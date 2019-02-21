@@ -15,11 +15,12 @@ const betaBranch =
     gitBranch === 'master' ||
     gitBranch === 'qa-beta' ||
     gitBranch === 'prod-beta';
+
 if (process.env.NODE_ENV === 'production' && betaBranch) {
     deploymentEnv = 'beta/apps';
 }
 
-const publicPath = `/${deploymentEnv}/sample/`;
+const publicPath = `/${deploymentEnv}/tower-analytics/`;
 
 module.exports = {
     paths: {
