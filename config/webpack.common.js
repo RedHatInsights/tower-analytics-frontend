@@ -9,7 +9,7 @@ const entry = process.env.NODE_ENV === 'production' ?
     path.resolve(__dirname, '../src/entry.js') :
     path.resolve(__dirname, '../src/entry-dev.js');
 
-let deploymentEnv = 'apps';
+let deploymentEnv = '/';
 const gitBranch = process.env.BRANCH || gitRevisionPlugin.branch();
 const betaBranch =
     gitBranch === 'master' ||
@@ -17,10 +17,10 @@ const betaBranch =
     gitBranch === 'prod-beta';
 
 if (process.env.NODE_ENV === 'production' && betaBranch) {
-    deploymentEnv = 'beta/apps';
+    deploymentEnv = '/beta';
 }
 
-const publicPath = `/${deploymentEnv}/tower-analytics/`;
+const publicPath = `${deploymentEnv}apps/tower-analytics/`;
 
 module.exports = {
     paths: {
