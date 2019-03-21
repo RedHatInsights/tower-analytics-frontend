@@ -32,7 +32,7 @@ class BarChart extends Component {
     async drawChart() {
         const url = this.getApiUrl('data');
         const response = await fetch(url);
-        const data = await response.json();
+        const data = [[12, 12, "01/01"], [50, 5, "01/02"], [6, 6, "01/03"], [6, 6, "01/04"], [9, 9, "01/05"], [10, 10, "01/06"]];
         const totals = data.map(x => x[0] + x[1]);
         console.log(data);
         console.log(totals);
