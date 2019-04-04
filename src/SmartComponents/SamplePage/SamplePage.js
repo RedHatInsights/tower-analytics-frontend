@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import './sample-page.scss';
 import BarChart from './BarChart.js';
+import LineChart from './LineChart.js';
 
 import { Section, Main, PageHeader, PageHeaderTitle } from '@red-hat-insights/insights-frontend-components';
 import { CircleIcon, WarningTriangleIcon } from '@patternfly/react-icons';
@@ -223,7 +224,8 @@ class SamplePage extends Component {
                             </div>
                         </CardHeader>
                         <CardBody>
-                            <BarChart width={ 700 } height={ 350 } id='bar-chart-root' />
+                            {/* <BarChart width={ 700 } height={ 350 } id='bar-chart-root' /> */}
+                            <LineChart width={ 700 } height={ 350 } id='d3-chart-root' />
                         </CardBody>
                     </Card>
                     <div className="dataCard" style={{ display: 'flex', marginTop: '20px' }}>
