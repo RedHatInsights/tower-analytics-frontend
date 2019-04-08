@@ -21,6 +21,11 @@ import {
     DropdownToggle,
     Modal,
 } from '@patternfly/react-core';
+import {
+    Table,
+    TableHeader,
+    TableBody
+} from '@patternfly/react-table';
 
 import SampleComponent from '../../PresentationalComponents/SampleComponent/sample-component';
 // const PageHeader2 = asyncComponent(() => import('../../PresentationalComponents/PageHeader/page-header'));
@@ -309,7 +314,10 @@ class SamplePage extends Component {
                     >
                         {/* Table */}
                         <Card>
-                            <h1>hi</h1>
+                          <Table caption="Simple Table" rows={[['one', 'two'], ['three', 'four']]} cells={['One', 'Two']}>
+                          <TableHeader/>
+                          <TableBody/>
+                          </Table>
                         </Card>
                     </Modal>
                 </Main>

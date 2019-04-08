@@ -4,11 +4,13 @@
   "private": false,
   "dependencies": {
     "@babel/runtime": "^7.1.2",
-    "@patternfly/patternfly-next": "^1.0.41",
+    "@patternfly/patternfly-next": "^1.0.175",
     "@patternfly/react-core": "1.51.6",
+    "@patternfly/react-table": "^0.4.10",
     "@red-hat-insights/insights-frontend-components": "^3.33.57",
     "classnames": "^2.2.5",
-    "create-react-class": "^15.6.3"
+    "create-react-class": "^15.6.3",
+    "install": "^0.12.2"
   },
   "sassIncludes": {
     "patternfly": "node_modules/patternfly/dist/sass",
