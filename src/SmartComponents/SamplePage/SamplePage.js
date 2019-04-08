@@ -13,13 +13,13 @@ import {
     CardBody,
     CardHeader,
     DataList,
-    DataListItem,
     DataListCell,
+    DataListItem,
     Dropdown,
-    DropdownToggle,
     DropdownItem,
     DropdownSeparator,
-    Modal
+    DropdownToggle,
+    Modal,
 } from '@patternfly/react-core';
 
 import SampleComponent from '../../PresentationalComponents/SampleComponent/sample-component';
@@ -39,13 +39,16 @@ class SamplePage extends Component {
         this.state = {
           isLeftOpen: false,
           isRightOpen: false,
+          isNotificationsOpen: false,
           isModalOpen: false
         };
 
         this.onLeftToggle = this.onLeftToggle.bind(this);
         this.onRightToggle = this.onRightToggle.bind(this);
+        this.onNotificationsToggle = this.onNotificationsToggle.bind(this);
         this.onLeftSelect = this.onLeftSelect.bind(this);
         this.onRightSelect = this.onRightSelect.bind(this);
+        this.onNotificationsSelect = this.onNotificationsSelect.bind(this);
         this.handleModalToggle = this.handleModalToggle.bind(this);
     }
 
@@ -61,6 +64,12 @@ class SamplePage extends Component {
         });
     };
 
+    onNotificationsToggle (isNotificationsOpen) {
+        this.setState({
+          isNotificationsOpen
+        });
+    };
+
     onLeftSelect (event) {
         this.setState({
           isLeftOpen: !this.state.isLeftOpen
@@ -73,6 +82,12 @@ class SamplePage extends Component {
         });
     };
 
+    onNotificationsSelect (event) {
+        this.setState({
+          isNotificationsOpen: !this.state.isNotificationsOpen
+        });
+    };
+
     handleModalToggle () {
         this.setState({
             isModalOpen: !this.state.isModalOpen
@@ -80,7 +95,12 @@ class SamplePage extends Component {
     };
 
     render() {
-        const { isLeftOpen, isRightOpen, isModalOpen } = this.state;
+        const {
+          isLeftOpen,
+          isRightOpen,
+          isNotificationsOpen,
+          isModalOpen
+        } = this.state;
 
         const dataListCellStyle = {
             display: 'flex',
@@ -244,9 +264,9 @@ class SamplePage extends Component {
                                 <DataListCell style={ dataListCellStyle }>
                                 <Dropdown
                                     style={{ border: '1px solid #ededed', borderBottomColor: '#282d33' }}
-                                    onSelect={this.onRightSelect}
-                                    toggle={<DropdownToggle onToggle={this.onRightToggle}>Right Dropdown</DropdownToggle>}
-                                    isOpen={isRightOpen}
+                                    onSelect={this.onNotificationsSelect}
+                                    toggle={<DropdownToggle onToggle={this.onNotificationsToggle}>Notifications Dropdown</DropdownToggle>}
+                                    isOpen={isNotificationsOpen}
                                     dropdownItems={dropdownItems}
                                 />
                                 </DataListCell>
