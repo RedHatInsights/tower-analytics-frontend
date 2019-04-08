@@ -17,6 +17,23 @@
     }
 }
 
+.pf-c-modal-box.templateModal {
+  --pf-c-modal-box--Width: 1000px;
+
+  .pf-c-table {
+    th:first-child,
+    td:first-child {
+      padding-left: 0;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: 20px;
+      text-align: right;
+    }
+  }
+}
+
 @media only screen and (max-width: 600px) {
     .dataCard {
         flex-direction: column;

@@ -5,7 +5,7 @@ import './sample-page.scss';
 import BarChart from './BarChart.js';
 
 import { Section, Main, PageHeader, PageHeaderTitle } from '@red-hat-insights/insights-frontend-components';
-import { WarningTriangleIcon } from '@patternfly/react-icons';
+import { CircleIcon, WarningTriangleIcon } from '@patternfly/react-icons';
 import {
     Badge,
     Button,
@@ -129,6 +129,8 @@ class SamplePage extends Component {
             Separated Action
           </DropdownItem>
         ];
+
+        const circleIcon = <CircleIcon size="sm" key='5' style={{ color: '#52af51', marginRight: '5px' }}/>;
 
         return (
             <React.Fragment>
@@ -305,16 +307,27 @@ class SamplePage extends Component {
                         </DataList>
                     </div>
                     <Modal
+                        className='templateModal'
                         title={'Template Name 1'}
                         isOpen={isModalOpen}
                         onClose={this.handleModalToggle}
                         actions={[
+                            <h4>Total Time 2 hr | Avg Time 30 min</h4>,
                             <Button key="cancel" variant="secondary" onClick={this.handleModalToggle}>Close</Button>
                         ]}
                     >
-                        {/* Table */}
                         <Card>
-                          <Table caption="Simple Table" rows={[['one', 'two'], ['three', 'four']]} cells={['One', 'Two']}>
+                          <Table
+                            caption={['']}
+                            cells={['Id/Name', 'Cluster', 'Start Time', 'Total Time']}
+                            rows={[
+                              [[circleIcon, '0001 - Job Name'], 'Tower 1', '3/11/19 3:15pm', '25min'],
+                              [[circleIcon, '0002 - Job Name'], 'Tower 1', '3/11/19 3:15pm', '25min'],
+                              [[circleIcon, '0003 - Job Name'], 'Tower 1', '3/11/19 3:15pm', '25min'],
+                              [[circleIcon, '0004 - Job Name'], 'Tower 1', '3/11/19 3:15pm', '25min'],
+                              [[circleIcon, '0005 - Job Name'], 'Tower 1', '3/11/19 3:15pm', '25min'],
+                            ]}
+                          >
                           <TableHeader/>
                           <TableBody/>
                           </Table>
