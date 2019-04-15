@@ -8,8 +8,8 @@ class BarChart extends Component {
 
     constructor(props) {
         super(props);
-        this.server = process.env.REACT_APP_SERVER_ADDRESS ? process.env.REACT_APP_SERVER_ADDRESS : window.location.host;
-        this.protocol = process.env.REACT_APP_SERVER_PROTOCOL ? process.env.REACT_APP_SERVER_PROTOCOL : 'https';
+        this.server = 'nginx-tower-analytics2.5a9f.insights-dev.openshiftapps.com';
+        this.protocol = 'https';
     }
 
     getApiUrl(name) {
@@ -32,7 +32,7 @@ class BarChart extends Component {
     async drawChart() {
         const url = this.getApiUrl('data');
         const response = await fetch(url);
-        const data = [[12, 12, "01/01"], [50, 5, "01/02"], [6, 6, "01/03"], [6, 6, "01/04"], [9, 9, "01/05"], [10, 10, "01/06"]];
+        const data = await response.json();
         const totals = data.map(x => x[0] + x[1]);
         console.log(data);
         console.log(totals);
