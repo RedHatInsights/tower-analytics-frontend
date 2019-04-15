@@ -10,6 +10,22 @@ class BarChart extends Component {
         super(props);
         this.server = 'nginx-tower-analytics2.5a9f.insights-dev.openshiftapps.com';
         this.protocol = 'https';
+        this.margin = { top: 20, right: 20, bottom: 50, left: 70 };
+        this.getApiUrl = this.getApiUrl.bind(this);
+        this.init = this.init.bind(this);
+        this.resize = this.resize.bind(this);
+    }
+
+    // Methods
+    resize(fn, time) {
+      let timeout;
+
+      return function() {
+        const functionCall = () => fn.apply(this, arguments);
+
+        clearTimeout(timeout);
+        timeout = setTimeout(functionCall, time);
+      };
     }
 
     getApiUrl(name) {
@@ -25,11 +41,23 @@ class BarChart extends Component {
         console.log('componentDidMount start');
         console.log(ReactDOM.findDOMNode(this));
         console.log(document.getElementById("#bar-chart-root"));
-        await this.drawChart();
+        await this.init();
         console.log('componentDidMount end');
     }
 
-    async drawChart() {
+    async init() {
+        d3.selectAll('#' + this.props.id  + ' > *').remove();
+        var width =
+            parseInt(d3.select('#' + this.props.id).style('width')) -
+            this.margin.left -
+            this.margin.right,
+          height =
+            parseInt(d3.select('#' + this.props.id).style('height')) -
+            this.margin.top -
+            this.margin.bottom;
+
+        height=500;
+        console.log([width, height]);
         const url = this.getApiUrl('data');
         const response = await fetch(url);
         const data = await response.json();
@@ -41,7 +69,7 @@ class BarChart extends Component {
         .domain([ 0, Math.max(...totals) ])
         .range([ 0, 210 ]);
 
-        const chartBottom = this.props.height - 70;
+        const chartBottom = height - 70;
         const chartLeft = 70;
 
         const parseTime = d3.timeParse('%m/%d');
@@ -56,8 +84,8 @@ class BarChart extends Component {
         console.log(d3.select("#" + this.props.id));
         const svg = d3.select("#" + this.props.id)
         .append('svg')
-        .attr('width', this.props.width)
-        .attr('height', this.props.height)
+        .attr('width', width)
+        .attr('height', height)
         .style('margin-left', 100)
         .style('background-color', 'white');
         //.style('border-style', 'solid')
@@ -70,7 +98,7 @@ class BarChart extends Component {
         svgYAxis.attr('transform', 'translate(' + chartLeft + ',' + (chartBottom - 210) + ')')
         .call(d3.axisRight(y2)
         .ticks(5)
-        .tickSize(this.props.width - chartLeft - 50))
+        .tickSize(width - chartLeft - 50))
         .selectAll('.domain').attr('stroke', '#d7d7d7');
         svgYAxis.selectAll('.tick text').attr('x', -5).attr('dy', 4).attr('fill', '#393f44').attr('text-anchor', 'end');
         svgYAxis.selectAll('.tick line').attr('stroke', '#d7d7d7');
@@ -114,14 +142,14 @@ class BarChart extends Component {
 
         // text label for the y axis
         svg.append('text')
-        .attr('transform', 'translate(30, ' + this.props.height / 2 + ') rotate(-90)')
+        .attr('transform', 'translate(30, ' + height / 2 + ') rotate(-90)')
         .style('text-anchor', 'middle')
         .text('Jobs Across All Clusters')
         .attr('fill', '#393f44');
 
         // text label for the x axis
         svg.append('text')
-        .attr('transform', 'translate(' + this.props.width / 2 + ', ' + (this.props.height - 30) + ')')
+        .attr('transform', 'translate(' + width / 2 + ', ' + (height - 30) + ')')
         .style('text-anchor', 'middle')
         .text('Time: Day')
         .attr('fill', '#393f44');
@@ -227,6 +255,7 @@ class BarChart extends Component {
         }
         console.log('done');
 
+        d3.select(window).on('resize', this.resize(this.init, 500));
     }
 
     render () {
