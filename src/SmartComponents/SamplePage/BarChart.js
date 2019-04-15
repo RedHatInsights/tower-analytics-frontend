@@ -92,6 +92,19 @@ class BarChart extends Component {
         //.style('border-color', 'blue')
         //.style('border-width', '5px');
 
+        // Add the x Axis
+        const svgXAxis = svg.append('g');
+        svgXAxis.attr('transform', 'translate(0,' + chartBottom + ')')
+        .call(d3.axisTop(x2)
+        .ticks(data.length)
+        .tickSize(210)
+        .tickFormat(d3.timeFormat('%m/%d')));
+        svgXAxis.selectAll('.domain').attr('stroke', '#d7d7d7');
+        svgXAxis.selectAll('text').attr('fill', '#393f44');
+        svgXAxis.selectAll('line').attr('stroke', '#d7d7d7');
+        svgXAxis.selectAll('.tick text').attr('dy', 230).attr('fill', '#393f44')
+        svgXAxis.selectAll('.tick line').attr('stroke', '#d7d7d7');
+
         // Add the y Axis
         const svgYAxis = svg.append('g');
 
@@ -129,16 +142,6 @@ class BarChart extends Component {
         .attr('width', 30)
         .attr('height', (d) => y(d[1]) - 1)
         .attr('fill', '#5cb85c');
-
-        // Add the x Axis
-        const svgXAxis = svg.append('g');
-        svgXAxis.attr('transform', 'translate(0,' + chartBottom + ')')
-        .call(d3.axisBottom(x2)
-        .ticks(data.length)
-        .tickFormat(d3.timeFormat('%m/%d')));
-        svgXAxis.selectAll('.domain').attr('stroke', '#d7d7d7');
-        svgXAxis.selectAll('text').attr('fill', '#393f44');
-        svgXAxis.selectAll('line').attr('stroke', '#d7d7d7');
 
         // text label for the y axis
         svg.append('text')
