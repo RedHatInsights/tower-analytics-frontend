@@ -85,7 +85,7 @@ class LineChart extends Component {
       .y(function(d) {
         return y(d.RAN);
       })
-      .curve(d3.curveLinear);
+      .curve(d3.curveCardinal);
 
     var failLine = d3
       .line()
@@ -95,7 +95,7 @@ class LineChart extends Component {
       .y(function(d) {
         return y(d.FAIL);
       })
-      .curve(d3.curveLinear);
+      .curve(d3.curveCardinal);
 
     var totalLine = d3
       .line()
@@ -105,15 +105,16 @@ class LineChart extends Component {
       .y(function(d) {
         return y(d.TOTAL);
       })
-      .curve(d3.curveLinear);
+      .curve(d3.curveCardinal);
 
     // Three function that change the tooltip when user hover / move
     var mouseover = function(d) {
-      var toolTipHeight = d3
+      var toolTipWidth = d3
         .select('.tooltip')
         .node()
-        .getBoundingClientRect().height;
-      console.log('this mouse', d3.mouse(this));
+        .getBoundingClientRect().width;
+      var overflow = 100 - (toolTipWidth / width) * 100;
+      var flipped = overflow < (d3.mouse(this)[0] / width) * 100;
       if (d3.event.path[0].__data__ && d3.event.path[0].__data__.DATE) {
         tooltip.transition().style('opacity', 1);
         tooltip
@@ -138,8 +139,22 @@ class LineChart extends Component {
               '</span>' +
               '<br/>'
           )
-          .style('left', d3.event.pageX + 10 + 'px')
-          .style('top', d3.event.pageY - Math.round(toolTipHeight / 2) + 'px'); // add half of the height of the tooltip
+          .classed('flipped', false)
+          .style('left', d3.event.pageX + 10 + 'px');
+        if (flipped) {
+          tooltip
+            .classed('flipped', true)
+            .style('left', d3.event.pageX - toolTipWidth - 10 + 'px');
+        }
+        var toolTipHeight = d3
+          .select('.tooltip')
+          .node()
+          .getBoundingClientRect().height;
+        tooltip.style(
+          'top',
+          d3.event.pageY - Math.round(toolTipHeight / 2) + 'px'
+        ); // add half of the height of the tooltip
+
         vertical
           .transition()
           .style('opacity', 1)
@@ -265,8 +280,8 @@ class LineChart extends Component {
           .transition()
           .ease(d3.easeElastic)
           .duration('1500')
-          .style('stroke', 'black')
-          // .style("stroke-width", 4)
+          // .style("stroke", 'black')
+          .style('fill', 'transparent')
           .attr('r', 5);
       })
       .on('mouseout', function(d, i) {
