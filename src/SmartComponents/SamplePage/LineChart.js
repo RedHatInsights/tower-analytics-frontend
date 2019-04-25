@@ -1,8 +1,7 @@
 /* eslint-disable */
 import React, { Component } from 'react';
+import Tooltip from '../../Utilities/Tooltip';
 import * as d3 from 'd3';
-import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
 
 class LineChart extends Component {
   constructor(props) {
@@ -27,7 +26,7 @@ class LineChart extends Component {
   async init() {
     // Clear our chart container element first
     d3.selectAll('#d3-chart-root > *').remove();
-    var width =
+    const width =
         parseInt(d3.select('#' + this.props.id).style('width')) -
         this.margin.left -
         this.margin.right,
@@ -43,21 +42,30 @@ class LineChart extends Component {
         .attrTween('stroke-dasharray', tweenDash);
     }
     function tweenDash() {
-      var l = this.getTotalLength(),
+      const l = this.getTotalLength(),
         i = d3.interpolateString('0,' + l, l + ',' + l);
       return function(t) {
         return i(t);
       };
     }
 
-    var parseTime = d3.timeParse('%Y-%m-%d');
-    var formatTooltipDate = d3.timeFormat('%b %d');
-    var x = d3.scaleTime().range([0, width]);
-    var y = d3.scaleLinear().range([height, 0]);
+    const parseTime = d3.timeParse('%Y-%m-%d');
+    const formatTooltipDate = d3.timeFormat('%b %d');
+    const x = d3.scaleTime().range([0, width]);
+    const y = d3.scaleLinear().range([height, 0]);
 
     //[success, fail, total]
-    var colors = d3.scaleOrdinal(['green', 'red', 'black']);
-    var vertical = d3
+    let colors = d3.scaleOrdinal(['#5cb85c', '#d9534f', '#337ab7']);
+    if (this.props.isAccessible) {
+      colors = d3.scaleOrdinal(['#92D400', '#A30000', '#337ab7']);
+    }
+
+    const top =
+      d3
+        .select('#d3-chart-root')
+        .node()
+        .getBoundingClientRect().y + this.margin.top; // offset padding
+    const vertical = d3
       .select('#' + this.props.id)
       .append('div')
       .attr('class', 'remove')
@@ -65,115 +73,34 @@ class LineChart extends Component {
       .style('position', 'absolute')
       .style('z-index', '19')
       .style('width', '1px')
-      .style('height', height + this.margin.top + 'px')
+      .style('height', height + 'px')
+      // need y position of chart
+      .style('top', top + 'px')
       .style('left', '0px')
       .style('pointer-events', 'none')
-      .style('border-left', '2px dotted gray');
-
-    // Tooltip
-    var tooltip = d3
-      .select('#d3-chart-root')
-      .append('div')
-      .attr('class', 'tooltip')
-      .style('opacity', 0);
-    // define the line
-    var successLine = d3
-      .line()
-      .x(function(d) {
-        return x(d.DATE);
-      })
-      .y(function(d) {
-        return y(d.RAN);
-      })
-      .curve(d3.curveCardinal);
-
-    var failLine = d3
-      .line()
-      .x(function(d) {
-        return x(d.DATE);
-      })
-      .y(function(d) {
-        return y(d.FAIL);
-      })
-      .curve(d3.curveCardinal);
-
-    var totalLine = d3
-      .line()
-      .x(function(d) {
-        return x(d.DATE);
-      })
-      .y(function(d) {
-        return y(d.TOTAL);
-      })
-      .curve(d3.curveCardinal);
+      .style('border-left', '3px dotted #393f44');
 
     // Three function that change the tooltip when user hover / move
-    var mouseover = function(d) {
-      var toolTipWidth = d3
-        .select('.tooltip')
-        .node()
-        .getBoundingClientRect().width;
-      var overflow = 100 - (toolTipWidth / width) * 100;
-      var flipped = overflow < (d3.mouse(this)[0] / width) * 100;
-      if (d3.event.path[0].__data__ && d3.event.path[0].__data__.DATE) {
-        tooltip.transition().style('opacity', 1);
-        tooltip
-          .html(
-            formatTooltipDate(d3.event.path[0].__data__.DATE) + // format time correctly
-              '<br/>' +
-              'Total ' +
-              "<span class='tooltip-value'>" +
-              d3.event.path[0].__data__.TOTAL +
-              '</span>' +
-              '<br/>' +
-              "<svg height='12' width='12'><circle r='4' cx='6' cy='6' stroke='white' stroke-width='1' fill='green' fill-opacity='1' /></svg>" +
-              ' Successful ' +
-              "<span class='tooltip-value'>" +
-              d3.event.path[0].__data__.RAN +
-              '</span>' +
-              '<br/>' +
-              "<svg height='12' width='12'><circle r='4' cx='6' cy='6' stroke='white' stroke-width='1' fill='red' fill-opacity='1' /></svg>" +
-              ' Failed ' +
-              "<span class='tooltip-value'>" +
-              d3.event.path[0].__data__.FAIL +
-              '</span>' +
-              '<br/>'
-          )
-          .classed('flipped', false)
-          .style('left', d3.event.pageX + 10 + 'px');
-        if (flipped) {
-          tooltip
-            .classed('flipped', true)
-            .style('left', d3.event.pageX - toolTipWidth - 10 + 'px');
-        }
-        var toolTipHeight = d3
-          .select('.tooltip')
-          .node()
-          .getBoundingClientRect().height;
-        tooltip.style(
-          'top',
-          d3.event.pageY - Math.round(toolTipHeight / 2) + 'px'
-        ); // add half of the height of the tooltip
-
-        vertical
-          .transition()
-          .style('opacity', 1)
-          .style('left', d3.event.pageX + 'px');
-      } else {
-        return false;
-      }
+    const handleMouseOver = function(d) {
+      // show tooltip
+      tooltip.handleMouseOver(d);
+      // show vertical line
+      vertical
+        .transition()
+        .style('opacity', 1)
+        .style('left', d3.event.pageX + 'px');
     };
-    var mousemove = function(d) {
+    const handleMouseMove = function() {
       vertical.style('left', d3.event.pageX + 'px');
     };
-    var mouseleave = function(d) {
-      tooltip.transition().style('opacity', 0);
+    const handleMouseOut = function() {
+      // hide tooltip
+      tooltip.handleMouseOut();
+      // hide vertical line
       vertical.transition().style('opacity', 0);
     };
-
-    // d3.
-    d3.select('svg').remove();
-    var svg = d3
+    // d3.select('svg').remove();
+    const svg = d3
       .select('#' + this.props.id)
       .append('svg')
       .attr('width', width + this.margin.left + this.margin.right)
@@ -183,10 +110,24 @@ class LineChart extends Component {
         'transform',
         'translate(' + this.margin.left + ',' + this.margin.top + ')'
       );
-
-    const data = await d3.csv(
+    // Tooltip
+    const tooltip = new Tooltip({
+      svg: '#d3-chart-root > svg',
+      colors
+    });
+    let data = await d3.csv(
       'https://gist.githubusercontent.com/kialam/52130f7e3292dad03a0c841f39a3b9d3/raw/ce1496e22c103cfd04314bac98c67eb8f7b8a7a1/sample.csv'
     );
+
+    const half_length = Math.ceil(data.length / 2);
+
+    if (this.props.value === 'past 2 weeks') {
+      data = data.splice(0, half_length);
+    }
+    if (this.props.value === 'past week') {
+      data = data.splice(0, 7);
+    }
+
     data.forEach(function(d) {
       d.DATE = parseTime(d.DATE); // format date string into DateTime object
       d.RAN = +d.RAN;
@@ -205,23 +146,97 @@ class LineChart extends Component {
         return d.TOTAL;
       })
     ]);
+
+    const successLine = d3
+      .line()
+      .x(function(d) {
+        return x(d.DATE);
+      })
+      .y(function(d) {
+        return y(d.RAN);
+      })
+      .curve(d3.curveCardinal);
+
+    const failLine = d3
+      .line()
+      .x(function(d) {
+        return x(d.DATE);
+      })
+      .y(function(d) {
+        return y(d.FAIL);
+      })
+      .curve(d3.curveCardinal);
+
+    const totalLine = d3
+      .line()
+      .x(function(d) {
+        return x(d.DATE);
+      })
+      .y(function(d) {
+        return y(d.TOTAL);
+      })
+      .curve(d3.curveCardinal);
+
+    // Add the Y Axis
+    svg
+      .append('g')
+      .call(
+        d3
+          .axisLeft(y)
+          .ticks(10)
+          .tickSize(-width)
+      )
+      .selectAll('line')
+      .attr('stroke', '#d7d7d7');
+    // text label for the y axis
+    svg
+      .append('text')
+      .attr('transform', 'rotate(-90)')
+      .attr('y', 0 - this.margin.left)
+      .attr('x', 0 - height / 2)
+      .attr('dy', '1em')
+      .style('text-anchor', 'middle')
+      .text('Job Runs');
+    // Add the X Axis
+    svg
+      .append('g')
+      .attr('transform', 'translate(0,' + height + ')')
+      .call(
+        d3
+          .axisBottom(x)
+          .ticks()
+          .tickSize(-height)
+          .tickFormat(d3.timeFormat('%b-%d'))
+      ) // "Jan-01"
+      .selectAll('line')
+      .attr('stroke', '#d7d7d7');
+    // text label for the x axis
+    svg
+      .append('text')
+      .attr(
+        'transform',
+        'translate(' + width / 2 + ' ,' + (height + this.margin.top + 20) + ')'
+      )
+      .style('text-anchor', 'middle')
+      .text('Date');
     // Add the successLine path.
     svg
       .append('path')
       .data([data])
       .attr('class', 'line')
       .style('fill', 'none')
-      .style('stroke', () => colors(0))
+      .style('stroke', () => colors(1))
       .attr('stroke-width', 2)
       .attr('d', successLine)
       .call(transition);
+
     // Add the failLine path.
     svg
       .append('path')
       .data([data])
       .attr('class', 'line')
       .style('fill', 'none')
-      .style('stroke', () => colors(1))
+      .style('stroke', () => colors(0))
       .attr('stroke-width', 2)
       .attr('d', failLine)
       .call(transition);
@@ -235,66 +250,8 @@ class LineChart extends Component {
       .attr('stroke-width', 2)
       .attr('d', totalLine)
       .call(transition);
-    // Add the X Axis
-    svg
-      .append('g')
-      .attr('transform', 'translate(0,' + height + ')')
-      .call(d3.axisBottom(x).tickFormat(d3.timeFormat('%b-%d'))); // "Jan-01"
-    // text label for the x axis
-    svg
-      .append('text')
-      .attr(
-        'transform',
-        'translate(' + width / 2 + ' ,' + (height + this.margin.top + 20) + ')'
-      )
-      .style('text-anchor', 'middle')
-      .text('Date');
-    // Add the Y Axis
-    svg.append('g').call(d3.axisLeft(y));
-    // text label for the y axis
-    svg
-      .append('text')
-      .attr('transform', 'rotate(-90)')
-      .attr('y', 0 - this.margin.left)
-      .attr('x', 0 - height / 2)
-      .attr('dy', '1em')
-      .style('text-anchor', 'middle')
-      .text('Job Runs');
-    // create our successLine circles
-    svg
-      .selectAll('dot')
-      .data(data)
-      .enter()
-      .append('circle')
-      .attr('r', 3)
-      .style('stroke', () => colors(0))
-      .style('fill', () => colors(0))
-      .attr('cx', function(d) {
-        return x(d.DATE);
-      })
-      .attr('cy', function(d) {
-        return y(d.RAN);
-      })
-      .on('mouseover', function(d, i) {
-        d3.select(this)
-          .transition()
-          .ease(d3.easeElastic)
-          .duration('1500')
-          // .style("stroke", 'black')
-          .style('fill', 'transparent')
-          .attr('r', 5);
-      })
-      .on('mouseout', function(d, i) {
-        d3.select(this)
-          .transition()
-          .ease(d3.easeBack)
-          .duration('200')
-          .style('stroke', 'green')
-          // .style("stroke-width", 1)
-          .attr('r', 3);
-      });
 
-    // create our failLine circles
+    // create our successLine circles
     svg
       .selectAll('dot')
       .data(data)
@@ -307,9 +264,30 @@ class LineChart extends Component {
         return x(d.DATE);
       })
       .attr('cy', function(d) {
-        return y(d.FAIL);
-      });
+        return y(d.RAN);
+      })
 
+      .on('mouseover', handleMouseOver)
+      .on('mousemove', handleMouseMove)
+      .on('mouseout', handleMouseOut);
+    // create our failLine circles
+    svg
+      .selectAll('dot')
+      .data(data)
+      .enter()
+      .append('circle')
+      .attr('r', 3)
+      .style('stroke', () => colors(0))
+      .style('fill', () => colors(0))
+      .attr('cx', function(d) {
+        return x(d.DATE);
+      })
+      .attr('cy', function(d) {
+        return y(d.FAIL);
+      })
+      .on('mouseover', handleMouseOver)
+      .on('mousemove', handleMouseMove)
+      .on('mouseout', handleMouseOut);
     // create our totalLine circles
     svg
       .selectAll('dot')
@@ -324,14 +302,10 @@ class LineChart extends Component {
       })
       .attr('cy', function(d) {
         return y(d.TOTAL);
-      });
-
-    svg
-      .on('mouseover', mouseover)
-      .on('mousemove', mousemove)
-      .on('mouseleave', mouseleave)
-      .on('mouseout', mouseleave);
-
+      })
+      .on('mouseover', handleMouseOver)
+      .on('mousemove', handleMouseMove)
+      .on('mouseout', handleMouseOut);
     // Call the resize function whenever a resize event occurs
     d3.select(window).on('resize', this.resize(this.init, 500));
   }
@@ -340,6 +314,14 @@ class LineChart extends Component {
     await this.init();
   }
 
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.value !== this.props.value) {
+      this.init();
+    }
+    if (prevProps.isAccessible !== this.props.isAccessible) {
+      this.init();
+    }
+  }
   render() {
     return <div id={this.props.id} />;
   }
