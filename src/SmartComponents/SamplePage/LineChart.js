@@ -82,16 +82,28 @@ class LineChart extends Component {
 
     // Three function that change the tooltip when user hover / move
     const handleMouseOver = function(d) {
+      const radialOffset = this.r.baseVal.value / 2;
+      const intersectX =
+        d3
+          .select(this)
+          .node()
+          .getBoundingClientRect().x + radialOffset;
       // show tooltip
       tooltip.handleMouseOver(d);
       // show vertical line
       vertical
         .transition()
         .style('opacity', 1)
-        .style('left', d3.event.pageX + 'px');
+        .style('left', intersectX + 'px');
     };
     const handleMouseMove = function() {
-      vertical.style('left', d3.event.pageX + 'px');
+      const radialOffset = this.r.baseVal.value / 2;
+      const intersectX =
+        d3
+          .select(this)
+          .node()
+          .getBoundingClientRect().x + radialOffset;
+      vertical.style('left', intersectX + 'px');
     };
     const handleMouseOut = function() {
       // hide tooltip
@@ -105,6 +117,7 @@ class LineChart extends Component {
       .append('svg')
       .attr('width', width + this.margin.left + this.margin.right)
       .attr('height', height + this.margin.top + this.margin.bottom)
+      .attr('z', 100)
       .append('g')
       .attr(
         'transform',
@@ -143,7 +156,7 @@ class LineChart extends Component {
     y.domain([
       0,
       d3.max(data, function(d) {
-        return d.TOTAL;
+        return d.TOTAL + 10;
       })
     ]);
 
