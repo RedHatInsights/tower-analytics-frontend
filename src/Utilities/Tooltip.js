@@ -124,14 +124,12 @@ class Tooltip {
     }
 
     const toolTipWidth = Tooltip.base.node().getBoundingClientRect().width;
-    const chartWidth =
-      d3
-        .select('#d3-chart-root')
-        .node()
-        .getBoundingClientRect().width - 90; // offset margins
+    const chartWidth = d3
+      .select('#d3-chart-root > svg')
+      .node()
+      .getBoundingClientRect().width;
     const overflow = 100 - (toolTipWidth / chartWidth) * 100;
-    const flipped = overflow < ((d3.event.pageX - 90) / chartWidth) * 100; // offset margins
-
+    const flipped = overflow < (x / chartWidth) * 100;
     if (d) {
       success = d.RAN;
       fail = d.FAIL;

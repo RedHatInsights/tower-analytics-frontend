@@ -113,20 +113,14 @@ class SamplePage extends Component {
       { value: 'cluster 002', label: 'Cluster 002', disabled: false }
     ];
     this.dropdownItems = [
-      <DropdownItem key="link">Link</DropdownItem>,
-      <DropdownItem key="action" component="button">
-        Action
+      <DropdownItem key="danger" component="button">
+        View Danger
       </DropdownItem>,
-      <DropdownItem key="disabled link" isDisabled>
-        Disabled Link
+      <DropdownItem key="warning" component="button">
+        View Warning
       </DropdownItem>,
-      <DropdownItem key="disabled action" isDisabled component="button">
-        Disabled Action
-      </DropdownItem>,
-      <DropdownSeparator key="separator" />,
-      <DropdownItem key="separated link">Separated Link</DropdownItem>,
-      <DropdownItem key="separated action" component="button">
-        Separated Action
+      <DropdownItem key="all" component="button">
+        View All
       </DropdownItem>
     ];
   }
@@ -325,7 +319,7 @@ class SamplePage extends Component {
                     onSelect={this.onRightSelect}
                     toggle={
                       <DropdownToggle onToggle={this.onRightToggle}>
-                        Right Dropdown
+                        View All
                       </DropdownToggle>
                     }
                     isOpen={isRightOpen}
