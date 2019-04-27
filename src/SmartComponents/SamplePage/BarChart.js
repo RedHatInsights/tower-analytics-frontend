@@ -18,9 +18,6 @@ class BarChart extends Component {
           data: []
         };
   }
-    getApiUrl(name) {
-        return this.protocol + '://' + this.server + '/tower_analytics/' + name + '/';
-    }
 
   // Methods
   resize(fn, time) {
@@ -32,6 +29,14 @@ class BarChart extends Component {
       clearTimeout(timeout);
       timeout = setTimeout(functionCall, time);
     };
+  }
+
+  getApiUrl(name) {
+      return this.protocol + '://' + this.server + '/tower_analytics/' + name + '/';
+  }
+
+  async componentDidMount() {
+    this.init();
   }
 
   async init() {
@@ -76,22 +81,14 @@ class BarChart extends Component {
     const status = ['FAIL', 'RAN'];
     const url = this.getApiUrl('chart');
     const response = await fetch(url);
-    const data = await response.json();
-    const half_length = Math.ceil(data.length / 2);
+    const raw_data = await response.json();
 
-    if (this.props.value === 'past 2 weeks') {
-      data = data.splice(0, half_length);
-    }
-    if (this.props.value === 'past week') {
-      data = data.splice(0, 7);
-    }
-
-    data.forEach(function(d) {
-      d.DATE = parseTime(d.DATE); // format date string into DateTime object
-      d.DATE = d.DATE; // format date string into DateTime object
-      d.RAN = +d.RAN;
-      d.FAIL = +d.FAIL;
-      d.TOTAL = +(+d.FAIL + +d.RAN);
+    const data = raw_data.map(function(d) {
+      return {DATE: parseTime(d.created), // format date string into DateTime object
+              RAN: +d.successful,
+              FAIL: +d.failed,
+              TOTAL: +d.total
+      };
     });
 
     // stack our data
@@ -179,9 +176,6 @@ class BarChart extends Component {
     d3.select(window).on('resize', this.resize(this.init, 500));
   }
 
-  async componentDidMount() {
-    this.init();
-  }
 
   componentDidUpdate(prevProps, prevState, snapshot) {
     if (prevProps.value !== this.props.value) {
