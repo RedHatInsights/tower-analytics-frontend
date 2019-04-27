@@ -8,7 +8,8 @@ class BarChart extends Component {
 
     constructor(props) {
         super(props);
-        this.server = 'nginx-tower-analytics2.5a9f.insights-dev.openshiftapps.com';
+        this.server = 'ci.foo.redhat.com:1337';
+        //this.server = 'nginx-tower-analytics2.5a9f.insights-dev.openshiftapps.com';
         this.protocol = 'https';
         this.margin = { top: 20, right: 20, bottom: 50, left: 70 };
         this.getApiUrl = this.getApiUrl.bind(this);
@@ -58,10 +59,10 @@ class BarChart extends Component {
 
         height=500;
         console.log([width, height]);
-        const url = this.getApiUrl('data');
+        const url = this.getApiUrl('chart');
         const response = await fetch(url);
         const data = await response.json();
-        const totals = data.map(x => x[0] + x[1]);
+        const totals = data.map(x => x.total);
         console.log(data);
         console.log(totals);
 
@@ -72,10 +73,10 @@ class BarChart extends Component {
         const chartBottom = height - 70;
         const chartLeft = 70;
 
-        const parseTime = d3.timeParse('%m/%d');
+        const parseTime = d3.timeParse('%Y-%m-%d');
         const x2 = d3.scaleTime().range([ chartLeft + 40, (data.length - 1) * 70 + chartLeft + 40 ]);
         const y2 = d3.scaleLinear().range([ 210, 0 ]);
-        x2.domain(d3.extent(data, function(d) { return parseTime(d[2]); }));
+        x2.domain(d3.extent(data, function(d) { return parseTime(d.created); }));
         y2.domain([ 0, Math.max(...totals) ]);
         y2.nice(5);
 
@@ -122,25 +123,25 @@ class BarChart extends Component {
         .data(data)
         .enter()
         .append('g')
-        .attr('data-failures', (d) => d[1])
-        .attr('data-passes', (d) => d[0])
-        .attr('data-total', (d) => d[0] + d[1])
+        .attr('data-failures', (d) => d.failed)
+        .attr('data-passes', (d) => d.successful)
+        .attr('data-total', (d) => d.total)
         .on('mouseover', handleMouseOver)
         .on('mousemove', handleMouseOver)
         .on('mouseout', handleMouseOut);
 
         columns.append('rect')
         .attr('x', (d, i) => i * 70 + chartLeft + 25)
-        .attr('y', (d) => chartBottom - y(d[0]))
+        .attr('y', (d) => chartBottom - y(d.failed))
         .attr('width', 30)
-        .attr('height', (d) => y(d[0]))
+        .attr('height', (d) => y(d.failed))
         .attr('fill', '#d9534f');
 
         columns.append('rect')
         .attr('x', (d, i) => i * 70 + chartLeft + 25)
-        .attr('y', (d) => chartBottom - y(d[1]) - y(d[0]))
+        .attr('y', (d) => chartBottom - y(d.successful) - y(d.failed))
         .attr('width', 30)
-        .attr('height', (d) => y(d[1]) - 1)
+        .attr('height', (d) => y(d.successful) - 1)
         .attr('fill', '#5cb85c');
 
         // text label for the y axis
@@ -241,7 +242,7 @@ class BarChart extends Component {
             const x = coordinates[0] + 5;
             const y = coordinates[1] - 5;
 
-            date.text(d[2]);
+            date.text(d.created);
             jobs.text('' + this.dataset.total + ' Jobs');
             failed.text('' + this.dataset.failures);
             successful.text('' + this.dataset.passes);
