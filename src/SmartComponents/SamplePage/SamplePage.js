@@ -162,15 +162,26 @@ class SamplePage extends Component {
 
         var i = 0;
         var modules = [];
+        var module_name = null;
         for (i = 0; i < this.state.modules.length; i++) {
-          modules.push(<DataListItem aria-labelledby="simple-item1">
-                            <DataListCell>
-                                 <span>{this.state.modules[i].module}</span>
-                            </DataListCell>
-                            <DataListCell style={ dataListCellStyle }>
-                                 <Badge isRead>{this.state.modules[i].count}</Badge>
-                            </DataListCell>
-                        </DataListItem>);
+          if (this.state.modules[i].count > 0) {
+            var module_name = this.state.modules[i].module;
+            if (module_name[0] === '"') {
+              module_name = module_name.slice(1)
+            }
+            if (module_name[module_name.length-1] === '"') {
+              module_name = module_name.slice(0, -1)
+            }
+
+            modules.push(<DataListItem aria-labelledby="simple-item1">
+                              <DataListCell>
+                                   <span>{module_name}</span>
+                              </DataListCell>
+                              <DataListCell style={ dataListCellStyle }>
+                                   <Badge isRead>{this.state.modules[i].count}</Badge>
+                              </DataListCell>
+                          </DataListItem>);
+          }
         }
 
         var templates = [];
