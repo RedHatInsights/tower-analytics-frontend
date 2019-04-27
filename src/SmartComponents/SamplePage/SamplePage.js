@@ -45,8 +45,12 @@ class SamplePage extends Component {
           isLeftOpen: false,
           isRightOpen: false,
           isNotificationsOpen: false,
-          isModalOpen: false
+          isModalOpen: false,
+          modules: [],
+          templates: []
         };
+        this.server = 'ci.foo.redhat.com:1337';
+        this.protocol = 'https';
 
         this.onLeftToggle = this.onLeftToggle.bind(this);
         this.onRightToggle = this.onRightToggle.bind(this);
@@ -55,6 +59,30 @@ class SamplePage extends Component {
         this.onRightSelect = this.onRightSelect.bind(this);
         this.onNotificationsSelect = this.onNotificationsSelect.bind(this);
         this.handleModalToggle = this.handleModalToggle.bind(this);
+        this.getApiUrl = this.getApiUrl.bind(this);
+        this.init = this.init.bind(this);
+    }
+
+    async componentDidMount() {
+        await this.init();
+    }
+
+    async init() {
+        const modulesUrl = this.getApiUrl('modules');
+        const modulesResponse = await fetch(modulesUrl);
+        const templateUrl = this.getApiUrl('templates');
+        const templateResponse = await fetch(templateUrl);
+        const modulesData = await modulesResponse.json()
+        const templatesData = await templateResponse.json()
+        console.log(modulesData);
+        console.log(templatesData);
+        this.setState({modules: modulesData});
+        this.setState({templates: templatesData});
+
+    }
+
+    getApiUrl(name) {
+        return this.protocol + '://' + this.server + '/tower_analytics/' + name + '/';
     }
 
     onLeftToggle (isLeftOpen) {
@@ -132,6 +160,31 @@ class SamplePage extends Component {
 
         const circleIcon = <CircleIcon size="sm" key='5' style={{ color: '#52af51', marginRight: '5px' }}/>;
 
+        var i = 0;
+        var modules = [];
+        for (i = 0; i < this.state.modules.length; i++) {
+          modules.push(<DataListItem aria-labelledby="simple-item1">
+                            <DataListCell>
+                                 <span>{this.state.modules[i].module}</span>
+                            </DataListCell>
+                            <DataListCell style={ dataListCellStyle }>
+                                 <Badge isRead>{this.state.modules[i].count}</Badge>
+                            </DataListCell>
+                        </DataListItem>);
+        }
+
+        var templates = [];
+        for (i = 0; i < this.state.templates.length; i++) {
+          templates.push(<DataListItem aria-labelledby="simple-item1">
+                                <DataListCell>
+                                    <span style={{ color: '#007bba', cursor: 'pointer' }} onClick={this.handleModalToggle}>{this.state.templates[i].template}</span>
+                                </DataListCell>
+                                <DataListCell style={ dataListCellStyle }>
+                                    <Badge isRead>Playbook Run</Badge>
+                                </DataListCell>
+                         </DataListItem>);
+        }
+
         return (
             <React.Fragment>
                 <PageHeader>
@@ -172,46 +225,7 @@ class SamplePage extends Component {
                                     <h3>Type</h3>
                                 </DataListCell>
                             </DataListItem>
-                            <DataListItem aria-labelledby="simple-item1">
-                                <DataListCell>
-                                    <span style={{ color: '#007bba', cursor: 'pointer' }} onClick={this.handleModalToggle}>Template Name 1</span>
-                                </DataListCell>
-                                <DataListCell style={ dataListCellStyle }>
-                                    <Badge isRead>Playbook Run</Badge>
-                                </DataListCell>
-                            </DataListItem>
-                            <DataListItem aria-labelledby="simple-item2">
-                                <DataListCell>
-                                <span style={{ color: '#007bba', cursor: 'pointer' }} onClick={this.handleModalToggle}>Template Name 2</span>
-                                </DataListCell>
-                                <DataListCell style={ dataListCellStyle }>
-                                    <Badge isRead>Workflow</Badge>
-                                </DataListCell>
-                            </DataListItem>
-                            <DataListItem aria-labelledby="simple-item1">
-                                <DataListCell>
-                                    <span style={{ color: '#007bba', cursor: 'pointer' }} onClick={this.handleModalToggle}>Template Name 3</span>
-                                </DataListCell>
-                                <DataListCell style={ dataListCellStyle }>
-                                    <Badge isRead>Playbook Run</Badge>
-                                </DataListCell>
-                            </DataListItem>
-                            <DataListItem aria-labelledby="simple-item1">
-                                <DataListCell>
-                                    <span style={{ color: '#007bba', cursor: 'pointer' }} onClick={this.handleModalToggle}>Template Name 4</span>
-                                </DataListCell>
-                                <DataListCell style={ dataListCellStyle }>
-                                    <Badge isRead>Playbook Run</Badge>
-                                </DataListCell>
-                            </DataListItem>
-                            <DataListItem aria-labelledby="simple-item1">
-                                <DataListCell>
-                                    <span style={{ color: '#007bba', cursor: 'pointer' }} onClick={this.handleModalToggle}>Template Name 5</span>
-                                </DataListCell>
-                                <DataListCell style={ dataListCellStyle }>
-                                    <Badge isRead>Playbook Run</Badge>
-                                </DataListCell>
-                            </DataListItem>
+                            {templates}
                         </DataList>
                         <DataList aria-label="Simple data list example">
                             <DataListItem aria-labelledby="simple-item1">
@@ -222,46 +236,7 @@ class SamplePage extends Component {
                                     <h3>Usage</h3>
                                 </DataListCell>
                             </DataListItem>
-                            <DataListItem aria-labelledby="simple-item1">
-                                <DataListCell>
-                                    <span>Module Name 1</span>
-                                </DataListCell>
-                                <DataListCell style={ dataListCellStyle }>
-                                    <Badge isRead>5</Badge>
-                                </DataListCell>
-                            </DataListItem>
-                            <DataListItem aria-labelledby="simple-item2">
-                                <DataListCell>
-                                    <span>Module Name 2</span>
-                                </DataListCell>
-                                <DataListCell style={ dataListCellStyle }>
-                                    <Badge isRead>11</Badge>
-                                </DataListCell>
-                            </DataListItem>
-                            <DataListItem aria-labelledby="simple-item1">
-                                <DataListCell>
-                                    <span>Module Name 3</span>
-                                </DataListCell>
-                                <DataListCell style={ dataListCellStyle }>
-                                    <Badge isRead>22</Badge>
-                                </DataListCell>
-                            </DataListItem>
-                            <DataListItem aria-labelledby="simple-item1">
-                                <DataListCell>
-                                    <span>Module Name 4</span>
-                                </DataListCell>
-                                <DataListCell style={ dataListCellStyle }>
-                                    <Badge isRead>17</Badge>
-                                </DataListCell>
-                            </DataListItem>
-                            <DataListItem aria-labelledby="simple-item1">
-                                <DataListCell>
-                                    <span>Module Name 5</span>
-                                </DataListCell>
-                                <DataListCell style={ dataListCellStyle }>
-                                    <Badge isRead>7</Badge>
-                                </DataListCell>
-                            </DataListItem>
+                            {modules}
                         </DataList>
                         <DataList style={{ flex: '1' }} aria-label="Simple data list example">
                             <DataListItem aria-labelledby="simple-item1">
