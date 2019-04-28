@@ -79,7 +79,16 @@ class BarChart extends Component {
       colors
     });
     const status = ['FAIL', 'RAN'];
-    const url = this.getApiUrl('chart');
+    var url = null;
+    if (this.props.value === 'past 2 weeks') {
+         url = this.getApiUrl('chart14');
+    }
+    if (this.props.value === 'past week') {
+        url = this.getApiUrl('chart7');
+    }
+    if (this.props.value === 'past month') {
+        url = this.getApiUrl('chart30');
+    }
     const response = await fetch(url);
     const raw_data = await response.json();
 
