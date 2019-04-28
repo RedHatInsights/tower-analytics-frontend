@@ -110,7 +110,8 @@ class SamplePage extends Component {
       { value: 'please choose', label: 'Select Hosts', disabled: true },
       { value: 'all clusters', label: 'All Clusters', disabled: false },
       { value: 'cluster 001', label: 'Cluster 001', disabled: false },
-      { value: 'cluster 002', label: 'Cluster 002', disabled: false }
+      { value: 'cluster 002', label: 'Cluster 002', disabled: false },
+      { value: 'cluster 003', label: 'Cluster 003', disabled: false }
     ];
     this.dropdownItems = [
       <DropdownItem key="danger" component="button">
@@ -264,13 +265,13 @@ class SamplePage extends Component {
                   isAccessible={this.state.isAccessible}
                 />
               )}
-              {(rightValue === 'cluster 001' ||
-                rightValue === 'cluster 002') && (
+              {(rightValue !== 'all clusters') && (
                 <LineChart
                   width={700}
                   height={350}
                   id="d3-chart-root"
                   value={this.state.leftValue}
+                  cluster={this.state.rightValue}
                   isAccessible={this.state.isAccessible}
                 />
               )}

@@ -6,9 +6,15 @@ import * as d3 from 'd3';
 class LineChart extends Component {
   constructor(props) {
     super(props);
+    this.server = 'ci.foo.redhat.com:1337';
+    this.protocol = 'https';
     this.margin = { top: 20, right: 20, bottom: 50, left: 70 };
     this.init = this.init.bind(this);
     this.resize = this.resize.bind(this);
+    this.getApiUrl = this.getApiUrl.bind(this);
+    this.state = {
+      data: []
+    };
   }
 
   // Methods
@@ -21,6 +27,10 @@ class LineChart extends Component {
       clearTimeout(timeout);
       timeout = setTimeout(functionCall, time);
     };
+  }
+
+  getApiUrl(name) {
+      return this.protocol + '://' + this.server + '/tower_analytics/' + name + '/';
   }
 
   async init() {
@@ -128,25 +138,39 @@ class LineChart extends Component {
       svg: '#d3-chart-root > svg',
       colors
     });
-    let data = await d3.csv(
-      'https://gist.githubusercontent.com/kialam/52130f7e3292dad03a0c841f39a3b9d3/raw/ce1496e22c103cfd04314bac98c67eb8f7b8a7a1/sample.csv'
-    );
 
-    const half_length = Math.ceil(data.length / 2);
-
+    var url = null;
+    var cluster = null;
+    if (this.props.cluster === 'cluster 001') {
+      cluster = 1;
+    }
+    if (this.props.cluster === 'cluster 002') {
+      cluster = 14;
+    }
+    if (this.props.cluster === 'cluster 003') {
+      cluster = 25;
+    }
     if (this.props.value === 'past 2 weeks') {
-      data = data.splice(0, half_length);
+         url = this.getApiUrl('systemchart14');
     }
     if (this.props.value === 'past week') {
-      data = data.splice(0, 7);
+        url = this.getApiUrl('systemchart7');
     }
+    if (this.props.value === 'past month') {
+        url = this.getApiUrl('systemchart30');
+    }
+    url = url + cluster + '/';
+    const response = await fetch(url);
+    const raw_data = await response.json();
 
-    data.forEach(function(d) {
-      d.DATE = parseTime(d.DATE); // format date string into DateTime object
-      d.RAN = +d.RAN;
-      d.FAIL = +d.FAIL;
-      d.TOTAL = +(+d.FAIL + +d.RAN);
+    const data = raw_data.map(function(d) {
+      return {DATE: parseTime(d.created), // format date string into DateTime object
+              RAN: +d.successful,
+              FAIL: +d.failed,
+              TOTAL: +d.total
+      };
     });
+
     // Scale the range of the data
     x.domain(
       d3.extent(data, function(d) {
