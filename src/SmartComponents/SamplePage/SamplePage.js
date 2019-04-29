@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import './sample-page.scss';
 import BarChart from './BarChart.js';
 import LineChart from './LineChart.js';
+import {forHumans} from './util.js';
 
 import {
   Section,
@@ -81,11 +82,11 @@ class TemplateModal extends Component {
     if (this.props.modalData !== undefined && this.props.modalData !== null) {
       for (i = 0; i < this.props.modalData.length; i++) {
         datum = this.props.modalData[i];
-        rows.push([[datum.status === "successful" ? successfulIcon : failedIcon, "" + datum.id +  " - " + datum.name], "Tower " + datum.system_id, datum.started, datum.elapsed + "s"]);
+        rows.push([[datum.status === "successful" ? successfulIcon : failedIcon, "" + datum.id +  " - " + datum.name], "Tower " + datum.system_id, datum.started, forHumans(Math.floor(datum.elapsed))]);
       }
       if (this.props.modalData.length > 0) {
-        total_time = this.props.modalData.map((datum) => +datum.elapsed).reduce((total, amount) => total + amount);
-        average_time = total_time / this.props.modalData.length;
+        total_time = Math.floor(this.props.modalData.map((datum) => +datum.elapsed).reduce((total, amount) => total + amount));
+        average_time = Math.floor(total_time / this.props.modalData.length);
       }
     }
     return <Modal
@@ -94,7 +95,7 @@ class TemplateModal extends Component {
               isOpen={this.props.isModalOpen}
               onClose={this.handleClose}
               actions={[
-                  <h4>Total Time {total_time}s | Avg Time {average_time}s</h4>,
+                  <h4>Total Time {forHumans(total_time)} | Avg Time {forHumans(average_time)}</h4>,
                   <Button key="cancel" variant="secondary" onClick={this.handleClose}>Close</Button>
               ]}
           >
