@@ -128,15 +128,18 @@ class SamplePage extends Component {
     async init() {
         const modulesUrl = this.getApiUrl('modules');
         const modulesResponse = await fetch(modulesUrl);
+        const modulesData = await modulesResponse.json()
         const templateUrl = this.getApiUrl('templates');
         const templateResponse = await fetch(templateUrl);
-        const modulesData = await modulesResponse.json()
         const templatesData = await templateResponse.json()
+        const notificationsUrl = this.getApiUrl('notifications');
+        const notificationsResponse = await fetch(notificationsUrl);
+        const notificationsData = await notificationsResponse.json()
         console.log(modulesData);
         console.log(templatesData);
         this.setState({modules: modulesData});
         this.setState({templates: templatesData});
-        this.setState({modalData: []});
+        this.setState({notifications: notificationsData});
     }
 
     getApiUrl(name) {
@@ -153,7 +156,9 @@ class SamplePage extends Component {
       isAccessible: false,
       modules: [],
       templates: [],
-      modalTemplate: null
+      notifications: [],
+      modalTemplate: null,
+      modalData: []
     };
     this.server = 'ci.foo.redhat.com:1337';
     this.protocol = 'https';
@@ -272,6 +277,23 @@ class SamplePage extends Component {
                                     <Badge isRead>Playbook Run</Badge>
                                 </DataListCell>
                          </DataListItem>);
+        }
+
+        var notification_colors = {error: '#db524b', warning: '#f0ad37', '': ''};
+        var notifications = [];
+        for (i = 0; i < this.state.notifications.length; i++) {
+          notifications.push(
+              <DataListItem aria-labelledby="simple-item1">
+                <DataListCell>
+                  <span>
+                    {this.state.notifications[i].label == 'error' || this.state.notifications[i].label == 'warning' ?
+                    <WarningTriangleIcon
+                      style={{ color: notification_colors[this.state.notifications[i].label], marginRight: '5px' }}
+                    />: null}
+                    {this.state.notifications[i].message}
+                  </span>
+                </DataListCell>
+              </DataListItem>);
         }
 
     return (
@@ -414,44 +436,7 @@ class SamplePage extends Component {
                   />
                 </DataListCell>
               </DataListItem>
-
-              <DataListItem aria-labelledby="simple-item1">
-                <DataListCell>
-                  <span>
-                    <WarningTriangleIcon
-                      style={{ color: '#db524b', marginRight: '5px' }}
-                    />
-                    It's 3am, time to create some chaos{' '}
-                  </span>
-                </DataListCell>
-              </DataListItem>
-              <DataListItem aria-labelledby="simple-item2">
-                <DataListCell>
-                  <span>
-                    <WarningTriangleIcon
-                      style={{ color: '#f0ad37', marginRight: '5px' }}
-                    />
-                    why use post when this sofa is here.
-                  </span>
-                </DataListCell>
-              </DataListItem>
-              <DataListItem aria-labelledby="simple-item1">
-                <DataListCell>
-                  <span>Kitty scratches couch bad kitty</span>
-                </DataListCell>
-              </DataListItem>
-              <DataListItem aria-labelledby="simple-item1">
-                <DataListCell>
-                  <span>lick the curtain just to be annoying or bite</span>
-                </DataListCell>
-              </DataListItem>
-              <DataListItem aria-labelledby="simple-item1">
-                <DataListCell>
-                  <span>
-                    off human's toes meow loudly just to annoy owners.
-                  </span>
-                </DataListCell>
-              </DataListItem>
+              {notifications}
             </DataList>
           </div>
           <TemplateModal modalTemplate={modalTemplate} isModalOpen={isModalOpen} onModalClose={this.handleModalToggle} getApiUrl={this.getApiUrl} modalData={modalData}/>
