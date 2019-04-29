@@ -11,7 +11,7 @@ import {
   PageHeader,
   PageHeaderTitle
 } from '@red-hat-insights/insights-frontend-components';
-import { WarningTriangleIcon } from '@patternfly/react-icons';
+import { CircleIcon, WarningTriangleIcon } from '@patternfly/react-icons';
 import {
   Badge,
   Button,
@@ -40,6 +40,76 @@ import SampleComponent from '../../PresentationalComponents/SampleComponent/samp
 // const PageHeader2 = asyncComponent(() => import('../../PresentationalComponents/PageHeader/page-header'));
 // const PageHeaderTitle2 = asyncComponent(() => import('../../PresentationalComponents/PageHeader/page-header-title'));
 
+
+class ModalTrigger extends Component {
+
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+  handleClick() {
+    this.props.onLinkClick(this.props.value);
+  }
+
+  render() {
+    return <span style={{ color: '#007bba', cursor: 'pointer' }} onClick={this.handleClick}>{this.props.value}</span>;
+  }
+}
+
+
+class TemplateModal extends Component {
+
+  constructor(props) {
+    super(props);
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+  handleClose() {
+    this.props.onModalClose(null);
+  }
+
+  render() {
+    const circleIcon = <CircleIcon size="sm" key='5' style={{ color: '#52af51', marginRight: '5px' }}/>;
+
+    var rows = [];
+    var i = 0;
+    var datum = null;
+    var average_time = 0;
+    var total_time = 0;
+    if (this.props.modalData !== undefined && this.props.modalData !== null) {
+      for (i = 0; i < this.props.modalData.length; i++) {
+        datum = this.props.modalData[i];
+        rows.push([[circleIcon, "" + datum.id +  " - " + datum.name], "Tower " + datum.system_id, datum.started, datum.elapsed + "s"]);
+      }
+      if (this.props.modalData.length > 0) {
+        total_time = this.props.modalData.map((datum) => +datum.elapsed).reduce((total, amount) => total + amount);
+        average_time = total_time / this.props.modalData.length;
+      }
+    }
+    return <Modal
+              className='templateModal'
+              title={this.props.modalTemplate}
+              isOpen={this.props.isModalOpen}
+              onClose={this.handleClose}
+              actions={[
+                  <h4>Total Time {total_time}s | Avg Time {average_time}s</h4>,
+                  <Button key="cancel" variant="secondary" onClick={this.handleClose}>Close</Button>
+              ]}
+          >
+              <Card>
+                <Table
+                  caption={['']}
+                  cells={['Id/Name', 'Cluster', 'Start Time', 'Total Time']}
+                  rows={rows}>
+                <TableHeader/>
+                <TableBody/>
+                </Table>
+              </Card>
+          </Modal>
+  }
+
+}
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.
  * Smart components are usually classes.
@@ -64,7 +134,7 @@ class SamplePage extends Component {
         console.log(templatesData);
         this.setState({modules: modulesData});
         this.setState({templates: templatesData});
-
+        this.setState({modalData: []});
     }
 
     getApiUrl(name) {
@@ -80,7 +150,8 @@ class SamplePage extends Component {
       rightValue: 'all clusters',
       isAccessible: false,
       modules: [],
-      templates: []
+      templates: [],
+      modalTemplate: null
     };
     this.server = 'ci.foo.redhat.com:1337';
     this.protocol = 'https';
@@ -109,9 +180,9 @@ class SamplePage extends Component {
     this.rightOptions = [
       { value: 'please choose', label: 'Select Hosts', disabled: true },
       { value: 'all clusters', label: 'All Clusters', disabled: false },
-      { value: 'cluster 001', label: 'Cluster 001', disabled: false },
-      { value: 'cluster 002', label: 'Cluster 002', disabled: false },
-      { value: 'cluster 003', label: 'Cluster 003', disabled: false }
+      { value: 'cluster 001', label: 'Tower 1', disabled: false },
+      { value: 'cluster 002', label: 'Tower 2', disabled: false },
+      { value: 'cluster 003', label: 'Tower 3', disabled: false }
     ];
     this.dropdownItems = [
       <DropdownItem key="danger" component="button">
@@ -138,14 +209,25 @@ class SamplePage extends Component {
     });
   }
 
-  handleModalToggle() {
+  async handleModalToggle(modalTemplate) {
+    console.log(['handleToggle', modalTemplate]);
+    var data = null;
+    if (modalTemplate !== null) {
+      const url = this.getApiUrl('template_jobs') + modalTemplate + '/';
+      console.log(url);
+      const response = await fetch(url);
+      data = await response.json()
+      console.log(data);
+    }
     this.setState({
-      isModalOpen: !this.state.isModalOpen
+      modalTemplate: modalTemplate,
+      isModalOpen: !this.state.isModalOpen,
+      modalData: data
     });
   }
 
   render() {
-    const { isModalOpen, rightValue, isRightOpen } = this.state;
+    const { isModalOpen, modalTemplate, modalData, rightValue, isRightOpen } = this.state;
 
     const dataListCellStyle = {
       display: 'flex',
@@ -177,10 +259,12 @@ class SamplePage extends Component {
         }
 
         var templates = [];
+        var template_name = null;
         for (i = 0; i < this.state.templates.length; i++) {
+          template_name = this.state.templates[i].template;
           templates.push(<DataListItem aria-labelledby="simple-item1">
                                 <DataListCell>
-                                    <span style={{ color: '#007bba', cursor: 'pointer' }} onClick={this.handleModalToggle}>{this.state.templates[i].template}</span>
+                                    <ModalTrigger value={template_name} onLinkClick={this.handleModalToggle} />
                                 </DataListCell>
                                 <DataListCell style={ dataListCellStyle }>
                                     <Badge isRead>Playbook Run</Badge>
@@ -368,25 +452,7 @@ class SamplePage extends Component {
               </DataListItem>
             </DataList>
           </div>
-          <Modal
-            title={'Template Name 1'}
-            isOpen={isModalOpen}
-            onClose={this.handleModalToggle}
-            actions={[
-              <Button
-                key="cancel"
-                variant="secondary"
-                onClick={this.handleModalToggle}
-              >
-                Close
-              </Button>
-            ]}
-          >
-            {/* Table */}
-            <Card>
-              <h1>hi</h1>
-            </Card>
-          </Modal>
+          <TemplateModal modalTemplate={modalTemplate} isModalOpen={isModalOpen} onModalClose={this.handleModalToggle} getApiUrl={this.getApiUrl} modalData={modalData}/>
         </Main>
       </React.Fragment>
     );
