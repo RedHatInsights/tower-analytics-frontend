@@ -70,7 +70,8 @@ class TemplateModal extends Component {
   }
 
   render() {
-    const circleIcon = <CircleIcon size="sm" key='5' style={{ color: '#52af51', marginRight: '5px' }}/>;
+    const successfulIcon = <CircleIcon size="sm" key='5' style={{ color: '#52af51', marginRight: '5px' }}/>;
+    const failedIcon = <CircleIcon size="sm" key='5' style={{ color: '#d9534f', marginRight: '5px' }}/>;
 
     var rows = [];
     var i = 0;
@@ -80,7 +81,7 @@ class TemplateModal extends Component {
     if (this.props.modalData !== undefined && this.props.modalData !== null) {
       for (i = 0; i < this.props.modalData.length; i++) {
         datum = this.props.modalData[i];
-        rows.push([[circleIcon, "" + datum.id +  " - " + datum.name], "Tower " + datum.system_id, datum.started, datum.elapsed + "s"]);
+        rows.push([[datum.status === "successful" ? successfulIcon : failedIcon, "" + datum.id +  " - " + datum.name], "Tower " + datum.system_id, datum.started, datum.elapsed + "s"]);
       }
       if (this.props.modalData.length > 0) {
         total_time = this.props.modalData.map((datum) => +datum.elapsed).reduce((total, amount) => total + amount);
