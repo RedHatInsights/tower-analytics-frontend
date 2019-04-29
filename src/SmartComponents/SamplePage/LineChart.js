@@ -204,16 +204,6 @@ class LineChart extends Component {
       })
       .curve(d3.curveCardinal);
 
-    const totalLine = d3
-      .line()
-      .x(function(d) {
-        return x(d.DATE);
-      })
-      .y(function(d) {
-        return y(d.TOTAL);
-      })
-      .curve(d3.curveCardinal);
-
     // Add the Y Axis
     svg
       .append('g')
@@ -277,16 +267,6 @@ class LineChart extends Component {
       .attr('stroke-width', 2)
       .attr('d', failLine)
       .call(transition);
-    // Add the totalLine path.
-    svg
-      .append('path')
-      .data([data])
-      .attr('class', 'line')
-      .style('fill', 'none')
-      .style('stroke', () => colors(2))
-      .attr('stroke-width', 2)
-      .attr('d', totalLine)
-      .call(transition);
 
     // create our successLine circles
     svg
@@ -321,24 +301,6 @@ class LineChart extends Component {
       })
       .attr('cy', function(d) {
         return y(d.FAIL);
-      })
-      .on('mouseover', handleMouseOver)
-      .on('mousemove', handleMouseMove)
-      .on('mouseout', handleMouseOut);
-    // create our totalLine circles
-    svg
-      .selectAll('dot')
-      .data(data)
-      .enter()
-      .append('circle')
-      .attr('r', 3)
-      .style('stroke', () => colors(2))
-      .style('fill', () => colors(2))
-      .attr('cx', function(d) {
-        return x(d.DATE);
-      })
-      .attr('cy', function(d) {
-        return y(d.TOTAL);
       })
       .on('mouseover', handleMouseOver)
       .on('mousemove', handleMouseMove)
