@@ -133,16 +133,6 @@ class LineChart extends Component {
     });
 
     var url = null;
-    var cluster = null;
-    if (this.props.cluster === 'cluster 001') {
-      cluster = 1;
-    }
-    if (this.props.cluster === 'cluster 002') {
-      cluster = 14;
-    }
-    if (this.props.cluster === 'cluster 003') {
-      cluster = 25;
-    }
     if (this.props.value === 'past 2 weeks') {
          url = this.props.getApiUrl('systemchart14');
     }
@@ -152,7 +142,7 @@ class LineChart extends Component {
     if (this.props.value === 'past month') {
         url = this.props.getApiUrl('systemchart30');
     }
-    url = url + cluster + '/';
+    url = url + this.props.cluster + '/';
     const response = await fetch(url);
     const raw_data = await response.json();
 

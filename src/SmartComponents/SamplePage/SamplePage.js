@@ -158,7 +158,13 @@ class SamplePage extends Component {
       templates: [],
       notifications: [],
       modalTemplate: null,
-      modalData: []
+      modalData: [],
+      rightOptions: [
+      { value: 'please choose', label: 'Select Hosts', disabled: true },
+      { value: 'all clusters', label: 'All Clusters', disabled: false },
+      { value: 1, label: 'Tower 1', disabled: false },
+      { value: 12, label: 'Tower 2', disabled: false },
+      { value: 27, label: 'Tower 3', disabled: false }]
     };
     this.server = 'nginx-tower-analytics2.5a9f.insights-dev.openshiftapps.com'
     this.protocol = 'https';
@@ -183,13 +189,6 @@ class SamplePage extends Component {
       { value: 'past week', label: 'Past Week', disabled: false },
       { value: 'past 2 weeks', label: 'Past 2 Weeks', disabled: false },
       { value: 'past month', label: 'Past Month', disabled: false }
-    ];
-    this.rightOptions = [
-      { value: 'please choose', label: 'Select Hosts', disabled: true },
-      { value: 'all clusters', label: 'All Clusters', disabled: false },
-      { value: 'cluster 001', label: 'Tower 1', disabled: false },
-      { value: 'cluster 002', label: 'Tower 2', disabled: false },
-      { value: 'cluster 003', label: 'Tower 3', disabled: false }
     ];
     this.dropdownItems = [
       <DropdownItem key="danger" component="button">
@@ -334,7 +333,7 @@ class SamplePage extends Component {
                   aria-label="Select Hosts"
                   style={{ margin: '2px 10px' }}
                 >
-                  {this.rightOptions.map((option, index) => (
+                  {this.state.rightOptions.map((option, index) => (
                     <FormSelectOption
                       isDisabled={option.disabled}
                       key={index}
