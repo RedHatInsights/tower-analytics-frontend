@@ -7,13 +7,9 @@ class BarChart extends Component {
 
   constructor(props) {
     super(props);
-        this.server = 'ci.foo.redhat.com:1337';
-        this.protocol = 'https';
-        //this.server = 'nginx-tower-analytics2.5a9f.insights-dev.openshiftapps.com';
         this.margin = { top: 20, right: 20, bottom: 50, left: 70 };
         this.init = this.init.bind(this);
         this.resize = this.resize.bind(this);
-        this.getApiUrl = this.getApiUrl.bind(this);
         this.state = {
           data: []
         };
@@ -29,10 +25,6 @@ class BarChart extends Component {
       clearTimeout(timeout);
       timeout = setTimeout(functionCall, time);
     };
-  }
-
-  getApiUrl(name) {
-      return this.protocol + '://' + this.server + '/tower_analytics/' + name + '/';
   }
 
   async componentDidMount() {
@@ -81,13 +73,13 @@ class BarChart extends Component {
     const status = ['FAIL', 'RAN'];
     var url = null;
     if (this.props.value === 'past 2 weeks') {
-         url = this.getApiUrl('chart14');
+         url = this.props.getApiUrl('chart14');
     }
     if (this.props.value === 'past week') {
-        url = this.getApiUrl('chart7');
+        url = this.props.getApiUrl('chart7');
     }
     if (this.props.value === 'past month') {
-        url = this.getApiUrl('chart30');
+        url = this.props.getApiUrl('chart30');
     }
     const response = await fetch(url);
     const raw_data = await response.json();

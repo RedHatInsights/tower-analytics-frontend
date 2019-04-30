@@ -160,7 +160,7 @@ class SamplePage extends Component {
       modalTemplate: null,
       modalData: []
     };
-    this.server = 'ci.foo.redhat.com:1337';
+    this.server = 'nginx-tower-analytics2.5a9f.insights-dev.openshiftapps.com'
     this.protocol = 'https';
 
     this.onRightToggle = this.onRightToggle.bind(this);
@@ -371,6 +371,7 @@ class SamplePage extends Component {
                   id="d3-chart-root"
                   value={this.state.leftValue}
                   isAccessible={this.state.isAccessible}
+                  getApiUrl={this.getApiUrl}
                 />
               )}
               {(rightValue !== 'all clusters') && (
@@ -381,6 +382,7 @@ class SamplePage extends Component {
                   value={this.state.leftValue}
                   cluster={this.state.rightValue}
                   isAccessible={this.state.isAccessible}
+                  getApiUrl={this.getApiUrl}
                 />
               )}
             </CardBody>
