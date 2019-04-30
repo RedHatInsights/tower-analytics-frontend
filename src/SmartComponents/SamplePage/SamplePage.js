@@ -82,7 +82,7 @@ class TemplateModal extends Component {
     if (this.props.modalData !== undefined && this.props.modalData !== null) {
       for (i = 0; i < this.props.modalData.length; i++) {
         datum = this.props.modalData[i];
-        rows.push([[datum.status === "successful" ? successfulIcon : failedIcon, "" + datum.id +  " - " + datum.name], "Tower " + datum.system_id, datum.started, forHumans(Math.floor(datum.elapsed))]);
+        rows.push([[datum.status === "successful" ? successfulIcon : failedIcon, "" + datum.id +  " - " + datum.name], datum.label, datum.started, forHumans(Math.floor(datum.elapsed))]);
       }
       if (this.props.modalData.length > 0) {
         total_time = Math.floor(this.props.modalData.map((datum) => +datum.elapsed).reduce((total, amount) => total + amount));
@@ -135,11 +135,19 @@ class SamplePage extends Component {
         const notificationsUrl = this.getApiUrl('notifications');
         const notificationsResponse = await fetch(notificationsUrl);
         const notificationsData = await notificationsResponse.json()
-        console.log(modulesData);
-        console.log(templatesData);
+        const clustersUrl = this.getApiUrl('clusters');
+        const clustersResponse = await fetch(clustersUrl);
+        const clustersData = await clustersResponse.json()
         this.setState({modules: modulesData});
         this.setState({templates: templatesData});
         this.setState({notifications: notificationsData});
+        this.setState({clusters: clustersData});
+        var rightOptions = this.state.rightOptions;
+        var i = 0;
+        for (i = 0; i < clustersData.length; i++) {
+          rightOptions.push({value: clustersData[i].system_id, label: clustersData[i].label});
+        }
+        this.setState({rightOptions: rightOptions});
     }
 
     getApiUrl(name) {
@@ -156,17 +164,16 @@ class SamplePage extends Component {
       isAccessible: false,
       modules: [],
       templates: [],
+      clusters: [],
       notifications: [],
       modalTemplate: null,
       modalData: [],
       rightOptions: [
       { value: 'please choose', label: 'Select Hosts', disabled: true },
-      { value: 'all clusters', label: 'All Clusters', disabled: false },
-      { value: 1, label: 'Tower 1', disabled: false },
-      { value: 12, label: 'Tower 2', disabled: false },
-      { value: 27, label: 'Tower 3', disabled: false }]
+      { value: 'all clusters', label: 'All Clusters', disabled: false }]
     };
     this.server = 'nginx-tower-analytics2.5a9f.insights-dev.openshiftapps.com'
+    //this.server = 'ci.foo.redhat.com:1337';
     this.protocol = 'https';
 
     this.onRightToggle = this.onRightToggle.bind(this);
@@ -216,14 +223,11 @@ class SamplePage extends Component {
   }
 
   async handleModalToggle(modalTemplate) {
-    console.log(['handleToggle', modalTemplate]);
     var data = null;
     if (modalTemplate !== null) {
       const url = this.getApiUrl('template_jobs') + modalTemplate + '/';
-      console.log(url);
       const response = await fetch(url);
       data = await response.json()
-      console.log(data);
     }
     this.setState({
       modalTemplate: modalTemplate,
