@@ -21,9 +21,9 @@ const LegendDetail = styled.div`
 const Color = styled.div.attrs(props => ({
     color: props.color || 'black'
 }))`
-  width: 20px;
-  height: 20px;
-  border-radius: 10px;
+  width: 15px;
+  height: 15px;
+  border-radius: calc(15px/2);
   background: ${props => props.color};
 `;
 
@@ -34,7 +34,7 @@ const Title = styled.span`
 `;
 
 const Switch = styled(PFSwitch)`
-  --pf-c-switch--Height: 20px;
+  --pf-c-switch--Height: 15px;
 
   svg {
     display: none;
@@ -47,23 +47,30 @@ class Legend extends Component {
         this.state = {
             isChecked: true
         };
-        this.handleChange = isChecked => {
-            this.setState({ isChecked });
-        };
+        this.handleChange = this.handleChange.bind(this);
+    // this.checkSelected = this.checkSelected.bind(this);
     }
+    handleChange(_isChecked, { target: { value }}) {
+        const { onToggle } = this.props;
+        const selectedId = parseFloat(value);
+        onToggle(selectedId);
+    };
 
     render() {
-        const { data } = this.props;
-        const { isChecked } = this.state;
+        const { data, selected } = this.props;
+        // const { isChecked } = this.state;
         return (
             <Container>
                 { data.map(
-                    ({ name, value }) => (
+                    ({ name, value, id }) => (
                         <LegendDetail key={ name }>
                             <Switch
-                                isChecked={ isChecked }
+                                // isChecked={isChecked}
+                                isChecked={ selected.some(selection => selection === id) }
                                 onChange={ this.handleChange }
                                 aria-label={ name }
+                                value={ id }
+                                // orgId={id}
                             />
                             <Title>{ name }</Title>
                             <Color color={ value } />
@@ -75,7 +82,9 @@ class Legend extends Component {
 }
 
 Legend.propTypes = {
-    data: PropTypes.array
+    data: PropTypes.array,
+    selected: PropTypes.array,
+    onToggle: PropTypes.func
 };
 
 export default Legend;
