@@ -15,7 +15,7 @@ class BarChart extends Component {
     resize(fn, time) {
         let timeout;
 
-        return function() {
+        return function () {
             const functionCall = () => fn.apply(this, arguments);
 
             clearTimeout(timeout);
@@ -24,17 +24,17 @@ class BarChart extends Component {
     }
 
     init() {
-    // Clear our chart container element first
-        d3.selectAll('#d3-chart-root > *').remove();
+        // Clear our chart container element first
+        d3.selectAll('#' + this.props.id + ' > *').remove();
         let { data } = this.props;
         const width =
-        parseInt(d3.select('#' + this.props.id).style('width')) -
-        this.margin.left -
-        this.margin.right;
+            parseInt(d3.select('#' + this.props.id).style('width')) -
+            this.margin.left -
+            this.margin.right;
         const height =
-        parseInt(d3.select('#' + this.props.id).style('height')) -
-        this.margin.top -
-        this.margin.bottom;
+            parseInt(d3.select('#' + this.props.id).style('height')) -
+            this.margin.top -
+            this.margin.bottom;
         const parseTime = d3.timeParse('%Y-%m-%d');
         // const formatTooltipDate = d3.timeFormat('%m/%d');
         const x = d3
@@ -60,7 +60,7 @@ class BarChart extends Component {
         }
 
         const tooltip = new Tooltip({
-            svg: '#d3-chart-root > svg',
+            svg: '#' + this.props.id,
             colors
         });
         const status = [ 'FAIL', 'RAN' ];
@@ -74,7 +74,7 @@ class BarChart extends Component {
             data = data.splice(0, 7);
         }
 
-        data.forEach(function(d) {
+        data.forEach(function (d) {
             d.DATE = parseTime(d.DATE); // format date string into DateTime object
             d.RAN = +d.RAN;
             d.FAIL = +d.FAIL;
@@ -167,7 +167,7 @@ class BarChart extends Component {
     }
 
     componentDidMount() {
-        document.getElementById('spinny').style.display = 'none';
+        // document.getElementById('spinny').style.display = 'none';
         this.init();
     }
 

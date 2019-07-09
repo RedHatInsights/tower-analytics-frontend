@@ -70,7 +70,7 @@ polyline{
 }
 
 #d3-donut-1-chart-root, #d3-donut-2-chart-root {
-  min-height: 250px;
+  min-height: 300px;
   // border: 1px solid;
 }
 
@@ -78,7 +78,7 @@ h2 {
   color: #393f44;
 }
 
-#d3-grouped-bar-chart-root {
-  min-height: 500px;
+#d3-grouped-bar-chart-root, #d3-line-chart-root {
+  min-height: 400px;
   min-width: 75%;
 }

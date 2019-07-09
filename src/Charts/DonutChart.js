@@ -2,7 +2,7 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import D3Util from '../Utilities/D3Util';
-// import Tooltip from "../Utilities/Tooltip";
+import Tooltip from '../Utilities/Tooltip';
 
 class DonutChart extends Component {
     constructor(props) {
@@ -28,24 +28,24 @@ class DonutChart extends Component {
     }
 
     sortData(data) {
-    // descending
+        // descending
         data.sort((a, b) => parseFloat(b.count) - parseFloat(a.count));
     }
     componentDidMount() {
         this.init();
-    // document.getElementById("spinny").style.display = "none";
+        // document.getElementById("spinny").style.display = "none";
     }
 
     init() {
         d3.selectAll('#' + this.props.id + ' > *').remove();
         const width =
-      parseInt(d3.select('#' + this.props.id).style('width')) -
-      this.margin.left -
-      this.margin.right;
+            parseInt(d3.select('#' + this.props.id).style('width')) -
+            this.margin.left -
+            this.margin.right;
         const height =
-        parseInt(d3.select('#' + this.props.id).style('height')) -
-        this.margin.top -
-        this.margin.bottom;
+            parseInt(d3.select('#' + this.props.id).style('height')) -
+            this.margin.top -
+            this.margin.bottom;
         const svg = d3.select('#' + this.props.id).append('svg')
         .attr('width', width + this.margin.left + this.margin.right)
         .attr('height', height + this.margin.top + this.margin.bottom)
@@ -62,11 +62,15 @@ class DonutChart extends Component {
         let { data } = this.props;
         this.sortData(data);
         const total = D3Util.getTotal(data);
-        data.forEach(function(d) {
+        data.forEach(function (d) {
             d.count = +d.count;
             d.percent = +Math.round(d.count / total * 100);
         });
-
+        let colors = d3.scaleOrdinal([ '#5cb85c', '#d9534f' ]);
+        const tooltip = new Tooltip({
+            svg: '#' + this.props.id,
+            colors
+        });
         const pie = d3.pie().sort(null).value(d => d.count);
         const arc = d3.arc().innerRadius(radius * 0.8).outerRadius(radius * 0.3);
 
@@ -81,7 +85,10 @@ class DonutChart extends Component {
         .enter()
         .append('path')
         .attr('d', arc)
-        .attr('fill', (d, i) => color(i));
+        .attr('fill', (d, i) => color(i))
+        .on('mouseover', tooltip.handleMouseOver)
+        .on('mousemove', tooltip.handleMouseOver)
+        .on('mouseout', tooltip.handleMouseOut);
         svg.append('g').classed('labels', true);
         svg.append('g').classed('lines', true);
 

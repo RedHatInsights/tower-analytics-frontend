@@ -8,14 +8,14 @@ class Tooltip {
     }
 
     draw() {
-        Tooltip.base = d3.select(this.svg).append('g');
-        Tooltip.base.attr('id', 'svg-chart-Tooltip.base');
-        Tooltip.base.attr('overflow', 'visible');
-        Tooltip.base.style('opacity', 0);
-        Tooltip.base.style('pointer-events', 'none');
-        Tooltip.base.attr('transform', 'translate(100, 100)');
+        this.toolTipBase = d3.select(this.svg + '> svg').append('g');
+        this.toolTipBase.attr('id', 'svg-chart-Tooltip.base-' + this.svg.slice(1));
+        this.toolTipBase.attr('overflow', 'visible');
+        this.toolTipBase.style('opacity', 0);
+        this.toolTipBase.style('pointer-events', 'none');
+        this.toolTipBase.attr('transform', 'translate(100, 100)');
 
-        Tooltip.point = Tooltip.base
+        this.toolTipPoint = this.toolTipBase
         .append('rect')
         .attr('transform', 'translate(10, -10) rotate(45)')
         .attr('x', 0)
@@ -23,7 +23,7 @@ class Tooltip {
         .attr('height', 20)
         .attr('width', 20)
         .attr('fill', '#393f44');
-        Tooltip.boundingBox = Tooltip.base
+        this.boundingBOx = this.toolTipBase
         .append('rect')
         .attr('x', 10)
         .attr('y', -41)
@@ -31,35 +31,35 @@ class Tooltip {
         .attr('height', 82)
         .attr('width', 135)
         .attr('fill', '#393f44');
-        Tooltip.circleGreen = Tooltip.base
+        this.circleGreen = this.toolTipBase
         .append('circle')
         .attr('cx', 26)
         .attr('cy', 0)
         .attr('r', 7)
         .attr('stroke', 'white')
         .attr('fill', this.colors(1));
-        Tooltip.circleRed = Tooltip.base
+        this.circleRed = this.toolTipBase
         .append('circle')
         .attr('cx', 26)
         .attr('cy', 26)
         .attr('r', 7)
         .attr('stroke', 'white')
         .attr('fill', this.colors(0));
-        Tooltip.successText = Tooltip.base
+        this.successText = this.toolTipBase
         .append('text')
         .attr('x', 43)
         .attr('y', 4)
         .attr('font-size', 12)
         .attr('fill', 'white')
         .text('Successful');
-        Tooltip.failText = Tooltip.base
+        this.failText = this.toolTipBase
         .append('text')
         .attr('x', 43)
         .attr('y', 28)
         .attr('font-size', 12)
         .attr('fill', 'white')
         .text('Failed');
-        Tooltip.icon = Tooltip.base
+        this.icon = this.toolTipBase
         .append('text')
         .attr('fill', 'white')
         .attr('stroke', 'white')
@@ -67,7 +67,7 @@ class Tooltip {
         .attr('y', 30)
         .attr('font-size', 12)
         .text('!');
-        Tooltip.jobs = Tooltip.base
+        this.jobs = this.toolTipBase
         .append('text')
         .attr('fill', 'white')
         .attr('x', 137)
@@ -75,21 +75,21 @@ class Tooltip {
         .attr('font-size', 12)
         .attr('text-anchor', 'end')
         .text('No Jobs');
-        Tooltip.successful = Tooltip.base
+        this.successful = this.toolTipBase
         .append('text')
         .attr('fill', 'white')
         .attr('font-size', 12)
         .attr('x', 122)
         .attr('y', 4)
         .text('0');
-        Tooltip.failed = Tooltip.base
+        this.failed = this.toolTipBase
         .append('text')
         .attr('fill', 'white')
         .attr('font-size', 12)
         .attr('x', 122)
         .attr('y', 28)
         .text('0');
-        Tooltip.date = Tooltip.base
+        this.date = this.toolTipBase
         .append('text')
         .attr('fill', 'white')
         .attr('stroke', 'white')
@@ -99,21 +99,21 @@ class Tooltip {
         .text('Never');
     }
 
-    handleMouseOver(d) {
+    handleMouseOver = (d) => {
         let success = 0;
         let fail = 0;
         let total = 0;
         const x =
             d3.event.pageX -
             d3
-            .select('#d3-chart-root')
+            .select(this.svg)
             .node()
             .getBoundingClientRect().x +
             10;
         const y =
             d3.event.pageY -
             d3
-            .select('#d3-chart-root')
+            .select(this.svg)
             .node()
             .getBoundingClientRect().y -
             10;
@@ -122,9 +122,9 @@ class Tooltip {
             return;
         }
 
-        const toolTipWidth = Tooltip.base.node().getBoundingClientRect().width;
+        const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
         const chartWidth = d3
-        .select('#d3-chart-root > svg')
+        .select(this.svg + '> svg')
         .node()
         .getBoundingClientRect().width;
         const overflow = 100 - (toolTipWidth / chartWidth) * 100;
@@ -133,53 +133,53 @@ class Tooltip {
             success = d.RAN;
             fail = d.FAIL;
             total = d.TOTAL;
-            Tooltip.date.text(formatTooltipDate(d.DATE));
+            this.date.text(formatTooltipDate(d.DATE));
         }
 
         if (d && d.data) {
-            success = d.data.RAN;
-            fail = d.data.FAIL;
-            total = d.data.TOTAL;
-            Tooltip.date.text(formatTooltipDate(d.data.DATE));
+            success = d.data.RAN || null;
+            fail = d.data.FAIL || null;
+            total = d.data.TOTAL || null;
+            this.date.text(formatTooltipDate(d.data.DATE || null));
         }
 
-        Tooltip.jobs.text('' + total + ' Jobs');
-        Tooltip.failed.text('' + fail);
-        Tooltip.successful.text('' + success);
+        this.jobs.text('' + total + ' Jobs');
+        this.failed.text('' + fail);
+        this.successful.text('' + success);
 
-        Tooltip.base.attr('transform', 'translate(' + x + ',' + y + ')');
+        this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
         if (flipped) {
-            Tooltip.point.attr('transform', 'translate(-20, -10) rotate(45)');
-            Tooltip.boundingBox.attr('x', -155);
-            Tooltip.circleGreen.attr('cx', -140);
-            Tooltip.circleRed.attr('cx', -140);
-            Tooltip.icon.attr('x', -142);
-            Tooltip.successText.attr('x', -120);
-            Tooltip.failText.attr('x', -120);
-            Tooltip.successful.attr('x', -50);
-            Tooltip.failed.attr('x', -50);
-            Tooltip.date.attr('x', -145);
-            Tooltip.jobs.attr('x', -35);
+            this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
+            this.boundingBOx.attr('x', -155);
+            this.circleGreen.attr('cx', -140);
+            this.circleRed.attr('cx', -140);
+            this.icon.attr('x', -142);
+            this.successText.attr('x', -120);
+            this.failText.attr('x', -120);
+            this.successful.attr('x', -50);
+            this.failed.attr('x', -50);
+            this.date.attr('x', -145);
+            this.jobs.attr('x', -35);
         } else {
-            Tooltip.point.attr('transform', 'translate(10, -10) rotate(45)');
-            Tooltip.boundingBox.attr('x', 10);
-            Tooltip.circleGreen.attr('cx', 26);
-            Tooltip.circleRed.attr('cx', 26);
-            Tooltip.icon.attr('x', 24);
-            Tooltip.successText.attr('x', 43);
-            Tooltip.failText.attr('x', 43);
-            Tooltip.successful.attr('x', 122);
-            Tooltip.failed.attr('x', 122);
-            Tooltip.date.attr('x', 20);
-            Tooltip.jobs.attr('x', 137);
+            this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
+            this.boundingBOx.attr('x', 10);
+            this.circleGreen.attr('cx', 26);
+            this.circleRed.attr('cx', 26);
+            this.icon.attr('x', 24);
+            this.successText.attr('x', 43);
+            this.failText.attr('x', 43);
+            this.successful.attr('x', 122);
+            this.failed.attr('x', 122);
+            this.date.attr('x', 20);
+            this.jobs.attr('x', 137);
         }
 
-        Tooltip.base.style('opacity', 1);
-        Tooltip.base.interrupt();
+        this.toolTipBase.style('opacity', 1);
+        this.toolTipBase.interrupt();
     }
 
-    handleMouseOut() {
-        Tooltip.base
+    handleMouseOut = () => {
+        this.toolTipBase
         .transition()
         .delay(15)
         .style('opacity', 0)

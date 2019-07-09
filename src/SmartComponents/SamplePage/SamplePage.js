@@ -28,6 +28,7 @@ import {
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 
 import BarChart from '../../Charts/BarChart';
+import LineChart from '../../Charts/LineChart';
 
 import { forHumans } from "./util.js";
 
@@ -243,10 +244,11 @@ class SamplePage extends Component {
         // notificationsData = notificationsData.concat(mockNotificationsAddendum);
         // this.setState({ notifications: notificationsData });
         const barChartData = await D3Util.getBarChartData();
+        const lineChartData = await D3Util.getLineChartData();
         const groupedBarChartData = await D3Util.getGroupedChartData();
         const pieChart1Data = await D3Util.getPieChart1Data();
         const pieChart2Data = await D3Util.getPieChart2Data();
-        this.setState({ barChartData, groupedBarChartData, pieChart1Data, pieChart2Data });
+        this.setState({ barChartData, lineChartData, groupedBarChartData, pieChart1Data, pieChart2Data });
     }
 
     getApiUrl(name) {
@@ -284,6 +286,7 @@ class SamplePage extends Component {
             ],
             activeTabKey: 0,
             barChartData: [],
+            lineChartData: [],
             groupedBarChartData: [],
             pieChart1Data: [],
             pieChart2Data: [],
@@ -372,6 +375,7 @@ class SamplePage extends Component {
             notifications,
             activeTabKey,
             barChartData,
+            lineChartData,
             groupedBarChartData,
             pieChart1Data,
             pieChart2Data
@@ -638,7 +642,7 @@ class SamplePage extends Component {
                                         />
                                     </rect>
                                 </svg>
-                                {barChartData.length > 0 && (
+                                {/* {barChartData.length > 0 && (
                                     <BarChart
                                         width={700}
                                         height={350}
@@ -648,12 +652,24 @@ class SamplePage extends Component {
                                         isAccessible={this.state.isAccessible}
                                         getApiUrl={this.getApiUrl}
                                     />
-                                )}
-                                {rightValue !== "all clusters" && (
+                                )} */}
+                                {/* {rightValue !== "all clusters" && (
                                     <LineChart
                                         width={700}
                                         height={350}
                                         id="d3-chart-root"
+                                        value={this.state.leftValue}
+                                        cluster={this.state.rightValue}
+                                        isAccessible={this.state.isAccessible}
+                                        getApiUrl={this.getApiUrl}
+                                    />
+                                )} */}
+                                {lineChartData.length > 0 && (
+                                    <LineChart
+                                        width={700}
+                                        height={350}
+                                        id="d3-line-chart-root"
+                                        data={lineChartData}
                                         value={this.state.leftValue}
                                         cluster={this.state.rightValue}
                                         isAccessible={this.state.isAccessible}
@@ -752,7 +768,7 @@ class SamplePage extends Component {
                                         alignItems: "center",
                                         padding: 0
                                     }}>
-                                        <h2 style={{ marginLeft: '20px' }}>Playbooks</h2>
+                                        <h2 style={{ marginLeft: '20px' }}>Average Elapsed Playbook Run</h2>
                                         <FormSelect
                                             value={this.state.leftValue}
                                             onChange={this.leftChange}

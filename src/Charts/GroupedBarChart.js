@@ -70,11 +70,14 @@ class GroupedBarChart extends Component {
 
     async init() {
         // create the first 8 selected data points
-        this.orgsList.forEach((org, index) => {
-            if (index <= 7) {
-                this.handleToggle(org.id);
-            }
-        });
+        if (this.selection.length === 0) {
+            this.orgsList.forEach((org, index) => {
+                if (index <= 7) {
+                    this.handleToggle(org.id);
+                }
+            });
+        }
+
         // create our colors array to send to the Legend component
         const colors = this.orgsList.reduce((colors, org) => {
             colors.push({ name: org.org_name, value: color(org.org_name), id: org.id });
