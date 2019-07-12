@@ -2,7 +2,103 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import D3Util from '../Utilities/D3Util';
-import Tooltip from '../Utilities/Tooltip';
+
+class Tooltip {
+    constructor(props) {
+        this.svg = props.svg;
+        this.draw();
+    }
+
+    draw() {
+        this.toolTipBase = d3.select(this.svg + '> svg').append('g');
+        this.toolTipBase.attr('id', 'svg-chart-Tooltip.base-' + this.svg.slice(1));
+        this.toolTipBase.attr('overflow', 'visible');
+        this.toolTipBase.style('opacity', 0);
+        this.toolTipBase.style('pointer-events', 'none');
+        this.toolTipBase.attr('transform', 'translate(100, 100)');
+
+        this.toolTipPoint = this.toolTipBase
+        .append('rect')
+        .attr('transform', 'translate(10, -10) rotate(45)')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('height', 20)
+        .attr('width', 20)
+        .attr('fill', '#393f44');
+        this.boundingBOx = this.toolTipBase
+        .append('rect')
+        .attr('x', 10)
+        .attr('y', -23)
+        .attr('rx', 2)
+        .attr('height', 52)
+        .attr('width', 85)
+        .attr('fill', '#393f44');
+        this.percentage = this.toolTipBase
+        .append('text')
+        .attr('fill', 'white')
+        .attr('font-size', 12)
+        .attr('font-weight', 800)
+        .attr('x', 44)
+        .attr('y', 6)
+        .text('0');
+    }
+
+    handleMouseOver = (d) => {
+        let perc;
+        const x =
+            d3.event.pageX -
+            d3
+            .select(this.svg)
+            .node()
+            .getBoundingClientRect().x +
+            10;
+        const y =
+            d3.event.pageY -
+            d3
+            .select(this.svg)
+            .node()
+            .getBoundingClientRect().y -
+            10;
+        if (!d) {
+            return;
+        }
+
+        if (d && d.data) {
+            perc = d.data.percent;
+        }
+
+        const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
+        const chartWidth = d3
+        .select(this.svg + '> svg')
+        .node()
+        .getBoundingClientRect().width;
+        const overflow = 100 - (toolTipWidth / chartWidth) * 100;
+        const flipped = overflow < (x / chartWidth) * 100;
+
+        this.percentage.text('' + perc + ' %');
+        this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
+        if (flipped) {
+            this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
+            this.boundingBOx.attr('x', -105);
+            this.percentage.attr('x', -72);
+        } else {
+            this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
+            this.boundingBOx.attr('x', 10);
+            this.percentage.attr('x', 44);
+        }
+
+        this.toolTipBase.style('opacity', 1);
+        this.toolTipBase.interrupt();
+    }
+
+    handleMouseOut = () => {
+        this.toolTipBase
+        .transition()
+        .delay(15)
+        .style('opacity', 0)
+        .style('pointer-events', 'none');
+    }
+}
 
 class DonutChart extends Component {
     constructor(props) {
@@ -10,9 +106,6 @@ class DonutChart extends Component {
         this.margin = { top: 20, right: 20, bottom: 0, left: 20 };
         this.init = this.init.bind(this);
         this.resize = this.resize.bind(this);
-        this.state = {
-            data: []
-        };
     }
 
     // Methods
@@ -27,13 +120,12 @@ class DonutChart extends Component {
         };
     }
 
-    sortData(data) {
+    sortDescending(data) {
         // descending
-        data.sort((a, b) => parseFloat(b.count) - parseFloat(a.count));
+        data.sort((a, b) => d3.descending(parseFloat(a.count), parseFloat(b.count)));
     }
-    componentDidMount() {
-        this.init();
-        // document.getElementById("spinny").style.display = "none";
+    async componentDidMount() {
+        await this.init();
     }
 
     init() {
@@ -60,16 +152,14 @@ class DonutChart extends Component {
         const radius = Math.min(width, height) / 2;
         const color = d3.scaleOrdinal(d3.schemePaired);
         let { data } = this.props;
-        this.sortData(data);
+        this.sortDescending(data);
         const total = D3Util.getTotal(data);
         data.forEach(function (d) {
             d.count = +d.count;
             d.percent = +Math.round(d.count / total * 100);
         });
-        let colors = d3.scaleOrdinal([ '#5cb85c', '#d9534f' ]);
-        const tooltip = new Tooltip({
-            svg: '#' + this.props.id,
-            colors
+        const donutTooltip = new Tooltip({
+            svg: '#' + this.props.id
         });
         const pie = d3.pie().sort(null).value(d => d.count);
         const arc = d3.arc().innerRadius(radius * 0.8).outerRadius(radius * 0.3);
@@ -85,10 +175,19 @@ class DonutChart extends Component {
         .enter()
         .append('path')
         .attr('d', arc)
-        .attr('fill', (d, i) => color(i))
-        .on('mouseover', tooltip.handleMouseOver)
-        .on('mousemove', tooltip.handleMouseOver)
-        .on('mouseout', tooltip.handleMouseOut);
+        .attr('fill', (d, i) => color(i));
+
+        svg.selectAll('path')
+        .on('mouseover', function (d, i) {
+            d3.select(this).style('fill', d3.rgb(color(i)).darker(1));
+            donutTooltip.handleMouseOver();
+        })
+        .on('mouseout', function (d, i) {
+            d3.select(this).style('fill', color(i));
+            donutTooltip.handleMouseOut();
+        })
+        .on('mousemove', donutTooltip.handleMouseOver);
+
         svg.append('g').classed('labels', true);
         svg.append('g').classed('lines', true);
 
@@ -121,14 +220,6 @@ class DonutChart extends Component {
         .style('text-anchor', function (d) {
             return (midAngle(d)) < Math.PI ? 'start' : 'end';
         });
-        // var color = d3.scaleOrdinal()
-        //   .range(["red", "green", "blue", "#6b486b", "#a05d56", "#d0743c", "#ff8c00"]);
-        // svg.append('text')
-        //   .attr('class', 'toolCircle')
-        //   .attr('dy', -15) // hard-coded. can adjust this to adjust text vertical alignment in tooltip
-        //   .html('sdfsd') // add text to the circle.
-        //   .style('font-size', '.9em')
-        //   .style('text-anchor', 'middle');
 
         function midAngle(d) { return d.startAngle + (d.endAngle - d.startAngle) / 2; }
 
@@ -138,10 +229,6 @@ class DonutChart extends Component {
 
     componentDidUpdate(prevProps) {
         if (prevProps.data !== this.props.data) {
-            this.init();
-        }
-
-        if (prevProps.isAccessible !== this.props.isAccessible) {
             this.init();
         }
     }
