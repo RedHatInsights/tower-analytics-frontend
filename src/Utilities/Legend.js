@@ -31,6 +31,11 @@ const Title = styled.span`
   font-size: 12px;
   display: inline-block;
   margin: 0 30px 0 10px;
+  width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
 `;
 
 const Switch = styled(PFSwitch)`
