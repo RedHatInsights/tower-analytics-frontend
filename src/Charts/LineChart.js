@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import initializeChart from './BaseChart';
 import PropTypes from 'prop-types';
 import Tooltip from '../Utilities/Tooltip';
 import * as d3 from 'd3';
@@ -6,34 +7,15 @@ import * as d3 from 'd3';
 class LineChart extends Component {
     constructor(props) {
         super(props);
-        this.margin = { top: 20, right: 20, bottom: 50, left: 70 };
         this.init = this.init.bind(this);
-        this.resize = this.resize.bind(this);
     }
 
     // Methods
-    resize(fn, time) {
-        let timeout;
-
-        return function () {
-            const functionCall = () => fn.apply(this, arguments);
-
-            clearTimeout(timeout);
-            timeout = setTimeout(functionCall, time);
-        };
-    }
-
     async init() {
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
-        const width =
-            parseInt(d3.select('#' + this.props.id).style('width')) -
-            this.margin.left -
-            this.margin.right;
-        const height =
-                parseInt(d3.select('#' + this.props.id).style('height')) -
-                this.margin.top -
-                this.margin.bottom;
+        const width = this.props.getWidth();
+        const height = this.props.getHeight();
 
         function transition(path) {
             path
@@ -65,7 +47,7 @@ class LineChart extends Component {
             d3
             .select('#' + this.props.id)
             .node()
-            .getBoundingClientRect().y + this.margin.top; // offset padding
+            .getBoundingClientRect().y + this.props.margin.top; // offset padding
 
         const vertical = d3
         .select('#' + this.props.id)
@@ -86,13 +68,13 @@ class LineChart extends Component {
         const svg = d3
         .select('#' + this.props.id)
         .append('svg')
-        .attr('width', width + this.margin.left + this.margin.right)
-        .attr('height', height + this.margin.top + this.margin.bottom)
+        .attr('width', width + this.props.margin.left + this.props.margin.right)
+        .attr('height', height + this.props.margin.top + this.props.margin.bottom)
         .attr('z', 100)
         .append('g')
         .attr(
             'transform',
-            'translate(' + this.margin.left + ',' + this.margin.top + ')'
+            'translate(' + this.props.margin.left + ',' + this.props.margin.top + ')'
         );
         // Tooltip
         const tooltip = new Tooltip({
@@ -135,7 +117,7 @@ class LineChart extends Component {
         const successLine = d3
         .line()
         // .defined(d => !isNaN(d.RAN))
-        .curve(d3.curveCardinal)
+        .curve(d3.curveLinear)
         .x(function (d) {
             return x(d.DATE);
         })
@@ -146,7 +128,7 @@ class LineChart extends Component {
         const failLine = d3
         .line()
         .defined(d => !isNaN(d.FAIL))
-        .curve(d3.curveCardinal)
+        .curve(d3.curveLinear)
         .x(function (d) {
             return x(d.DATE);
         })
@@ -157,7 +139,7 @@ class LineChart extends Component {
         const totalLine = d3
         .line()
         .defined(d => !isNaN(d.TOTAL))
-        .curve(d3.curveCardinal)
+        .curve(d3.curveLinear)
         .x(function (d) {
             return x(d.DATE);
         })
@@ -206,7 +188,7 @@ class LineChart extends Component {
         svg
         .append('text')
         .attr('transform', 'rotate(-90)')
-        .attr('y', 0 - this.margin.left)
+        .attr('y', 0 - this.props.margin.left)
         .attr('x', 0 - height / 2)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
@@ -229,7 +211,7 @@ class LineChart extends Component {
         .append('text')
         .attr(
             'transform',
-            'translate(' + width / 2 + ' ,' + (height + this.margin.top + 20) + ')'
+            'translate(' + width / 2 + ' ,' + (height + this.props.margin.top + 20) + ')'
         )
         .style('text-anchor', 'middle')
         .text('Date');
@@ -321,7 +303,7 @@ class LineChart extends Component {
         .on('mousemove', handleMouseMove)
         .on('mouseout', handleMouseOut);
         // Call the resize function whenever a resize event occurs
-        d3.select(window).on('resize', this.resize(this.init, 500));
+        d3.select(window).on('resize', this.props.resize(this.init, 500));
     }
 
     async componentDidMount() {
@@ -346,7 +328,11 @@ LineChart.propTypes = {
     id: PropTypes.string,
     isAccessible: PropTypes.bool,
     data: PropTypes.array,
-    value: PropTypes.string
+    value: PropTypes.string,
+    margin: PropTypes.object,
+    resize: PropTypes.func,
+    getHeight: PropTypes.func,
+    getWidth: PropTypes.func
 };
 
-export default LineChart;
+export default initializeChart(LineChart);

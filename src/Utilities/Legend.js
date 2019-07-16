@@ -53,7 +53,6 @@ class Legend extends Component {
             isChecked: true
         };
         this.handleChange = this.handleChange.bind(this);
-    // this.checkSelected = this.checkSelected.bind(this);
     }
     handleChange(_isChecked, { target: { value }}) {
         const { onToggle } = this.props;
@@ -63,19 +62,17 @@ class Legend extends Component {
 
     render() {
         const { data, selected } = this.props;
-        // const { isChecked } = this.state;
         return (
             <Container>
                 { data.map(
                     ({ name, value, id }) => (
                         <LegendDetail key={ name }>
                             <Switch
-                                // isChecked={isChecked}
                                 isChecked={ selected.some(selection => selection === id) }
                                 onChange={ this.handleChange }
                                 aria-label={ name }
                                 value={ id }
-                                // orgId={id}
+                                id={ `${name}-${id}` }
                             />
                             <Title>{ name }</Title>
                             <Color color={ value } />

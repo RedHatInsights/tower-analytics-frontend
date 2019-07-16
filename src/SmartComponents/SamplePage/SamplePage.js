@@ -642,17 +642,16 @@ class SamplePage extends Component {
                                         />
                                     </rect>
                                 </svg>
-                                {/* {barChartData.length > 0 && (
+                                {barChartData.length > 0 && (
                                     <BarChart
-                                        width={700}
-                                        height={350}
+                                        margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
                                         id="d3-chart-root"
                                         data={barChartData}
                                         value={this.state.leftValue}
                                         isAccessible={this.state.isAccessible}
                                         getApiUrl={this.getApiUrl}
                                     />
-                                )} */}
+                                )}
                                 {/* {rightValue !== "all clusters" && (
                                     <LineChart
                                         width={700}
@@ -664,10 +663,9 @@ class SamplePage extends Component {
                                         getApiUrl={this.getApiUrl}
                                     />
                                 )} */}
-                                {lineChartData.length > 0 && (
+                                {/* {lineChartData.length > 0 && (
                                     <LineChart
-                                        width={700}
-                                        height={350}
+                                        margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
                                         id="d3-line-chart-root"
                                         data={lineChartData}
                                         value={this.state.leftValue}
@@ -675,7 +673,7 @@ class SamplePage extends Component {
                                         isAccessible={this.state.isAccessible}
                                         getApiUrl={this.getApiUrl}
                                     />
-                                )}
+                                )} */}
                             </CardBody>
                         </Card>
                         <div
@@ -750,8 +748,7 @@ class SamplePage extends Component {
                             <CardBody>
                                 {groupedBarChartData.length > 0 && activeTabKey == 1 && (
                                     <GroupedBarChart
-                                        width={700}
-                                        height={350}
+                                        margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
                                         id="d3-grouped-bar-chart-root"
                                         data={groupedBarChartData}
                                     />
@@ -787,8 +784,7 @@ class SamplePage extends Component {
                                     </CardHeader>
                                     {pieChart1Data.length > 0 && activeTabKey == 1 && (
                                         <DonutChart
-                                            width={700}
-                                            height={350}
+                                            margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                                             id="d3-donut-1-chart-root"
                                             data={pieChart1Data}
                                         />
@@ -823,8 +819,7 @@ class SamplePage extends Component {
                                     </CardHeader>
                                     {pieChart2Data.length > 0 && activeTabKey == 1 && (
                                         <DonutChart
-                                            width={700}
-                                            height={350}
+                                            margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                                             id="d3-donut-2-chart-root"
                                             data={pieChart2Data}
                                         />

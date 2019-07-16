@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import * as d3 from 'd3';
+import initializeChart from './BaseChart';
 import D3Util from '../Utilities/D3Util';
 
 class Tooltip {
@@ -103,44 +104,28 @@ class Tooltip {
 class DonutChart extends Component {
     constructor(props) {
         super(props);
-        this.margin = { top: 20, right: 20, bottom: 0, left: 20 };
         this.init = this.init.bind(this);
-        this.resize = this.resize.bind(this);
     }
 
-    // Methods
-    resize(fn, time) {
-        let timeout;
-
-        return function () {
-            const functionCall = () => fn.apply(this, arguments);
-
-            clearTimeout(timeout);
-            timeout = setTimeout(functionCall, time);
-        };
+    static defaultProps = {
+        margin: { top: 20, right: 20, bottom: 0, left: 20 }
     }
 
     sortDescending(data) {
         // descending
         data.sort((a, b) => d3.descending(parseFloat(a.count), parseFloat(b.count)));
     }
-    async componentDidMount() {
-        await this.init();
+    componentDidMount() {
+        this.init();
     }
 
     init() {
         d3.selectAll('#' + this.props.id + ' > *').remove();
-        const width =
-            parseInt(d3.select('#' + this.props.id).style('width')) -
-            this.margin.left -
-            this.margin.right;
-        const height =
-            parseInt(d3.select('#' + this.props.id).style('height')) -
-            this.margin.top -
-            this.margin.bottom;
+        const width = this.props.getWidth();
+        const height = this.props.getHeight();
         const svg = d3.select('#' + this.props.id).append('svg')
-        .attr('width', width + this.margin.left + this.margin.right)
-        .attr('height', height + this.margin.top + this.margin.bottom)
+        .attr('width', width + this.props.margin.left + this.props.margin.right)
+        .attr('height', height + this.props.margin.top + this.props.margin.bottom)
         .append('g');
 
         svg.append('g')
@@ -224,7 +209,7 @@ class DonutChart extends Component {
         function midAngle(d) { return d.startAngle + (d.endAngle - d.startAngle) / 2; }
 
         // Call the resize function whenever a resize event occurs
-        d3.select(window).on('resize', this.resize(this.init, 500));
+        d3.select(window).on('resize', this.props.resize(this.init, 500));
     }
 
     componentDidUpdate(prevProps) {
@@ -239,9 +224,16 @@ class DonutChart extends Component {
 }
 
 DonutChart.propTypes = {
-    id: PropTypes.string,
+    id: PropTypes.string.isRequired,
     isAccessible: PropTypes.bool,
-    data: PropTypes.array
+    data: PropTypes.array.isRequired,
+    margin: PropTypes.object,
+    resize: PropTypes.func,
+    getHeight: PropTypes.func,
+    getWidth: PropTypes.func
+};
+DonutChart.defaultProps = {
+    margin: { top: 20, right: 20, bottom: 0, left: 20 }
 };
 
-export default DonutChart;
+export default initializeChart(DonutChart);

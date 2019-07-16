@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import initializeChart from './BaseChart';
 import * as d3 from 'd3';
 import Legend from '../Utilities/Legend';
 import styled from 'styled-components';
@@ -141,9 +142,7 @@ class Tooltip {
 class GroupedBarChart extends Component {
     constructor(props) {
         super(props);
-        this.margin = { top: 20, right: 20, bottom: 50, left: 70 };
         this.init = this.init.bind(this);
-        this.resize = this.resize.bind(this);
         this.handleToggle = this.handleToggle.bind(this);
         this.draw = this.draw.bind(this);
         this.orgsList = props.data[0].orgs;
@@ -156,17 +155,6 @@ class GroupedBarChart extends Component {
     }
 
     // Methods
-    resize(fn, time) {
-        let timeout;
-
-        return function () {
-            const functionCall = () => fn.apply(this, arguments);
-
-            clearTimeout(timeout);
-            timeout = setTimeout(functionCall, time);
-        };
-    }
-
     async handleToggle(selectedId) {
         if (this.selection.indexOf(selectedId) === -1) {
             this.selection = [ ...this.selection, selectedId ];
@@ -221,14 +209,8 @@ class GroupedBarChart extends Component {
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
         const { formattedData: data } = this.state;
-        const width =
-            parseInt(d3.select('#' + this.props.id).style('width')) -
-            this.margin.left -
-            this.margin.right;
-        const height =
-            parseInt(d3.select('#' + this.props.id).style('height')) -
-            this.margin.top -
-            this.margin.bottom;
+        const width = this.props.getWidth();
+        const height = this.props.getHeight();
         // x scale of entire chart
         const x0 = d3.scaleBand()
         .range([ 0, width ])
@@ -239,16 +221,17 @@ class GroupedBarChart extends Component {
         const y = d3.scaleLinear()
         .range([ height, 0 ]);
 
-        const xAxis = d3.axisBottom(x0)
-        .tickSize(0);
+        const xAxis = d3.axisBottom(x0).ticks(8)
+        .tickSize(-height);
 
-        const yAxis = d3.axisLeft(y);
+        const yAxis = d3.axisLeft(y).ticks(8)
+        .tickSize(-width, 0, 0);
 
         const svg = d3.select('#' + this.props.id).append('svg')
-        .attr('width', width + this.margin.left + this.margin.right)
-        .attr('height', height + this.margin.bottom)
+        .attr('width', width + this.props.margin.left + this.props.margin.right)
+        .attr('height', height + this.props.margin.bottom)
         .append('g')
-        .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
+        .attr('transform', 'translate(' + this.props.margin.left + ',' + this.props.margin.top + ')');
 
         const dates = data.map(d => d.date);
         const selectedOrgNames = data[0].selectedOrgs.map(d => d.org_name);
@@ -260,25 +243,13 @@ class GroupedBarChart extends Component {
         y.domain([ 0, d3.max(data, (date) => d3.max(date.selectedOrgs, (d) => d.value)) ]);
         // x1.domain(d3.range(0, data[0].orgs.length)).range([0, x0.bandwidth()]); // sorted
 
-        // add x axis
-        svg.append('g')
-        .attr('class', 'x axis')
-        .attr('transform', 'translate(0,' + height + ')')
-        .call(xAxis);
-        svg
-        .append('text')
-        .attr(
-            'transform',
-            'translate(' + width / 2 + ' ,' + (height + this.margin.top) + ')'
-        )
-        .style('text-anchor', 'middle')
-        .text('Date');
-
         // add y axis
         svg.append('g')
         .attr('class', 'y axis')
         // .style('opacity', '0')
         .call(yAxis)
+        .selectAll('line')
+        .attr('stroke', '#d7d7d7')
         .append('text')
         .attr('transform', 'rotate(-90)')
         .attr('y', 6)
@@ -289,13 +260,29 @@ class GroupedBarChart extends Component {
         svg
         .append('text')
         .attr('transform', 'rotate(-90)')
-        .attr('y', 0 - this.margin.left)
+        .attr('y', 0 - this.props.margin.left)
         .attr('x', 0 - height / 2)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
         .text('Jobs Across Orgs');
         // fade in y axis
         // svg.select('.y').transition().duration(500).delay(500).style('opacity', '1');
+
+        // add x axis
+        svg.append('g')
+        .attr('class', 'x axis')
+        .attr('transform', 'translate(0,' + height + ')')
+        .call(xAxis)
+        .selectAll('line')
+        .attr('stroke', '#d7d7d7');
+        svg
+        .append('text')
+        .attr(
+            'transform',
+            'translate(' + width / 2 + ' ,' + (height + this.props.margin.top) + ')'
+        )
+        .style('text-anchor', 'middle')
+        .text('Date');
         // add the groups
         let slice = svg.selectAll('.slice')
         .data(data);
@@ -341,7 +328,7 @@ class GroupedBarChart extends Component {
         //     .attr('height', function (d) { return height - y(d.value); });
 
         // Call the resize function whenever a resize event occurs
-        d3.select(window).on('resize', this.resize(this.init, 500));
+        d3.select(window).on('resize', this.props.resize(this.init, 500));
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -376,7 +363,11 @@ GroupedBarChart.propTypes = {
     id: PropTypes.string,
     isAccessible: PropTypes.bool,
     data: PropTypes.array,
-    value: PropTypes.array
+    value: PropTypes.array,
+    margin: PropTypes.object,
+    resize: PropTypes.func,
+    getHeight: PropTypes.func,
+    getWidth: PropTypes.func
 };
 
-export default GroupedBarChart;
+export default initializeChart(GroupedBarChart);

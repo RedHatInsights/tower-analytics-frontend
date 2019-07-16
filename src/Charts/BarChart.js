@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import initializeChart from './BaseChart';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import Tooltip from '../Utilities/Tooltip';
@@ -6,35 +7,16 @@ import Tooltip from '../Utilities/Tooltip';
 class BarChart extends Component {
     constructor(props) {
         super(props);
-        this.margin = { top: 20, right: 20, bottom: 50, left: 70 };
         this.init = this.init.bind(this);
-        this.resize = this.resize.bind(this);
     }
 
     // Methods
-    resize(fn, time) {
-        let timeout;
-
-        return function () {
-            const functionCall = () => fn.apply(this, arguments);
-
-            clearTimeout(timeout);
-            timeout = setTimeout(functionCall, time);
-        };
-    }
-
     init() {
         // Clear our chart container element first
-        d3.selectAll('#' + this.props.id + ' > *').remove();
+        d3.selectAll('#d3-chart-root > *').remove();
         let { data } = this.props;
-        const width =
-            parseInt(d3.select('#' + this.props.id).style('width')) -
-            this.margin.left -
-            this.margin.right;
-        const height =
-            parseInt(d3.select('#' + this.props.id).style('height')) -
-            this.margin.top -
-            this.margin.bottom;
+        const width = this.props.getWidth();
+        const height = this.props.getHeight();
         const parseTime = d3.timeParse('%Y-%m-%d');
         // const formatTooltipDate = d3.timeFormat('%m/%d');
         const x = d3
@@ -46,12 +28,12 @@ class BarChart extends Component {
         const svg = d3
         .select('#' + this.props.id)
         .append('svg')
-        .attr('width', width + this.margin.left + this.margin.right)
-        .attr('height', height + this.margin.top + this.margin.bottom)
+        .attr('width', width + this.props.margin.left + this.props.margin.right)
+        .attr('height', height + this.props.margin.top + this.props.margin.bottom)
         .append('g')
         .attr(
             'transform',
-            'translate(' + this.margin.left + ',' + this.margin.top + ')'
+            'translate(' + this.props.margin.left + ',' + this.props.margin.top + ')'
         );
         //[fail, success]
         let colors = d3.scaleOrdinal([ '#5cb85c', '#d9534f' ]);
@@ -59,7 +41,7 @@ class BarChart extends Component {
             colors = d3.scaleOrdinal([ '#92D400', '#A30000' ]);
         }
 
-        const tooltip = new Tooltip({
+        const barTooltip = new Tooltip({
             svg: '#' + this.props.id,
             colors
         });
@@ -107,7 +89,7 @@ class BarChart extends Component {
         svg
         .append('text')
         .attr('transform', 'rotate(-90)')
-        .attr('y', 0 - this.margin.left)
+        .attr('y', 0 - this.props.margin.left)
         .attr('x', 0 - height / 2)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
@@ -130,7 +112,7 @@ class BarChart extends Component {
         .append('text')
         .attr(
             'transform',
-            'translate(' + width / 2 + ' ,' + (height + this.margin.top + 20) + ')'
+            'translate(' + width / 2 + ' ,' + (height + this.props.margin.top + 20) + ')'
         )
         .style('text-anchor', 'middle')
         .text('Date');
@@ -158,12 +140,12 @@ class BarChart extends Component {
         .attr('height', d => y(d[0]) - y(d[1]));
         layer
         .selectAll('rect')
-        .on('mouseover', tooltip.handleMouseOver)
-        .on('mousemove', tooltip.handleMouseOver)
-        .on('mouseout', tooltip.handleMouseOut);
+        .on('mouseover', barTooltip.handleMouseOver)
+        .on('mousemove', barTooltip.handleMouseOver)
+        .on('mouseout', barTooltip.handleMouseOut);
 
         // Call the resize function whenever a resize event occurs
-        d3.select(window).on('resize', this.resize(this.init, 500));
+        d3.select(window).on('resize', this.props.resize(this.init, 500));
     }
 
     componentDidMount() {
@@ -190,7 +172,11 @@ BarChart.propTypes = {
     id: PropTypes.string,
     isAccessible: PropTypes.bool,
     data: PropTypes.array,
-    value: PropTypes.string
+    value: PropTypes.string,
+    margin: PropTypes.object,
+    resize: PropTypes.func,
+    getHeight: PropTypes.func,
+    getWidth: PropTypes.func
 };
 
-export default BarChart;
+export default initializeChart(BarChart);
