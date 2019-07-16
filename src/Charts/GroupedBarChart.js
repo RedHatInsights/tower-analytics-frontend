@@ -68,75 +68,73 @@ class Tooltip {
         .text('Org');
     }
 
-    handleMouseOver = (d) => {
-        let date;
-        let orgName;
-        let jobs;
-        const x =
-            d3.event.pageX -
-            d3
-            .select(this.svg)
-            .node()
-            .getBoundingClientRect().x +
-            10;
-        const y =
-            d3.event.pageY -
-            d3
-            .select(this.svg)
-            .node()
-            .getBoundingClientRect().y -
-            10;
-        if (!d) {
-            return;
-        }
+  handleMouseOver = d => {
+      let date;
+      let orgName;
+      let jobs;
+      const x =
+      d3.event.pageX -
+      d3
+      .select(this.svg)
+      .node()
+      .getBoundingClientRect().x +
+      10;
+      const y =
+      d3.event.pageY -
+      d3
+      .select(this.svg)
+      .node()
+      .getBoundingClientRect().y -
+      10;
+      if (!d) {
+          return;
+      } else {
+          const maxLength = 16;
+          date = d.date;
+          orgName = d.org_name;
+          jobs = d.value;
+          if (d.org_name.length > maxLength) {
+              orgName = d.org_name.slice(0, maxLength).concat('...');
+          }
+      }
 
-        else {
-            const maxLength = 16;
-            date = d.date;
-            orgName = d.org_name;
-            jobs = d.value;
-            if (d.org_name.length > maxLength) {
-                orgName = d.org_name.slice(0, maxLength).concat('...');
-            }
-        }
+      const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
+      const chartWidth = d3
+      .select(this.svg + '> svg')
+      .node()
+      .getBoundingClientRect().width;
+      const overflow = 100 - (toolTipWidth / chartWidth) * 100;
+      const flipped = overflow < (x / chartWidth) * 100;
 
-        const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
-        const chartWidth = d3
-        .select(this.svg + '> svg')
-        .node()
-        .getBoundingClientRect().width;
-        const overflow = 100 - (toolTipWidth / chartWidth) * 100;
-        const flipped = overflow < (x / chartWidth) * 100;
+      this.date.text('' + date);
+      this.orgName.text('' + orgName);
+      this.jobs.text('' + jobs + ' Jobs');
+      this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
+      if (flipped) {
+          this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
+          this.boundingBOx.attr('x', -145);
+          this.jobs.attr('x', -132);
+          this.orgName.attr('x', -132);
+          this.date.attr('x', -72);
+      } else {
+          this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
+          this.boundingBOx.attr('x', 10);
+          this.orgName.attr('x', 20);
+          this.jobs.attr('x', 72);
+          this.date.attr('x', 20);
+      }
 
-        this.date.text('' + date);
-        this.orgName.text('' + orgName);
-        this.jobs.text('' + jobs + ' Jobs');
-        this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
-        if (flipped) {
-            this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
-            this.boundingBOx.attr('x', -145);
-            this.jobs.attr('x', -132);
-            this.orgName.attr('x', -132);
-            this.date.attr('x', -72);
-        } else {
-            this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
-            this.boundingBOx.attr('x', 10);
-            this.orgName.attr('x', 20);
-            this.jobs.attr('x', 72);
-            this.date.attr('x', 20);
-        }
+      this.toolTipBase.style('opacity', 1);
+      this.toolTipBase.interrupt();
+  };
 
-        this.toolTipBase.style('opacity', 1);
-        this.toolTipBase.interrupt();
-    }
-
-    handleMouseOut = () => {
-        this.toolTipBase
-        .transition()
-        .delay(15)
-        .style('opacity', 0)
-        .style('pointer-events', 'none');
-    }
+  handleMouseOut = () => {
+      this.toolTipBase
+      .transition()
+      .delay(15)
+      .style('opacity', 0)
+      .style('pointer-events', 'none');
+  };
 }
 
 class GroupedBarChart extends Component {
@@ -158,8 +156,7 @@ class GroupedBarChart extends Component {
     async handleToggle(selectedId) {
         if (this.selection.indexOf(selectedId) === -1) {
             this.selection = [ ...this.selection, selectedId ];
-        }
-        else if (this.selection.includes(selectedId)) {
+        } else if (this.selection.includes(selectedId)) {
             this.selection = [ ...this.selection ].filter(s => s !== selectedId);
         }
 
@@ -185,7 +182,7 @@ class GroupedBarChart extends Component {
     }
 
     async init() {
-        // create the first 8 selected data points
+    // create the first 8 selected data points
         if (this.selection.length === 0) {
             this.orgsList.forEach((org, index) => {
                 if (index <= 7) {
@@ -196,7 +193,11 @@ class GroupedBarChart extends Component {
 
         // create our colors array to send to the Legend component
         const colors = this.orgsList.reduce((colors, org) => {
-            colors.push({ name: org.org_name, value: color(org.org_name), id: org.id });
+            colors.push({
+                name: org.org_name,
+                value: color(org.org_name),
+                id: org.id
+            });
             return colors;
         }, []);
         this.setState({ colors });
@@ -206,32 +207,45 @@ class GroupedBarChart extends Component {
     }
 
     draw() {
-        // Clear our chart container element first
+    // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
         const { formattedData: data } = this.state;
         const width = this.props.getWidth();
         const height = this.props.getHeight();
         // x scale of entire chart
-        const x0 = d3.scaleBand()
+        const x0 = d3
+        .scaleBand()
         .range([ 0, width ])
         .padding(0.15);
         // x scale of individual grouped bars
         const x1 = d3.scaleBand();
 
-        const y = d3.scaleLinear()
-        .range([ height, 0 ]);
+        const y = d3.scaleLinear().range([ height, 0 ]);
 
-        const xAxis = d3.axisBottom(x0).ticks(8)
+        const xAxis = d3
+        .axisBottom(x0)
+        .ticks(8)
         .tickSize(-height);
 
-        const yAxis = d3.axisLeft(y).ticks(8)
+        const yAxis = d3
+        .axisLeft(y)
+        .ticks(8)
         .tickSize(-width, 0, 0);
 
-        const svg = d3.select('#' + this.props.id).append('svg')
+        const svg = d3
+        .select('#' + this.props.id)
+        .append('svg')
         .attr('width', width + this.props.margin.left + this.props.margin.right)
         .attr('height', height + this.props.margin.bottom)
         .append('g')
-        .attr('transform', 'translate(' + this.props.margin.left + ',' + this.props.margin.top + ')');
+        .attr(
+            'transform',
+            'translate(' +
+          this.props.margin.left +
+          ',' +
+          this.props.margin.top +
+          ')'
+        );
 
         const dates = data.map(d => d.date);
         const selectedOrgNames = data[0].selectedOrgs.map(d => d.org_name);
@@ -240,11 +254,15 @@ class GroupedBarChart extends Component {
         });
         x0.domain(dates);
         x1.domain(selectedOrgNames).range([ 0, x0.bandwidth() ]); // unsorted
-        y.domain([ 0, d3.max(data, (date) => d3.max(date.selectedOrgs, (d) => d.value)) ]);
+        y.domain([
+            0,
+            d3.max(data, date => d3.max(date.selectedOrgs, d => d.value))
+        ]);
         // x1.domain(d3.range(0, data[0].orgs.length)).range([0, x0.bandwidth()]); // sorted
 
         // add y axis
-        svg.append('g')
+        svg
+        .append('g')
         .attr('class', 'y axis')
         // .style('opacity', '0')
         .call(yAxis)
@@ -269,7 +287,8 @@ class GroupedBarChart extends Component {
         // svg.select('.y').transition().duration(500).delay(500).style('opacity', '1');
 
         // add x axis
-        svg.append('g')
+        svg
+        .append('g')
         .attr('class', 'x axis')
         .attr('transform', 'translate(0,' + height + ')')
         .call(xAxis)
@@ -284,37 +303,47 @@ class GroupedBarChart extends Component {
         .style('text-anchor', 'middle')
         .text('Date');
         // add the groups
-        let slice = svg.selectAll('.slice')
-        .data(data);
+        let slice = svg.selectAll('.slice').data(data);
         slice.exit().remove();
 
         const enter = slice
-        .enter().append('g')
+        .enter()
+        .append('g')
         .attr('class', 'g foo')
-        .attr('transform', (d) => 'translate(' + x0(d.date) + ',0)');
+        .attr('transform', d => 'translate(' + x0(d.date) + ',0)');
         slice = slice.merge(enter);
         // add the individual bars
-        let bars = slice.selectAll('rect')
-        .data(function (d) { return d.selectedOrgs; });
+        let bars = slice.selectAll('rect').data(function(d) {
+            return d.selectedOrgs;
+        });
         // .exit().remove()
         bars.exit().remove();
 
         const subEnter = bars
-        .enter().append('rect')
+        .enter()
+        .append('rect')
         .attr('width', x1.bandwidth())
-        .attr('x', function (d) { return x1(d.org_name); }) // unsorted
+        .attr('x', function(d) {
+            return x1(d.org_name);
+        }) // unsorted
         // .attr("x", function(d, i) { return x1(i); }) // sorted
-        .style('fill', function (d) { return color(d.org_name); })
+        .style('fill', function(d) {
+            return color(d.org_name);
+        })
         // .attr('y', function () { return y(0); })
         // .attr('height', function () { return height - y(0); })
-        .attr('y', function (d) { return y(d.value); })
-        .attr('height', function (d) { return height - y(d.value); })
-        .on('mouseover', function (d) {
+        .attr('y', function(d) {
+            return y(d.value);
+        })
+        .attr('height', function(d) {
+            return height - y(d.value);
+        })
+        .on('mouseover', function(d) {
             d3.select(this).style('fill', d3.rgb(color(d.org_name)).darker(1));
             tooltip.handleMouseOver();
         })
         .on('mousemove', tooltip.handleMouseOver)
-        .on('mouseout', function (d) {
+        .on('mouseout', function(d) {
             d3.select(this).style('fill', color(d.org_name));
             tooltip.handleMouseOut();
         });
@@ -351,11 +380,15 @@ class GroupedBarChart extends Component {
             <Wrapper>
                 <div id={ this.props.id } />
                 { colors.length > 0 && (
-                    <Legend id="d3-grouped-bar-legend" data={ colors } selected={ selected } onToggle={ this.handleToggle } />
+                    <Legend
+                        id="d3-grouped-bar-legend"
+                        data={ colors }
+                        selected={ selected }
+                        onToggle={ this.handleToggle }
+                    />
                 ) }
             </Wrapper>
         );
-
     }
 }
 

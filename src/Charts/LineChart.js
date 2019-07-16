@@ -12,7 +12,7 @@ class LineChart extends Component {
 
     // Methods
     async init() {
-        // Clear our chart container element first
+    // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
         const width = this.props.getWidth();
         const height = this.props.getHeight();
@@ -27,7 +27,7 @@ class LineChart extends Component {
         function tweenDash() {
             const l = this.getTotalLength();
             const i = d3.interpolateString('0,' + l, l + ',' + l);
-            return function (t) {
+            return function(t) {
                 return i(t);
             };
         }
@@ -44,10 +44,10 @@ class LineChart extends Component {
         }
 
         const top =
-            d3
-            .select('#' + this.props.id)
-            .node()
-            .getBoundingClientRect().y + this.props.margin.top; // offset padding
+      d3
+      .select('#' + this.props.id)
+      .node()
+      .getBoundingClientRect().y + this.props.margin.top; // offset padding
 
         const vertical = d3
         .select('#' + this.props.id)
@@ -74,7 +74,11 @@ class LineChart extends Component {
         .append('g')
         .attr(
             'transform',
-            'translate(' + this.props.margin.left + ',' + this.props.margin.top + ')'
+            'translate(' +
+          this.props.margin.left +
+          ',' +
+          this.props.margin.top +
+          ')'
         );
         // Tooltip
         const tooltip = new Tooltip({
@@ -95,7 +99,7 @@ class LineChart extends Component {
             data = data.splice(0, 7);
         }
 
-        data.forEach(function (d) {
+        data.forEach(function(d) {
             d.DATE = parseTime(d.DATE); // format date string into DateTime object
             d.RAN = +d.RAN;
             d.FAIL = +d.FAIL;
@@ -103,13 +107,13 @@ class LineChart extends Component {
         });
         // Scale the range of the data
         x.domain(
-            d3.extent(data, function (d) {
+            d3.extent(data, function(d) {
                 return d.DATE;
             })
         );
         y.domain([
             0,
-            d3.max(data, function (d) {
+            d3.max(data, function(d) {
                 return d.TOTAL + 10;
             })
         ]);
@@ -118,10 +122,10 @@ class LineChart extends Component {
         .line()
         // .defined(d => !isNaN(d.RAN))
         .curve(d3.curveLinear)
-        .x(function (d) {
+        .x(function(d) {
             return x(d.DATE);
         })
-        .y(function (d) {
+        .y(function(d) {
             return y(d.RAN);
         });
 
@@ -129,10 +133,10 @@ class LineChart extends Component {
         .line()
         .defined(d => !isNaN(d.FAIL))
         .curve(d3.curveLinear)
-        .x(function (d) {
+        .x(function(d) {
             return x(d.DATE);
         })
-        .y(function (d) {
+        .y(function(d) {
             return y(d.FAIL);
         });
 
@@ -140,17 +144,21 @@ class LineChart extends Component {
         .line()
         .defined(d => !isNaN(d.TOTAL))
         .curve(d3.curveLinear)
-        .x(function (d) {
+        .x(function(d) {
             return x(d.DATE);
         })
-        .y(function (d) {
+        .y(function(d) {
             return y(d.TOTAL);
         });
 
         // Three function that change the tooltip when user hover / move
-        const handleMouseOver = function (d) {
+        const handleMouseOver = function(d) {
             const radialOffset = this.r.baseVal.value / 2;
-            const intersectX = d3.select(this).node().getBoundingClientRect().x + radialOffset;
+            const intersectX =
+        d3
+        .select(this)
+        .node()
+        .getBoundingClientRect().x + radialOffset;
             // show tooltip
             tooltip.handleMouseOver(d);
             // show vertical line
@@ -160,13 +168,17 @@ class LineChart extends Component {
             .style('left', intersectX + 'px');
         };
 
-        const handleMouseMove = function () {
+        const handleMouseMove = function() {
             const radialOffset = this.r.baseVal.value / 2;
-            const intersectX = d3.select(this).node().getBoundingClientRect().x + radialOffset;
+            const intersectX =
+        d3
+        .select(this)
+        .node()
+        .getBoundingClientRect().x + radialOffset;
             vertical.style('left', intersectX + 'px');
         };
 
-        const handleMouseOut = function () {
+        const handleMouseOut = function() {
             // hide tooltip
             tooltip.handleMouseOut();
             // hide vertical line
@@ -211,7 +223,11 @@ class LineChart extends Component {
         .append('text')
         .attr(
             'transform',
-            'translate(' + width / 2 + ' ,' + (height + this.props.margin.top + 20) + ')'
+            'translate(' +
+          width / 2 +
+          ' ,' +
+          (height + this.props.margin.top + 20) +
+          ')'
         )
         .style('text-anchor', 'middle')
         .text('Date');
@@ -256,10 +272,10 @@ class LineChart extends Component {
         .attr('r', 3)
         .style('stroke', () => colors(1))
         .style('fill', () => colors(1))
-        .attr('cx', function (d) {
+        .attr('cx', function(d) {
             return x(d.DATE);
         })
-        .attr('cy', function (d) {
+        .attr('cy', function(d) {
             return y(d.RAN);
         })
 
@@ -275,10 +291,10 @@ class LineChart extends Component {
         .attr('r', 3)
         .style('stroke', () => colors(0))
         .style('fill', () => colors(0))
-        .attr('cx', function (d) {
+        .attr('cx', function(d) {
             return x(d.DATE);
         })
-        .attr('cy', function (d) {
+        .attr('cy', function(d) {
             return y(d.FAIL);
         })
         .on('mouseover', handleMouseOver)
@@ -293,10 +309,10 @@ class LineChart extends Component {
         .attr('r', 3)
         .style('stroke', () => colors(2))
         .style('fill', () => colors(2))
-        .attr('cx', function (d) {
+        .attr('cx', function(d) {
             return x(d.DATE);
         })
-        .attr('cy', function (d) {
+        .attr('cy', function(d) {
             return y(d.TOTAL);
         })
         .on('mouseover', handleMouseOver)

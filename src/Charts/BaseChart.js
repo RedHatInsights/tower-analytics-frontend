@@ -13,7 +13,7 @@ function initializeChart(Chart) {
         resize(fn, time) {
             let timeout;
 
-            return function () {
+            return function() {
                 const functionCall = () => fn.apply(this, arguments);
 
                 clearTimeout(timeout);
@@ -23,21 +23,29 @@ function initializeChart(Chart) {
 
         getWidth() {
             const width =
-                parseInt(d3.select('#' + this.props.id).style('width')) -
-                this.props.margin.left -
-                this.props.margin.right;
+        parseInt(d3.select('#' + this.props.id).style('width')) -
+        this.props.margin.left -
+        this.props.margin.right;
             return width;
         }
 
         getHeight() {
-            const height = parseInt(d3.select('#' + this.props.id).style('height')) -
-                this.props.margin.top -
-                this.props.margin.bottom;
+            const height =
+        parseInt(d3.select('#' + this.props.id).style('height')) -
+        this.props.margin.top -
+        this.props.margin.bottom;
             return height;
         }
 
         render() {
-            return <Chart { ...this.props } resize={ this.resize } getWidth={ this.getWidth } getHeight={ this.getHeight } />;
+            return (
+                <Chart
+                    { ...this.props }
+                    resize={ this.resize }
+                    getWidth={ this.getWidth }
+                    getHeight={ this.getHeight }
+                />
+            );
         }
     };
 }

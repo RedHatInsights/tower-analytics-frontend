@@ -12,7 +12,7 @@ class BarChart extends Component {
 
     // Methods
     init() {
-        // Clear our chart container element first
+    // Clear our chart container element first
         d3.selectAll('#d3-chart-root > *').remove();
         let { data } = this.props;
         const width = this.props.getWidth();
@@ -33,7 +33,11 @@ class BarChart extends Component {
         .append('g')
         .attr(
             'transform',
-            'translate(' + this.props.margin.left + ',' + this.props.margin.top + ')'
+            'translate(' +
+          this.props.margin.left +
+          ',' +
+          this.props.margin.top +
+          ')'
         );
         //[fail, success]
         let colors = d3.scaleOrdinal([ '#5cb85c', '#d9534f' ]);
@@ -56,7 +60,7 @@ class BarChart extends Component {
             data = data.splice(0, 7);
         }
 
-        data.forEach(function (d) {
+        data.forEach(function(d) {
             d.DATE = parseTime(d.DATE); // format date string into DateTime object
             d.RAN = +d.RAN;
             d.FAIL = +d.FAIL;
@@ -112,7 +116,11 @@ class BarChart extends Component {
         .append('text')
         .attr(
             'transform',
-            'translate(' + width / 2 + ' ,' + (height + this.props.margin.top + 20) + ')'
+            'translate(' +
+          width / 2 +
+          ' ,' +
+          (height + this.props.margin.top + 20) +
+          ')'
         )
         .style('text-anchor', 'middle')
         .text('Date');
@@ -149,7 +157,7 @@ class BarChart extends Component {
     }
 
     componentDidMount() {
-        // document.getElementById('spinny').style.display = 'none';
+    // document.getElementById('spinny').style.display = 'none';
         this.init();
     }
 
