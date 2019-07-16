@@ -1,7 +1,8 @@
 /*eslint max-len: ["error", { "ignoreStrings": true }]*/
 import * as d3 from 'd3';
 
-const barChartEndpoint = 'https://gist.githubusercontent.com/kialam/52130f7e3292dad03a0c841f39a3b9d3/raw/ce1496e22c103cfd04314bac98c67eb8f7b8a7a1/sample.csv';
+const barChartEndpoint =
+    'https://gist.githubusercontent.com/kialam/52130f7e3292dad03a0c841f39a3b9d3/raw/89b8d3215c4968739ae200f90780539eda38d844/sample.csv';
 const groupedBarChartEndpoint =
     'https://gist.githubusercontent.com/kialam/5d26af588b3f299a4589fc27d2be7ba3/raw/b21325b78b951968041a31a0e0ee061e4d8f40ff/groupedbarchartdata_large.json';
 const donutChart1Endpoint =
