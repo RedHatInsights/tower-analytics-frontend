@@ -5,9 +5,10 @@ import { Switch as PFSwitch } from '@patternfly/react-core';
 import styled from 'styled-components';
 
 const Container = styled.div`
-  flex-basis: 20%;
-  /* border: 1px solid black; */
-  /* overflow: auto; */
+  margin-top: 20px;
+  height: 350px;
+  overflow: auto;
+  width: 25%;
 `;
 
 const LegendDetail = styled.div`
@@ -21,9 +22,9 @@ const LegendDetail = styled.div`
 const Color = styled.div.attrs(props => ({
     color: props.color || 'black'
 }))`
-  width: 15px;
-  height: 15px;
-  border-radius: calc(15px/2);
+  width: 12px;
+  height: 12px;
+  border-radius: calc(12px/2);
   background: ${props => props.color};
 `;
 
