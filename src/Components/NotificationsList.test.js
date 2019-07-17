@@ -44,6 +44,7 @@ describe('Components/NotificationsList', () => {
     ];
     const filterBy = 'all';
     const onNotificationChange = () => {};
+
     it('should render successfully', () => {
         mount(
             <NotificationsList
