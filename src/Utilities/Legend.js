@@ -6,15 +6,12 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   margin-top: 20px;
-  height: 350px;
   overflow: auto;
-  width: 25%;
 `;
 
 const LegendDetail = styled.div`
   display: flex;
   padding: 5px 10px;
-  /* border: 1px solid red; */
   justify-content: center;
   align-items: center;
 `;
@@ -24,7 +21,6 @@ const Color = styled.div.attrs(props => ({
 }))`
   width: 12px;
   height: 12px;
-  border-radius: calc(12px/2);
   background: ${props => props.color};
 `;
 
@@ -68,15 +64,17 @@ class Legend extends Component {
                 { data.map(
                     ({ name, value, id }) => (
                         <LegendDetail key={ name }>
-                            <Switch
-                                isChecked={ selected.some(selection => selection === id) }
-                                onChange={ this.handleChange }
-                                aria-label={ name }
-                                value={ id }
-                                id={ `${name}-${id}` }
-                            />
-                            <Title>{ name }</Title>
                             <Color color={ value } />
+                            <Title>{ name }</Title>
+                            { selected && (
+                                <Switch
+                                    isChecked={ selected.some(selection => selection === id) }
+                                    onChange={ this.handleChange }
+                                    aria-label={ name }
+                                    value={ id }
+                                    id={ `${name}-${id}` }
+                                />
+                            ) }
                         </LegendDetail>
                     )) }
             </Container>

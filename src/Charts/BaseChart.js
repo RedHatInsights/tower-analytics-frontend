@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 import * as d3 from 'd3';
 
@@ -22,19 +23,32 @@ function initializeChart(Chart) {
         }
 
         getWidth() {
-            const width =
-        parseInt(d3.select('#' + this.props.id).style('width')) -
-        this.props.margin.left -
-        this.props.margin.right;
-            return width;
+            // console.log(d3.select('#' + this.props.id))
+            let width;
+            try {
+                width =
+            parseInt(d3.select('#' + this.props.id).style('width')) -
+            this.props.margin.left -
+            this.props.margin.right;
+            } catch (e) {
+                width = 700;
+            } finally {
+                return width;
+            }
         }
 
         getHeight() {
-            const height =
-        parseInt(d3.select('#' + this.props.id).style('height')) -
-        this.props.margin.top -
-        this.props.margin.bottom;
-            return height;
+            let height;
+            try {
+                height =
+            parseInt(d3.select('#' + this.props.id).style('height')) -
+            this.props.margin.top -
+            this.props.margin.bottom;
+            } catch(e) {
+                height = 350;
+            } finally {
+                return height;
+            }
         }
 
         render() {

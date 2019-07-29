@@ -19,7 +19,7 @@ import {
   Button,
   Card,
   CardBody,
-  CardHeader,
+  CardHeader as PFCardHeader,
   DataList,
   DataListItem,
   DataListCell,
@@ -35,6 +35,7 @@ import {
 
 import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 
+import PieChart from "../../Charts/PieChart";
 import BarChart from "../../Charts/BarChart";
 import LineChart from "../../Charts/LineChart";
 import ModulesList from "../../Components/ModulesList";
@@ -49,6 +50,21 @@ import GroupedBarChart from "../../Charts/GroupedBarChart";
 
 const PageHeader = styled(RHPageHeader)`
   padding: 8px 0 0 0;
+`;
+const CardHeader = styled(PFCardHeader)`
+&&& {
+  /* border-bottom: "2px solid #ebebeb";
+  display: flex;
+  justify-content: "space-between";
+  align-content: "center"; */
+  min-height: 60px;
+  --pf-c-card--first-child--PaddingTop: 10px;
+  --pf-c-card__header--not-last-child--PaddingBottom: 10px;
+
+  h3 {
+    font-size: .875em;
+  }
+}
 `;
 const PageHeaderTitle = styled(RHPageHeaderTitle)`
   margin-left: 20px;
@@ -67,6 +83,7 @@ const CardContainer = styled.div`
   .pf-c-card {
     width: 50%;
     margin-top: 20px;
+    overflow: auto;
   }
 
   .pf-c-card:first-of-type {
@@ -264,20 +281,18 @@ class SamplePage extends Component {
       isLeftOpen: false,
       isRightOpen: false,
       isModalOpen: false,
-      leftValue: "past week",
-      rightValue: "all clusters",
+      clusterTimeFrame: 7,
+      orgsJobsTimeFrame: 7,
+      orgsStorageTimeFrame: 7,
+      orgsPlaybookTimeFrame: 7,
+      rightValue: 0,
       notificationValue: "all",
-      isAccessible: false,
       modules: [],
       templates: [],
       clusters: [],
       notifications: [],
       modalTemplate: null,
       modalData: [],
-      rightOptions: [
-        { value: "please choose", label: "Select Hosts", disabled: true },
-        { value: "all clusters", label: "All Clusters", disabled: false }
-      ],
       activeTabKey: 0,
       barChartData: [],
       lineChartData: [],
@@ -294,25 +309,26 @@ class SamplePage extends Component {
     this.handleModalToggle = this.handleModalToggle.bind(this);
     this.getApiUrl = this.getApiUrl.bind(this);
     this.init = this.init.bind(this);
+    this.handleTimeFrameChange = this.handleTimeFrameChange.bind(this);
 
-    this.leftChange = (value, event) => {
-      this.setState({ leftValue: value });
-    };
+
     this.rightChange = (value, event) => {
-      this.setState({ rightValue: value });
+      this.setState({ rightValue: +value });
     };
     this.handleNotificationChange = (value, event) => {
       this.setState({ notificationValue: value });
     };
-    this.handleToggle = isAccessible => {
-      this.setState({ isAccessible });
-    };
-    this.leftOptions = [
+    this.timeFrameOptions = [
       { value: "please choose", label: "Select Date Range", disabled: true },
-      { value: "past week", label: "Past Week", disabled: false },
-      { value: "past 2 weeks", label: "Past 2 Weeks", disabled: false },
-      { value: "past month", label: "Past Month", disabled: false }
+      { value: 7, label: "Past Week", disabled: false },
+      { value: 14, label: "Past 2 Weeks", disabled: false },
+      { value: 31, label: "Past Month", disabled: false }
     ];
+    this.rightOptions = [
+      { value: "please choose", label: "Select Hosts", disabled: true },
+      { value: 0, label: "All Clusters", disabled: false },
+      { value: 1, label: "Cluster A", disabled: false }
+    ],
     this.notificationOptions = [
       {
         value: "please choose",
@@ -365,12 +381,15 @@ class SamplePage extends Component {
     this.contentRef2 = React.createRef();
 
     // Toggle currently active tab
-    this.handleTabClick = (event, tabIndex) => {
+    this.handleTabClick = (_event, tabIndex) => {
       this.setState({
         activeTabKey: tabIndex
       });
     };
   }
+  handleTimeFrameChange(value, { target: { name } }) {
+    this.setState({ [name]: +value });
+  };
 
   onRightToggle(isRightOpen) {
     this.setState({
@@ -452,15 +471,17 @@ class SamplePage extends Component {
                   alignItems: "center"
                 }}
               >
-                <h1>Job Status</h1>
+                <h2>Job Status</h2>
                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
                   <FormSelect
-                    value={this.state.leftValue}
-                    onChange={this.leftChange}
+                    name="clusterTimeFrame"
+                    value={this.state.clusterTimeFrame}
+                    onChange={this.handleTimeFrameChange}
+                    // onClick={this.handleTimeFrameChange}
                     aria-label="Select Date Range"
                     style={{ margin: "2px 10px" }}
                   >
-                    {this.leftOptions.map((option, index) => (
+                    {this.timeFrameOptions.map((option, index) => (
                       <FormSelectOption
                         isDisabled={option.disabled}
                         key={index}
@@ -475,7 +496,7 @@ class SamplePage extends Component {
                     aria-label="Select Hosts"
                     style={{ margin: "2px 10px" }}
                   >
-                    {this.state.rightOptions.map((option, index) => (
+                    {this.rightOptions.map((option, index) => (
                       <FormSelectOption
                         isDisabled={option.disabled}
                         key={index}
@@ -484,59 +505,28 @@ class SamplePage extends Component {
                       />
                     ))}
                   </FormSelect>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexDirection: "row",
-                      alignItems: "flex-end",
-                      padding: "5px",
-                      marginLeft: "5px"
-                    }}
-                  >
-                    <label style={{ marginRight: "10px" }}>Accessibility</label>
-                    <Switch
-                      // label={'Accessibility'}
-                      isChecked={this.state.isAccessible}
-                      onChange={this.handleToggle}
-                      aria-label="Accessibility enabled"
-                    />
-                  </div>
-                  {/* // </div> */}
                 </div>
               </CardHeader>
               <CardBody>
-                {barChartData.length > 0 && (
+                {rightValue === 0 && barChartData.length > 0 && (
                   <BarChart
                     margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                    id="d3-chart-root"
+                    id="d3-bar-chart-root"
                     data={barChartData}
-                    value={this.state.leftValue}
-                    isAccessible={this.state.isAccessible}
+                    value={this.state.clusterTimeFrame}
                     getApiUrl={this.getApiUrl}
                   />
                 )}
-                {/* {rightValue !== "all clusters" && (
-                                    <LineChart
-                                        width={700}
-                                        height={350}
-                                        id="d3-chart-root"
-                                        value={this.state.leftValue}
-                                        cluster={this.state.rightValue}
-                                        isAccessible={this.state.isAccessible}
-                                        getApiUrl={this.getApiUrl}
-                                    />
-                                )} */}
-                {/* {lineChartData.length > 0 && (
-                                    <LineChart
-                                        margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                                        id="d3-line-chart-root"
-                                        data={lineChartData}
-                                        value={this.state.leftValue}
-                                        cluster={this.state.rightValue}
-                                        isAccessible={this.state.isAccessible}
-                                        getApiUrl={this.getApiUrl}
-                                    />
-                                )} */}
+                {rightValue !== 0 && lineChartData.length > 0 && (
+                  <LineChart
+                    margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
+                    id="d3-bar-chart-root"
+                    data={lineChartData}
+                    value={this.state.clusterTimeFrame}
+                    cluster={this.state.rightValue}
+                    getApiUrl={this.getApiUrl}
+                  />
+                )}
               </CardBody>
             </Card>
             <div
@@ -545,9 +535,9 @@ class SamplePage extends Component {
             >
               <TemplatesList
                 templates={[
-                  { name: "Template 1", type: "Playbook Run" },
-                  { name: "Template 2", type: "Workflow" },
-                  { name: "Template 3", type: "Playbook Run" }
+                  { name: "Template 1", type: "Playbook Run", id: 1 },
+                  { name: "Template 2", type: "Workflow", id: 2 },
+                  { name: "Template 3", type: "Playbook Run", id: 3 }
                 ]}
               />
               <ModulesList
@@ -582,10 +572,38 @@ class SamplePage extends Component {
         >
           <Main>
             <TopCard>
+              <CardHeader
+                style={{
+                  borderBottom: "2px solid #ebebeb",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center"
+                }}
+              >
+                <h2>Organization Status</h2>
+                <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <FormSelect
+                    name="orgsJobsTimeFrame"
+                    value={this.state.orgsJobsTimeFrame}
+                    onChange={this.handleTimeFrameChange}
+                    aria-label="Select Date Range"
+                    style={{ margin: "2px 10px" }}
+                  >
+                    {this.timeFrameOptions.map((option, index) => (
+                      <FormSelectOption
+                        isDisabled={option.disabled}
+                        key={index}
+                        value={option.value}
+                        label={option.label}
+                      />
+                    ))}
+                  </FormSelect>
+                </div>
+              </CardHeader>
               <CardBody>
                 {groupedBarChartData.length > 0 && activeTabKey == 1 && (
                   <GroupedBarChart
-                    margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
+                    margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
                     id="d3-grouped-bar-chart-root"
                     data={groupedBarChartData}
                   />
@@ -608,12 +626,13 @@ class SamplePage extends Component {
                       Average Elapsed Playbook Run
                     </h2>
                     <FormSelect
-                      value={this.state.leftValue}
-                      onChange={this.leftChange}
+                      name="orgsPlaybookTimeFrame"
+                      value={this.state.orgsPlaybookTimeFrame}
+                      onChange={this.handleTimeFrameChange}
                       aria-label="Select Date Range"
                       style={{ margin: "2px 10px", width: "33%" }}
                     >
-                      {this.leftOptions.map((option, index) => (
+                      {this.timeFrameOptions.map((option, index) => (
                         <FormSelectOption
                           isDisabled={option.disabled}
                           key={index}
@@ -624,7 +643,7 @@ class SamplePage extends Component {
                     </FormSelect>
                   </CardHeader>
                   {pieChart1Data.length > 0 && activeTabKey == 1 && (
-                    <DonutChart
+                    <PieChart
                       margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                       id="d3-donut-1-chart-root"
                       data={pieChart1Data}
@@ -645,12 +664,13 @@ class SamplePage extends Component {
                   >
                     <h2 style={{ marginLeft: "20px" }}>Storage</h2>
                     <FormSelect
-                      value={this.state.leftValue}
-                      onChange={this.leftChange}
+                      name="orgsStorageTimeFrame"
+                      value={this.state.orgsStorageTimeFrame}
+                      onChange={this.handleTimeFrameChange}
                       aria-label="Select Date Range"
                       style={{ margin: "2px 10px", width: "33%" }}
                     >
-                      {this.leftOptions.map((option, index) => (
+                      {this.timeFrameOptions.map((option, index) => (
                         <FormSelectOption
                           isDisabled={option.disabled}
                           key={index}
@@ -661,7 +681,7 @@ class SamplePage extends Component {
                     </FormSelect>
                   </CardHeader>
                   {pieChart2Data.length > 0 && activeTabKey == 1 && (
-                    <DonutChart
+                    <PieChart
                       margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                       id="d3-donut-2-chart-root"
                       data={pieChart2Data}

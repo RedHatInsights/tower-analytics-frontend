@@ -8,10 +8,56 @@ class LineChart extends Component {
     constructor(props) {
         super(props);
         this.init = this.init.bind(this);
+        this.draw = this.draw.bind(this);
+        this.formatData = this.formatData.bind(this);
+        this.state = {
+            formattedData: []
+        };
     }
 
-    // Methods
+    async formatData() {
+        const { data, value } = this.props;
+        const parseTime = d3.timeParse('%Y-%m-%d');
+
+        const formattedData = data.reduce((formatted, { DATE, RAN, FAIL, TOTAL = 0 }) => {
+            DATE = parseTime(DATE) || new Date();
+            RAN = +RAN || 0;
+            FAIL = +FAIL || 0;
+            TOTAL = RAN + FAIL || 0;
+            return formatted.concat({ DATE, RAN, FAIL, TOTAL });
+        }, []);
+        const halfLength = Math.ceil(data.length / 2);
+        if (value === 14) {
+            return [ ...formattedData ].splice(0, halfLength);
+        }
+
+        if (value === 7) {
+            return [ ...formattedData ].splice(0, value);
+        }
+
+        return formattedData;
+    }
+    getTickCount() {
+        const { value } = this.props;
+        if (value > 20) {
+            return (value / 2);
+        } else {
+            return value;
+        }
+    }
     async init() {
+        const formattedData = await this.formatData();
+        this.setState((prevState) => {
+            if (prevState.formattedData === formattedData) {
+                return null;
+            } else {
+                return { formattedData };
+            }
+        });
+        this.draw();
+    }
+    // Methods
+    async draw() {
     // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
         const width = this.props.getWidth();
@@ -32,39 +78,12 @@ class LineChart extends Component {
             };
         }
 
-        const parseTime = d3.timeParse('%Y-%m-%d');
-        // const formatTooltipDate = d3.timeFormat('%b %d');
-        const x = d3.scaleTime().range([ 0, width ]);
-        const y = d3.scaleLinear().range([ height, 0 ]);
+        const x = d3.scaleTime().rangeRound([ 0, width ]);
+        const y = d3.scaleLinear().range([ height, 0 ]).nice();
 
         //[success, fail, total]
-        let colors = d3.scaleOrdinal([ '#5cb85c', '#d9534f', '#337ab7' ]);
-        if (this.props.isAccessible) {
-            colors = d3.scaleOrdinal([ '#92D400', '#A30000', '#337ab7' ]);
-        }
-
-        const top =
-      d3
-      .select('#' + this.props.id)
-      .node()
-      .getBoundingClientRect().y + this.props.margin.top; // offset padding
-
-        const vertical = d3
-        .select('#' + this.props.id)
-        .append('div')
-        .attr('class', 'remove')
-        .style('opacity', 0)
-        .style('position', 'absolute')
-        .style('z-index', '19')
-        .style('width', '1px')
-        .style('height', height + 'px')
-        // need y position of chart
-        .style('top', top + 'px')
-        .style('left', '0px')
-        .style('pointer-events', 'none')
-        .style('border-left', '3px dotted #393f44');
-
-        // d3.select('svg').remove();
+        // let colors = d3.scaleOrdinal([ '4CB140', '#C46100', '#06C' ]);
+        let colors = d3.scaleOrdinal([ '#6EC664', '#A30000', '#06C' ]);
         const svg = d3
         .select('#' + this.props.id)
         .append('svg')
@@ -85,26 +104,8 @@ class LineChart extends Component {
             svg: '#' + this.props.id,
             colors
         });
-        // let data = await d3.csv(
-        //   'https://gist.githubusercontent.com/kialam/52130f7e3292dad03a0c841f39a3b9d3/raw/ce1496e22c103cfd04314bac98c67eb8f7b8a7a1/sample.csv'
-        // );
-        let { data } = this.props;
-        const halfLength = Math.ceil(data.length / 2);
-
-        if (this.props.value === 'past 2 weeks') {
-            data = data.splice(0, halfLength);
-        }
-
-        if (this.props.value === 'past week') {
-            data = data.splice(0, 7);
-        }
-
-        data.forEach(function(d) {
-            d.DATE = parseTime(d.DATE); // format date string into DateTime object
-            d.RAN = +d.RAN;
-            d.FAIL = +d.FAIL;
-            d.TOTAL = +(+d.FAIL + +d.RAN);
-        });
+        let { formattedData: data } = this.state;
+        const { value } = this.props;
         // Scale the range of the data
         x.domain(
             d3.extent(data, function(d) {
@@ -121,7 +122,7 @@ class LineChart extends Component {
         const successLine = d3
         .line()
         // .defined(d => !isNaN(d.RAN))
-        .curve(d3.curveLinear)
+        .curve(d3.curveMonotoneX)
         .x(function(d) {
             return x(d.DATE);
         })
@@ -132,62 +133,17 @@ class LineChart extends Component {
         const failLine = d3
         .line()
         .defined(d => !isNaN(d.FAIL))
-        .curve(d3.curveLinear)
+        .curve(d3.curveMonotoneX)
         .x(function(d) {
             return x(d.DATE);
         })
         .y(function(d) {
             return y(d.FAIL);
         });
-
-        const totalLine = d3
-        .line()
-        .defined(d => !isNaN(d.TOTAL))
-        .curve(d3.curveLinear)
-        .x(function(d) {
-            return x(d.DATE);
-        })
-        .y(function(d) {
-            return y(d.TOTAL);
-        });
-
-        // Three function that change the tooltip when user hover / move
-        const handleMouseOver = function(d) {
-            const radialOffset = this.r.baseVal.value / 2;
-            const intersectX =
-        d3
-        .select(this)
-        .node()
-        .getBoundingClientRect().x + radialOffset;
-            // show tooltip
-            tooltip.handleMouseOver(d);
-            // show vertical line
-            vertical
-            .transition()
-            .style('opacity', 1)
-            .style('left', intersectX + 'px');
-        };
-
-        const handleMouseMove = function() {
-            const radialOffset = this.r.baseVal.value / 2;
-            const intersectX =
-        d3
-        .select(this)
-        .node()
-        .getBoundingClientRect().x + radialOffset;
-            vertical.style('left', intersectX + 'px');
-        };
-
-        const handleMouseOut = function() {
-            // hide tooltip
-            tooltip.handleMouseOut();
-            // hide vertical line
-            vertical.transition().style('opacity', 0);
-        };
-
         // Add the Y Axis
         svg
         .append('g')
+        .attr('class', 'y-axis')
         .call(
             d3
             .axisLeft(y)
@@ -196,6 +152,8 @@ class LineChart extends Component {
         )
         .selectAll('line')
         .attr('stroke', '#d7d7d7');
+        svg.selectAll('.y-axis .tick text').attr('x', -5);
+
         // text label for the y axis
         svg
         .append('text')
@@ -206,31 +164,73 @@ class LineChart extends Component {
         .style('text-anchor', 'middle')
         .text('Job Runs');
         // Add the X Axis
+        let ticks;
+        const maxTicks = Math.round(data.length / (value / 2));
+        ticks = data.map(d => d.DATE);
+        if (value === 31) {
+            ticks = data.map((d, i) =>
+                i % maxTicks === 0 ? d.DATE : undefined).filter(item => item);
+        }
+
         svg
         .append('g')
+        .attr('class', 'x-axis')
         .attr('transform', 'translate(0,' + height + ')')
         .call(
             d3
             .axisBottom(x)
-            .ticks()
+            .tickValues(ticks)
             .tickSize(-height)
-            .tickFormat(d3.timeFormat('%b-%d'))
+            .tickFormat(d3.timeFormat('%-m/%-d')) // "1/19"
         ) // "Jan-01"
         .selectAll('line')
         .attr('stroke', '#d7d7d7');
+        svg.selectAll('.x-axis .tick text').attr('y', 10);
+
         // text label for the x axis
         svg
         .append('text')
         .attr(
             'transform',
             'translate(' +
-          width / 2 +
-          ' ,' +
-          (height + this.props.margin.top + 20) +
-          ')'
+                width / 2 +
+                ' ,' +
+                (height + this.props.margin.top + 20) +
+                ')'
         )
         .style('text-anchor', 'middle')
         .text('Date');
+        const vertical = svg
+        .append('path')
+        .attr('class', 'mouse-line')
+        .style('stroke', 'black')
+        .style('stroke-width', '3px')
+        .style('stroke-dasharray', ('3, 3'))
+        .style('opacity', '0');
+
+        const handleMouseOver = function(d) {
+            tooltip.handleMouseOver(d);
+            // show vertical line
+            vertical.transition().style('opacity', '1');
+        };
+
+        const handleMouseMove = function() {
+            let intersectX = this.cx.baseVal.value;
+            vertical
+            .attr('d', function () {
+                let d = 'M' + intersectX + ',' + height;
+                d += ' ' + intersectX + ',' + 0;
+                return d;
+            });
+        };
+
+        const handleMouseOut = function() {
+            // hide tooltip
+            tooltip.handleMouseOut();
+            // hide vertical line
+            vertical.transition().style('opacity', 0);
+        };
+
         // Add the successLine path.
         svg
         .append('path')
@@ -252,18 +252,6 @@ class LineChart extends Component {
         .attr('stroke-width', 2)
         .attr('d', failLine)
         .call(transition);
-        // Add the totalLine path.
-        svg
-        .append('path')
-        .data([ data ])
-        .attr('class', 'line')
-        .style('fill', 'none')
-        .style('stroke', () => colors(2))
-        .attr('stroke-width', 2)
-        .attr('d', totalLine)
-        .call(transition);
-
-        // create our successLine circles
         svg
         .selectAll('dot')
         .data(data)
@@ -300,41 +288,21 @@ class LineChart extends Component {
         .on('mouseover', handleMouseOver)
         .on('mousemove', handleMouseMove)
         .on('mouseout', handleMouseOut);
-        // create our totalLine circles
-        svg
-        .selectAll('dot')
-        .data(data)
-        .enter()
-        .append('circle')
-        .attr('r', 3)
-        .style('stroke', () => colors(2))
-        .style('fill', () => colors(2))
-        .attr('cx', function(d) {
-            return x(d.DATE);
-        })
-        .attr('cy', function(d) {
-            return y(d.TOTAL);
-        })
-        .on('mouseover', handleMouseOver)
-        .on('mousemove', handleMouseMove)
-        .on('mouseout', handleMouseOut);
+
         // Call the resize function whenever a resize event occurs
         d3.select(window).on('resize', this.props.resize(this.init, 500));
     }
 
-    async componentDidMount() {
-        await this.init();
+    componentDidMount() {
+        this.init();
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.value !== this.props.value) {
             this.init();
         }
-
-        if (prevProps.isAccessible !== this.props.isAccessible) {
-            this.init();
-        }
     }
+
     render() {
         return <div id={ this.props.id } />;
     }
@@ -342,9 +310,8 @@ class LineChart extends Component {
 
 LineChart.propTypes = {
     id: PropTypes.string,
-    isAccessible: PropTypes.bool,
     data: PropTypes.array,
-    value: PropTypes.string,
+    value: PropTypes.number,
     margin: PropTypes.object,
     resize: PropTypes.func,
     getHeight: PropTypes.func,

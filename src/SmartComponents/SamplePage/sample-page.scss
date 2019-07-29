@@ -46,39 +46,16 @@
   }
 }
 
-#d3-chart-root {
-  min-height: 400px;
-}
-
-#spinny {
-  height: 140px;
-  top: 50%;
-  bottom: 50%;
-  position: absolute;
-  width: 205px;
-  left: 50%;
-  right: 50%;
-  display: none;
-}
-
-/*Styling for the lines connecting the labels to the slices*/
-polyline{
-  opacity: .3;
-  stroke: black;
-  stroke-width: 2px;
-  fill: none;
-}
-
 #d3-donut-1-chart-root, #d3-donut-2-chart-root {
   min-height: 300px;
-  // border: 1px solid;
+  min-width: 60%;
 }
 
 h2 {
   color: #393f44;
 }
 
-#d3-grouped-bar-chart-root, #d3-line-chart-root {
+#d3-grouped-bar-chart-root, #d3-line-chart-root, #d3-bar-chart-root, #d3-pie-1-chart-root {
   min-height: 450px;
   min-width: 75%;
 }

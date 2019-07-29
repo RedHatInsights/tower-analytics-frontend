@@ -6,8 +6,12 @@ import {
     Badge,
     DataList,
     DataListItem as PFDataListItem,
-    DataListCell
+    DataListCell as PFDataListCell
 } from '@patternfly/react-core';
+
+const DataListCell = styled(PFDataListCell)`
+    --pf-c-data-list__cell-cell--MarginRight: 0;
+`;
 
 const DataListItem = styled(PFDataListItem)`
   display: flex;

@@ -7,23 +7,60 @@ import Tooltip from '../Utilities/Tooltip';
 class BarChart extends Component {
     constructor(props) {
         super(props);
+        this.draw = this.draw.bind(this);
         this.init = this.init.bind(this);
+        this.formatData = this.formatData.bind(this);
+        this.state = {
+            formattedData: []
+        };
     }
 
+    async formatData() {
+        const { data, value } = this.props;
+        const parseTime = d3.timeParse('%Y-%m-%d');
+
+        const formattedData = data.reduce((formatted, { DATE, RAN, FAIL, TOTAL = 0 }) => {
+            DATE = parseTime(DATE) || new Date();
+            RAN = +RAN || 0;
+            FAIL = +FAIL || 0;
+            TOTAL = RAN + FAIL || 0;
+            return formatted.concat({ DATE, RAN, FAIL, TOTAL });
+        }, []);
+        const halfLength = Math.ceil(data.length / 2);
+        if (value === 14) {
+            return [ ...formattedData ].splice(0, halfLength);
+        }
+
+        if (value === 7) {
+            return [ ...formattedData ].splice(0, value);
+        }
+
+        return formattedData;
+    }
+    async init() {
+        const formattedData = await this.formatData();
+        this.setState((prevState) => {
+            if (prevState.formattedData === formattedData) {
+                return null;
+            } else {
+                return { formattedData };
+            }
+        });
+        this.draw();
+    }
     // Methods
-    init() {
-    // Clear our chart container element first
-        d3.selectAll('#d3-chart-root > *').remove();
-        let { data } = this.props;
+    draw() {
+        // Clear our chart container element first
+        d3.selectAll('#' + this.props.id + ' > *').remove();
+        let { formattedData: data } = this.state;
+        const { value } = this.props;
         const width = this.props.getWidth();
         const height = this.props.getHeight();
-        const parseTime = d3.timeParse('%Y-%m-%d');
-        // const formatTooltipDate = d3.timeFormat('%m/%d');
         const x = d3
         .scaleBand()
         .rangeRound([ 0, width ])
         .padding(0.35); // percentage
-        const y = d3.scaleLinear().range([ height, 0 ]);
+        const y = d3.scaleLinear().range([ height, 0 ]).nice();
 
         const svg = d3
         .select('#' + this.props.id)
@@ -34,38 +71,19 @@ class BarChart extends Component {
         .attr(
             'transform',
             'translate(' +
-          this.props.margin.left +
-          ',' +
-          this.props.margin.top +
-          ')'
+                this.props.margin.left +
+                ',' +
+                this.props.margin.top +
+                ')'
         );
         //[fail, success]
-        let colors = d3.scaleOrdinal([ '#5cb85c', '#d9534f' ]);
-        if (this.props.isAccessible) {
-            colors = d3.scaleOrdinal([ '#92D400', '#A30000' ]);
-        }
+        let colors = d3.scaleOrdinal([ '#6EC664', '#A30000' ]);
 
         const barTooltip = new Tooltip({
             svg: '#' + this.props.id,
             colors
         });
         const status = [ 'FAIL', 'RAN' ];
-        const halfLength = Math.ceil(data.length / 2);
-
-        if (this.props.value === 'past 2 weeks') {
-            data = data.splice(0, halfLength);
-        }
-
-        if (this.props.value === 'past week') {
-            data = data.splice(0, 7);
-        }
-
-        data.forEach(function(d) {
-            d.DATE = parseTime(d.DATE); // format date string into DateTime object
-            d.RAN = +d.RAN;
-            d.FAIL = +d.FAIL;
-            d.TOTAL = +(+d.FAIL + +d.RAN);
-        });
 
         // stack our data
         const stack = d3
@@ -81,6 +99,7 @@ class BarChart extends Component {
         // Add the Y Axis
         svg
         .append('g')
+        .attr('class', 'y-axis')
         .call(
             d3
             .axisLeft(y)
@@ -89,6 +108,7 @@ class BarChart extends Component {
         )
         .selectAll('line')
         .attr('stroke', '#d7d7d7');
+        svg.selectAll('.y-axis .tick text').attr('x', -5);
         // text label for the y axis
         svg
         .append('text')
@@ -99,28 +119,40 @@ class BarChart extends Component {
         .style('text-anchor', 'middle')
         .text('Jobs Across All Clusters');
         // Add the X Axis
+        let ticks;
+        const maxTicks = Math.round(data.length / (value / 2));
+        ticks = data.map(d => d.DATE);
+        if (value === 31) {
+            ticks = data.map((d, i) =>
+                i % maxTicks === 0 ? d.DATE : undefined).filter(item => item);
+        }
+
         svg
         .append('g')
+        .attr('class', 'x-axis')
         .attr('transform', 'translate(0,' + height + ')')
         .call(
             d3
             .axisBottom(x)
-            .ticks(8)
+            .tickValues(ticks)
             .tickSize(-height)
-            .tickFormat(d3.timeFormat('%m/%d')) // "01/19"
+            .tickFormat(d3.timeFormat('%-m/%-d')) // "1/19"
         )
         .selectAll('line')
         .attr('stroke', '#d7d7d7');
+        svg.selectAll('.x-axis .tick text')
+        .attr('y', 10);
+
         // text label for the x axis
         svg
         .append('text')
         .attr(
             'transform',
             'translate(' +
-          width / 2 +
-          ' ,' +
-          (height + this.props.margin.top + 20) +
-          ')'
+                width / 2 +
+                ' ,' +
+                (height + this.props.margin.top + 20) +
+                ')'
         )
         .style('text-anchor', 'middle')
         .text('Date');
@@ -153,20 +185,15 @@ class BarChart extends Component {
         .on('mouseout', barTooltip.handleMouseOut);
 
         // Call the resize function whenever a resize event occurs
-        d3.select(window).on('resize', this.props.resize(this.init, 500));
+        window.addEventListener('resize', this.props.resize(this.init, 1000));
     }
 
     componentDidMount() {
-    // document.getElementById('spinny').style.display = 'none';
         this.init();
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.value !== this.props.value) {
-            this.init();
-        }
-
-        if (prevProps.isAccessible !== this.props.isAccessible) {
             this.init();
         }
     }
@@ -178,9 +205,8 @@ class BarChart extends Component {
 
 BarChart.propTypes = {
     id: PropTypes.string,
-    isAccessible: PropTypes.bool,
     data: PropTypes.array,
-    value: PropTypes.string,
+    value: PropTypes.number,
     margin: PropTypes.object,
     resize: PropTypes.func,
     getHeight: PropTypes.func,

@@ -4,25 +4,34 @@ import PropTypes from 'prop-types';
 import {
     DataList,
     DataListItem as PFDataListItem,
-    DataListCell,
+    DataListCell as PFDataListCell,
     FormSelect,
     FormSelectOption
 } from '@patternfly/react-core';
 
 import { WarningTriangleIcon } from '@patternfly/react-icons';
 
+const DataListCell = styled(PFDataListCell)`
+    --pf-c-data-list__cell-cell--MarginRight: 0;
+    &.pf-c-data-list__cell {
+        padding: 0;
+        display: flex;
+        align-items: center;
+    }
+`;
+
 const DataListItem = styled(PFDataListItem)`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  align-content: center;
   padding: 10px 15px;
-
-  &:last-of-type {
-    border-bottom: 1px solid var(--pf-global--BorderColor--100);
-  }
 `;
 
+const DataCellEnd = styled(DataListCell)`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+`;
 const colors = { error: '#db524b', warning: '#f0ad37', '': '' };
 
 const NotificationTemplate = ({ notifications }) =>
@@ -84,7 +93,7 @@ const NotificationsList = ({
             <DataListCell>
                 <h3>Notifications</h3>
             </DataListCell>
-            <DataListCell>
+            <DataCellEnd>
                 <FormSelect
                     value={ filterBy }
                     onChange={ onNotificationChange }
@@ -100,7 +109,7 @@ const NotificationsList = ({
                         />
                     )) }
                 </FormSelect>
-            </DataListCell>
+            </DataCellEnd>
         </DataListItem>
         { filterBy === 'all' && (
             <NotificationTemplate notifications={ notifications } />

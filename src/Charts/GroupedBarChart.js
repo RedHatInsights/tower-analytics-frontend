@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import initializeChart from './BaseChart';
 import * as d3 from 'd3';
 import Legend from '../Utilities/Legend';
+import { pfmulti } from '../Utilities/colors';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -11,7 +12,8 @@ const Wrapper = styled.div`
   flex-shrink: 0;
 `;
 
-const color = d3.scaleOrdinal(d3.schemePaired);
+// const color = d3.scaleOrdinal(d3.schemePaired);
+const color = d3.scaleOrdinal(pfmulti);
 
 class Tooltip {
     constructor(props) {
@@ -216,11 +218,11 @@ class GroupedBarChart extends Component {
         const x0 = d3
         .scaleBand()
         .range([ 0, width ])
-        .padding(0.15);
+        .padding(0.35);
         // x scale of individual grouped bars
         const x1 = d3.scaleBand();
 
-        const y = d3.scaleLinear().range([ height, 0 ]);
+        const y = d3.scaleLinear().range([ height, 0 ]).nice();
 
         const xAxis = d3
         .axisBottom(x0)
@@ -236,7 +238,7 @@ class GroupedBarChart extends Component {
         .select('#' + this.props.id)
         .append('svg')
         .attr('width', width + this.props.margin.left + this.props.margin.right)
-        .attr('height', height + this.props.margin.bottom)
+        .attr('height', height + this.props.margin.bottom + this.props.margin.top)
         .append('g')
         .attr(
             'transform',
@@ -298,7 +300,7 @@ class GroupedBarChart extends Component {
         .append('text')
         .attr(
             'transform',
-            'translate(' + width / 2 + ' ,' + (height + this.props.margin.top) + ')'
+            'translate(' + width / 2 + ' ,' + (height + this.props.margin.top + 25) + ')'
         )
         .style('text-anchor', 'middle')
         .text('Date');
@@ -316,7 +318,6 @@ class GroupedBarChart extends Component {
         let bars = slice.selectAll('rect').data(function(d) {
             return d.selectedOrgs;
         });
-        // .exit().remove()
         bars.exit().remove();
 
         const subEnter = bars
@@ -357,7 +358,7 @@ class GroupedBarChart extends Component {
         //     .attr('height', function (d) { return height - y(d.value); });
 
         // Call the resize function whenever a resize event occurs
-        d3.select(window).on('resize', this.props.resize(this.init, 500));
+        window.addEventListener('resize', this.props.resize(this.init, 500));
     }
 
     componentDidUpdate(prevProps, prevState) {
