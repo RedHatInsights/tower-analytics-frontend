@@ -107,111 +107,111 @@ const SampleComponent = asyncComponent(() =>
  * https://reactjs.org/docs/components-and-props.html
  * https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43
  */
-class ModalTrigger extends Component {
-  constructor(props) {
-    super(props);
-    this.handleClick = this.handleClick.bind(this);
-  }
+// class ModalTrigger extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.handleClick = this.handleClick.bind(this);
+//   }
 
-  handleClick() {
-    this.props.onLinkClick(this.props.value);
-  }
+//   handleClick() {
+//     this.props.onLinkClick(this.props.value);
+//   }
 
-  render() {
-    return (
-      <span
-        style={{ color: "#007bba", cursor: "pointer" }}
-        onClick={this.handleClick}
-      >
-        {this.props.value}
-      </span>
-    );
-  }
-}
+//   render() {
+//     return (
+//       <span
+//         style={{ color: "#007bba", cursor: "pointer" }}
+//         onClick={this.handleClick}
+//       >
+//         {this.props.value}
+//       </span>
+//     );
+//   }
+// }
 
-class TemplateModal extends Component {
-  constructor(props) {
-    super(props);
-    this.handleClose = this.handleClose.bind(this);
-  }
+// class TemplateModal extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.handleClose = this.handleClose.bind(this);
+//   }
 
-  handleClose() {
-    this.props.onModalClose(null);
-  }
+//   handleClose() {
+//     this.props.onModalClose(null);
+//   }
 
-  render() {
-    const successfulIcon = (
-      <CircleIcon
-        size="sm"
-        key="5"
-        style={{ color: "#52af51", marginRight: "5px" }}
-      />
-    );
-    const failedIcon = (
-      <CircleIcon
-        size="sm"
-        key="5"
-        style={{ color: "#d9534f", marginRight: "5px" }}
-      />
-    );
+//   render() {
+//     const successfulIcon = (
+//       <CircleIcon
+//         size="sm"
+//         key="5"
+//         style={{ color: "#52af51", marginRight: "5px" }}
+//       />
+//     );
+//     const failedIcon = (
+//       <CircleIcon
+//         size="sm"
+//         key="5"
+//         style={{ color: "#d9534f", marginRight: "5px" }}
+//       />
+//     );
 
-    var rows = [];
-    var i = 0;
-    var datum = null;
-    var average_time = 0;
-    var total_time = 0;
-    if (this.props.modalData !== undefined && this.props.modalData !== null) {
-      for (i = 0; i < this.props.modalData.length; i++) {
-        datum = this.props.modalData[i];
-        rows.push([
-          [
-            datum.status === "successful" ? successfulIcon : failedIcon,
-            "" + datum.id + " - " + datum.name
-          ],
-          datum.label,
-          datum.started,
-          forHumans(Math.floor(datum.elapsed))
-        ]);
-      }
-      if (this.props.modalData.length > 0) {
-        total_time = Math.floor(
-          this.props.modalData
-            .map(datum => +datum.elapsed)
-            .reduce((total, amount) => total + amount)
-        );
-        average_time = Math.floor(total_time / this.props.modalData.length);
-      }
-    }
-    return (
-      <Modal
-        className="templateModal"
-        title={this.props.modalTemplate}
-        isOpen={this.props.isModalOpen}
-        onClose={this.handleClose}
-        actions={[
-          <h4>
-            Total Time {forHumans(total_time)} | Avg Time{" "}
-            {forHumans(average_time)}
-          </h4>,
-          <Button key="cancel" variant="secondary" onClick={this.handleClose}>
-            Close
-          </Button>
-        ]}
-      >
-        <Card>
-          <Table
-            caption={[""]}
-            cells={["Id/Name", "Cluster", "Start Time", "Total Time"]}
-            rows={rows}
-          >
-            <TableHeader />
-            <TableBody />
-          </Table>
-        </Card>
-      </Modal>
-    );
-  }
-}
+//     var rows = [];
+//     var i = 0;
+//     var datum = null;
+//     var average_time = 0;
+//     var total_time = 0;
+//     if (this.props.modalData !== undefined && this.props.modalData !== null) {
+//       for (i = 0; i < this.props.modalData.length; i++) {
+//         datum = this.props.modalData[i];
+//         rows.push([
+//           [
+//             datum.status === "successful" ? successfulIcon : failedIcon,
+//             "" + datum.id + " - " + datum.name
+//           ],
+//           datum.label,
+//           datum.started,
+//           forHumans(Math.floor(datum.elapsed))
+//         ]);
+//       }
+//       if (this.props.modalData.length > 0) {
+//         total_time = Math.floor(
+//           this.props.modalData
+//             .map(datum => +datum.elapsed)
+//             .reduce((total, amount) => total + amount)
+//         );
+//         average_time = Math.floor(total_time / this.props.modalData.length);
+//       }
+//     }
+//     return (
+//       <Modal
+//         className="templateModal"
+//         title={this.props.modalTemplate}
+//         isOpen={this.props.isModalOpen}
+//         onClose={this.handleClose}
+//         actions={[
+//           <h4>
+//             Total Time {forHumans(total_time)} | Avg Time{" "}
+//             {forHumans(average_time)}
+//           </h4>,
+//           <Button key="cancel" variant="secondary" onClick={this.handleClose}>
+//             Close
+//           </Button>
+//         ]}
+//       >
+//         <Card>
+//           <Table
+//             caption={[""]}
+//             cells={["Id/Name", "Cluster", "Start Time", "Total Time"]}
+//             rows={rows}
+//           >
+//             <TableHeader />
+//             <TableBody />
+//           </Table>
+//         </Card>
+//       </Modal>
+//     );
+//   }
+// }
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.
  * Smart components are usually classes.
@@ -554,13 +554,13 @@ class SamplePage extends Component {
                 notifications={this.mockNotificationsData}
               />
             </div>
-            <TemplateModal
+            {/* <TemplateModal
               modalTemplate={modalTemplate}
               isModalOpen={isModalOpen}
               onModalClose={this.handleModalToggle}
               getApiUrl={this.getApiUrl}
               modalData={modalData}
-            />
+            /> */}
           </Main>
         </TabContent>
         <TabContent
