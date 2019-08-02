@@ -20,7 +20,7 @@ class D3Util {
         return this.readJSON(barChartEndpoint);
     }
     static getLineChartData() {
-        return this.readCSV(barChartEndpoint);
+        return this.readJSON(barChartEndpoint);
     }
     static getGroupedChartData() {
         return this.readJSON(groupedBarChartEndpoint);

@@ -110,7 +110,7 @@ class SamplePage extends Component {
 
   async init() {
     const barChartData = (await D3Util.getBarChartData()).data;
-    const lineChartData = await D3Util.getLineChartData();
+    const lineChartData = (await D3Util.getLineChartData()).data;
     const groupedBarChartData = await D3Util.getGroupedChartData();
     const pieChart1Data = await D3Util.getPieChart1Data();
     const pieChart2Data = await D3Util.getPieChart2Data();
