@@ -1,8 +1,7 @@
 /*eslint max-len: ["error", { "ignoreStrings": true }]*/
 import * as d3 from 'd3';
 
-const barChartEndpoint =
-    'https://gist.githubusercontent.com/kialam/52130f7e3292dad03a0c841f39a3b9d3/raw/89b8d3215c4968739ae200f90780539eda38d844/sample.csv';
+const barChartEndpoint = '/api/tower-analytics/chart30/';
 const groupedBarChartEndpoint =
     'https://gist.githubusercontent.com/kialam/5d26af588b3f299a4589fc27d2be7ba3/raw/b21325b78b951968041a31a0e0ee061e4d8f40ff/groupedbarchartdata_large.json';
 const donutChart1Endpoint =
@@ -18,7 +17,7 @@ class D3Util {
         return await d3.csv(endpoint);
     }
     static getBarChartData() {
-        return this.readCSV(barChartEndpoint);
+        return this.readJSON(barChartEndpoint);
     }
     static getLineChartData() {
         return this.readCSV(barChartEndpoint);
