@@ -135,7 +135,6 @@ class BarChart extends Component {
             d3
             .axisBottom(x)
             .tickValues(ticks)
-            .tickSize(-height)
             .tickFormat(d3.timeFormat('%-m/%-d')) // "1/19"
         )
         .selectAll('line')
@@ -183,19 +182,22 @@ class BarChart extends Component {
         .on('mouseover', barTooltip.handleMouseOver)
         .on('mousemove', barTooltip.handleMouseOver)
         .on('mouseout', barTooltip.handleMouseOut);
-
-        // Call the resize function whenever a resize event occurs
-        window.addEventListener('resize', this.props.resize(this.init, 1000));
     }
 
     componentDidMount() {
         this.init();
+        // Call the resize function whenever a resize event occurs
+        window.addEventListener('resize', this.props.resize(this.init, 1000));
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.value !== this.props.value) {
             this.init();
         }
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.props.resize(this.init, 1000));
     }
 
     render() {

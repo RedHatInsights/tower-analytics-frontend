@@ -157,9 +157,6 @@ class PieChart extends Component {
             d3.descending(parseFloat(a.count), parseFloat(b.count))
         );
     }
-    componentDidMount() {
-        this.init();
-    }
     init() {
         const color = d3.scaleOrdinal(pfmulti);
         // create our colors array to send to the Legend component
@@ -175,32 +172,32 @@ class PieChart extends Component {
     }
     draw() {
         const color = d3.scaleOrdinal(pfmulti);
-
+        
         d3.selectAll('#' + this.props.id + ' > *').remove();
         // const width = this.props.getWidth();
         // const height = this.props.getHeight();
         const width =
-            parseInt(d3.select('#' + this.props.id).style('width')) -
-            this.props.margin.left -
-            this.props.margin.right;
+        parseInt(d3.select('#' + this.props.id).style('width')) -
+        this.props.margin.left -
+        this.props.margin.right;
         const height =
-            parseInt(d3.select('#' + this.props.id).style('height')) -
-            this.props.margin.top -
-            this.props.margin.bottom;
+        parseInt(d3.select('#' + this.props.id).style('height')) -
+        this.props.margin.top -
+        this.props.margin.bottom;
         const svg = d3
-            .select('#' + this.props.id)
-            .append('svg')
-            .attr('width', width + this.props.margin.left + this.props.margin.right)
-            .attr('height', height + this.props.margin.bottom)
-            .append('g');
-
-
+        .select('#' + this.props.id)
+        .append('svg')
+        .attr('width', width + this.props.margin.left + this.props.margin.right)
+        .attr('height', height + this.props.margin.bottom)
+        .append('g');
+        
+        
         svg.append('g').attr('class', 'slices');
         svg.append('g').attr('class', 'labels');
         svg.append('g').attr('class', 'lines');
         const radius = Math.min(width, height) / 2;
         let { data } = this.props;
-
+        
         // this.sortDescending(data);
         const total = D3Util.getTotal(data);
         data.forEach(function (d) {
@@ -211,39 +208,42 @@ class PieChart extends Component {
             svg: '#' + this.props.id
         });
         const pie = d3
-            .pie()
-            .sort(null)
-            .value(d => d.count);
+        .pie()
+        .sort(null)
+        .value(d => d.count);
         const arc = d3
-            .arc()
-            .outerRadius(radius - 10) // controls top positioning of chart
-            .innerRadius(0);
-
+        .arc()
+        .outerRadius(radius - 10) // controls top positioning of chart
+        .innerRadius(0);
+        
         svg.attr('transform', 'translate(' + (width + this.props.margin.left + this.props.margin.right) / 2 + ',' + (height + this.props.margin.top + this.props.margin.bottom) / 2 + ')');
-
+        
         svg
-            .selectAll('path')
-            .data(pie(data))
-            .enter()
-            .append('path')
-            .attr('d', arc)
-            .attr('fill', (d, i) => color(i));
-
+        .selectAll('path')
+        .data(pie(data))
+        .enter()
+        .append('path')
+        .attr('d', arc)
+        .attr('fill', (d, i) => color(i));
+        
         svg
-            .selectAll('path')
-            .on('mouseover', function (d, i) {
-                d3.select(this).style('fill', d3.rgb(color(i)).darker(1));
-                donutTooltip.handleMouseOver();
-            })
-            .on('mouseout', function (d, i) {
-                d3.select(this).style('fill', color(i));
-                donutTooltip.handleMouseOut();
-            })
-            .on('mousemove', donutTooltip.handleMouseOver);
-
+        .selectAll('path')
+        .on('mouseover', function (d, i) {
+            d3.select(this).style('fill', d3.rgb(color(i)).darker(1));
+            donutTooltip.handleMouseOver();
+        })
+        .on('mouseout', function (d, i) {
+            d3.select(this).style('fill', color(i));
+            donutTooltip.handleMouseOut();
+        })
+        .on('mousemove', donutTooltip.handleMouseOver);
+        
         svg.append('g').classed('labels', true);
-        svg.append('g').classed('lines', true);
-
+        svg.append('g').classed('lines', true);        
+    }
+    
+    componentDidMount() {
+        this.init();
         // Call the resize function whenever a resize event occurs
         window.addEventListener('resize', this.resize(this.init, 500));
     }

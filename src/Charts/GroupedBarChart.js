@@ -179,12 +179,8 @@ class GroupedBarChart extends Component {
         await this.setState({ formattedData });
     }
 
-    componentDidMount() {
-        this.init();
-    }
-
     async init() {
-    // create the first 8 selected data points
+        // create the first 8 selected data points
         if (this.selection.length === 0) {
             this.orgsList.forEach((org, index) => {
                 if (index <= 7) {
@@ -209,7 +205,7 @@ class GroupedBarChart extends Component {
     }
 
     draw() {
-    // Clear our chart container element first
+        // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
         const { formattedData: data } = this.state;
         const width = this.props.getWidth();
@@ -225,9 +221,7 @@ class GroupedBarChart extends Component {
         const y = d3.scaleLinear().range([ height, 0 ]).nice();
 
         const xAxis = d3
-        .axisBottom(x0)
-        .ticks(8)
-        .tickSize(-height);
+        .axisBottom(x0);
 
         const yAxis = d3
         .axisLeft(y)
@@ -356,9 +350,16 @@ class GroupedBarChart extends Component {
         //     .duration(500)
         //     .attr('y', function (d) { return y(d.value); })
         //     .attr('height', function (d) { return height - y(d.value); });
+    };
 
+    componentDidMount() {
+        this.init();
         // Call the resize function whenever a resize event occurs
         window.addEventListener('resize', this.props.resize(this.init, 500));
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.props.resize(this.init, 1000));
     }
 
     componentDidUpdate(prevProps, prevState) {
