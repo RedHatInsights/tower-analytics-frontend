@@ -42,8 +42,6 @@ import ModulesList from "../../Components/ModulesList";
 import TemplatesList from "../../Components/TemplatesList";
 import NotificationsList from "../../Components/NotificationsList";
 
-import { forHumans } from "./util.js";
-
 import styled from "styled-components";
 import DonutChart from "../../Charts/DonutChart";
 import GroupedBarChart from "../../Charts/GroupedBarChart";
@@ -97,121 +95,7 @@ const TopCard = styled(Card)`
 const SampleComponent = asyncComponent(() =>
   import("../../PresentationalComponents/SampleComponent/sample-component")
 );
-// const PageHeader2 = asyncComponent(() => import('../../PresentationalComponents/PageHeader/page-header'));
-// const PageHeaderTitle2 = asyncComponent(() => import('../../PresentationalComponents/PageHeader/page-header-title'));
 
-/**
- * A smart component that handles all the api calls and data needed by the dumb components.
- * Smart components are usually classes.
- *
- * https://reactjs.org/docs/components-and-props.html
- * https://medium.com/@thejasonfile/dumb-components-and-smart-components-e7b33a698d43
- */
-// class ModalTrigger extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.handleClick = this.handleClick.bind(this);
-//   }
-
-//   handleClick() {
-//     this.props.onLinkClick(this.props.value);
-//   }
-
-//   render() {
-//     return (
-//       <span
-//         style={{ color: "#007bba", cursor: "pointer" }}
-//         onClick={this.handleClick}
-//       >
-//         {this.props.value}
-//       </span>
-//     );
-//   }
-// }
-
-// class TemplateModal extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.handleClose = this.handleClose.bind(this);
-//   }
-
-//   handleClose() {
-//     this.props.onModalClose(null);
-//   }
-
-//   render() {
-//     const successfulIcon = (
-//       <CircleIcon
-//         size="sm"
-//         key="5"
-//         style={{ color: "#52af51", marginRight: "5px" }}
-//       />
-//     );
-//     const failedIcon = (
-//       <CircleIcon
-//         size="sm"
-//         key="5"
-//         style={{ color: "#d9534f", marginRight: "5px" }}
-//       />
-//     );
-
-//     var rows = [];
-//     var i = 0;
-//     var datum = null;
-//     var average_time = 0;
-//     var total_time = 0;
-//     if (this.props.modalData !== undefined && this.props.modalData !== null) {
-//       for (i = 0; i < this.props.modalData.length; i++) {
-//         datum = this.props.modalData[i];
-//         rows.push([
-//           [
-//             datum.status === "successful" ? successfulIcon : failedIcon,
-//             "" + datum.id + " - " + datum.name
-//           ],
-//           datum.label,
-//           datum.started,
-//           forHumans(Math.floor(datum.elapsed))
-//         ]);
-//       }
-//       if (this.props.modalData.length > 0) {
-//         total_time = Math.floor(
-//           this.props.modalData
-//             .map(datum => +datum.elapsed)
-//             .reduce((total, amount) => total + amount)
-//         );
-//         average_time = Math.floor(total_time / this.props.modalData.length);
-//       }
-//     }
-//     return (
-//       <Modal
-//         className="templateModal"
-//         title={this.props.modalTemplate}
-//         isOpen={this.props.isModalOpen}
-//         onClose={this.handleClose}
-//         actions={[
-//           <h4>
-//             Total Time {forHumans(total_time)} | Avg Time{" "}
-//             {forHumans(average_time)}
-//           </h4>,
-//           <Button key="cancel" variant="secondary" onClick={this.handleClose}>
-//             Close
-//           </Button>
-//         ]}
-//       >
-//         <Card>
-//           <Table
-//             caption={[""]}
-//             cells={["Id/Name", "Cluster", "Start Time", "Total Time"]}
-//             rows={rows}
-//           >
-//             <TableHeader />
-//             <TableBody />
-//           </Table>
-//         </Card>
-//       </Modal>
-//     );
-//   }
-// }
 /**
  * A smart component that handles all the api calls and data needed by the dumb components.
  * Smart components are usually classes.
@@ -225,32 +109,6 @@ class SamplePage extends Component {
   }
 
   async init() {
-    // const modulesUrl = this.getApiUrl("modules");
-    // const modulesResponse = await fetch(modulesUrl);
-    // const modulesData = await modulesResponse.json();
-    // const templateUrl = this.getApiUrl("templates");
-    // const templateResponse = await fetch(templateUrl);
-    // const templatesData = await templateResponse.json();
-    // const notificationsUrl = this.getApiUrl("notifications");
-    // const notificationsResponse = await fetch(notificationsUrl);
-    // let notificationsData = await notificationsResponse.json();
-    // const clustersUrl = this.getApiUrl("clusters");
-    // const clustersResponse = await fetch(clustersUrl);
-    // const clustersData = await clustersResponse.json();
-    // this.setState({ modules: modulesData });
-    // this.setState({ templates: templatesData });
-    // this.setState({ clusters: clustersData });
-    // var rightOptions = this.state.rightOptions;
-    // var i = 0;
-    // for (i = 0; i < clustersData.length; i++) {
-    //   rightOptions.push({
-    //     value: clustersData[i].system_id,
-    //     label: clustersData[i].label
-    //   });
-    // }
-    // this.setState({ rightOptions: rightOptions });
-
-    // this.setState({ notifications: notificationsData });
     const barChartData = await D3Util.getBarChartData();
     const lineChartData = await D3Util.getLineChartData();
     const groupedBarChartData = await D3Util.getGroupedChartData();
@@ -263,12 +121,6 @@ class SamplePage extends Component {
       pieChart1Data,
       pieChart2Data
     });
-  }
-
-  getApiUrl(name) {
-    return (
-      this.protocol + "://" + this.server + "/tower_analytics/" + name + "/"
-    );
   }
 
   async fetchData(endpoint) {
@@ -300,14 +152,9 @@ class SamplePage extends Component {
       pieChart1Data: [],
       pieChart2Data: []
     };
-    this.server = "nginx-tower-analytics2.5a9f.insights-dev.openshiftapps.com";
-    //this.server = 'ci.foo.redhat.com:1337';
-    this.protocol = "https";
 
     this.onRightToggle = this.onRightToggle.bind(this);
     this.onRightSelect = this.onRightSelect.bind(this);
-    this.handleModalToggle = this.handleModalToggle.bind(this);
-    this.getApiUrl = this.getApiUrl.bind(this);
     this.init = this.init.bind(this);
     this.handleTimeFrameChange = this.handleTimeFrameChange.bind(this);
 
@@ -400,20 +247,6 @@ class SamplePage extends Component {
   onRightSelect(event) {
     this.setState({
       isRightOpen: !this.state.isRightOpen
-    });
-  }
-
-  async handleModalToggle(modalTemplate) {
-    var data = null;
-    if (modalTemplate !== null) {
-      const url = this.getApiUrl("template_jobs") + modalTemplate + "/";
-      const response = await fetch(url);
-      data = await response.json();
-    }
-    this.setState({
-      modalTemplate: modalTemplate,
-      isModalOpen: !this.state.isModalOpen,
-      modalData: data
     });
   }
 
@@ -514,7 +347,6 @@ class SamplePage extends Component {
                     id="d3-bar-chart-root"
                     data={barChartData}
                     value={this.state.clusterTimeFrame}
-                    getApiUrl={this.getApiUrl}
                   />
                 )}
                 {rightValue !== 0 && lineChartData.length > 0 && (
@@ -524,7 +356,6 @@ class SamplePage extends Component {
                     data={lineChartData}
                     value={this.state.clusterTimeFrame}
                     cluster={this.state.rightValue}
-                    getApiUrl={this.getApiUrl}
                   />
                 )}
               </CardBody>
@@ -554,13 +385,6 @@ class SamplePage extends Component {
                 notifications={this.mockNotificationsData}
               />
             </div>
-            {/* <TemplateModal
-              modalTemplate={modalTemplate}
-              isModalOpen={isModalOpen}
-              onModalClose={this.handleModalToggle}
-              getApiUrl={this.getApiUrl}
-              modalData={modalData}
-            /> */}
           </Main>
         </TabContent>
         <TabContent
