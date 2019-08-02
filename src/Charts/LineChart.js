@@ -288,19 +288,22 @@ class LineChart extends Component {
         .on('mouseover', handleMouseOver)
         .on('mousemove', handleMouseMove)
         .on('mouseout', handleMouseOut);
-
-        // Call the resize function whenever a resize event occurs
-        d3.select(window).on('resize', this.props.resize(this.init, 500));
     }
 
     componentDidMount() {
         this.init();
+        // Call the resize function whenever a resize event occurs
+        d3.select(window).on('resize', this.props.resize(this.init, 500));
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.value !== this.props.value) {
             this.init();
         }
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.props.resize(this.init, 1000));
     }
 
     render() {
