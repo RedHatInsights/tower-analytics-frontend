@@ -2,6 +2,8 @@
 import * as d3 from 'd3';
 
 const barChartEndpoint = '/api/tower-analytics/chart30/';
+const modulesEndpoint = '/api/tower-analytics/modules/';
+const templatesEndPoint = '/api/tower-analytics/templates/';
 const groupedBarChartEndpoint =
     'https://gist.githubusercontent.com/kialam/5d26af588b3f299a4589fc27d2be7ba3/raw/b21325b78b951968041a31a0e0ee061e4d8f40ff/groupedbarchartdata_large.json';
 const donutChart1Endpoint =
@@ -30,6 +32,12 @@ class D3Util {
     }
     static getPieChart2Data() {
         return this.readJSON(donutChart2Endpoint);
+    }
+    static getModulesData() {
+        return this.readJSON(modulesEndpoint);
+    }
+    static getTemplatesData() {
+        return this.readJSON(templatesEndPoint);
     }
 
     static getTotal(data) {

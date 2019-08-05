@@ -114,12 +114,15 @@ class SamplePage extends Component {
     const groupedBarChartData = await D3Util.getGroupedChartData();
     const pieChart1Data = await D3Util.getPieChart1Data();
     const pieChart2Data = await D3Util.getPieChart2Data();
+    const modulesData = (await D3Util.getModulesData()).modules;
+    console.log(modulesData);
     this.setState({
       barChartData,
       lineChartData,
       groupedBarChartData,
       pieChart1Data,
-      pieChart2Data
+      pieChart2Data,
+      modulesData
     });
   }
 
@@ -150,7 +153,8 @@ class SamplePage extends Component {
       lineChartData: [],
       groupedBarChartData: [],
       pieChart1Data: [],
-      pieChart2Data: []
+      pieChart2Data: [],
+      modulesData: []
     };
 
     this.onRightToggle = this.onRightToggle.bind(this);
@@ -263,7 +267,8 @@ class SamplePage extends Component {
       lineChartData,
       groupedBarChartData,
       pieChart1Data,
-      pieChart2Data
+      pieChart2Data,
+      modulesData
     } = this.state;
 
     return (
@@ -372,11 +377,7 @@ class SamplePage extends Component {
                 ]}
               />
               <ModulesList
-                modules={[
-                  { name: "Module 1", count: 4 },
-                  { name: "Module 2", count: 3 },
-                  { name: "Module 3", count: 1 }
-                ]}
+                modules={this.state.modulesData}
               />
               <NotificationsList
                 onNotificationChange={this.handleNotificationChange}

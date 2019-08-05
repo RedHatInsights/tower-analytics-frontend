@@ -38,10 +38,10 @@ const ModulesList = ({ modules }) => (
                 </h3>
             </DataCellEnd>
         </DataListItem>
-        { modules.map(({ name, count }) => (
-            <DataListItem aria-labelledby="top-modules-detail" key={ name }>
+        { modules.map(({ module, count }) => (
+            <DataListItem aria-labelledby="top-modules-detail" key={ module }>
                 <DataListCell>
-                    <span>{ name }</span>
+                    <span>{ module }</span>
                 </DataListCell>
                 <DataCellEnd>
                     <Badge isRead>{ count }</Badge>
