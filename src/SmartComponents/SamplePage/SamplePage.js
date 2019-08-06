@@ -117,6 +117,7 @@ class SamplePage extends Component {
     const { modules: modulesData} = await D3Util.getModulesData();
     const templatesData = (await D3Util.getTemplatesData()).templates;
     const notificationsData = (await D3Util.getNotificationsData()).notifications;
+
     this.setState({
       barChartData,
       lineChartData,
