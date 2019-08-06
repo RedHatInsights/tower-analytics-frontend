@@ -19,20 +19,20 @@ class LineChart extends Component {
         const { data, value } = this.props;
         const parseTime = d3.timeParse('%Y-%m-%d');
 
-        const formattedData = data.reduce((formatted, row) => {
-            let DATE = parseTime(row.created) || new Date();
-            let RAN = +row.successful || 0;
-            let FAIL = +row.failed || 0;
-            let TOTAL = +row.successful + row.failed || 0;
+        const formattedData = data.reduce((formatted, { created, successful, failed }) => {
+            let DATE = parseTime(created) || new Date();
+            let RAN = +successful || 0;
+            let FAIL = +failed || 0;
+            let TOTAL = +successful + failed || 0;
             return formatted.concat({ DATE, RAN, FAIL, TOTAL });
         }, []);
         const halfLength = Math.ceil(data.length / 2);
         if (value === 14) {
-            return [ ...formattedData ].splice(0, halfLength);
+            return [ ...formattedData ].splice(halfLength, data.length - 1);
         }
 
         if (value === 7) {
-            return [ ...formattedData ].splice(0, value);
+            return [ ...formattedData ].splice(data.length - 7, data.length - 1);
         }
 
         return formattedData;
