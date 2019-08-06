@@ -135,7 +135,7 @@ const TemplatesList = ({ templates }) => {
                         {job.status === 'successful' ? success : fail } { job.job_name }
                     </PFDataListCell>
                     <PFDataListCell key="job cluster">
-                        { job.cluster }
+                        { job.system_label || job.system_uuid }
                     </PFDataListCell>
                     <PFDataListCell key="start time">
                         { job.start_time }
