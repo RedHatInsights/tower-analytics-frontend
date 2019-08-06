@@ -84,11 +84,11 @@ const TemplatesList = ({ templates }) => {
               </DataListCell>
               <DataCellEnd>
                   <h3>
-                      <strong>Type</strong>
+                      <strong>Usage</strong>
                   </h3>
               </DataCellEnd>
           </DataListItem>
-          { templates.map(({ name, type, id }) => (
+          { templates.map(({ name, count, id }) => (
               <DataListItem aria-labelledby="top-templates-detail" key={ name }>
                   <DataListCell>
                       <a
@@ -101,7 +101,7 @@ const TemplatesList = ({ templates }) => {
                       </a>
                   </DataListCell>
                   <DataCellEnd>
-                      <Badge isRead>{ type }</Badge>
+                      <Badge isRead>{ count }</Badge>
                   </DataCellEnd>
               </DataListItem>
           )) }

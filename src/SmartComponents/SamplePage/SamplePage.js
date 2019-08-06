@@ -115,14 +115,15 @@ class SamplePage extends Component {
     const pieChart1Data = await D3Util.getPieChart1Data();
     const pieChart2Data = await D3Util.getPieChart2Data();
     const modulesData = (await D3Util.getModulesData()).modules;
-    console.log(modulesData);
+    const templatesData = (await D3Util.getTemplatesData()).templates;
     this.setState({
       barChartData,
       lineChartData,
       groupedBarChartData,
       pieChart1Data,
       pieChart2Data,
-      modulesData
+      modulesData,
+      templatesData
     });
   }
 
@@ -154,7 +155,8 @@ class SamplePage extends Component {
       groupedBarChartData: [],
       pieChart1Data: [],
       pieChart2Data: [],
-      modulesData: []
+      modulesData: [],
+      templatesData: []
     };
 
     this.onRightToggle = this.onRightToggle.bind(this);
@@ -369,13 +371,7 @@ class SamplePage extends Component {
               className="dataCard"
               style={{ display: "flex", marginTop: "20px" }}
             >
-              <TemplatesList
-                templates={[
-                  { name: "Template 1", type: "Playbook Run", id: 1 },
-                  { name: "Template 2", type: "Workflow", id: 2 },
-                  { name: "Template 3", type: "Playbook Run", id: 3 }
-                ]}
-              />
+              <TemplatesList templates={this.state.templatesData} />
               <ModulesList
                 modules={this.state.modulesData}
               />
