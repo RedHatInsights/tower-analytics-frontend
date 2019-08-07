@@ -116,6 +116,7 @@ class SamplePage extends Component {
     const pieChart2Data = await D3Util.getPieChart2Data();
     const modulesData = (await D3Util.getModulesData()).modules;
     const templatesData = (await D3Util.getTemplatesData()).templates;
+    const notificationsData = (await D3Util.getNotificationsData()).notifications;
     this.setState({
       barChartData,
       lineChartData,
@@ -123,7 +124,8 @@ class SamplePage extends Component {
       pieChart1Data,
       pieChart2Data,
       modulesData,
-      templatesData
+      templatesData,
+      notificationsData
     });
   }
 
@@ -156,7 +158,8 @@ class SamplePage extends Component {
       pieChart1Data: [],
       pieChart2Data: [],
       modulesData: [],
-      templatesData: []
+      templatesData: [],
+      notificationsData: []
     };
 
     this.onRightToggle = this.onRightToggle.bind(this);
@@ -379,7 +382,7 @@ class SamplePage extends Component {
                 onNotificationChange={this.handleNotificationChange}
                 filterBy={this.state.notificationValue}
                 options={this.notificationOptions}
-                notifications={this.mockNotificationsData}
+                notifications={this.state.notificationsData}
               />
             </div>
           </Main>
