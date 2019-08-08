@@ -133,8 +133,6 @@ class SamplePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLeftOpen: false,
-      isRightOpen: false,
       isModalOpen: false,
       clusterTimeFrame: 7,
       orgsJobsTimeFrame: 7,
@@ -157,8 +155,6 @@ class SamplePage extends Component {
       modulesData: []
     };
 
-    this.onRightToggle = this.onRightToggle.bind(this);
-    this.onRightSelect = this.onRightSelect.bind(this);
     this.init = this.init.bind(this);
     this.handleTimeFrameChange = this.handleTimeFrameChange.bind(this);
 
@@ -242,18 +238,6 @@ class SamplePage extends Component {
     this.setState({ [name]: +value });
   };
 
-  onRightToggle(isRightOpen) {
-    this.setState({
-      isRightOpen
-    });
-  }
-
-  onRightSelect(event) {
-    this.setState({
-      isRightOpen: !this.state.isRightOpen
-    });
-  }
-
   render() {
     const {
       isModalOpen,
@@ -315,7 +299,6 @@ class SamplePage extends Component {
                     name="clusterTimeFrame"
                     value={this.state.clusterTimeFrame}
                     onChange={this.handleTimeFrameChange}
-                    // onClick={this.handleTimeFrameChange}
                     aria-label="Select Date Range"
                     style={{ margin: "2px 10px" }}
                   >
@@ -329,7 +312,7 @@ class SamplePage extends Component {
                     ))}
                   </FormSelect>
                   <FormSelect
-                    value={this.state.rightValue}
+                    value={rightValue}
                     onChange={this.rightChange}
                     aria-label="Select Hosts"
                     style={{ margin: "2px 10px" }}
@@ -346,7 +329,7 @@ class SamplePage extends Component {
                 </div>
               </CardHeader>
               <CardBody>
-                {rightValue === 0 && barChartData.length > 0 && (
+                {rightValue === 0 && barChartData.length > 0 && activeTabKey === 0 && (
                   <BarChart
                     margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
                     id="d3-bar-chart-root"
@@ -354,13 +337,13 @@ class SamplePage extends Component {
                     value={this.state.clusterTimeFrame}
                   />
                 )}
-                {rightValue !== 0 && lineChartData.length > 0 && (
+                {rightValue === 1 && lineChartData.length > 0 && activeTabKey === 0 && (
                   <LineChart
                     margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
                     id="d3-bar-chart-root"
                     data={lineChartData}
                     value={this.state.clusterTimeFrame}
-                    cluster={this.state.rightValue}
+                    cluster={rightValue}
                   />
                 )}
               </CardBody>
@@ -426,7 +409,7 @@ class SamplePage extends Component {
                 </div>
               </CardHeader>
               <CardBody>
-                {groupedBarChartData.length > 0 && activeTabKey == 1 && (
+                {groupedBarChartData.length > 0 && activeTabKey === 1 && (
                   <GroupedBarChart
                     margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
                     id="d3-grouped-bar-chart-root"
@@ -467,7 +450,7 @@ class SamplePage extends Component {
                       ))}
                     </FormSelect>
                   </CardHeader>
-                  {pieChart1Data.length > 0 && activeTabKey == 1 && (
+                  {pieChart1Data.length > 0 && activeTabKey === 1 && (
                     <PieChart
                       margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                       id="d3-donut-1-chart-root"
@@ -505,7 +488,7 @@ class SamplePage extends Component {
                       ))}
                     </FormSelect>
                   </CardHeader>
-                  {pieChart2Data.length > 0 && activeTabKey == 1 && (
+                  {pieChart2Data.length > 0 && activeTabKey === 1 && (
                     <PieChart
                       margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                       id="d3-donut-2-chart-root"

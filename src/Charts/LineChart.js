@@ -9,10 +9,20 @@ class LineChart extends Component {
         super(props);
         this.init = this.init.bind(this);
         this.draw = this.draw.bind(this);
+        this.resize = this.resize.bind(this);
         this.formatData = this.formatData.bind(this);
         this.state = {
-            formattedData: []
+            formattedData: [],
+            timeout: null
         };
+    }
+
+    resize() {
+        const { timeout } = this.state;
+        clearTimeout(timeout);
+        this.setState({
+            timeout: setTimeout(() => { this.init(); }, 500)
+        });
     }
 
     async formatData() {
@@ -293,7 +303,7 @@ class LineChart extends Component {
     componentDidMount() {
         this.init();
         // Call the resize function whenever a resize event occurs
-        d3.select(window).on('resize', this.props.resize(this.init, 500));
+        window.addEventListener('resize', this.resize);
     }
 
     componentDidUpdate(prevProps) {
@@ -303,7 +313,9 @@ class LineChart extends Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.props.resize(this.init, 1000));
+        const { timeout } = this.state;
+        clearTimeout(timeout);
+        window.removeEventListener('resize', this.resize);
     }
 
     render() {
@@ -316,7 +328,6 @@ LineChart.propTypes = {
     data: PropTypes.array,
     value: PropTypes.number,
     margin: PropTypes.object,
-    resize: PropTypes.func,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func
 };
