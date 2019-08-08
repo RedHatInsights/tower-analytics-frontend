@@ -9,10 +9,19 @@ class BarChart extends Component {
         super(props);
         this.draw = this.draw.bind(this);
         this.init = this.init.bind(this);
+        this.resize = this.resize.bind(this);
         this.formatData = this.formatData.bind(this);
         this.state = {
-            formattedData: []
+            formattedData: [],
+            timeout: null
         };
+    }
+    resize() {
+        const { timeout } = this.state;
+        clearTimeout(timeout);
+        this.setState({
+            timeout: setTimeout(() => { this.init(); }, 500)
+        });
     }
 
     async formatData() {
@@ -187,7 +196,7 @@ class BarChart extends Component {
     componentDidMount() {
         this.init();
         // Call the resize function whenever a resize event occurs
-        window.addEventListener('resize', this.props.resize(this.init, 1000));
+        window.addEventListener('resize', this.resize);
     }
 
     componentDidUpdate(prevProps) {
@@ -197,7 +206,9 @@ class BarChart extends Component {
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.props.resize(this.init, 1000));
+        const { timeout } = this.state;
+        clearTimeout(timeout);
+        window.removeEventListener('resize', this.resize);
     }
 
     render() {
@@ -210,7 +221,6 @@ BarChart.propTypes = {
     data: PropTypes.array,
     value: PropTypes.number,
     margin: PropTypes.object,
-    resize: PropTypes.func,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func
 };

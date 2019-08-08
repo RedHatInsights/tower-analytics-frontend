@@ -145,16 +145,26 @@ class GroupedBarChart extends Component {
         this.init = this.init.bind(this);
         this.handleToggle = this.handleToggle.bind(this);
         this.draw = this.draw.bind(this);
+        this.resize = this.resize.bind(this);
         this.orgsList = props.data[0].orgs;
         this.selection = [];
         this.state = {
             colors: [],
             selected: [],
-            formattedData: []
+            formattedData: [],
+            timeout: null
         };
     }
 
     // Methods
+    resize() {
+        const { timeout } = this.state;
+        clearTimeout(timeout);
+        this.setState({
+            timeout: setTimeout(() => { this.init(); }, 500)
+        });
+    }
+
     async handleToggle(selectedId) {
         if (this.selection.indexOf(selectedId) === -1) {
             this.selection = [ ...this.selection, selectedId ];
@@ -355,11 +365,13 @@ class GroupedBarChart extends Component {
     componentDidMount() {
         this.init();
         // Call the resize function whenever a resize event occurs
-        window.addEventListener('resize', this.props.resize(this.init, 500));
+        window.addEventListener('resize', this.resize);
     }
 
     componentWillUnmount() {
-        window.removeEventListener('resize', this.props.resize(this.init, 1000));
+        const { timeout } = this.state;
+        clearTimeout(timeout);
+        window.removeEventListener('resize', this.resize);
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -400,7 +412,6 @@ GroupedBarChart.propTypes = {
     data: PropTypes.array,
     value: PropTypes.array,
     margin: PropTypes.object,
-    resize: PropTypes.func,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func
 };
