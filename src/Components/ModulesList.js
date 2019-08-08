@@ -38,7 +38,7 @@ const ModulesList = ({ modules }) => (
                 </h3>
             </DataCellEnd>
         </DataListItem>
-        { modules.map(({ module, count }) => (
+        { modules.filter(module => module.module !== null).map(({ module, count }) => (
             <DataListItem aria-labelledby="top-modules-detail" key={ module }>
                 <DataListCell>
                     <span>{ module }</span>
