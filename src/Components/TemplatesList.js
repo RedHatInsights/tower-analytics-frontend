@@ -70,8 +70,10 @@ const TemplatesList = ({ templates }) => {
     useEffect(() => {
     // Make GET request to get template details
         templatesRequest(selectedId).then(data => {
-            setSelectedTemplate(data);
-            setRelatedJobs(data.related_jobs);
+            if (data) {
+                setSelectedTemplate(data);
+                setRelatedJobs(data.related_jobs);
+            }
         });
     }, [ selectedId ]);
 
@@ -106,55 +108,57 @@ const TemplatesList = ({ templates }) => {
               </DataListItem>
           )) }
       </DataList>
-      <Modal
-          width={ '80%' }
-          title={ `${selectedTemplate.name}` }
-          isOpen={ isModalOpen }
-          onClose={ () => setIsModalOpen(false) }
-          actions={ [
-              <Button
-                  key="cancel"
-                  variant="secondary"
-                  onClick={ () => setIsModalOpen(false) }
-              >
-            Close
-              </Button>
-          ] }
-      >
-          <DataList aria-label="Simple data list example">
-              <DataListItemCompact aria-labelledby="datalist header">
-                  <PFDataListCell key="job heading">Id/Name</PFDataListCell>
-                  <PFDataListCell key="cluster heading">Cluster</PFDataListCell>
-                  <PFDataListCell key="start time heading">Start Time</PFDataListCell>
-                  <PFDataListCell key="total time heading">Total Time</PFDataListCell>
-              </DataListItemCompact>
-              { relatedJobs.length > 0 &&
-            relatedJobs.map((job, index) => (
-                <DataListItem key={`job-details-${index}`} aria-labelledby="job details">
-                    <PFDataListCell key="job name">
-                        {job.status === 'successful' ? success : fail } { job.job_name }
+      { selectedTemplate && (
+        <Modal
+            width={ '80%' }
+            title={ `${selectedTemplate.name}` }
+            isOpen={ isModalOpen }
+            onClose={ () => setIsModalOpen(false) }
+            actions={ [
+                <Button
+                    key="cancel"
+                    variant="secondary"
+                    onClick={ () => setIsModalOpen(false) }
+                >
+                Close
+                </Button>
+            ] }
+        >
+            <DataList aria-label="Simple data list example">
+                <DataListItemCompact aria-labelledby="datalist header">
+                    <PFDataListCell key="job heading">Id/Name</PFDataListCell>
+                    <PFDataListCell key="cluster heading">Cluster</PFDataListCell>
+                    <PFDataListCell key="start time heading">Start Time</PFDataListCell>
+                    <PFDataListCell key="total time heading">Total Time</PFDataListCell>
+                </DataListItemCompact>
+                { relatedJobs.length > 0 &&
+                relatedJobs.map((job, index) => (
+                    <DataListItem key={`job-details-${index}`} aria-labelledby="job details">
+                        <PFDataListCell key="job name">
+                            {job.status === 'successful' ? success : fail } { job.job_name }
+                        </PFDataListCell>
+                        <PFDataListCell key="job cluster">
+                            { job.system_label || job.system_uuid }
+                        </PFDataListCell>
+                        <PFDataListCell key="start time">
+                            { job.start_time }
+                        </PFDataListCell>
+                        <PFDataListCell key="total time">
+                            { job.total_time }
+                        </PFDataListCell>
+                    </DataListItem>
+                )) }
+                <DataListItemCompact aria-labelledby="playbook run time">
+                    <PFDataListCell key="primary content">
+                        <span>
+                    Total Time: { selectedTemplate.total_run } | Avg Time:{ ' ' }
+                            { selectedTemplate.average_run }
+                        </span>
                     </PFDataListCell>
-                    <PFDataListCell key="job cluster">
-                        { job.system_label || job.system_uuid }
-                    </PFDataListCell>
-                    <PFDataListCell key="start time">
-                        { job.start_time }
-                    </PFDataListCell>
-                    <PFDataListCell key="total time">
-                        { job.total_time }
-                    </PFDataListCell>
-                </DataListItem>
-            )) }
-              <DataListItemCompact aria-labelledby="playbook run time">
-                  <PFDataListCell key="primary content">
-                      <span>
-                Total Time: { selectedTemplate.total_run } | Avg Time:{ ' ' }
-                          { selectedTemplate.average_run }
-                      </span>
-                  </PFDataListCell>
-              </DataListItemCompact>
-          </DataList>
-      </Modal>
+                </DataListItemCompact>
+            </DataList>
+        </Modal>
+      )}
     </>
     );
 };
