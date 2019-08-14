@@ -115,13 +115,9 @@ class SamplePage extends Component {
     const pieChart1Data = await D3Util.getPieChart1Data();
     const pieChart2Data = await D3Util.getPieChart2Data();
     const { modules: modulesData} = await D3Util.getModulesData();
-<<<<<<< HEAD
-    const templatesData = (await D3Util.getTemplatesData()).templates;
-    const notificationsData = (await D3Util.getNotificationsData()).notifications;
+    const { templates: templatesData} = await D3Util.getTemplatesData();
+    const { notifications: notificationsData} = await D3Util.getNotificationsData();
 
-=======
-    console.log(modulesData);
->>>>>>> 39b3e6e8420685f8e30f60950e2b352d5ca4ca9b
     this.setState({
       barChartData,
       lineChartData,
