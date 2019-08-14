@@ -35,23 +35,23 @@ const DataCellEnd = styled(DataListCell)`
 const colors = { error: '#db524b', warning: '#f0ad37', '': '' };
 
 const NotificationTemplate = ({ notifications }) =>
-    notifications.map(notification => (
+    notifications.map(({ date, message, label, notification_id: id }) => (
         <DataListItem
             aria-labelledby="notifications-detail"
-            key={ notification.date }
+            key={ date + '-' + id }
         >
             <DataListCell>
                 <span>
-                    { notification.label === 'error' ||
-          notification.label === 'warning' ? (
+                    { label === 'error' ||
+          label === 'warning' ? (
                             <WarningTriangleIcon
                                 style={ {
-                                    color: colors[notification.label],
+                                    color: colors[label],
                                     marginRight: '5px'
                                 } }
                             />
                         ) : null }
-                    { notification.message }
+                    { message }
                 </span>
             </DataListCell>
         </DataListItem>
@@ -60,23 +60,23 @@ const NotificationTemplate = ({ notifications }) =>
 const ErrorNotificationTemplate = ({ notifications }) =>
     notifications
     .filter(notification => notification.label === 'error')
-    .map(notification => (
+    .map(({ date, label, message, notification_id: id }) => (
         <DataListItem
             aria-labelledby="notifications-detail"
-            key={ notification.date }
+            key={ date + '-' + id }
         >
             <DataListCell>
                 <span>
-                    { notification.label === 'error' ||
-            notification.label === 'warning' ? (
+                    { label === 'error' ||
+            label === 'warning' ? (
                             <WarningTriangleIcon
                                 style={ {
-                                    color: colors[notification.label],
+                                    color: colors[label],
                                     marginRight: '5px'
                                 } }
                             />
                         ) : null }
-                    { notification.message }
+                    { message }
                 </span>
             </DataListCell>
         </DataListItem>
@@ -100,12 +100,12 @@ const NotificationsList = ({
                     aria-label="Select Notification Type"
                     style={ { margin: '2px 10px' } }
                 >
-                    { options.map((option, index) => (
+                    { options.map(({ disabled, value, label }, index) => (
                         <FormSelectOption
-                            isDisabled={ option.disabled }
+                            isDisabled={ disabled }
                             key={ index }
-                            value={ option.value }
-                            label={ option.label }
+                            value={ value }
+                            label={ label }
                         />
                     )) }
                 </FormSelect>
