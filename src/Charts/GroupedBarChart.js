@@ -262,7 +262,7 @@ class GroupedBarChart extends Component {
         x1.domain(selectedOrgNames).range([ 0, x0.bandwidth() ]); // unsorted
         y.domain([
             0,
-            d3.max(data, date => d3.max(date.selectedOrgs, d => d.value))
+            d3.max(data, date => d3.max(date.selectedOrgs, d => d.value * 1.15))
         ]);
         // x1.domain(d3.range(0, data[0].orgs.length)).range([0, x0.bandwidth()]); // sorted
 
