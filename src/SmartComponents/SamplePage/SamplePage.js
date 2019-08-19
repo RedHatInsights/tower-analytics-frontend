@@ -177,8 +177,8 @@ class SamplePage extends Component {
       { value: 14, label: "Past 2 Weeks", disabled: false },
       { value: 31, label: "Past Month", disabled: false }
     ];
-    this.rightOptions = [
-      { value: "please choose", label: "Select Hosts", disabled: true },
+    this.clusterOptions = [
+      { value: "please choose", label: "Select Cluster", disabled: true },
       { value: 0, label: "All Clusters", disabled: false },
       { value: 1, label: "Cluster A", disabled: false }
     ],
@@ -277,7 +277,7 @@ class SamplePage extends Component {
             />
             <Tab
               eventKey={1}
-              title="Organizations"
+              title="Organization Statistics"
               tabContentId="refTab2Section"
               tabContentRef={this.contentRef2}
             />
@@ -320,10 +320,10 @@ class SamplePage extends Component {
                   <FormSelect
                     value={rightValue}
                     onChange={this.rightChange}
-                    aria-label="Select Hosts"
+                    aria-label="Select Cluster"
                     style={{ margin: "2px 10px" }}
                   >
-                    {this.rightOptions.map((option, index) => (
+                    {this.clusterOptions.map((option, index) => (
                       <FormSelectOption
                         isDisabled={option.disabled}
                         key={index}
