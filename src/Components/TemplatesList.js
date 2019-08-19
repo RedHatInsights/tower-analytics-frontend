@@ -1,6 +1,7 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { formatDateTime, formatSeconds } from '../Utilities/helpers';
 import styled from 'styled-components';
 
 import {
@@ -46,7 +47,7 @@ const DataListItem = styled(PFDataListItem)`
   justify-content: center;
 `;
 const DataListItemCompact = styled(DataListItem)`
-  padding: 0 0 0 15px;
+  padding: 0 15px;
   > .pf-c-data-list__cell {
     font-weight: 600;
   }
@@ -141,10 +142,10 @@ const TemplatesList = ({ templates }) => {
                             { job.system_label || job.system_uuid }
                         </PFDataListCell>
                         <PFDataListCell key="start time">
-                            { job.start_time }
+                            { formatDateTime(job.start_time) }
                         </PFDataListCell>
                         <PFDataListCell key="total time">
-                            { job.total_time }
+                            { formatSeconds(job.total_time) }
                         </PFDataListCell>
                     </DataListItem>
                 )) }
