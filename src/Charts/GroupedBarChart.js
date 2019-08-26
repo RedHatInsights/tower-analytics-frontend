@@ -8,6 +8,7 @@ import styled from 'styled-components';
 
 const Wrapper = styled.div`
   display: flex;
+  justify-content: space-between;
   flex-wrap: nowrap;
   flex-shrink: 0;
 `;
@@ -100,6 +101,7 @@ class Tooltip {
           }
       }
 
+      const formatTooltipDate = d3.timeFormat('%m/%d');
       const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
       const chartWidth = d3
       .select(this.svg + '> svg')
@@ -108,7 +110,7 @@ class Tooltip {
       const overflow = 100 - (toolTipWidth / chartWidth) * 100;
       const flipped = overflow < (x / chartWidth) * 100;
 
-      this.date.text('' + date);
+      this.date.text('' + formatTooltipDate(date));
       this.orgName.text('' + orgName);
       this.jobs.text('' + jobs + ' Jobs');
       this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
@@ -177,9 +179,26 @@ class GroupedBarChart extends Component {
     }
 
     async formatData() {
-        const { data } = this.props;
+        const { data, timeFrame } = this.props;
         const { selected } = this.state;
-        const formattedData = data.reduce((formatted, { date, orgs: orgsList }) => {
+        const halfLength = Math.ceil(data.length / 2);
+        const parseTime = d3.timeParse('%Y-%m-%d');
+
+        let slicedData = [];
+        if (timeFrame === 7) {
+            slicedData = data.slice(data.length - 7, data.length);
+        }
+
+        if (timeFrame === 14) {
+            slicedData = data.slice(halfLength, data.length);
+        }
+
+        if (timeFrame === 31) {
+            slicedData = data;
+        }
+
+        const formattedData = slicedData.reduce((formatted, { date, orgs: orgsList }) => {
+            date = parseTime(date);
             const selectedOrgs = orgsList.filter(({ id }) => selected.includes(id));
             selectedOrgs.map(org => {
                 org.date = date;
@@ -191,6 +210,7 @@ class GroupedBarChart extends Component {
 
     async init() {
         // create the first 8 selected data points
+        // const { timeFrame } = this.props;
         if (this.selection.length === 0) {
             this.orgsList.forEach((org, index) => {
                 if (index <= 7) {
@@ -198,6 +218,23 @@ class GroupedBarChart extends Component {
                 }
             });
         }
+
+        // if (timeFrame === 31 && this.selection.length > 5) {
+        //     this.selection = [];
+        //     this.orgsList.forEach((org, index) => {
+        //         if (index <= 4) {
+        //             this.handleToggle(org.id);
+        //         }
+        //     });
+        // }
+
+        // if (timeFrame !== 31 && this.selection.length === 0) {
+        //     this.orgsList.forEach((org, index) => {
+        //         if (index <= 7) {
+        //             this.handleToggle(org.id);
+        //         }
+        //     });
+        // }
 
         // create our colors array to send to the Legend component
         const colors = this.orgsList.reduce((colors, org) => {
@@ -227,11 +264,21 @@ class GroupedBarChart extends Component {
         .padding(0.35);
         // x scale of individual grouped bars
         const x1 = d3.scaleBand();
-
         const y = d3.scaleLinear().range([ height, 0 ]).nice();
+        // format our X Axis ticks
+        const { timeFrame } = this.props;
+        let ticks;
+        const maxTicks = Math.round(data.length / (timeFrame / 2));
+        ticks = data.map(d => d.date);
+        if (timeFrame === 31) {
+            ticks = data.map((d, i) =>
+                i % maxTicks === 0 ? d.date : undefined).filter(item => item);
+        }
 
         const xAxis = d3
-        .axisBottom(x0);
+        .axisBottom(x0)
+        .tickValues(ticks)
+        .tickFormat(d3.timeFormat('%-m/%-d'));
 
         const yAxis = d3
         .axisLeft(y)
@@ -379,7 +426,7 @@ class GroupedBarChart extends Component {
             this.init();
         }
 
-        if (prevProps.isAccessible !== this.props.isAccessible) {
+        if (prevProps.timeFrame !== this.props.timeFrame) {
             this.init();
         }
 
@@ -413,7 +460,8 @@ GroupedBarChart.propTypes = {
     value: PropTypes.array,
     margin: PropTypes.object,
     getHeight: PropTypes.func,
-    getWidth: PropTypes.func
+    getWidth: PropTypes.func,
+    timeFrame: PropTypes.number
 };
 
 export default initializeChart(GroupedBarChart);

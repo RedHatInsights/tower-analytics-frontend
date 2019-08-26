@@ -7,6 +7,7 @@ import styled from 'styled-components';
 const Container = styled.div`
   margin-top: 20px;
   overflow: auto;
+  min-width: 25%;
 `;
 
 const LegendDetail = styled.div`

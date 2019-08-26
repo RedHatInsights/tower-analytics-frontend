@@ -414,6 +414,7 @@ class SamplePage extends Component {
                     margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
                     id="d3-grouped-bar-chart-root"
                     data={groupedBarChartData}
+                    timeFrame={this.state.orgsJobsTimeFrame}
                   />
                 )}
               </CardBody>
