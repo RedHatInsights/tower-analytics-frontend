@@ -104,7 +104,7 @@ class BarChart extends Component {
         const layers = stack(data);
         // Scale the range of the data
         x.domain(layers[0].map(d => d.data.DATE));
-        y.domain([ 0, d3.max(layers[layers.length - 1], d => d[1] + 10) ]).nice();
+        y.domain([ 0, d3.max(layers[layers.length - 1], d => d[1] * 1.15) ]).nice();
         // Add the Y Axis
         svg
         .append('g')

@@ -125,7 +125,7 @@ class LineChart extends Component {
         y.domain([
             0,
             d3.max(data, function(d) {
-                return d.TOTAL + 10;
+                return d.TOTAL * 1.15;
             })
         ]);
 
