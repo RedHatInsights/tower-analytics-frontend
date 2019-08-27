@@ -38,6 +38,7 @@ import { Table, TableHeader, TableBody } from "@patternfly/react-table";
 import PieChart from "../../Charts/PieChart";
 import BarChart from "../../Charts/BarChart";
 import LineChart from "../../Charts/LineChart";
+import LoadingState from "../../Components/LoadingState";
 import ModulesList from "../../Components/ModulesList";
 import TemplatesList from "../../Components/TemplatesList";
 import NotificationsList from "../../Components/NotificationsList";
@@ -335,6 +336,9 @@ class SamplePage extends Component {
                 </div>
               </CardHeader>
               <CardBody>
+                {barChartData.length <= 0 && (
+                  <LoadingState />
+                )}
                 {rightValue === 0 && barChartData.length > 0 && activeTabKey === 0 && (
                   <BarChart
                     margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
@@ -342,6 +346,9 @@ class SamplePage extends Component {
                     data={barChartData}
                     value={this.state.clusterTimeFrame}
                   />
+                )}
+                {rightValue === 1 && lineChartData.length <= 0 && (
+                  <LoadingState />
                 )}
                 {rightValue === 1 && lineChartData.length > 0 && activeTabKey === 0 && (
                   <LineChart
@@ -409,6 +416,9 @@ class SamplePage extends Component {
                 </div>
               </CardHeader>
               <CardBody>
+                {groupedBarChartData.length <= 0 && (
+                  <LoadingState />
+                )}
                 {groupedBarChartData.length > 0 && activeTabKey === 1 && (
                   <GroupedBarChart
                     margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
@@ -451,6 +461,9 @@ class SamplePage extends Component {
                       ))}
                     </FormSelect>
                   </CardHeader>
+                  {pieChart1Data.length <= 0 && (
+                    <LoadingState />
+                  )}
                   {pieChart1Data.length > 0 && activeTabKey === 1 && (
                     <PieChart
                       margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
@@ -489,6 +502,9 @@ class SamplePage extends Component {
                       ))}
                     </FormSelect>
                   </CardHeader>
+                  {pieChart2Data.length <= 0 && (
+                    <LoadingState />
+                  )}
                   {pieChart2Data.length > 0 && activeTabKey === 1 && (
                     <PieChart
                       margin={{ top: 20, right: 20, bottom: 0, left: 20 }}

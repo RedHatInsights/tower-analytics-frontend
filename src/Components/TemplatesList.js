@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { formatDateTime, formatSeconds } from '../Utilities/helpers';
 import styled from 'styled-components';
+import LoadingState from '../Components/LoadingState';
 
 import {
     Badge,
@@ -91,6 +92,9 @@ const TemplatesList = ({ templates }) => {
                   </h3>
               </DataCellEnd>
           </DataListItem>
+          { templates.length <= 0 && (
+              <LoadingState />
+          )}
           { templates.map(({ name, count, id }) => (
               <DataListItem aria-labelledby="top-templates-detail" key={ name }>
                   <DataListCell>

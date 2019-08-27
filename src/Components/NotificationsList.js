@@ -10,6 +10,7 @@ import {
 } from '@patternfly/react-core';
 
 import { WarningTriangleIcon } from '@patternfly/react-icons';
+import LoadingState from '../Components/LoadingState';
 
 const DataListCell = styled(PFDataListCell)`
     --pf-c-data-list__cell-cell--MarginRight: 0;
@@ -111,6 +112,9 @@ const NotificationsList = ({
                 </FormSelect>
             </DataCellEnd>
         </DataListItem>
+        { notifications.length <= 0 && (
+            <LoadingState />
+        ) }
         { filterBy === 'all' && (
             <NotificationTemplate notifications={ notifications } />
         ) }
