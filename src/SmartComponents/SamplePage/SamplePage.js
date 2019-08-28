@@ -110,13 +110,13 @@ class SamplePage extends Component {
 
   async init() {
     const { data: barChartData } = await D3Util.getBarChartData();
-    const { data: lineChartData} = await D3Util.getLineChartData();
-    const groupedBarChartData = await D3Util.getGroupedChartData();
-    const pieChart1Data = await D3Util.getPieChart1Data();
-    const pieChart2Data = await D3Util.getPieChart2Data();
-    const { modules: modulesData} = await D3Util.getModulesData();
-    const { templates: templatesData} = await D3Util.getTemplatesData();
-    const { notifications: notificationsData} = await D3Util.getNotificationsData();
+    const { data: lineChartData } = await D3Util.getLineChartData();
+    const { dates: groupedBarChartData } = await D3Util.getGroupedChartData();
+    const { usages: pieChart1Data } = await D3Util.getPieChart1Data();
+    const { usages: pieChart2Data } = await D3Util.getPieChart2Data();
+    const { modules: modulesData } = await D3Util.getModulesData();
+    const { templates: templatesData } = await D3Util.getTemplatesData();
+    const { notifications: notificationsData } = await D3Util.getNotificationsData();
 
     this.setState({
       barChartData,
