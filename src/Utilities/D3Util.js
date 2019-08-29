@@ -6,9 +6,16 @@ const modulesEndpoint = '/api/tower-analytics/modules/';
 const templatesEndPoint = '/api/tower-analytics/templates/';
 const notificationsEndPoint = '/api/tower-analytics/notifications/';
 const groupedBarChartEndpoint = '/api/tower-analytics/jobs_by_date_and_org_30/';
-const donutChart1Endpoint =  '/api/tower-analytics/average_elapsed_time_by_org_30/';
+const donutChart1Endpoint =
+  '/api/tower-analytics/average_elapsed_time_by_org_30/';
 const donutChart2Endpoint = '/api/tower-analytics/job_events_by_org_30/';
 class D3Util {
+    static getAbsoluteUrl() {
+        const url = window.location.href;
+        let arr = url.split('/');
+        arr.pop();
+        return arr.join('/');
+    }
     static async readJSON(endpoint) {
         return await d3.json(endpoint);
     }
@@ -24,11 +31,21 @@ class D3Util {
     static getGroupedChartData() {
         return this.readJSON(groupedBarChartEndpoint);
     }
-    static getPieChart1Data() {
-        return this.readJSON(donutChart1Endpoint);
+    static getPieChart1Data({ params = {}}) {
+        const formattedUrl = this.getAbsoluteUrl();
+        let url = new URL(donutChart1Endpoint, formattedUrl);
+        Object.keys(params).forEach(key =>
+            url.searchParams.append(key, params[key])
+        );
+        return this.readJSON(url);
     }
-    static getPieChart2Data() {
-        return this.readJSON(donutChart2Endpoint);
+    static getPieChart2Data({ params = {}}) {
+        const formattedUrl = this.getAbsoluteUrl();
+        let url = new URL(donutChart2Endpoint, formattedUrl);
+        Object.keys(params).forEach(key =>
+            url.searchParams.append(key, params[key])
+        );
+        return this.readJSON(url);
     }
     static getModulesData() {
         return this.readJSON(modulesEndpoint);

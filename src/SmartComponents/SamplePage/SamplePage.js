@@ -46,6 +46,7 @@ import NotificationsList from "../../Components/NotificationsList";
 import styled from "styled-components";
 import DonutChart from "../../Charts/DonutChart";
 import GroupedBarChart from "../../Charts/GroupedBarChart";
+import moment from 'moment';
 
 const PageHeader = styled(RHPageHeader)`
   padding: 8px 0 0 0;
@@ -110,11 +111,14 @@ class SamplePage extends Component {
   }
 
   async init() {
+    const today = moment().format('YYYY-MM-DD');
+    const previousDay = moment().subtract(7, 'days').format('YYYY-MM-DD');
+    const defaultPrams = { params: { startDate: previousDay, endDate: today }}
     const { data: barChartData } = await D3Util.getBarChartData();
     const { data: lineChartData } = await D3Util.getLineChartData();
     const { dates: groupedBarChartData } = await D3Util.getGroupedChartData();
-    const { usages: pieChart1Data } = await D3Util.getPieChart1Data();
-    const { usages: pieChart2Data } = await D3Util.getPieChart2Data();
+    const { usages: pieChart1Data } = await D3Util.getPieChart1Data(defaultPrams);
+    const { usages: pieChart2Data } = await D3Util.getPieChart2Data(defaultPrams);
     const { modules: modulesData } = await D3Util.getModulesData();
     const { templates: templatesData } = await D3Util.getTemplatesData();
     const { notifications: notificationsData } = await D3Util.getNotificationsData();
@@ -164,7 +168,7 @@ class SamplePage extends Component {
 
     this.init = this.init.bind(this);
     this.handleTimeFrameChange = this.handleTimeFrameChange.bind(this);
-
+    this.handleDateToggle = this.handleDateToggle.bind(this);
 
     this.rightChange = (value, event) => {
       this.setState({ rightValue: +value });
@@ -244,6 +248,20 @@ class SamplePage extends Component {
   handleTimeFrameChange(value, { target: { name } }) {
     this.setState({ [name]: +value });
   };
+  async handleDateToggle(selectedDates, id) {
+    if (!id) {
+      return;
+    }
+    const params = selectedDates || {};
+    if (id === 1) {
+      const { usages: pieChart1Data } = await D3Util.getPieChart1Data({ params });
+      await this.setState({ pieChart1Data });
+    }
+    if (id === 2) {
+      const { usages: pieChart2Data } = await D3Util.getPieChart2Data({ params });
+      await this.setState({ pieChart2Data });
+    }
+  }
 
   render() {
     const {
@@ -468,7 +486,10 @@ class SamplePage extends Component {
                     <PieChart
                       margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                       id="d3-donut-1-chart-root"
+                      tag={1}
                       data={pieChart1Data}
+                      timeFrame={this.state.orgsPlaybookTimeFrame}
+                      onDateToggle={this.handleDateToggle}
                     />
                   )}
                 </CardBody>
@@ -509,7 +530,10 @@ class SamplePage extends Component {
                     <PieChart
                       margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                       id="d3-donut-2-chart-root"
+                      tag={2}
                       data={pieChart2Data}
+                      timeFrame={this.state.orgsStorageTimeFrame}
+                      onDateToggle={this.handleDateToggle}
                     />
                   )}
                 </CardBody>

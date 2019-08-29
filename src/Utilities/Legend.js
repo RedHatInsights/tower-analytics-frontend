@@ -57,14 +57,13 @@ class Legend extends Component {
         const selectedId = parseFloat(value);
         onToggle(selectedId);
     };
-
     render() {
         const { data, selected } = this.props;
         return (
             <Container>
                 { data.map(
-                    ({ name, value, id }) => (
-                        <LegendDetail key={ name }>
+                    ({ name, value, id }, index) => (
+                        <LegendDetail key={ index }>
                             <Color color={ value } />
                             <Title>{ name }</Title>
                             { selected && (

@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import * as d3 from 'd3';
+import moment from 'moment';
 import initializeChart from './BaseChart';
 import D3Util from '../Utilities/D3Util';
 import Legend from '../Utilities/Legend';
@@ -138,6 +139,7 @@ class PieChart extends Component {
         this.draw = this.draw.bind(this);
         this.init = this.init.bind(this);
         this.resize = this.resize.bind(this);
+        this.updateTimeFrame = this.updateTimeFrame.bind(this);
     }
     // Methods
     resize() {
@@ -152,6 +154,12 @@ class PieChart extends Component {
         data.sort((a, b) =>
             d3.descending(parseFloat(a.count), parseFloat(b.count))
         );
+    }
+    updateTimeFrame() {
+        const { onDateToggle, tag, timeFrame } = this.props;
+        const today = moment().format('YYYY-MM-DD');
+        const previousDay = moment().subtract(timeFrame, 'days').format('YYYY-MM-DD');
+        onDateToggle({ startDate: previousDay, endDate: today }, tag);
     }
     init() {
         const color = d3.scaleOrdinal(pfmulti);
@@ -251,6 +259,10 @@ class PieChart extends Component {
         if (prevProps.data !== this.props.data) {
             this.init();
         }
+
+        if (prevProps.timeFrame !== this.props.timeFrame) {
+            this.updateTimeFrame();
+        }
     }
 
     render() {
@@ -277,7 +289,10 @@ PieChart.propTypes = {
     data: PropTypes.array,
     margin: PropTypes.object,
     getHeight: PropTypes.func,
-    getWidth: PropTypes.func
+    getWidth: PropTypes.func,
+    onDateToggle: PropTypes.func,
+    timeFrame: PropTypes.number,
+    tag: PropTypes.number
 };
 
 export default initializeChart(PieChart);
