@@ -89,7 +89,7 @@ class LineChart extends Component {
         }
 
         const x = d3.scaleTime().rangeRound([ 0, width ]);
-        const y = d3.scaleLinear().range([ height, 0 ]).nice();
+        const y = d3.scaleLinear().range([ height, 0 ]);
 
         //[success, fail, total]
         // let colors = d3.scaleOrdinal([ '4CB140', '#C46100', '#06C' ]);
@@ -125,7 +125,7 @@ class LineChart extends Component {
         y.domain([
             0,
             d3.max(data, function(d) {
-                return d.TOTAL * 1.15;
+                return d.TOTAL * 1.15 || 8;
             })
         ]);
 

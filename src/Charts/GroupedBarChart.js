@@ -264,7 +264,7 @@ class GroupedBarChart extends Component {
         .padding(0.35);
         // x scale of individual grouped bars
         const x1 = d3.scaleBand();
-        const y = d3.scaleLinear().range([ height, 0 ]).nice();
+        const y = d3.scaleLinear().range([ height, 0 ]);
         // format our X Axis ticks
         const { timeFrame } = this.props;
         let ticks;
@@ -309,7 +309,7 @@ class GroupedBarChart extends Component {
         x1.domain(selectedOrgNames).range([ 0, x0.bandwidth() ]); // unsorted
         y.domain([
             0,
-            d3.max(data, date => d3.max(date.selectedOrgs, d => d.value * 1.15))
+            d3.max(data, date => d3.max(date.selectedOrgs, d => d.value * 1.15)) || 8
         ]);
         // x1.domain(d3.range(0, data[0].orgs.length)).range([0, x0.bandwidth()]); // sorted
 

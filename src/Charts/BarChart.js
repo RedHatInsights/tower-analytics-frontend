@@ -69,7 +69,7 @@ class BarChart extends Component {
         .scaleBand()
         .rangeRound([ 0, width ])
         .padding(0.35); // percentage
-        const y = d3.scaleLinear().range([ height, 0 ]).nice();
+        const y = d3.scaleLinear().range([ height, 0 ]);
 
         const svg = d3
         .select('#' + this.props.id)
@@ -104,7 +104,7 @@ class BarChart extends Component {
         const layers = stack(data);
         // Scale the range of the data
         x.domain(layers[0].map(d => d.data.DATE));
-        y.domain([ 0, d3.max(layers[layers.length - 1], d => d[1] * 1.15) ]).nice();
+        y.domain([ 0, d3.max(layers[layers.length - 1], d => d[1] * 1.15) || 8 ]);
         // Add the Y Axis
         svg
         .append('g')
@@ -112,7 +112,6 @@ class BarChart extends Component {
         .call(
             d3
             .axisLeft(y)
-            .ticks(8)
             .tickSize(-width, 0, 0)
         )
         .selectAll('line')
