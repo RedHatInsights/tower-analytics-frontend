@@ -283,7 +283,7 @@ class SamplePage extends Component {
     return (
       <React.Fragment>
         <PageHeader>
-          <PageHeaderTitle title="Tower Analytics" />
+          <PageHeaderTitle title="Automation Analytics" />
           <Tabs
             activeKey={this.state.activeTabKey}
             onSelect={this.handleTabClick}
