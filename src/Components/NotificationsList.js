@@ -96,6 +96,7 @@ const NotificationsList = ({
             </DataListCell>
             <DataCellEnd>
                 <FormSelect
+                    name="selectedNotification"
                     value={ filterBy }
                     onChange={ onNotificationChange }
                     aria-label="Select Notification Type"

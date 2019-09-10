@@ -63,7 +63,7 @@ class D3Util {
         } else {
             let total = 0;
             data.forEach(datum => {
-                total += datum.count;
+                total += parseInt(datum.count);
             });
             return total;
         }
