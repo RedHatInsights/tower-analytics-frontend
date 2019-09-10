@@ -1,5 +1,5 @@
 {
-  "name": "tower-analytics",
+  "name": "automation-analytics",
   "version": "1.1.0",
   "private": false,
   "dependencies": {
@@ -89,6 +89,6 @@
     "verify": "npm-run-all build lint test"
   },
   "insights": {
-    "appname": "tower-analytics"
+    "appname": "automation-analytics"
   }
 }

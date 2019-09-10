@@ -1,7 +1,7 @@
 /*global module*/
 
-const SECTION = 'insights';
-const APP_ID = 'tower-analytics';
+const SECTION = 'ansible';
+const APP_ID = 'automation-analytics';
 const FRONTEND_PORT = 8002;
 const routes = {};
 
