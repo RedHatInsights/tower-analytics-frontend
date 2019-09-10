@@ -9,6 +9,6 @@ const localhost = (process.env.PLATFORM === 'linux') ? 'localhost' : 'host.docke
 module.exports = {
     routes: {
         '/apps/automation-analytics': { host: `https://${localhost}:8002` },
-        '/insights/automation-analytics': { host: `https://${localhost}:8002` }
+        '/ansible/automation-analytics': { host: `https://${localhost}:8002` }
     }
 };
