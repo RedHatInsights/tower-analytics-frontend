@@ -1,7 +1,8 @@
 /*eslint max-len: ["error", { "ignoreStrings": true }]*/
 const templatesEndpoint = '/api/tower-analytics/template_jobs/';
+const clustersEndpoint = '/api/tower-analytics//clusters/';
 
-const templatesRequest = async (id) => {
+export const templatesRequest = async (id) => {
     if (!id) {
         return;
     }
@@ -11,4 +12,8 @@ const templatesRequest = async (id) => {
     return data;
 };
 
-export default templatesRequest;
+export const clustersRequest = async () => {
+    let response = await fetch(clustersEndpoint);
+    let data = await response.json();
+    return data;
+};

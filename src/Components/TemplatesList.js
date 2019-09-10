@@ -15,7 +15,7 @@ import {
 
 import { CircleIcon } from '@patternfly/react-icons';
 
-import templatesRequest from '../Api';
+import { templatesRequest } from '../Api';
 
 const success = (
     <CircleIcon

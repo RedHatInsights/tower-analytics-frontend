@@ -21,6 +21,7 @@ import {
     TabContent
 } from '@patternfly/react-core';
 
+import { clustersRequest } from '../../Api';
 import BarChart from '../../Charts/BarChart';
 import D3Util from '../../Utilities/D3Util';
 import GroupedBarChart from '../../Charts/GroupedBarChart';
@@ -35,15 +36,15 @@ const PageHeader = styled(RHPageHeader)`
   padding: 8px 0 0 0;
 `;
 const CardHeader = styled(PFCardHeader)`
-&&& {
-  min-height: 60px;
-  --pf-c-card--first-child--PaddingTop: 10px;
-  --pf-c-card__header--not-last-child--PaddingBottom: 10px;
+  &&& {
+    min-height: 60px;
+    --pf-c-card--first-child--PaddingTop: 10px;
+    --pf-c-card__header--not-last-child--PaddingBottom: 10px;
 
-  h3 {
-    font-size: .875em;
+    h3 {
+      font-size: 0.875em;
+    }
   }
-}
 `;
 const PageHeaderTitle = styled(RHPageHeaderTitle)`
   margin-left: 20px;
@@ -81,7 +82,7 @@ class SamplePage extends Component {
             orgsJobsTimeFrame: 7,
             orgsStorageTimeFrame: 7,
             orgsPlaybookTimeFrame: 7,
-            selectedCluster: 1,
+            selectedCluster: 'all',
             selectedNotification: 'all',
             activeTabKey: 0,
             barChartData: [],
@@ -91,7 +92,8 @@ class SamplePage extends Component {
             pieChart2Data: [],
             modulesData: [],
             templatesData: [],
-            notificationsData: []
+            notificationsData: [],
+            clusterOptions: []
         };
 
         this.init = this.init.bind(this);
@@ -105,11 +107,6 @@ class SamplePage extends Component {
             { value: 14, label: 'Past 2 Weeks', disabled: false },
             { value: 31, label: 'Past Month', disabled: false }
         ];
-        this.clusterOptions = [
-            { value: 'please choose', label: 'Select Cluster', disabled: true },
-            { value: 1, label: 'All Clusters', disabled: false },
-            { value: 2, label: 'Cluster A', disabled: false }
-        ],
         this.notificationOptions = [
             {
                 value: 'please choose',
@@ -127,17 +124,26 @@ class SamplePage extends Component {
     }
     async init() {
         const today = moment().format('YYYY-MM-DD');
-        const previousDay = moment().subtract(7, 'days').format('YYYY-MM-DD');
+        const previousDay = moment()
+        .subtract(7, 'days')
+        .format('YYYY-MM-DD');
         const defaultPrams = { params: { startDate: previousDay, endDate: today }};
         const { data: barChartData } = await D3Util.getBarChartData();
         const { data: lineChartData } = await D3Util.getLineChartData();
         const { dates: groupedBarChartData } = await D3Util.getGroupedChartData();
-        const { usages: pieChart1Data } = await D3Util.getPieChart1Data(defaultPrams);
-        const { usages: pieChart2Data } = await D3Util.getPieChart2Data(defaultPrams);
+        const { usages: pieChart1Data } = await D3Util.getPieChart1Data(
+            defaultPrams
+        );
+        const { usages: pieChart2Data } = await D3Util.getPieChart2Data(
+            defaultPrams
+        );
         const { modules: modulesData } = await D3Util.getModulesData();
         const { templates: templatesData } = await D3Util.getTemplatesData();
-        const { notifications: notificationsData } = await D3Util.getNotificationsData();
-
+        const {
+            notifications: notificationsData
+        } = await D3Util.getNotificationsData();
+        const { templates: clusterData } = await clustersRequest();
+        const clusterOptions = this.formatClusterName(clusterData);
         this.setState({
             barChartData,
             lineChartData,
@@ -146,7 +152,8 @@ class SamplePage extends Component {
             pieChart2Data,
             modulesData,
             templatesData,
-            notificationsData
+            notificationsData,
+            clusterOptions
         });
     }
 
@@ -155,10 +162,32 @@ class SamplePage extends Component {
           activeTabKey: tabIndex
       });
   };
-  handleSelectChange(value, { target: { name }}) {
+  handleSelectChange(
+      value,
+      {
+          target: { name }
+      }
+  ) {
       this.setState({ [name]: +value || value });
-  };
+  }
+  defaultClusterOptions = [
+      { value: 'please choose', label: 'Select Cluster', disabled: true },
+      { value: 'all', label: 'All Clusters', disabled: false }
+  ];
+  formatClusterName(data) {
+      return data.reduce(
+          (formatted, { label, system_id: id, system_uuid: uuid }) => {
+              if (label.length === 0) {
+                  formatted.push({ value: id, label: uuid, disabled: false });
+              } else {
+                  formatted.push({ value: id, label, disabled: false });
+              }
 
+              return formatted;
+          },
+          this.defaultClusterOptions
+      );
+  }
   async handleDateToggle(selectedDates, id) {
       if (!id) {
           return;
@@ -166,12 +195,16 @@ class SamplePage extends Component {
 
       const params = selectedDates || {};
       if (id === 1) {
-          const { usages: pieChart1Data } = await D3Util.getPieChart1Data({ params });
+          const { usages: pieChart1Data } = await D3Util.getPieChart1Data({
+              params
+          });
           await this.setState({ pieChart1Data });
       }
 
       if (id === 2) {
-          const { usages: pieChart2Data } = await D3Util.getPieChart2Data({ params });
+          const { usages: pieChart2Data } = await D3Util.getPieChart2Data({
+              params
+          });
           await this.setState({ pieChart2Data });
       }
   }
@@ -192,17 +225,15 @@ class SamplePage extends Component {
           clusterTimeFrame,
           orgsStorageTimeFrame,
           orgsPlaybookTimeFrame,
-          selectedNotification
+          selectedNotification,
+          clusterOptions
       } = this.state;
 
       return (
           <React.Fragment>
               <PageHeader>
                   <PageHeaderTitle title="Automation Analytics" />
-                  <Tabs
-                      activeKey={ activeTabKey }
-                      onSelect={ this.handleTabClick }
-                  >
+                  <Tabs activeKey={ activeTabKey } onSelect={ this.handleTabClick }>
                       <Tab
                           eventKey={ 0 }
                           title="Clusters"
@@ -258,7 +289,7 @@ class SamplePage extends Component {
                                       aria-label="Select Cluster"
                                       style={ { margin: '2px 10px' } }
                                   >
-                                      { this.clusterOptions.map(({ value, label, disabled }, index) => (
+                                      { clusterOptions.map(({ value, label, disabled }, index) => (
                                           <FormSelectOption
                                               isDisabled={ disabled }
                                               key={ index }
@@ -270,10 +301,10 @@ class SamplePage extends Component {
                               </div>
                           </CardHeader>
                           <CardBody>
-                              { barChartData.length <= 0 && (
-                                  <LoadingState />
-                              ) }
-                              { selectedCluster === 1 && barChartData.length > 0 && activeTabKey === 0 && (
+                              { barChartData.length <= 0 && <LoadingState /> }
+                              { selectedCluster === 'all' &&
+                  barChartData.length > 0 &&
+                  activeTabKey === 0 && (
                                   <BarChart
                                       margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                                       id="d3-bar-chart-root"
@@ -281,10 +312,12 @@ class SamplePage extends Component {
                                       value={ clusterTimeFrame }
                                   />
                               ) }
-                              { selectedCluster === 2 && lineChartData.length <= 0 && (
+                              { selectedCluster !== 'all' && lineChartData.length <= 0 && (
                                   <LoadingState />
                               ) }
-                              { selectedCluster === 2 && lineChartData.length > 0 && activeTabKey === 0 && (
+                              { selectedCluster !== 'all' &&
+                  lineChartData.length > 0 &&
+                  activeTabKey === 0 && (
                                   <LineChart
                                       margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                                       id="d3-bar-chart-root"
@@ -300,9 +333,7 @@ class SamplePage extends Component {
                           style={ { display: 'flex', marginTop: '20px' } }
                       >
                           <TemplatesList templates={ templatesData } />
-                          <ModulesList
-                              modules={ modulesData }
-                          />
+                          <ModulesList modules={ modulesData } />
                           <NotificationsList
                               onNotificationChange={ this.handleSelectChange }
                               filterBy={ selectedNotification }
@@ -350,9 +381,7 @@ class SamplePage extends Component {
                               </div>
                           </CardHeader>
                           <CardBody>
-                              { groupedBarChartData.length <= 0 && (
-                                  <LoadingState />
-                              ) }
+                              { groupedBarChartData.length <= 0 && <LoadingState /> }
                               { groupedBarChartData.length > 0 && activeTabKey === 1 && (
                                   <GroupedBarChart
                                       margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
@@ -395,9 +424,7 @@ class SamplePage extends Component {
                                           )) }
                                       </FormSelect>
                                   </CardHeader>
-                                  { pieChart1Data.length <= 0 && (
-                                      <LoadingState />
-                                  ) }
+                                  { pieChart1Data.length <= 0 && <LoadingState /> }
                                   { pieChart1Data.length > 0 && activeTabKey === 1 && (
                                       <PieChart
                                           margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
@@ -439,9 +466,7 @@ class SamplePage extends Component {
                                           )) }
                                       </FormSelect>
                                   </CardHeader>
-                                  { pieChart2Data.length <= 0 && (
-                                      <LoadingState />
-                                  ) }
+                                  { pieChart2Data.length <= 0 && <LoadingState /> }
                                   { pieChart2Data.length > 0 && activeTabKey === 1 && (
                                       <PieChart
                                           margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
