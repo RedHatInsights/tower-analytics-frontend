@@ -405,7 +405,7 @@ class SamplePage extends Component {
                                       } }
                                   >
                                       <h2 style={ { marginLeft: '20px' } }>
-                      Average Elapsed Playbook Run
+                      Job Runs by Organization
                                       </h2>
                                       <FormSelect
                                           name="orgsPlaybookTimeFrame"
@@ -448,7 +448,7 @@ class SamplePage extends Component {
                                           padding: 0
                                       } }
                                   >
-                                      <h2 style={ { marginLeft: '20px' } }>Storage</h2>
+                                      <h2 style={ { marginLeft: '20px' } }>Usage by Organization (Tasks)</h2>
                                       <FormSelect
                                           name="orgsStorageTimeFrame"
                                           value={ orgsStorageTimeFrame }
