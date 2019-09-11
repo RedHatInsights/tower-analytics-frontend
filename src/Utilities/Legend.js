@@ -7,6 +7,7 @@ import styled from 'styled-components';
 const Container = styled.div`
   margin-top: 20px;
   overflow: auto;
+  min-width: 25%;
 `;
 
 const LegendDetail = styled.div`
@@ -56,14 +57,13 @@ class Legend extends Component {
         const selectedId = parseFloat(value);
         onToggle(selectedId);
     };
-
     render() {
         const { data, selected } = this.props;
         return (
             <Container>
                 { data.map(
-                    ({ name, value, id }) => (
-                        <LegendDetail key={ name }>
+                    ({ name, value, id }, index) => (
+                        <LegendDetail key={ index }>
                             <Color color={ value } />
                             <Title>{ name }</Title>
                             { selected && (

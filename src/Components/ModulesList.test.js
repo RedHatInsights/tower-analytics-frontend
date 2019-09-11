@@ -3,6 +3,6 @@ import ModulesList from './ModulesList/';
 
 describe('Components/ModulesList', () => {
     it('should render successfully', () => {
-        mount(<ModulesList modules={ [{ name: 'Foo', count: 1 }] } />);
+        mount(<ModulesList modules={ [{ module: 'Foo', count: 1 }] } />);
     });
 });

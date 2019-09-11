@@ -9,30 +9,40 @@ class LineChart extends Component {
         super(props);
         this.init = this.init.bind(this);
         this.draw = this.draw.bind(this);
+        this.resize = this.resize.bind(this);
         this.formatData = this.formatData.bind(this);
         this.state = {
-            formattedData: []
+            formattedData: [],
+            timeout: null
         };
+    }
+
+    resize() {
+        const { timeout } = this.state;
+        clearTimeout(timeout);
+        this.setState({
+            timeout: setTimeout(() => { this.init(); }, 500)
+        });
     }
 
     async formatData() {
         const { data, value } = this.props;
         const parseTime = d3.timeParse('%Y-%m-%d');
 
-        const formattedData = data.reduce((formatted, { DATE, RAN, FAIL, TOTAL = 0 }) => {
-            DATE = parseTime(DATE) || new Date();
-            RAN = +RAN || 0;
-            FAIL = +FAIL || 0;
-            TOTAL = RAN + FAIL || 0;
+        const formattedData = data.reduce((formatted, { created, successful, failed }) => {
+            let DATE = parseTime(created) || new Date();
+            let RAN = +successful || 0;
+            let FAIL = +failed || 0;
+            let TOTAL = +successful + failed || 0;
             return formatted.concat({ DATE, RAN, FAIL, TOTAL });
         }, []);
         const halfLength = Math.ceil(data.length / 2);
         if (value === 14) {
-            return [ ...formattedData ].splice(0, halfLength);
+            return [ ...formattedData ].splice(halfLength, data.length - 1);
         }
 
         if (value === 7) {
-            return [ ...formattedData ].splice(0, value);
+            return [ ...formattedData ].splice(data.length - 7, data.length - 1);
         }
 
         return formattedData;
@@ -79,7 +89,7 @@ class LineChart extends Component {
         }
 
         const x = d3.scaleTime().rangeRound([ 0, width ]);
-        const y = d3.scaleLinear().range([ height, 0 ]).nice();
+        const y = d3.scaleLinear().range([ height, 0 ]);
 
         //[success, fail, total]
         // let colors = d3.scaleOrdinal([ '4CB140', '#C46100', '#06C' ]);
@@ -115,7 +125,7 @@ class LineChart extends Component {
         y.domain([
             0,
             d3.max(data, function(d) {
-                return d.TOTAL + 10;
+                return d.TOTAL * 1.15 || 8;
             })
         ]);
 
@@ -288,19 +298,24 @@ class LineChart extends Component {
         .on('mouseover', handleMouseOver)
         .on('mousemove', handleMouseMove)
         .on('mouseout', handleMouseOut);
-
-        // Call the resize function whenever a resize event occurs
-        d3.select(window).on('resize', this.props.resize(this.init, 500));
     }
 
     componentDidMount() {
         this.init();
+        // Call the resize function whenever a resize event occurs
+        window.addEventListener('resize', this.resize);
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.value !== this.props.value) {
             this.init();
         }
+    }
+
+    componentWillUnmount() {
+        const { timeout } = this.state;
+        clearTimeout(timeout);
+        window.removeEventListener('resize', this.resize);
     }
 
     render() {
@@ -313,7 +328,6 @@ LineChart.propTypes = {
     data: PropTypes.array,
     value: PropTypes.number,
     margin: PropTypes.object,
-    resize: PropTypes.func,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func
 };

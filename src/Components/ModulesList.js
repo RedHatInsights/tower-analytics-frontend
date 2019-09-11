@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { trimStr } from '../Utilities/helpers';
 import styled from 'styled-components';
+import LoadingState from '../Components/LoadingState';
 
 import {
     Badge,
@@ -38,10 +40,13 @@ const ModulesList = ({ modules }) => (
                 </h3>
             </DataCellEnd>
         </DataListItem>
-        { modules.map(({ name, count }) => (
-            <DataListItem aria-labelledby="top-modules-detail" key={ name }>
+        { modules.length <= 0 && (
+            <LoadingState />
+        ) }
+        { modules.filter(module => module.module !== null).map(({ module, count }) => (
+            <DataListItem aria-labelledby="top-modules-detail" key={ module }>
                 <DataListCell>
-                    <span>{ name }</span>
+                    <span>{ trimStr(module) }</span>
                 </DataListCell>
                 <DataCellEnd>
                     <Badge isRead>{ count }</Badge>

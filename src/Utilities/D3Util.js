@@ -1,16 +1,21 @@
 /*eslint max-len: ["error", { "ignoreStrings": true }]*/
 import * as d3 from 'd3';
 
-const barChartEndpoint =
-    'https://gist.githubusercontent.com/kialam/52130f7e3292dad03a0c841f39a3b9d3/raw/89b8d3215c4968739ae200f90780539eda38d844/sample.csv';
-const groupedBarChartEndpoint =
-    'https://gist.githubusercontent.com/kialam/5d26af588b3f299a4589fc27d2be7ba3/raw/b21325b78b951968041a31a0e0ee061e4d8f40ff/groupedbarchartdata_large.json';
+const barChartEndpoint = '/api/tower-analytics/chart30/';
+const modulesEndpoint = '/api/tower-analytics/modules/';
+const templatesEndPoint = '/api/tower-analytics/templates/';
+const notificationsEndPoint = '/api/tower-analytics/notifications/';
+const groupedBarChartEndpoint = '/api/tower-analytics/jobs_by_date_and_org_30/';
 const donutChart1Endpoint =
-    'https://gist.githubusercontent.com/kialam/fd0d1982a7aac0010c01a8f83741ff78/raw/5990e72318725bad39de4f977c58c26714f59379/donut_sample_1.json    ';
-const donutChart2Endpoint =
-    'https://gist.githubusercontent.com/kialam/78cc391eebe2b2b3dd19a859ca9061d8/raw/e56537b87d55dc83f50dea1b8a80a1f90d9f9ed5/donut_sample_2.json';
-
+  '/api/tower-analytics/average_elapsed_time_by_org_30/';
+const donutChart2Endpoint = '/api/tower-analytics/job_events_by_org_30/';
 class D3Util {
+    static getAbsoluteUrl() {
+        const url = window.location.href;
+        let arr = url.split('/');
+        arr.pop();
+        return arr.join('/');
+    }
     static async readJSON(endpoint) {
         return await d3.json(endpoint);
     }
@@ -18,19 +23,38 @@ class D3Util {
         return await d3.csv(endpoint);
     }
     static getBarChartData() {
-        return this.readCSV(barChartEndpoint);
+        return this.readJSON(barChartEndpoint);
     }
     static getLineChartData() {
-        return this.readCSV(barChartEndpoint);
+        return this.readJSON(barChartEndpoint);
     }
     static getGroupedChartData() {
         return this.readJSON(groupedBarChartEndpoint);
     }
-    static getPieChart1Data() {
-        return this.readJSON(donutChart1Endpoint);
+    static getPieChart1Data({ params = {}}) {
+        const formattedUrl = this.getAbsoluteUrl();
+        let url = new URL(donutChart1Endpoint, formattedUrl);
+        Object.keys(params).forEach(key =>
+            url.searchParams.append(key, params[key])
+        );
+        return this.readJSON(url);
     }
-    static getPieChart2Data() {
-        return this.readJSON(donutChart2Endpoint);
+    static getPieChart2Data({ params = {}}) {
+        const formattedUrl = this.getAbsoluteUrl();
+        let url = new URL(donutChart2Endpoint, formattedUrl);
+        Object.keys(params).forEach(key =>
+            url.searchParams.append(key, params[key])
+        );
+        return this.readJSON(url);
+    }
+    static getModulesData() {
+        return this.readJSON(modulesEndpoint);
+    }
+    static getTemplatesData() {
+        return this.readJSON(templatesEndPoint);
+    }
+    static getNotificationsData() {
+        return this.readJSON(notificationsEndPoint);
     }
 
     static getTotal(data) {
@@ -39,7 +63,7 @@ class D3Util {
         } else {
             let total = 0;
             data.forEach(datum => {
-                total += datum.count;
+                total += parseInt(datum.count);
             });
             return total;
         }

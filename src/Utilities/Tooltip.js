@@ -130,16 +130,16 @@ class Tooltip {
         const overflow = 100 - (toolTipWidth / chartWidth) * 100;
         const flipped = overflow < (x / chartWidth) * 100;
         if (d) {
-            success = d.RAN;
-            fail = d.FAIL;
-            total = d.TOTAL;
-            this.date.text(formatTooltipDate(d.DATE));
+            success = d.RAN || 0;
+            fail = d.FAIL || 0;
+            total = d.TOTAL || 0;
+            this.date.text(formatTooltipDate(d.DATE || null));
         }
 
         if (d && d.data) {
-            success = d.data.RAN || null;
-            fail = d.data.FAIL || null;
-            total = d.data.TOTAL || null;
+            success = d.data.RAN || 0;
+            fail = d.data.FAIL || 0;
+            total = d.data.TOTAL || 0;
             this.date.text(formatTooltipDate(d.data.DATE || null));
         }
 

@@ -9,30 +9,39 @@ class BarChart extends Component {
         super(props);
         this.draw = this.draw.bind(this);
         this.init = this.init.bind(this);
+        this.resize = this.resize.bind(this);
         this.formatData = this.formatData.bind(this);
         this.state = {
-            formattedData: []
+            formattedData: [],
+            timeout: null
         };
+    }
+    resize() {
+        const { timeout } = this.state;
+        clearTimeout(timeout);
+        this.setState({
+            timeout: setTimeout(() => { this.init(); }, 500)
+        });
     }
 
     async formatData() {
         const { data, value } = this.props;
         const parseTime = d3.timeParse('%Y-%m-%d');
 
-        const formattedData = data.reduce((formatted, { DATE, RAN, FAIL, TOTAL = 0 }) => {
-            DATE = parseTime(DATE) || new Date();
-            RAN = +RAN || 0;
-            FAIL = +FAIL || 0;
-            TOTAL = RAN + FAIL || 0;
+        const formattedData = data.reduce((formatted, { created, successful, failed }) => {
+            let DATE = parseTime(created) || new Date();
+            let RAN = +successful || 0;
+            let FAIL = +failed || 0;
+            let TOTAL = +successful + failed || 0;
             return formatted.concat({ DATE, RAN, FAIL, TOTAL });
         }, []);
         const halfLength = Math.ceil(data.length / 2);
         if (value === 14) {
-            return [ ...formattedData ].splice(0, halfLength);
+            return [ ...formattedData ].splice(halfLength, (data.length - 1));
         }
 
         if (value === 7) {
-            return [ ...formattedData ].splice(0, value);
+            return [ ...formattedData ].splice(data.length - 7, (data.length - 1));
         }
 
         return formattedData;
@@ -60,7 +69,7 @@ class BarChart extends Component {
         .scaleBand()
         .rangeRound([ 0, width ])
         .padding(0.35); // percentage
-        const y = d3.scaleLinear().range([ height, 0 ]).nice();
+        const y = d3.scaleLinear().range([ height, 0 ]);
 
         const svg = d3
         .select('#' + this.props.id)
@@ -95,7 +104,7 @@ class BarChart extends Component {
         const layers = stack(data);
         // Scale the range of the data
         x.domain(layers[0].map(d => d.data.DATE));
-        y.domain([ 0, d3.max(layers[layers.length - 1], d => d[1]) ]).nice();
+        y.domain([ 0, d3.max(layers[layers.length - 1], d => d[1] * 1.15) || 8 ]);
         // Add the Y Axis
         svg
         .append('g')
@@ -103,7 +112,6 @@ class BarChart extends Component {
         .call(
             d3
             .axisLeft(y)
-            .ticks(8)
             .tickSize(-width, 0, 0)
         )
         .selectAll('line')
@@ -135,7 +143,6 @@ class BarChart extends Component {
             d3
             .axisBottom(x)
             .tickValues(ticks)
-            .tickSize(-height)
             .tickFormat(d3.timeFormat('%-m/%-d')) // "1/19"
         )
         .selectAll('line')
@@ -183,19 +190,24 @@ class BarChart extends Component {
         .on('mouseover', barTooltip.handleMouseOver)
         .on('mousemove', barTooltip.handleMouseOver)
         .on('mouseout', barTooltip.handleMouseOut);
-
-        // Call the resize function whenever a resize event occurs
-        window.addEventListener('resize', this.props.resize(this.init, 1000));
     }
 
     componentDidMount() {
         this.init();
+        // Call the resize function whenever a resize event occurs
+        window.addEventListener('resize', this.resize);
     }
 
     componentDidUpdate(prevProps) {
         if (prevProps.value !== this.props.value) {
             this.init();
         }
+    }
+
+    componentWillUnmount() {
+        const { timeout } = this.state;
+        clearTimeout(timeout);
+        window.removeEventListener('resize', this.resize);
     }
 
     render() {
@@ -208,7 +220,6 @@ BarChart.propTypes = {
     data: PropTypes.array,
     value: PropTypes.number,
     margin: PropTypes.object,
-    resize: PropTypes.func,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func
 };
