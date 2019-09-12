@@ -120,6 +120,7 @@ class SamplePage extends Component {
         this.contentRef2 = React.createRef();
     }
     async componentDidMount() {
+        await window.insights.chrome.auth.getUser();
         await this.init();
     }
     async init() {
