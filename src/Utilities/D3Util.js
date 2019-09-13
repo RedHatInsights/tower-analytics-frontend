@@ -19,14 +19,18 @@ class D3Util {
     static async readJSON(endpoint) {
         return await d3.json(endpoint);
     }
-    static async readCSV(endpoint) {
-        return await d3.csv(endpoint);
-    }
     static getBarChartData() {
         return this.readJSON(barChartEndpoint);
     }
-    static getLineChartData() {
-        return this.readJSON(barChartEndpoint);
+    static getLineChartData({ id = {}}) {
+        const { id: clusterId } = id;
+        const formattedUrl = this.getAbsoluteUrl();
+        let url = new URL(barChartEndpoint, formattedUrl);
+        if (clusterId) {
+            url.searchParams.append('id', clusterId);
+        }
+
+        return this.readJSON(url);
     }
     static getGroupedChartData() {
         return this.readJSON(groupedBarChartEndpoint);

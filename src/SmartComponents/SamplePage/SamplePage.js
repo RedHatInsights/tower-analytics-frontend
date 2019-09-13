@@ -99,6 +99,7 @@ class SamplePage extends Component {
         this.init = this.init.bind(this);
         this.handleSelectChange = this.handleSelectChange.bind(this);
         this.handleDateToggle = this.handleDateToggle.bind(this);
+        this.handleClusterToggle = this.handleClusterToggle.bind(this);
         this.handleTabClick = this.handleTabClick.bind(this);
 
         this.timeFrameOptions = [
@@ -130,7 +131,7 @@ class SamplePage extends Component {
         .format('YYYY-MM-DD');
         const defaultPrams = { params: { startDate: previousDay, endDate: today }};
         const { data: barChartData } = await D3Util.getBarChartData();
-        const { data: lineChartData } = await D3Util.getLineChartData();
+        const { data: lineChartData } = await D3Util.getLineChartData({ params: {}});
         const { dates: groupedBarChartData } = await D3Util.getGroupedChartData();
         const { usages: pieChart1Data } = await D3Util.getPieChart1Data(
             defaultPrams
@@ -199,15 +200,23 @@ class SamplePage extends Component {
           const { usages: pieChart1Data } = await D3Util.getPieChart1Data({
               params
           });
-          await this.setState({ pieChart1Data });
+          this.setState({ pieChart1Data });
       }
 
       if (id === 2) {
           const { usages: pieChart2Data } = await D3Util.getPieChart2Data({
               params
           });
-          await this.setState({ pieChart2Data });
+          this.setState({ pieChart2Data });
       }
+  }
+  async handleClusterToggle(id) {
+      if (!id) {
+          return;
+      }
+
+      const { data: lineChartData } = await D3Util.getLineChartData({ id });
+      this.setState({ lineChartData });
   }
 
   render() {
@@ -325,6 +334,7 @@ class SamplePage extends Component {
                                       data={ lineChartData }
                                       value={ clusterTimeFrame }
                                       cluster={ selectedCluster }
+                                      onClusterToggle={ this.handleClusterToggle }
                                   />
                               ) }
                           </CardBody>
