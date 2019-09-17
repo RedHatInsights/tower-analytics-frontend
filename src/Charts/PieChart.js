@@ -131,7 +131,6 @@ class Tooltip {
 class PieChart extends Component {
     constructor(props) {
         super(props);
-        this.orgList = props.data;
         this.state = {
             colors: [],
             timeout: null
@@ -162,9 +161,10 @@ class PieChart extends Component {
         onDateToggle({ startDate: previousDay, endDate: today }, tag);
     }
     init() {
+        const { data } = this.props;
         const color = d3.scaleOrdinal(pfmulti);
         // create our colors array to send to the Legend component
-        const colors = this.orgList.reduce((colors, org) => {
+        const colors = data.reduce((colors, org) => {
             colors.push({
                 name: org.name,
                 value: color(org.name)
