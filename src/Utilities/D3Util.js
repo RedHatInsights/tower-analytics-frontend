@@ -7,7 +7,7 @@ const templatesEndPoint = '/api/tower-analytics/templates/';
 const notificationsEndPoint = '/api/tower-analytics/notifications/';
 const groupedBarChartEndpoint = '/api/tower-analytics/jobs_by_date_and_org_30/';
 const donutChart1Endpoint =
-  '/api/tower-analytics/average_elapsed_time_by_org_30/';
+  '/api/tower-analytics/job_runs_by_org_30/';
 const donutChart2Endpoint = '/api/tower-analytics/job_events_by_org_30/';
 class D3Util {
     static getAbsoluteUrl() {
