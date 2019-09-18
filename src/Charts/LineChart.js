@@ -11,6 +11,7 @@ class LineChart extends Component {
         this.draw = this.draw.bind(this);
         this.resize = this.resize.bind(this);
         this.formatData = this.formatData.bind(this);
+        this.updateCluster = this.updateCluster.bind(this);
         this.state = {
             formattedData: [],
             timeout: null
@@ -55,7 +56,12 @@ class LineChart extends Component {
             return value;
         }
     }
+    async updateCluster() {
+        const { cluster, onClusterToggle } = this.props;
+        await onClusterToggle({ id: cluster });
+    }
     async init() {
+        this.updateCluster();
         const formattedData = await this.formatData();
         this.setState((prevState) => {
             if (prevState.formattedData === formattedData) {
@@ -310,6 +316,10 @@ class LineChart extends Component {
         if (prevProps.value !== this.props.value) {
             this.init();
         }
+
+        if (prevProps.cluster !== this.props.cluster) {
+            this.updateCluster();
+        }
     }
 
     componentWillUnmount() {
@@ -327,6 +337,10 @@ LineChart.propTypes = {
     id: PropTypes.string,
     data: PropTypes.array,
     value: PropTypes.number,
+    cluster: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number
+    ]),
     margin: PropTypes.object,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func
