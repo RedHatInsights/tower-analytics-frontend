@@ -42,7 +42,7 @@ class Tooltip {
         .attr('y', -23)
         .attr('rx', 2)
         .attr('height', 52)
-        .attr('width', 105)
+        .attr('width', 108)
         .attr('fill', '#393f44');
         this.orgName = this.toolTipBase
         .append('text')
@@ -88,7 +88,7 @@ class Tooltip {
           perc = d.data.percent;
           orgName = d.data.name;
           if (d.data.name.length > maxLength) {
-              orgName = d.data.name.slice(0, maxLength).concat('...');
+              orgName = d.data.name.slice(0, maxLength - 3).concat('...');
           }
       }
 
@@ -167,7 +167,8 @@ class PieChart extends Component {
         const colors = data.reduce((colors, org) => {
             colors.push({
                 name: org.name,
-                value: color(org.name)
+                value: color(org.name),
+                count: Math.round(org.count)
             });
             return colors;
         }, []);
@@ -192,7 +193,6 @@ class PieChart extends Component {
         svg.append('g').attr('class', 'lines');
         const radius = Math.min(width, height) / 2;
         let { data } = this.props;
-
         // this.sortDescending(data);
         const total = D3Util.getTotal(data);
         data.forEach(function(d) {

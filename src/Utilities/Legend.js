@@ -13,14 +13,13 @@ const Container = styled.div`
 const LegendDetail = styled.div`
   display: flex;
   padding: 5px 10px;
-  justify-content: center;
   align-items: center;
 `;
 
 const Color = styled.div.attrs(props => ({
     color: props.color || 'black'
 }))`
-  width: 12px;
+  min-width: 12px;
   height: 12px;
   background: ${props => props.color};
 `;
@@ -34,6 +33,10 @@ const Title = styled.span`
   overflow: hidden;
   text-overflow: ellipsis;
   text-align: left;
+`;
+
+const SubTitle = styled.span`
+    font-size: 12px;
 `;
 
 const Switch = styled(PFSwitch)`
@@ -62,10 +65,13 @@ class Legend extends Component {
         return (
             <Container>
                 { data.map(
-                    ({ name, value, id }, index) => (
+                    ({ name, value, id, count }, index) => (
                         <LegendDetail key={ index }>
                             <Color color={ value } />
                             <Title>{ name }</Title>
+                            { count && (
+                                <SubTitle>{ count }</SubTitle>
+                            ) }
                             { selected && (
                                 <Switch
                                     isChecked={ selected.some(selection => selection === id) }
