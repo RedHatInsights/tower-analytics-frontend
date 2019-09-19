@@ -59,9 +59,9 @@ class LineChart extends Component {
     async updateCluster() {
         const { cluster, onClusterToggle } = this.props;
         await onClusterToggle({ id: cluster });
+        this.init();
     }
     async init() {
-        this.updateCluster();
         const formattedData = await this.formatData();
         this.setState((prevState) => {
             if (prevState.formattedData === formattedData) {
@@ -314,7 +314,7 @@ class LineChart extends Component {
 
     componentDidUpdate(prevProps) {
         if (prevProps.value !== this.props.value) {
-            this.init();
+            this.updateCluster();
         }
 
         if (prevProps.cluster !== this.props.cluster) {
