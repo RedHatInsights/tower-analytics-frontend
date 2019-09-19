@@ -21,11 +21,12 @@ import {
     TabContent
 } from '@patternfly/react-core';
 
-import { clustersRequest } from '../../Api';
+import { clustersRequest, preflightRequest } from '../../Api';
 import BarChart from '../../Charts/BarChart';
 import D3Util from '../../Utilities/D3Util';
 import GroupedBarChart from '../../Charts/GroupedBarChart';
 import LineChart from '../../Charts/LineChart';
+import EmptyState from '../../Components/EmptyState';
 import LoadingState from '../../Components/LoadingState';
 import ModulesList from '../../Components/ModulesList';
 import NotificationsList from '../../Components/NotificationsList';
@@ -51,6 +52,7 @@ const PageHeaderTitle = styled(RHPageHeaderTitle)`
 `;
 const Tabs = styled(PFTabs)`
   padding: 8px 0 0;
+  margin-left: 20px;
 
   & .pf-c-tabs__button {
     padding: 8px 20px;
@@ -93,7 +95,9 @@ class SamplePage extends Component {
             modulesData: [],
             templatesData: [],
             notificationsData: [],
-            clusterOptions: []
+            clusterOptions: [],
+            preflightError: null,
+            error: null
         };
 
         this.init = this.init.bind(this);
@@ -122,7 +126,14 @@ class SamplePage extends Component {
     }
     async componentDidMount() {
         await window.insights.chrome.auth.getUser();
-        await this.init();
+        try {
+            await preflightRequest().catch(error => {
+                this.setState({ preflightError: error });
+            });
+            await this.init();
+        } catch (error) {
+            this.setState({ error });
+        }
     }
     async init() {
         const today = moment().format('YYYY-MM-DD');
@@ -236,35 +247,50 @@ class SamplePage extends Component {
           orgsStorageTimeFrame,
           orgsPlaybookTimeFrame,
           selectedNotification,
-          clusterOptions
+          clusterOptions,
+          preflightError
       } = this.state;
 
       return (
           <React.Fragment>
               <PageHeader>
                   <PageHeaderTitle title="Automation Analytics" />
-                  <Tabs activeKey={ activeTabKey } onSelect={ this.handleTabClick }>
-                      <Tab
-                          eventKey={ 0 }
-                          title="Clusters"
-                          tabContentId="refTab1Section"
-                          tabContentRef={ this.contentRef1 }
-                      />
-                      <Tab
-                          eventKey={ 1 }
-                          title="Organization Statistics"
-                          tabContentId="refTab2Section"
-                          tabContentRef={ this.contentRef2 }
-                      />
-                  </Tabs>
+                  { !preflightError && (
+                      <Tabs activeKey={ activeTabKey } onSelect={ this.handleTabClick }>
+                          <Tab
+                              eventKey={ 0 }
+                              title="Clusters"
+                              tabContentId="refTab1Section"
+                              tabContentRef={ this.contentRef1 }
+                          />
+                          <Tab
+                              eventKey={ 1 }
+                              title="Organization Statistics"
+                              tabContentId="refTab2Section"
+                              tabContentRef={ this.contentRef2 }
+                          />
+                      </Tabs>
+                  ) }
               </PageHeader>
+              { preflightError && (
+                  <Main>
+                      <Card>
+                          <CardBody>
+                              <EmptyState error={ preflightError } />
+                          </CardBody>
+                      </Card>
+                  </Main>
+              ) }
+              { !preflightError && (
+                  <>
               <TabContent
                   eventKey={ 0 }
                   id="refTab1Section"
                   ref={ this.contentRef1 }
                   aria-label="Tab item 1"
+                  style={ { height: '100vh' } }
               >
-                  <Main>
+                  <Main style={ { height: '100%' } }>
                       <Card>
                           <CardHeader
                               style={ {
@@ -311,7 +337,7 @@ class SamplePage extends Component {
                               </div>
                           </CardHeader>
                           <CardBody>
-                              { barChartData.length <= 0 && <LoadingState /> }
+                              { barChartData.length <= 0 && !preflightError && <LoadingState /> }
                               { selectedCluster === 'all' &&
                   barChartData.length > 0 &&
                   activeTabKey === 0 && (
@@ -360,8 +386,9 @@ class SamplePage extends Component {
                   ref={ this.contentRef2 }
                   aria-label="Tab item 2"
                   hidden
+                  style={ { height: '100vh' } }
               >
-                  <Main>
+                  <Main style={ { height: '100%' } }>
                       <TopCard>
                           <CardHeader
                               style={ {
@@ -493,6 +520,9 @@ class SamplePage extends Component {
                       </CardContainer>
                   </Main>
               </TabContent>
+              </>
+              ) }
+
           </React.Fragment>
       );
   }
