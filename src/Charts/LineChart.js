@@ -307,7 +307,7 @@ class LineChart extends Component {
     }
 
     componentDidMount() {
-        this.init();
+        this.updateCluster();
         // Call the resize function whenever a resize event occurs
         window.addEventListener('resize', this.resize);
     }
