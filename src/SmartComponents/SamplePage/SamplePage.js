@@ -288,9 +288,8 @@ class SamplePage extends Component {
                   id="refTab1Section"
                   ref={ this.contentRef1 }
                   aria-label="Tab item 1"
-                  style={ { height: '100vh' } }
               >
-                  <Main style={ { height: '100%' } }>
+                  <Main>
                       <Card>
                           <CardHeader
                               style={ {
@@ -386,9 +385,8 @@ class SamplePage extends Component {
                   ref={ this.contentRef2 }
                   aria-label="Tab item 2"
                   hidden
-                  style={ { height: '100vh' } }
               >
-                  <Main style={ { height: '100%' } }>
+                  <Main>
                       <TopCard>
                           <CardHeader
                               style={ {
