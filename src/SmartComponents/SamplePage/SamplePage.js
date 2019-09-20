@@ -282,243 +282,239 @@ class SamplePage extends Component {
                   </Main>
               ) }
               { !preflightError && (
-                  <>
-              <TabContent
-                  eventKey={ 0 }
-                  id="refTab1Section"
-                  ref={ this.contentRef1 }
-                  aria-label="Tab item 1"
-              >
                   <Main>
-                      <Card>
-                          <CardHeader
-                              style={ {
-                                  borderBottom: '2px solid #ebebeb',
-                                  display: 'flex',
-                                  justifyContent: 'space-between',
-                                  alignItems: 'center'
-                              } }
-                          >
-                              <h2>Job Status</h2>
-                              <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
-                                  <FormSelect
-                                      name="clusterTimeFrame"
-                                      value={ clusterTimeFrame }
-                                      onChange={ this.handleSelectChange }
-                                      aria-label="Select Date Range"
-                                      style={ { margin: '2px 10px' } }
-                                  >
-                                      { this.timeFrameOptions.map((option, index) => (
-                                          <FormSelectOption
-                                              isDisabled={ option.disabled }
-                                              key={ index }
-                                              value={ option.value }
-                                              label={ option.label }
-                                          />
-                                      )) }
-                                  </FormSelect>
-                                  <FormSelect
-                                      name="selectedCluster"
-                                      value={ selectedCluster }
-                                      onChange={ this.handleSelectChange }
-                                      aria-label="Select Cluster"
-                                      style={ { margin: '2px 10px' } }
-                                  >
-                                      { clusterOptions.map(({ value, label, disabled }, index) => (
-                                          <FormSelectOption
-                                              isDisabled={ disabled }
-                                              key={ index }
-                                              value={ value }
-                                              label={ label }
-                                          />
-                                      )) }
-                                  </FormSelect>
-                              </div>
-                          </CardHeader>
-                          <CardBody>
-                              { barChartData.length <= 0 && !preflightError && <LoadingState /> }
-                              { selectedCluster === 'all' &&
+                      <TabContent
+                          eventKey={ 0 }
+                          id="refTab1Section"
+                          ref={ this.contentRef1 }
+                          aria-label="Tab item 1"
+                      >
+                          <Card>
+                              <CardHeader
+                                  style={ {
+                                      borderBottom: '2px solid #ebebeb',
+                                      display: 'flex',
+                                      justifyContent: 'space-between',
+                                      alignItems: 'center'
+                                  } }
+                              >
+                                  <h2>Job Status</h2>
+                                  <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
+                                      <FormSelect
+                                          name="clusterTimeFrame"
+                                          value={ clusterTimeFrame }
+                                          onChange={ this.handleSelectChange }
+                                          aria-label="Select Date Range"
+                                          style={ { margin: '2px 10px' } }
+                                      >
+                                          { this.timeFrameOptions.map((option, index) => (
+                                              <FormSelectOption
+                                                  isDisabled={ option.disabled }
+                                                  key={ index }
+                                                  value={ option.value }
+                                                  label={ option.label }
+                                              />
+                                          )) }
+                                      </FormSelect>
+                                      <FormSelect
+                                          name="selectedCluster"
+                                          value={ selectedCluster }
+                                          onChange={ this.handleSelectChange }
+                                          aria-label="Select Cluster"
+                                          style={ { margin: '2px 10px' } }
+                                      >
+                                          { clusterOptions.map(({ value, label, disabled }, index) => (
+                                              <FormSelectOption
+                                                  isDisabled={ disabled }
+                                                  key={ index }
+                                                  value={ value }
+                                                  label={ label }
+                                              />
+                                          )) }
+                                      </FormSelect>
+                                  </div>
+                              </CardHeader>
+                              <CardBody>
+                                  { barChartData.length <= 0 && !preflightError && <LoadingState /> }
+                                  { selectedCluster === 'all' &&
                   barChartData.length > 0 &&
                   activeTabKey === 0 && (
-                                  <BarChart
-                                      margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
-                                      id="d3-bar-chart-root"
-                                      data={ barChartData }
-                                      value={ clusterTimeFrame }
-                                  />
-                              ) }
-                              { selectedCluster !== 'all' && lineChartData.length <= 0 && (
-                                  <LoadingState />
-                              ) }
-                              { selectedCluster !== 'all' &&
+                                      <BarChart
+                                          margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
+                                          id="d3-bar-chart-root"
+                                          data={ barChartData }
+                                          value={ clusterTimeFrame }
+                                      />
+                                  ) }
+                                  { selectedCluster !== 'all' && lineChartData.length <= 0 && (
+                                      <LoadingState />
+                                  ) }
+                                  { selectedCluster !== 'all' &&
                   lineChartData.length > 0 &&
                   activeTabKey === 0 && (
-                                  <LineChart
-                                      margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
-                                      id="d3-bar-chart-root"
-                                      data={ lineChartData }
-                                      value={ clusterTimeFrame }
-                                      cluster={ selectedCluster }
-                                      onClusterToggle={ this.handleClusterToggle }
-                                  />
-                              ) }
-                          </CardBody>
-                      </Card>
-                      <div
-                          className="dataCard"
-                          style={ { display: 'flex', marginTop: '20px' } }
-                      >
-                          <TemplatesList templates={ templatesData } />
-                          <ModulesList modules={ modulesData } />
-                          <NotificationsList
-                              onNotificationChange={ this.handleSelectChange }
-                              filterBy={ selectedNotification }
-                              options={ this.notificationOptions }
-                              notifications={ notificationsData }
-                          />
-                      </div>
-                  </Main>
-              </TabContent>
-              <TabContent
-                  eventKey={ 1 }
-                  id="refTab2Section"
-                  ref={ this.contentRef2 }
-                  aria-label="Tab item 2"
-                  hidden
-              >
-                  <Main>
-                      <TopCard>
-                          <CardHeader
-                              style={ {
-                                  borderBottom: '2px solid #ebebeb',
-                                  display: 'flex',
-                                  justifyContent: 'space-between',
-                                  alignItems: 'center'
-                              } }
+                                      <LineChart
+                                          margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
+                                          id="d3-bar-chart-root"
+                                          data={ lineChartData }
+                                          value={ clusterTimeFrame }
+                                          cluster={ selectedCluster }
+                                          onClusterToggle={ this.handleClusterToggle }
+                                      />
+                                  ) }
+                              </CardBody>
+                          </Card>
+                          <div
+                              className="dataCard"
+                              style={ { display: 'flex', marginTop: '20px' } }
                           >
-                              <h2>Organization Status</h2>
-                              <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
-                                  <FormSelect
-                                      name="orgsJobsTimeFrame"
-                                      value={ orgsJobsTimeFrame }
-                                      onChange={ this.handleSelectChange }
-                                      aria-label="Select Date Range"
-                                      style={ { margin: '2px 10px' } }
-                                  >
-                                      { this.timeFrameOptions.map((option, index) => (
-                                          <FormSelectOption
-                                              isDisabled={ option.disabled }
-                                              key={ index }
-                                              value={ option.value }
-                                              label={ option.label }
-                                          />
-                                      )) }
-                                  </FormSelect>
-                              </div>
-                          </CardHeader>
-                          <CardBody>
-                              { groupedBarChartData.length <= 0 && <LoadingState /> }
-                              { groupedBarChartData.length > 0 && activeTabKey === 1 && (
-                                  <GroupedBarChart
-                                      margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
-                                      id="d3-grouped-bar-chart-root"
-                                      data={ groupedBarChartData }
-                                      timeFrame={ orgsJobsTimeFrame }
-                                  />
-                              ) }
-                          </CardBody>
-                      </TopCard>
-                      <CardContainer>
-                          <Card>
-                              <CardBody style={ { padding: 0 } }>
-                                  <CardHeader
-                                      style={ {
-                                          borderBottom: '2px solid #ebebeb',
-                                          display: 'flex',
-                                          justifyContent: 'space-between',
-                                          alignItems: 'center',
-                                          padding: 0
-                                      } }
-                                  >
-                                      <h2 style={ { marginLeft: '20px' } }>
+                              <TemplatesList templates={ templatesData } />
+                              <ModulesList modules={ modulesData } />
+                              <NotificationsList
+                                  onNotificationChange={ this.handleSelectChange }
+                                  filterBy={ selectedNotification }
+                                  options={ this.notificationOptions }
+                                  notifications={ notificationsData }
+                              />
+                          </div>
+                      </TabContent>
+                      <TabContent
+                          eventKey={ 1 }
+                          id="refTab2Section"
+                          ref={ this.contentRef2 }
+                          aria-label="Tab item 2"
+                          hidden
+                      >
+                          <TopCard>
+                              <CardHeader
+                                  style={ {
+                                      borderBottom: '2px solid #ebebeb',
+                                      display: 'flex',
+                                      justifyContent: 'space-between',
+                                      alignItems: 'center'
+                                  } }
+                              >
+                                  <h2>Organization Status</h2>
+                                  <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
+                                      <FormSelect
+                                          name="orgsJobsTimeFrame"
+                                          value={ orgsJobsTimeFrame }
+                                          onChange={ this.handleSelectChange }
+                                          aria-label="Select Date Range"
+                                          style={ { margin: '2px 10px' } }
+                                      >
+                                          { this.timeFrameOptions.map((option, index) => (
+                                              <FormSelectOption
+                                                  isDisabled={ option.disabled }
+                                                  key={ index }
+                                                  value={ option.value }
+                                                  label={ option.label }
+                                              />
+                                          )) }
+                                      </FormSelect>
+                                  </div>
+                              </CardHeader>
+                              <CardBody>
+                                  { groupedBarChartData.length <= 0 && <LoadingState /> }
+                                  { groupedBarChartData.length > 0 && activeTabKey === 1 && (
+                                      <GroupedBarChart
+                                          margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
+                                          id="d3-grouped-bar-chart-root"
+                                          data={ groupedBarChartData }
+                                          timeFrame={ orgsJobsTimeFrame }
+                                      />
+                                  ) }
+                              </CardBody>
+                          </TopCard>
+                          <CardContainer>
+                              <Card>
+                                  <CardBody style={ { padding: 0 } }>
+                                      <CardHeader
+                                          style={ {
+                                              borderBottom: '2px solid #ebebeb',
+                                              display: 'flex',
+                                              justifyContent: 'space-between',
+                                              alignItems: 'center',
+                                              padding: 0
+                                          } }
+                                      >
+                                          <h2 style={ { marginLeft: '20px' } }>
                       Job Runs by Organization
-                                      </h2>
-                                      <FormSelect
-                                          name="orgsPlaybookTimeFrame"
-                                          value={ orgsPlaybookTimeFrame }
-                                          onChange={ this.handleSelectChange }
-                                          aria-label="Select Date Range"
-                                          style={ { margin: '2px 10px', width: '33%' } }
+                                          </h2>
+                                          <FormSelect
+                                              name="orgsPlaybookTimeFrame"
+                                              value={ orgsPlaybookTimeFrame }
+                                              onChange={ this.handleSelectChange }
+                                              aria-label="Select Date Range"
+                                              style={ { margin: '2px 10px', width: '33%' } }
+                                          >
+                                              { this.timeFrameOptions.map((option, index) => (
+                                                  <FormSelectOption
+                                                      isDisabled={ option.disabled }
+                                                      key={ index }
+                                                      value={ option.value }
+                                                      label={ option.label }
+                                                  />
+                                              )) }
+                                          </FormSelect>
+                                      </CardHeader>
+                                      { pieChart1Data.length <= 0 && <LoadingState /> }
+                                      { pieChart1Data.length > 0 && activeTabKey === 1 && (
+                                          <PieChart
+                                              margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
+                                              id="d3-donut-1-chart-root"
+                                              tag={ 1 }
+                                              data={ pieChart1Data }
+                                              timeFrame={ orgsPlaybookTimeFrame }
+                                              onDateToggle={ this.handleDateToggle }
+                                          />
+                                      ) }
+                                  </CardBody>
+                              </Card>
+                              <Card>
+                                  <CardBody style={ { padding: 0 } }>
+                                      <CardHeader
+                                          style={ {
+                                              borderBottom: '2px solid #ebebeb',
+                                              display: 'flex',
+                                              justifyContent: 'space-between',
+                                              alignItems: 'center',
+                                              padding: 0
+                                          } }
                                       >
-                                          { this.timeFrameOptions.map((option, index) => (
-                                              <FormSelectOption
-                                                  isDisabled={ option.disabled }
-                                                  key={ index }
-                                                  value={ option.value }
-                                                  label={ option.label }
-                                              />
-                                          )) }
-                                      </FormSelect>
-                                  </CardHeader>
-                                  { pieChart1Data.length <= 0 && <LoadingState /> }
-                                  { pieChart1Data.length > 0 && activeTabKey === 1 && (
-                                      <PieChart
-                                          margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
-                                          id="d3-donut-1-chart-root"
-                                          tag={ 1 }
-                                          data={ pieChart1Data }
-                                          timeFrame={ orgsPlaybookTimeFrame }
-                                          onDateToggle={ this.handleDateToggle }
-                                      />
-                                  ) }
-                              </CardBody>
-                          </Card>
-                          <Card>
-                              <CardBody style={ { padding: 0 } }>
-                                  <CardHeader
-                                      style={ {
-                                          borderBottom: '2px solid #ebebeb',
-                                          display: 'flex',
-                                          justifyContent: 'space-between',
-                                          alignItems: 'center',
-                                          padding: 0
-                                      } }
-                                  >
-                                      <h2 style={ { marginLeft: '20px' } }>Usage by Organization (Tasks)</h2>
-                                      <FormSelect
-                                          name="orgsStorageTimeFrame"
-                                          value={ orgsStorageTimeFrame }
-                                          onChange={ this.handleSelectChange }
-                                          aria-label="Select Date Range"
-                                          style={ { margin: '2px 10px', width: '33%' } }
-                                      >
-                                          { this.timeFrameOptions.map((option, index) => (
-                                              <FormSelectOption
-                                                  isDisabled={ option.disabled }
-                                                  key={ index }
-                                                  value={ option.value }
-                                                  label={ option.label }
-                                              />
-                                          )) }
-                                      </FormSelect>
-                                  </CardHeader>
-                                  { pieChart2Data.length <= 0 && <LoadingState /> }
-                                  { pieChart2Data.length > 0 && activeTabKey === 1 && (
-                                      <PieChart
-                                          margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
-                                          id="d3-donut-2-chart-root"
-                                          tag={ 2 }
-                                          data={ pieChart2Data }
-                                          timeFrame={ orgsStorageTimeFrame }
-                                          onDateToggle={ this.handleDateToggle }
-                                      />
-                                  ) }
-                              </CardBody>
-                          </Card>
-                      </CardContainer>
+                                          <h2 style={ { marginLeft: '20px' } }>Usage by Organization (Tasks)</h2>
+                                          <FormSelect
+                                              name="orgsStorageTimeFrame"
+                                              value={ orgsStorageTimeFrame }
+                                              onChange={ this.handleSelectChange }
+                                              aria-label="Select Date Range"
+                                              style={ { margin: '2px 10px', width: '33%' } }
+                                          >
+                                              { this.timeFrameOptions.map((option, index) => (
+                                                  <FormSelectOption
+                                                      isDisabled={ option.disabled }
+                                                      key={ index }
+                                                      value={ option.value }
+                                                      label={ option.label }
+                                                  />
+                                              )) }
+                                          </FormSelect>
+                                      </CardHeader>
+                                      { pieChart2Data.length <= 0 && <LoadingState /> }
+                                      { pieChart2Data.length > 0 && activeTabKey === 1 && (
+                                          <PieChart
+                                              margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
+                                              id="d3-donut-2-chart-root"
+                                              tag={ 2 }
+                                              data={ pieChart2Data }
+                                              timeFrame={ orgsStorageTimeFrame }
+                                              onDateToggle={ this.handleDateToggle }
+                                          />
+                                      ) }
+                                  </CardBody>
+                              </Card>
+                          </CardContainer>
+                      </TabContent>
                   </Main>
-              </TabContent>
-              </>
               ) }
 
           </React.Fragment>
