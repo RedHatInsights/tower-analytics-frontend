@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+    Button,
     Title,
     EmptyState,
     EmptyStateVariant,
@@ -31,6 +32,14 @@ const DefaultEmptyState = ({ error }) => (
                 <EmptyStateBody>
                     You do not have the correct permissions to view this page.
                 </EmptyStateBody>
+            </>
+        ) }
+        { !error.status && (
+            <>
+                <Title headingLevel="h5" size="lg">
+                    Something went wrong. Please try reloading the page.
+                </Title>
+                <Button variant="primary" onClick={ () => window.location.reload() }>Reload</Button>
             </>
         ) }
     </EmptyState>
