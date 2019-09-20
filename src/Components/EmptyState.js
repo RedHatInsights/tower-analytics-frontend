@@ -20,7 +20,7 @@ const DefaultEmptyState = ({ error }) => (
                     No Data Found.
                 </Title>
                 <EmptyStateBody>
-                    Please visit <a href='https://docs.ansible.com/ansible-tower/latest/html/administration/usability_data_collection.html#automation-insights' target='_blank' rel='noopener noreferrer'>here</a> to learn how to enable Automation Analytics.
+                    Please visit <a href='https://docs.ansible.com/ansible-tower/latest/html/administration/usability_data_collection.html#automation-analytics' target='_blank' rel='noopener noreferrer'>here</a> to learn how to enable Automation Analytics.
                 </EmptyStateBody>
             </>
         ) }
