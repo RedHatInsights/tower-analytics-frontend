@@ -29,7 +29,7 @@ class Tooltip {
         .attr('y', -41)
         .attr('rx', 2)
         .attr('height', 82)
-        .attr('width', 135)
+        .attr('width', 155)
         .attr('fill', '#393f44');
         this.circleGreen = this.toolTipBase
         .append('circle')
