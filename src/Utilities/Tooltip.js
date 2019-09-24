@@ -150,16 +150,16 @@ class Tooltip {
         this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
         if (flipped) {
             this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
-            this.boundingBOx.attr('x', -155);
-            this.circleGreen.attr('cx', -140);
-            this.circleRed.attr('cx', -140);
-            this.icon.attr('x', -142);
-            this.successText.attr('x', -120);
-            this.failText.attr('x', -120);
-            this.successful.attr('x', -50);
-            this.failed.attr('x', -50);
-            this.date.attr('x', -145);
-            this.jobs.attr('x', -35);
+            this.boundingBOx.attr('x', -175);
+            this.circleGreen.attr('cx', -155);
+            this.circleRed.attr('cx', -155);
+            this.icon.attr('x', -157);
+            this.successText.attr('x', -138);
+            this.failText.attr('x', -138);
+            this.successful.attr('x', -55);
+            this.failed.attr('x', -55);
+            this.date.attr('x', -160);
+            this.jobs.attr('x', -40);
         } else {
             this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
             this.boundingBOx.attr('x', 10);
