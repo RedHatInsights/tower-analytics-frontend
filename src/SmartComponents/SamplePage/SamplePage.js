@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import styled from 'styled-components';
-import moment from 'moment';
 import './sample-page.scss';
 
 import {
@@ -21,9 +20,15 @@ import {
     TabContent
 } from '@patternfly/react-core';
 
-import { clustersRequest, preflightRequest } from '../../Api';
+import {
+    preflightRequest,
+    getAllEndpoints,
+    readChart30ById,
+    readJobRunsByOrg,
+    readJobEventsByOrg
+} from '../../Api';
+
 import BarChart from '../../Charts/BarChart';
-import D3Util from '../../Utilities/D3Util';
 import GroupedBarChart from '../../Charts/GroupedBarChart';
 import LineChart from '../../Charts/LineChart';
 import EmptyState from '../../Components/EmptyState';
@@ -136,37 +141,31 @@ class SamplePage extends Component {
         }
     }
     async init() {
-        const today = moment().format('YYYY-MM-DD');
-        const previousDay = moment()
-        .subtract(7, 'days')
-        .format('YYYY-MM-DD');
-        const defaultPrams = { params: { startDate: previousDay, endDate: today }};
-        const { data: barChartData } = await D3Util.getBarChartData();
-        const { data: lineChartData } = await D3Util.getLineChartData({ params: {}});
-        const { dates: groupedBarChartData } = await D3Util.getGroupedChartData();
-        const { usages: pieChart1Data } = await D3Util.getPieChart1Data(
-            defaultPrams
-        );
-        const { usages: pieChart2Data } = await D3Util.getPieChart2Data(
-            defaultPrams
-        );
-        const { modules: modulesData } = await D3Util.getModulesData();
-        const { templates: templatesData } = await D3Util.getTemplatesData();
-        const {
-            notifications: notificationsData
-        } = await D3Util.getNotificationsData();
-        const { templates: clusterData } = await clustersRequest();
-        const clusterOptions = this.formatClusterName(clusterData);
-        this.setState({
-            barChartData,
-            lineChartData,
-            groupedBarChartData,
-            pieChart1Data,
-            pieChart2Data,
-            modulesData,
-            templatesData,
-            notificationsData,
-            clusterOptions
+        // concurrent block
+        await getAllEndpoints()
+        .then(([
+            { data: barChartData },
+            { dates: groupedBarChartData },
+            { modules: modulesData },
+            { templates: templatesData },
+            { notifications: notificationsData },
+            { templates: clustersData },
+            { usages: pieChart1Data },
+            { usages: pieChart2Data }
+        ]) => {
+            const clusterOptions = this.formatClusterName(clustersData);
+            this.setState({
+                barChartData,
+                groupedBarChartData,
+                notificationsData,
+                templatesData,
+                modulesData,
+                pieChart1Data,
+                pieChart2Data,
+                clusterOptions
+            });
+        }).catch(error => {
+            this.setState({ getAllError: error });
         });
     }
 
@@ -208,14 +207,14 @@ class SamplePage extends Component {
 
       const params = selectedDates || {};
       if (id === 1) {
-          const { usages: pieChart1Data } = await D3Util.getPieChart1Data({
+          const { usages: pieChart1Data } = await readJobRunsByOrg({
               params
           });
           this.setState({ pieChart1Data });
       }
 
       if (id === 2) {
-          const { usages: pieChart2Data } = await D3Util.getPieChart2Data({
+          const { usages: pieChart2Data } = await readJobEventsByOrg({
               params
           });
           this.setState({ pieChart2Data });
@@ -226,7 +225,7 @@ class SamplePage extends Component {
           return;
       }
 
-      const { data: lineChartData } = await D3Util.getLineChartData({ id });
+      const { data: lineChartData } = await readChart30ById({ id });
       this.setState({ lineChartData });
   }
 
@@ -346,12 +345,10 @@ class SamplePage extends Component {
                                           value={ clusterTimeFrame }
                                       />
                                   ) }
-                                  { selectedCluster !== 'all' && lineChartData.length <= 0 && (
+                                  { /* { selectedCluster !== 'all' && lineChartData.length <= 0 && (
                                       <LoadingState />
-                                  ) }
-                                  { selectedCluster !== 'all' &&
-                  lineChartData.length > 0 &&
-                  activeTabKey === 0 && (
+                                  ) } */ }
+                                  { selectedCluster !== 'all' && activeTabKey === 0 && (
                                       <LineChart
                                           margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                                           id="d3-bar-chart-root"

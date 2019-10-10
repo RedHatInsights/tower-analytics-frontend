@@ -13,3 +13,15 @@ export function formatSeconds(seconds) {
     .seconds(seconds)
     .format('H:mm:ss');
 }
+
+export function getTotal(data) {
+    if (!data) {
+        return;
+    } else {
+        let total = 0;
+        data.forEach(datum => {
+            total += parseInt(datum.count);
+        });
+        return total;
+    }
+}

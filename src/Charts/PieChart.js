@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import * as d3 from 'd3';
 import moment from 'moment';
 import initializeChart from './BaseChart';
-import D3Util from '../Utilities/D3Util';
+import { getTotal } from '../Utilities/helpers';
 import Legend from '../Utilities/Legend';
 import { pfmulti } from '../Utilities/colors';
 import styled from 'styled-components';
@@ -194,7 +194,7 @@ class PieChart extends Component {
         const radius = Math.min(width, height) / 2;
         let { data } = this.props;
         // this.sortDescending(data);
-        const total = D3Util.getTotal(data);
+        const total = getTotal(data);
         data.forEach(function(d) {
             d.count = +d.count;
             d.percent = +Math.round((d.count / total) * 100);
