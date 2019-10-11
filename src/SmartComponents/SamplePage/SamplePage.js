@@ -144,25 +144,25 @@ class SamplePage extends Component {
         // concurrent block
         await getAllEndpoints()
         .then(([
-            { data: barChartData },
-            { dates: groupedBarChartData },
-            { modules: modulesData },
-            { templates: templatesData },
-            { notifications: notificationsData },
-            { templates: clustersData },
-            { usages: pieChart1Data },
-            { usages: pieChart2Data }
+            { data: barChartData = []},
+            { dates: groupedBarChartData = []},
+            { modules: modulesData = []},
+            { templates: templatesData = []},
+            { notifications: notificationsData = []},
+            { templates: clustersData = []},
+            { usages: pieChart1Data = []},
+            { usages: pieChart2Data = []}
         ]) => {
             const clusterOptions = this.formatClusterName(clustersData);
             this.setState({
                 barChartData,
                 groupedBarChartData,
-                notificationsData,
-                templatesData,
                 modulesData,
+                templatesData,
+                notificationsData,
+                clusterOptions,
                 pieChart1Data,
-                pieChart2Data,
-                clusterOptions
+                pieChart2Data
             });
         }).catch(error => {
             this.setState({ getAllError: error });
@@ -345,9 +345,6 @@ class SamplePage extends Component {
                                           value={ clusterTimeFrame }
                                       />
                                   ) }
-                                  { /* { selectedCluster !== 'all' && lineChartData.length <= 0 && (
-                                      <LoadingState />
-                                  ) } */ }
                                   { selectedCluster !== 'all' && activeTabKey === 0 && (
                                       <LineChart
                                           margin={ { top: 20, right: 20, bottom: 50, left: 70 } }

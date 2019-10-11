@@ -3,6 +3,7 @@ import initializeChart from './BaseChart';
 import PropTypes from 'prop-types';
 import Tooltip from '../Utilities/Tooltip';
 import * as d3 from 'd3';
+import LoadingState from '../Components/LoadingState';
 
 class LineChart extends Component {
     constructor(props) {
@@ -329,6 +330,11 @@ class LineChart extends Component {
     }
 
     render() {
+        const { data } = this.props;
+        if (data.length <= 0) {
+            return <LoadingState />;
+        }
+
         return <div id={ this.props.id } />;
     }
 }

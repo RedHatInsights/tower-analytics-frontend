@@ -118,5 +118,5 @@ export const getAllEndpoints = () => {
         readClusters(),
         readJobRunsByOrg(defaultPrams),
         readJobEventsByOrg(defaultPrams)
-    ]);
+    ].map(p => p.catch(() => [])));
 };
