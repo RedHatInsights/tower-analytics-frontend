@@ -1,3 +1,4 @@
+/* eslint-disable */
 import * as d3 from 'd3';
 
 class Tooltip {
@@ -14,6 +15,8 @@ class Tooltip {
         this.toolTipBase.style('opacity', 0);
         this.toolTipBase.style('pointer-events', 'none');
         this.toolTipBase.attr('transform', 'translate(100, 100)');
+        this.boxWidth = 145;
+        this.textWidthThreshold = 20;
 
         this.toolTipPoint = this.toolTipBase
         .append('rect')
@@ -23,13 +26,13 @@ class Tooltip {
         .attr('height', 20)
         .attr('width', 20)
         .attr('fill', '#393f44');
-        this.boundingBOx = this.toolTipBase
+        this.boundingBox = this.toolTipBase
         .append('rect')
         .attr('x', 10)
         .attr('y', -41)
         .attr('rx', 2)
         .attr('height', 82)
-        .attr('width', 155)
+        .attr('width', this.boxWidth)
         .attr('fill', '#393f44');
         this.circleGreen = this.toolTipBase
         .append('circle')
@@ -144,34 +147,47 @@ class Tooltip {
         }
 
         this.jobs.text('' + total + ' Jobs');
+        this.jobsWidth = this.jobs.node().getComputedTextLength();
         this.failed.text('' + fail);
         this.successful.text('' + success);
+        this.successTextWidth = this.successful.node().getComputedTextLength();
+        this.failTextWidth = this.failed.node().getComputedTextLength();
 
+        const maxTextPerc = this.jobsWidth / this.boxWidth * 100;
+        const threshold = 40;
+        const overage = maxTextPerc / threshold;
+        let adjustedWidth;
+        if (maxTextPerc > threshold) {
+            adjustedWidth = this.boxWidth * overage;
+        } else {
+            adjustedWidth = this.boxWidth;
+        }
+        this.boundingBox.attr('width', adjustedWidth);
         this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
         if (flipped) {
             this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
-            this.boundingBOx.attr('x', -175);
-            this.circleGreen.attr('cx', -155);
-            this.circleRed.attr('cx', -155);
-            this.icon.attr('x', -157);
-            this.successText.attr('x', -138);
-            this.failText.attr('x', -138);
-            this.successful.attr('x', -55);
-            this.failed.attr('x', -55);
-            this.date.attr('x', -160);
-            this.jobs.attr('x', -40);
+            this.boundingBox.attr('x', -adjustedWidth - 20);
+            this.circleGreen.attr('cx', -adjustedWidth);
+            this.circleRed.attr('cx', -adjustedWidth);
+            this.icon.attr('x', -adjustedWidth - 2);
+            this.successText.attr('x', -adjustedWidth + 17);
+            this.failText.attr('x', -adjustedWidth + 17);
+            this.successful.attr('x', -this.successTextWidth - 20 - 12);
+            this.failed.attr('x', -this.failTextWidth - 20 - 12);
+            this.date.attr('x', -adjustedWidth - 5);
+            this.jobs.attr('x', -this.jobsWidth/2 - 7);
         } else {
             this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
-            this.boundingBOx.attr('x', 10);
+            this.boundingBox.attr('x', 10);
             this.circleGreen.attr('cx', 26);
             this.circleRed.attr('cx', 26);
             this.icon.attr('x', 24);
             this.successText.attr('x', 43);
             this.failText.attr('x', 43);
-            this.successful.attr('x', 122);
-            this.failed.attr('x', 122);
+            this.successful.attr('x', (adjustedWidth - this.successTextWidth));
+            this.failed.attr('x', (adjustedWidth - this.failTextWidth));
             this.date.attr('x', 20);
-            this.jobs.attr('x', 137);
+            this.jobs.attr('x', (adjustedWidth));
         }
 
         this.toolTipBase.style('opacity', 1);

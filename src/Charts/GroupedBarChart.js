@@ -30,6 +30,8 @@ class Tooltip {
         this.toolTipBase.style('opacity', 0);
         this.toolTipBase.style('pointer-events', 'none');
         this.toolTipBase.attr('transform', 'translate(100, 100)');
+        this.boxWidth = 125;
+        this.textWidthThreshold = 20;
 
         this.toolTipPoint = this.toolTipBase
         .append('rect')
@@ -39,13 +41,13 @@ class Tooltip {
         .attr('height', 20)
         .attr('width', 20)
         .attr('fill', '#393f44');
-        this.boundingBOx = this.toolTipBase
+        this.boundingBox = this.toolTipBase
         .append('rect')
         .attr('x', 10)
         .attr('y', -23)
         .attr('rx', 2)
         .attr('height', 52)
-        .attr('width', this.width)
+        .attr('width', this.boxWidth)
         .attr('fill', '#393f44');
         this.date = this.toolTipBase
         .append('text')
@@ -113,18 +115,31 @@ class Tooltip {
       this.date.text('' + formatTooltipDate(date));
       this.orgName.text('' + orgName);
       this.jobs.text('' + jobs + ' Jobs');
+      this.jobsWidth = this.jobs.node().getComputedTextLength();
+
+      const maxTextPerc = this.jobsWidth / this.boxWidth * 100;
+      const threshold = 45;
+      const overage = maxTextPerc / threshold;
+      let adjustedWidth;
+      if (maxTextPerc > threshold) {
+          adjustedWidth = this.boxWidth * overage;
+      } else {
+          adjustedWidth = this.boxWidth;
+      }
+
+      this.boundingBox.attr('width', adjustedWidth);
       this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
       if (flipped) {
           this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
-          this.boundingBOx.attr('x', -145);
-          this.jobs.attr('x', -132);
-          this.orgName.attr('x', -132);
-          this.date.attr('x', -72);
+          this.boundingBox.attr('x', -adjustedWidth - 20);
+          this.jobs.attr('x', -this.jobsWidth - 20 - 7);
+          this.orgName.attr('x', -adjustedWidth - 7);
+          this.date.attr('x', -adjustedWidth - 7);
       } else {
           this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
-          this.boundingBOx.attr('x', 10);
+          this.boundingBox.attr('x', 10);
           this.orgName.attr('x', 20);
-          this.jobs.attr('x', 72);
+          this.jobs.attr('x', adjustedWidth / 2);
           this.date.attr('x', 20);
       }
 
