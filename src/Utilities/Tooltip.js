@@ -1,4 +1,3 @@
-/* eslint-disable */
 import * as d3 from 'd3';
 
 class Tooltip {
@@ -162,6 +161,7 @@ class Tooltip {
         } else {
             adjustedWidth = this.boxWidth;
         }
+
         this.boundingBox.attr('width', adjustedWidth);
         this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
         if (flipped) {
@@ -175,7 +175,7 @@ class Tooltip {
             this.successful.attr('x', -this.successTextWidth - 20 - 12);
             this.failed.attr('x', -this.failTextWidth - 20 - 12);
             this.date.attr('x', -adjustedWidth - 5);
-            this.jobs.attr('x', -this.jobsWidth/2 - 7);
+            this.jobs.attr('x', -this.jobsWidth / 2 - 7);
         } else {
             this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
             this.boundingBox.attr('x', 10);
