@@ -10,6 +10,7 @@ module.exports = {
     routes: {
         '/apps/automation-analytics': { host: `https://${localhost}:8002` },
         '/ansible/automation-analytics': { host: `https://${localhost}:8002` },
-        '/beta/ansible/automation-analytics': { host: `https://${localhost}:8002` }
+        '/beta/ansible/automation-analytics': { host: `https://${localhost}:8002` },
+        '/beta/config': { host: `http://${localhost}:8889` }
     }
 };
