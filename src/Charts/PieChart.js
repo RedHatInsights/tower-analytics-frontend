@@ -276,6 +276,7 @@ class PieChart extends Component {
                         data={ colors }
                         selected={ null }
                         onToggle={ null }
+                        height="300px"
                     />
                 ) }
             </Wrapper>

@@ -461,6 +461,7 @@ class GroupedBarChart extends Component {
                         data={ colors }
                         selected={ selected }
                         onToggle={ this.handleToggle }
+                        height="350px"
                     />
                 ) }
             </Wrapper>
