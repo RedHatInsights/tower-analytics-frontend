@@ -6,8 +6,10 @@ import styled from 'styled-components';
 
 const Container = styled.div`
   margin-top: 20px;
+  margin-bottom: 20px;
   overflow: auto;
   min-width: 25%;
+  height: ${props => props.height};
 `;
 
 const LegendDetail = styled.div`
@@ -61,9 +63,9 @@ class Legend extends Component {
         onToggle(selectedId);
     };
     render() {
-        const { data, selected } = this.props;
+        const { data, selected, height } = this.props;
         return (
-            <Container>
+            <Container height={ height }>
                 { data.map(
                     ({ name, value, id, count }, index) => (
                         <LegendDetail key={ index }>
@@ -91,7 +93,8 @@ class Legend extends Component {
 Legend.propTypes = {
     data: PropTypes.array,
     selected: PropTypes.array,
-    onToggle: PropTypes.func
+    onToggle: PropTypes.func,
+    height: PropTypes.string
 };
 
 export default Legend;
