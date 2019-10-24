@@ -1,3 +1,80 @@
 // Importing Global Variables
 @import "~@redhat-cloud-services/frontend-components-utilities/files/Utilities/_all";
 @import "~@redhat-cloud-services/frontend-components/index.css";
+
+// Automation Analytics Styling
+
+// js generates class '.page__{rootClass}' that wraps the content in your page added to the root tag
+// Found in Routes.js as the rootClass
+.pf-c-data-list__cell {
+  --pf-c-data-list__cell--PaddingTop: 10px;
+  --pf-c-data-list__cell-cell--PaddingTop: 10px;
+  --pf-c-data-list__cell--PaddingBottom: 10px;
+}
+
+.dataCard {
+  .pf-c-data-list {
+    flex: 1;
+    margin-right: 0;
+  }
+
+  ul + ul {
+    margin-left: 20px;
+  }
+}
+
+.pf-c-modal-box.templateModal {
+  --pf-c-modal-box--Width: 1000px;
+
+  .pf-c-table {
+    --pf-c-table-td--PaddingBottom: 20px;
+    --pf-c-table-td--PaddingTop: 20px;
+    th:first-child,
+    td:first-child {
+      padding-left: 0;
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: 20px;
+      text-align: right;
+    }
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .dataCard {
+    flex-direction: column;
+
+    .pf-c-data-list {
+      margin: 20px 0 0 0;
+    }
+  }
+}
+
+#d3-donut-1-chart-root, #d3-donut-2-chart-root {
+  min-height: 300px;
+  min-width: 60%;
+}
+
+h2 {
+  color: #393f44;
+}
+
+#d3-grouped-bar-chart-root, #d3-line-chart-root, #d3-bar-chart-root, #d3-pie-1-chart-root {
+  min-height: 450px;
+  min-width: 75%;
+}
+
+#fail-icon {
+  position: absolute;
+  left: 21px;
+  top: 20px;
+  color: white;
+  font-size: 14px;
+}
+
+section#refTab1Section, section#refTab2Section {
+  outline: none;
+}
+

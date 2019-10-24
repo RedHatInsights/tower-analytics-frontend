@@ -2,7 +2,11 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import LoadingState from '../../Components/LoadingState';
-import { readJobsByDateAndOrg, readJobRunsByOrg, readJobEventsByOrg } from '../../Api';
+import {
+    readJobsByDateAndOrg,
+    readJobRunsByOrg,
+    readJobEventsByOrg
+} from '../../Api';
 
 import {
     Main,
@@ -67,7 +71,6 @@ const timeFrameOptions = [
 ];
 
 const OrganizationStatistics = () => {
-    const [ page, setPage ] = useState(2);
     const [ pieChart1Data, setPieChart1Data ] = useState([]);
     const [ pieChart2Data, setPieChart2Data ] = useState([]);
     const [ groupedBarChartData, setGroupedBarChartData ] = useState([]);
@@ -98,6 +101,7 @@ const OrganizationStatistics = () => {
     };
 
     useEffect(() => {
+        let ignore = false;
         const getData = () => {
             const today = moment().format('YYYY-MM-DD');
             const previousDay = moment()
@@ -116,11 +120,15 @@ const OrganizationStatistics = () => {
             { usages: pieChart1Data = []},
             { usages: pieChart2Data = []}
         ]) => {
-            setGroupedBarChartData(groupedBarChartData);
-            setPieChart1Data(pieChart1Data);
-            setPieChart2Data(pieChart2Data);
-        }).finally(() => setPage(2));
-    }, [ page ]);
+            if (!ignore) {
+                setGroupedBarChartData(groupedBarChartData);
+                setPieChart1Data(pieChart1Data);
+                setPieChart2Data(pieChart2Data);
+            }
+        });
+
+        return () => ignore = true;
+    }, []);
 
     return (
         <React.Fragment>

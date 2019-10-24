@@ -87,7 +87,6 @@ function formatClusterName(data) {
 }
 
 const Clusters = () => {
-    const [ page, setPage ] = useState(2);
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ barChartData, setBarChartData ] = useState([]);
     const [ lineChartData, setLineChartData ] = useState([]);
@@ -110,6 +109,7 @@ const Clusters = () => {
     };
 
     useEffect(() => {
+        let ignore = false;
         const getData = () => {
             return Promise.all([
                 readChart30(),
@@ -132,18 +132,21 @@ const Clusters = () => {
                 { templates: templatesData = []},
                 { notifications: notificationsData = []}
             ]) => {
-                const clusterOptions = formatClusterName(clustersData);
+                if (!ignore) {
+                    const clusterOptions = formatClusterName(clustersData);
 
-                setBarChartData(barChartData);
-                setClusterOptions(clusterOptions);
-                setModulesData(modulesData);
-                setTemplatesData(templatesData);
-                setNotificationsData(notificationsData);
-            }).finally(() => setPage(2));
+                    setBarChartData(barChartData);
+                    setClusterOptions(clusterOptions);
+                    setModulesData(modulesData);
+                    setTemplatesData(templatesData);
+                    setNotificationsData(notificationsData);
+                }
+            });
         }
 
         initializeWithPreflight();
-    }, [ page ]);
+        return () => ignore = true;
+    }, []);
 
     return (
         <React.Fragment>
@@ -226,13 +229,13 @@ const Clusters = () => {
                         className="dataCard"
                         style={ { display: 'flex', marginTop: '20px' } }
                     >
-                        <TemplatesList templates={ templatesData } />
-                        <ModulesList modules={ modulesData } />
+                        <TemplatesList templates={ templatesData.slice(0, 10) } />
+                        <ModulesList modules={ modulesData.slice(0, 10) } />
                         <NotificationsList
                             onNotificationChange={ (value) => setSelectedNotification(value) }
                             filterBy={ selectedNotification }
                             options={ notificationOptions }
-                            notifications={ notificationsData }
+                            notifications={ notificationsData.slice(0, 10) }
                         />
                     </div>
                 </Main>
