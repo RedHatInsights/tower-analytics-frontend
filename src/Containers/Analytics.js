@@ -361,13 +361,13 @@ class Analytics extends Component {
                                 className="dataCard"
                                 style={ { display: 'flex', marginTop: '20px' } }
                             >
-                                <TemplatesList templates={ templatesData } />
-                                <ModulesList modules={ modulesData } />
+                                <TemplatesList templates={ templatesData.slice(0, 10) } />
+                                <ModulesList modules={ modulesData.slice(0, 10) } />
                                 <NotificationsList
                                     onNotificationChange={ this.handleSelectChange }
                                     filterBy={ selectedNotification }
                                     options={ this.notificationOptions }
-                                    notifications={ notificationsData }
+                                    notifications={ notificationsData.slice(0, 10) }
                                 />
                             </div>
                         </TabContent>
