@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import asyncComponent from './Utilities/asyncComponent';
 import some from 'lodash/some';
+import { Paths } from './paths';
 
 /**
  * Aysnc imports of components
@@ -18,14 +19,18 @@ import some from 'lodash/some';
  *         see the difference with DashboardMap and InventoryDeployments.
  *
  */
-const Analytics = asyncComponent(() => import(/* webpackChunkName: "automation-analytics" */ './Containers/Analytics'));
-const paths = {
-    dashboard: '/dashboard'
-};
-
-type Props = {
-    childProps: any
-};
+const Clusters = asyncComponent(() =>
+    import(
+        /* webpackChunkName: "automation_analytics" */
+        './Containers/Clusters/Clusters'
+    ),
+);
+const OrganizationStatistics = asyncComponent(() =>
+    import(
+        /* webpackChunkName: "automation_analytics" */
+        './Containers/OrganizationStatistics/OrganizationStatistics'
+    ),
+);
 
 const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {
     const root = document.getElementById('root');
@@ -49,14 +54,18 @@ InsightsRoute.propTypes = {
  *      path - https://prod.foo.redhat.com:1337/insights/advisor/rules
  *      component - component to be rendered when a route has been chosen.
  */
-export const Routes = (props: Props) => {
+export const Routes = (props) => {
     const path = props.childProps.location.pathname;
-
     return (
         <Switch>
-            <InsightsRoute path={ paths.dashboard } component={ Analytics } rootClass='dashboard'/>
-            { /* Finally, catch all unmatched routes */ }
-            <Route render={ () => some(paths, p => p === path) ? null : (<Redirect to={ paths.dashboard }/>) }/>
+            <InsightsRoute path={ Paths.clusters } component={ Clusters } rootClass="clusters"/>
+            <InsightsRoute path={ Paths.organizationStatistics } component={ OrganizationStatistics } rootClass="organizationStatistics"/>
+            { /* Finally, catch all unmatched routes and redirect to Clusters page */ }
+            <Route render={ () => some(Paths, p => p === path) ? null : (<Redirect to={ Paths.clusters }/>) }/>
         </Switch>
     );
+};
+
+Routes.propTypes = {
+    childProps: PropTypes.any
 };
