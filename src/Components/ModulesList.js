@@ -32,7 +32,7 @@ const ModulesList = ({ modules }) => (
     <DataList aria-label="Top Modules" style={ {
         maxHeight: '400px',
         overflow: 'auto'
-    }}>
+    } }>
         <DataListItem aria-labelledby="top-modules-header">
             <DataListCell>
                 <h3>Top Modules</h3>
