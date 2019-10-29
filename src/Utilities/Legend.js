@@ -8,7 +8,7 @@ const Container = styled.div`
   margin-top: 20px;
   margin-bottom: 20px;
   overflow: auto;
-  min-width: 25%;
+  width: 100%;
   height: ${props => props.height};
 `;
 
@@ -16,6 +16,13 @@ const LegendDetail = styled.div`
   display: flex;
   padding: 5px 10px;
   align-items: center;
+  justify-content: space-between;
+`;
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  overflow: auto;
 `;
 
 const Color = styled.div.attrs(props => ({
@@ -24,13 +31,12 @@ const Color = styled.div.attrs(props => ({
   min-width: 12px;
   height: 12px;
   background: ${props => props.color};
+  margin-right: 20px;
 `;
 
 const Title = styled.span`
   font-size: 12px;
   display: inline-block;
-  margin: 0 30px 0 10px;
-  width: 100px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -39,10 +45,12 @@ const Title = styled.span`
 
 const SubTitle = styled.span`
     font-size: 12px;
+    margin-left: 20px;
 `;
 
 const Switch = styled(PFSwitch)`
   --pf-c-switch--Height: 15px;
+  margin-left: 20px;
 
   svg {
     display: none;
@@ -52,9 +60,6 @@ const Switch = styled(PFSwitch)`
 class Legend extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            isChecked: true
-        };
         this.handleChange = this.handleChange.bind(this);
     }
     handleChange(_isChecked, { target: { value }}) {
@@ -69,8 +74,10 @@ class Legend extends Component {
                 { data.map(
                     ({ name, value, id, count }, index) => (
                         <LegendDetail key={ index }>
-                            <Color color={ value } />
-                            <Title>{ name }</Title>
+                            <Wrapper>
+                                <Color color={ value } />
+                                <Title>{ name }</Title>
+                            </Wrapper>
                             { count && (
                                 <SubTitle>{ count }</SubTitle>
                             ) }
