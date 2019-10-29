@@ -89,7 +89,11 @@ const NotificationsList = ({
     options,
     notifications
 }) => (
-    <DataList style={ { flex: '1' } } aria-label="Notifications List">
+    <DataList style={ {
+        flex: '1',
+        maxHeight: '400px',
+        overflow: 'auto'
+    } } aria-label="Notifications List">
         <DataListItem aria-labelledby="notifications-header">
             <DataListCell>
                 <h3>Notifications</h3>

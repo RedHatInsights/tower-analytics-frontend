@@ -62,7 +62,7 @@ const notificationOptions = [
         label: 'Select Notification Type',
         disabled: true
     },
-    { value: 'error', label: 'View Danger', disabled: false },
+    { value: 'error', label: 'View Critical', disabled: false },
     { value: 'all', label: 'View All', disabled: false }
 ];
 
@@ -235,7 +235,7 @@ const Clusters = () => {
                             onNotificationChange={ (value) => setSelectedNotification(value) }
                             filterBy={ selectedNotification }
                             options={ notificationOptions }
-                            notifications={ notificationsData.slice(0, 10) }
+                            notifications={ notificationsData }
                         />
                     </div>
                 </Main>
