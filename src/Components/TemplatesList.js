@@ -80,7 +80,10 @@ const TemplatesList = ({ templates }) => {
 
     return (
     <>
-      <DataList aria-label="Top Templates">
+      <DataList aria-label="Top Templates" style={ {
+          maxHeight: '400px',
+          overflow: 'auto'
+      } }>
           <DataListItem aria-labelledby="top-templates-header">
               <DataListCell>
                   <h3>Top Templates</h3>
