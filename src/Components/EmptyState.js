@@ -11,7 +11,7 @@ import {
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons';
 
-const DefaultEmptyState = ({ error }) => (
+const DefaultEmptyState = ({ preflightError: error }) => (
     <EmptyState variant={ EmptyStateVariant.full }>
         <EmptyStateIcon icon={ CubesIcon } />
         { error.status === 404 && (
@@ -46,7 +46,7 @@ const DefaultEmptyState = ({ error }) => (
 );
 
 DefaultEmptyState.propTypes = {
-    error: PropTypes.object
+    preflightError: PropTypes.object
 };
 
 export default DefaultEmptyState;

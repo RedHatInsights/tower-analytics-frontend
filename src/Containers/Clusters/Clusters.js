@@ -157,7 +157,7 @@ const Clusters = () => {
                 <Main>
                     <Card>
                         <CardBody>
-                            <EmptyState error={ preflightError } />
+                            <EmptyState { ...preflightError } />
                         </CardBody>
                     </Card>
                 </Main>
