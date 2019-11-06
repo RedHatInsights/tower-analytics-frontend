@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 import LoadingState from '../../Components/LoadingState';
+import EmptyState from '../../Components/EmptyState';
 import {
+    preflightRequest,
     readJobsByDateAndOrg,
     readJobRunsByOrg,
     readJobEventsByOrg
@@ -71,6 +73,7 @@ const timeFrameOptions = [
 ];
 
 const OrganizationStatistics = () => {
+    const [ preflightError, setPreFlightError ] = useState(null);
     const [ pieChart1Data, setPieChart1Data ] = useState([]);
     const [ pieChart2Data, setPieChart2Data ] = useState([]);
     const [ groupedBarChartData, setGroupedBarChartData ] = useState([]);
@@ -115,18 +118,25 @@ const OrganizationStatistics = () => {
             ].map(p => p.catch(() => [])));
         };
 
-        getData().then(([
-            { dates: groupedBarChartData = []},
-            { usages: pieChart1Data = []},
-            { usages: pieChart2Data = []}
-        ]) => {
-            if (!ignore) {
-                setGroupedBarChartData(groupedBarChartData);
-                setPieChart1Data(pieChart1Data);
-                setPieChart2Data(pieChart2Data);
-            }
-        });
+        async function initializeWithPreflight() {
+            await window.insights.chrome.auth.getUser();
+            await preflightRequest().catch(error => {
+                setPreFlightError({ preflightError: error });
+            });
+            getData().then(([
+                { dates: groupedBarChartData = []},
+                { usages: pieChart1Data = []},
+                { usages: pieChart2Data = []}
+            ]) => {
+                if (!ignore) {
+                    setGroupedBarChartData(groupedBarChartData);
+                    setPieChart1Data(pieChart1Data);
+                    setPieChart2Data(pieChart2Data);
+                }
+            });
+        }
 
+        initializeWithPreflight();
         return () => ignore = true;
     }, []);
 
@@ -135,118 +145,129 @@ const OrganizationStatistics = () => {
             <PageHeader>
                 <PageHeaderTitle title={ title } />
             </PageHeader>
-            <Main>
-                <TopCard>
-                    <CardHeader>
-                        <h2>Organization Status</h2>
-                        <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
-                            <FormSelect
-                                name="orgsJobsTimeFrame"
-                                value={ orgsJobsTimeFrame }
-                                onChange={ value => setOrgsJobsTimeFrame(+value) }
-                                aria-label="Select Date Range"
-                                style={ { margin: '2px 10px' } }
-                            >
-                                { timeFrameOptions.map((option, index) => (
-                                    <FormSelectOption
-                                        isDisabled={ option.disabled }
-                                        key={ index }
-                                        value={ option.value }
-                                        label={ option.label }
-                                    />
-                                )) }
-                            </FormSelect>
-                        </div>
-                    </CardHeader>
-                    <CardBody>
-                        { groupedBarChartData.length <= 0 && <LoadingState /> }
-                        { groupedBarChartData.length > 0 && (
-                            <GroupedBarChart
-                                margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
-                                id="d3-grouped-bar-chart-root"
-                                data={ groupedBarChartData }
-                                timeFrame={ orgsJobsTimeFrame }
-                            />
-                        ) }
-                    </CardBody>
-                </TopCard>
-                <CardContainer>
+            { preflightError && (
+                <Main>
                     <Card>
-                        <CardBody style={ { padding: 0 } }>
-                            <CardHeader
-                                style={ { padding: 0 } }
-                            >
-                                <h2 style={ { marginLeft: '20px' } }>
+                        <CardBody>
+                            <EmptyState { ...preflightError } />
+                        </CardBody>
+                    </Card>
+                </Main>
+            ) }
+            { !preflightError && (
+                <Main>
+                    <TopCard>
+                        <CardHeader>
+                            <h2>Organization Status</h2>
+                            <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
+                                <FormSelect
+                                    name="orgsJobsTimeFrame"
+                                    value={ orgsJobsTimeFrame }
+                                    onChange={ value => setOrgsJobsTimeFrame(+value) }
+                                    aria-label="Select Date Range"
+                                    style={ { margin: '2px 10px' } }
+                                >
+                                    { timeFrameOptions.map((option, index) => (
+                                        <FormSelectOption
+                                            isDisabled={ option.disabled }
+                                            key={ index }
+                                            value={ option.value }
+                                            label={ option.label }
+                                        />
+                                    )) }
+                                </FormSelect>
+                            </div>
+                        </CardHeader>
+                        <CardBody>
+                            { groupedBarChartData.length <= 0 && <LoadingState /> }
+                            { groupedBarChartData.length > 0 && (
+                                <GroupedBarChart
+                                    margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
+                                    id="d3-grouped-bar-chart-root"
+                                    data={ groupedBarChartData }
+                                    timeFrame={ orgsJobsTimeFrame }
+                                />
+                            ) }
+                        </CardBody>
+                    </TopCard>
+                    <CardContainer>
+                        <Card>
+                            <CardBody style={ { padding: 0 } }>
+                                <CardHeader
+                                    style={ { padding: 0 } }
+                                >
+                                    <h2 style={ { marginLeft: '20px' } }>
                                 Job Runs by Organization
-                                </h2>
-                                <FormSelect
-                                    name="orgsPlaybookTimeFrame"
-                                    value={ orgsPlaybookTimeFrame }
-                                    onChange={ value => setOrgsPlaybookTimeFrame(+value) }
-                                    aria-label="Select Date Range"
-                                    style={ { margin: '2px 10px', width: '33%' } }
+                                    </h2>
+                                    <FormSelect
+                                        name="orgsPlaybookTimeFrame"
+                                        value={ orgsPlaybookTimeFrame }
+                                        onChange={ value => setOrgsPlaybookTimeFrame(+value) }
+                                        aria-label="Select Date Range"
+                                        style={ { margin: '2px 10px', width: '33%' } }
+                                    >
+                                        { timeFrameOptions.map((option, index) => (
+                                            <FormSelectOption
+                                                isDisabled={ option.disabled }
+                                                key={ index }
+                                                value={ option.value }
+                                                label={ option.label }
+                                            />
+                                        )) }
+                                    </FormSelect>
+                                </CardHeader>
+                                { pieChart1Data.length <= 0 && <LoadingState /> }
+                                { pieChart1Data.length > 0 && (
+                                    <PieChart
+                                        margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
+                                        id="d3-donut-1-chart-root"
+                                        tag={ 1 }
+                                        data={ pieChart1Data }
+                                        timeFrame={ orgsPlaybookTimeFrame }
+                                        onDateToggle={ handleDateToggle }
+                                    />
+                                ) }
+                            </CardBody>
+                        </Card>
+                        <Card>
+                            <CardBody style={ { padding: 0 } }>
+                                <CardHeader
+                                    style={ { padding: 0 } }
                                 >
-                                    { timeFrameOptions.map((option, index) => (
-                                        <FormSelectOption
-                                            isDisabled={ option.disabled }
-                                            key={ index }
-                                            value={ option.value }
-                                            label={ option.label }
-                                        />
-                                    )) }
-                                </FormSelect>
-                            </CardHeader>
-                            { pieChart1Data.length <= 0 && <LoadingState /> }
-                            { pieChart1Data.length > 0 && (
-                                <PieChart
-                                    margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
-                                    id="d3-donut-1-chart-root"
-                                    tag={ 1 }
-                                    data={ pieChart1Data }
-                                    timeFrame={ orgsPlaybookTimeFrame }
-                                    onDateToggle={ handleDateToggle }
-                                />
-                            ) }
-                        </CardBody>
-                    </Card>
-                    <Card>
-                        <CardBody style={ { padding: 0 } }>
-                            <CardHeader
-                                style={ { padding: 0 } }
-                            >
-                                <h2 style={ { marginLeft: '20px' } }>Usage by Organization (Tasks)</h2>
-                                <FormSelect
-                                    name="orgsStorageTimeFrame"
-                                    value={ orgsStorageTimeFrame }
-                                    onChange={ value => setOrgsStorageTimeFrame(+value) }
-                                    aria-label="Select Date Range"
-                                    style={ { margin: '2px 10px', width: '33%' } }
-                                >
-                                    { timeFrameOptions.map((option, index) => (
-                                        <FormSelectOption
-                                            isDisabled={ option.disabled }
-                                            key={ index }
-                                            value={ option.value }
-                                            label={ option.label }
-                                        />
-                                    )) }
-                                </FormSelect>
-                            </CardHeader>
-                            { pieChart2Data.length <= 0 && <LoadingState /> }
-                            { pieChart2Data.length > 0 && (
-                                <PieChart
-                                    margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
-                                    id="d3-donut-2-chart-root"
-                                    tag={ 2 }
-                                    data={ pieChart2Data }
-                                    timeFrame={ orgsStorageTimeFrame }
-                                    onDateToggle={ handleDateToggle }
-                                />
-                            ) }
-                        </CardBody>
-                    </Card>
-                </CardContainer>
-            </Main>
+                                    <h2 style={ { marginLeft: '20px' } }>Usage by Organization (Tasks)</h2>
+                                    <FormSelect
+                                        name="orgsStorageTimeFrame"
+                                        value={ orgsStorageTimeFrame }
+                                        onChange={ value => setOrgsStorageTimeFrame(+value) }
+                                        aria-label="Select Date Range"
+                                        style={ { margin: '2px 10px', width: '33%' } }
+                                    >
+                                        { timeFrameOptions.map((option, index) => (
+                                            <FormSelectOption
+                                                isDisabled={ option.disabled }
+                                                key={ index }
+                                                value={ option.value }
+                                                label={ option.label }
+                                            />
+                                        )) }
+                                    </FormSelect>
+                                </CardHeader>
+                                { pieChart2Data.length <= 0 && <LoadingState /> }
+                                { pieChart2Data.length > 0 && (
+                                    <PieChart
+                                        margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
+                                        id="d3-donut-2-chart-root"
+                                        tag={ 2 }
+                                        data={ pieChart2Data }
+                                        timeFrame={ orgsStorageTimeFrame }
+                                        onDateToggle={ handleDateToggle }
+                                    />
+                                ) }
+                            </CardBody>
+                        </Card>
+                    </CardContainer>
+                </Main>
+            ) }
         </React.Fragment>
     );
 };
