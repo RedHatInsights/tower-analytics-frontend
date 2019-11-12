@@ -156,8 +156,8 @@ class PieChart extends Component {
     }
     updateTimeFrame() {
         const { onDateToggle, tag, timeFrame } = this.props;
-        const today = moment().format('YYYY-MM-DD');
-        const previousDay = moment().subtract(timeFrame, 'days').format('YYYY-MM-DD');
+        const today = moment.utc().format('YYYY-MM-DD');
+        const previousDay = moment.utc().subtract(timeFrame, 'days').format('YYYY-MM-DD');
         onDateToggle({ startDate: previousDay, endDate: today }, tag);
     }
     init() {

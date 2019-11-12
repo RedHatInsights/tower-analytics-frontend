@@ -9,7 +9,7 @@ export function formatDateTime(dateTime) {
 }
 
 export function formatSeconds(seconds) {
-    return moment().startOf('day')
+    return moment.utc().startOf('day')
     .seconds(seconds)
     .format('H:mm:ss');
 }

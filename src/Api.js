@@ -104,8 +104,8 @@ export const readJobEventsByOrg = ({ params = {}}) => {
 };
 
 export const getAllEndpoints = () => {
-    const today = moment().format('YYYY-MM-DD');
-    const previousDay = moment()
+    const today = moment.utc().format('YYYY-MM-DD');
+    const previousDay = moment.utc()
     .subtract(7, 'days')
     .format('YYYY-MM-DD');
     const defaultPrams = { params: { startDate: previousDay, endDate: today }};
