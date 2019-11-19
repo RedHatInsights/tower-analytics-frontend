@@ -193,7 +193,6 @@ class PieChart extends Component {
         svg.append('g').attr('class', 'lines');
         const radius = Math.min(width, height) / 2;
         let { data } = this.props;
-        // this.sortDescending(data);
         const total = getTotal(data);
         data.forEach(function(d) {
             d.count = +d.count;
