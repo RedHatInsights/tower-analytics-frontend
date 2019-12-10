@@ -188,17 +188,17 @@ class GroupedBarChart extends Component {
             this.selection = [ ...this.selection ].filter(s => s !== selectedId);
         }
 
-        await this.setState({ selected: this.selection });
+        this.setState({ selected: this.selection });
         this.formatData();
     }
 
     async formatData() {
-        const { data, timeFrame } = this.props;
+        const { data, timeFrame } = await this.props;
         const { selected } = this.state;
         const halfLength = Math.ceil(data.length / 2);
         const parseTime = d3.timeParse('%Y-%m-%d');
 
-        let slicedData = [];
+        let slicedData;
         if (timeFrame === 7) {
             slicedData = data.slice(data.length - 7, data.length);
         }
@@ -219,7 +219,7 @@ class GroupedBarChart extends Component {
             });
             return formatted.concat({ date, selectedOrgs });
         }, []);
-        await this.setState({ formattedData });
+        this.setState({ formattedData });
     }
 
     async init() {

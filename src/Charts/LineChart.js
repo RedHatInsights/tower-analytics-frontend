@@ -27,7 +27,7 @@ class LineChart extends Component {
         });
     }
 
-    async formatData() {
+    formatData() {
         const { data, value } = this.props;
         const parseTime = d3.timeParse('%Y-%m-%d');
 
