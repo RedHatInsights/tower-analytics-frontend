@@ -66,12 +66,11 @@ const notificationOptions = [
     { value: 'all', label: 'View All', disabled: false }
 ];
 
-const defaultClusterOptions = [
-    { value: 'please choose', label: 'Select Cluster', disabled: true },
-    { value: 'all', label: 'All Clusters', disabled: false }
-];
-
 function formatClusterName(data) {
+    const defaultClusterOptions = [
+        { value: 'please choose', label: 'Select Cluster', disabled: true },
+        { value: 'all', label: 'All Clusters', disabled: false }
+    ];
     return data.reduce(
         (formatted, { label, system_id: id, system_uuid: uuid }) => {
             if (label.length === 0) {
