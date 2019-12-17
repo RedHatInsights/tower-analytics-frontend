@@ -97,11 +97,11 @@ const initialQueryParams = {
 
 function paramsReducer(state, action) {
     switch (action.type) {
-        case 'STARTDATE':
+        case 'SET_STARTDATE':
             return { ...state, startDate: action.startDate };
-        case 'ENDDATE':
+        case 'SET_ENDDATE':
             return { ...state, endDate: action.endDate };
-        case 'ID':
+        case 'SET_ID':
             return { ...state, id: action.id };
         default:
             throw new Error();
@@ -127,18 +127,18 @@ const Clusters = () => {
 
     const updateEndDate = () => {
         const endDate = moment.utc().format('YYYY-MM-DD');
-        dispatch({ type: 'ENDDATE', endDate });
+        dispatch({ type: 'SET_ENDDATE', endDate });
     };
 
     const updateStartDate = (days) => {
         const startDate = moment.utc()
         .subtract(days, 'days')
         .format('YYYY-MM-DD');
-        dispatch({ type: 'STARTDATE', startDate });
+        dispatch({ type: 'SET_STARTDATE', startDate });
     };
 
     const updateId = (id) => {
-        dispatch({ type: 'ID', id });
+        dispatch({ type: 'SET_ID', id });
     };
 
     useEffect(() => {
