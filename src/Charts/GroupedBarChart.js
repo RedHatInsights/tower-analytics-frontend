@@ -13,7 +13,6 @@ const Wrapper = styled.div`
   flex-shrink: 0;
 `;
 
-// const color = d3.scaleOrdinal(d3.schemePaired);
 const color = d3.scaleOrdinal(pfmulti);
 
 class Tooltip {
@@ -189,17 +188,17 @@ class GroupedBarChart extends Component {
             this.selection = [ ...this.selection ].filter(s => s !== selectedId);
         }
 
-        await this.setState({ selected: this.selection });
+        this.setState({ selected: this.selection });
         this.formatData();
     }
 
     async formatData() {
-        const { data, timeFrame } = this.props;
+        const { data, timeFrame } = await this.props;
         const { selected } = this.state;
         const halfLength = Math.ceil(data.length / 2);
         const parseTime = d3.timeParse('%Y-%m-%d');
 
-        let slicedData = [];
+        let slicedData;
         if (timeFrame === 7) {
             slicedData = data.slice(data.length - 7, data.length);
         }
@@ -220,12 +219,11 @@ class GroupedBarChart extends Component {
             });
             return formatted.concat({ date, selectedOrgs });
         }, []);
-        await this.setState({ formattedData });
+        this.setState({ formattedData });
     }
 
     async init() {
         // create the first 8 selected data points
-        // const { timeFrame } = this.props;
         if (this.selection.length === 0) {
             this.orgsList.forEach((org, index) => {
                 if (index <= 7) {
@@ -233,23 +231,6 @@ class GroupedBarChart extends Component {
                 }
             });
         }
-
-        // if (timeFrame === 31 && this.selection.length > 5) {
-        //     this.selection = [];
-        //     this.orgsList.forEach((org, index) => {
-        //         if (index <= 4) {
-        //             this.handleToggle(org.id);
-        //         }
-        //     });
-        // }
-
-        // if (timeFrame !== 31 && this.selection.length === 0) {
-        //     this.orgsList.forEach((org, index) => {
-        //         if (index <= 7) {
-        //             this.handleToggle(org.id);
-        //         }
-        //     });
-        // }
 
         // create our colors array to send to the Legend component
         const colors = this.orgsList.reduce((colors, org) => {
@@ -326,13 +307,11 @@ class GroupedBarChart extends Component {
             0,
             d3.max(data, date => d3.max(date.selectedOrgs, d => d.value * 1.15)) || 8
         ]);
-        // x1.domain(d3.range(0, data[0].orgs.length)).range([0, x0.bandwidth()]); // sorted
 
         // add y axis
         svg
         .append('g')
         .attr('class', 'y axis')
-        // .style('opacity', '0')
         .call(yAxis)
         .selectAll('line')
         .attr('stroke', '#d7d7d7')
@@ -351,8 +330,6 @@ class GroupedBarChart extends Component {
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
         .text('Jobs Across Orgs');
-        // fade in y axis
-        // svg.select('.y').transition().duration(500).delay(500).style('opacity', '1');
 
         // add x axis
         svg
@@ -393,12 +370,9 @@ class GroupedBarChart extends Component {
         .attr('x', function(d) {
             return x1(d.org_name);
         }) // unsorted
-        // .attr("x", function(d, i) { return x1(i); }) // sorted
         .style('fill', function(d) {
             return color(d.org_name);
         })
-        // .attr('y', function () { return y(0); })
-        // .attr('height', function () { return height - y(0); })
         .attr('y', function(d) {
             return y(d.value);
         })
@@ -415,13 +389,6 @@ class GroupedBarChart extends Component {
             tooltip.handleMouseOut();
         });
         bars = bars.merge(subEnter);
-        //animate the bars
-        // slice.selectAll('rect')
-        //     .transition()
-        //     .delay(function () { return Math.random() * 1000; })
-        //     .duration(500)
-        //     .attr('y', function (d) { return y(d.value); })
-        //     .attr('height', function (d) { return height - y(d.value); });
     };
 
     componentDidMount() {

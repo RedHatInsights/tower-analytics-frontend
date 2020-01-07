@@ -27,7 +27,7 @@ class LineChart extends Component {
         });
     }
 
-    async formatData() {
+    formatData() {
         const { data, value } = this.props;
         const parseTime = d3.timeParse('%Y-%m-%d');
 
@@ -99,7 +99,6 @@ class LineChart extends Component {
         const y = d3.scaleLinear().range([ height, 0 ]);
 
         //[success, fail, total]
-        // let colors = d3.scaleOrdinal([ '4CB140', '#C46100', '#06C' ]);
         let colors = d3.scaleOrdinal([ '#6EC664', '#A30000', '#06C' ]);
         const svg = d3
         .select('#' + this.props.id)
@@ -138,7 +137,6 @@ class LineChart extends Component {
 
         const successLine = d3
         .line()
-        // .defined(d => !isNaN(d.RAN))
         .curve(d3.curveMonotoneX)
         .x(function(d) {
             return x(d.DATE);
