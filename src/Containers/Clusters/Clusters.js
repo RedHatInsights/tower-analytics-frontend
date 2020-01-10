@@ -1,6 +1,9 @@
-import React, { useState, useEffect, useReducer } from 'react';
-import styled from 'styled-components';
+import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+
+import { useQueryParams } from '../../Utilities/useQueryParams';
+
+import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import {
@@ -95,19 +98,6 @@ const initialQueryParams = {
     endDate: moment.utc().format('YYYY-MM-DD')
 };
 
-function paramsReducer(state, action) {
-    switch (action.type) {
-        case 'SET_STARTDATE':
-            return { ...state, startDate: action.startDate };
-        case 'SET_ENDDATE':
-            return { ...state, endDate: action.endDate };
-        case 'SET_ID':
-            return { ...state, id: action.id };
-        default:
-            throw new Error();
-    }
-}
-
 const Clusters = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ barChartData, setBarChartData ] = useState([]);
@@ -120,26 +110,7 @@ const Clusters = () => {
     const [ selectedCluster, setSelectedCluster ] = useState('all');
     const [ selectedNotification, setSelectedNotification ] = useState('all');
     const [ firstRender, setFirstRender ] = useState(true);
-    const [ queryParams, dispatch ] = useReducer(
-        paramsReducer,
-        initialQueryParams
-    );
-
-    const updateEndDate = () => {
-        const endDate = moment.utc().format('YYYY-MM-DD');
-        dispatch({ type: 'SET_ENDDATE', endDate });
-    };
-
-    const updateStartDate = (days) => {
-        const startDate = moment.utc()
-        .subtract(days, 'days')
-        .format('YYYY-MM-DD');
-        dispatch({ type: 'SET_STARTDATE', startDate });
-    };
-
-    const updateId = (id) => {
-        dispatch({ type: 'SET_ID', id });
-    };
+    const { queryParams, setEndDate, setStartDate, setId } = useQueryParams(initialQueryParams);
 
     useEffect(() => {
         if (firstRender) {
@@ -240,7 +211,7 @@ const Clusters = () => {
                                     value={ selectedCluster }
                                     onChange={ (value) => {
                                         setSelectedCluster(value);
-                                        updateId(value);
+                                        setId(value);
                                     } }
                                     aria-label="Select Cluster"
                                     style={ { margin: '2px 10px' } }
@@ -259,8 +230,8 @@ const Clusters = () => {
                                     value={ clusterTimeFrame }
                                     onChange={ (value) => {
                                         setClusterTimeFrame(+value);
-                                        updateEndDate();
-                                        updateStartDate(+value);
+                                        setEndDate();
+                                        setStartDate(+value);
                                     } }
                                     aria-label="Select Date Range"
                                     style={ { margin: '2px 10px' } }
