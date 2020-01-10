@@ -10,6 +10,8 @@ export const useQueryParams = initial => {
                 return { ...state, endDate: action.endDate };
             case 'SET_ID':
                 return { ...state, id: action.id };
+            case 'SET_ORDERBY':
+                return { ...state, orderBy: action.order };
             default:
                 throw new Error();
         }
@@ -36,6 +38,8 @@ export const useQueryParams = initial => {
                 .subtract(days, 'days')
                 .format('YYYY-MM-DD');
                 dispatch({ type: 'SET_STARTDATE', startDate });
-            }
+            },
+        setOrderBy:
+            order => dispatch({ type: 'SET_ORDERBY', order })
     };
 };
