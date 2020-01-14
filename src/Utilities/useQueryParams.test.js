@@ -12,7 +12,7 @@ const TestHook = ({ callback }) => {
 };
 
 const testHook = (callback) => {
-    mount(<TestHook callback={callback} />);
+    mount(<TestHook callback={ callback } />);
 };
 
 const initialValues = { foo: '1', bar: 2, orderBy: 'baz' };
@@ -76,7 +76,7 @@ describe('Utilities/useQueryParams', () => {
     });
 
     it('setStartDate returns expected day when invoked', () => {
-        const days = 8
+        const days = 8;
         const date = new Date(new Date().setDate(new Date().getDate() - days));
         const expected = date.toJSON().slice(0, 10).replace(/-/g, '-');
         act(() => {
