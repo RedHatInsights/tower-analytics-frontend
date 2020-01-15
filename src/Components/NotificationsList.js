@@ -9,8 +9,12 @@ import {
     FormSelectOption
 } from '@patternfly/react-core';
 
-import { WarningTriangleIcon } from '@patternfly/react-icons';
+import { WarningTriangleIcon, ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
 import LoadingState from '../Components/LoadingState';
+
+const ArrowIcon = styled(PFArrowIcon)`
+    margin-left: 7px;
+`;
 
 const DataListCell = styled(PFDataListCell)`
     --pf-c-data-list__cell-cell--MarginRight: 0;
@@ -36,7 +40,7 @@ const DataCellEnd = styled(DataListCell)`
 const colors = { error: '#db524b', warning: '#f0ad37', '': '' };
 
 const NotificationTemplate = ({ notifications }) =>
-    notifications.map(({ date, message, label, notification_id: id }) => (
+    notifications.map(({ date, message, label, notification_id: id, tower_url }) => (
         <DataListItem
             aria-labelledby="notifications-detail"
             key={ date + '-' + id }
@@ -53,6 +57,7 @@ const NotificationTemplate = ({ notifications }) =>
                             />
                         ) : null }
                     { message }
+                    <a target="_blank" rel='noopener noreferrer' href={tower_url}><ArrowIcon /></a>
                 </span>
             </DataListCell>
         </DataListItem>
@@ -78,6 +83,7 @@ const ErrorNotificationTemplate = ({ notifications }) =>
                             />
                         ) : null }
                     { message }
+                    <a target="_blank" rel='noopener noreferrer' href={tower_url}><ArrowIcon /></a>
                 </span>
             </DataListCell>
         </DataListItem>
