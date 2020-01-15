@@ -77,7 +77,7 @@ function formatClusterName(data) {
         { value: 'all', label: 'All Clusters', disabled: false }
     ];
     return data.reduce(
-        (formatted, { label, system_id: id, system_uuid: uuid }) => {
+        (formatted, { label, cluster_id: id, install_uuid: uuid }) => {
             if (label.length === 0) {
                 formatted.push({ value: id, label: uuid, disabled: false });
             } else {
