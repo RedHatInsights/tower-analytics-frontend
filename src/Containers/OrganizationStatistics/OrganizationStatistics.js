@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
+
+import { useQueryParams } from '../../Utilities/useQueryParams';
+
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import {
@@ -23,6 +26,8 @@ import {
     FormSelect,
     FormSelectOption
 } from '@patternfly/react-core';
+
+import { FilterIcon } from '@patternfly/react-icons';
 
 import GroupedBarChart from '../../Charts/GroupedBarChart';
 import PieChart from '../../Charts/PieChart';
@@ -72,50 +77,51 @@ const timeFrameOptions = [
     { value: 31, label: 'Past Month', disabled: false }
 ];
 
+const sortOptions = [
+    { value: 'please choose', label: 'Order By', disabled: true },
+    { value: 'top_5', label: 'Top 5 Orgs', disabled: false },
+    { value: 'bottom_5', label: 'Bottom 5 Orgs', disabled: false },
+    { value: 'all', label: 'All Orgs', disabled: false }
+];
+
+const initialQueryParams = {
+    startDate: moment.utc()
+    .subtract(7, 'days')
+    .format('YYYY-MM-DD'),
+    endDate: moment.utc().format('YYYY-MM-DD'),
+    orderBy: 'top_5'
+};
+
 const OrganizationStatistics = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ pieChart1Data, setPieChart1Data ] = useState([]);
     const [ pieChart2Data, setPieChart2Data ] = useState([]);
     const [ groupedBarChartData, setGroupedBarChartData ] = useState([]);
-    const [ orgsJobsTimeFrame, setOrgsJobsTimeFrame ] = useState(7);
-    const [ orgsPlaybookTimeFrame, setOrgsPlaybookTimeFrame ] = useState(7);
-    const [ orgsStorageTimeFrame, setOrgsStorageTimeFrame ] = useState(7);
-    const handleDateToggle = async (selectedDates, id) => {
-        if (!id) {
-            return;
-        }
-
-        const params = selectedDates || {};
-        if (id === 1) {
-            setPieChart1Data([]);
-            const { usages: pieChart1Data } = await readJobRunsByOrg({
-                params
-            });
-            setPieChart1Data(pieChart1Data);
-        }
-
-        if (id === 2) {
-            setPieChart2Data([]);
-            const { usages: pieChart2Data } = await readJobEventsByOrg({
-                params
-            });
-            setPieChart2Data(pieChart2Data);
-        }
-    };
+    const [ timeframe, setTimeframe ] = useState(7);
+    const [ sortOrder, setSortOrder ] = useState('top_5');
+    const [ firstRender, setFirstRender ] = useState(true);
+    const { queryParams, setEndDate, setStartDate, setOrderBy } = useQueryParams(initialQueryParams);
 
     useEffect(() => {
         let ignore = false;
-        const getData = () => {
-            const today = moment.utc().format('YYYY-MM-DD');
-            const previousDay = moment.utc()
-            .subtract(7, 'days')
-            .format('YYYY-MM-DD');
-            const defaultPrams = { params: { startDate: previousDay, endDate: today }};
+        const fetchEndpoints = () => {
             return Promise.all([
-                readJobsByDateAndOrg(),
-                readJobRunsByOrg(defaultPrams),
-                readJobEventsByOrg(defaultPrams)
+                readJobsByDateAndOrg({ params: queryParams }),
+                readJobRunsByOrg({ params: queryParams }),
+                readJobEventsByOrg({ params: queryParams })
             ].map(p => p.catch(() => [])));
+        };
+
+        const update = () => {
+            fetchEndpoints().then(([
+                { dates: groupedBarChartData = []},
+                { usages: pieChart1Data = []},
+                { usages: pieChart2Data = []}
+            ]) => {
+                setGroupedBarChartData(groupedBarChartData);
+                setPieChart1Data(pieChart1Data);
+                setPieChart2Data(pieChart2Data);
+            });
         };
 
         async function initializeWithPreflight() {
@@ -123,7 +129,7 @@ const OrganizationStatistics = () => {
             await preflightRequest().catch(error => {
                 setPreFlightError({ preflightError: error });
             });
-            getData().then(([
+            fetchEndpoints().then(([
                 { dates: groupedBarChartData = []},
                 { usages: pieChart1Data = []},
                 { usages: pieChart2Data = []}
@@ -132,13 +138,18 @@ const OrganizationStatistics = () => {
                     setGroupedBarChartData(groupedBarChartData);
                     setPieChart1Data(pieChart1Data);
                     setPieChart2Data(pieChart2Data);
+                    setFirstRender(false);
                 }
             });
         }
 
-        initializeWithPreflight();
-        return () => ignore = true;
-    }, []);
+        if (firstRender) {
+            initializeWithPreflight();
+            return () => ignore = true;
+        } else {
+            update();
+        }
+    }, [ queryParams ]);
 
     return (
         <React.Fragment>
@@ -155,28 +166,59 @@ const OrganizationStatistics = () => {
                 </Main>
             ) }
             { !preflightError && (
+                <>
+                    <Main style={ { paddingBottom: '0' } }>
+                        <Card>
+                            <CardHeader style={ { paddingBottom: '0', paddingTop: '0' } }>
+                                <h2><FilterIcon style={ { marginRight: '10px' } } />Filter</h2>
+                                <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
+                                    <FormSelect
+                                        name="sortOrder"
+                                        value={ sortOrder }
+                                        onChange={ (value) => {
+                                            setSortOrder(value);
+                                            setOrderBy(value);
+                                        } }
+                                        aria-label="Select Cluster"
+                                        style={ { margin: '2px 10px' } }
+                                    >
+                                        { sortOptions.map(({ value, label, disabled }, index) => (
+                                            <FormSelectOption
+                                                isDisabled={ disabled }
+                                                key={ index }
+                                                value={ value }
+                                                label={ label }
+                                            />
+                                        )) }
+                                    </FormSelect>
+                                    <FormSelect
+                                        name="timeframe"
+                                        value={ timeframe }
+                                        onChange={ (value) => {
+                                            setTimeframe(+value);
+                                            setEndDate();
+                                            setStartDate(+value);
+                                        } }
+                                        aria-label="Select Date Range"
+                                        style={ { margin: '2px 10px' } }
+                                    >
+                                        { timeFrameOptions.map((option, index) => (
+                                            <FormSelectOption
+                                                isDisabled={ option.disabled }
+                                                key={ index }
+                                                value={ option.value }
+                                                label={ option.label }
+                                            />
+                                        )) }
+                                    </FormSelect>
+                                </div>
+                            </CardHeader>
+                        </Card>
+                    </Main>
                 <Main>
                     <TopCard>
                         <CardHeader>
                             <h2>Organization Status</h2>
-                            <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
-                                <FormSelect
-                                    name="orgsJobsTimeFrame"
-                                    value={ orgsJobsTimeFrame }
-                                    onChange={ value => setOrgsJobsTimeFrame(+value) }
-                                    aria-label="Select Date Range"
-                                    style={ { margin: '2px 10px' } }
-                                >
-                                    { timeFrameOptions.map((option, index) => (
-                                        <FormSelectOption
-                                            isDisabled={ option.disabled }
-                                            key={ index }
-                                            value={ option.value }
-                                            label={ option.label }
-                                        />
-                                    )) }
-                                </FormSelect>
-                            </div>
                         </CardHeader>
                         <CardBody>
                             { groupedBarChartData.length <= 0 && <LoadingState /> }
@@ -185,7 +227,7 @@ const OrganizationStatistics = () => {
                                     margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
                                     id="d3-grouped-bar-chart-root"
                                     data={ groupedBarChartData }
-                                    timeFrame={ orgsJobsTimeFrame }
+                                    timeFrame={ timeframe }
                                 />
                             ) }
                         </CardBody>
@@ -199,32 +241,14 @@ const OrganizationStatistics = () => {
                                     <h2 style={ { marginLeft: '20px' } }>
                                 Job Runs by Organization
                                     </h2>
-                                    <FormSelect
-                                        name="orgsPlaybookTimeFrame"
-                                        value={ orgsPlaybookTimeFrame }
-                                        onChange={ value => setOrgsPlaybookTimeFrame(+value) }
-                                        aria-label="Select Date Range"
-                                        style={ { margin: '2px 10px', width: '33%' } }
-                                    >
-                                        { timeFrameOptions.map((option, index) => (
-                                            <FormSelectOption
-                                                isDisabled={ option.disabled }
-                                                key={ index }
-                                                value={ option.value }
-                                                label={ option.label }
-                                            />
-                                        )) }
-                                    </FormSelect>
                                 </CardHeader>
                                 { pieChart1Data.length <= 0 && <LoadingState /> }
                                 { pieChart1Data.length > 0 && (
                                     <PieChart
                                         margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
                                         id="d3-donut-1-chart-root"
-                                        tag={ 1 }
                                         data={ pieChart1Data }
-                                        timeFrame={ orgsPlaybookTimeFrame }
-                                        onDateToggle={ handleDateToggle }
+                                        timeFrame={ timeframe }
                                     />
                                 ) }
                             </CardBody>
@@ -235,38 +259,21 @@ const OrganizationStatistics = () => {
                                     style={ { padding: 0 } }
                                 >
                                     <h2 style={ { marginLeft: '20px' } }>Usage by Organization (Tasks)</h2>
-                                    <FormSelect
-                                        name="orgsStorageTimeFrame"
-                                        value={ orgsStorageTimeFrame }
-                                        onChange={ value => setOrgsStorageTimeFrame(+value) }
-                                        aria-label="Select Date Range"
-                                        style={ { margin: '2px 10px', width: '33%' } }
-                                    >
-                                        { timeFrameOptions.map((option, index) => (
-                                            <FormSelectOption
-                                                isDisabled={ option.disabled }
-                                                key={ index }
-                                                value={ option.value }
-                                                label={ option.label }
-                                            />
-                                        )) }
-                                    </FormSelect>
                                 </CardHeader>
                                 { pieChart2Data.length <= 0 && <LoadingState /> }
                                 { pieChart2Data.length > 0 && (
                                     <PieChart
                                         margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
                                         id="d3-donut-2-chart-root"
-                                        tag={ 2 }
                                         data={ pieChart2Data }
-                                        timeFrame={ orgsStorageTimeFrame }
-                                        onDateToggle={ handleDateToggle }
+                                        timeFrame={ timeframe }
                                     />
                                 ) }
                             </CardBody>
                         </Card>
                     </CardContainer>
                 </Main>
+                </>
             ) }
         </React.Fragment>
     );
