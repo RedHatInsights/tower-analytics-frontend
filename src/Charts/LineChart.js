@@ -57,9 +57,7 @@ class LineChart extends Component {
             return value;
         }
     }
-    async updateCluster() {
-        const { cluster, onClusterToggle } = this.props;
-        await onClusterToggle({ id: cluster });
+    updateCluster() {
         this.init();
     }
     async init() {
@@ -316,9 +314,6 @@ class LineChart extends Component {
             this.updateCluster();
         }
 
-        if (prevProps.cluster !== this.props.cluster) {
-            this.updateCluster();
-        }
     }
 
     componentWillUnmount() {
@@ -341,10 +336,6 @@ LineChart.propTypes = {
     id: PropTypes.string,
     data: PropTypes.array,
     value: PropTypes.number,
-    cluster: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number
-    ]),
     margin: PropTypes.object,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func

@@ -1,5 +1,4 @@
 /*eslint max-len: ["error", { "ignoreStrings": true }]*/
-import moment from 'moment';
 
 const barChartEndpoint = '/api/tower-analytics/chart30/';
 const clustersEndpoint = '/api/tower-analytics/clusters/';
@@ -54,18 +53,12 @@ export const readClusters = () => {
     return fetch(clustersEndpoint).then(handleResponse);
 };
 
-export const readChart30 = () => {
-    return fetch(barChartEndpoint).then(handleResponse);
-};
-
-export const readChart30ById = ({ id = {}}) => {
-    const { id: clusterId } = id;
+export const readChart30 = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(barChartEndpoint, formattedUrl);
-    if (clusterId) {
-        url.searchParams.append('id', clusterId);
-    }
-
+    Object.keys(params).forEach(key =>
+        url.searchParams.append(key, params[key])
+    );
     return fetch(url).then(handleResponse);
 };
 
@@ -73,16 +66,31 @@ export const readJobsByDateAndOrg = () => {
     return fetch(groupedBarChartEndpoint).then(handleResponse);
 };
 
-export const readModules = () => {
-    return fetch(modulesEndpoint).then(handleResponse);
+export const readModules = ({ params = {}}) => {
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(modulesEndpoint, formattedUrl);
+    Object.keys(params).forEach(key =>
+        url.searchParams.append(key, params[key])
+    );
+    return fetch(url).then(handleResponse);
 };
 
-export const readTemplates = () => {
-    return fetch(templatesEndPoint).then(handleResponse);
+export const readTemplates = ({ params = {}}) => {
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(templatesEndPoint, formattedUrl);
+    Object.keys(params).forEach(key =>
+        url.searchParams.append(key, params[key])
+    );
+    return fetch(url).then(handleResponse);
 };
 
-export const readNotifications = () => {
-    return fetch(notificationsEndPoint).then(handleResponse);
+export const readNotifications = ({ params = {}}) => {
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(notificationsEndPoint, formattedUrl);
+    Object.keys(params).forEach(key =>
+        url.searchParams.append(key, params[key])
+    );
+    return fetch(url).then(handleResponse);
 };
 
 export const readJobRunsByOrg = ({ params = {}}) => {
@@ -101,22 +109,4 @@ export const readJobEventsByOrg = ({ params = {}}) => {
         url.searchParams.append(key, params[key])
     );
     return fetch(url).then(handleResponse);
-};
-
-export const getAllEndpoints = () => {
-    const today = moment.utc().format('YYYY-MM-DD');
-    const previousDay = moment.utc()
-    .subtract(7, 'days')
-    .format('YYYY-MM-DD');
-    const defaultPrams = { params: { startDate: previousDay, endDate: today }};
-    return Promise.all([
-        readChart30(),
-        readJobsByDateAndOrg(),
-        readModules(),
-        readTemplates(),
-        readNotifications(),
-        readClusters(),
-        readJobRunsByOrg(defaultPrams),
-        readJobEventsByOrg(defaultPrams)
-    ].map(p => p.catch(() => [])));
 };

@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import styled from 'styled-components';
+import moment from 'moment';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import {
     preflightRequest,
     readChart30,
-    readChart30ById,
     readClusters,
     readModules,
     readTemplates,
@@ -25,6 +25,8 @@ import {
     FormSelect,
     FormSelectOption
 } from '@patternfly/react-core';
+
+import { FilterIcon } from '@patternfly/react-icons';
 
 import BarChart from '../../Charts/BarChart';
 import LineChart from '../../Charts/LineChart';
@@ -85,6 +87,26 @@ function formatClusterName(data) {
     );
 }
 
+const initialQueryParams = {
+    startDate: moment.utc()
+    .subtract(7, 'days')
+    .format('YYYY-MM-DD'),
+    endDate: moment.utc().format('YYYY-MM-DD')
+};
+
+function paramsReducer(state, action) {
+    switch (action.type) {
+        case 'SET_STARTDATE':
+            return { ...state, startDate: action.startDate };
+        case 'SET_ENDDATE':
+            return { ...state, endDate: action.endDate };
+        case 'SET_ID':
+            return { ...state, id: action.id };
+        default:
+            throw new Error();
+    }
+}
+
 const Clusters = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ barChartData, setBarChartData ] = useState([]);
@@ -96,26 +118,69 @@ const Clusters = () => {
     const [ clusterTimeFrame, setClusterTimeFrame ] = useState(7);
     const [ selectedCluster, setSelectedCluster ] = useState('all');
     const [ selectedNotification, setSelectedNotification ] = useState('all');
+    const [ firstRender, setFirstRender ] = useState(true);
+    const [ queryParams, dispatch ] = useReducer(
+        paramsReducer,
+        initialQueryParams
+    );
 
-    const handleClusterToggle =  async (id) => {
-        if (!id) {
+    const updateEndDate = () => {
+        const endDate = moment.utc().format('YYYY-MM-DD');
+        dispatch({ type: 'SET_ENDDATE', endDate });
+    };
+
+    const updateStartDate = (days) => {
+        const startDate = moment.utc()
+        .subtract(days, 'days')
+        .format('YYYY-MM-DD');
+        dispatch({ type: 'SET_STARTDATE', startDate });
+    };
+
+    const updateId = (id) => {
+        dispatch({ type: 'SET_ID', id });
+    };
+
+    useEffect(() => {
+        if (firstRender) {
             return;
         }
 
-        setLineChartData([]);
-        const { data: lineChartData } = await readChart30ById({ id });
-        setLineChartData(lineChartData);
-    };
+        const fetchEndpoints = () => {
+            return Promise.all([
+                readChart30({ params: queryParams }),
+                readModules({ params: queryParams }),
+                readTemplates({ params: queryParams }),
+                readNotifications({ params: queryParams })
+            ].map(p => p.catch(() => [])));
+        };
+
+        const update = () => {
+            setLineChartData([]); // Clear out line chart values
+            fetchEndpoints().then(([
+                { data: lineChartData = []},
+                { modules: modulesData = []},
+                { templates: templatesData = []},
+                { notifications: notificationsData = []}
+            ]) => {
+                setLineChartData(lineChartData);
+                setModulesData(modulesData);
+                setTemplatesData(templatesData);
+                setNotificationsData(notificationsData);
+            });
+        };
+
+        update();
+    }, [ queryParams ]);
 
     useEffect(() => {
         let ignore = false;
         const getData = () => {
             return Promise.all([
-                readChart30(),
+                readChart30({ params: queryParams }),
                 readClusters(),
-                readModules(),
-                readTemplates(),
-                readNotifications()
+                readModules({ params: queryParams }),
+                readTemplates({ params: queryParams }),
+                readNotifications({ params: queryParams })
             ].map(p => p.catch(() => [])));
         };
 
@@ -139,6 +204,7 @@ const Clusters = () => {
                     setModulesData(modulesData);
                     setTemplatesData(templatesData);
                     setNotificationsData(notificationsData);
+                    setFirstRender(false);
                 }
             });
         }
@@ -162,31 +228,19 @@ const Clusters = () => {
                 </Main>
             ) }
             { !preflightError && (
-                <Main>
+                <>
+                <Main style={ { paddingBottom: '0' } }>
                     <Card>
-                        <CardHeader>
-                            <h2>Job Status</h2>
+                        <CardHeader style={ { paddingBottom: '0', paddingTop: '0' } }>
+                            <h2><FilterIcon style={ { marginRight: '10px' } }/>Filter</h2>
                             <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
-                                <FormSelect
-                                    name="clusterTimeFrame"
-                                    value={ clusterTimeFrame }
-                                    onChange={ (value) => setClusterTimeFrame(+value) }
-                                    aria-label="Select Date Range"
-                                    style={ { margin: '2px 10px' } }
-                                >
-                                    { timeFrameOptions.map((option, index) => (
-                                        <FormSelectOption
-                                            isDisabled={ option.disabled }
-                                            key={ index }
-                                            value={ option.value }
-                                            label={ option.label }
-                                        />
-                                    )) }
-                                </FormSelect>
                                 <FormSelect
                                     name="selectedCluster"
                                     value={ selectedCluster }
-                                    onChange={ (value) => setSelectedCluster(value) }
+                                    onChange={ (value) => {
+                                        setSelectedCluster(value);
+                                        updateId(value);
+                                    } }
                                     aria-label="Select Cluster"
                                     style={ { margin: '2px 10px' } }
                                 >
@@ -199,7 +253,34 @@ const Clusters = () => {
                                         />
                                     )) }
                                 </FormSelect>
+                                <FormSelect
+                                    name="clusterTimeFrame"
+                                    value={ clusterTimeFrame }
+                                    onChange={ (value) => {
+                                        setClusterTimeFrame(+value);
+                                        updateEndDate();
+                                        updateStartDate(+value);
+                                    } }
+                                    aria-label="Select Date Range"
+                                    style={ { margin: '2px 10px' } }
+                                >
+                                    { timeFrameOptions.map((option, index) => (
+                                        <FormSelectOption
+                                            isDisabled={ option.disabled }
+                                            key={ index }
+                                            value={ option.value }
+                                            label={ option.label }
+                                        />
+                                    )) }
+                                </FormSelect>
                             </div>
+                        </CardHeader>
+                    </Card>
+                </Main>
+                <Main>
+                    <Card>
+                        <CardHeader>
+                            <h2>Job Status</h2>
                         </CardHeader>
                         <CardBody>
                             { barChartData.length <= 0 && !preflightError && <LoadingState /> }
@@ -212,14 +293,13 @@ const Clusters = () => {
                                     value={ clusterTimeFrame }
                                 />
                             ) }
-                            { selectedCluster !== 'all' && (
+                            { lineChartData.length <= 0 && selectedCluster !== 'all' && <LoadingState /> }
+                            { selectedCluster !== 'all' && lineChartData.length > 0 && (
                                 <LineChart
                                     margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                                     id="d3-bar-chart-root"
                                     data={ lineChartData }
                                     value={ clusterTimeFrame }
-                                    cluster={ selectedCluster }
-                                    onClusterToggle={ handleClusterToggle }
                                 />
                             ) }
                         </CardBody>
@@ -238,6 +318,7 @@ const Clusters = () => {
                         />
                     </div>
                 </Main>
+                </>
             ) }
         </React.Fragment>
     );
