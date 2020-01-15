@@ -162,7 +162,7 @@ const TemplatesList = ({ templates }) => {
                           { job.job_name }
                       </PFDataListCell>
                       <PFDataListCell key="job cluster">
-                          { job.system_label || job.system_uuid }
+                          { job.system_label || job.install_uuid }
                       </PFDataListCell>
                       <PFDataListCell key="start time">
                           { formatDateTime(job.start_time) }
