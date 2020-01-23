@@ -25,3 +25,11 @@ export function getTotal(data) {
         return total;
     }
 }
+
+export function formatPercentage(val) {
+    if (!parseInt(val)) {
+        return;
+    }
+
+    return `${val}%`;
+}
