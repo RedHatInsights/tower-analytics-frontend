@@ -39,9 +39,9 @@ describe('Utilities/useQueryParams', () => {
 
     it('invoked methods returns new queryParams object', () => {
         act(() => {
-            page.setId('baz');
+            page.setId(1);
         });
-        expect(page.queryParams).toEqual({ ...initialValues, id: 'baz' });
+        expect(page.queryParams).toEqual({ ...initialValues, id: 1 });
     });
 
     it('methods correctly update existing values in queryParams object', () => {
@@ -56,7 +56,7 @@ describe('Utilities/useQueryParams', () => {
             page.setId(null);
             page.setOrderBy(NaN);
         });
-        expect(page.queryParams).toEqual({ ...initialValues, id: null, orderBy: NaN });
+        expect(page.queryParams).toEqual({ ...initialValues, orderBy: NaN });
     });
 
     it('setEndDate returns current day in `YYYY-MM-DD` string format', () => {

@@ -55,6 +55,10 @@ export const useQueryParams = initial => {
                     startDate = moment.utc().subtract(1, 'month')
                     .format('YYYY-MM-DD');
                 }
+                else {
+                    startDate = moment.utc().subtract(days, 'days')
+                    .format('YYYY-MM-DD');
+                }
 
                 dispatch({ type: 'SET_STARTDATE', startDate });
             },
