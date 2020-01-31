@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Alert, AlertGroup, AlertVariant } from '@patternfly/react-core';
+import { Alert, AlertGroup, AlertVariant, AlertActionCloseButton } from '@patternfly/react-core';
 import { ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
 import LoadingState from '../Components/LoadingState';
 import NoData from '../Components/NoData';
@@ -19,6 +19,7 @@ const AllNotificationTemplate = ({ notifications }) =>
                     variant={ AlertVariant.default }
                     isInline
                     key={ date + '-' + id }
+                    action={ <AlertActionCloseButton onClose={ () => { } } /> }
                     style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
                 >
                     { message } <a target="_blank" rel='noopener noreferrer' href={ url }><ArrowIcon /></a>
@@ -33,6 +34,7 @@ const AllNotificationTemplate = ({ notifications }) =>
                     variant={ AlertVariant.danger }
                     isInline
                     key={ date + '-' + id }
+                    action={ <AlertActionCloseButton onClose={ () => {} } /> }
                     style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
                 >
                     { message.split(':')[1] || message } <a target="_blank" rel='noopener noreferrer' href={ url }><ArrowIcon /></a>
@@ -47,6 +49,7 @@ const AllNotificationTemplate = ({ notifications }) =>
                     variant={ AlertVariant.warning }
                     isInline
                     key={ date + '-' + id }
+                    action={ <AlertActionCloseButton onClose={ () => { } } /> }
                     style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
                 >
                     { message } <a target="_blank" rel='noopener noreferrer' href={ url }><ArrowIcon /></a>
@@ -57,13 +60,14 @@ const AllNotificationTemplate = ({ notifications }) =>
 
 const ErrorNotificationTemplate = ({ notifications }) =>
     notifications
-    .filter(notification => notification.label === 'error' || 'critical')
+    .filter(notification => notification.label === 'error' || notification.label === 'critical')
     .map(({ message, date, notification_id: id, tower_url: url }) => (
         <Alert
             title={ message.split(':')[0] || 'Error' }
             variant={ AlertVariant.danger }
             isInline
             key={ date + '-' + id }
+            action={ <AlertActionCloseButton onClose={ () => { } } /> }
             style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
         >
             { message.split(':')[1] || message } <a target="_blank" rel='noopener noreferrer' href={ url }><ArrowIcon /></a>
@@ -79,6 +83,7 @@ const WarningNotificationTemplate = ({ notifications }) =>
             variant={ AlertVariant.warning }
             isInline
             key={ date + '-' + id }
+            action={ <AlertActionCloseButton onClose={ () => { } } /> }
             style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
         >
             { message } <a target="_blank" rel='noopener noreferrer' href={ url }><ArrowIcon /></a>
