@@ -15,7 +15,7 @@ const testHook = (callback) => {
     mount(<TestHook callback={ callback } />);
 };
 
-const initialValues = { foo: '1', bar: 2, orderBy: 'baz' };
+const initialValues = { foo: '1', bar: 2, orderBy: 'asc' };
 
 let page;
 
@@ -46,9 +46,9 @@ describe('Utilities/useQueryParams', () => {
 
     it('methods correctly update existing values in queryParams object', () => {
         act(() => {
-            page.setOrderBy('fizz');
+            page.setOrderBy('desc');
         });
-        expect(page.queryParams).toEqual({ foo: '1', bar: 2, orderBy: 'fizz' });
+        expect(page.queryParams).toEqual({ foo: '1', bar: 2, orderBy: 'desc' });
     });
 
     it('correctly handles null and NaN values', () => {
@@ -56,7 +56,7 @@ describe('Utilities/useQueryParams', () => {
             page.setId(null);
             page.setOrderBy(NaN);
         });
-        expect(page.queryParams).toEqual({ ...initialValues, orderBy: NaN });
+        expect(page.queryParams).toEqual({ foo: '1', bar: 2 });
     });
 
     it('setEndDate returns current day in `YYYY-MM-DD` string format', () => {
@@ -83,5 +83,11 @@ describe('Utilities/useQueryParams', () => {
             page.setStartDate(days);
         });
         expect(page.queryParams).toEqual({ ...initialValues, startDate: expected });
+    });
+    it('setOrderBy returns nothing when specifying a non-column type', () => {
+        act(() => {
+            page.setOrderBy('foo');
+        });
+        expect(page.queryParams).toEqual({ foo: '1', bar: 2 });
     });
 });
