@@ -34,7 +34,7 @@ const AllNotificationTemplate = ({ notifications }) =>
                     variant={ AlertVariant.danger }
                     isInline
                     key={ date + '-' + id }
-                    action={ <AlertActionCloseButton onClose={ () => {} } /> }
+                    action={ <AlertActionCloseButton onClose={ () => { } } /> }
                     style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
                 >
                     { message.split(':')[1] || message } <a target="_blank" rel='noopener noreferrer' href={ url }><ArrowIcon /></a>
