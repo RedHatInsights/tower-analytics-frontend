@@ -19,7 +19,9 @@ import {
     CardHeader as PFCardHeader,
     FormSelect,
     FormSelectOption,
-    Badge
+    Badge,
+    Pagination,
+    PaginationVariant
 } from '@patternfly/react-core';
 
 import NotificationsList from '../../Components/NotificationsList';
@@ -274,7 +276,17 @@ const Notifications = () => {
                           onNotificationChange={ value => setSelectedNotification(value) }
                           filterBy={ selectedNotification }
                           options={ notificationOptions }
-                          notifications={ notificationsData }
+                          notifications={ notificationsData.slice(notificationsData.length - 5, notificationsData.length) }
+                      />
+                      <Pagination
+                          itemCount={ notificationsData.length }
+                          widgetId="pagination-options-menu-bottom"
+                          perPage={ 5 }
+                          page={ 1 }
+                          variant={ PaginationVariant.bottom }
+                          onSetPage={ () => { } }
+                          onPerPageSelect={ () => { } }
+                          style={ { marginTop: '20px' } }
                       />
                   </CardBody>
               </Card>
