@@ -1,3 +1,4 @@
+/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
 import { useReducer } from 'react';
 import moment from 'moment';
 
@@ -10,14 +11,19 @@ export const useQueryParams = initial => {
                 return { ...state, endDate: action.endDate };
             case 'SET_ID':
                 if (!parseInt(action.id)) {
-                    /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
                     const { id: ignored, ...rest } = state;
                     return rest;
                 }
 
                 return { ...state, id: action.id };
             case 'SET_ORDERBY':
-                return { ...state, orderBy: action.order };
+                if (action.order === 'count:asc' || action.order === 'count:desc') {
+                    return { ...state, orderBy: action.order };
+                } else {
+                    const { orderBy: ignored, ...rest } = state;
+                    return rest;
+                }
+
             default:
                 throw new Error();
         }
