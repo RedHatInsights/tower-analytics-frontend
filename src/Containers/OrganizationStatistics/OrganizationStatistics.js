@@ -90,7 +90,8 @@ const initialQueryParams = {
     .subtract(7, 'days')
     .format('YYYY-MM-DD'),
     endDate: moment.utc().format('YYYY-MM-DD'),
-    sort_by: 'count:desc'
+    sort_by: 'count:desc',
+    limit: 5
 };
 
 const OrganizationStatistics = () => {
@@ -101,7 +102,19 @@ const OrganizationStatistics = () => {
     const [ timeframe, setTimeframe ] = useState(7);
     const [ sortOrder, setSortOrder ] = useState('count:desc');
     const [ firstRender, setFirstRender ] = useState(true);
-    const { queryParams, setEndDate, setStartDate, setSortBy } = useQueryParams(initialQueryParams);
+    const { queryParams, setEndDate, setStartDate, setSortBy, setLimit } = useQueryParams(initialQueryParams);
+
+    const setLimitValue = val => {
+        let limit;
+        if (val === 'count:asc' || val === 'count:desc') {
+            limit = 5;
+        }
+        else {
+            limit = 200;
+        }
+
+        return setLimit(limit);
+    };
 
     useEffect(() => {
         let ignore = false;
@@ -179,6 +192,7 @@ const OrganizationStatistics = () => {
                                         onChange={ (value) => {
                                             setSortOrder(value);
                                             setSortBy(value);
+                                            setLimitValue(value);
                                         } }
                                         aria-label="Select Cluster"
                                         style={ { margin: '2px 10px' } }
