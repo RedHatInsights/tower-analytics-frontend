@@ -79,8 +79,8 @@ const timeFrameOptions = [
 
 const sortOptions = [
     { value: 'please choose', label: 'Order By', disabled: true },
-    { value: 'top_5', label: 'Top 5 Orgs', disabled: false },
-    { value: 'bottom_5', label: 'Bottom 5 Orgs', disabled: false },
+    { value: 'count:desc', label: 'Top 5 Orgs', disabled: false },
+    { value: 'count:asc', label: 'Bottom 5 Orgs', disabled: false },
     { value: 'all', label: 'All Orgs', disabled: false }
 ];
 
@@ -89,7 +89,7 @@ const initialQueryParams = {
     .subtract(7, 'days')
     .format('YYYY-MM-DD'),
     endDate: moment.utc().format('YYYY-MM-DD'),
-    orderBy: 'top_5'
+    orderBy: 'count:desc'
 };
 
 const OrganizationStatistics = () => {
@@ -98,7 +98,7 @@ const OrganizationStatistics = () => {
     const [ pieChart2Data, setPieChart2Data ] = useState([]);
     const [ groupedBarChartData, setGroupedBarChartData ] = useState([]);
     const [ timeframe, setTimeframe ] = useState(7);
-    const [ sortOrder, setSortOrder ] = useState('top_5');
+    const [ sortOrder, setSortOrder ] = useState('count:desc');
     const [ firstRender, setFirstRender ] = useState(true);
     const { queryParams, setEndDate, setStartDate, setOrderBy } = useQueryParams(initialQueryParams);
 
