@@ -1,3 +1,4 @@
+/*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
 import { useReducer } from 'react';
 import moment from 'moment';
@@ -16,11 +17,11 @@ export const useQueryParams = initial => {
                 }
 
                 return { ...state, id: action.id };
-            case 'SET_ORDERBY':
-                if (action.order === 'count:asc' || action.order === 'count:desc') {
-                    return { ...state, orderBy: action.order };
+            case 'SET_SORT_BY':
+                if (action.sort === 'count:asc' || action.sort === 'count:desc') {
+                    return { ...state, sort_by: action.sort };
                 } else {
-                    const { orderBy: ignored, ...rest } = state;
+                    const { sort_by: ignored, ...rest } = state;
                     return rest;
                 }
 
@@ -68,7 +69,7 @@ export const useQueryParams = initial => {
 
                 dispatch({ type: 'SET_STARTDATE', startDate });
             },
-        setOrderBy:
-            order => dispatch({ type: 'SET_ORDERBY', order })
+        setSortBy:
+            sort => dispatch({ type: 'SET_SORT_BY', sort })
     };
 };

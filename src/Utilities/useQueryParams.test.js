@@ -15,7 +15,7 @@ const testHook = (callback) => {
     mount(<TestHook callback={ callback } />);
 };
 
-const initialValues = { foo: '1', bar: 2, orderBy: 'asc' };
+const initialValues = { foo: '1', bar: 2, sort_by: 'count:asc' };
 
 let page;
 
@@ -30,11 +30,11 @@ describe('Utilities/useQueryParams', () => {
         expect(page.queryParams).toEqual(initialValues);
     });
 
-    it('returns setId, setStartDate, setEndDate, and setOrderBy as methods', () => {
+    it('returns setId, setStartDate, setEndDate, and setSortBy as methods', () => {
         expect(page.setId).toBeInstanceOf(Function);
         expect(page.setStartDate).toBeInstanceOf(Function);
         expect(page.setEndDate).toBeInstanceOf(Function);
-        expect(page.setOrderBy).toBeInstanceOf(Function);
+        expect(page.setSortBy).toBeInstanceOf(Function);
     });
 
     it('invoked methods returns new queryParams object', () => {
@@ -46,15 +46,15 @@ describe('Utilities/useQueryParams', () => {
 
     it('methods correctly update existing values in queryParams object', () => {
         act(() => {
-            page.setOrderBy('desc');
+            page.setSortBy('count:desc');
         });
-        expect(page.queryParams).toEqual({ foo: '1', bar: 2, orderBy: 'desc' });
+        expect(page.queryParams).toEqual({ foo: '1', bar: 2, sort_by: 'count:desc' });
     });
 
     it('correctly handles null and NaN values', () => {
         act(() => {
             page.setId(null);
-            page.setOrderBy(NaN);
+            page.setSortBy(NaN);
         });
         expect(page.queryParams).toEqual({ foo: '1', bar: 2 });
     });
@@ -84,9 +84,9 @@ describe('Utilities/useQueryParams', () => {
         });
         expect(page.queryParams).toEqual({ ...initialValues, startDate: expected });
     });
-    it('setOrderBy returns nothing when specifying a non-column type', () => {
+    it('setSortBy returns nothing when specifying a non-column type', () => {
         act(() => {
-            page.setOrderBy('foo');
+            page.setSortBy('foo');
         });
         expect(page.queryParams).toEqual({ foo: '1', bar: 2 });
     });

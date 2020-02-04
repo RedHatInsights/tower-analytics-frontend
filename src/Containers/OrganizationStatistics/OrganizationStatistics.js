@@ -1,3 +1,4 @@
+/*eslint camelcase: ["error", {properties: "never"}]*/
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
@@ -89,7 +90,7 @@ const initialQueryParams = {
     .subtract(7, 'days')
     .format('YYYY-MM-DD'),
     endDate: moment.utc().format('YYYY-MM-DD'),
-    orderBy: 'count:desc'
+    sort_by: 'count:desc'
 };
 
 const OrganizationStatistics = () => {
@@ -100,7 +101,7 @@ const OrganizationStatistics = () => {
     const [ timeframe, setTimeframe ] = useState(7);
     const [ sortOrder, setSortOrder ] = useState('count:desc');
     const [ firstRender, setFirstRender ] = useState(true);
-    const { queryParams, setEndDate, setStartDate, setOrderBy } = useQueryParams(initialQueryParams);
+    const { queryParams, setEndDate, setStartDate, setSortBy } = useQueryParams(initialQueryParams);
 
     useEffect(() => {
         let ignore = false;
@@ -177,7 +178,7 @@ const OrganizationStatistics = () => {
                                         value={ sortOrder }
                                         onChange={ (value) => {
                                             setSortOrder(value);
-                                            setOrderBy(value);
+                                            setSortBy(value);
                                         } }
                                         aria-label="Select Cluster"
                                         style={ { margin: '2px 10px' } }
