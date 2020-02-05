@@ -1,3 +1,4 @@
+/*eslint camelcase: ["error", {properties: "never"}]*/
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
@@ -79,8 +80,8 @@ const timeFrameOptions = [
 
 const sortOptions = [
     { value: 'please choose', label: 'Order By', disabled: true },
-    { value: 'top_5', label: 'Top 5 Orgs', disabled: false },
-    { value: 'bottom_5', label: 'Bottom 5 Orgs', disabled: false },
+    { value: 'count:desc', label: 'Top 5 Orgs', disabled: false },
+    { value: 'count:asc', label: 'Bottom 5 Orgs', disabled: false },
     { value: 'all', label: 'All Orgs', disabled: false }
 ];
 
@@ -89,7 +90,8 @@ const initialQueryParams = {
     .subtract(7, 'days')
     .format('YYYY-MM-DD'),
     endDate: moment.utc().format('YYYY-MM-DD'),
-    orderBy: 'top_5'
+    sort_by: 'count:desc',
+    limit: 5
 };
 
 const OrganizationStatistics = () => {
@@ -98,9 +100,21 @@ const OrganizationStatistics = () => {
     const [ pieChart2Data, setPieChart2Data ] = useState([]);
     const [ groupedBarChartData, setGroupedBarChartData ] = useState([]);
     const [ timeframe, setTimeframe ] = useState(7);
-    const [ sortOrder, setSortOrder ] = useState('top_5');
+    const [ sortOrder, setSortOrder ] = useState('count:desc');
     const [ firstRender, setFirstRender ] = useState(true);
-    const { queryParams, setEndDate, setStartDate, setOrderBy } = useQueryParams(initialQueryParams);
+    const { queryParams, setEndDate, setStartDate, setSortBy, setLimit } = useQueryParams(initialQueryParams);
+
+    const setLimitValue = val => {
+        let limit;
+        if (val === 'count:asc' || val === 'count:desc') {
+            limit = 5;
+        }
+        else {
+            limit = 200;
+        }
+
+        return setLimit(limit);
+    };
 
     useEffect(() => {
         let ignore = false;
@@ -177,7 +191,8 @@ const OrganizationStatistics = () => {
                                         value={ sortOrder }
                                         onChange={ (value) => {
                                             setSortOrder(value);
-                                            setOrderBy(value);
+                                            setSortBy(value);
+                                            setLimitValue(value);
                                         } }
                                         aria-label="Select Cluster"
                                         style={ { margin: '2px 10px' } }
