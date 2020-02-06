@@ -65,7 +65,7 @@ const ModulesList = ({ modules, isLoading }) => (
                 </PFDataListCell>
             </PFDataListItem>
         ) }
-        { modules.filter(module => module.module !== null).map(({ module, count }) => (
+        { !isLoading && modules.filter(module => module.module !== null).map(({ module, count }) => (
             <DataListItem aria-labelledby="top-modules-detail" key={ module }>
                 <DataListCell>
                     <span>{ trimStr(module) }</span>

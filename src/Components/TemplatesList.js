@@ -144,7 +144,7 @@ const TemplatesList = ({ templates, isLoading }) => {
                   </PFDataListCell>
               </PFDataListItem>
           ) }
-          { templates.map(({ name, count, id }) => (
+          { !isLoading && templates.map(({ name, count, id }) => (
               <DataListItem aria-labelledby="top-templates-detail" key={ name }>
                   <DataListCell>
                       <a

@@ -145,10 +145,10 @@ const NotificationsList = ({
                 </PFDataListCell>
             </PFDataListItem>
         ) }
-        { filterBy === 'all' && (
+        { !isLoading && filterBy === 'all' && (
             <NotificationTemplate notifications={ notifications } />
         ) }
-        { filterBy === 'error' && (
+        { !isLoading && filterBy === 'error' && (
             <ErrorNotificationTemplate notifications={ notifications } />
         ) }
     </DataList>
