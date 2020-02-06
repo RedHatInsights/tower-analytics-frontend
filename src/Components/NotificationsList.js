@@ -142,7 +142,6 @@ const NotificationsList = ({
             >
                 <PFDataListCell>
                     <NoData />
-
                 </PFDataListCell>
             </PFDataListItem>
         ) }
