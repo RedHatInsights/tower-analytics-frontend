@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { trimStr } from '../Utilities/helpers';
 import styled from 'styled-components';
 import LoadingState from '../Components/LoadingState';
+import NoData from '../Components/NoData';
 
 import {
     Badge,
@@ -28,7 +29,7 @@ const DataCellEnd = styled(DataListCell)`
   align-items: center;
 `;
 
-const ModulesList = ({ modules }) => (
+const ModulesList = ({ modules, isLoading }) => (
     <DataList aria-label="Top Modules" style={ {
         maxHeight: '400px',
         overflow: 'auto'
@@ -43,8 +44,26 @@ const ModulesList = ({ modules }) => (
                 </h3>
             </DataCellEnd>
         </DataListItem>
-        { modules.length <= 0 && (
-            <LoadingState />
+        { isLoading && (
+            <PFDataListItem
+                aria-labelledby="modules-loading"
+                key={ isLoading }
+            >
+                <PFDataListCell>
+                    <LoadingState />
+                </PFDataListCell>
+            </PFDataListItem>
+        ) }
+        { !isLoading && modules.length <= 0 && (
+            <PFDataListItem
+                aria-labelledby="modules-no-data"
+                key={ isLoading }
+            >
+                <PFDataListCell>
+                    <NoData />
+
+                </PFDataListCell>
+            </PFDataListItem>
         ) }
         { modules.filter(module => module.module !== null).map(({ module, count }) => (
             <DataListItem aria-labelledby="top-modules-detail" key={ module }>
@@ -60,7 +79,8 @@ const ModulesList = ({ modules }) => (
 );
 
 ModulesList.propTypes = {
-    modules: PropTypes.array
+    modules: PropTypes.array,
+    isLoading: PropTypes.bool
 };
 
 export default ModulesList;
