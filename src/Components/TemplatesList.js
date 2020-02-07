@@ -75,8 +75,16 @@ const DataCellEnd = styled(DataListCell)`
 `;
 
 const formatTopFailedTask = data => {
-    const percentage = formatPercentage(data[0].fail_rate);
-    return `${data[0].task_name} ${percentage}`;
+    if (!data) {
+        return;
+    }
+
+    if (data && data[0]) {
+        const percentage = formatPercentage(data[0].fail_rate);
+        return `${data[0].task_name} ${percentage}`;
+    }
+
+    return `Unavailable`;
 };
 
 const renderTemplateTitle = ({ name, type }) => {
