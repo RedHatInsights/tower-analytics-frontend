@@ -109,6 +109,7 @@ const Clusters = () => {
     const [ selectedCluster, setSelectedCluster ] = useState('all');
     const [ selectedNotification, setSelectedNotification ] = useState('all');
     const [ firstRender, setFirstRender ] = useState(true);
+    const [ isLoading, setIsLoading ] = useState(true);
     const { queryParams, setEndDate, setStartDate, setId } = useQueryParams(initialQueryParams);
 
     useEffect(() => {
@@ -126,6 +127,7 @@ const Clusters = () => {
         };
 
         const update = () => {
+            setIsLoading(true);
             setLineChartData([]); // Clear out line chart values
             fetchEndpoints().then(([
                 { data: lineChartData = []},
@@ -137,6 +139,7 @@ const Clusters = () => {
                 setModulesData(modulesData);
                 setTemplatesData(templatesData);
                 setNotificationsData(notificationsData);
+                setIsLoading(false);
             });
         };
 
@@ -156,6 +159,7 @@ const Clusters = () => {
         };
 
         async function initializeWithPreflight() {
+            setIsLoading(true);
             await window.insights.chrome.auth.getUser();
             await preflightRequest().catch(error => {
                 setPreFlightError({ preflightError: error });
@@ -176,6 +180,7 @@ const Clusters = () => {
                     setTemplatesData(templatesData);
                     setNotificationsData(notificationsData);
                     setFirstRender(false);
+                    setIsLoading(false);
                 }
             });
         }
@@ -279,13 +284,14 @@ const Clusters = () => {
                         className="dataCard"
                         style={ { display: 'flex', marginTop: '20px' } }
                     >
-                        <TemplatesList templates={ templatesData.slice(0, 10) } />
-                        <ModulesList modules={ modulesData.slice(0, 10) } />
+                        <TemplatesList templates={ templatesData.slice(0, 10) } isLoading={ isLoading } />
+                        <ModulesList modules={ modulesData.slice(0, 10) } isLoading={ isLoading }/>
                         <NotificationsList
                             onNotificationChange={ (value) => setSelectedNotification(value) }
                             filterBy={ selectedNotification }
                             options={ notificationOptions }
                             notifications={ notificationsData }
+                            isLoading={ isLoading }
                         />
                     </div>
                 </Main>

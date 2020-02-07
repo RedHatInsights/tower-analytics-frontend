@@ -6,6 +6,7 @@ import moment from 'moment';
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
 import LoadingState from '../../Components/LoadingState';
+import NoData from '../../Components/NoData';
 import EmptyState from '../../Components/EmptyState';
 import {
     preflightRequest,
@@ -102,6 +103,7 @@ const OrganizationStatistics = () => {
     const [ timeframe, setTimeframe ] = useState(7);
     const [ sortOrder, setSortOrder ] = useState('count:desc');
     const [ firstRender, setFirstRender ] = useState(true);
+    const [ isLoading, setIsLoading ] = useState(true);
     const { queryParams, setEndDate, setStartDate, setSortBy, setLimit } = useQueryParams(initialQueryParams);
 
     const setLimitValue = val => {
@@ -127,6 +129,7 @@ const OrganizationStatistics = () => {
         };
 
         const update = () => {
+            setIsLoading(true);
             fetchEndpoints().then(([
                 { dates: groupedBarChartData = []},
                 { usages: pieChart1Data = []},
@@ -135,10 +138,12 @@ const OrganizationStatistics = () => {
                 setGroupedBarChartData(groupedBarChartData);
                 setPieChart1Data(pieChart1Data);
                 setPieChart2Data(pieChart2Data);
+                setIsLoading(false);
             });
         };
 
         async function initializeWithPreflight() {
+            setIsLoading(true);
             await window.insights.chrome.auth.getUser();
             await preflightRequest().catch(error => {
                 setPreFlightError({ preflightError: error });
@@ -153,6 +158,7 @@ const OrganizationStatistics = () => {
                     setPieChart1Data(pieChart1Data);
                     setPieChart2Data(pieChart2Data);
                     setFirstRender(false);
+                    setIsLoading(false);
                 }
             });
         }
@@ -236,8 +242,11 @@ const OrganizationStatistics = () => {
                             <h2>Organization Status</h2>
                         </CardHeader>
                         <CardBody>
-                            { groupedBarChartData.length <= 0 && <LoadingState /> }
-                            { groupedBarChartData.length > 0 && (
+                            { isLoading && <LoadingState /> }
+                            { !isLoading && groupedBarChartData.length <= 0 && (
+                                <NoData />
+                            ) }
+                            { !isLoading && groupedBarChartData.length > 0 && (
                                 <GroupedBarChart
                                     margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
                                     id="d3-grouped-bar-chart-root"
@@ -257,8 +266,11 @@ const OrganizationStatistics = () => {
                                 Job Runs by Organization
                                     </h2>
                                 </CardHeader>
-                                { pieChart1Data.length <= 0 && <LoadingState /> }
-                                { pieChart1Data.length > 0 && (
+                                { isLoading && <LoadingState /> }
+                                { !isLoading && pieChart1Data.length <= 0 && (
+                                    <NoData />
+                                ) }
+                                { !isLoading && pieChart1Data.length > 0 && (
                                     <PieChart
                                         margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
                                         id="d3-donut-1-chart-root"
@@ -275,8 +287,11 @@ const OrganizationStatistics = () => {
                                 >
                                     <h2 style={ { marginLeft: '20px' } }>Usage by Organization (Tasks)</h2>
                                 </CardHeader>
-                                { pieChart2Data.length <= 0 && <LoadingState /> }
-                                { pieChart2Data.length > 0 && (
+                                { isLoading && <LoadingState /> }
+                                { !isLoading && pieChart2Data.length <= 0 && (
+                                    <NoData />
+                                ) }
+                                { !isLoading && pieChart2Data.length > 0 && (
                                     <PieChart
                                         margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
                                         id="d3-donut-2-chart-root"

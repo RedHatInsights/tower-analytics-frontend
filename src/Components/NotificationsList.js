@@ -11,6 +11,7 @@ import {
 
 import { WarningTriangleIcon, ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
 import LoadingState from '../Components/LoadingState';
+import NoData from '../Components/NoData';
 
 const ArrowIcon = styled(PFArrowIcon)`
     margin-left: 7px;
@@ -93,7 +94,8 @@ const NotificationsList = ({
     filterBy,
     onNotificationChange,
     options,
-    notifications
+    notifications,
+    isLoading
 }) => (
     <DataList style={ {
         flex: '1',
@@ -123,13 +125,30 @@ const NotificationsList = ({
                 </FormSelect>
             </DataCellEnd>
         </DataListItem>
-        { notifications.length <= 0 && (
-            <LoadingState />
+        { isLoading && (
+            <PFDataListItem
+                aria-labelledby="notifications-loading"
+                key={ isLoading }
+            >
+                <PFDataListCell>
+                    <LoadingState />
+                </PFDataListCell>
+            </PFDataListItem>
         ) }
-        { filterBy === 'all' && (
+        { !isLoading && notifications.length <= 0 && (
+            <PFDataListItem
+                aria-labelledby="notifications-no-data"
+                key={ isLoading }
+            >
+                <PFDataListCell>
+                    <NoData />
+                </PFDataListCell>
+            </PFDataListItem>
+        ) }
+        { !isLoading && filterBy === 'all' && (
             <NotificationTemplate notifications={ notifications } />
         ) }
-        { filterBy === 'error' && (
+        { !isLoading && filterBy === 'error' && (
             <ErrorNotificationTemplate notifications={ notifications } />
         ) }
     </DataList>
@@ -143,7 +162,8 @@ NotificationsList.propTypes = {
     notifications: PropTypes.array,
     options: PropTypes.array,
     filterBy: PropTypes.string,
-    onNotificationChange: PropTypes.func
+    onNotificationChange: PropTypes.func,
+    isLoading: PropTypes.bool
 };
 
 export default NotificationsList;

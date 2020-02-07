@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { formatDateTime, formatSeconds, formatPercentage } from '../Utilities/helpers';
 import styled from 'styled-components';
 import LoadingState from '../Components/LoadingState';
+import NoData from '../Components/NoData';
 
 import {
     Badge,
@@ -92,7 +93,7 @@ const renderTemplateTitle = ({ name, type }) => {
     );
 };
 
-const TemplatesList = ({ templates }) => {
+const TemplatesList = ({ templates, isLoading }) => {
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ selectedId, setSelectedId ] = useState(null);
     const [ selectedTemplate, setSelectedTemplate ] = useState([]);
@@ -123,9 +124,28 @@ const TemplatesList = ({ templates }) => {
                   </h3>
               </DataCellEnd>
           </DataListItem>
-          { templates.length <= 0 && <LoadingState /> }
-          { templates.map(({ name, count, id }) => (
-              <DataListItem aria-labelledby="top-templates-detail" key={ name }>
+          { isLoading && (
+              <PFDataListItem
+                  aria-labelledby="templates-loading"
+                  key={ isLoading }
+              >
+                  <PFDataListCell>
+                      <LoadingState />
+                  </PFDataListCell>
+              </PFDataListItem>
+          ) }
+          { !isLoading && templates.length <= 0 && (
+              <PFDataListItem
+                  aria-labelledby="templates-no-data"
+                  key={ isLoading }
+              >
+                  <PFDataListCell>
+                      <NoData />
+                  </PFDataListCell>
+              </PFDataListItem>
+          ) }
+          { !isLoading && templates.map(({ name, count, id }, index) => (
+              <DataListItem aria-labelledby="top-templates-detail" key={ index }>
                   <DataListCell>
                       <a
                           onClick={ () => {
@@ -241,7 +261,8 @@ const TemplatesList = ({ templates }) => {
 };
 
 TemplatesList.propTypes = {
-    templates: PropTypes.array
+    templates: PropTypes.array,
+    isLoading: PropTypes.bool
 };
 
 export default TemplatesList;
