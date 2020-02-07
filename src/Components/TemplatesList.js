@@ -120,7 +120,9 @@ const TemplatesList = ({ templates, isLoading }) => {
     <>
       <DataList aria-label="Top Templates" style={ {
           maxHeight: '400px',
-          overflow: 'auto'
+          overflow: 'auto',
+          height: '400px',
+          background: 'white'
       } }>
           <DataListItem aria-labelledby="top-templates-header">
               <DataListCell>
@@ -136,6 +138,8 @@ const TemplatesList = ({ templates, isLoading }) => {
               <PFDataListItem
                   aria-labelledby="templates-loading"
                   key={ isLoading }
+                  style={ { border: 'none' } }
+
               >
                   <PFDataListCell>
                       <LoadingState />
@@ -146,6 +150,7 @@ const TemplatesList = ({ templates, isLoading }) => {
               <PFDataListItem
                   aria-labelledby="templates-no-data"
                   key={ isLoading }
+                  style={ { border: 'none' } }
               >
                   <PFDataListCell>
                       <NoData />
