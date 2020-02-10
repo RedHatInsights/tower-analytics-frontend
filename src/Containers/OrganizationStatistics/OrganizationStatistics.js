@@ -88,7 +88,7 @@ const sortOptions = [
 
 const initialQueryParams = {
     startDate: moment.utc()
-    .subtract(7, 'days')
+    .subtract(1, 'month')
     .format('YYYY-MM-DD'),
     endDate: moment.utc().format('YYYY-MM-DD'),
     sort_by: 'count:desc',
@@ -100,7 +100,7 @@ const OrganizationStatistics = () => {
     const [ pieChart1Data, setPieChart1Data ] = useState([]);
     const [ pieChart2Data, setPieChart2Data ] = useState([]);
     const [ groupedBarChartData, setGroupedBarChartData ] = useState([]);
-    const [ timeframe, setTimeframe ] = useState(7);
+    const [ timeframe, setTimeframe ] = useState(31);
     const [ sortOrder, setSortOrder ] = useState('count:desc');
     const [ firstRender, setFirstRender ] = useState(true);
     const [ isLoading, setIsLoading ] = useState(true);

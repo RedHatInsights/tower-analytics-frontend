@@ -92,7 +92,7 @@ function formatClusterName(data) {
 
 const initialQueryParams = {
     startDate: moment.utc()
-    .subtract(7, 'days')
+    .subtract(1, 'month')
     .format('YYYY-MM-DD'),
     endDate: moment.utc().format('YYYY-MM-DD')
 };
@@ -105,7 +105,7 @@ const Clusters = () => {
     const [ templatesData, setTemplatesData ] = useState([]);
     const [ modulesData, setModulesData ] = useState([]);
     const [ clusterOptions, setClusterOptions ] = useState([]);
-    const [ clusterTimeFrame, setClusterTimeFrame ] = useState(7);
+    const [ clusterTimeFrame, setClusterTimeFrame ] = useState(31);
     const [ selectedCluster, setSelectedCluster ] = useState('all');
     const [ selectedNotification, setSelectedNotification ] = useState('all');
     const [ firstRender, setFirstRender ] = useState(true);
@@ -128,14 +128,18 @@ const Clusters = () => {
 
         const update = () => {
             setIsLoading(true);
-            setLineChartData([]); // Clear out line chart values
             fetchEndpoints().then(([
-                { data: lineChartData = []},
+                { data: chartData = []},
                 { modules: modulesData = []},
                 { templates: templatesData = []},
                 { notifications: notificationsData = []}
             ]) => {
-                setLineChartData(lineChartData);
+                if (queryParams.id) {
+                    setLineChartData(chartData);
+                } else {
+                    setBarChartData(chartData);
+                }
+
                 setModulesData(modulesData);
                 setTemplatesData(templatesData);
                 setNotificationsData(notificationsData);
@@ -259,9 +263,9 @@ const Clusters = () => {
                             <h2>Job Status</h2>
                         </CardHeader>
                         <CardBody>
-                            { barChartData.length <= 0 && !preflightError && <LoadingState /> }
+                            { isLoading && !preflightError && <LoadingState /> }
                             { selectedCluster === 'all' &&
-                        barChartData.length > 0 && (
+                        barChartData.length > 0 && !isLoading && (
                                 <BarChart
                                     margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                                     id="d3-bar-chart-root"
@@ -269,8 +273,7 @@ const Clusters = () => {
                                     value={ clusterTimeFrame }
                                 />
                             ) }
-                            { lineChartData.length <= 0 && selectedCluster !== 'all' && <LoadingState /> }
-                            { selectedCluster !== 'all' && lineChartData.length > 0 && (
+                            { selectedCluster !== 'all' && lineChartData.length > 0 && !isLoading && (
                                 <LineChart
                                     margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                                     id="d3-bar-chart-root"

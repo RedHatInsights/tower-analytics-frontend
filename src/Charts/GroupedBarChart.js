@@ -195,7 +195,7 @@ class GroupedBarChart extends Component {
     async formatData() {
         const { data, timeFrame } = await this.props;
         const { selected } = this.state;
-        const halfLength = Math.ceil(data.length / 2);
+        // const halfLength = Math.ceil(data.length / 2);
         const parseTime = d3.timeParse('%Y-%m-%d');
 
         let slicedData;
@@ -203,11 +203,15 @@ class GroupedBarChart extends Component {
             slicedData = data.slice(data.length - 7, data.length);
         }
 
-        if (timeFrame === 14) {
-            slicedData = data.slice(halfLength, data.length);
-        }
+        // if (timeFrame === 14) {
+        //     slicedData = data.slice(halfLength, data.length);
+        // }
 
-        if (timeFrame === 31) {
+        // if (timeFrame === 31) {
+        //     slicedData = data;
+        // }
+
+        if (timeFrame) {
             slicedData = data;
         }
 
@@ -251,6 +255,13 @@ class GroupedBarChart extends Component {
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
         const { formattedData: data } = this.state;
+        // try this: FORMAT
+        //let { data } = this.props;
+        // const total = getTotal(data);
+        // data.forEach(function (d) {
+        //     d.count = +d.count;
+        //     d.percent = +Math.round((d.count / total) * 100);
+        // });
         const width = this.props.getWidth();
         const height = this.props.getHeight();
         // x scale of entire chart
@@ -403,19 +414,19 @@ class GroupedBarChart extends Component {
         window.removeEventListener('resize', this.resize);
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if (prevProps.value !== this.props.value) {
-            this.init();
-        }
+    // componentDidUpdate(prevProps, prevState) {
+    //     // if (prevProps.value !== this.props.value) {
+    //     //     this.init();
+    //     // }
 
-        if (prevProps.timeFrame !== this.props.timeFrame) {
-            this.init();
-        }
+    //     // if (prevProps.timeFrame !== this.props.timeFrame) {
+    //     //     this.init();
+    //     // }
 
-        if (prevState.formattedData !== this.state.formattedData) {
-            this.draw();
-        }
-    }
+    //     // if (prevState.formattedData !== this.state.formattedData) {
+    //     //     this.draw();
+    //     // }
+    // }
 
     render() {
         const { colors, selected } = this.state;
