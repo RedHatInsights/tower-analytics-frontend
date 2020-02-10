@@ -181,7 +181,7 @@ class GroupedBarChart extends Component {
         });
     }
 
-    async handleToggle(selectedId) {
+    handleToggle(selectedId) {
         if (this.selection.indexOf(selectedId) === -1) {
             this.selection = [ ...this.selection, selectedId ];
         } else if (this.selection.includes(selectedId)) {
@@ -189,44 +189,10 @@ class GroupedBarChart extends Component {
         }
 
         this.setState({ selected: this.selection });
-        this.formatData();
+        this.draw();
     }
 
-    async formatData() {
-        const { data, timeFrame } = await this.props;
-        const { selected } = this.state;
-        // const halfLength = Math.ceil(data.length / 2);
-        const parseTime = d3.timeParse('%Y-%m-%d');
-
-        let slicedData;
-        if (timeFrame === 7) {
-            slicedData = data.slice(data.length - 7, data.length);
-        }
-
-        // if (timeFrame === 14) {
-        //     slicedData = data.slice(halfLength, data.length);
-        // }
-
-        // if (timeFrame === 31) {
-        //     slicedData = data;
-        // }
-
-        if (timeFrame) {
-            slicedData = data;
-        }
-
-        const formattedData = slicedData.reduce((formatted, { date, orgs: orgsList }) => {
-            date = parseTime(date);
-            const selectedOrgs = orgsList.filter(({ id }) => selected.includes(id));
-            selectedOrgs.map(org => {
-                org.date = date;
-            });
-            return formatted.concat({ date, selectedOrgs });
-        }, []);
-        this.setState({ formattedData });
-    }
-
-    async init() {
+    init() {
         // create the first 8 selected data points
         if (this.selection.length === 0) {
             this.orgsList.forEach((org, index) => {
@@ -246,22 +212,23 @@ class GroupedBarChart extends Component {
             return colors;
         }, []);
         this.setState({ colors });
-
-        await this.formatData();
         this.draw();
     }
 
     draw() {
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
-        const { formattedData: data } = this.state;
-        // try this: FORMAT
-        //let { data } = this.props;
-        // const total = getTotal(data);
-        // data.forEach(function (d) {
-        //     d.count = +d.count;
-        //     d.percent = +Math.round((d.count / total) * 100);
-        // });
+        let { data: unformattedData, timeFrame } = this.props;
+        const selected = this.selection;
+        const parseTime = d3.timeParse('%Y-%m-%d');
+        const data = unformattedData.reduce((formatted, { date, orgs: orgsList }) => {
+            date = parseTime(date);
+            const selectedOrgs = orgsList.filter(({ id }) => selected.includes(id));
+            selectedOrgs.map(org => {
+                org.date = date;
+            });
+            return formatted.concat({ date, selectedOrgs });
+        }, []);
         const width = this.props.getWidth();
         const height = this.props.getHeight();
         // x scale of entire chart
@@ -273,7 +240,6 @@ class GroupedBarChart extends Component {
         const x1 = d3.scaleBand();
         const y = d3.scaleLinear().range([ height, 0 ]);
         // format our X Axis ticks
-        const { timeFrame } = this.props;
         let ticks;
         const maxTicks = Math.round(data.length / (timeFrame / 2));
         ticks = data.map(d => d.date);
@@ -413,20 +379,6 @@ class GroupedBarChart extends Component {
         clearTimeout(timeout);
         window.removeEventListener('resize', this.resize);
     }
-
-    // componentDidUpdate(prevProps, prevState) {
-    //     // if (prevProps.value !== this.props.value) {
-    //     //     this.init();
-    //     // }
-
-    //     // if (prevProps.timeFrame !== this.props.timeFrame) {
-    //     //     this.init();
-    //     // }
-
-    //     // if (prevState.formattedData !== this.state.formattedData) {
-    //     //     this.draw();
-    //     // }
-    // }
 
     render() {
         const { colors, selected } = this.state;
