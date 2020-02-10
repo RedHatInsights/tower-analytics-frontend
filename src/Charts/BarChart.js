@@ -10,7 +10,6 @@ class BarChart extends Component {
         this.draw = this.draw.bind(this);
         this.init = this.init.bind(this);
         this.resize = this.resize.bind(this);
-        this.formatData = this.formatData.bind(this);
         this.state = {
             formattedData: [],
             timeout: null
@@ -24,45 +23,22 @@ class BarChart extends Component {
         });
     }
 
-    formatData() {
-        const { data, value } = this.props;
-        const parseTime = d3.timeParse('%Y-%m-%d');
-
-        const formattedData = data.reduce((formatted, { created, successful, failed }) => {
-            let DATE = parseTime(created) || new Date();
-            let RAN = +successful || 0;
-            let FAIL = +failed || 0;
-            let TOTAL = +successful + failed || 0;
-            return formatted.concat({ DATE, RAN, FAIL, TOTAL });
-        }, []);
-        const halfLength = Math.ceil(data.length / 2);
-        if (value === 14) {
-            return [ ...formattedData ].splice(halfLength, (data.length - 1));
-        }
-
-        if (value === 7) {
-            return [ ...formattedData ].splice(data.length - 7, (data.length - 1));
-        }
-
-        return formattedData;
-    }
-    async init() {
-        const formattedData = await this.formatData();
-        this.setState((prevState) => {
-            if (prevState.formattedData === formattedData) {
-                return null;
-            } else {
-                return { formattedData };
-            }
-        });
+    init() {
         this.draw();
     }
     // Methods
     draw() {
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
-        let { formattedData: data } = this.state;
-        const { value } = this.props;
+        const parseTime = d3.timeParse('%Y-%m-%d');
+        let { data: unformattedData, value } = this.props;
+        const data = unformattedData.reduce((formatted, { created, successful, failed }) => {
+            let DATE = parseTime(created) || new Date();
+            let RAN = +successful || 0;
+            let FAIL = +failed || 0;
+            let TOTAL = +successful + failed || 0;
+            return formatted.concat({ DATE, RAN, FAIL, TOTAL });
+        }, []);
         const width = this.props.getWidth();
         const height = this.props.getHeight();
         const x = d3

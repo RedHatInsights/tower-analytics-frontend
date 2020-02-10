@@ -32,7 +32,9 @@ const DataCellEnd = styled(DataListCell)`
 const ModulesList = ({ modules, isLoading }) => (
     <DataList aria-label="Top Modules" style={ {
         maxHeight: '400px',
-        overflow: 'auto'
+        overflow: 'auto',
+        height: '400px',
+        background: 'white'
     } }>
         <DataListItem aria-labelledby="top-modules-header">
             <DataListCell>
@@ -48,6 +50,7 @@ const ModulesList = ({ modules, isLoading }) => (
             <PFDataListItem
                 aria-labelledby="modules-loading"
                 key={ isLoading }
+                style={ { border: 'none' } }
             >
                 <PFDataListCell>
                     <LoadingState />
@@ -58,6 +61,7 @@ const ModulesList = ({ modules, isLoading }) => (
             <PFDataListItem
                 aria-labelledby="modules-no-data"
                 key={ isLoading }
+                style={ { border: 'none' } }
             >
                 <PFDataListCell>
                     <NoData />

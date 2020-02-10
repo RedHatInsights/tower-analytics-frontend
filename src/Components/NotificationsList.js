@@ -100,7 +100,9 @@ const NotificationsList = ({
     <DataList style={ {
         flex: '1',
         maxHeight: '400px',
-        overflow: 'auto'
+        overflow: 'auto',
+        height: '400px',
+        background: 'white'
     } } aria-label="Notifications List">
         <DataListItem aria-labelledby="notifications-header">
             <DataListCell>
@@ -129,6 +131,7 @@ const NotificationsList = ({
             <PFDataListItem
                 aria-labelledby="notifications-loading"
                 key={ isLoading }
+                style={ { border: 'none' } }
             >
                 <PFDataListCell>
                     <LoadingState />
@@ -139,6 +142,8 @@ const NotificationsList = ({
             <PFDataListItem
                 aria-labelledby="notifications-no-data"
                 key={ isLoading }
+                style={ { border: 'none' } }
+
             >
                 <PFDataListCell>
                     <NoData />

@@ -3,7 +3,6 @@ import initializeChart from './BaseChart';
 import PropTypes from 'prop-types';
 import Tooltip from '../Utilities/Tooltip';
 import * as d3 from 'd3';
-import LoadingState from '../Components/LoadingState';
 
 class LineChart extends Component {
     constructor(props) {
@@ -11,7 +10,6 @@ class LineChart extends Component {
         this.init = this.init.bind(this);
         this.draw = this.draw.bind(this);
         this.resize = this.resize.bind(this);
-        this.formatData = this.formatData.bind(this);
         this.updateCluster = this.updateCluster.bind(this);
         this.state = {
             formattedData: [],
@@ -27,28 +25,6 @@ class LineChart extends Component {
         });
     }
 
-    formatData() {
-        const { data, value } = this.props;
-        const parseTime = d3.timeParse('%Y-%m-%d');
-
-        const formattedData = data.reduce((formatted, { created, successful, failed }) => {
-            let DATE = parseTime(created) || new Date();
-            let RAN = +successful || 0;
-            let FAIL = +failed || 0;
-            let TOTAL = +successful + failed || 0;
-            return formatted.concat({ DATE, RAN, FAIL, TOTAL });
-        }, []);
-        const halfLength = Math.ceil(data.length / 2);
-        if (value === 14) {
-            return [ ...formattedData ].splice(halfLength, data.length - 1);
-        }
-
-        if (value === 7) {
-            return [ ...formattedData ].splice(data.length - 7, data.length - 1);
-        }
-
-        return formattedData;
-    }
     getTickCount() {
         const { value } = this.props;
         if (value > 20) {
@@ -60,19 +36,11 @@ class LineChart extends Component {
     updateCluster() {
         this.init();
     }
-    async init() {
-        const formattedData = await this.formatData();
-        this.setState((prevState) => {
-            if (prevState.formattedData === formattedData) {
-                return null;
-            } else {
-                return { formattedData };
-            }
-        });
+    init() {
         this.draw();
     }
     // Methods
-    async draw() {
+    draw() {
     // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
         const width = this.props.getWidth();
@@ -118,8 +86,16 @@ class LineChart extends Component {
             svg: '#' + this.props.id,
             colors
         });
-        let { formattedData: data } = this.state;
-        const { value } = this.props;
+        const { data: unformattedData, value } = this.props;
+        const parseTime = d3.timeParse('%Y-%m-%d');
+
+        const data = unformattedData.reduce((formatted, { created, successful, failed }) => {
+            let DATE = parseTime(created) || new Date();
+            let RAN = +successful || 0;
+            let FAIL = +failed || 0;
+            let TOTAL = +successful + failed || 0;
+            return formatted.concat({ DATE, RAN, FAIL, TOTAL });
+        }, []);
         // Scale the range of the data
         x.domain(
             d3.extent(data, function(d) {
@@ -313,7 +289,6 @@ class LineChart extends Component {
         if (prevProps.value !== this.props.value) {
             this.updateCluster();
         }
-
     }
 
     componentWillUnmount() {
@@ -323,11 +298,6 @@ class LineChart extends Component {
     }
 
     render() {
-        const { data } = this.props;
-        if (data.length <= 0) {
-            return <LoadingState />;
-        }
-
         return <div id={ this.props.id } />;
     }
 }

@@ -75,8 +75,16 @@ const DataCellEnd = styled(DataListCell)`
 `;
 
 const formatTopFailedTask = data => {
-    const percentage = formatPercentage(data[0].fail_rate);
-    return `${data[0].task_name} ${percentage}`;
+    if (!data) {
+        return;
+    }
+
+    if (data && data[0]) {
+        const percentage = formatPercentage(data[0].fail_rate);
+        return `${data[0].task_name} ${percentage}`;
+    }
+
+    return `Unavailable`;
 };
 
 const renderTemplateTitle = ({ name, type }) => {
@@ -112,7 +120,9 @@ const TemplatesList = ({ templates, isLoading }) => {
     <>
       <DataList aria-label="Top Templates" style={ {
           maxHeight: '400px',
-          overflow: 'auto'
+          overflow: 'auto',
+          height: '400px',
+          background: 'white'
       } }>
           <DataListItem aria-labelledby="top-templates-header">
               <DataListCell>
@@ -128,6 +138,8 @@ const TemplatesList = ({ templates, isLoading }) => {
               <PFDataListItem
                   aria-labelledby="templates-loading"
                   key={ isLoading }
+                  style={ { border: 'none' } }
+
               >
                   <PFDataListCell>
                       <LoadingState />
@@ -138,6 +150,7 @@ const TemplatesList = ({ templates, isLoading }) => {
               <PFDataListItem
                   aria-labelledby="templates-no-data"
                   key={ isLoading }
+                  style={ { border: 'none' } }
               >
                   <PFDataListCell>
                       <NoData />
