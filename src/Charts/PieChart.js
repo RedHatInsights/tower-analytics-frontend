@@ -194,7 +194,8 @@ class PieChart extends Component {
         svg.append('g').attr('class', 'labels');
         svg.append('g').attr('class', 'lines');
         const radius = Math.min(width, height) / 2;
-        let { data } = this.props;
+        let { data: unfilteredData } = this.props;
+        const data = unfilteredData.filter(datum => datum.id !== -1);
         const total = getTotal(data);
         data.forEach(function(d) {
             d.count = +d.count;
