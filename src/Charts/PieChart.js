@@ -157,10 +157,10 @@ class PieChart extends Component {
         const color = d3.scaleOrdinal(pfmulti);
         // create our colors array to send to the Legend component
         const colors = data.reduce((colors, org) => {
-            // format complement slice as "REST"
+            // format complement slice as "Others"
             if (org.id === -1) {
                 colors.push({
-                    name: 'REST',
+                    name: 'Others',
                     value: color(org.name),
                     count: Math.round(org.count)
                 });
