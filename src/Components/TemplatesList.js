@@ -16,7 +16,7 @@ import {
 
 import { CircleIcon } from '@patternfly/react-icons';
 
-import { templatesRequest } from '../Api';
+import { readTemplateJobs } from '../Api';
 
 const success = (
     <CircleIcon
@@ -101,19 +101,29 @@ const renderTemplateTitle = ({ name, type }) => {
     );
 };
 
-const TemplatesList = ({ templates, isLoading }) => {
+const TemplatesList = ({ templates, isLoading, queryParams }) => {
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ selectedId, setSelectedId ] = useState(null);
     const [ selectedTemplate, setSelectedTemplate ] = useState([]);
     const [ relatedJobs, setRelatedJobs ] = useState([]);
+
     useEffect(() => {
-    // Make GET request to get template details
-        templatesRequest(selectedId).then(data => {
-            if (data) {
+        const fetchTemplateDetails = () => {
+            return readTemplateJobs(selectedId, { params: queryParams });
+        };
+
+        const update = () => {
+            fetchTemplateDetails().then(data => {
                 setSelectedTemplate(data);
                 setRelatedJobs(data.related_jobs);
-            }
-        });
+            });
+        };
+
+        if (selectedId) {
+            update();
+        }
+
+        ;
     }, [ selectedId ]);
 
     return (

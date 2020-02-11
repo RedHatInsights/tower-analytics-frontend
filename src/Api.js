@@ -35,14 +35,17 @@ function handleResponse(response) {
     });
 }
 
-export const templatesRequest = async id => {
+export const readTemplateJobs = (id, { params = {}}) => {
     if (!id) {
         return;
     }
 
-    let response = await fetch(templateJobsEndpoint + id + '/');
-    let data = await response.json();
-    return data;
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(templateJobsEndpoint + id + '/', formattedUrl);
+    Object.keys(params).forEach(key =>
+        url.searchParams.append(key, params[key])
+    );
+    return fetch(url).then(handleResponse);
 };
 
 export const preflightRequest = () => {
