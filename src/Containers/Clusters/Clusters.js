@@ -287,7 +287,7 @@ const Clusters = () => {
                         className="dataCard"
                         style={ { display: 'flex', marginTop: '20px' } }
                     >
-                        <TemplatesList templates={ templatesData.slice(0, 10) } isLoading={ isLoading } />
+                        <TemplatesList queryParams={ queryParams } templates={ templatesData.slice(0, 10) } isLoading={ isLoading } />
                         <ModulesList modules={ modulesData.slice(0, 10) } isLoading={ isLoading }/>
                         <NotificationsList
                             onNotificationChange={ (value) => setSelectedNotification(value) }
