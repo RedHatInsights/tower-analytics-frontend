@@ -112,7 +112,8 @@ const TemplatesList = ({ templates, isLoading, queryParams }) => {
             return readTemplateJobs(selectedId, { params: queryParams });
         };
 
-        const update = () => {
+        const update = async () => {
+            await window.insights.chrome.auth.getUser();
             fetchTemplateDetails().then(data => {
                 setSelectedTemplate(data);
                 setRelatedJobs(data.related_jobs);
