@@ -126,8 +126,9 @@ const Clusters = () => {
             ].map(p => p.catch(() => [])));
         };
 
-        const update = () => {
+        const update = async () => {
             setIsLoading(true);
+            await window.insights.chrome.auth.getUser();
             fetchEndpoints().then(([
                 { data: chartData = []},
                 { modules: modulesData = []},

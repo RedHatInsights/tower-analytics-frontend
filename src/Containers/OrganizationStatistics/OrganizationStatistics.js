@@ -128,8 +128,9 @@ const OrganizationStatistics = () => {
             ].map(p => p.catch(() => [])));
         };
 
-        const update = () => {
+        const update = async () => {
             setIsLoading(true);
+            await window.insights.chrome.auth.getUser();
             fetchEndpoints().then(([
                 { dates: groupedBarChartData = []},
                 { usages: pieChart1Data = []},
