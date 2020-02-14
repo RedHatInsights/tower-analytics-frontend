@@ -220,14 +220,11 @@ const Notifications = () => {
         setCurrPage(page);
     };
 
-    const handlePerPageSelect = perPage => {
-    // go to first page of results if limit exceeds count
-        if (meta.count < perPage) {
-            setOffset(0);
-            setCurrPage(1);
-        }
-
+    const handlePerPageSelect = (perPage, page) => {
         setLimit(perPage);
+        const nextOffset = returnOffsetVal(page);
+        setOffset(nextOffset);
+        setCurrPage(page);
     };
 
     return (
@@ -327,8 +324,8 @@ const Notifications = () => {
                           page={ currPage }
                           variant={ PaginationVariant.bottom }
                           dropDirection={ 'up' }
-                          onPerPageSelect={ (_event, perPage) => {
-                              handlePerPageSelect(perPage);
+                          onPerPageSelect={ (_event, perPage, page) => {
+                              handlePerPageSelect(perPage, page);
                           } }
                           onSetPage={ (_event, pageNumber) => {
                               handleSetPage(pageNumber);
