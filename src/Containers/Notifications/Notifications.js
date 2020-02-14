@@ -95,6 +95,14 @@ const notificationOptions = [
     { value: 'all', label: 'View All', disabled: false }
 ];
 
+const perPageOptions = [
+    { title: '5', value: 5 },
+    { title: '10', value: 10 },
+    { title: '20', value: 20 },
+    { title: '50', value: 50 },
+    { title: '100', value: 100 }
+];
+
 function formatClusterName(data) {
     const defaultClusterOptions = [
         { value: 'please choose', label: 'Select Cluster', disabled: true },
@@ -119,7 +127,9 @@ const initialQueryParams = {
     .utc()
     .subtract(1, 'month')
     .format('YYYY-MM-DD'),
-    endDate: moment.utc().format('YYYY-MM-DD')
+    endDate: moment.utc().format('YYYY-MM-DD'),
+    limit: 5,
+    offset: 0
 };
 
 const Notifications = () => {
@@ -130,9 +140,16 @@ const Notifications = () => {
     const [ selectedCluster, setSelectedCluster ] = useState('all');
     const [ selectedNotification, setSelectedNotification ] = useState('all');
     const [ firstRender, setFirstRender ] = useState(true);
-    const { queryParams, setEndDate, setStartDate, setId } = useQueryParams(
-        initialQueryParams
-    );
+    const [ meta, setMeta ] = useState({});
+    const [ currPage, setCurrPage ] = useState(1);
+    const {
+        queryParams,
+        setEndDate,
+        setStartDate,
+        setId,
+        setLimit,
+        setOffset
+    } = useQueryParams(initialQueryParams);
 
     useEffect(() => {
         if (firstRender) {
@@ -146,9 +163,12 @@ const Notifications = () => {
         };
 
         const update = () => {
-            fetchEndpoints().then(([{ notifications: notificationsData = []}]) => {
-                setNotificationsData(notificationsData);
-            });
+            fetchEndpoints().then(
+                ([{ notifications: notificationsData = [], meta }]) => {
+                    setNotificationsData(notificationsData);
+                    setMeta(meta);
+                }
+            );
         };
 
         update();
@@ -172,12 +192,13 @@ const Notifications = () => {
             getData().then(
                 ([
                     { templates: clustersData = []},
-                    { notifications: notificationsData = []}
+                    { notifications: notificationsData = [], meta }
                 ]) => {
                     if (!ignore) {
                         const clusterOptions = formatClusterName(clustersData);
                         setClusterOptions(clusterOptions);
                         setNotificationsData(notificationsData);
+                        setMeta(meta);
                         setFirstRender(false);
                     }
                 }
@@ -187,6 +208,27 @@ const Notifications = () => {
         initializeWithPreflight();
         return () => (ignore = true);
     }, []);
+
+    const returnOffsetVal = page => {
+        let offsetVal = (page - 1) * queryParams.limit;
+        return offsetVal;
+    };
+
+    const handleSetPage = page => {
+        const nextOffset = returnOffsetVal(page);
+        setOffset(nextOffset);
+        setCurrPage(page);
+    };
+
+    const handlePerPageSelect = perPage => {
+    // go to first page of results if limit exceeds count
+        if (meta.count < perPage) {
+            setOffset(0);
+            setCurrPage(1);
+        }
+
+        setLimit(perPage);
+    };
 
     return (
         <React.Fragment>
@@ -211,7 +253,7 @@ const Notifications = () => {
                           <h2>
                               <strong>Notifications</strong>
                           </h2>
-                          <Badge isRead>{ notificationsData.length }</Badge>
+                          <Badge isRead>{ meta.count ? meta.count : 0 }</Badge>
                       </TitleWithBadge>
                       <DropdownGroup>
                           <FormSelect
@@ -256,7 +298,6 @@ const Notifications = () => {
                               value={ selectedNotification }
                               onChange={ value => setSelectedNotification(value) }
                               aria-label="Select Notification Type"
-                              // style={{ width: '150px' }}
                           >
                               { notificationOptions.map(
                                   ({ disabled, value, label }, index) => (
@@ -276,16 +317,22 @@ const Notifications = () => {
                           onNotificationChange={ value => setSelectedNotification(value) }
                           filterBy={ selectedNotification }
                           options={ notificationOptions }
-                          notifications={ notificationsData.slice(notificationsData.length - 5, notificationsData.length) }
+                          notifications={ notificationsData }
                       />
                       <Pagination
-                          itemCount={ notificationsData.length }
+                          itemCount={ meta.count ? meta.count : 0 }
                           widgetId="pagination-options-menu-bottom"
-                          perPage={ 5 }
-                          page={ 1 }
+                          perPageOptions={ perPageOptions }
+                          perPage={ queryParams.limit }
+                          page={ currPage }
                           variant={ PaginationVariant.bottom }
-                          onSetPage={ () => { } }
-                          onPerPageSelect={ () => { } }
+                          dropDirection={ 'up' }
+                          onPerPageSelect={ (_event, perPage) => {
+                              handlePerPageSelect(perPage);
+                          } }
+                          onSetPage={ (_event, pageNumber) => {
+                              handleSetPage(pageNumber);
+                          } }
                           style={ { marginTop: '20px' } }
                       />
                   </CardBody>
