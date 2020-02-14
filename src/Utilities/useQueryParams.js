@@ -33,6 +33,8 @@ export const useQueryParams = initial => {
                 }
 
                 return { ...state, limit: parseInt(action.limit) };
+            case 'SET_OFFSET':
+                return { ...state, offset: action.offset };
             default:
                 throw new Error();
         }
@@ -79,6 +81,7 @@ export const useQueryParams = initial => {
             dispatch({ type: 'SET_STARTDATE', startDate });
         },
         setSortBy: sort => dispatch({ type: 'SET_SORT_BY', sort }),
-        setLimit: limit => dispatch({ type: 'SET_LIMIT', limit })
+        setLimit: limit => dispatch({ type: 'SET_LIMIT', limit }),
+        setOffset: offset => dispatch({ type: 'SET_OFFSET', offset })
     };
 };
