@@ -1,7 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Alert, AlertGroup, AlertVariant, AlertActionCloseButton } from '@patternfly/react-core';
+import {
+    Alert,
+    AlertGroup,
+    AlertVariant,
+    AlertActionCloseButton
+} from '@patternfly/react-core';
 import { ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
 import LoadingState from '../Components/LoadingState';
 import NoData from '../Components/NoData';
@@ -11,66 +16,91 @@ const ArrowIcon = styled(PFArrowIcon)`
 `;
 
 const AllNotificationTemplate = ({ notifications }) =>
-    notifications.map(({ date, message, label, notification_id: id, tower_url: url }) => {
-        if (label === '' || label === 'notice') {
-            return (
-                <Alert
-                    title="Notice"
-                    variant={ AlertVariant.default }
-                    isInline
-                    key={ date + '-' + id }
-                    action={ <AlertActionCloseButton onClose={ () => { } } /> }
-                    style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
-                >
-                    { message } <a target="_blank" rel='noopener noreferrer' href={ url }><ArrowIcon /></a>
-                </Alert>
-            );
-        }
+    notifications.map(
+        ({ date, message, label, notification_id: id, tower_url: url }) => {
+            if (label === '' || label === 'notice') {
+                return (
+                    <Alert
+                        title="Notice"
+                        variant={ AlertVariant.default }
+                        isInline
+                        key={ date + '-' + id }
+                        action={ <AlertActionCloseButton onClose={ () => {} } /> }
+                        style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
+                    >
+                        { message }{ ' ' }
+                        { url ? (
+                            <a target="_blank" rel="noopener noreferrer" href={ url }>
+                                <ArrowIcon />
+                            </a>
+                        ) : null }
+                    </Alert>
+                );
+            }
 
-        if (label === 'error' || label === 'critical') {
-            return (
-                <Alert
-                    title={ message.split(':')[0] || 'Error' }
-                    variant={ AlertVariant.danger }
-                    isInline
-                    key={ date + '-' + id }
-                    action={ <AlertActionCloseButton onClose={ () => { } } /> }
-                    style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
-                >
-                    { message.split(':')[1] || message } <a target="_blank" rel='noopener noreferrer' href={ url }><ArrowIcon /></a>
-                </Alert>
-            );
-        }
+            if (label === 'error' || label === 'critical') {
+                return (
+                    <Alert
+                        title={ message.split(':')[0] || 'Error' }
+                        variant={ AlertVariant.danger }
+                        isInline
+                        key={ date + '-' + id }
+                        action={ <AlertActionCloseButton onClose={ () => {} } /> }
+                        style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
+                    >
+                        { message.split(':')[1] || message }{ ' ' }
+                        { url ? (
+                            <a target="_blank" rel="noopener noreferrer" href={ url }>
+                                <ArrowIcon />
+                            </a>
+                        ) : null }
+                    </Alert>
+                );
+            }
 
-        if (label === 'warning') {
-            return (
-                <Alert
-                    title="Warning"
-                    variant={ AlertVariant.warning }
-                    isInline
-                    key={ date + '-' + id }
-                    action={ <AlertActionCloseButton onClose={ () => { } } /> }
-                    style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
-                >
-                    { message } <a target="_blank" rel='noopener noreferrer' href={ url }><ArrowIcon /></a>
-                </Alert>
-            );
+            if (label === 'warning') {
+                return (
+                    <Alert
+                        title="Warning"
+                        variant={ AlertVariant.warning }
+                        isInline
+                        key={ date + '-' + id }
+                        action={ <AlertActionCloseButton onClose={ () => {} } /> }
+                        style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
+                    >
+                        { message }{ ' ' }
+                        { url ? (
+                            <a target="_blank" rel="noopener noreferrer" href={ url }>
+                                <ArrowIcon />
+                            </a>
+                        ) : null }
+                    </Alert>
+                );
+            }
         }
-    });
+    );
 
 const ErrorNotificationTemplate = ({ notifications }) =>
     notifications
-    .filter(notification => notification.label === 'error' || notification.label === 'critical')
+    .filter(
+        notification =>
+            notification.label === 'error' || notification.label === 'critical'
+    )
     .map(({ message, date, notification_id: id, tower_url: url }) => (
         <Alert
             title={ message.split(':')[0] || 'Error' }
             variant={ AlertVariant.danger }
             isInline
             key={ date + '-' + id }
-            action={ <AlertActionCloseButton onClose={ () => { } } /> }
+            action={ <AlertActionCloseButton onClose={ () => {} } /> }
             style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
         >
-            { message.split(':')[1] || message } <a target="_blank" rel='noopener noreferrer' href={ url }><ArrowIcon /></a>
+            { message.split(':')[1] || message }{ ' ' }
+            { url ? (
+                <a target="_blank" rel="noopener noreferrer" href={ url }>
+                    <ArrowIcon />
+                </a>
+            ) : null }
         </Alert>
     ));
 
@@ -83,10 +113,13 @@ const WarningNotificationTemplate = ({ notifications }) =>
             variant={ AlertVariant.warning }
             isInline
             key={ date + '-' + id }
-            action={ <AlertActionCloseButton onClose={ () => { } } /> }
+            action={ <AlertActionCloseButton onClose={ () => {} } /> }
             style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
         >
-            { message } <a target="_blank" rel='noopener noreferrer' href={ url }><ArrowIcon /></a>
+            { message }{ ' ' }
+            <a target="_blank" rel="noopener noreferrer" href={ url }>
+                <ArrowIcon />
+            </a>
         </Alert>
     ));
 
