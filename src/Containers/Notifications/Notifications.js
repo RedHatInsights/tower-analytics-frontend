@@ -4,7 +4,9 @@ import moment from 'moment';
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
 import styled from 'styled-components';
+import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
+import NoData from '../../Components/NoData';
 import { preflightRequest, readClusters, readNotifications } from '../../Api';
 
 import {
@@ -141,6 +143,7 @@ const Notifications = () => {
     const [ clusterTimeFrame, setClusterTimeFrame ] = useState(31);
     const [ selectedCluster, setSelectedCluster ] = useState(-1);
     const [ firstRender, setFirstRender ] = useState(true);
+    const [ isLoading, setIsLoading ] = useState(true);
     const [ meta, setMeta ] = useState({});
     const [ currPage, setCurrPage ] = useState(1);
     const {
@@ -165,10 +168,12 @@ const Notifications = () => {
         };
 
         const update = () => {
+            setIsLoading(true);
             fetchEndpoints().then(
                 ([{ notifications: notificationsData = [], meta }]) => {
                     setNotificationsData(notificationsData);
                     setMeta(meta);
+                    setIsLoading(false);
                 }
             );
         };
@@ -187,6 +192,7 @@ const Notifications = () => {
         };
 
         async function initializeWithPreflight() {
+            setIsLoading(true);
             await window.insights.chrome.auth.getUser();
             await preflightRequest().catch(error => {
                 setPreFlightError({ preflightError: error });
@@ -202,6 +208,7 @@ const Notifications = () => {
                         setNotificationsData(notificationsData);
                         setMeta(meta);
                         setFirstRender(false);
+                        setIsLoading(false);
                     }
                 }
             );
@@ -298,6 +305,7 @@ const Notifications = () => {
                               onChange={ value => {
                                   setSeverity(value);
                                   setOffset(0);
+                                  setCurrPage(1);
                               } }
                               aria-label="Select Notification Type"
                           >
@@ -315,27 +323,33 @@ const Notifications = () => {
                       </DropdownGroup>
                   </CardHeader>
                   <CardBody>
-                      <NotificationsList
-                          filterBy={ queryParams.severity || '' }
-                          options={ notificationOptions }
-                          notifications={ notificationsData }
-                      />
-                      <Pagination
-                          itemCount={ meta.count ? meta.count : 0 }
-                          widgetId="pagination-options-menu-bottom"
-                          perPageOptions={ perPageOptions }
-                          perPage={ queryParams.limit }
-                          page={ currPage }
-                          variant={ PaginationVariant.bottom }
-                          dropDirection={ 'up' }
-                          onPerPageSelect={ (_event, perPage, page) => {
-                              handlePerPageSelect(perPage, page);
-                          } }
-                          onSetPage={ (_event, pageNumber) => {
-                              handleSetPage(pageNumber);
-                          } }
-                          style={ { marginTop: '20px' } }
-                      />
+                      { isLoading && <LoadingState /> }
+                      { !isLoading && notificationsData.length <= 0 && <NoData /> }
+                      { !isLoading && notificationsData.length > 0 && (
+                  <>
+                    <NotificationsList
+                        filterBy={ queryParams.severity || '' }
+                        options={ notificationOptions }
+                        notifications={ notificationsData }
+                    />
+                    <Pagination
+                        itemCount={ meta.count ? meta.count : 0 }
+                        widgetId="pagination-options-menu-bottom"
+                        perPageOptions={ perPageOptions }
+                        perPage={ queryParams.limit }
+                        page={ currPage }
+                        variant={ PaginationVariant.bottom }
+                        dropDirection={ 'up' }
+                        onPerPageSelect={ (_event, perPage, page) => {
+                            handlePerPageSelect(perPage, page);
+                        } }
+                        onSetPage={ (_event, pageNumber) => {
+                            handleSetPage(pageNumber);
+                        } }
+                        style={ { marginTop: '20px' } }
+                    />
+                  </>
+                      ) }
                   </CardBody>
               </Card>
           </Main>

@@ -9,7 +9,6 @@ import {
 } from '@patternfly/react-core';
 import { ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
 import LoadingState from '../Components/LoadingState';
-import NoData from '../Components/NoData';
 
 const ArrowIcon = styled(PFArrowIcon)`
   margin-left: 7px;
@@ -82,10 +81,7 @@ const AllNotificationTemplate = ({ notifications }) =>
 
 const ErrorNotificationTemplate = ({ notifications }) =>
     notifications
-    .filter(
-        notification =>
-            notification.label === 'error'
-    )
+    .filter(notification => notification.label === 'error')
     .map(({ message, date, notification_id: id, tower_url: url }) => (
         <Alert
             title={ message.split(':')[0] || 'Error' }
@@ -130,7 +126,7 @@ const NotificationsList = ({ filterBy, notifications }) => (
         { filterBy === '' && (
             <AllNotificationTemplate notifications={ notifications } />
         ) }
-        { !isLoading && filterBy === 'error' && (
+        { filterBy === 'error' && (
             <ErrorNotificationTemplate notifications={ notifications } />
         ) }
         { filterBy === 'warning' && (
