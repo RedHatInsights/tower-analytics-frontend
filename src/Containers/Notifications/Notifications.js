@@ -92,7 +92,8 @@ const notificationOptions = [
     },
     { value: 'error', label: 'View Critical', disabled: false },
     { value: 'warning', label: 'View Warning', disabled: false },
-    { value: 'all', label: 'View All', disabled: false }
+    { value: 'notice', label: 'View Notice', disabled: false },
+    { value: '', label: 'View All', disabled: false }
 ];
 
 const perPageOptions = [
@@ -106,7 +107,7 @@ const perPageOptions = [
 function formatClusterName(data) {
     const defaultClusterOptions = [
         { value: 'please choose', label: 'Select Cluster', disabled: true },
-        { value: 'all', label: 'All Clusters', disabled: false }
+        { value: -1, label: 'All Clusters', disabled: false }
     ];
     return data.reduce(
         (formatted, { label, cluster_id: id, install_uuid: uuid }) => {
@@ -123,6 +124,7 @@ function formatClusterName(data) {
 }
 
 const initialQueryParams = {
+    id: -1,
     startDate: moment
     .utc()
     .subtract(1, 'month')
@@ -137,8 +139,7 @@ const Notifications = () => {
     const [ notificationsData, setNotificationsData ] = useState([]);
     const [ clusterOptions, setClusterOptions ] = useState([]);
     const [ clusterTimeFrame, setClusterTimeFrame ] = useState(31);
-    const [ selectedCluster, setSelectedCluster ] = useState('all');
-    const [ selectedNotification, setSelectedNotification ] = useState('all');
+    const [ selectedCluster, setSelectedCluster ] = useState(-1);
     const [ firstRender, setFirstRender ] = useState(true);
     const [ meta, setMeta ] = useState({});
     const [ currPage, setCurrPage ] = useState(1);
@@ -148,7 +149,8 @@ const Notifications = () => {
         setStartDate,
         setId,
         setLimit,
-        setOffset
+        setOffset,
+        setSeverity
     } = useQueryParams(initialQueryParams);
 
     useEffect(() => {
@@ -292,8 +294,11 @@ const Notifications = () => {
                           </FormSelect>
                           <FormSelect
                               name="selectedNotification"
-                              value={ selectedNotification }
-                              onChange={ value => setSelectedNotification(value) }
+                              value={ queryParams.severity || '' }
+                              onChange={ value => {
+                                  setSeverity(value);
+                                  setOffset(0);
+                              } }
                               aria-label="Select Notification Type"
                           >
                               { notificationOptions.map(
@@ -311,8 +316,7 @@ const Notifications = () => {
                   </CardHeader>
                   <CardBody>
                       <NotificationsList
-                          onNotificationChange={ value => setSelectedNotification(value) }
-                          filterBy={ selectedNotification }
+                          filterBy={ queryParams.severity || '' }
                           options={ notificationOptions }
                           notifications={ notificationsData }
                       />

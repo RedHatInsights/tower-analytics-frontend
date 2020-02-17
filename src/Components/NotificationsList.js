@@ -38,7 +38,7 @@ const AllNotificationTemplate = ({ notifications }) =>
                 );
             }
 
-            if (label === 'error' || label === 'critical') {
+            if (label === 'error') {
                 return (
                     <Alert
                         title={ message.split(':')[0] || 'Error' }
@@ -84,7 +84,7 @@ const ErrorNotificationTemplate = ({ notifications }) =>
     notifications
     .filter(
         notification =>
-            notification.label === 'error' || notification.label === 'critical'
+            notification.label === 'error'
     )
     .map(({ message, date, notification_id: id, tower_url: url }) => (
         <Alert
@@ -127,7 +127,7 @@ const NotificationsList = ({ filterBy, notifications }) => (
   <>
     <AlertGroup>
         { notifications.length <= 0 && <LoadingState /> }
-        { filterBy === 'all' && (
+        { filterBy === '' && (
             <AllNotificationTemplate notifications={ notifications } />
         ) }
         { !isLoading && filterBy === 'error' && (

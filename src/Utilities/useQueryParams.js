@@ -35,6 +35,13 @@ export const useQueryParams = initial => {
                 return { ...state, limit: parseInt(action.limit) };
             case 'SET_OFFSET':
                 return { ...state, offset: action.offset };
+            case 'SET_SEVERITY':
+                if (action.severity.length <= 0) {
+                    const { severity: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, severity: action.severity };
             default:
                 throw new Error();
         }
@@ -82,6 +89,7 @@ export const useQueryParams = initial => {
         },
         setSortBy: sort => dispatch({ type: 'SET_SORT_BY', sort }),
         setLimit: limit => dispatch({ type: 'SET_LIMIT', limit }),
-        setOffset: offset => dispatch({ type: 'SET_OFFSET', offset })
+        setOffset: offset => dispatch({ type: 'SET_OFFSET', offset }),
+        setSeverity: severity => dispatch({ type: 'SET_SEVERITY', severity })
     };
 };
