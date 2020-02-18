@@ -268,6 +268,8 @@ const Notifications = () => {
                               onChange={ value => {
                                   setSelectedCluster(value);
                                   setId(value);
+                                  setOffset(0);
+                                  setCurrPage(1);
                               } }
                               aria-label="Select Cluster"
                           >
