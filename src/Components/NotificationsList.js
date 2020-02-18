@@ -100,6 +100,27 @@ const ErrorNotificationTemplate = ({ notifications }) =>
         </Alert>
     ));
 
+const NoticeNotificationTemplate = ({ notifications }) =>
+    notifications
+    .filter(notification => notification.label === 'notice')
+    .map(({ message, date, notification_id: id, tower_url: url }) => (
+        <Alert
+            title="Notice"
+            variant={ AlertVariant.default }
+            isInline
+            key={ date + '-' + id }
+            action={ <AlertActionCloseButton onClose={ () => { } } /> }
+            style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
+        >
+            { message }{ ' ' }
+            { url ? (
+                <a target="_blank" rel="noopener noreferrer" href={ url }>
+                    <ArrowIcon />
+                </a>
+            ) : null }
+        </Alert>
+    ));
+
 const WarningNotificationTemplate = ({ notifications }) =>
     notifications
     .filter(notification => notification.label === 'warning')
@@ -125,6 +146,9 @@ const NotificationsList = ({ filterBy, notifications }) => (
         { notifications.length <= 0 && <LoadingState /> }
         { filterBy === '' && (
             <AllNotificationTemplate notifications={ notifications } />
+        ) }
+        { filterBy === 'notice' && (
+            <NoticeNotificationTemplate notifications={ notifications } />
         ) }
         { filterBy === 'error' && (
             <ErrorNotificationTemplate notifications={ notifications } />
