@@ -9,21 +9,24 @@ import {
     FormSelectOption
 } from '@patternfly/react-core';
 
-import { WarningTriangleIcon, ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
+import {
+    WarningTriangleIcon,
+    ArrowIcon as PFArrowIcon
+} from '@patternfly/react-icons';
 import LoadingState from '../Components/LoadingState';
 import NoData from '../Components/NoData';
 
 const ArrowIcon = styled(PFArrowIcon)`
-    margin-left: 7px;
+  margin-left: 7px;
 `;
 
 const DataListCell = styled(PFDataListCell)`
-    --pf-c-data-list__cell-cell--MarginRight: 0;
-    &.pf-c-data-list__cell {
-        padding: 0;
-        display: flex;
-        align-items: center;
-    }
+  --pf-c-data-list__cell-cell--MarginRight: 0;
+  &.pf-c-data-list__cell {
+    padding: 0;
+    display: flex;
+    align-items: center;
+  }
 `;
 
 const DataListItem = styled(PFDataListItem)`
@@ -41,15 +44,15 @@ const DataCellEnd = styled(DataListCell)`
 const colors = { error: '#db524b', warning: '#f0ad37', '': '' };
 
 const NotificationTemplate = ({ notifications }) =>
-    notifications.map(({ date, message, label, notification_id: id, tower_url: url }) => (
-        <DataListItem
-            aria-labelledby="notifications-detail"
-            key={ date + '-' + id }
-        >
-            <DataListCell>
-                <span>
-                    { label === 'error' ||
-          label === 'warning' ? (
+    notifications.map(
+        ({ date, message, label, notification_id: id, tower_url: url }) => (
+            <DataListItem
+                aria-labelledby="notifications-detail"
+                key={ date + '-' + id }
+            >
+                <DataListCell>
+                    <span>
+                        { label === 'error' || label === 'warning' ? (
                             <WarningTriangleIcon
                                 style={ {
                                     color: colors[label],
@@ -57,12 +60,17 @@ const NotificationTemplate = ({ notifications }) =>
                                 } }
                             />
                         ) : null }
-                    { message }
-                    <a target="_blank" rel='noopener noreferrer' href={ url }><ArrowIcon /></a>
-                </span>
-            </DataListCell>
-        </DataListItem>
-    ));
+                        { message }
+                        { url ? (
+                            <a target="_blank" rel="noopener noreferrer" href={ url }>
+                                <ArrowIcon />
+                            </a>
+                        ) : null }
+                    </span>
+                </DataListCell>
+            </DataListItem>
+        )
+    );
 
 const ErrorNotificationTemplate = ({ notifications }) =>
     notifications
@@ -74,17 +82,20 @@ const ErrorNotificationTemplate = ({ notifications }) =>
         >
             <DataListCell>
                 <span>
-                    { label === 'error' ||
-            label === 'warning' ? (
-                            <WarningTriangleIcon
-                                style={ {
-                                    color: colors[label],
-                                    marginRight: '5px'
-                                } }
-                            />
-                        ) : null }
+                    { label === 'error' || label === 'warning' ? (
+                        <WarningTriangleIcon
+                            style={ {
+                                color: colors[label],
+                                marginRight: '5px'
+                            } }
+                        />
+                    ) : null }
                     { message }
-                    <a target="_blank" rel='noopener noreferrer' href={ url }><ArrowIcon /></a>
+                    { url ? (
+                        <a target="_blank" rel="noopener noreferrer" href={ url }>
+                            <ArrowIcon />
+                        </a>
+                    ) : null }
                 </span>
             </DataListCell>
         </DataListItem>
@@ -97,13 +108,16 @@ const NotificationsList = ({
     notifications,
     isLoading
 }) => (
-    <DataList style={ {
-        flex: '1',
-        maxHeight: '400px',
-        overflow: 'auto',
-        height: '400px',
-        background: 'white'
-    } } aria-label="Notifications List">
+    <DataList
+        style={ {
+            flex: '1',
+            maxHeight: '400px',
+            overflow: 'auto',
+            height: '400px',
+            background: 'white'
+        } }
+        aria-label="Notifications List"
+    >
         <DataListItem aria-labelledby="notifications-header">
             <DataListCell>
                 <h3>Notifications</h3>
@@ -143,7 +157,6 @@ const NotificationsList = ({
                 aria-labelledby="notifications-no-data"
                 key={ isLoading }
                 style={ { border: 'none' } }
-
             >
                 <PFDataListCell>
                     <NoData />
