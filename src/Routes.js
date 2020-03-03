@@ -31,10 +31,10 @@ const OrganizationStatistics = asyncComponent(() =>
         './Containers/OrganizationStatistics/OrganizationStatistics'
     ),
 );
-const ROICalculator = asyncComponent(() =>
+const AutomationCalculator = asyncComponent(() =>
     import(
         /* webpackChunkName: "automation_analytics" */
-        './Containers/ROICalculator/ROICalculator'
+        './Containers/AutomationCalculator/AutomationCalculator'
     ),
 );
 
@@ -66,7 +66,7 @@ export const Routes = (props) => {
         <Switch>
             <InsightsRoute path={ Paths.clusters } component={ Clusters } rootClass="clusters"/>
             <InsightsRoute path={ Paths.organizationStatistics } component={ OrganizationStatistics } rootClass="organizationStatistics"/>
-            <InsightsRoute path={ Paths.roiCalculator } component={ ROICalculator } rootClass="roiCalculator"/>
+            <InsightsRoute path={ Paths.automationCalculator } component={ AutomationCalculator } rootClass="automationCalculator"/>
             { /* Finally, catch all unmatched routes and redirect to Clusters page */ }
             <Route render={ () => some(Paths, p => p === path) ? null : (<Redirect to={ Paths.clusters }/>) }/>
         </Switch>
