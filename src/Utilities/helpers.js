@@ -39,3 +39,34 @@ export const capitalize = (s) => {
 
     return s.charAt(0).toUpperCase() + s.slice(1);
 };
+export function calculateDelta(a, b) {
+    if (!parseInt(b)) {
+        return 0;
+    }
+
+    return b - a;
+}
+
+export function convertMinsToMs(mins) {
+    if (!parseInt(mins)) {
+        return 0;
+    }
+
+    return mins * 60000;
+}
+
+export function convertMsToMins(ms) {
+    return ms / 60000;
+}
+
+export function convertSecondsToMins(seconds) {
+    return seconds / 60;
+}
+
+export function convertMinsToSeconds(mins) {
+    return mins * 60;
+}
+
+export function convertSecondsToHours(seconds) {
+    return seconds / 3600;
+}
