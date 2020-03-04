@@ -7,12 +7,13 @@ const { config: webpackConfig, plugins } = config({
 });
 const overrideConfig = require('./overrides.config');
 
-const { output: { filename }} = overrideConfig;
+const { output: { filename, chunkFilename }} = overrideConfig;
 const combined = {
     ...webpackConfig,
     output: {
         ...webpackConfig.output,
-        filename
+        filename,
+        chunkFilename
     }
 };
 
