@@ -8,10 +8,14 @@ const { config: webpackConfig, plugins } = config({
 });
 const overrideConfig = require('./overrides.config');
 const { output: { filename }} = overrideConfig;
-
 const combined = {
-    ...webpackConfig, output: { filename }
+    ...webpackConfig,
+    output: {
+        ...webpackConfig.output,
+        filename
+    }
 };
+
 module.exports = {
     ...combined,
     plugins
