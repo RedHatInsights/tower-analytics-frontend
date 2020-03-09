@@ -5,7 +5,6 @@ import styled from 'styled-components';
 // import moment from 'moment';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import useDebounce from '../../Utilities/useDebounce';
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
 import EmptyState from '../../Components/EmptyState';
@@ -33,7 +32,7 @@ import { DollarSignIcon } from '@patternfly/react-icons';
 
 import TopTemplatesSavings from '../../Charts/ROITopTemplates';
 
-import { calculateDelta, convertMinsToMs, convertMsToMins, convertSecondsToMins, convertMinsToSeconds, convertSecondsToHours } from '../../Utilities/helpers';
+import { calculateDelta, convertSecondsToMins, convertMinsToSeconds, convertSecondsToHours } from '../../Utilities/helpers';
 
 let sampleAPIResponse = [
     // time in seconds
@@ -94,7 +93,6 @@ let sampleAPIResponse = [
 ];
 
 let defaultAvgRunVal = 3600; // 1 hr
-// let defaultAvgRunVal = 0; // 1 hr
 
 // create our array to feed to D3
 const formatData = (response, defaults) => {
@@ -108,13 +106,11 @@ const formatData = (response, defaults) => {
                     {
                         type: 'manual',
                         avg_run: defaults,
-                        // run_count,
                         total: defaults * run_count
                     },
                     {
                         type: 'automated',
                         avg_run,
-                        // run_count,
                         total: avg_run * run_count
                     }
                 ]
@@ -154,22 +150,13 @@ const AutomationCalculator = () => {
     const [placeholderData, setPlaceholderData] = useState(initialData);
     const [costManual, setCostManual] = useState(0);
     const [costAutomation, setCostAutomation] = useState(0);
-    const [timeout, setTimeout] = useState(null);
     const [totalSavings, setTotalSavings] = useState(0);
-    // const debounceVal = useDebounce(placeholderVal, 500);
-
-    // useEffect(() => {
-    //     if (debounceVal) {
-    //         handleChange(debounceVal);
-    //     }
-    // }, [debounceVal])
     useEffect(() => {
         let data = [...placeholderData];
         let total = 0;
 
         data.forEach(datum => {
             total += calculateDelta(convertSecondsToHours(datum.calculations[1].total) * costAutomation, convertSecondsToHours(datum.calculations[0].total) * costManual)
-            // console.log('total', total);
         })
         const totalWithCommas = total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         setTotalSavings('$' + totalWithCommas);
@@ -179,7 +166,8 @@ const AutomationCalculator = () => {
         let data = [...placeholderData];
         data.map(datum => {
             if (datum.id === id) {
-                datum.calculations[0].total = ms;
+                datum.calculations[0].avg_run = ms;
+                datum.calculations[0].total = ms * datum.run_count;
             }
         });
         return data;
@@ -264,7 +252,7 @@ const AutomationCalculator = () => {
                         { placeholderData.map(data => (
                             <InputAndText key={ data.id }>
                                 <InputGroup>
-                                    <TextInput id={data.id} type="number" aria-label="time run manually" value={ convertSecondsToMins(data.calculations[0].total) } onChange={
+                                    <TextInput id={data.id} type="number" aria-label="time run manually" value={ convertSecondsToMins(data.calculations[0].avg_run) } onChange={
                                         (e) => {
                                             handleChange(e, data.id);
                                         }
