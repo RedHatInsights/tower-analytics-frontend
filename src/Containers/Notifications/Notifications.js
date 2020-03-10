@@ -167,8 +167,9 @@ const Notifications = () => {
             );
         };
 
-        const update = () => {
+        const update = async () => {
             setIsLoading(true);
+            await window.insights.chrome.auth.getUser();
             fetchEndpoints().then(
                 ([{ notifications: notificationsData = [], meta }]) => {
                     setNotificationsData(notificationsData);
