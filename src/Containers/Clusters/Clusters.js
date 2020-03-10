@@ -11,8 +11,7 @@ import {
     readChart30,
     readClusters,
     readModules,
-    readTemplates,
-    readNotifications
+    readTemplates
 } from '../../Api';
 
 import {
@@ -34,7 +33,6 @@ import { FilterIcon } from '@patternfly/react-icons';
 import BarChart from '../../Charts/BarChart';
 import LineChart from '../../Charts/LineChart';
 import ModulesList from '../../Components/ModulesList';
-import NotificationsList from '../../Components/NotificationsList';
 import TemplatesList from '../../Components/TemplatesList';
 
 const CardHeader = styled(PFCardHeader)`
@@ -59,16 +57,6 @@ const timeFrameOptions = [
     { value: 7, label: 'Past Week', disabled: false },
     { value: 14, label: 'Past 2 Weeks', disabled: false },
     { value: 31, label: 'Past Month', disabled: false }
-];
-
-const notificationOptions = [
-    {
-        value: 'please choose',
-        label: 'Select Notification Type',
-        disabled: true
-    },
-    { value: 'error', label: 'View Critical', disabled: false },
-    { value: 'all', label: 'View All', disabled: false }
 ];
 
 function formatClusterName(data) {
@@ -101,13 +89,11 @@ const Clusters = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ barChartData, setBarChartData ] = useState([]);
     const [ lineChartData, setLineChartData ] = useState([]);
-    const [ notificationsData, setNotificationsData ] = useState([]);
     const [ templatesData, setTemplatesData ] = useState([]);
     const [ modulesData, setModulesData ] = useState([]);
     const [ clusterOptions, setClusterOptions ] = useState([]);
     const [ clusterTimeFrame, setClusterTimeFrame ] = useState(31);
     const [ selectedCluster, setSelectedCluster ] = useState('all');
-    const [ selectedNotification, setSelectedNotification ] = useState('all');
     const [ firstRender, setFirstRender ] = useState(true);
     const [ isLoading, setIsLoading ] = useState(true);
     const { queryParams, setEndDate, setStartDate, setId } = useQueryParams(initialQueryParams);
@@ -121,8 +107,7 @@ const Clusters = () => {
             return Promise.all([
                 readChart30({ params: queryParams }),
                 readModules({ params: queryParams }),
-                readTemplates({ params: queryParams }),
-                readNotifications({ params: queryParams })
+                readTemplates({ params: queryParams })
             ].map(p => p.catch(() => [])));
         };
 
@@ -132,8 +117,7 @@ const Clusters = () => {
             fetchEndpoints().then(([
                 { data: chartData = []},
                 { modules: modulesData = []},
-                { templates: templatesData = []},
-                { notifications: notificationsData = []}
+                { templates: templatesData = []}
             ]) => {
                 if (queryParams.id) {
                     setLineChartData(chartData);
@@ -143,7 +127,6 @@ const Clusters = () => {
 
                 setModulesData(modulesData);
                 setTemplatesData(templatesData);
-                setNotificationsData(notificationsData);
                 setIsLoading(false);
             });
         };
@@ -158,8 +141,7 @@ const Clusters = () => {
                 readChart30({ params: queryParams }),
                 readClusters(),
                 readModules({ params: queryParams }),
-                readTemplates({ params: queryParams }),
-                readNotifications({ params: queryParams })
+                readTemplates({ params: queryParams })
             ].map(p => p.catch(() => [])));
         };
 
@@ -173,8 +155,7 @@ const Clusters = () => {
                 { data: barChartData = []},
                 { templates: clustersData = []},
                 { modules: modulesData = []},
-                { templates: templatesData = []},
-                { notifications: notificationsData = []}
+                { templates: templatesData = []}
             ]) => {
                 if (!ignore) {
                     const clusterOptions = formatClusterName(clustersData);
@@ -183,7 +164,6 @@ const Clusters = () => {
                     setClusterOptions(clusterOptions);
                     setModulesData(modulesData);
                     setTemplatesData(templatesData);
-                    setNotificationsData(notificationsData);
                     setFirstRender(false);
                     setIsLoading(false);
                 }
@@ -290,13 +270,6 @@ const Clusters = () => {
                     >
                         <TemplatesList queryParams={ queryParams } templates={ templatesData.slice(0, 10) } isLoading={ isLoading } />
                         <ModulesList modules={ modulesData.slice(0, 10) } isLoading={ isLoading }/>
-                        <NotificationsList
-                            onNotificationChange={ (value) => setSelectedNotification(value) }
-                            filterBy={ selectedNotification }
-                            options={ notificationOptions }
-                            notifications={ notificationsData }
-                            isLoading={ isLoading }
-                        />
                     </div>
                 </Main>
                 </>
