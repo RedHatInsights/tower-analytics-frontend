@@ -4,8 +4,7 @@ import styled from 'styled-components';
 import {
     Alert,
     AlertGroup,
-    AlertVariant,
-    AlertActionCloseButton
+    AlertVariant
 } from '@patternfly/react-core';
 import { ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
 import LoadingState from '../Components/LoadingState';
@@ -24,7 +23,6 @@ const AllNotificationTemplate = ({ notifications }) =>
                         variant={ AlertVariant.default }
                         isInline
                         key={ date + '-' + id }
-                        action={ <AlertActionCloseButton onClose={ () => {} } /> }
                         style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
                     >
                         { message }{ ' ' }
@@ -44,7 +42,6 @@ const AllNotificationTemplate = ({ notifications }) =>
                         variant={ AlertVariant.danger }
                         isInline
                         key={ date + '-' + id }
-                        action={ <AlertActionCloseButton onClose={ () => {} } /> }
                         style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
                     >
                         { message.split(':')[1] || message }{ ' ' }
@@ -64,7 +61,6 @@ const AllNotificationTemplate = ({ notifications }) =>
                         variant={ AlertVariant.warning }
                         isInline
                         key={ date + '-' + id }
-                        action={ <AlertActionCloseButton onClose={ () => {} } /> }
                         style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
                     >
                         { message }{ ' ' }
@@ -88,7 +84,6 @@ const ErrorNotificationTemplate = ({ notifications }) =>
             variant={ AlertVariant.danger }
             isInline
             key={ date + '-' + id }
-            action={ <AlertActionCloseButton onClose={ () => {} } /> }
             style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
         >
             { message.split(':')[1] || message }{ ' ' }
@@ -109,7 +104,6 @@ const NoticeNotificationTemplate = ({ notifications }) =>
             variant={ AlertVariant.default }
             isInline
             key={ date + '-' + id }
-            action={ <AlertActionCloseButton onClose={ () => { } } /> }
             style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
         >
             { message }{ ' ' }
@@ -130,7 +124,6 @@ const WarningNotificationTemplate = ({ notifications }) =>
             variant={ AlertVariant.warning }
             isInline
             key={ date + '-' + id }
-            action={ <AlertActionCloseButton onClose={ () => {} } /> }
             style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
         >
             { message }{ ' ' }
