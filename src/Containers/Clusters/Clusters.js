@@ -61,16 +61,16 @@ const title = (
 );
 
 const timeFrameOptions = [
-    { value: 'please choose', label: 'Select Date Range', disabled: true },
-    { value: 7, label: 'Past Week', disabled: false },
-    { value: 14, label: 'Past 2 Weeks', disabled: false },
-    { value: 31, label: 'Past Month', disabled: false }
+    { value: 'please choose', label: 'Select date range', disabled: true },
+    { value: 7, label: 'Past week', disabled: false },
+    { value: 14, label: 'Past 2 weeks', disabled: false },
+    { value: 31, label: 'Past month', disabled: false }
 ];
 
 function formatClusterName(data) {
     const defaultClusterOptions = [
-        { value: 'please choose', label: 'Select Cluster', disabled: true },
-        { value: 'all', label: 'All Clusters', disabled: false }
+        { value: 'please choose', label: 'Select cluster', disabled: true },
+        { value: 'all', label: 'All clusters', disabled: false }
     ];
     return data.reduce(
         (formatted, { label, cluster_id: id, install_uuid: uuid }) => {
@@ -262,9 +262,9 @@ const Clusters = () => {
           </Main>
           <Main>
               <Card>
-                  <CardHeader>
-                      <h2>Job Status</h2>
-                  </CardHeader>
+                  <PFCardHeader>
+                      <h2>Job status</h2>
+                  </PFCardHeader>
                   <CardBody>
                       { isLoading && !preflightError && <LoadingState /> }
                       { selectedCluster === 'all' &&

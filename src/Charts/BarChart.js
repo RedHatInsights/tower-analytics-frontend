@@ -101,7 +101,7 @@ class BarChart extends Component {
         .attr('x', 0 - height / 2)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
-        .text('Jobs Across All Clusters');
+        .text('Jobs across all clusters');
         // Add the X Axis
         let ticks;
         const maxTicks = Math.round(data.length / (value / 2));
