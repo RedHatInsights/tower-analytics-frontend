@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
 function initializeChart(Chart) {
@@ -38,5 +39,9 @@ function initializeChart(Chart) {
         }
     };
 }
+
+initializeChart.propTypes = {
+    Chart: PropTypes.element
+};
 
 export default initializeChart;
