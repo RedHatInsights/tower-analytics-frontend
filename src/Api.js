@@ -10,6 +10,7 @@ const pieChart2Endpoint = '/api/tower-analytics/job_events_by_org_30/';
 const preflightEndpoint = '/api/tower-analytics/authorized/';
 const templateJobsEndpoint = '/api/tower-analytics/template_jobs/';
 const templatesEndPoint = '/api/tower-analytics/templates/';
+const roiEndpoint = '/api/tower-analytics/roi_templates/';
 
 function getAbsoluteUrl() {
     const url = window.location.href;
@@ -113,6 +114,15 @@ export const readJobRunsByOrg = ({ params = {}}) => {
 export const readJobEventsByOrg = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(pieChart2Endpoint, formattedUrl);
+    Object.keys(params).forEach(key =>
+        url.searchParams.append(key, params[key])
+    );
+    return fetch(url).then(handleResponse);
+};
+
+export const readROI = ({ params = {}}) => {
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(roiEndpoint, formattedUrl);
     Object.keys(params).forEach(key =>
         url.searchParams.append(key, params[key])
     );
