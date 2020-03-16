@@ -8,6 +8,7 @@ import {
 } from '@patternfly/react-core';
 import { ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
 import LoadingState from '../Components/LoadingState';
+import { capitalize } from '../Utilities/helpers';
 
 const ArrowIcon = styled(PFArrowIcon)`
   margin-left: 7px;
@@ -19,7 +20,7 @@ const AllNotificationTemplate = ({ notifications }) =>
             if (label === '' || label === 'notice') {
                 return (
                     <Alert
-                        title="Notice"
+                        title={ capitalize(label) }
                         variant={ AlertVariant.default }
                         isInline
                         key={ date + '-' + id }
@@ -38,13 +39,13 @@ const AllNotificationTemplate = ({ notifications }) =>
             if (label === 'error') {
                 return (
                     <Alert
-                        title={ message.split(':')[0] || 'Error' }
+                        title={ capitalize(label) }
                         variant={ AlertVariant.danger }
                         isInline
                         key={ date + '-' + id }
                         style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
                     >
-                        { message.split(':')[1] || message }{ ' ' }
+                        { message }{ ' ' }
                         { url ? (
                             <a target="_blank" rel="noopener noreferrer" href={ url }>
                                 <ArrowIcon />
@@ -57,7 +58,7 @@ const AllNotificationTemplate = ({ notifications }) =>
             if (label === 'warning') {
                 return (
                     <Alert
-                        title="Warning"
+                        title={ capitalize(label) }
                         variant={ AlertVariant.warning }
                         isInline
                         key={ date + '-' + id }
@@ -78,15 +79,15 @@ const AllNotificationTemplate = ({ notifications }) =>
 const ErrorNotificationTemplate = ({ notifications }) =>
     notifications
     .filter(notification => notification.label === 'error')
-    .map(({ message, date, notification_id: id, tower_url: url }) => (
+    .map(({ message, date, label, notification_id: id, tower_url: url }) => (
         <Alert
-            title={ message.split(':')[0] || 'Error' }
+            title={ capitalize(label) }
             variant={ AlertVariant.danger }
             isInline
             key={ date + '-' + id }
             style={ { marginTop: 'var(--pf-c-alert-group__item--MarginTop)' } }
         >
-            { message.split(':')[1] || message }{ ' ' }
+            { message }{ ' ' }
             { url ? (
                 <a target="_blank" rel="noopener noreferrer" href={ url }>
                     <ArrowIcon />
@@ -98,9 +99,9 @@ const ErrorNotificationTemplate = ({ notifications }) =>
 const NoticeNotificationTemplate = ({ notifications }) =>
     notifications
     .filter(notification => notification.label === 'notice')
-    .map(({ message, date, notification_id: id, tower_url: url }) => (
+    .map(({ message, date, label, notification_id: id, tower_url: url }) => (
         <Alert
-            title="Notice"
+            title={ capitalize(label) }
             variant={ AlertVariant.default }
             isInline
             key={ date + '-' + id }
@@ -118,9 +119,9 @@ const NoticeNotificationTemplate = ({ notifications }) =>
 const WarningNotificationTemplate = ({ notifications }) =>
     notifications
     .filter(notification => notification.label === 'warning')
-    .map(({ message, date, notification_id: id, tower_url: url }) => (
+    .map(({ message, date, label, notification_id: id, tower_url: url }) => (
         <Alert
-            title={ message }
+            title={ capitalize(label) }
             variant={ AlertVariant.warning }
             isInline
             key={ date + '-' + id }

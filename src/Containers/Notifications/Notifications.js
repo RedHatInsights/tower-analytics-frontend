@@ -89,7 +89,7 @@ const timeFrameOptions = [
 const notificationOptions = [
     {
         value: 'please choose',
-        label: 'Select Notification Type',
+        label: 'Select Notification Severity',
         disabled: true
     },
     { value: 'error', label: 'View Critical', disabled: false },
@@ -108,8 +108,9 @@ const perPageOptions = [
 
 function formatClusterName(data) {
     const defaultClusterOptions = [
-        { value: 'please choose', label: 'Select Cluster', disabled: true },
-        { value: -1, label: 'All Clusters', disabled: false }
+        { value: 'please choose', label: 'Select Notification Type', disabled: true },
+        { value: '', label: 'All Clusters', disabled: false },
+        { value: -1, label: 'Unassociated', disabled: false }
     ];
     return data.reduce(
         (formatted, { label, cluster_id: id, install_uuid: uuid }) => {
@@ -126,7 +127,6 @@ function formatClusterName(data) {
 }
 
 const initialQueryParams = {
-    id: -1,
     startDate: moment
     .utc()
     .subtract(1, 'month')
@@ -141,7 +141,7 @@ const Notifications = () => {
     const [ notificationsData, setNotificationsData ] = useState([]);
     const [ clusterOptions, setClusterOptions ] = useState([]);
     const [ clusterTimeFrame, setClusterTimeFrame ] = useState(31);
-    const [ selectedCluster, setSelectedCluster ] = useState(-1);
+    const [ selectedCluster, setSelectedCluster ] = useState('');
     const [ firstRender, setFirstRender ] = useState(true);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ meta, setMeta ] = useState({});
