@@ -1,4 +1,6 @@
+/* eslint react/prop-types: 0 */
 import React from 'react';
+import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
 function initializeChart(Chart) {
@@ -8,6 +10,12 @@ function initializeChart(Chart) {
             this.getWidth = this.getWidth.bind(this);
             this.getHeight = this.getHeight.bind(this);
         }
+
+        propTypes = {
+            id: PropTypes.string,
+            margin: PropTypes.object
+        }
+
         // Methods
         getWidth() {
             let width;
@@ -38,5 +46,9 @@ function initializeChart(Chart) {
         }
     };
 }
+
+initializeChart.propTypes = {
+    Chart: PropTypes.element
+};
 
 export default initializeChart;
