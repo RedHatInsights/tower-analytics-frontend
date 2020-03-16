@@ -40,12 +40,13 @@ let defaultAvgRunVal = 3600; // 1 hr
 
 // create our array to feed to D3
 const formatData = (response, defaults) => {
-    return response.reduce((formatted, { name, template_id: id, successful_run_count, successful_elapsed_sum }) => {
+    return response.reduce((formatted, { name, template_id: id, successful_run_count, successful_elapsed_sum, successful_host_count_avg }) => {
         const avg_run = (successful_elapsed_sum / successful_run_count);
         formatted.push({
             name,
             id,
             run_count: successful_run_count,
+            host_count: Math.ceil(successful_host_count_avg) || 0,
             calculations: [
                 {
                     type: 'manual',
@@ -54,7 +55,7 @@ const formatData = (response, defaults) => {
                 },
                 {
                     type: 'automated',
-                    avg_run,
+                    avg_run: avg_run || 0,
                     total: avg_run * successful_run_count || 0
                 }
             ]
@@ -130,19 +131,18 @@ const AutomationCalculator = () => {
     useEffect(() => {
         let data = [ ...formattedData ];
         let total = 0;
-
         data.forEach(datum => {
             total += calculateDelta(
-                convertSecondsToHours(datum.calculations[1].total) * costAutomation,
-                convertSecondsToHours(datum.calculations[0].total) * costManual
-            );
+                convertSecondsToHours(datum.calculations[1].avg_run) * costAutomation,
+                convertSecondsToHours(datum.calculations[0].avg_run) * costManual
+            ) * datum.run_count * datum.host_count;
         });
         const totalWithCommas = total
         .toFixed(2)
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         setTotalSavings('$' + totalWithCommas);
-    }, [ formattedData, costManual, costAutomation ]);
+    }, [ formattedData, costAutomation, costManual ]);
 
     const updateData = (ms, id) => {
         let data = [ ...formattedData ];
@@ -155,9 +155,9 @@ const AutomationCalculator = () => {
         return data;
     };
 
-    const handleChange = (e, id) => {
-        const ms = convertMinsToSeconds(e);
-        const updated = updateData(ms, id);
+    const handleManualTimeChange = (minutes, id) => {
+        const seconds = convertMinsToSeconds(minutes);
+        const updated = updateData(seconds, id);
         setFormattedData(updated);
     };
 
@@ -291,7 +291,7 @@ const AutomationCalculator = () => {
                                                         data.calculations[0].avg_run
                                                     ) }
                                                     onChange={ e => {
-                                                        handleChange(e, data.id);
+                                                        handleManualTimeChange(e, data.id);
                                                     } }
                                                 />
                                                 <InputGroupText>min</InputGroupText>
