@@ -42,29 +42,19 @@ let defaultAvgRunVal = 3600; // 1 hr in seconds
 
 const InputAndText = styled.div`
     flex: 1;
-  /* display: flex; */
-  /* align-items: center; */
-  /* padding-top: 15px; */
 
   & .pf-c-input-group {
       width: 75%;
-    /* flex-basis: 150px; */
-    /* margin-right: 10px; */
   }
 `;
 
 const TemplateDetail = styled.div`
     display: flex;
     align-items: center;
-    /* border: 1px solid; */
     justify-content: space-between;
 `;
 
 const IconGroup = styled.div`
-    /* display: flex; */
-    /* align-items: center; */
-    /* border: 1px solid; */
-    /* justify-content: space-between; */
     & svg {
         fill: var(--pf-global--Color--dark-200);
         
@@ -105,14 +95,14 @@ const AutomationCalculator = () => {
                 delta: 0,
                 calculations: [
                     {
-                        type: 'manual',
+                        type: 'Manual',
                         name,
                         savings: 0,
                         avg_run: defaults,
                         total: defaults * successful_run_count || 0
                     },
                     {
-                        type: 'automated',
+                        type: 'Automated',
                         name,
                         savings: 0,
                         avg_run: avg_run || 0,
@@ -221,7 +211,7 @@ const AutomationCalculator = () => {
                                     ) }
                                     { formattedData.length > 0 && !isLoading && (
                                         <TopTemplatesSavings
-                                            margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
+                                            margin={ { top: 20, right: 20, bottom: 70, left: 70 } }
                                             id="d3-roi-chart-root"
                                             data={ formattedData }
                                         />

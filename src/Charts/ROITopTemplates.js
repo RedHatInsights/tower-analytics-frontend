@@ -89,7 +89,7 @@ class Tooltip {
         this.nameWidth = this.name.node().getComputedTextLength();
 
         const maxTextPerc = this.nameWidth / this.boxWidth * 100;
-        const threshold = 65;
+        const threshold = 85;
         const overage = maxTextPerc / threshold;
         let adjustedWidth;
         if (maxTextPerc > threshold) {
@@ -252,11 +252,12 @@ class TopTemplatesSavings extends Component {
             'translate(' +
           width / 2 +
           ' ,' +
-          (height + this.props.margin.top + 25) +
+          (height + this.props.margin.top + 45) +
           ')'
         )
         .style('text-anchor', 'middle')
         .text('Templates');
+
         // add the groups
         let slice = svg.selectAll('.slice').data(data);
         slice.exit().remove();
@@ -297,6 +298,26 @@ class TopTemplatesSavings extends Component {
             tooltip.handleMouseOut();
         });
         bars = bars.merge(subEnter);
+
+        //Legend
+        let legend = svg.selectAll('.legend')
+        .data(data[0].calculations.map(row => row.type).reverse())
+        .enter().append('g')
+        .attr('class', 'legend')
+        .attr('transform', function (d, i) { return 'translate(' + -(i + 1) * 90 + ', ' + (height + 25) + ')'; });
+
+        legend.append('rect')
+        .attr('x', width - 15)
+        .attr('width', 15)
+        .attr('height', 15)
+        .style('fill', function (d) { return color(d); });
+
+        legend.append('text')
+        .attr('x', width + 5)
+        .attr('y', 7.5)
+        .attr('dy', '.35em')
+        .style('font-size', '14px')
+        .text(function (d) { return d; });
     }
 
     componentDidMount() {
