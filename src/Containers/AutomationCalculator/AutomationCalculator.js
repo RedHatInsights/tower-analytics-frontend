@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
@@ -103,34 +102,19 @@ const AutomationCalculator = () => {
                 id,
                 run_count: successful_run_count,
                 host_count: Math.ceil(successful_host_count_avg) || 0,
-                get foo() {
-                    return calculateDelta(
-                                convertSecondsToHours(avg_run) * costAutomation,
-                                convertSecondsToHours(this.calculations[0].avg_run) * costManual
-                            ) * successful_run_count * successful_host_count_avg || 0
-                },
+                delta: 0,
                 calculations: [
                     {
                         type: 'manual',
                         name,
-                        // get savings() {
-                        //     return calculateDelta(
-                        //         convertSecondsToHours(avg_run) * costAutomation,
-                        //         convertSecondsToHours(this.calculations[0].avg_run) * costManual
-                        //     ) * successful_run_count * successful_host_count_avg || 0
-                        // },
+                        savings: 0,
                         avg_run: defaults,
-                        total: defaults * successful_run_count || 0,
+                        total: defaults * successful_run_count || 0
                     },
                     {
                         type: 'automated',
                         name,
-                        // get savings() {
-                        //     return calculateDelta(
-                        //         convertSecondsToHours(avg_run) * costAutomation,
-                        //         convertSecondsToHours(this.calculations[0].avg_run) * costManual
-                        //     ) * successful_run_count * successful_host_count_avg || 0
-                        // },
+                        savings: 0,
                         avg_run: avg_run || 0,
                         total: avg_run * successful_run_count || 0
                     }
@@ -181,6 +165,10 @@ const AutomationCalculator = () => {
                 convertSecondsToHours(datum.calculations[1].avg_run) * costAutomation,
                 convertSecondsToHours(datum.calculations[0].avg_run) * costManual
             ) * datum.run_count * datum.host_count;
+            datum.delta = calculateDelta(
+                convertSecondsToHours(datum.calculations[1].avg_run) * costAutomation,
+                convertSecondsToHours(datum.calculations[0].avg_run) * costManual
+            ) * datum.run_count * datum.host_count;
         });
         const totalWithCommas = total
         .toFixed(2)
@@ -194,7 +182,6 @@ const AutomationCalculator = () => {
         data.map(datum => {
             if (datum.id === id) {
                 datum.calculations[0].avg_run = seconds;
-                datum.foo = seconds;
                 datum.calculations[0].total = seconds * datum.run_count;
             }
         });
@@ -208,8 +195,8 @@ const AutomationCalculator = () => {
     };
 
     return (
-        <React.Fragment>
-            <PageHeader style={{ flex: '0'}}>
+        <>
+            <PageHeader style={ { flex: '0' } }>
                 <PageHeaderTitle title={ title } />
             </PageHeader>
             { preflightError && (
@@ -222,154 +209,154 @@ const AutomationCalculator = () => {
                 </Main>
             ) }
             { !preflightError && (
-            <Grid>
-                <GridItem span={8} style={{ display: 'flex', flexDirection: 'column' }}>
-                    <Main style={{ paddingBottom: '0' }}>
-                    <Card>
-                        <CardHeader>Automation vs manual</CardHeader>
-                        <CardBody>
-                            {isLoading && !preflightError && <LoadingState />}
-                            {!isLoading && formattedData.length <= 0 && (
-                                <NoData />
-                            )}
-                            {formattedData.length > 0 && !isLoading && (
-                                <TopTemplatesSavings
-                                    margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                                    id="d3-roi-chart-root"
-                                    data={formattedData}
-                                />
-                            )}
-                        </CardBody>
-                    </Card>
-                    </Main>
-                    <Main>
-                        <Card style={{ height: '100%' }}>
-                        <CardHeader>Automation formula</CardHeader>
-                        <CardBody>
-                            <p>
+                <Grid>
+                    <GridItem span={ 8 } style={ { display: 'flex', flexDirection: 'column' } }>
+                        <Main style={ { paddingBottom: '0' } }>
+                            <Card>
+                                <CardHeader>Automation vs manual</CardHeader>
+                                <CardBody>
+                                    { isLoading && !preflightError && <LoadingState /> }
+                                    { !isLoading && formattedData.length <= 0 && (
+                                        <NoData />
+                                    ) }
+                                    { formattedData.length > 0 && !isLoading && (
+                                        <TopTemplatesSavings
+                                            margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
+                                            id="d3-roi-chart-root"
+                                            data={ formattedData }
+                                        />
+                                    ) }
+                                </CardBody>
+                            </Card>
+                        </Main>
+                        <Main>
+                            <Card style={ { height: '100%' } }>
+                                <CardHeader>Automation formula</CardHeader>
+                                <CardBody>
+                                    <p>
                                 Your automation savings is calculated by the following
                                 formula:
                                     </p>
-                            <p>
-                                <em>
+                                    <p>
+                                        <em>
                                     S = &sum;fc<sub>m</sub>t - fc<sub>a</sub>t
                                         </em>
-                            </p>
-                            <p>Lounge in doorway lick the other cats claws in your leg sit on the laptop. 𝕄𝔼𝕆𝕎 so you're just gonna scroll by without saying meowdy?</p>
-                        </CardBody>
-                    </Card>
-                    </Main>
-                </GridItem>
-                <GridItem span={4}>
-                    <Main style={{ paddingBottom: '0', paddingLeft: '0' }}>
-                    <Card>
-                        <CardHeader style={{ paddingBottom: '0' }}>
+                                    </p>
+                                    <p>Lounge in doorway lick the other cats claws in your leg sit on the laptop.</p>
+                                </CardBody>
+                            </Card>
+                        </Main>
+                    </GridItem>
+                    <GridItem span={ 4 }>
+                        <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
+                            <Card>
+                                <CardHeader style={ { paddingBottom: '0' } }>
                             Total savings
                                 </CardHeader>
-                        <CardBody>
-                            <Title
-                                headingLevel="h3"
-                                size="3xl"
-                                style={{ color: 'var(--pf-global--success-color--200)' }}
-                            >
-                                {totalSavings}
-                            </Title>
-                        </CardBody>
-                    </Card>
-                    </Main>
-                    <Main style={{ paddingBottom: '0', paddingLeft: '0' }}>
-                    <Card>
-                        <CardHeader>Calculate your automation</CardHeader>
-                        <CardBody>
-                            <InputAndText>
-                                <p>Manual cost of automation</p>
-                                <em style={{ color: 'var(--pf-global--Color--dark-200)' }}>
+                                <CardBody>
+                                    <Title
+                                        headingLevel="h3"
+                                        size="3xl"
+                                        style={ { color: 'var(--pf-global--success-color--200)' } }
+                                    >
+                                        { totalSavings }
+                                    </Title>
+                                </CardBody>
+                            </Card>
+                        </Main>
+                        <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
+                            <Card>
+                                <CardHeader style={ { paddingBottom: '10px' } }>Calculate your automation</CardHeader>
+                                <CardBody>
+                                    <InputAndText>
+                                        <p>Manual cost of automation</p>
+                                        <em style={ { color: 'var(--pf-global--Color--dark-200)' } }>
                                     (e.g. average salary of mid-level SE)
-                                            </em>
-                                <InputGroup style={{ width: '50%' }}>
-                                    <InputGroupText>
-                                        <DollarSignIcon />
-                                    </InputGroupText>
-                                    <TextInput
-                                        id="manual-cost"
-                                        type="number"
-                                        aria-label="manual-cost"
-                                        value={costManual}
-                                        onChange={e => setCostManual(e)}
-                                    />
-                                    <InputGroupText>/hr</InputGroupText>
-                                </InputGroup>
-                            </InputAndText>
-                            <InputAndText>
-                                <p>Cost of automation</p>
-                                <InputGroup style={{ width: '50%' }}>
-                                    <InputGroupText>
-                                        <DollarSignIcon />
-                                    </InputGroupText>
-                                    <TextInput
-                                        id="automation-cost"
-                                        type="number"
-                                        aria-label="automation-cost"
-                                        value={costAutomation}
-                                        onChange={e => setCostAutomation(e)}
-                                    />
-                                    <InputGroupText>/hr</InputGroupText>
-                                </InputGroup>
-                            </InputAndText>
-                        </CardBody>
-                    </Card>
-                    </Main>
-                    <Main style={{ paddingLeft: '0' }}>
-                    <Card style={{ height: '40vh', overflow: 'auto' }}>
-                        <CardHeader>Top templates</CardHeader>
-                        <CardBody>
-                            <p>
+                                        </em>
+                                        <InputGroup style={ { width: '50%' } }>
+                                            <InputGroupText>
+                                                <DollarSignIcon />
+                                            </InputGroupText>
+                                            <TextInput
+                                                id="manual-cost"
+                                                type="number"
+                                                aria-label="manual-cost"
+                                                value={ costManual }
+                                                onChange={ e => setCostManual(e) }
+                                            />
+                                            <InputGroupText>/hr</InputGroupText>
+                                        </InputGroup>
+                                    </InputAndText>
+                                    <InputAndText style={ { paddingTop: '10px' } }>
+                                        <p>Cost of automation</p>
+                                        <InputGroup style={ { width: '50%' } }>
+                                            <InputGroupText>
+                                                <DollarSignIcon />
+                                            </InputGroupText>
+                                            <TextInput
+                                                id="automation-cost"
+                                                type="number"
+                                                aria-label="automation-cost"
+                                                value={ costAutomation }
+                                                onChange={ e => setCostAutomation(e) }
+                                            />
+                                            <InputGroupText>/hr</InputGroupText>
+                                        </InputGroup>
+                                    </InputAndText>
+                                </CardBody>
+                            </Card>
+                        </Main>
+                        <Main style={ { paddingLeft: '0' } }>
+                            <Card style={ { height: '39vh', overflow: 'auto' } }>
+                                <CardHeader>Top templates</CardHeader>
+                                <CardBody>
+                                    <p>
                                 Enter the time it takes to run the following templates
                                 manually.
                                     </p>
-                            {formattedData.map(data => (
-                                <>
-                                    <p style={{ padding: '15px 0 10px' }}>{data.name}</p>
-                                    <TemplateDetail>
-                                        <InputAndText key={data.id}>
-                                            <InputGroup>
-                                                <TextInput
-                                                    id={data.id}
-                                                    type="number"
-                                                    aria-label="time run manually"
-                                                    value={convertSecondsToMins(
-                                                        data.calculations[0].avg_run
-                                                    )}
-                                                    onChange={e => {
-                                                        handleManualTimeChange(e, data.id);
-                                                    }}
-                                                    style={{ width: '80%' }}
-                                                />
-                                                <InputGroupText>min</InputGroupText>
-                                                <em style={{
-                                                    color: 'var(--pf-global--Color--dark-200)',
-                                                    lineHeight: '36px',
-                                                    marginLeft: '10px'
-                                                }}>
-                                                    x {data.run_count} runs, {data.host_count} hosts
-                                                </em>
-                                            </InputGroup>
-                                        </InputAndText>
-                                        <IconGroup>
-                                            <InfoCircleIcon />
-                                            <OutlinedEyeIcon />
-                                        </IconGroup>
-                                    </TemplateDetail>
-                                </>
-                            ))}
-                        </CardBody>
-                    </Card>
-                    </Main>
-                </GridItem>
-            </Grid>
+                                    { formattedData.map(data => (
+                                        <div key={ data.id }>
+                                            <p style={ { padding: '15px 0 10px' } }>{ data.name }</p>
+                                            <TemplateDetail>
+                                                <InputAndText key={ data.id }>
+                                                    <InputGroup>
+                                                        <TextInput
+                                                            id={ data.id }
+                                                            type="number"
+                                                            aria-label="time run manually"
+                                                            value={ convertSecondsToMins(
+                                                                data.calculations[0].avg_run
+                                                            ) }
+                                                            onChange={ e => {
+                                                                handleManualTimeChange(e, data.id);
+                                                            } }
+                                                            style={ { width: '80%' } }
+                                                        />
+                                                        <InputGroupText>min</InputGroupText>
+                                                        <em style={ {
+                                                            color: 'var(--pf-global--Color--dark-200)',
+                                                            lineHeight: '36px',
+                                                            marginLeft: '10px'
+                                                        } }>
+                                                    x { data.run_count } runs, { data.host_count } hosts
+                                                        </em>
+                                                    </InputGroup>
+                                                </InputAndText>
+                                                <IconGroup>
+                                                    <InfoCircleIcon />
+                                                    <OutlinedEyeIcon />
+                                                </IconGroup>
+                                            </TemplateDetail>
+                                        </div>
+                                    )) }
+                                </CardBody>
+                            </Card>
+                        </Main>
+                    </GridItem>
+                </Grid>
             )}
-            
-        </React.Fragment>
+
+        </>
     );
 };
 

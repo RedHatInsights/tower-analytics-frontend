@@ -1,4 +1,3 @@
-/* eslint-disable */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import * as d3 from 'd3';
@@ -37,35 +36,25 @@ class Tooltip {
         .attr('height', 52)
         .attr('width', this.boxWidth)
         .attr('fill', '#393f44');
-        this.date = this.toolTipBase
+        this.savings = this.toolTipBase
         .append('text')
         .attr('x', 20)
-        .attr('y', 14)
+        .attr('y', 16)
         .attr('font-size', 12)
         .attr('fill', 'white')
-        .text('Date');
-        this.jobs = this.toolTipBase
+        .text('Savings $0');
+        this.name = this.toolTipBase
         .append('text')
         .attr('fill', 'white')
         .attr('font-size', 12)
-        .attr('x', 72)
-        .attr('y', 14)
-        .text('0 Jobs');
-        this.orgName = this.toolTipBase
-        .append('text')
-        .attr('fill', 'white')
-        .attr('font-weight', 800)
         .attr('x', 20)
-        .attr('y', -1)
-        .attr('font-size', 12)
-        .text('Org');
+        .attr('y', -2)
+        .text('Unknown');
     }
 
     handleMouseOver = d => {
-        console.log(d);
-        let date;
-        let orgName;
-        let jobs;
+        let name;
+        let savings;
         const x =
             d3.event.pageX -
             d3
@@ -83,16 +72,11 @@ class Tooltip {
         if (!d) {
             return;
         } else {
-            const maxLength = 16;
-            date = d.date;
-            orgName = d.org_name;
-            jobs = d.value;
-            if (d.org_name.length > maxLength) {
-                orgName = d.org_name.slice(0, maxLength).concat('...');
-            }
+            savings = d.savings.toFixed(2).toString()
+            .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            name = d.name;
         }
 
-        const formatTooltipDate = d3.timeFormat('%m/%d');
         const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
         const chartWidth = d3
         .select(this.svg + '> svg')
@@ -100,14 +84,12 @@ class Tooltip {
         .getBoundingClientRect().width;
         const overflow = 100 - (toolTipWidth / chartWidth) * 100;
         const flipped = overflow < (x / chartWidth) * 100;
+        this.name.text('' + name);
+        this.savings.text('Savings $' + savings);
+        this.nameWidth = this.name.node().getComputedTextLength();
 
-        this.date.text('' + formatTooltipDate(date));
-        this.orgName.text('' + orgName);
-        this.jobs.text('' + jobs + ' Jobs');
-        this.jobsWidth = this.jobs.node().getComputedTextLength();
-
-        const maxTextPerc = this.jobsWidth / this.boxWidth * 100;
-        const threshold = 45;
+        const maxTextPerc = this.nameWidth / this.boxWidth * 100;
+        const threshold = 65;
         const overage = maxTextPerc / threshold;
         let adjustedWidth;
         if (maxTextPerc > threshold) {
@@ -121,15 +103,13 @@ class Tooltip {
         if (flipped) {
             this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
             this.boundingBox.attr('x', -adjustedWidth - 20);
-            this.jobs.attr('x', -this.jobsWidth - 20 - 7);
-            this.orgName.attr('x', -adjustedWidth - 7);
-            this.date.attr('x', -adjustedWidth - 7);
+            this.name.attr('x', -this.nameWidth - 7);
+            this.savings.attr('x', -this.nameWidth - 7);
         } else {
             this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
             this.boundingBox.attr('x', 10);
-            this.orgName.attr('x', 20);
-            this.jobs.attr('x', adjustedWidth / 2);
-            this.date.attr('x', 20);
+            this.name.attr('x', 20);
+            this.savings.attr('x', 20);
         }
 
         this.toolTipBase.style('opacity', 1);
@@ -158,7 +138,6 @@ class TopTemplatesSavings extends Component {
 
     // Methods
     resize() {
-        console.log('resizing?');
         const { timeout } = this.state;
         clearTimeout(timeout);
         this.setState({
@@ -178,15 +157,11 @@ class TopTemplatesSavings extends Component {
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
         let { data } = this.props;
-        // data.forEach(datum => {
-        //     // datum.calculations.template_name: datum.template_name
-        //     // console.log('datum', datum)
-        //     datum.calculations.forEach(row => {
-        //         row.name = datum.name;
-        //         row.savings = calculateDelta()
-        //     })
-        // })
-        // console.log('data', data);
+        data.forEach(datum => {
+            datum.calculations.forEach(row => {
+                row.savings = datum.delta;
+            });
+        });
         const width = this.props.getWidth();
         const height = this.props.getHeight();
         const x0 = d3
@@ -266,7 +241,7 @@ class TopTemplatesSavings extends Component {
         .selectAll('text')
         .style('text-anchor', 'start')
         .attr('dx', '0.75em')
-        .attr('dy', '-4.35em')
+        .attr('dy', -x0.bandwidth() / 1.45 - 5)
         .attr('transform', 'rotate(-90)');
 
         svg.selectAll('.x-axis line').attr('stroke', 'transparent');
@@ -296,7 +271,6 @@ class TopTemplatesSavings extends Component {
             return d.calculations;
         });
         bars.exit().remove();
-
         const subEnter = bars
         .enter()
         .append('rect')
@@ -317,7 +291,7 @@ class TopTemplatesSavings extends Component {
             d3.select(this).style('fill', d3.rgb(color(d.type)).darker(1));
             tooltip.handleMouseOver(d);
         })
-        // .on('mousemove', tooltip.handleMouseOver)
+        .on('mousemove', tooltip.handleMouseOver)
         .on('mouseout', function(d) {
             d3.select(this).style('fill', color(d.type));
             tooltip.handleMouseOut();
