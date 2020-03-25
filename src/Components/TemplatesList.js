@@ -123,12 +123,10 @@ const TemplatesList = ({ templates, isLoading, queryParams }) => {
       } }>
           <DataListItem aria-labelledby="top-templates-header">
               <DataListCell>
-                  <h3>Top Templates</h3>
+                  <h3>Top templates</h3>
               </DataListCell>
               <DataCellEnd>
-                  <h3>
-                      <strong>Usage</strong>
-                  </h3>
+                  <h3>Usage</h3>
               </DataCellEnd>
           </DataListItem>
           { isLoading && (

@@ -6,7 +6,7 @@ describe('Components/NotificationsList', () => {
     const notifications = [
         {
             date: '2019-04-30T15:06:40.995',
-            label: 'message',
+            label: 'notice',
             message: 'Regular message number 1',
             notification_id: 1,
             notification_severity_id: 1,
@@ -38,13 +38,15 @@ describe('Components/NotificationsList', () => {
             label: 'Select Notification Type',
             disabled: true
         },
-        { value: 'error', label: 'View Danger', disabled: false },
-        { value: 'all', label: 'View All', disabled: false }
+        { value: 'error', label: 'View error', disabled: false },
+        { value: 'warning', label: 'View warning', disabled: false },
+        { value: 'notice', label: 'View notice', disabled: false },
+        { value: '', label: 'View all', disabled: false }
     ];
-    const filterBy = 'all';
+    const filterBy = '';
     const onNotificationChange = () => {};
 
-    it('should render successfully', () => {
+    it('Should render successfully', () => {
         mount(
             <NotificationsList
                 notifications={ notifications }
@@ -54,7 +56,7 @@ describe('Components/NotificationsList', () => {
             />
         );
     });
-    it('should render all notifications by default', () => {
+    it('Should render all notifications by default', () => {
         const wrapper = mount(
             <NotificationsList
                 notifications={ notifications }
@@ -63,20 +65,9 @@ describe('Components/NotificationsList', () => {
                 onNotificationChange={ onNotificationChange }
             />
         );
-        const notificationTemplate = wrapper.find('NotificationTemplate');
-        const dataListItem = notificationTemplate.find('DataListItem');
-        expect(dataListItem.length).toEqual(notifications.length);
-    });
-    it('should render ErrorNotificationsTemplate successfully', () => {
-        const filterBy = 'error';
-        mount(
-            <NotificationsList
-                notifications={ notifications }
-                options={ options }
-                filterBy={ filterBy }
-                onNotificationChange={ onNotificationChange }
-            />
-        );
+        const notificationTemplate = wrapper.find('AllNotificationTemplate');
+        const alertItem = notificationTemplate.find('Alert');
+        expect(alertItem.length).toEqual(notifications.length);
     });
     it('ErrorNotificationsTemplate should render only error type notifications', () => {
         const filterBy = 'error';
@@ -89,9 +80,43 @@ describe('Components/NotificationsList', () => {
             />
         );
         const notificationTemplate = wrapper.find('ErrorNotificationTemplate');
-        const dataListItem = notificationTemplate.find('DataListItem');
-        expect(dataListItem.length).toEqual(
+        const alertItem = notificationTemplate.find('Alert');
+        expect(alertItem.length).toEqual(
             notifications.filter(notification => notification.label === 'error')
+            .length
+        );
+    });
+    it('WarningNotificationTemplate should render only warning type notifications', () => {
+        const filterBy = 'warning';
+        const wrapper = mount(
+            <NotificationsList
+                notifications={ notifications }
+                options={ options }
+                filterBy={ filterBy }
+                onNotificationChange={ onNotificationChange }
+            />
+        );
+        const notificationTemplate = wrapper.find('WarningNotificationTemplate');
+        const alertItem = notificationTemplate.find('Alert');
+        expect(alertItem.length).toEqual(
+            notifications.filter(notification => notification.label === 'warning')
+            .length
+        );
+    });
+    it('NoticeNotificationsTemplate should render only notice type notifications', () => {
+        const filterBy = 'notice';
+        const wrapper = mount(
+            <NotificationsList
+                notifications={ notifications }
+                options={ options }
+                filterBy={ filterBy }
+                onNotificationChange={ onNotificationChange }
+            />
+        );
+        const notificationTemplate = wrapper.find('NoticeNotificationTemplate');
+        const alertItem = notificationTemplate.find('Alert');
+        expect(alertItem.length).toEqual(
+            notifications.filter(notification => notification.label === 'notice')
             .length
         );
     });
