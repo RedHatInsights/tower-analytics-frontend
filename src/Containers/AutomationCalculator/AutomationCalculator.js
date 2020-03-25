@@ -87,6 +87,7 @@ const AutomationCalculator = () => {
     const formatData = (response, defaults) => {
         return response.reduce((formatted, { name, template_id: id, successful_run_count, successful_elapsed_sum, successful_host_count_avg }) => {
             const avg_run = (successful_elapsed_sum / successful_run_count);
+            const total_hosts = Math.floor(successful_host_count_avg * successful_run_count);
             formatted.push({
                 name,
                 id,
@@ -97,12 +98,12 @@ const AutomationCalculator = () => {
                     {
                         type: 'Manual',
                         avg_run: defaults,
-                        total: defaults * successful_run_count || 0
+                        total: defaults * total_hosts || 0
                     },
                     {
                         type: 'Automated',
                         avg_run: avg_run || 0,
-                        total: avg_run * successful_run_count || 0
+                        total: successful_elapsed_sum * total_hosts || 0
                     }
                 ]
             });
