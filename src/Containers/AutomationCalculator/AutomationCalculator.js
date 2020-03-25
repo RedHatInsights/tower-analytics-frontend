@@ -96,15 +96,11 @@ const AutomationCalculator = () => {
                 calculations: [
                     {
                         type: 'Manual',
-                        name,
-                        savings: 0,
                         avg_run: defaults,
                         total: defaults * successful_run_count || 0
                     },
                     {
                         type: 'Automated',
-                        name,
-                        savings: 0,
                         avg_run: avg_run || 0,
                         total: avg_run * successful_run_count || 0
                     }

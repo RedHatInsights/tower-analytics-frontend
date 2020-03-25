@@ -160,6 +160,7 @@ class TopTemplatesSavings extends Component {
         data.forEach(datum => {
             datum.calculations.forEach(row => {
                 row.savings = datum.delta;
+                row.name = datum.name;
             });
         });
         const width = this.props.getWidth();
