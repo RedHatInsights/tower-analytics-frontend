@@ -103,8 +103,8 @@ class Tooltip {
         if (flipped) {
             this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
             this.boundingBox.attr('x', -adjustedWidth - 20);
-            this.name.attr('x', -this.nameWidth - 7);
-            this.savings.attr('x', -this.nameWidth - 7);
+            this.name.attr('x', -(toolTipWidth - 7));
+            this.savings.attr('x', -(toolTipWidth - 7));
         } else {
             this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
             this.boundingBox.attr('x', 10);
