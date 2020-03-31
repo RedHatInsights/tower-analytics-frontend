@@ -27,7 +27,7 @@ import {
     GridItem
 } from '@patternfly/react-core';
 
-import { DollarSignIcon, InfoCircleIcon, OutlinedEyeIcon } from '@patternfly/react-icons';
+import { DollarSignIcon, InfoCircleIcon, OutlinedEyeIcon, OutlinedEyeSlashIcon } from '@patternfly/react-icons';
 
 import TopTemplatesSavings from '../../Charts/ROITopTemplates';
 
@@ -44,7 +44,9 @@ const InputAndText = styled.div`
     flex: 1;
 
   & .pf-c-input-group {
-      width: 75%;
+      /* width: 75%; */
+      /* margin-right: 15px; */
+      padding-right: 15px;
   }
 `;
 
@@ -75,11 +77,14 @@ const initialQueryParams = {
 
 const AutomationCalculator = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
+    const [ unfilteredData, setUnfilteredData ] = useState([]);
     const [ formattedData, setFormattedData ] = useState([]);
+    const [ templatesList, setTemplatesList ] = useState([]);
     const [ costManual, setCostManual ] = useState(0);
     const [ costAutomation, setCostAutomation ] = useState(0);
     const [ totalSavings, setTotalSavings ] = useState(0);
     const [ roiData, setRoiData ] = useState([]);
+    const [ selectedIds, setSelectedIds ] = useState([]);
     const [ isLoading, setIsLoading ] = useState(true);
     const { queryParams } = useQueryParams(initialQueryParams);
 
@@ -94,6 +99,7 @@ const AutomationCalculator = () => {
                 run_count: successful_run_count,
                 host_count: Math.ceil(successful_host_count_avg) || 0,
                 delta: 0,
+                isActive: true,
                 calculations: [
                     {
                         type: 'Manual',
@@ -113,15 +119,27 @@ const AutomationCalculator = () => {
 
     useEffect(() => {
         const formatted = formatData(roiData, defaultAvgRunVal);
+        setUnfilteredData(formatted);
         setFormattedData(formatted);
+        setTemplatesList(formatted);
     }, [ roiData ]);
+
+    useEffect(() => {
+        const filteredData = unfilteredData.filter(({ id }) => !selectedIds.includes(id));
+        templatesList.map(l => {
+            if (selectedIds.includes(l.id)) {
+                l.isActive = false;
+            } else {
+                l.isActive = true;
+            }
+        });
+        setFormattedData(filteredData);
+    }, [ selectedIds ]);
 
     useEffect(() => {
         let ignore = false;
         const getData = () => {
-            return Promise.all([
-                readROI({ params: queryParams })
-            ].map(p => p.catch(() => [])));
+            return readROI({ params: queryParams });
         };
 
         async function initializeWithPreflight() {
@@ -130,9 +148,9 @@ const AutomationCalculator = () => {
             await preflightRequest().catch(error => {
                 setPreFlightError({ preflightError: error });
             });
-            getData().then(([
+            getData().then((
                 { templates: roiData = []}
-            ]) => {
+            ) => {
                 if (!ignore) {
                     setRoiData(roiData);
                     setIsLoading(false);
@@ -181,6 +199,23 @@ const AutomationCalculator = () => {
         setFormattedData(updated);
     };
 
+    const formatSelectedIds = (arr, id) => {
+        let selected;
+        if (arr.includes(id)) {
+            selected = [ ...arr ].filter(s => s !== id);
+        } else {
+            selected = [ ...arr, id ];
+        }
+
+        return selected;
+    };
+
+    const handleToggle = (id) => {
+        const currentSelection = [ ...selectedIds ];
+        const newSelection = formatSelectedIds(currentSelection, id);
+        setSelectedIds(newSelection);
+    };
+
     return (
         <>
             <PageHeader style={ { flex: '0' } }>
@@ -211,6 +246,7 @@ const AutomationCalculator = () => {
                                             margin={ { top: 20, right: 20, bottom: 70, left: 70 } }
                                             id="d3-roi-chart-root"
                                             data={ formattedData }
+                                            selected={ selectedIds }
                                         />
                                     ) }
                                 </CardBody>
@@ -301,7 +337,7 @@ const AutomationCalculator = () => {
                                 Enter the time it takes to run the following templates
                                 manually.
                                     </p>
-                                    { formattedData.map(data => (
+                                    { templatesList.map(data => (
                                         <div key={ data.id }>
                                             <p style={ { padding: '15px 0 10px' } }>{ data.name }</p>
                                             <TemplateDetail>
@@ -317,7 +353,7 @@ const AutomationCalculator = () => {
                                                             onChange={ e => {
                                                                 handleManualTimeChange(e, data.id);
                                                             } }
-                                                            style={ { width: '80%' } }
+                                                            isDisabled={ !data.isActive }
                                                         />
                                                         <InputGroupText>min</InputGroupText>
                                                         <em style={ {
@@ -331,7 +367,16 @@ const AutomationCalculator = () => {
                                                 </InputAndText>
                                                 <IconGroup>
                                                     <InfoCircleIcon />
-                                                    <OutlinedEyeIcon />
+                                                    { data.isActive === true && (
+                                                        <OutlinedEyeIcon onClick={ () => {
+                                                            handleToggle(data.id);
+                                                        } } />
+                                                    ) }
+                                                    { data.isActive === false && (
+                                                        <OutlinedEyeSlashIcon onClick={ () => {
+                                                            handleToggle(data.id);
+                                                        } } />
+                                                    ) }
                                                 </IconGroup>
                                             </TemplateDetail>
                                         </div>

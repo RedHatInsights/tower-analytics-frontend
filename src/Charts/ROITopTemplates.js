@@ -156,7 +156,8 @@ class TopTemplatesSavings extends Component {
         const color = d3.scaleOrdinal(d3.schemeCategory10);
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
-        let { data } = this.props;
+        let { data: unfiltered, selected } = this.props;
+        const data = unfiltered.filter(({ id }) => !selected.includes(id));
         data.forEach(datum => {
             datum.calculations.forEach(row => {
                 row.savings = datum.delta;
@@ -345,6 +346,7 @@ class TopTemplatesSavings extends Component {
 TopTemplatesSavings.propTypes = {
     id: PropTypes.string,
     data: PropTypes.array,
+    selected: PropTypes.array,
     margin: PropTypes.object,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func
