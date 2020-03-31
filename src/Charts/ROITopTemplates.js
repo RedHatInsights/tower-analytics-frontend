@@ -152,8 +152,8 @@ class TopTemplatesSavings extends Component {
     }
 
     draw() {
-        // const color = d3.scaleOrdinal(d3.schemePaired);
-        const color = d3.scaleOrdinal(d3.schemeCategory10);
+        // Use PF chart colors
+        const color = d3.scaleOrdinal([ '#F0AB00', '#0066CC' ]);
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
         let { data: unfiltered, selected } = this.props;
