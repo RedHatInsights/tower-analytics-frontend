@@ -24,10 +24,17 @@ import {
     TextInput,
     Title,
     Grid,
-    GridItem
+    GridItem,
+    Tooltip,
+    TooltipPosition
 } from '@patternfly/react-core';
 
-import { DollarSignIcon, InfoCircleIcon, OutlinedEyeIcon, OutlinedEyeSlashIcon } from '@patternfly/react-icons';
+import {
+    DollarSignIcon,
+    InfoCircleIcon,
+    OutlinedEyeIcon,
+    OutlinedEyeSlashIcon
+} from '@patternfly/react-icons';
 
 import TopTemplatesSavings from '../../Charts/ROITopTemplates';
 
@@ -41,35 +48,49 @@ import {
 let defaultAvgRunVal = 3600; // 1 hr in seconds
 
 const InputAndText = styled.div`
-    flex: 1;
+  flex: 1;
 
   & .pf-c-input-group {
-      /* width: 75%; */
-      /* margin-right: 15px; */
-      padding-right: 15px;
+    /* width: 75%; */
+    /* margin-right: 15px; */
+    padding-right: 15px;
   }
 `;
 
 const TemplateDetail = styled.div`
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const TooltipWrapper = styled.div`
+  p {
+      text-align: left;
+  }
 `;
 
 const IconGroup = styled.div`
-    & svg {
-        fill: var(--pf-global--Color--dark-200);
-        
-        :first-of-type {
-            margin-right: 20px;
-        }
+  & svg {
+    fill: var(--pf-global--Color--dark-200);
+
+    :first-of-type {
+      margin-right: 20px;
     }
+  }
 `;
-const title =
-<span>Automation Analytics<span style={ { fontSize: '16px' } } > <span style={ { margin: '0 10px' } } >|</span> Automation Calculator</span></span>;
+const title = (
+    <span>
+    Automation Analytics
+        <span style={ { fontSize: '16px' } }>
+            { ' ' }
+            <span style={ { margin: '0 10px' } }>|</span> Automation Calculator
+        </span>
+    </span>
+);
 
 const initialQueryParams = {
-    startDate: moment.utc()
+    startDate: moment
+    .utc()
     .subtract(3, 'months')
     .format('YYYY-MM-DD'),
     endDate: moment.utc().format('YYYY-MM-DD')
@@ -90,31 +111,53 @@ const AutomationCalculator = () => {
 
     // create our array to feed to D3
     const formatData = (response, defaults) => {
-        return response.reduce((formatted, { name, template_id: id, successful_run_count, successful_elapsed_sum, successful_host_count_avg }) => {
-            const avg_run = (successful_elapsed_sum / successful_run_count);
-            const total_hosts = Math.floor(successful_host_count_avg * successful_run_count);
-            formatted.push({
-                name,
-                id,
-                run_count: successful_run_count,
-                host_count: Math.ceil(successful_host_count_avg) || 0,
-                delta: 0,
-                isActive: true,
-                calculations: [
-                    {
-                        type: 'Manual',
-                        avg_run: defaults,
-                        total: defaults * total_hosts || 0
-                    },
-                    {
-                        type: 'Automated',
-                        avg_run: avg_run || 0,
-                        total: successful_elapsed_sum * total_hosts || 0
-                    }
-                ]
-            });
-            return formatted;
-        }, []);
+        return response.reduce(
+            (
+                formatted,
+                {
+                    name,
+                    template_id: id,
+                    successful_run_count,
+                    successful_elapsed_sum,
+                    successful_host_count_avg,
+                    elapsed_sum,
+                    failed_elapsed_sum,
+                    org_name,
+                    cluster_name
+                }
+            ) => {
+                const avg_run = successful_elapsed_sum / successful_run_count;
+                const total_hosts = Math.floor(
+                    successful_host_count_avg * successful_run_count
+                );
+                formatted.push({
+                    name,
+                    id,
+                    run_count: successful_run_count,
+                    host_count: Math.ceil(successful_host_count_avg) || 0,
+                    delta: 0,
+                    isActive: true,
+                    calculations: [
+                        {
+                            type: 'Manual',
+                            avg_run: defaults,
+                            total: defaults * total_hosts || 0
+                        },
+                        {
+                            type: 'Automated',
+                            avg_run: avg_run || 0,
+                            total: successful_elapsed_sum * total_hosts || 0
+                        }
+                    ],
+                    org_name,
+                    cluster_name,
+                    elapsed_sum,
+                    failed_elapsed_sum
+                });
+                return formatted;
+            },
+            []
+        );
     };
 
     useEffect(() => {
@@ -125,7 +168,9 @@ const AutomationCalculator = () => {
     }, [ roiData ]);
 
     useEffect(() => {
-        const filteredData = unfilteredData.filter(({ id }) => !selectedIds.includes(id));
+        const filteredData = unfilteredData.filter(
+            ({ id }) => !selectedIds.includes(id)
+        );
         templatesList.map(l => {
             if (selectedIds.includes(l.id)) {
                 l.isActive = false;
@@ -148,9 +193,7 @@ const AutomationCalculator = () => {
             await preflightRequest().catch(error => {
                 setPreFlightError({ preflightError: error });
             });
-            getData().then((
-                { templates: roiData = []}
-            ) => {
+            getData().then(({ templates: roiData = []}) => {
                 if (!ignore) {
                     setRoiData(roiData);
                     setIsLoading(false);
@@ -159,21 +202,27 @@ const AutomationCalculator = () => {
         }
 
         initializeWithPreflight();
-        return () => ignore = true;
+        return () => (ignore = true);
     }, []);
 
     useEffect(() => {
         let data = [ ...formattedData ];
         let total = 0;
         data.forEach(datum => {
-            total += calculateDelta(
-                convertSecondsToHours(datum.calculations[1].avg_run) * costAutomation,
-                convertSecondsToHours(datum.calculations[0].avg_run) * costManual
-            ) * datum.run_count * datum.host_count;
-            datum.delta = calculateDelta(
-                convertSecondsToHours(datum.calculations[1].avg_run) * costAutomation,
-                convertSecondsToHours(datum.calculations[0].avg_run) * costManual
-            ) * datum.run_count * datum.host_count;
+            total +=
+        calculateDelta(
+            convertSecondsToHours(datum.calculations[1].avg_run) * costAutomation,
+            convertSecondsToHours(datum.calculations[0].avg_run) * costManual
+        ) *
+        datum.run_count *
+        datum.host_count;
+            datum.delta =
+        calculateDelta(
+            convertSecondsToHours(datum.calculations[1].avg_run) * costAutomation,
+            convertSecondsToHours(datum.calculations[0].avg_run) * costManual
+        ) *
+        datum.run_count *
+        datum.host_count;
         });
         const totalWithCommas = total
         .toFixed(2)
@@ -210,185 +259,211 @@ const AutomationCalculator = () => {
         return selected;
     };
 
-    const handleToggle = (id) => {
+    const handleToggle = id => {
         const currentSelection = [ ...selectedIds ];
         const newSelection = formatSelectedIds(currentSelection, id);
         setSelectedIds(newSelection);
     };
 
     return (
-        <>
-            <PageHeader style={ { flex: '0' } }>
-                <PageHeaderTitle title={ title } />
-            </PageHeader>
-            { preflightError && (
-                <Main>
-                    <Card>
-                        <CardBody>
-                            <EmptyState { ...preflightError } />
-                        </CardBody>
-                    </Card>
-                </Main>
-            ) }
-            { !preflightError && (
-                <Grid>
-                    <GridItem span={ 8 } style={ { display: 'flex', flexDirection: 'column' } }>
-                        <Main style={ { paddingBottom: '0' } }>
-                            <Card>
-                                <CardHeader>Automation vs manual</CardHeader>
-                                <CardBody>
-                                    { isLoading && !preflightError && <LoadingState /> }
-                                    { !isLoading && formattedData.length <= 0 && (
-                                        <NoData />
-                                    ) }
-                                    { formattedData.length > 0 && !isLoading && (
-                                        <TopTemplatesSavings
-                                            margin={ { top: 20, right: 20, bottom: 70, left: 70 } }
-                                            id="d3-roi-chart-root"
-                                            data={ formattedData }
-                                            selected={ selectedIds }
-                                        />
-                                    ) }
-                                </CardBody>
-                            </Card>
-                        </Main>
-                        <Main>
-                            <Card style={ { height: '100%' } }>
-                                <CardHeader>Automation formula</CardHeader>
-                                <CardBody>
-                                    <p>
-                                Your automation savings is calculated by the following
-                                formula:
-                                    </p>
-                                    <p>
-                                        <em>
-                                    S = &sum;fc<sub>m</sub>t - fc<sub>a</sub>t
-                                        </em>
-                                    </p>
-                                    <p>Lounge in doorway lick the other cats claws in your leg sit on the laptop.</p>
-                                </CardBody>
-                            </Card>
-                        </Main>
-                    </GridItem>
-                    <GridItem span={ 4 }>
-                        <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
-                            <Card>
-                                <CardHeader style={ { paddingBottom: '0' } }>
-                            Total savings
-                                </CardHeader>
-                                <CardBody>
-                                    <Title
-                                        headingLevel="h3"
-                                        size="3xl"
-                                        style={ { color: 'var(--pf-global--success-color--200)' } }
-                                    >
-                                        { totalSavings }
-                                    </Title>
-                                </CardBody>
-                            </Card>
-                        </Main>
-                        <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
-                            <Card>
-                                <CardHeader style={ { paddingBottom: '10px' } }>Calculate your automation</CardHeader>
-                                <CardBody>
-                                    <InputAndText>
-                                        <p>Manual cost of automation</p>
-                                        <em style={ { color: 'var(--pf-global--Color--dark-200)' } }>
-                                    (e.g. average salary of mid-level SE)
-                                        </em>
-                                        <InputGroup style={ { width: '50%' } }>
-                                            <InputGroupText>
-                                                <DollarSignIcon />
-                                            </InputGroupText>
-                                            <TextInput
-                                                id="manual-cost"
-                                                type="number"
-                                                aria-label="manual-cost"
-                                                value={ costManual }
-                                                onChange={ e => setCostManual(e) }
-                                            />
-                                            <InputGroupText>/hr</InputGroupText>
-                                        </InputGroup>
-                                    </InputAndText>
-                                    <InputAndText style={ { paddingTop: '10px' } }>
-                                        <p>Cost of automation</p>
-                                        <InputGroup style={ { width: '50%' } }>
-                                            <InputGroupText>
-                                                <DollarSignIcon />
-                                            </InputGroupText>
-                                            <TextInput
-                                                id="automation-cost"
-                                                type="number"
-                                                aria-label="automation-cost"
-                                                value={ costAutomation }
-                                                onChange={ e => setCostAutomation(e) }
-                                            />
-                                            <InputGroupText>/hr</InputGroupText>
-                                        </InputGroup>
-                                    </InputAndText>
-                                </CardBody>
-                            </Card>
-                        </Main>
-                        <Main style={ { paddingLeft: '0' } }>
-                            <Card style={ { height: '39vh', overflow: 'auto' } }>
-                                <CardHeader>Top templates</CardHeader>
-                                <CardBody>
-                                    <p>
-                                Enter the time it takes to run the following templates
-                                manually.
-                                    </p>
-                                    { templatesList.map(data => (
-                                        <div key={ data.id }>
-                                            <p style={ { padding: '15px 0 10px' } }>{ data.name }</p>
-                                            <TemplateDetail>
-                                                <InputAndText key={ data.id }>
-                                                    <InputGroup>
-                                                        <TextInput
-                                                            id={ data.id }
-                                                            type="number"
-                                                            aria-label="time run manually"
-                                                            value={ convertSecondsToMins(
-                                                                data.calculations[0].avg_run
-                                                            ) }
-                                                            onChange={ e => {
-                                                                handleManualTimeChange(e, data.id);
-                                                            } }
-                                                            isDisabled={ !data.isActive }
-                                                        />
-                                                        <InputGroupText>min</InputGroupText>
-                                                        <em style={ {
-                                                            color: 'var(--pf-global--Color--dark-200)',
-                                                            lineHeight: '36px',
-                                                            marginLeft: '10px'
-                                                        } }>
-                                                    x { data.run_count } runs, { data.host_count } hosts
-                                                        </em>
-                                                    </InputGroup>
-                                                </InputAndText>
-                                                <IconGroup>
-                                                    <InfoCircleIcon />
-                                                    { data.isActive === true && (
-                                                        <OutlinedEyeIcon onClick={ () => {
-                                                            handleToggle(data.id);
-                                                        } } />
-                                                    ) }
-                                                    { data.isActive === false && (
-                                                        <OutlinedEyeSlashIcon onClick={ () => {
-                                                            handleToggle(data.id);
-                                                        } } />
-                                                    ) }
-                                                </IconGroup>
-                                            </TemplateDetail>
-                                        </div>
-                                    )) }
-                                </CardBody>
-                            </Card>
-                        </Main>
-                    </GridItem>
-                </Grid>
-            )}
-
-        </>
+    <>
+      <PageHeader style={ { flex: '0' } }>
+          <PageHeaderTitle title={ title } />
+      </PageHeader>
+      {preflightError && (
+          <Main>
+              <Card>
+                  <CardBody>
+                      <EmptyState { ...preflightError } />
+                  </CardBody>
+              </Card>
+          </Main>
+      )}
+      {!preflightError && (
+          <Grid>
+              <GridItem
+                  span={ 8 }
+                  style={ { display: 'flex', flexDirection: 'column' } }
+              >
+                  <Main style={ { paddingBottom: '0' } }>
+                      <Card>
+                          <CardHeader>Automation vs manual</CardHeader>
+                          <CardBody>
+                              { isLoading && !preflightError && <LoadingState /> }
+                              { !isLoading && formattedData.length <= 0 && <NoData /> }
+                              { formattedData.length > 0 && !isLoading && (
+                                  <TopTemplatesSavings
+                                      margin={ { top: 20, right: 20, bottom: 70, left: 70 } }
+                                      id="d3-roi-chart-root"
+                                      data={ formattedData }
+                                      selected={ selectedIds }
+                                  />
+                              ) }
+                          </CardBody>
+                      </Card>
+                  </Main>
+                  <Main>
+                      <Card style={ { height: '100%' } }>
+                          <CardHeader>Automation formula</CardHeader>
+                          <CardBody>
+                              <p>
+                    Your automation savings is calculated by the following
+                    formula:
+                              </p>
+                              <p>
+                                  <em>
+                      S = &sum;fc<sub>m</sub>t - fc<sub>a</sub>t
+                                  </em>
+                              </p>
+                              <p>
+                    Lounge in doorway lick the other cats claws in your leg sit
+                    on the laptop.
+                              </p>
+                          </CardBody>
+                      </Card>
+                  </Main>
+              </GridItem>
+              <GridItem span={ 4 }>
+                  <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
+                      <Card>
+                          <CardHeader style={ { paddingBottom: '0' } }>
+                  Total savings
+                          </CardHeader>
+                          <CardBody>
+                              <Title
+                                  headingLevel="h3"
+                                  size="3xl"
+                                  style={ { color: 'var(--pf-global--success-color--200)' } }
+                              >
+                                  { totalSavings }
+                              </Title>
+                          </CardBody>
+                      </Card>
+                  </Main>
+                  <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
+                      <Card>
+                          <CardHeader style={ { paddingBottom: '10px' } }>
+                  Calculate your automation
+                          </CardHeader>
+                          <CardBody>
+                              <InputAndText>
+                                  <p>Manual cost of automation</p>
+                                  <em style={ { color: 'var(--pf-global--Color--dark-200)' } }>
+                      (e.g. average salary of mid-level SE)
+                                  </em>
+                                  <InputGroup style={ { width: '50%' } }>
+                                      <InputGroupText>
+                                          <DollarSignIcon />
+                                      </InputGroupText>
+                                      <TextInput
+                                          id="manual-cost"
+                                          type="number"
+                                          aria-label="manual-cost"
+                                          value={ costManual }
+                                          onChange={ e => setCostManual(e) }
+                                      />
+                                      <InputGroupText>/hr</InputGroupText>
+                                  </InputGroup>
+                              </InputAndText>
+                              <InputAndText style={ { paddingTop: '10px' } }>
+                                  <p>Cost of automation</p>
+                                  <InputGroup style={ { width: '50%' } }>
+                                      <InputGroupText>
+                                          <DollarSignIcon />
+                                      </InputGroupText>
+                                      <TextInput
+                                          id="automation-cost"
+                                          type="number"
+                                          aria-label="automation-cost"
+                                          value={ costAutomation }
+                                          onChange={ e => setCostAutomation(e) }
+                                      />
+                                      <InputGroupText>/hr</InputGroupText>
+                                  </InputGroup>
+                              </InputAndText>
+                          </CardBody>
+                      </Card>
+                  </Main>
+                  <Main style={ { paddingLeft: '0' } }>
+                      <Card style={ { height: '39vh', overflow: 'auto' } }>
+                          <CardHeader>Top templates</CardHeader>
+                          <CardBody>
+                              <p>
+                    Enter the time it takes to run the following templates
+                    manually.
+                              </p>
+                              { templatesList.map(data => (
+                                  <div key={ data.id }>
+                                      <p style={ { padding: '15px 0 10px' } }>{ data.name }</p>
+                                      <TemplateDetail>
+                                          <InputAndText key={ data.id }>
+                                              <InputGroup>
+                                                  <TextInput
+                                                      id={ data.id }
+                                                      type="number"
+                                                      aria-label="time run manually"
+                                                      value={ convertSecondsToMins(
+                                                          data.calculations[0].avg_run
+                                                      ) }
+                                                      onChange={ e => {
+                                                          handleManualTimeChange(e, data.id);
+                                                      } }
+                                                      isDisabled={ !data.isActive }
+                                                  />
+                                                  <InputGroupText>min</InputGroupText>
+                                                  <em
+                                                      style={ {
+                                                          color: 'var(--pf-global--Color--dark-200)',
+                                                          lineHeight: '36px',
+                                                          marginLeft: '10px'
+                                                      } }
+                                                  >
+                              x { data.run_count } runs, { data.host_count } hosts
+                                                  </em>
+                                              </InputGroup>
+                                          </InputAndText>
+                                          <IconGroup>
+                                              <Tooltip
+                                                  position={ TooltipPosition.top }
+                                                  entryDelay={ 50 }
+                                                  exitDelay={ 50 }
+                                                  content={
+                                                      <TooltipWrapper>
+                                                          <p
+                                                          >Elapsed sum: { data.elapsed_sum }s</p>
+                                                          <p>Failed elapsed sum: { data.failed_elapsed_sum }s</p>
+                                                          <p>Org name: { data.org_name }</p>
+                                                          <p>Cluster name: { data.cluster_name }</p>
+                                                      </TooltipWrapper>
+                                                  }
+                                              >
+                                                  <InfoCircleIcon />
+                                              </Tooltip>
+                                              { data.isActive === true && (
+                                                  <OutlinedEyeIcon
+                                                      onClick={ () => {
+                                                          handleToggle(data.id);
+                                                      } }
+                                                  />
+                                              ) }
+                                              { data.isActive === false && (
+                                                  <OutlinedEyeSlashIcon
+                                                      onClick={ () => {
+                                                          handleToggle(data.id);
+                                                      } }
+                                                  />
+                                              ) }
+                                          </IconGroup>
+                                      </TemplateDetail>
+                                  </div>
+                              )) }
+                          </CardBody>
+                      </Card>
+                  </Main>
+              </GridItem>
+          </Grid>
+      )}
+    </>
     );
 };
 
