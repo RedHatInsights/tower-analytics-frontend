@@ -49,23 +49,35 @@ let defaultAvgRunVal = 3600; // 1 hr in seconds
 
 const InputAndText = styled.div`
   flex: 1;
-
-  & .pf-c-input-group {
-    /* width: 75%; */
-    /* margin-right: 15px; */
-    padding-right: 15px;
-  }
 `;
 
 const TemplateDetail = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
+
+  div,
+  em {
+    padding-right: 5px;
+  }
+
+  @media (max-width: 1350px) {
+    display: block;
+
+    em {
+      padding: 10px 0;
+      display: block;
+    }
+  }
+`;
+
+const TemplateDetailSubTitle = styled.em`
+  color: var(--pf-global--Color--dark-200);
 `;
 
 const TooltipWrapper = styled.div`
   p {
-      text-align: left;
+    text-align: left;
   }
 `;
 
@@ -74,7 +86,12 @@ const IconGroup = styled.div`
     fill: var(--pf-global--Color--dark-200);
 
     :first-of-type {
-      margin-right: 20px;
+      margin-right: 10px;
+      margin-left: 10px;
+
+      @media (max-width: 1350px) {
+        margin-left: 0;
+      }
     }
   }
 `;
@@ -411,17 +428,11 @@ const AutomationCalculator = () => {
                                                       isDisabled={ !data.isActive }
                                                   />
                                                   <InputGroupText>min</InputGroupText>
-                                                  <em
-                                                      style={ {
-                                                          color: 'var(--pf-global--Color--dark-200)',
-                                                          lineHeight: '36px',
-                                                          marginLeft: '10px'
-                                                      } }
-                                                  >
-                              x { data.run_count } runs, { data.host_count } hosts
-                                                  </em>
                                               </InputGroup>
                                           </InputAndText>
+                                          <TemplateDetailSubTitle>
+                          x { data.run_count } runs, { data.host_count } hosts
+                                          </TemplateDetailSubTitle>
                                           <IconGroup>
                                               <Tooltip
                                                   position={ TooltipPosition.top }
@@ -429,9 +440,10 @@ const AutomationCalculator = () => {
                                                   exitDelay={ 50 }
                                                   content={
                                                       <TooltipWrapper>
-                                                          <p
-                                                          >Elapsed sum: { data.elapsed_sum }s</p>
-                                                          <p>Failed elapsed sum: { data.failed_elapsed_sum }s</p>
+                                                          <p>Elapsed sum: { data.elapsed_sum }s</p>
+                                                          <p>
+                                  Failed elapsed sum: { data.failed_elapsed_sum }s
+                                                          </p>
                                                           <p>Org name: { data.org_name }</p>
                                                           <p>Cluster name: { data.cluster_name }</p>
                                                       </TooltipWrapper>
