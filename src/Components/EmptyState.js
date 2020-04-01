@@ -27,7 +27,7 @@ const DefaultEmptyState = ({ preflightError: error }) => (
         { error.status === 401 && (
             <>
                 <Title headingLevel="h5" size="lg">
-                    Not Authorized
+                    Not authorized
                 </Title>
                 <EmptyStateBody>
                     You do not have the correct permissions to view this page.
@@ -37,7 +37,7 @@ const DefaultEmptyState = ({ preflightError: error }) => (
         { !error.status && (
             <>
                 <Title headingLevel="h5" size="lg">
-                    Something went wrong. Please try reloading the page.
+                    Something went wrong, please try reloading the page
                 </Title>
                 <Button variant="primary" onClick={ () => window.location.reload() }>Reload</Button>
             </>
