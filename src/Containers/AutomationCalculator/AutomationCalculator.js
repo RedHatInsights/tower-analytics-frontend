@@ -85,6 +85,10 @@ const IconGroup = styled.div`
   & svg {
     fill: var(--pf-global--Color--dark-200);
 
+    :hover {
+        cursor: pointer;
+    }
+
     :first-of-type {
       margin-right: 10px;
       margin-left: 10px;
