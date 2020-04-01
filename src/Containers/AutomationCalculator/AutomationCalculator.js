@@ -86,7 +86,7 @@ const IconGroup = styled.div`
     fill: var(--pf-global--Color--dark-200);
 
     :hover {
-        cursor: pointer;
+      cursor: pointer;
     }
 
     :first-of-type {
@@ -333,12 +333,16 @@ const AutomationCalculator = () => {
                               </p>
                               <p>
                                   <em>
-                      S = &sum;fc<sub>m</sub>t - fc<sub>a</sub>t
+                      S = &sum;(c<sub>m</sub>t<sub>m</sub> - c<sub>a</sub>t
+                                      <sub>a</sub>) * h * r
                                   </em>
                               </p>
-                              <p>
-                    Lounge in doorway lick the other cats claws in your leg sit
-                    on the laptop.
+                              <p> Money saved for template X = (currency per hour(c<sub>m</sub>) * manual
+                    time for job X (t<sub>m</sub>) - automation cost per hour (c<sub>a</sub>)* automated job
+                    time for X (t<sub>a</sub>)) * the number of hosts it ran on (h) * the number of
+                    jobs it has run (r).</p>
+                              <p>Total money saved (S) = sum money saved for
+                    template X for all templates.
                               </p>
                           </CardBody>
                       </Card>
@@ -406,7 +410,7 @@ const AutomationCalculator = () => {
                       </Card>
                   </Main>
                   <Main style={ { paddingLeft: '0' } }>
-                      <Card style={ { height: '39vh', overflow: 'auto' } }>
+                      <Card style={ { height: '41vh', overflow: 'auto' } }>
                           <CardHeader>Top templates</CardHeader>
                           <CardBody>
                               <p>
