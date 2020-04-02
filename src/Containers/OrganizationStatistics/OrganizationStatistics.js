@@ -179,11 +179,7 @@ const OrganizationStatistics = () => {
             </PageHeader>
             { preflightError && (
                 <Main>
-                    <Card>
-                        <CardBody>
-                            <EmptyState { ...preflightError } />
-                        </CardBody>
-                    </Card>
+                    <EmptyState { ...preflightError } />
                 </Main>
             ) }
             { !preflightError && (
