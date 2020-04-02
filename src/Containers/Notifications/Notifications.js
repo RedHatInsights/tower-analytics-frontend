@@ -161,17 +161,15 @@ const Notifications = () => {
             return;
         }
 
-        const fetchEndpoints = () => {
-            return Promise.all(
-                [ readNotifications({ params: queryParams }) ].map(p => p.catch(() => []))
-            );
+        const getData = () => {
+            return readNotifications({ params: queryParams });
         };
 
         const update = async () => {
             setIsLoading(true);
             await window.insights.chrome.auth.getUser();
-            fetchEndpoints().then(
-                ([{ notifications: notificationsData = [], meta }]) => {
+            getData().then(
+                ({ notifications: notificationsData = [], meta }) => {
                     setNotificationsData(notificationsData);
                     setMeta(meta);
                     setIsLoading(false);
@@ -184,7 +182,7 @@ const Notifications = () => {
 
     useEffect(() => {
         let ignore = false;
-        const getData = () => {
+        const fetchEndpoints = () => {
             return Promise.all(
                 [ readClusters(), readNotifications({ params: queryParams }) ].map(p =>
                     p.catch(() => [])
@@ -198,7 +196,7 @@ const Notifications = () => {
             await preflightRequest().catch(error => {
                 setPreFlightError({ preflightError: error });
             });
-            getData().then(
+            fetchEndpoints().then(
                 ([
                     { templates: clustersData = []},
                     { notifications: notificationsData = [], meta }
