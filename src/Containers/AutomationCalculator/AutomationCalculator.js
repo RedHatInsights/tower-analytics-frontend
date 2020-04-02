@@ -117,6 +117,98 @@ const initialQueryParams = {
     endDate: moment.utc().format('YYYY-MM-DD')
 };
 
+export const automationCalculatorMethods = () => {
+    // create our array to feed to D3
+    const formatData = (response, defaults) => {
+        return response.reduce(
+            (
+                formatted,
+                {
+                    name,
+                    template_id: id,
+                    successful_run_count,
+                    successful_elapsed_sum,
+                    successful_host_count_avg,
+                    successful_host_count,
+                    elapsed_sum,
+                    failed_elapsed_sum,
+                    orgs,
+                    clusters
+                }
+            ) => {
+                formatted.push({
+                    name,
+                    id,
+                    run_count: successful_run_count,
+                    host_count: Math.ceil(successful_host_count_avg) || 0,
+                    successful_host_count,
+                    delta: 0,
+                    isActive: true,
+                    calculations: [
+                        {
+                            type: 'Manual',
+                            avg_run: defaults,
+                            total: defaults * successful_host_count || 0
+                        },
+                        {
+                            type: 'Automated',
+                            avg_run: successful_elapsed_sum || 0,
+                            total: successful_elapsed_sum * successful_host_count || 0
+                        }
+                    ],
+                    orgs,
+                    clusters,
+                    elapsed_sum,
+                    failed_elapsed_sum
+                });
+                return formatted;
+            },
+            []
+        );
+    };
+
+    const updateData = (seconds, id, data) => {
+        let updatedData = [ ...data ];
+        updatedData.map(datum => {
+            if (datum.id === id) {
+                datum.calculations[0].avg_run = seconds;
+                datum.calculations[0].total = seconds * datum.successful_host_count;
+            }
+        });
+        return updatedData;
+    };
+
+    const handleManualTimeChange = minutes => {
+        const seconds = convertMinsToSeconds(minutes);
+        return seconds;
+    };
+
+    const formatSelectedIds = (arr, id) => {
+        let selected;
+        if (arr.includes(id)) {
+            selected = [ ...arr ].filter(s => s !== id);
+        } else {
+            selected = [ ...arr, id ];
+        }
+
+        return selected;
+    };
+
+    const handleToggle = (id, selected) => {
+        const currentSelection = [ ...selected ];
+        const newSelection = formatSelectedIds(currentSelection, id);
+        return newSelection;
+    };
+
+    return {
+        formatData,
+        updateData,
+        handleManualTimeChange,
+        formatSelectedIds,
+        handleToggle
+    };
+};
+
 const AutomationCalculator = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ unfilteredData, setUnfilteredData ] = useState([]);
@@ -130,56 +222,12 @@ const AutomationCalculator = () => {
     const [ isLoading, setIsLoading ] = useState(true);
     const { queryParams } = useQueryParams(initialQueryParams);
 
-    // create our array to feed to D3
-    const formatData = (response, defaults) => {
-        return response.reduce(
-            (
-                formatted,
-                {
-                    name,
-                    template_id: id,
-                    successful_run_count,
-                    successful_elapsed_sum,
-                    successful_host_count_avg,
-                    elapsed_sum,
-                    failed_elapsed_sum,
-                    org_name,
-                    cluster_name
-                }
-            ) => {
-                const avg_run = successful_elapsed_sum / successful_run_count;
-                const total_hosts = Math.floor(
-                    successful_host_count_avg * successful_run_count
-                );
-                formatted.push({
-                    name,
-                    id,
-                    run_count: successful_run_count,
-                    host_count: Math.ceil(successful_host_count_avg) || 0,
-                    delta: 0,
-                    isActive: true,
-                    calculations: [
-                        {
-                            type: 'Manual',
-                            avg_run: defaults,
-                            total: defaults * total_hosts || 0
-                        },
-                        {
-                            type: 'Automated',
-                            avg_run: avg_run || 0,
-                            total: successful_elapsed_sum * total_hosts || 0
-                        }
-                    ],
-                    org_name,
-                    cluster_name,
-                    elapsed_sum,
-                    failed_elapsed_sum
-                });
-                return formatted;
-            },
-            []
-        );
-    };
+    const {
+        formatData,
+        updateData,
+        handleManualTimeChange,
+        handleToggle
+    } = automationCalculatorMethods();
 
     useEffect(() => {
         const formatted = formatData(roiData, defaultAvgRunVal);
@@ -235,15 +283,13 @@ const AutomationCalculator = () => {
             convertSecondsToHours(datum.calculations[1].avg_run) * costAutomation,
             convertSecondsToHours(datum.calculations[0].avg_run) * costManual
         ) *
-        datum.run_count *
-        datum.host_count;
+        datum.successful_host_count;
             datum.delta =
         calculateDelta(
             convertSecondsToHours(datum.calculations[1].avg_run) * costAutomation,
             convertSecondsToHours(datum.calculations[0].avg_run) * costManual
         ) *
-        datum.run_count *
-        datum.host_count;
+        datum.successful_host_count;
         });
         const totalWithCommas = total
         .toFixed(2)
@@ -251,40 +297,6 @@ const AutomationCalculator = () => {
         .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         setTotalSavings('$' + totalWithCommas);
     }, [ formattedData, costAutomation, costManual ]);
-
-    const updateData = (seconds, id) => {
-        let data = [ ...formattedData ];
-        data.map(datum => {
-            if (datum.id === id) {
-                datum.calculations[0].avg_run = seconds;
-                datum.calculations[0].total = seconds * datum.run_count;
-            }
-        });
-        return data;
-    };
-
-    const handleManualTimeChange = (minutes, id) => {
-        const seconds = convertMinsToSeconds(minutes);
-        const updated = updateData(seconds, id);
-        setFormattedData(updated);
-    };
-
-    const formatSelectedIds = (arr, id) => {
-        let selected;
-        if (arr.includes(id)) {
-            selected = [ ...arr ].filter(s => s !== id);
-        } else {
-            selected = [ ...arr, id ];
-        }
-
-        return selected;
-    };
-
-    const handleToggle = id => {
-        const currentSelection = [ ...selectedIds ];
-        const newSelection = formatSelectedIds(currentSelection, id);
-        setSelectedIds(newSelection);
-    };
 
     return (
     <>
@@ -337,12 +349,17 @@ const AutomationCalculator = () => {
                                       <sub>a</sub>) * h * r
                                   </em>
                               </p>
-                              <p> Money saved for template X = (currency per hour(c<sub>m</sub>) * manual
-                    time for job X (t<sub>m</sub>) - automation cost per hour (c<sub>a</sub>)* automated job
-                    time for X (t<sub>a</sub>)) * the number of hosts it ran on (h) * the number of
-                    jobs it has run (r).</p>
-                              <p>Total money saved (S) = sum money saved for
-                    template X for all templates.
+                              <p>
+                                  { ' ' }
+                    Money saved for template X = (currency per hour(c
+                                  <sub>m</sub>) * manual time for job X (t<sub>m</sub>) -
+                    automation cost per hour (c<sub>a</sub>)* automated job time
+                    for X (t<sub>a</sub>)) * the number of hosts it ran on (h) *
+                    the number of jobs it has run (r).
+                              </p>
+                              <p>
+                    Total money saved (S) = sum money saved for template X for
+                    all templates.
                               </p>
                           </CardBody>
                       </Card>
@@ -431,7 +448,16 @@ const AutomationCalculator = () => {
                                                           data.calculations[0].avg_run
                                                       ) }
                                                       onChange={ e => {
-                                                          handleManualTimeChange(e, data.id);
+                                                          const seconds = handleManualTimeChange(
+                                                              e,
+                                                              data.id
+                                                          );
+                                                          const updated = updateData(
+                                                              seconds,
+                                                              data.id,
+                                                              formattedData
+                                                          );
+                                                          setFormattedData(updated);
                                                       } }
                                                       isDisabled={ !data.isActive }
                                                   />
@@ -452,8 +478,20 @@ const AutomationCalculator = () => {
                                                           <p>
                                   Failed elapsed sum: { data.failed_elapsed_sum }s
                                                           </p>
-                                                          <p>Org name: { data.org_name }</p>
-                                                          <p>Cluster name: { data.cluster_name }</p>
+                                                          <p>
+                                  Associated organizations:{ ' ' }
+                                                              { data.orgs.map(o => (
+                                                                  <span key={ o.org_id }>{ o.org_name }</span>
+                                                              )) }
+                                                          </p>
+                                                          <p>
+                                  Associated clusters:{ ' ' }
+                                                              { data.clusters.map(c => (
+                                                                  <span key={ c.cluster_id }>
+                                                                      { c.cluster_name }
+                                                                  </span>
+                                                              )) }
+                                                          </p>
                                                       </TooltipWrapper>
                                                   }
                                               >
@@ -462,14 +500,22 @@ const AutomationCalculator = () => {
                                               { data.isActive === true && (
                                                   <OutlinedEyeIcon
                                                       onClick={ () => {
-                                                          handleToggle(data.id);
+                                                          const selected = handleToggle(
+                                                              data.id,
+                                                              selectedIds
+                                                          );
+                                                          setSelectedIds(selected);
                                                       } }
                                                   />
                                               ) }
                                               { data.isActive === false && (
                                                   <OutlinedEyeSlashIcon
                                                       onClick={ () => {
-                                                          handleToggle(data.id);
+                                                          const selected = handleToggle(
+                                                              data.id,
+                                                              selectedIds
+                                                          );
+                                                          setSelectedIds(selected);
                                                       } }
                                                   />
                                               ) }
