@@ -9,15 +9,15 @@ import {
     EmptyStateIcon,
     EmptyStateBody
 } from '@patternfly/react-core';
-import { CubesIcon } from '@patternfly/react-icons';
+import { WrenchIcon } from '@patternfly/react-icons';
 
 const DefaultEmptyState = ({ preflightError: error }) => (
     <EmptyState variant={ EmptyStateVariant.full }>
-        <EmptyStateIcon icon={ CubesIcon } />
+        <EmptyStateIcon icon={ WrenchIcon } />
         { error.status === 404 && (
             <>
                 <Title headingLevel="h5" size="lg">
-                    No Data Found.
+                    No data found
                 </Title>
                 <EmptyStateBody>
                     Please visit <a href='https://docs.ansible.com/ansible-tower/latest/html/administration/usability_data_collection.html#automation-analytics' target='_blank' rel='noopener noreferrer'>here</a> to learn how to enable Automation Analytics.
@@ -27,7 +27,7 @@ const DefaultEmptyState = ({ preflightError: error }) => (
         { error.status === 401 && (
             <>
                 <Title headingLevel="h5" size="lg">
-                    Not Authorized
+                    Not authorized
                 </Title>
                 <EmptyStateBody>
                     You do not have the correct permissions to view this page.
@@ -37,11 +37,12 @@ const DefaultEmptyState = ({ preflightError: error }) => (
         { !error.status && (
             <>
                 <Title headingLevel="h5" size="lg">
-                    Something went wrong. Please try reloading the page.
+                    Something went wrong, please try reloading the page
                 </Title>
                 <Button variant="primary" onClick={ () => window.location.reload() }>Reload</Button>
             </>
         ) }
+
     </EmptyState>
 );
 
