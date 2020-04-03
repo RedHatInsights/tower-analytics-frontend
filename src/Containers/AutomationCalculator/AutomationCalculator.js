@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
@@ -159,7 +160,8 @@ export const automationCalculatorMethods = () => {
                     orgs,
                     clusters,
                     elapsed_sum,
-                    failed_elapsed_sum
+                    failed_elapsed_sum,
+                    successful_elapsed_sum
                 });
                 return formatted;
             },
@@ -171,6 +173,7 @@ export const automationCalculatorMethods = () => {
         let updatedData = [ ...data ];
         updatedData.map(datum => {
             if (datum.id === id) {
+                // Update manual calculations
                 datum.calculations[0].avg_run = seconds;
                 datum.calculations[0].total = seconds * datum.successful_host_count;
             }
@@ -277,19 +280,20 @@ const AutomationCalculator = () => {
     useEffect(() => {
         let data = [ ...formattedData ];
         let total = 0;
+        let costAutomationPerHour;
+        let costManualPerHour;
+
         data.forEach(datum => {
+            costAutomationPerHour = (convertSecondsToHours(datum.successful_elapsed_sum) * costAutomation);
+            costManualPerHour = (convertSecondsToHours(datum.calculations[0].avg_run) * datum.successful_host_count * costManual);
             total +=
         calculateDelta(
-            convertSecondsToHours(datum.calculations[1].avg_run) * costAutomation,
-            convertSecondsToHours(datum.calculations[0].avg_run) * costManual
-        ) *
-        datum.successful_host_count;
+            costAutomationPerHour, costManualPerHour
+        );
             datum.delta =
         calculateDelta(
-            convertSecondsToHours(datum.calculations[1].avg_run) * costAutomation,
-            convertSecondsToHours(datum.calculations[0].avg_run) * costManual
-        ) *
-        datum.successful_host_count;
+            costAutomationPerHour, costManualPerHour
+        );
         });
         const totalWithCommas = total
         .toFixed(2)
@@ -474,7 +478,8 @@ const AutomationCalculator = () => {
                                                   exitDelay={ 50 }
                                                   content={
                                                       <TooltipWrapper>
-                                                          <p>Elapsed sum: { data.elapsed_sum }s</p>
+                                                          <p>Total elapsed sum: { data.elapsed_sum }s</p>
+                                                          <p>Success elapsed sum: { data.successful_elapsed_sum }s</p>
                                                           <p>
                                   Failed elapsed sum: { data.failed_elapsed_sum }s
                                                           </p>
