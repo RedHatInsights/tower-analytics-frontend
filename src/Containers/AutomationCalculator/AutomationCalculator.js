@@ -1,4 +1,3 @@
-/* eslint-disable */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
@@ -284,16 +283,14 @@ const AutomationCalculator = () => {
         let costManualPerHour;
 
         data.forEach(datum => {
-            costAutomationPerHour = (convertSecondsToHours(datum.successful_elapsed_sum) * costAutomation);
-            costManualPerHour = (convertSecondsToHours(datum.calculations[0].avg_run) * datum.successful_host_count * costManual);
-            total +=
-        calculateDelta(
-            costAutomationPerHour, costManualPerHour
-        );
-            datum.delta =
-        calculateDelta(
-            costAutomationPerHour, costManualPerHour
-        );
+            costAutomationPerHour =
+        convertSecondsToHours(datum.successful_elapsed_sum) * costAutomation;
+            costManualPerHour =
+        convertSecondsToHours(datum.calculations[0].avg_run) *
+        datum.successful_host_count *
+        costManual;
+            total += calculateDelta(costAutomationPerHour, costManualPerHour);
+            datum.delta = calculateDelta(costAutomationPerHour, costManualPerHour);
         });
         const totalWithCommas = total
         .toFixed(2)
@@ -344,26 +341,25 @@ const AutomationCalculator = () => {
                           <CardHeader>Automation formula</CardHeader>
                           <CardBody>
                               <p>
-                    Your automation savings is calculated by the following
-                    formula:
-                              </p>
-                              <p>
+                                  <b>Manual cost for template X</b> =
                                   <em>
-                      S = &sum;(c<sub>m</sub>t<sub>m</sub> - c<sub>a</sub>t
-                                      <sub>a</sub>) * h * r
+                      (time for a manual run on one host * (number of hosts it
+                      has run across in a sum of all job runs) ) * cost per hour
                                   </em>
                               </p>
                               <p>
-                                  { ' ' }
-                    Money saved for template X = (currency per hour(c
-                                  <sub>m</sub>) * manual time for job X (t<sub>m</sub>) -
-                    automation cost per hour (c<sub>a</sub>)* automated job time
-                    for X (t<sub>a</sub>)) * the number of hosts it ran on (h) *
-                    the number of jobs it has run (r).
+                                  <b>Automation cost for template X</b> =
+                                  <em>
+                      cost of automation per hour * sum of total elapsed hours
+                      for JT
+                                  </em>
                               </p>
                               <p>
-                    Total money saved (S) = sum money saved for template X for
-                    all templates.
+                                  <b>Savings</b> =
+                                  <em>
+                      Sum of (manual cost - automation cost) across all
+                      templates
+                                  </em>
                               </p>
                           </CardBody>
                       </Card>
@@ -479,7 +475,10 @@ const AutomationCalculator = () => {
                                                   content={
                                                       <TooltipWrapper>
                                                           <p>Total elapsed sum: { data.elapsed_sum }s</p>
-                                                          <p>Success elapsed sum: { data.successful_elapsed_sum }s</p>
+                                                          <p>
+                                  Success elapsed sum:{ ' ' }
+                                                              { data.successful_elapsed_sum }s
+                                                          </p>
                                                           <p>
                                   Failed elapsed sum: { data.failed_elapsed_sum }s
                                                           </p>
