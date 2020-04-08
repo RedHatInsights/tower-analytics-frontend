@@ -128,8 +128,8 @@ export const automationCalculatorMethods = () => {
                     template_id: id,
                     successful_run_count,
                     successful_elapsed_sum,
-                    successful_host_count_avg,
-                    successful_host_count,
+                    successful_host_run_count_avg,
+                    successful_host_run_count,
                     elapsed_sum,
                     failed_elapsed_sum,
                     orgs,
@@ -140,20 +140,20 @@ export const automationCalculatorMethods = () => {
                     name,
                     id,
                     run_count: successful_run_count,
-                    host_count: Math.ceil(successful_host_count_avg) || 0,
-                    successful_host_count,
+                    host_count: Math.ceil(successful_host_run_count_avg) || 0,
+                    successful_host_run_count,
                     delta: 0,
                     isActive: true,
                     calculations: [
                         {
                             type: 'Manual',
                             avg_run: defaults,
-                            total: defaults * successful_host_count || 0
+                            total: defaults * successful_host_run_count || 0
                         },
                         {
                             type: 'Automated',
                             avg_run: successful_elapsed_sum || 0,
-                            total: successful_elapsed_sum * successful_host_count || 0
+                            total: successful_elapsed_sum * successful_host_run_count || 0
                         }
                     ],
                     orgs,
@@ -174,7 +174,7 @@ export const automationCalculatorMethods = () => {
             if (datum.id === id) {
                 // Update manual calculations
                 datum.calculations[0].avg_run = seconds;
-                datum.calculations[0].total = seconds * datum.successful_host_count;
+                datum.calculations[0].total = seconds * datum.successful_host_run_count;
             }
         });
         return updatedData;
@@ -261,7 +261,7 @@ export const useAutomationFormula = () => {
                 convertSecondsToHours(datum.successful_elapsed_sum) * costAutomation;
             costManualPerHour =
                 convertSecondsToHours(datum.calculations[0].avg_run) *
-                datum.successful_host_count *
+                    datum.successful_host_run_count *
                 costManual;
             total += calculateDelta(costAutomationPerHour, costManualPerHour);
             datum.delta = calculateDelta(costAutomationPerHour, costManualPerHour);
