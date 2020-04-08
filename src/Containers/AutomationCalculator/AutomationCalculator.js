@@ -211,46 +211,20 @@ export const automationCalculatorMethods = () => {
     };
 };
 
-const AutomationCalculator = () => {
+export const useAutomationFormula = () => {
+    const [ isLoading, setIsLoading ] = useState(true);
     const [ preflightError, setPreFlightError ] = useState(null);
-    const [ unfilteredData, setUnfilteredData ] = useState([]);
-    const [ formattedData, setFormattedData ] = useState([]);
-    const [ templatesList, setTemplatesList ] = useState([]);
     const [ costManual, setCostManual ] = useState(0);
     const [ costAutomation, setCostAutomation ] = useState(0);
     const [ totalSavings, setTotalSavings ] = useState(0);
+    const [ unfilteredData, setUnfilteredData ] = useState([]);
+    const [ formattedData, setFormattedData ] = useState([]);
+    const [ templatesList, setTemplatesList ] = useState([]);
     const [ roiData, setRoiData ] = useState([]);
     const [ selectedIds, setSelectedIds ] = useState([]);
-    const [ isLoading, setIsLoading ] = useState(true);
+
     const { queryParams } = useQueryParams(initialQueryParams);
-
-    const {
-        formatData,
-        updateData,
-        handleManualTimeChange,
-        handleToggle
-    } = automationCalculatorMethods();
-
-    useEffect(() => {
-        const formatted = formatData(roiData, defaultAvgRunVal);
-        setUnfilteredData(formatted);
-        setFormattedData(formatted);
-        setTemplatesList(formatted);
-    }, [ roiData ]);
-
-    useEffect(() => {
-        const filteredData = unfilteredData.filter(
-            ({ id }) => !selectedIds.includes(id)
-        );
-        templatesList.map(l => {
-            if (selectedIds.includes(l.id)) {
-                l.isActive = false;
-            } else {
-                l.isActive = true;
-            }
-        });
-        setFormattedData(filteredData);
-    }, [ selectedIds ]);
+    const { formatData } = automationCalculatorMethods();
 
     useEffect(() => {
         let ignore = false;
@@ -284,11 +258,11 @@ const AutomationCalculator = () => {
 
         data.forEach(datum => {
             costAutomationPerHour =
-        convertSecondsToHours(datum.successful_elapsed_sum) * costAutomation;
+                convertSecondsToHours(datum.successful_elapsed_sum) * costAutomation;
             costManualPerHour =
-        convertSecondsToHours(datum.calculations[0].avg_run) *
-        datum.successful_host_count *
-        costManual;
+                convertSecondsToHours(datum.calculations[0].avg_run) *
+                datum.successful_host_count *
+                costManual;
             total += calculateDelta(costAutomationPerHour, costManualPerHour);
             datum.delta = calculateDelta(costAutomationPerHour, costManualPerHour);
         });
@@ -298,6 +272,71 @@ const AutomationCalculator = () => {
         .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         setTotalSavings('$' + totalWithCommas);
     }, [ formattedData, costAutomation, costManual ]);
+
+    useEffect(() => {
+        const filteredData = unfilteredData.filter(
+            ({ id }) => !selectedIds.includes(id)
+        );
+        templatesList.map(l => {
+            if (selectedIds.includes(l.id)) {
+                l.isActive = false;
+            } else {
+                l.isActive = true;
+            }
+        });
+        setFormattedData(filteredData);
+    }, [ selectedIds ]);
+
+    useEffect(() => {
+        const formatted = formatData(roiData, defaultAvgRunVal);
+        setUnfilteredData(formatted);
+        setFormattedData(formatted);
+        setTemplatesList(formatted);
+    }, [ roiData ]);
+
+    return {
+        isLoading,
+        preflightError,
+        costManual,
+        setCostManual,
+        costAutomation,
+        setCostAutomation,
+        totalSavings,
+        unfilteredData,
+        setUnfilteredData,
+        formattedData,
+        setFormattedData,
+        templatesList,
+        setTemplatesList,
+        roiData,
+        setRoiData,
+        selectedIds,
+        setSelectedIds
+    };
+};
+
+const AutomationCalculator = () => {
+
+    const {
+        isLoading,
+        costManual,
+        setCostManual,
+        costAutomation,
+        setCostAutomation,
+        totalSavings,
+        formattedData,
+        setFormattedData,
+        templatesList,
+        selectedIds,
+        setSelectedIds,
+        preflightError
+    } = useAutomationFormula();
+
+    const {
+        updateData,
+        handleManualTimeChange,
+        handleToggle
+    } = automationCalculatorMethods();
 
     return (
     <>
@@ -450,7 +489,6 @@ const AutomationCalculator = () => {
                                                       onChange={ e => {
                                                           const seconds = handleManualTimeChange(
                                                               e,
-                                                              data.id
                                                           );
                                                           const updated = updateData(
                                                               seconds,

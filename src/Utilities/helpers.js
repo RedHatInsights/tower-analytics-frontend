@@ -64,7 +64,11 @@ export function convertSecondsToMins(seconds) {
 }
 
 export function convertMinsToSeconds(mins) {
-    return mins * 60;
+    if (!parseInt(mins) || parseInt(mins) < 0) {
+        return 0;
+    }
+
+    return +parseInt(mins) * 60;
 }
 
 export function convertSecondsToHours(seconds) {
