@@ -140,7 +140,7 @@ export const automationCalculatorMethods = () => {
                     name,
                     id,
                     run_count: successful_run_count,
-                    host_count: Math.ceil(successful_host_run_count_avg) || 0,
+                    host_count: successful_host_run_count_avg || 0,
                     successful_host_run_count,
                     delta: 0,
                     isActive: true,
