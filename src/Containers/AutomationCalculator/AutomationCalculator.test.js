@@ -13,10 +13,10 @@ const testResponse = [
         successful_elapsed_sum: 1,
         host_count_avg: 1,
         failed_host_count_avg: 1,
-        successful_host_count_avg: 1,
+        successful_host_run_count_avg: 1,
         host_count: 1,
         failed_host_count: 1,
-        successful_host_count: 1,
+        successful_host_run_count: 1,
         orgs: [
             {
                 org_name: 'bar_org_name',
@@ -32,6 +32,22 @@ const testResponse = [
         known_roi_metric: 36
     }
 ];
+
+const expectedObj = {
+    id: expect.any(Number),
+    name: expect.any(String),
+    isActive: true,
+    calculations: expect.any(Array),
+    orgs: expect.any(Array),
+    clusters: expect.any(Array),
+    run_count: expect.any(Number),
+    host_count: expect.any(Number),
+    successful_host_run_count: expect.any(Number),
+    delta: 0,
+    elapsed_sum: expect.any(Number),
+    failed_elapsed_sum: expect.any(Number),
+    successful_elapsed_sum: expect.any(Number)
+};
 
 const TestHook = ({ callback }) => {
     callback();
@@ -59,21 +75,6 @@ describe('automationCalculatorFormula()', () => {
         });
     });
     it('setRoiData creates unfilteredData, templatesList and formattedData arrays', () => {
-        const expectedObj = {
-            id: expect.any(Number),
-            name: expect.any(String),
-            isActive: true,
-            calculations: expect.any(Array),
-            orgs: expect.any(Array),
-            clusters: expect.any(Array),
-            run_count: expect.any(Number),
-            host_count: expect.any(Number),
-            successful_host_count: expect.any(Number),
-            delta: 0,
-            elapsed_sum: expect.any(Number),
-            failed_elapsed_sum: expect.any(Number),
-            successful_elapsed_sum: expect.any(Number)
-        };
         expect(page.totalSavings).toEqual('$0.00');
         if (page.unfilteredData.length > 0) {
             expect(page.unfilteredData).toStrictEqual(expect.arrayContaining([ expect.objectContaining(expectedObj) ]));
@@ -88,12 +89,16 @@ describe('automationCalculatorFormula()', () => {
         }
     });
     it('setSelectedIds removes templates that match Id(s) passed from formattedData', () => {
+        expect(page.formattedData).toStrictEqual(expect.arrayContaining([expect.objectContaining(expectedObj)]));
         act(() => {
             page.setSelectedIds([ 1 ]);
         });
         expect(page.formattedData).toEqual([]);
     });
     it('setSelectedIds sets isActive to false in templatesList if the template matches the passed id', () => {
+        if (page.templatesList.length > 0) {
+            expect(page.templatesList[0].isActive).toEqual(true);
+        }
         act(() => {
             page.setSelectedIds([ 1 ]);
         });
@@ -143,57 +148,26 @@ describe('automationCalculatorFormula()', () => {
 describe('automationCalculatorMethods()', () => {
     it('formatData should return correctly formatted array', () => {
         const testDefaults = 0;
-        const testResponse = [
-            {
-                template_id: 1,
-                name: 'foo',
-                run_count: 13,
-                failed_run_count: 1,
-                successful_run_count: 12,
-                elapsed_sum: 337.6,
-                failed_elapsed_sum: 13.533,
-                successful_elapsed_sum: 324.067,
-                host_count_avg: 3,
-                failed_host_count_avg: 2,
-                successful_host_count_avg: 3,
-                host_count: 34,
-                failed_host_count: 2,
-                successful_host_count: 32,
-                orgs: [
-                    {
-                        org_name: 'bar_org_name',
-                        org_id: 1
-                    }
-                ],
-                clusters: [
-                    {
-                        cluster_name: 'baz_cluster_name',
-                        cluster_id: 1
-                    }
-                ],
-                known_roi_metric: 36
-            }
-        ];
 
         const expected = [
             {
                 name: testResponse[0].name,
                 id: testResponse[0].template_id,
                 run_count: testResponse[0].successful_run_count,
-                host_count: Math.ceil(testResponse[0].successful_host_count_avg) || 0,
-                successful_host_count: testResponse[0].successful_host_count,
+                host_count: Math.ceil(testResponse[0].successful_host_run_count_avg) || 0,
+                successful_host_run_count: testResponse[0].successful_host_run_count,
                 delta: 0,
                 isActive: true,
                 calculations: [
                     {
                         type: 'Manual',
                         avg_run: testDefaults,
-                        total: testDefaults * testResponse[0].successful_host_count || 0
+                        total: testDefaults * testResponse[0].successful_host_run_count || 0
                     },
                     {
                         type: 'Automated',
                         avg_run: testResponse[0].successful_elapsed_sum || 0,
-                        total: testResponse[0].successful_elapsed_sum * testResponse[0].successful_host_count || 0
+                        total: testResponse[0].successful_elapsed_sum * testResponse[0].successful_host_run_count || 0
                     }
                 ],
                 orgs: testResponse[0].orgs,
@@ -213,7 +187,7 @@ describe('automationCalculatorMethods()', () => {
         const testData = [
             {
                 id: 1,
-                successful_host_count: 2,
+                successful_host_run_count: 2,
                 calculations: [
                     {
                         type: 'Manual',
@@ -229,7 +203,7 @@ describe('automationCalculatorMethods()', () => {
             },
             {
                 id: 2,
-                successful_host_count: 3,
+                successful_host_run_count: 3,
                 calculations: [
                     {
                         type: 'Manual',
@@ -247,12 +221,12 @@ describe('automationCalculatorMethods()', () => {
         const expected = [
             {
                 id: 1,
-                successful_host_count: 2,
+                successful_host_run_count: 2,
                 calculations: [
                     {
                         type: 'Manual',
                         avg_run: testSeconds,
-                        total: testSeconds * testData[0].successful_host_count
+                        total: testSeconds * testData[0].successful_host_run_count
                     },
                     {
                         type: 'Automated',
@@ -263,7 +237,7 @@ describe('automationCalculatorMethods()', () => {
             },
             {
                 id: 2,
-                successful_host_count: 3,
+                successful_host_run_count: 3,
                 calculations: [
                     {
                         type: 'Manual',
