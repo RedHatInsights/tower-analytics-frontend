@@ -1,3 +1,4 @@
+/*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 import { act } from 'react-dom/test-utils';
 import { automationCalculatorMethods, useAutomationFormula } from './AutomationCalculator';
 
@@ -89,7 +90,7 @@ describe('automationCalculatorFormula()', () => {
         }
     });
     it('setSelectedIds removes templates that match Id(s) passed from formattedData', () => {
-        expect(page.formattedData).toStrictEqual(expect.arrayContaining([expect.objectContaining(expectedObj)]));
+        expect(page.formattedData).toStrictEqual(expect.arrayContaining([ expect.objectContaining(expectedObj) ]));
         act(() => {
             page.setSelectedIds([ 1 ]);
         });
@@ -99,6 +100,7 @@ describe('automationCalculatorFormula()', () => {
         if (page.templatesList.length > 0) {
             expect(page.templatesList[0].isActive).toEqual(true);
         }
+
         act(() => {
             page.setSelectedIds([ 1 ]);
         });
