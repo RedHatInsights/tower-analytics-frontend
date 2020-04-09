@@ -66,6 +66,10 @@ h2 {
   min-width: 75%;
 }
 
+#d3-roi-chart-root {
+  overflow-x: auto;
+}
+
 #fail-icon {
   position: absolute;
   left: 21px;

@@ -55,13 +55,14 @@ class Tooltip {
     handleMouseOver = d => {
         let name;
         let savings;
+        const scrollLeftOffset = d3.select('#d3-roi-chart-root').node().scrollLeft;
         const x =
             d3.event.pageX -
             d3
             .select(this.svg)
             .node()
             .getBoundingClientRect().x +
-            10;
+            10 + scrollLeftOffset;
         const y =
             d3.event.pageY -
             d3
@@ -164,7 +165,15 @@ class TopTemplatesSavings extends Component {
                 row.name = datum.name;
             });
         });
-        const width = this.props.getWidth();
+        let width;
+        // adjust chart width to support larger datasets
+        if (data.length >= 15) {
+            const containerWidth = d3.select('.pf-l-grid').node();
+            width = containerWidth.getBoundingClientRect().width - this.props.margin.left - this.props.margin.right;
+        } else {
+            width = this.props.getWidth();
+        }
+
         const height = this.props.getHeight();
         const x0 = d3
         .scaleBand()
@@ -247,18 +256,6 @@ class TopTemplatesSavings extends Component {
         .attr('transform', 'rotate(-90)');
 
         svg.selectAll('.x-axis line').attr('stroke', 'transparent');
-        svg
-        .append('text')
-        .attr(
-            'transform',
-            'translate(' +
-          width / 2 +
-          ' ,' +
-          (height + this.props.margin.top + 45) +
-          ')'
-        )
-        .style('text-anchor', 'middle')
-        .text('Templates');
 
         // add the groups
         let slice = svg.selectAll('.slice').data(data);
@@ -300,26 +297,6 @@ class TopTemplatesSavings extends Component {
             tooltip.handleMouseOut();
         });
         bars = bars.merge(subEnter);
-
-        //Legend
-        let legend = svg.selectAll('.legend')
-        .data(data[0].calculations.map(row => row.type).reverse())
-        .enter().append('g')
-        .attr('class', 'legend')
-        .attr('transform', function (d, i) { return 'translate(' + -(i + 1) * 90 + ', ' + (height + 25) + ')'; });
-
-        legend.append('rect')
-        .attr('x', width - 15)
-        .attr('width', 15)
-        .attr('height', 15)
-        .style('fill', function (d) { return color(d); });
-
-        legend.append('text')
-        .attr('x', width + 5)
-        .attr('y', 7.5)
-        .attr('dy', '.35em')
-        .style('font-size', '14px')
-        .text(function (d) { return d; });
     }
 
     componentDidMount() {

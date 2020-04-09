@@ -1,9 +1,7 @@
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import moment from 'moment';
 
-import { useQueryParams } from '../../Utilities/useQueryParams';
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
 import EmptyState from '../../Components/EmptyState';
@@ -99,6 +97,36 @@ const IconGroup = styled.div`
     }
   }
 `;
+
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: auto;
+
+  div, p {
+      margin: 10px;
+  }
+`;
+
+const Color = styled.div.attrs(props => ({
+    color: props.color || 'black'
+}))`
+  min-width: 12px;
+  height: 12px;
+  background: ${props => props.color};
+  margin-right: 10px;
+`;
+
+const LegendTitle = styled.span`
+  font-size: 12px;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+`;
+
 const title = (
     <span>
     Automation Analytics
@@ -108,14 +136,6 @@ const title = (
         </span>
     </span>
 );
-
-const initialQueryParams = {
-    startDate: moment
-    .utc()
-    .subtract(3, 'months')
-    .format('YYYY-MM-DD'),
-    endDate: moment.utc().format('YYYY-MM-DD')
-};
 
 export const automationCalculatorMethods = () => {
     // create our array to feed to D3
@@ -223,13 +243,12 @@ export const useAutomationFormula = () => {
     const [ roiData, setRoiData ] = useState([]);
     const [ selectedIds, setSelectedIds ] = useState([]);
 
-    const { queryParams } = useQueryParams(initialQueryParams);
     const { formatData } = automationCalculatorMethods();
 
     useEffect(() => {
         let ignore = false;
         const getData = () => {
-            return readROI({ params: queryParams });
+            return readROI({ params: {}});
         };
 
         async function initializeWithPreflight() {
@@ -365,12 +384,21 @@ const AutomationCalculator = () => {
                               { isLoading && !preflightError && <LoadingState /> }
                               { !isLoading && formattedData.length <= 0 && <NoData /> }
                               { formattedData.length > 0 && !isLoading && (
+                                  <>
                                   <TopTemplatesSavings
-                                      margin={ { top: 20, right: 20, bottom: 70, left: 70 } }
+                                      margin={ { top: 20, right: 20, bottom: 10, left: 70 } }
                                       id="d3-roi-chart-root"
                                       data={ formattedData }
                                       selected={ selectedIds }
                                   />
+                                      <p style={ { textAlign: 'center' } }>Templates</p>
+                                      <Wrapper>
+                                          <Color color={ '#0066CC' } />
+                                          <LegendTitle>Automated</LegendTitle>
+                                          <Color color={ '#F0AB00' } />
+                                          <LegendTitle>Manual</LegendTitle>
+                                      </Wrapper>
+                                  </>
                               ) }
                           </CardBody>
                       </Card>
