@@ -18,6 +18,7 @@ const testResponse = [
         host_count: 1,
         failed_host_count: 1,
         successful_host_run_count: 1,
+        template_automation_percentage: 1,
         orgs: [
             {
                 org_name: 'bar_org_name',
@@ -47,7 +48,8 @@ const expectedObj = {
     delta: 0,
     elapsed_sum: expect.any(Number),
     failed_elapsed_sum: expect.any(Number),
-    successful_elapsed_sum: expect.any(Number)
+    successful_elapsed_sum: expect.any(Number),
+    template_automation_percentage: expect.any(Number)
 };
 
 const TestHook = ({ callback }) => {
@@ -176,7 +178,8 @@ describe('automationCalculatorMethods()', () => {
                 clusters: testResponse[0].clusters,
                 elapsed_sum: testResponse[0].elapsed_sum,
                 failed_elapsed_sum: testResponse[0].failed_elapsed_sum,
-                successful_elapsed_sum: testResponse[0].successful_elapsed_sum
+                successful_elapsed_sum: testResponse[0].successful_elapsed_sum,
+                template_automation_percentage: testResponse[0].template_automation_percentage
             }
 
         ];

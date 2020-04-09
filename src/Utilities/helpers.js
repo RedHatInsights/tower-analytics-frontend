@@ -27,7 +27,7 @@ export function getTotal(data) {
 }
 
 export function formatPercentage(val) {
-    if (!parseInt(val)) {
+    if (!parseFloat(val)) {
         return;
     }
 

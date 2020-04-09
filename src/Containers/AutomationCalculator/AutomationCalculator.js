@@ -41,7 +41,8 @@ import {
     convertSecondsToMins,
     convertMinsToSeconds,
     convertSecondsToHours,
-    convertWithCommas
+    convertWithCommas,
+    formatPercentage
 } from '../../Utilities/helpers';
 
 let defaultAvgRunVal = 3600; // 1 hr in seconds
@@ -105,8 +106,9 @@ const Wrapper = styled.div`
   justify-content: flex-end;
   overflow: auto;
 
-  div, p {
-      margin: 10px;
+  div,
+  p {
+    margin: 10px;
   }
 `;
 
@@ -154,7 +156,8 @@ export const automationCalculatorMethods = () => {
                     elapsed_sum,
                     failed_elapsed_sum,
                     orgs,
-                    clusters
+                    clusters,
+                    template_automation_percentage
                 }
             ) => {
                 formatted.push({
@@ -181,7 +184,8 @@ export const automationCalculatorMethods = () => {
                     clusters,
                     elapsed_sum,
                     failed_elapsed_sum,
-                    successful_elapsed_sum
+                    successful_elapsed_sum,
+                    template_automation_percentage
                 });
                 return formatted;
             },
@@ -278,11 +282,11 @@ export const useAutomationFormula = () => {
 
         data.forEach(datum => {
             costAutomationPerHour =
-                convertSecondsToHours(datum.successful_elapsed_sum) * costAutomation;
+        convertSecondsToHours(datum.successful_elapsed_sum) * costAutomation;
             costManualPerHour =
-                convertSecondsToHours(datum.calculations[0].avg_run) *
-                    datum.successful_host_run_count *
-                costManual;
+        convertSecondsToHours(datum.calculations[0].avg_run) *
+        datum.successful_host_run_count *
+        costManual;
             total += calculateDelta(costAutomationPerHour, costManualPerHour);
             datum.delta = calculateDelta(costAutomationPerHour, costManualPerHour);
         });
@@ -336,7 +340,6 @@ export const useAutomationFormula = () => {
 };
 
 const AutomationCalculator = () => {
-
     const {
         isLoading,
         costManual,
@@ -385,21 +388,21 @@ const AutomationCalculator = () => {
                               { isLoading && !preflightError && <LoadingState /> }
                               { !isLoading && formattedData.length <= 0 && <NoData /> }
                               { formattedData.length > 0 && !isLoading && (
-                                  <>
-                                  <TopTemplatesSavings
-                                      margin={ { top: 20, right: 20, bottom: 10, left: 70 } }
-                                      id="d3-roi-chart-root"
-                                      data={ formattedData }
-                                      selected={ selectedIds }
-                                  />
-                                      <p style={ { textAlign: 'center' } }>Templates</p>
-                                      <Wrapper>
-                                          <Color color={ '#0066CC' } />
-                                          <LegendTitle>Automated</LegendTitle>
-                                          <Color color={ '#F0AB00' } />
-                                          <LegendTitle>Manual</LegendTitle>
-                                      </Wrapper>
-                                  </>
+                    <>
+                      <TopTemplatesSavings
+                          margin={ { top: 20, right: 20, bottom: 10, left: 70 } }
+                          id="d3-roi-chart-root"
+                          data={ formattedData }
+                          selected={ selectedIds }
+                      />
+                      <p style={ { textAlign: 'center' } }>Templates</p>
+                      <Wrapper>
+                          <Color color={ '#0066CC' } />
+                          <LegendTitle>Automated</LegendTitle>
+                          <Color color={ '#F0AB00' } />
+                          <LegendTitle>Manual</LegendTitle>
+                      </Wrapper>
+                    </>
                               ) }
                           </CardBody>
                       </Card>
@@ -411,7 +414,8 @@ const AutomationCalculator = () => {
                               <p>
                                   <b>Manual cost for template X</b> =
                                   <em>
-                                            (time for a manual run on one host * (sum of all hosts across all job runs) ) * cost per hour
+                      (time for a manual run on one host * (sum of all hosts
+                      across all job runs) ) * cost per hour
                                   </em>
                               </p>
                               <p>
@@ -515,9 +519,7 @@ const AutomationCalculator = () => {
                                                           data.calculations[0].avg_run
                                                       ) }
                                                       onChange={ e => {
-                                                          const seconds = handleManualTimeChange(
-                                                              e,
-                                                          );
+                                                          const seconds = handleManualTimeChange(e);
                                                           const updated = updateData(
                                                               seconds,
                                                               data.id,
@@ -540,21 +542,36 @@ const AutomationCalculator = () => {
                                                   exitDelay={ 50 }
                                                   content={
                                                       <TooltipWrapper>
-                                                          <p>Total elapsed sum: { data.elapsed_sum }s</p>
                                                           <p>
-                                  Success elapsed sum:{ ' ' }
+                                                              <b>Total elapsed sum</b>:{ ' ' }
+                                                              { data.elapsed_sum }s
+                                                          </p>
+                                                          <p>
+                                                              <b>Success elapsed sum</b>:{ ' ' }
                                                               { data.successful_elapsed_sum }s
                                                           </p>
                                                           <p>
-                                  Failed elapsed sum: { data.failed_elapsed_sum }s
+                                                              <b>Failed elapsed sum</b>:{ ' ' }
+                                                              { data.failed_elapsed_sum }s
                                                           </p>
                                                           <p>
-                                  Associated organizations:{ ' ' }
-                                                              <span key={ data.id }>{ convertWithCommas(data.orgs, 'org_name') }</span>
+                                                              <b>Automation Percentage</b>:{ ' ' }
+                                                              { formatPercentage(data.template_automation_percentage.toFixed(2)) }
                                                           </p>
                                                           <p>
-                                  Associated clusters:{ ' ' }
-                                                              <span key={ data.id }>{ convertWithCommas(data.clusters, 'cluster_name') }</span>
+                                                              <b>Associated organizations</b>:{ ' ' }
+                                                              <span key={ data.id }>
+                                                                  { convertWithCommas(data.orgs, 'org_name') }
+                                                              </span>
+                                                          </p>
+                                                          <p>
+                                                              <b>Associated clusters</b>:{ ' ' }
+                                                              <span key={ data.id }>
+                                                                  { convertWithCommas(
+                                                                      data.clusters,
+                                                                      'cluster_name'
+                                                                  ) }
+                                                              </span>
                                                           </p>
                                                       </TooltipWrapper>
                                                   }
