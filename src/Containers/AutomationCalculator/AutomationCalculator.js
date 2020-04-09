@@ -40,7 +40,8 @@ import {
     calculateDelta,
     convertSecondsToMins,
     convertMinsToSeconds,
-    convertSecondsToHours
+    convertSecondsToHours,
+    convertWithCommas
 } from '../../Utilities/helpers';
 
 let defaultAvgRunVal = 3600; // 1 hr in seconds
@@ -550,17 +551,11 @@ const AutomationCalculator = () => {
                                                           </p>
                                                           <p>
                                   Associated organizations:{ ' ' }
-                                                              { data.orgs.map(o => (
-                                                                  <span key={ o.org_id }>{ o.org_name }</span>
-                                                              )) }
+                                                              <span key={ data.id }>{ convertWithCommas(data.orgs, 'org_name') }</span>
                                                           </p>
                                                           <p>
                                   Associated clusters:{ ' ' }
-                                                              { data.clusters.map(c => (
-                                                                  <span key={ c.cluster_id }>
-                                                                      { c.cluster_name }
-                                                                  </span>
-                                                              )) }
+                                                              <span key={ data.id }>{ convertWithCommas(data.clusters, 'cluster_name') }</span>
                                                           </p>
                                                       </TooltipWrapper>
                                                   }

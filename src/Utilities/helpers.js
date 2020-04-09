@@ -75,3 +75,8 @@ export function convertMinsToSeconds(mins) {
 export function convertSecondsToHours(seconds) {
     return seconds / 3600;
 }
+
+export function convertWithCommas(arr, key) {
+    const split = arr.reduce((strs, datum) => { strs.push(datum[key]); return strs; }, []);
+    return split.join(', ');
+}
