@@ -411,15 +411,14 @@ const AutomationCalculator = () => {
                               <p>
                                   <b>Manual cost for template X</b> =
                                   <em>
-                      (time for a manual run on one host * (number of hosts it
-                      has run across in a sum of all job runs) ) * cost per hour
+                                            (time for a manual run on one host * (sum of all hosts across all job runs) ) * cost per hour
                                   </em>
                               </p>
                               <p>
                                   <b>Automation cost for template X</b> =
                                   <em>
                       cost of automation per hour * sum of total elapsed hours
-                      for JT
+                      for a template
                                   </em>
                               </p>
                               <p>
