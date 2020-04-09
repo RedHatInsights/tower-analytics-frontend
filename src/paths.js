@@ -2,5 +2,6 @@ export const Paths =
 {
     clusters: '/clusters',
     organizationStatistics: '/organization-statistics',
-    notifications: '/notifications'
+    notifications: '/notifications',
+    automationCalculator: '/automation-calculator'
 };

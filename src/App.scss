@@ -61,9 +61,13 @@ h2 {
   color: #393f44;
 }
 
-#d3-grouped-bar-chart-root, #d3-line-chart-root, #d3-bar-chart-root, #d3-pie-1-chart-root {
+#d3-grouped-bar-chart-root, #d3-line-chart-root, #d3-bar-chart-root, #d3-pie-1-chart-root, #d3-roi-chart-root {
   min-height: 450px;
   min-width: 75%;
+}
+
+#d3-roi-chart-root {
+  overflow-x: auto;
 }
 
 #fail-icon {

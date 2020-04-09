@@ -27,7 +27,7 @@ export function getTotal(data) {
 }
 
 export function formatPercentage(val) {
-    if (!parseInt(val)) {
+    if (!parseFloat(val)) {
         return;
     }
 
@@ -39,3 +39,44 @@ export const capitalize = (s) => {
 
     return s.charAt(0).toUpperCase() + s.slice(1);
 };
+
+export function calculateDelta(a, b) {
+    if (!parseInt(b)) {
+        return 0;
+    }
+
+    return b - a;
+}
+
+export function convertMinsToMs(mins) {
+    if (!parseInt(mins)) {
+        return 0;
+    }
+
+    return mins * 60000;
+}
+
+export function convertMsToMins(ms) {
+    return ms / 60000;
+}
+
+export function convertSecondsToMins(seconds) {
+    return seconds / 60;
+}
+
+export function convertMinsToSeconds(mins) {
+    if (!parseInt(mins) || parseInt(mins) < 0) {
+        return 0;
+    }
+
+    return +parseInt(mins) * 60;
+}
+
+export function convertSecondsToHours(seconds) {
+    return seconds / 3600;
+}
+
+export function convertWithCommas(arr, key) {
+    const split = arr.reduce((strs, datum) => { strs.push(datum[key]); return strs; }, []);
+    return split.join(', ');
+}
