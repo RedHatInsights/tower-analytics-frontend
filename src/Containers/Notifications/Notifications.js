@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import moment from 'moment';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
@@ -79,13 +78,6 @@ const title = (
     </span>
 );
 
-const timeFrameOptions = [
-    { value: 'please choose', label: 'Select Date Range', disabled: true },
-    { value: 7, label: 'Past Week', disabled: false },
-    { value: 14, label: 'Past 2 Weeks', disabled: false },
-    { value: 31, label: 'Past Month', disabled: false }
-];
-
 const notificationOptions = [
     {
         value: 'please choose',
@@ -127,11 +119,6 @@ function formatClusterName(data) {
 }
 
 const initialQueryParams = {
-    startDate: moment
-    .utc()
-    .subtract(1, 'month')
-    .format('YYYY-MM-DD'),
-    endDate: moment.utc().format('YYYY-MM-DD'),
     limit: 5,
     offset: 0
 };
@@ -140,7 +127,6 @@ const Notifications = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ notificationsData, setNotificationsData ] = useState([]);
     const [ clusterOptions, setClusterOptions ] = useState([]);
-    const [ clusterTimeFrame, setClusterTimeFrame ] = useState(31);
     const [ selectedCluster, setSelectedCluster ] = useState('');
     const [ firstRender, setFirstRender ] = useState(true);
     const [ isLoading, setIsLoading ] = useState(true);
@@ -148,8 +134,6 @@ const Notifications = () => {
     const [ currPage, setCurrPage ] = useState(1);
     const {
         queryParams,
-        setEndDate,
-        setStartDate,
         setId,
         setLimit,
         setOffset,
@@ -274,25 +258,6 @@ const Notifications = () => {
                                       key={ index }
                                       value={ value }
                                       label={ label }
-                                  />
-                              )) }
-                          </FormSelect>
-                          <FormSelect
-                              name="clusterTimeFrame"
-                              value={ clusterTimeFrame }
-                              onChange={ value => {
-                                  setClusterTimeFrame(+value);
-                                  setEndDate();
-                                  setStartDate(+value);
-                              } }
-                              aria-label="Select Date Range"
-                          >
-                              { timeFrameOptions.map((option, index) => (
-                                  <FormSelectOption
-                                      isDisabled={ option.disabled }
-                                      key={ index }
-                                      value={ option.value }
-                                      label={ option.label }
                                   />
                               )) }
                           </FormSelect>
