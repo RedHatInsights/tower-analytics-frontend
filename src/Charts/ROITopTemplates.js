@@ -159,6 +159,7 @@ class TopTemplatesSavings extends Component {
         d3.selectAll('#' + this.props.id + ' > *').remove();
         let { data: unfiltered, selected } = this.props;
         const data = unfiltered.filter(({ id }) => !selected.includes(id));
+        data.types = [ 'Manual', 'Automated' ];
         data.forEach(datum => {
             datum.calculations.forEach(row => {
                 row.savings = datum.delta;
@@ -208,16 +209,16 @@ class TopTemplatesSavings extends Component {
           ')'
         );
 
-        const dates = data.map(d => d.name);
-        const taskTypes = data[0].calculations.map(d => d.type);
+        const taskNames = data.map(d => d.name);
+        const taskTypes = data.types;
         const tooltip = new Tooltip({
             svg: '#' + this.props.id
         });
-        x0.domain(dates);
+        x0.domain(taskNames);
         x1.domain(taskTypes).range([ 0, x0.bandwidth() ]); // unsorted
         y.domain([
             0,
-            d3.max(data, date => d3.max(date.calculations, d => d.total * 1.15)) || 8
+            d3.max(data, datum => d3.max(datum.calculations, datum => datum.total * 1.15)) || 8
         ]);
 
         // add y axis
