@@ -45,7 +45,7 @@ const expectedObj = {
     run_count: expect.any(Number),
     host_count: expect.any(Number),
     successful_host_run_count: expect.any(Number),
-    delta: 0,
+    delta: expect.any(Number),
     elapsed_sum: expect.any(Number),
     failed_elapsed_sum: expect.any(Number),
     successful_elapsed_sum: expect.any(Number),
@@ -78,7 +78,6 @@ describe('automationCalculatorFormula()', () => {
         });
     });
     it('setRoiData creates unfilteredData, templatesList and formattedData arrays', () => {
-        expect(page.totalSavings).toEqual('$0.00');
         if (page.unfilteredData.length > 0) {
             expect(page.unfilteredData).toStrictEqual(expect.arrayContaining([ expect.objectContaining(expectedObj) ]));
         }
@@ -111,7 +110,9 @@ describe('automationCalculatorFormula()', () => {
         }
     });
     it('setformattedData triggers totalSavings calculation', () => {
-        expect(page.totalSavings).toEqual('$0.00');
+        const expected = (page.formattedData[0].calculations[0].cost - page.formattedData[0].calculations[1].cost).toFixed(2)
+        .toString();
+        expect(page.totalSavings).toEqual('$' + expected);
     });
     it('setCostManual triggers totalSavings calculation', () => {
         act(() => {
@@ -123,20 +124,26 @@ describe('automationCalculatorFormula()', () => {
         act(() => {
             page.setCostAutomation(0);
         });
-        expect(page.totalSavings).toEqual('$0.00');
+        const expected = (page.formattedData[0].calculations[0].cost - page.formattedData[0].calculations[1].cost).toFixed(2)
+        .toString();
+        expect(page.totalSavings).toEqual('$' + expected);
     });
     it('setCostManual triggers correct totalSavings calculation', () => {
         act(() => {
             page.setCostManual(10);
         });
-        expect(page.totalSavings).toEqual('$10.00');
+        const expected = (page.formattedData[0].calculations[0].cost - page.formattedData[0].calculations[1].cost).toFixed(2)
+        .toString();
+        expect(page.totalSavings).toEqual('$' + expected);
     });
     it('setCostManual sets correct delta calculation for formattedData', () => {
         act(() => {
             page.setCostManual(10);
         });
+        const expected = (page.formattedData[0].calculations[0].cost - page.formattedData[0].calculations[1].cost).toFixed(2)
+        .toString();
         if (page.formattedData.length > 0) {
-            expect(page.formattedData[0].delta).toEqual(10);
+            expect(page.formattedData[0].delta.toFixed(2)).toEqual(expected);
         }
     });
     it('setCostAutomation triggers correct totalSavings calculation', () => {
@@ -151,7 +158,9 @@ describe('automationCalculatorFormula()', () => {
 });
 describe('automationCalculatorMethods()', () => {
     it('formatData should return correctly formatted array', () => {
-        const testDefaults = 0;
+        const testDefaults = {
+            defaultAvgRunVal: 0
+        };
 
         const expected = [
             {
@@ -165,13 +174,13 @@ describe('automationCalculatorMethods()', () => {
                 calculations: [
                     {
                         type: 'Manual',
-                        avg_run: testDefaults,
-                        total: testDefaults * testResponse[0].successful_host_run_count || 0
+                        avg_run: testDefaults.defaultAvgRunVal,
+                        cost: 0
                     },
                     {
                         type: 'Automated',
                         avg_run: testResponse[0].successful_elapsed_sum || 0,
-                        total: testResponse[0].successful_elapsed_sum * testResponse[0].successful_host_run_count || 0
+                        cost: 0
                     }
                 ],
                 orgs: testResponse[0].orgs,
