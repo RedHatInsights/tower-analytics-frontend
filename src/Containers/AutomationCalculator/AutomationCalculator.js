@@ -544,15 +544,15 @@ const AutomationCalculator = () => {
                                                       <TooltipWrapper>
                                                           <p>
                                                               <b>Total elapsed sum</b>:{ ' ' }
-                                                              { data.elapsed_sum }s
+                                                              { data.elapsed_sum.toFixed(2) }s
                                                           </p>
                                                           <p>
                                                               <b>Success elapsed sum</b>:{ ' ' }
-                                                              { data.successful_elapsed_sum }s
+                                                              { data.successful_elapsed_sum.toFixed(2) }s
                                                           </p>
                                                           <p>
                                                               <b>Failed elapsed sum</b>:{ ' ' }
-                                                              { data.failed_elapsed_sum }s
+                                                              { data.failed_elapsed_sum.toFixed(2) }s
                                                           </p>
                                                           <p>
                                                               <b>Automation Percentage</b>:{ ' ' }
