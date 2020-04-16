@@ -470,8 +470,7 @@ const AutomationCalculator = () => {
                           <CardHeader>Top templates</CardHeader>
                           <CardBody>
                               <p>
-                    Enter the time it takes to run the following templates
-                    manually.
+                              Enter the time it takes to manually perform the tasks that the following templates automate.
                               </p>
                               { templatesList.map(data => (
                                   <div key={ data.id }>
