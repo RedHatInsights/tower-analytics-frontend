@@ -215,12 +215,13 @@ class TopTemplatesSavings extends Component {
         // format our X Axis ticks
         let ticks;
         ticks = data.map(d => d.name);
-
+        const formatYAxisValue = d3.format('.2s');
         const xAxis = d3.axisBottom(x).tickValues(ticks);
 
         const yAxis = d3
         .axisLeft(y)
         .ticks(8)
+        .tickFormat(d => formatYAxisValue(d).replace('G', 'B'))
         .tickSize(-width, 0, 0);
 
         const svg = d3
