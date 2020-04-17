@@ -570,7 +570,7 @@ const AutomationCalculator = () => {
                                               ) }
                                           </IconGroup>
                                       </TemplateDetail>
-                                      ${ data.delta.toFixed(2) }
+                                      <p style={ { color: '#486B00' } }>${ data.delta.toFixed(2) }</p>
                                   </div>
                               )) }
                           </CardBody>
