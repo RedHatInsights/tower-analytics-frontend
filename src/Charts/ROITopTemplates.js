@@ -9,6 +9,11 @@ class Tooltip {
         this.draw();
     }
 
+    formatDollars(amount) {
+        return parseFloat(amount).toFixed(2).toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    };
+
     draw() {
         this.width = 125;
         this.toolTipBase = d3.select(this.svg + '> svg').append('g');
@@ -22,7 +27,7 @@ class Tooltip {
 
         this.toolTipPoint = this.toolTipBase
         .append('rect')
-        .attr('transform', 'translate(10, -10) rotate(45)')
+        .attr('transform', 'translate(10, 0) rotate(45)')
         .attr('x', 0)
         .attr('y', 0)
         .attr('height', 20)
@@ -33,28 +38,45 @@ class Tooltip {
         .attr('x', 10)
         .attr('y', -23)
         .attr('rx', 2)
-        .attr('height', 52)
+        .attr('height', 92)
         .attr('width', this.boxWidth)
         .attr('fill', '#393f44');
-        this.savings = this.toolTipBase
-        .append('text')
-        .attr('x', 20)
-        .attr('y', 16)
-        .attr('font-size', 12)
-        .attr('fill', 'white')
-        .text('Savings $0');
         this.name = this.toolTipBase
         .append('text')
         .attr('fill', 'white')
         .attr('font-size', 12)
         .attr('x', 20)
         .attr('y', -2)
-        .text('Unknown');
+        .text('Template name');
+        this.savings = this.toolTipBase
+        .append('text')
+        .attr('x', 20)
+        .attr('y', 52)
+        .attr('font-size', 12)
+        .attr('font-weight', 'bold')
+        .attr('fill', 'white')
+        .text('Total savings $0');
+        this.manualCost = this.toolTipBase
+        .append('text')
+        .attr('fill', 'white')
+        .attr('font-size', 12)
+        .attr('x', 20)
+        .attr('y', 16)
+        .text('Manual Cost $0');
+        this.automationCost = this.toolTipBase
+        .append('text')
+        .attr('fill', 'white')
+        .attr('font-size', 12)
+        .attr('x', 20)
+        .attr('y', 34)
+        .text('Automation Cost $0');
     }
 
     handleMouseOver = d => {
         let name;
         let savings;
+        let manualCost;
+        let automationCost;
         const scrollLeftOffset = d3.select('#d3-roi-chart-root').node().scrollLeft;
         const x =
             d3.event.pageX -
@@ -69,13 +91,14 @@ class Tooltip {
             .select(this.svg)
             .node()
             .getBoundingClientRect().y -
-            10;
+            30;
         if (!d) {
             return;
         } else {
-            savings = d.savings.toFixed(2).toString()
-            .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+            savings = this.formatDollars(d.delta);
             name = d.name;
+            manualCost = this.formatDollars(d.calculations[0].cost);
+            automationCost = this.formatDollars(d.calculations[1].cost);
         }
 
         const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
@@ -86,10 +109,16 @@ class Tooltip {
         const overflow = 100 - (toolTipWidth / chartWidth) * 100;
         const flipped = overflow < (x / chartWidth) * 100;
         this.name.text('' + name);
-        this.savings.text('Savings $' + savings);
+        this.savings.text('Total savings $' + savings);
+        this.manualCost.text('Manual Cost $' + manualCost);
+        this.automationCost.text('Automation Cost $' + automationCost);
         this.nameWidth = this.name.node().getComputedTextLength();
+        this.savingsWidth = this.savings.node().getComputedTextLength();
+        this.manualCostWidth = this.manualCost.node().getComputedTextLength();
+        this.automationCostWidth = this.automationCost.node().getComputedTextLength();
+        this.widestTextElem = d3.max([ this.nameWidth, this.savingsWidth, this.automationCostWidth, this.manualCostWidth ]);
 
-        const maxTextPerc = this.nameWidth / this.boxWidth * 100;
+        const maxTextPerc = this.widestTextElem / this.boxWidth * 100;
         const threshold = 85;
         const overage = maxTextPerc / threshold;
         let adjustedWidth;
@@ -102,15 +131,19 @@ class Tooltip {
         this.boundingBox.attr('width', adjustedWidth);
         this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
         if (flipped) {
-            this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
+            this.toolTipPoint.attr('transform', 'translate(-20, 15) rotate(45)');
             this.boundingBox.attr('x', -adjustedWidth - 20);
             this.name.attr('x', -(toolTipWidth - 7));
             this.savings.attr('x', -(toolTipWidth - 7));
+            this.manualCost.attr('x', -(toolTipWidth - 7));
+            this.automationCost.attr('x', -(toolTipWidth - 7));
         } else {
-            this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
+            this.toolTipPoint.attr('transform', 'translate(10, 15) rotate(45)');
             this.boundingBox.attr('x', 10);
             this.name.attr('x', 20);
             this.savings.attr('x', 20);
+            this.manualCost.attr('x', 20);
+            this.automationCost.attr('x', 20);
         }
 
         this.toolTipBase.style('opacity', 1);
@@ -153,16 +186,14 @@ class TopTemplatesSavings extends Component {
     }
 
     draw() {
-        // Use PF chart colors
-        const color = d3.scaleOrdinal([ '#F0AB00', '#0066CC' ]);
+        // Use PF chart color
+        const color = d3.scaleOrdinal([ '#0066CC' ]); //blue
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
         let { data: unfiltered, selected } = this.props;
         const data = unfiltered.filter(({ id }) => !selected.includes(id));
-        data.types = [ 'Manual', 'Automated' ];
         data.forEach(datum => {
             datum.calculations.forEach(row => {
-                row.savings = datum.delta;
                 row.name = datum.name;
             });
         });
@@ -176,18 +207,16 @@ class TopTemplatesSavings extends Component {
         }
 
         const height = this.props.getHeight();
-        const x0 = d3
+        const x = d3
         .scaleBand()
-        .range([ 0, width ])
+        .rangeRound([ 0, width ])
         .padding(0.45);
-        // x scale of individual grouped bars
-        const x1 = d3.scaleBand();
         const y = d3.scaleLinear().range([ height, 0 ]);
         // format our X Axis ticks
         let ticks;
         ticks = data.map(d => d.name);
 
-        const xAxis = d3.axisBottom(x0).tickValues(ticks);
+        const xAxis = d3.axisBottom(x).tickValues(ticks);
 
         const yAxis = d3
         .axisLeft(y)
@@ -210,15 +239,13 @@ class TopTemplatesSavings extends Component {
         );
 
         const taskNames = data.map(d => d.name);
-        const taskTypes = data.types;
         const tooltip = new Tooltip({
             svg: '#' + this.props.id
         });
-        x0.domain(taskNames);
-        x1.domain(taskTypes).range([ 0, x0.bandwidth() ]); // unsorted
+        x.domain(taskNames);
         y.domain([
             0,
-            d3.max(data, datum => d3.max(datum.calculations, datum => datum.total * 1.15)) || 8
+            d3.max(data, d => d.delta * 1.15) || 8
         ]);
 
         // add y axis
@@ -242,7 +269,7 @@ class TopTemplatesSavings extends Component {
         .attr('x', 0 - height / 2)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
-        .text('Automation time (seconds)');
+        .text('Savings per template ($)');
 
         // add x axis
         svg
@@ -253,41 +280,19 @@ class TopTemplatesSavings extends Component {
         .selectAll('text')
         .style('text-anchor', 'start')
         .attr('dx', '0.75em')
-        .attr('dy', -x0.bandwidth() / 1.45 - 5)
+        .attr('dy', -x.bandwidth() / 1.45 - 5)
         .attr('transform', 'rotate(-90)');
 
         svg.selectAll('.x-axis line').attr('stroke', 'transparent');
 
-        // add the groups
-        let slice = svg.selectAll('.slice').data(data);
-        slice.exit().remove();
-
-        const enter = slice
-        .enter()
-        .append('g')
-        .attr('transform', d => 'translate(' + x0(d.name) + ',0)');
-        slice = slice.merge(enter);
-        // add the individual bars
-        let bars = slice.selectAll('rect').data(function(d) {
-            return d.calculations;
-        });
-        bars.exit().remove();
-        const subEnter = bars
-        .enter()
-        .append('rect')
-        .attr('width', x1.bandwidth())
-        .attr('x', function(d) {
-            return x1(d.type);
-        }) // unsorted
-        .style('fill', function(d) {
-            return color(d.type);
-        })
-        .attr('y', function(d) {
-            return y(d.total);
-        })
-        .attr('height', function(d) {
-            return height - y(d.total);
-        })
+        svg.selectAll('.bar')
+        .data(data)
+        .enter().append('rect')
+        .attr('x', d => x(d.name))
+        .attr('width', x.bandwidth())
+        .attr('y', d => y(d.delta))
+        .style('fill', d => color(d.type))
+        .attr('height', d => height - y(d.delta))
         .on('mouseover', function(d) {
             d3.select(this).style('fill', d3.rgb(color(d.type)).darker(1));
             tooltip.handleMouseOver(d);
@@ -297,7 +302,6 @@ class TopTemplatesSavings extends Component {
             d3.select(this).style('fill', color(d.type));
             tooltip.handleMouseOut();
         });
-        bars = bars.merge(subEnter);
     }
 
     componentDidMount() {

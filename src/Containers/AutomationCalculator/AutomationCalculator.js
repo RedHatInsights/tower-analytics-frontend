@@ -45,7 +45,9 @@ import {
     formatPercentage
 } from '../../Utilities/helpers';
 
-let defaultAvgRunVal = 3600; // 1 hr in seconds
+const defaultAvgRunVal = 3600; // 1 hr in seconds
+const defaultCostAutomation = 20;
+const defaultCostManual = 50;
 
 const InputAndText = styled.div`
   flex: 1;
@@ -100,36 +102,6 @@ const IconGroup = styled.div`
   }
 `;
 
-const Wrapper = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  overflow: auto;
-
-  div,
-  p {
-    margin: 10px;
-  }
-`;
-
-const Color = styled.div.attrs(props => ({
-    color: props.color || 'black'
-}))`
-  min-width: 12px;
-  height: 12px;
-  background: ${props => props.color};
-  margin-right: 10px;
-`;
-
-const LegendTitle = styled.span`
-  font-size: 12px;
-  display: inline-block;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  text-align: left;
-`;
-
 const title = (
     <span>
     Automation Analytics
@@ -171,13 +143,13 @@ export const automationCalculatorMethods = () => {
                     calculations: [
                         {
                             type: 'Manual',
-                            avg_run: defaults,
-                            total: defaults * successful_host_run_count || 0
+                            avg_run: defaults.defaultAvgRunVal,
+                            cost: 0
                         },
                         {
                             type: 'Automated',
                             avg_run: successful_elapsed_sum || 0,
-                            total: successful_elapsed_sum * successful_host_run_count || 0
+                            cost: 0
                         }
                     ],
                     orgs,
@@ -239,8 +211,8 @@ export const automationCalculatorMethods = () => {
 export const useAutomationFormula = () => {
     const [ isLoading, setIsLoading ] = useState(true);
     const [ preflightError, setPreFlightError ] = useState(null);
-    const [ costManual, setCostManual ] = useState(0);
-    const [ costAutomation, setCostAutomation ] = useState(0);
+    const [ costManual, setCostManual ] = useState(defaultCostManual);
+    const [ costAutomation, setCostAutomation ] = useState(defaultCostAutomation);
     const [ totalSavings, setTotalSavings ] = useState(0);
     const [ unfilteredData, setUnfilteredData ] = useState([]);
     const [ formattedData, setFormattedData ] = useState([]);
@@ -289,6 +261,8 @@ export const useAutomationFormula = () => {
         costManual;
             total += calculateDelta(costAutomationPerHour, costManualPerHour);
             datum.delta = calculateDelta(costAutomationPerHour, costManualPerHour);
+            datum.calculations[0].cost = costManualPerHour;
+            datum.calculations[1].cost = costAutomationPerHour;
         });
         const totalWithCommas = total
         .toFixed(2)
@@ -312,7 +286,7 @@ export const useAutomationFormula = () => {
     }, [ selectedIds ]);
 
     useEffect(() => {
-        const formatted = formatData(roiData, defaultAvgRunVal);
+        const formatted = formatData(roiData, { defaultAvgRunVal, defaultCostAutomation, defaultCostManual });
         setUnfilteredData(formatted);
         setFormattedData(formatted);
         setTemplatesList(formatted);
@@ -383,25 +357,19 @@ const AutomationCalculator = () => {
               >
                   <Main style={ { paddingBottom: '0' } }>
                       <Card>
-                          <CardHeader>Automation vs manual</CardHeader>
+                          <CardHeader>Automation savings</CardHeader>
                           <CardBody>
                               { isLoading && !preflightError && <LoadingState /> }
                               { !isLoading && formattedData.length <= 0 && <NoData /> }
                               { formattedData.length > 0 && !isLoading && (
                     <>
                       <TopTemplatesSavings
-                          margin={ { top: 20, right: 20, bottom: 10, left: 70 } }
+                          margin={ { top: 20, right: 20, bottom: 20, left: 70 } }
                           id="d3-roi-chart-root"
                           data={ formattedData }
                           selected={ selectedIds }
                       />
                       <p style={ { textAlign: 'center' } }>Templates</p>
-                      <Wrapper>
-                          <Color color={ '#0066CC' } />
-                          <LegendTitle>Automated</LegendTitle>
-                          <Color color={ '#F0AB00' } />
-                          <LegendTitle>Manual</LegendTitle>
-                      </Wrapper>
                     </>
                               ) }
                           </CardBody>
@@ -602,6 +570,7 @@ const AutomationCalculator = () => {
                                               ) }
                                           </IconGroup>
                                       </TemplateDetail>
+                                      ${ data.delta.toFixed(2) }
                                   </div>
                               )) }
                           </CardBody>
