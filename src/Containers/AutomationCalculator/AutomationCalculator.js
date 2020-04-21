@@ -375,34 +375,36 @@ const AutomationCalculator = () => {
                           </CardBody>
                       </Card>
                   </Main>
-                  <Main>
-                      <Card style={ { height: '100%' } }>
-                          <CardHeader>Automation formula</CardHeader>
-                          <CardBody>
-                              <p>
-                                  <b>Manual cost for template X</b> =
-                                  <em>
-                      (time for a manual run on one host * (sum of all hosts
-                      across all job runs) ) * cost per hour
-                                  </em>
-                              </p>
-                              <p>
-                                  <b>Automation cost for template X</b> =
-                                  <em>
-                      cost of automation per hour * sum of total elapsed hours
-                      for a template
-                                  </em>
-                              </p>
-                              <p>
-                                  <b>Savings</b> =
-                                  <em>
-                      Sum of (manual cost - automation cost) across all
-                      templates
-                                  </em>
-                              </p>
-                          </CardBody>
-                      </Card>
-                  </Main>
+                  <GridItem rowSpan={ 3 }>
+                      <Main>
+                          <Card style={ { height: '100%' } }>
+                              <CardHeader>Automation formula</CardHeader>
+                              <CardBody>
+                                  <p>
+                                      <b>Manual cost for template X</b> =
+                                      <em>
+                          (time for a manual run on one host * (sum of all hosts
+                          across all job runs) ) * cost per hour
+                                      </em>
+                                  </p>
+                                  <p>
+                                      <b>Automation cost for template X</b> =
+                                      <em>
+                          cost of automation per hour * sum of total elapsed hours
+                          for a template
+                                      </em>
+                                  </p>
+                                  <p>
+                                      <b>Savings</b> =
+                                      <em>
+                          Sum of (manual cost - automation cost) across all
+                          templates
+                                      </em>
+                                  </p>
+                              </CardBody>
+                          </Card>
+                      </Main>
+                  </GridItem>
               </GridItem>
               <GridItem span={ 4 }>
                   <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
@@ -466,7 +468,7 @@ const AutomationCalculator = () => {
                       </Card>
                   </Main>
                   <Main style={ { paddingLeft: '0' } }>
-                      <Card style={ { height: '41vh', overflow: 'auto' } }>
+                      <Card style={ { maxHeight: '360px', overflow: 'auto' } }>
                           <CardHeader>Top templates</CardHeader>
                           <CardBody>
                               <p>
