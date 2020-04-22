@@ -21,8 +21,6 @@ import {
     InputGroupText,
     TextInput,
     Title,
-    Grid,
-    GridItem,
     Tooltip,
     TooltipPosition
 } from '@patternfly/react-core';
@@ -63,7 +61,7 @@ const TemplateDetail = styled.div`
     padding-right: 5px;
   }
 
-  @media (max-width: 1350px) {
+  @media (max-width: 1490px) {
     display: block;
 
     em {
@@ -100,6 +98,23 @@ const IconGroup = styled.div`
       }
     }
   }
+`;
+
+const Wrapper = styled.div`
+    display: grid;
+    grid-template-columns: 5fr 2fr;
+`;
+
+const WrapperLeft = styled.div`
+    flex: 5;
+    display: flex;
+    flex-direction: column;
+`;
+
+const WrapperRight = styled.div`
+    flex: 2;
+    display: flex;
+    flex-direction: column;
 `;
 
 const title = (
@@ -350,11 +365,9 @@ const AutomationCalculator = () => {
           </Main>
       )}
       {!preflightError && (
-          <Grid>
-              <GridItem
-                  span={ 8 }
-                  style={ { display: 'flex', flexDirection: 'column' } }
-              >
+          <>
+          <Wrapper>
+              <WrapperLeft>
                   <Main style={ { paddingBottom: '0' } }>
                       <Card>
                           <CardHeader>Automation savings</CardHeader>
@@ -375,38 +388,36 @@ const AutomationCalculator = () => {
                           </CardBody>
                       </Card>
                   </Main>
-                  <GridItem rowSpan={ 3 }>
-                      <Main>
-                          <Card style={ { height: '100%' } }>
-                              <CardHeader>Automation formula</CardHeader>
-                              <CardBody>
-                                  <p>
-                                      <b>Manual cost for template X</b> =
-                                      <em>
+                  <Main>
+                      <Card style={ { height: '100%' } }>
+                          <CardHeader>Automation formula</CardHeader>
+                          <CardBody>
+                              <p>
+                                  <b>Manual cost for template X</b> =
+                                  <em>
                           (time for a manual run on one host * (sum of all hosts
                           across all job runs) ) * cost per hour
-                                      </em>
-                                  </p>
-                                  <p>
-                                      <b>Automation cost for template X</b> =
-                                      <em>
+                                  </em>
+                              </p>
+                              <p>
+                                  <b>Automation cost for template X</b> =
+                                  <em>
                           cost of automation per hour * sum of total elapsed hours
                           for a template
-                                      </em>
-                                  </p>
-                                  <p>
-                                      <b>Savings</b> =
-                                      <em>
+                                  </em>
+                              </p>
+                              <p>
+                                  <b>Savings</b> =
+                                  <em>
                           Sum of (manual cost - automation cost) across all
                           templates
-                                      </em>
-                                  </p>
-                              </CardBody>
-                          </Card>
-                      </Main>
-                  </GridItem>
-              </GridItem>
-              <GridItem span={ 4 }>
+                                  </em>
+                              </p>
+                          </CardBody>
+                      </Card>
+                  </Main>
+              </WrapperLeft>
+              <WrapperRight>
                   <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
                       <Card>
                           <CardHeader style={ { paddingBottom: '0' } }>
@@ -467,8 +478,8 @@ const AutomationCalculator = () => {
                           </CardBody>
                       </Card>
                   </Main>
-                  <Main style={ { paddingLeft: '0' } }>
-                      <Card style={ { maxHeight: '360px', overflow: 'auto' } }>
+                  <Main style={ { display: 'flex', flexDirection: 'column', flex: '1 1 0', paddingLeft: '0' } }>
+                      <Card style={ { overflow: 'auto', flex: '1 1 0' } } >
                           <CardHeader>Top templates</CardHeader>
                           <CardBody>
                               <p>
@@ -578,8 +589,9 @@ const AutomationCalculator = () => {
                           </CardBody>
                       </Card>
                   </Main>
-              </GridItem>
-          </Grid>
+              </WrapperRight>
+          </Wrapper>
+        </>
       )}
     </>
     );
