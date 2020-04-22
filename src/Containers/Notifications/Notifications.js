@@ -100,7 +100,7 @@ const perPageOptions = [
 
 function formatClusterName(data) {
     const defaultClusterOptions = [
-        { value: 'please choose', label: 'Select Notification Type', disabled: true },
+        { value: 'please choose', label: 'Select cluster', disabled: true },
         { value: '', label: 'All Clusters', disabled: false },
         { value: -1, label: 'Unassociated', disabled: false }
     ];
