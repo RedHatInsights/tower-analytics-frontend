@@ -30,8 +30,8 @@ import {
 import {
     DollarSignIcon,
     InfoCircleIcon,
-    OutlinedEyeIcon,
-    OutlinedEyeSlashIcon
+    ToggleOnIcon,
+    ToggleOffIcon
 } from '@patternfly/react-icons';
 
 import TopTemplatesSavings from '../../Charts/ROITopTemplates';
@@ -546,7 +546,7 @@ const AutomationCalculator = () => {
                                                   <InfoCircleIcon />
                                               </Tooltip>
                                               { data.isActive === true && (
-                                                  <OutlinedEyeIcon
+                                                  <ToggleOnIcon
                                                       onClick={ () => {
                                                           const selected = handleToggle(
                                                               data.id,
@@ -557,7 +557,7 @@ const AutomationCalculator = () => {
                                                   />
                                               ) }
                                               { data.isActive === false && (
-                                                  <OutlinedEyeSlashIcon
+                                                  <ToggleOffIcon
                                                       onClick={ () => {
                                                           const selected = handleToggle(
                                                               data.id,
