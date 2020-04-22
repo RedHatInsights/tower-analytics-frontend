@@ -439,6 +439,8 @@ const AutomationCalculator = () => {
                                       <TextInput
                                           id="manual-cost"
                                           type="number"
+                                          step="any"
+                                          min="0"
                                           aria-label="manual-cost"
                                           value={ costManual }
                                           onChange={ e => setCostManual(e) }
@@ -455,6 +457,8 @@ const AutomationCalculator = () => {
                                       <TextInput
                                           id="automation-cost"
                                           type="number"
+                                          step="any"
+                                          min="0"
                                           aria-label="automation-cost"
                                           value={ costAutomation }
                                           onChange={ e => setCostAutomation(e) }
