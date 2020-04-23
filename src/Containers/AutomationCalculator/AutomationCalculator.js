@@ -109,6 +109,7 @@ const WrapperLeft = styled.div`
     flex: 5;
     display: flex;
     flex-direction: column;
+    overflow: auto;
 `;
 
 const WrapperRight = styled.div`
@@ -366,7 +367,7 @@ const AutomationCalculator = () => {
       )}
       {!preflightError && (
           <>
-          <Wrapper>
+          <Wrapper className="automation-wrapper">
               <WrapperLeft>
                   <Main style={ { paddingBottom: '0' } }>
                       <Card>
