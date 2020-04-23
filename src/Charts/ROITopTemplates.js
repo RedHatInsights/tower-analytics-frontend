@@ -200,7 +200,7 @@ class TopTemplatesSavings extends Component {
         let width;
         // adjust chart width to support larger datasets
         if (data.length >= 15) {
-            const containerWidth = d3.select('.pf-l-grid').node();
+            const containerWidth = d3.select('.automation-wrapper').node();
             width = containerWidth.getBoundingClientRect().width - this.props.margin.left - this.props.margin.right;
         } else {
             width = this.props.getWidth();
