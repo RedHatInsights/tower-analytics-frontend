@@ -442,7 +442,7 @@ const AutomationCalculator = () => {
                                           step="any"
                                           min="0"
                                           aria-label="manual-cost"
-                                          value={ costManual }
+                                          value={ parseInt(costManual) }
                                           onChange={ e => setCostManual(e) }
                                       />
                                       <InputGroupText>/hr</InputGroupText>
@@ -460,7 +460,7 @@ const AutomationCalculator = () => {
                                           step="any"
                                           min="0"
                                           aria-label="automation-cost"
-                                          value={ costAutomation }
+                                          value={ parseInt(costAutomation) }
                                           onChange={ e => setCostAutomation(e) }
                                       />
                                       <InputGroupText>/hr</InputGroupText>
