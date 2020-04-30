@@ -55,7 +55,7 @@ const title = (
     Automation Analytics
         <span style={ { fontSize: '16px' } }>
             { ' ' }
-            <span style={ { margin: '0 10px' } }>|</span> Clusters
+            <span style={ { margin: '0 10px' } }>|</span> FOOBAR
         </span>
     </span>
 );
