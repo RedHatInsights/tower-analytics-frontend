@@ -442,7 +442,7 @@ const AutomationCalculator = () => {
                           </CardHeader>
                           <CardBody>
                               <InputAndText>
-                                  <p>Manual cost of automation</p>
+                                  <p>Manual process cost</p>
                                   <em style={ { color: 'var(--pf-global--Color--dark-200)' } }>
                       (e.g. average salary of mid-level SE)
                                   </em>
@@ -463,7 +463,7 @@ const AutomationCalculator = () => {
                                   </InputGroup>
                               </InputAndText>
                               <InputAndText style={ { paddingTop: '10px' } }>
-                                  <p>Cost of automation</p>
+                                  <p>Automated process cost</p>
                                   <InputGroup style={ { width: '50%' } }>
                                       <InputGroupText>
                                           <DollarSignIcon />
