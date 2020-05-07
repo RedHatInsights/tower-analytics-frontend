@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /*eslint max-len: ["error", { "ignoreStrings": true }]*/
 
 const barChartEndpoint = '/api/tower-analytics/chart30/';
@@ -11,7 +12,7 @@ const preflightEndpoint = '/api/tower-analytics/authorized/';
 const templateJobsEndpoint = '/api/tower-analytics/template_jobs/';
 const templatesEndPoint = '/api/tower-analytics/templates/';
 const roiEndpoint = '/api/tower-analytics/roi_templates/';
-const jobExplorerEndpoint = 'api/tower-analytics/job-explorer/';
+const jobExplorerEndpoint = 'https://gist.githubusercontent.com/jeanetteobr/9a3863ac0f6391a40f6e70a87131eb0f/raw/f2265e22176f903e6a3b4bfa452528ef44f72e7d/job_explorer.json';
 
 function getAbsoluteUrl() {
     const url = window.location.href;
@@ -103,12 +104,8 @@ export const readNotifications = ({ params = {}}) => {
     return fetch(url).then(handleResponse);
 };
 
-export const readJobExplorer = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(jobExplorerEndpoint, formattedUrl);
-    Object.keys(params).forEach(key =>
-        url.searchParams.append(key, params[key])
-    );
+export const readJobExplorer = () => {
+    let url = new URL(jobExplorerEndpoint);
     return fetch(url).then(handleResponse);
 };
 
