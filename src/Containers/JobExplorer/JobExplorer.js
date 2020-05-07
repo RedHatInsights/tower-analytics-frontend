@@ -2,13 +2,11 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
 
-import { useQueryParams } from '../../Utilities/useQueryParams';
-
 import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoData from '../../Components/NoData';
-import { preflightRequest, readClusters, readJobExplorer } from '../../Api';
+import { preflightRequest, readJobExplorer } from '../../Api';
 
 import {
     Main,
@@ -20,10 +18,10 @@ import {
     Badge,
     Card,
     CardBody,
-    CardHeader as PFCardHeader,
-    FormSelect,
-    FormSelectOption
+    CardHeader as PFCardHeader
 } from '@patternfly/react-core';
+
+import JobExplorerList from '../../Components/JobExplorerList';
 
 const CardHeader = styled(PFCardHeader)`
   display: flex;
@@ -43,69 +41,14 @@ const TitleWithBadge = styled.div`
   }
 `;
 
-const DropdownGroup = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-
-  @media screen and (max-width: 1035px) {
-    display: block;
-  }
-
-  select {
-    margin: 0 10px;
-    width: 150px;
-
-    @media screen and (max-width: 1035px) {
-      margin: 10px 10px 0 0;
-    }
-
-    @media screen and (max-width: 865px) {
-      width: 100%;
-    }
-  }
-`;
-
-function formatClusterName(data) {
-    const defaultClusterOptions = [
-        { value: 'please choose', label: 'Select cluster', disabled: true },
-        { value: '', label: 'All Clusters', disabled: false },
-        { value: -1, label: 'Unassociated', disabled: false }
-    ];
-    return data.reduce(
-        (formatted, { label, cluster_id: id, install_uuid: uuid }) => {
-            if (label.length === 0) {
-                formatted.push({ value: id, label: uuid, disabled: false });
-            } else {
-                formatted.push({ value: id, label, disabled: false });
-            }
-
-            return formatted;
-        },
-        defaultClusterOptions
-    );
-}
-
-const initialQueryParams = {
-    limit: 5,
-    offset: 0
-};
-
 const JobExplorer = () => {
-    debugger;
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ jobExplorerData, setJobExplorerData ] = useState([]);
-    const [ clusterOptions, setClusterOptions ] = useState([]);
-    const [ selectedCluster, setSelectedCluster ] = useState('');
-    const [ firstRender, setFirstRender ] = useState(true);
+    const [ firstRender, setFirstRender ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ meta, setMeta ] = useState({});
-    const {
-        queryParams,
-        setId,
-        // setLimit,
-        setOffset
-    } = useQueryParams(initialQueryParams);
+
+    console.log(meta);
 
     useEffect(() => {
         if (firstRender) {
@@ -113,7 +56,7 @@ const JobExplorer = () => {
         }
 
         const getData = () => {
-            return readJobExplorer({ params: queryParams });
+            return readJobExplorer();
         };
 
         const update = async () => {
@@ -129,15 +72,13 @@ const JobExplorer = () => {
         };
 
         update();
-    }, [ queryParams ]);
+    }, []);
 
     useEffect(() => {
         let ignore = false;
         const fetchEndpoints = () => {
             return Promise.all(
-                [ readClusters(), readJobExplorer({ params: queryParams }) ].map(p =>
-                    p.catch(() => [])
-                )
+                [ readJobExplorer() ]
             );
         };
 
@@ -149,12 +90,9 @@ const JobExplorer = () => {
             });
             fetchEndpoints().then(
                 ([
-                    { templates: clustersData = []},
-                    { jobExplorer: jobExplorerData = [], meta }
+                    { jobs: jobExplorerData = [], meta }
                 ]) => {
                     if (!ignore) {
-                        const clusterOptions = formatClusterName(clustersData);
-                        setClusterOptions(clusterOptions);
                         setJobExplorerData(jobExplorerData);
                         setMeta(meta);
                         setFirstRender(false);
@@ -167,8 +105,6 @@ const JobExplorer = () => {
         initializeWithPreflight();
         return () => (ignore = true);
     }, []);
-
-    console.log(jobExplorerData);
 
     const title = (
         <span>
@@ -199,36 +135,21 @@ const JobExplorer = () => {
                             <CardHeader>
                                 <TitleWithBadge>
                                     <h2>
-                                        <strong>Job Explorer</strong>
+                                        <strong>Total Jobs</strong>
                                     </h2>
-                                    <Badge isRead>{ meta.count ? meta.count : 0 }</Badge>
+                                    <Badge isRead></Badge>
                                 </TitleWithBadge>
-                                <DropdownGroup>
-                                    <FormSelect
-                                        name="selectedCluster"
-                                        value={ selectedCluster }
-                                        onChange={ value => {
-                                            setSelectedCluster(value);
-                                            setId(value);
-                                            setOffset(0);
-                                        } }
-                                        aria-label="Select Cluster"
-                                    >
-                                        { clusterOptions.map(({ value, label, disabled }, index) => (
-                                            <FormSelectOption
-                                                isDisabled={ disabled }
-                                                key={ index }
-                                                value={ value }
-                                                label={ label }
-                                            />
-                                        )) }
-                                    </FormSelect>
-                                </DropdownGroup>
                             </CardHeader>
                             <CardBody>
                                 { isLoading && <LoadingState /> }
                                 { !isLoading && jobExplorerData.length <= 0 && <NoData /> }
-                                <div>FOOBAR</div>
+                                { !isLoading && jobExplorerData.length > 0 && (
+                                    <>
+                                        <JobExplorerList
+                                            jobs={ jobExplorerData }
+                                        />
+                                    </>
+                                ) }
                             </CardBody>
                         </Card>
                     </Main>
