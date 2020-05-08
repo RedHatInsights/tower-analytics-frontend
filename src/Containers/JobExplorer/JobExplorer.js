@@ -2,6 +2,8 @@
 /* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
 
+import { useQueryParams } from '../../Utilities/useQueryParams';
+
 import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
@@ -18,7 +20,9 @@ import {
     Badge,
     Card,
     CardBody,
-    CardHeader as PFCardHeader
+    CardHeader as PFCardHeader,
+    Pagination,
+    PaginationVariant
 } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
@@ -41,12 +45,33 @@ const TitleWithBadge = styled.div`
   }
 `;
 
+const perPageOptions = [
+    { title: '5', value: 5 },
+    { title: '10', value: 10 },
+    { title: '20', value: 20 },
+    { title: '50', value: 50 },
+    { title: '100', value: 100 }
+];
+
+const initialQueryParams = {
+    limit: 5,
+    offset: 0
+};
+
 const JobExplorer = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ jobExplorerData, setJobExplorerData ] = useState([]);
     const [ firstRender, setFirstRender ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ meta, setMeta ] = useState({});
+    const [ currPage, setCurrPage ] = useState(1);
+    const {
+        queryParams,
+        // setId,
+        setLimit,
+        setOffset
+        // setStatusType
+    } = useQueryParams(initialQueryParams);
 
     console.log(meta);
 
@@ -78,7 +103,7 @@ const JobExplorer = () => {
         let ignore = false;
         const fetchEndpoints = () => {
             return Promise.all(
-                [ readJobExplorer() ]
+                [ readJobExplorer({ params: {}}) ]
             );
         };
 
@@ -90,9 +115,10 @@ const JobExplorer = () => {
             });
             fetchEndpoints().then(
                 ([
-                    { jobs: jobExplorerData = [], meta }
+                    { items: jobExplorerData = [], meta }
                 ]) => {
                     if (!ignore) {
+                        console.log(jobExplorerData);
                         setJobExplorerData(jobExplorerData);
                         setMeta(meta);
                         setFirstRender(false);
@@ -106,6 +132,11 @@ const JobExplorer = () => {
         return () => (ignore = true);
     }, []);
 
+    const returnOffsetVal = page => {
+        let offsetVal = (page - 1) * queryParams.limit;
+        return offsetVal;
+    };
+
     const title = (
         <span>
         Automation Analytics
@@ -115,6 +146,19 @@ const JobExplorer = () => {
             </span>
         </span>
     );
+
+    const handleSetPage = page => {
+        const nextOffset = returnOffsetVal(page);
+        setOffset(nextOffset);
+        setCurrPage(page);
+    };
+
+    const handlePerPageSelect = (perPage, page) => {
+        setLimit(perPage);
+        const nextOffset = returnOffsetVal(page);
+        setOffset(nextOffset);
+        setCurrPage(page);
+    };
 
     return (
         <React.Fragment>
@@ -137,7 +181,7 @@ const JobExplorer = () => {
                                     <h2>
                                         <strong>Total Jobs</strong>
                                     </h2>
-                                    <Badge isRead></Badge>
+                                    <Badge isRead>{ meta.count ? meta.count : 0 }</Badge>
                                 </TitleWithBadge>
                             </CardHeader>
                             <CardBody>
@@ -147,6 +191,22 @@ const JobExplorer = () => {
                                     <>
                                         <JobExplorerList
                                             jobs={ jobExplorerData }
+                                        />
+                                        <Pagination
+                                            itemCount={ meta.count ? meta.count : 0 }
+                                            widgetId="pagination-options-menu-bottom"
+                                            perPageOptions={ perPageOptions }
+                                            perPage={ queryParams.limit }
+                                            page={ currPage }
+                                            variant={ PaginationVariant.bottom }
+                                            dropDirection={ 'up' }
+                                            onPerPageSelect={ (_event, perPage, page) => {
+                                                handlePerPageSelect(perPage, page);
+                                            } }
+                                            onSetPage={ (_event, pageNumber) => {
+                                                handleSetPage(pageNumber);
+                                            } }
+                                            style={ { marginTop: '20px' } }
                                         />
                                     </>
                                 ) }
