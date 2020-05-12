@@ -4,14 +4,14 @@
 // import { useState, useEffect } from 'react';
 
 export const formatQueryStrings = ({
-    attributes = [],
-    endDate = '',
-    startDate = '',
-    ids = [],
-    limit = null,
-    offset = null,
-    job_type = '',
-    status = []
+    attributes,
+    endDate,
+    startDate,
+    ids,
+    limit,
+    offset,
+    job_type,
+    status
 }) => {
     let strings = {};
 
@@ -39,11 +39,19 @@ export const formatQueryStrings = ({
         .join('&');
     };
 
+    const parseJobType = jobTypes => {
+        return jobTypes
+        .map(jobType => {
+            return `job_type=${encodeURIComponent(jobType)}`;
+        })
+        .join('&');
+    };
+
     const parseStartDate = date => `startDate=${encodeURIComponent(date)}`;
     const parseEndDate = date => `endDate=${encodeURIComponent(date)}`;
     const parseLimit = limit => `limit=${encodeURIComponent(limit)}`;
     const parseOffset = offset => `offset=${encodeURIComponent(offset)}`;
-    const parseJobType = jobType => `job_type=${encodeURIComponent(jobType)}`;
+    // const parseJobType = jobType => `job_type=${encodeURIComponent(jobType)}`;
 
     if (attributes) {
         strings.attributes = parseAttrs(attributes);
@@ -61,7 +69,7 @@ export const formatQueryStrings = ({
         strings.limit = parseLimit(limit);
     }
 
-    if (offset) {
+    if (offset >= 0) {
         strings.offset = parseOffset(offset);
     }
 

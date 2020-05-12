@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* eslint-disable no-console */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
@@ -111,7 +112,7 @@ const JobExplorer = () => {
         if (firstRender) {
             return;
         }
-
+        console.log('queryparams', queryParams);
         const getData = () => {
             return readJobExplorer({ params: queryParams });
         };
@@ -130,6 +131,15 @@ const JobExplorer = () => {
 
         update();
     }, [ queryParams ]);
+
+    useEffect(() => {
+        if (filters.type) {
+            setJobType(filters.type);
+        }
+        if (filters.status) {
+            setStatus(filters.status);
+        }
+    }, [ filters ])
 
     useEffect(() => {
         let ignore = false;
@@ -203,13 +213,10 @@ const JobExplorer = () => {
 
     const onStatusSelect = (event, selection) => {
         onSelect('status', event, selection);
-        setStatus(filters.status);
     };
 
     const onJobTypeSelect = (event, selection) => {
         onSelect('type', event, selection);
-        console.log(event.target.value);
-        setJobType(filters.type);
     };
 
     const onStatusToggle = () => {
@@ -227,12 +234,12 @@ const JobExplorer = () => {
                 [type.toLowerCase()]: filters[type.toLowerCase()].filter(value => value !== id)
             });
         } else {
-            setFilters({
-                filters: {
+            setFilters(
+                {
                     status: [],
                     type: []
                 }
-            });
+            );
         }
     };
 

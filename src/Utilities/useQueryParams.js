@@ -46,16 +46,28 @@ export const useQueryParams = initial => {
             case 'SET_ATTRIBUTES':
                 return { ...state, attributes: [ ...action.attributes ]};
             case 'SET_JOB_TYPE':
-                if (action.jobType === '') {
+                console.log('action', action);
+                if (action.jobType.includes('workflowjob') && action.jobType.includes('job')) {
+                    console.log('both need to be removed');
                     const { job_type: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, job_type: action.jobType };
+                if (action.jobType.length <= 0) {
+                    const { job_type: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, job_type: [ ...action.jobType ]};
 
             case 'SET_STATUS':
 
-                if (action.status === [ '' ]) {
+                if (action.status.length <= 0) {
+                    const { status: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                if (action.status.includes('failed') && action.status.includes('successful')) {
                     const { status: ignored, ...rest } = state;
                     return rest;
                 }
