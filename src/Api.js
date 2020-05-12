@@ -2,6 +2,8 @@
 /* eslint-disable no-console */
 /*eslint max-len: ["error", { "ignoreStrings": true }]*/
 
+import { formatQueryStrings } from './Utilities/formatQueryStrings';
+
 const barChartEndpoint = '/api/tower-analytics/chart30/';
 const clustersEndpoint = '/api/tower-analytics/clusters/';
 const groupedBarChartEndpoint = '/api/tower-analytics/jobs_by_date_and_org_30/';
@@ -108,9 +110,8 @@ export const readNotifications = ({ params = {}}) => {
 export const readJobExplorer = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(jobExplorerEndpoint, formattedUrl);
-    Object.keys(params).forEach(key =>
-        url.searchParams.append(key, params[key])
-    );
+    const { strings } = formatQueryStrings(params);
+    url.search = Object.keys(strings).map(key => strings[key]).join('&');
     return fetch(url).then(handleResponse);
 };
 

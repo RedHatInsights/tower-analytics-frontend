@@ -11,6 +11,7 @@ import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoData from '../../Components/NoData';
 import { preflightRequest, readJobExplorer } from '../../Api';
+import { jobExplorer } from '../../Utilities/constants';
 
 import {
     Main,
@@ -68,6 +69,7 @@ const perPageOptions = [
 ];
 
 const initialQueryParams = {
+    attributes: jobExplorer.attributes,
     limit: 5,
     offset: 0
 };
