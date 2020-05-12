@@ -1,5 +1,7 @@
 /* eslint-disable no-debugger */
 /* eslint-disable no-console */
+/* eslint-disable no-undef */
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
@@ -17,12 +19,24 @@ import {
 } from '@redhat-cloud-services/frontend-components';
 
 import {
+    DataToolbar,
+    DataToolbarContent,
+    DataToolbarFilter,
+    DataToolbarToggleGroup,
+    DataToolbarGroup
+} from '@patternfly/react-core';
+
+import { FilterIcon } from '@patternfly/react-icons';
+
+import {
     Badge,
     Card,
     CardBody,
     CardHeader as PFCardHeader,
     Pagination,
-    PaginationVariant
+    PaginationVariant,
+    Select,
+    SelectOption
 } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
@@ -58,6 +72,24 @@ const initialQueryParams = {
     offset: 0
 };
 
+const statusMenuItems = [
+    <SelectOption key="status-failed"  value="Failed" />,
+    <SelectOption key="status-failed"  value="Failed" />
+];
+
+const typeMenuItems = [
+    <SelectOption key="type-template"  value="Template" />,
+    <SelectOption key="type-worklow"  value="Workflow" />
+];
+
+const buildListFilters = (options) => (
+    options.map((option) => {
+        return (
+            <div key={ option }>{ option }</div>
+        );
+    })
+);
+
 const JobExplorer = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ jobExplorerData, setJobExplorerData ] = useState([]);
@@ -73,16 +105,16 @@ const JobExplorer = () => {
         // setStatusType
     } = useQueryParams(initialQueryParams);
 
-    console.log(meta);
-
     useEffect(() => {
         if (firstRender) {
             return;
         }
 
         const getData = () => {
-            return readJobExplorer();
+            return readJobExplorer({ params: queryParams });
         };
+
+        console.log('queryParams', queryParams);
 
         const update = async () => {
             setIsLoading(true);
@@ -98,12 +130,12 @@ const JobExplorer = () => {
 
         update();
     }, []);
-
+    console.log(jobExplorerData);
     useEffect(() => {
         let ignore = false;
         const fetchEndpoints = () => {
             return Promise.all(
-                [ readJobExplorer({ params: {}}) ]
+                [ readJobExplorer({ params: queryParams, attributes: 'status' }) ]
             );
         };
 
@@ -118,7 +150,6 @@ const JobExplorer = () => {
                     { items: jobExplorerData = [], meta }
                 ]) => {
                     if (!ignore) {
-                        console.log(jobExplorerData);
                         setJobExplorerData(jobExplorerData);
                         setMeta(meta);
                         setFirstRender(false);
@@ -189,7 +220,43 @@ const JobExplorer = () => {
                                 { !isLoading && jobExplorerData.length <= 0 && <NoData /> }
                                 { !isLoading && jobExplorerData.length > 0 && (
                                     <>
+                                        {/* <DataToolbar id="jobs-data-toolbar">
+                                            <DataToolbarContent>
+                                                <DataToolbarToggleGroup
+                                                    toggleIcon={ <FilterIcon /> }
+                                                    breakpoint="xl"
+                                                >
+                                                    <DataToolbarGroup variant="filter-group">
+                                                        <DataToolbarFilter
+                                                            categoryName="Status"
+                                                            chips={ queryParams.status }
+                                                            deleteChip={ () => console.log('deleted') }
+                                                        >
+                                                            <Select
+                                                                aria-label="Status"
+                                                                onToggle={ () => console.log('toggled') }
+                                                                onSelect={ () => console.log('selected') }
+                                                                placeholderText="Status"
+                                                                isExpanded="true"
+                                                            >
+                                                                { statusMenuItems }
+                                                            </Select>
+                                                        </DataToolbarFilter>
+                                                        <DataToolbarFilter categoryName="Type">
+                                                            <Select
+                                                                aria-label="Type"
+                                                                onSelect={ () => console.log('selected') }
+                                                                placeholderText="Type"
+                                                            >
+                                                                { typeMenuItems }
+                                                            </Select>
+                                                        </DataToolbarFilter>
+                                                    </DataToolbarGroup>
+                                                </DataToolbarToggleGroup>
+                                            </DataToolbarContent>
+                                        </DataToolbar> */}
                                         <JobExplorerList
+                                            filterByStatus={ queryParams.status || '' }
                                             jobs={ jobExplorerData }
                                         />
                                         <Pagination

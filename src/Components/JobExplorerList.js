@@ -7,25 +7,26 @@ import moment from 'moment';
 import PropTypes from 'prop-types';
 
 import {
+    DataListCell,
     DataList,
+    DataListItem,
     DataListItemRow,
-    DataListItemCells,
-    DataListCell
+    DataListItemCells
 } from '@patternfly/react-core';
 
 import StatusIcon from '../Icons/StatusIcon/StatusIcon';
+import LoadingState from '../Components/LoadingState';
 
 const headerLabels = [
     'Id/Name',
     'Status',
     'Cluster',
     'Organization',
-    'Template',
     'Job Type',
     'Finished'
 ];
 
-const jobsListHeader = (labels) => (
+const buildHeader = (labels) => (
     <DataListItemRow>
         { labels.map((label) =>
             <DataListCell key = { label }>
@@ -35,56 +36,101 @@ const jobsListHeader = (labels) => (
     </DataListItemRow>
 );
 
-const AllJobsTemplate = ({ jobs }) =>
-    jobs.map(
-        ({ job_name: name, job_type: type, org_id: org, cluster_id: cluster, template_name: template, id, finished, status }) => {
-            return (
-                <DataList>
-                    <DataListItemRow key={ id }>
-                        <DataListItemCells
-                            dataListCells={ [
-                                <DataListCell key={ name }>
-                                    { `${id} - ${name}` }
-                                </DataListCell>,
-                                <DataListCell key={ status }>
-                                    <StatusIcon status={ status } />
-                                    { status }
-                                </DataListCell>,
-                                <DataListCell key={ cluster }>
-                                    { cluster }
-                                </DataListCell>,
-                                <DataListCell key={ org }>
-                                    { org }
-                                </DataListCell>,
-                                <DataListCell key={ template }>
-                                    { template }
-                                </DataListCell>,
-                                <DataListCell key={ type }>
-                                    { type }
-                                </DataListCell>,
-                                <DataListCell key={ finished }>
-                                    { moment(finished).format() }
-                                </DataListCell>
-                            ] }
-                        />
-                    </DataListItemRow>
-                </DataList>
-            );
-        }
-    );
+const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
+    return (
+        <DataList aria-label={ ariaLabel }>
+            { items.map((item, count) => {
+                return (
+                    <DataListItem key={ item.id } aria-labelledby={ ariaLabelledBy }>
+                        <DataListItemRow key={ item.id }>
+                            <DataListItemCells
+                                dataListCells={ [
+                                    <DataListCell key={ count++ }>
+                                        { `${item.id} - ${item.template_name}` }
+                                    </DataListCell>,
+                                    <DataListCell key={ count++ }>
+                                        <StatusIcon status={ item.status } />
+                                        { item.status }
+                                    </DataListCell>,
+                                    <DataListCell key={ count++ }>
+                                        { item.cluster_id }
+                                    </DataListCell>,
+                                    <DataListCell key={ count++ }>
+                                        { item.org_id }
+                                    </DataListCell>,
+                                    <DataListCell key={ count++ }>
+                                        { item.job_ype }
+                                    </DataListCell>,
+                                    <DataListCell key={ count++ }>
+                                        { moment(item.finished).format() }
+                                    </DataListCell>
+                                ] }
+                            />
+                        </DataListItemRow>
+                    </DataListItem>
+                );
+            }) }
+        </DataList>);
+};
 
-const JobExplorerList = ({ jobs }) => (
-    <React.Fragment>
-        { jobsListHeader(headerLabels) }
-        <AllJobsTemplate jobs={ jobs } />
-    </React.Fragment>
+const AllJobsTemplate = ({ jobs }) => {
+    return buildListRow(jobs, 'All jobs view', 'all-jobs');
+};
+
+const FailedJobsTemplate = ({ jobs }) => {
+    return buildListRow(
+        jobs.filter((job) => job.status === 'failed'),
+        'Failed jobs view',
+        'failed-jobs'
+    );
+};
+
+const SuccessfulJobsTemplate = ({ jobs }) => {
+    return buildListRow(
+        jobs.filter((job) => job.status === 'successful'),
+        'Successful jobs view',
+        'successful-jobs'
+    );
+};
+
+const JobExplorerList = ({ filterByStatus, filterByType, jobs }) => (
+    <>
+        { jobs.length <= 0 && <LoadingState /> }
+        { filterByStatus === '' && (
+          <>
+            { buildHeader(headerLabels) }
+            <AllJobsTemplate jobs={ jobs } />
+          </>
+        ) }
+        { filterByStatus === 'failed' && (
+          <>
+            { buildHeader(headerLabels) }
+            <FailedJobsTemplate jobs={ jobs } />
+          </>
+        ) }
+        { filterByStatus === 'success' && (
+          <>
+            { buildHeader(headerLabels) }
+            <SuccessfulJobsTemplate jobs={ jobs } />
+          </>
+        ) }
+    </>
 );
 
 JobExplorerList.propTypes = {
-    jobs: PropTypes.array
+    jobs: PropTypes.array,
+    filterBy: PropTypes.string
 };
 
 AllJobsTemplate.propTypes = {
+    jobs: PropTypes.array
+};
+
+FailedJobsTemplate.propTypes = {
+    jobs: PropTypes.array
+};
+
+SuccessfulJobsTemplate.propTypes = {
     jobs: PropTypes.array
 };
 
