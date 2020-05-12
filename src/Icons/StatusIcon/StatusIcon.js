@@ -77,6 +77,11 @@ const SkippedBottom = styled.div`
   background-color: #2dbaba;
 `;
 
+const FinishedTop = styled(WhiteTop)``;
+const FinishedBottom = styled.div`
+  background-color: 'pink';
+`;
+
 const StatusIcon = ({ status, ...props }) => {
     return (
         <div { ...props }>
@@ -91,7 +96,7 @@ const StatusIcon = ({ status, ...props }) => {
                     <FailedBottom />
                 </FinishedJob>
             ) }
-            { (status === 'success' || status === 'ok') && (
+            { (status === 'successful' || status === 'ok') && (
                 <FinishedJob>
                     <SuccessfulTop />
                     <SuccessfulBottom />
@@ -113,6 +118,12 @@ const StatusIcon = ({ status, ...props }) => {
                 <FinishedJob>
                     <UnreachableTop />
                     <UnreachableBottom />
+                </FinishedJob>
+            ) }
+            { status === 'finished' && (
+                <FinishedJob>
+                    <FinishedTop />
+                    <FinishedBottom />
                 </FinishedJob>
             ) }
         </div>
