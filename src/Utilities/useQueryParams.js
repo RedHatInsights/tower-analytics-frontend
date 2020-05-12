@@ -42,6 +42,8 @@ export const useQueryParams = initial => {
                 }
 
                 return { ...state, severity: action.severity };
+            case 'SET_ATTRIBUTES':
+                return { ...state, attributes: [ ...action.attributes ]};
             default:
                 throw new Error();
         }
@@ -90,6 +92,7 @@ export const useQueryParams = initial => {
         setSortBy: sort => dispatch({ type: 'SET_SORT_BY', sort }),
         setLimit: limit => dispatch({ type: 'SET_LIMIT', limit }),
         setOffset: offset => dispatch({ type: 'SET_OFFSET', offset }),
-        setSeverity: severity => dispatch({ type: 'SET_SEVERITY', severity })
+        setSeverity: severity => dispatch({ type: 'SET_SEVERITY', severity }),
+        setAttributes: attributes => dispatch({ type: 'SET_ATTRIBUTES', attributes })
     };
 };
