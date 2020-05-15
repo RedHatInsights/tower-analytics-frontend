@@ -25,7 +25,7 @@ import {
     DataToolbarFilter,
     DataToolbarToggleGroup,
     DataToolbarGroup
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/dist/umd/experimental';
 
 import { FilterIcon } from '@patternfly/react-icons';
 
@@ -37,7 +37,8 @@ import {
     Pagination,
     PaginationVariant,
     Select,
-    SelectOption
+    SelectOption,
+    SelectVariant
 } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
@@ -70,27 +71,33 @@ const perPageOptions = [
 
 const initialQueryParams = {
     attributes: jobExplorer.attributes,
-    limit: 5,
-    offset: 0
+    limit: 5
 };
 
 const statusMenuItems = [
-    <SelectOption key="status-failed"  value="Failed" />,
-    <SelectOption key="status-failed"  value="Failed" />
+    <SelectOption key="status-success"  value="Success" data-value="successful" />,
+    <SelectOption key="status-failed"  value="Failed" data-value="failed" />,
+    <SelectOption key="status-all"  value="All" data-value="all" />
 ];
 
 const typeMenuItems = [
-    <SelectOption key="type-template"  value="Template" />,
-    <SelectOption key="type-worklow"  value="Workflow" />
+    <SelectOption key="type-template"  value="Template" data-value="job" />,
+    <SelectOption key="type-worklow"  value="Workflow" data-value="workflowjob" />,
+    <SelectOption key="type-all"  value="All" data-value="all" />
 ];
 
-const buildListFilters = (options) => (
-    options.map((option) => {
-        return (
-            <div key={ option }>{ option }</div>
-        );
-    })
-);
+const filters = {
+    type: [ 'job', 'workflowjob' ],
+    status: [ 'successful', 'failed' ]
+};
+
+// const buildListFilters = (options) => (
+//     options.map((option) => {
+//         return (
+//             <div key={ option }>{ option }</div>
+//         );
+//     })
+// );
 
 const JobExplorer = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
@@ -99,12 +106,17 @@ const JobExplorer = () => {
     const [ isLoading, setIsLoading ] = useState(true);
     const [ meta, setMeta ] = useState({});
     const [ currPage, setCurrPage ] = useState(1);
+    const [ statusIsExpanded, setStatusIsExpanded ] = useState(false);
+    const [ riskIsExpanded, setRiskIsExpanded ] = useState(false);
+    // const [ selections, setSelections ] = useState([]);
+    const [ statusArr, setStatusArr ] = useState([]);
     const {
         queryParams,
         // setId,
         setLimit,
-        setOffset
-        // setStatusType
+        setOffset,
+        setJobType,
+        setStatus
     } = useQueryParams(initialQueryParams);
 
     useEffect(() => {
@@ -112,17 +124,17 @@ const JobExplorer = () => {
             return;
         }
 
+        console.log('query params', queryParams);
+
         const getData = () => {
             return readJobExplorer({ params: queryParams });
         };
-
-        console.log('queryParams', queryParams);
 
         const update = async () => {
             setIsLoading(true);
             await window.insights.chrome.auth.getUser();
             getData().then(
-                ({ jobExplorer: jobExplorerData = [], meta }) => {
+                ({ items: jobExplorerData = [], meta }) => {
                     setJobExplorerData(jobExplorerData);
                     setMeta(meta);
                     setIsLoading(false);
@@ -131,13 +143,13 @@ const JobExplorer = () => {
         };
 
         update();
-    }, []);
-    console.log(jobExplorerData);
+    }, [ queryParams ]);
+
     useEffect(() => {
         let ignore = false;
         const fetchEndpoints = () => {
             return Promise.all(
-                [ readJobExplorer({ params: queryParams, attributes: 'status' }) ]
+                [ readJobExplorer({ params: queryParams }) ]
             );
         };
 
@@ -193,6 +205,46 @@ const JobExplorer = () => {
         setCurrPage(page);
     };
 
+    const handleJobTypeSelect = (event) => {
+        setJobType(event.target.dataset.value);
+    };
+
+    const handleStatusSelect = () => {
+        setStatus(statusArr);
+    };
+
+    const onStatusSelect = (event, selection) => {
+        console.log(event.target);
+        console.log('selection', selection);
+        if (!statusArr.includes(selection.toLowerCase())) {
+            statusArr.push(selection.toLowerCase());
+            setStatusArr(statusArr);
+            handleStatusSelect();
+        }
+
+        else if (statusArr.includes(selection.toLowerCase())) {
+            let idx = statusArr.indexOf(selection.toLowerCase());
+            if (idx >= 0) {
+                statusArr.splice(idx, 1);
+                setStatusArr(statusArr);
+                console.log(statusArr);
+                handleStatusSelect();
+            }
+        }
+
+        if (selection.toLowerCase() === 'all') {
+            statusArr.length = 0;
+            setStatusArr(statusArr);
+            console.log('here');
+            handleStatusSelect();
+        }
+
+    };
+
+    const onStatusToggle = () => {
+        setStatusIsExpanded(!statusIsExpanded);
+    };
+
     return (
         <React.Fragment>
             <PageHeader>
@@ -222,7 +274,7 @@ const JobExplorer = () => {
                                 { !isLoading && jobExplorerData.length <= 0 && <NoData /> }
                                 { !isLoading && jobExplorerData.length > 0 && (
                                     <>
-                                        {/* <DataToolbar id="jobs-data-toolbar">
+                                        <DataToolbar id="jobs-data-toolbar">
                                             <DataToolbarContent>
                                                 <DataToolbarToggleGroup
                                                     toggleIcon={ <FilterIcon /> }
@@ -230,16 +282,17 @@ const JobExplorer = () => {
                                                 >
                                                     <DataToolbarGroup variant="filter-group">
                                                         <DataToolbarFilter
+                                                            chips={ filters.status }
                                                             categoryName="Status"
-                                                            chips={ queryParams.status }
-                                                            deleteChip={ () => console.log('deleted') }
                                                         >
                                                             <Select
+                                                                variant={ SelectVariant.checkbox }
                                                                 aria-label="Status"
-                                                                onToggle={ () => console.log('toggled') }
-                                                                onSelect={ () => console.log('selected') }
+                                                                onToggle={ onStatusToggle }
+                                                                onSelect={ onStatusSelect }
+                                                                selections={ filters.status }
+                                                                isExpanded={ statusIsExpanded }
                                                                 placeholderText="Status"
-                                                                isExpanded="true"
                                                             >
                                                                 { statusMenuItems }
                                                             </Select>
@@ -247,18 +300,32 @@ const JobExplorer = () => {
                                                         <DataToolbarFilter categoryName="Type">
                                                             <Select
                                                                 aria-label="Type"
-                                                                onSelect={ () => console.log('selected') }
-                                                                placeholderText="Type"
+                                                                onToggle={ (riskIsExpanded) => setRiskIsExpanded(riskIsExpanded) }
+                                                                onSelect={ handleJobTypeSelect }
+                                                                placeholderText="Job Type"
+                                                                isExpanded={ riskIsExpanded }
                                                             >
                                                                 { typeMenuItems }
                                                             </Select>
                                                         </DataToolbarFilter>
+                                                        { /* <DataToolbarFilter
+                                                            categoryName="Status"
+                                                        >
+                                                            <Select
+                                                                aria-label="Status"
+                                                                onToggle={ (statusIsExpanded) => setStatusIsExpanded(statusIsExpanded) }
+                                                                onSelect={ onStatusSelect }
+                                                                placeholderText="Status"
+                                                                isExpanded={ statusIsExpanded }
+                                                            >
+                                                                { statusMenuItems }
+                                                            </Select>
+                                                        </DataToolbarFilter> */ }
                                                     </DataToolbarGroup>
                                                 </DataToolbarToggleGroup>
                                             </DataToolbarContent>
-                                        </DataToolbar> */}
+                                        </DataToolbar>
                                         <JobExplorerList
-                                            filterByStatus={ queryParams.status || '' }
                                             jobs={ jobExplorerData }
                                         />
                                         <Pagination

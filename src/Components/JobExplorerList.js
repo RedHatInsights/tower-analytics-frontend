@@ -2,16 +2,18 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
-import React from 'react';
+import React, { useState } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
 
 import {
     DataListCell,
+    DataListContent,
     DataList,
     DataListItem,
     DataListItemRow,
-    DataListItemCells
+    DataListItemCells,
+    DataListToggle
 } from '@patternfly/react-core';
 
 import StatusIcon from '../Icons/StatusIcon/StatusIcon';
@@ -22,8 +24,8 @@ const headerLabels = [
     'Status',
     'Cluster',
     'Organization',
-    'Job Type',
-    'Finished'
+    'Template',
+    'Type'
 ];
 
 const buildHeader = (labels) => (
@@ -37,16 +39,34 @@ const buildHeader = (labels) => (
 );
 
 const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
+    const [ isExpanded, setIsExpanded ] = useState([]);
     return (
         <DataList aria-label={ ariaLabel }>
             { items.map((item, count) => {
+                const toggle = id => {
+                    const expanded = isExpanded;
+                    const idx = expanded.indexOf(id);
+                    const newExpanded =
+                        idx >= 0 ? [
+                            ...expanded.slice(0, idx),
+                            ...expanded.slice(idx + 1, expanded.length) ] :
+                            [ ...expanded, id ];
+                    setIsExpanded(newExpanded);
+                };
+
                 return (
                     <DataListItem key={ item.id } aria-labelledby={ ariaLabelledBy }>
                         <DataListItemRow key={ item.id }>
+                            <DataListToggle
+                                id={ `${item.id}-toggle` }
+                                aria-controls={ `${item.id}-expand` }
+                                onClick={ () => toggle(`${item.id}-toggle`) }
+                                isExpanded={ isExpanded.includes(`${item.id}-toggle`) }
+                            />
                             <DataListItemCells
                                 dataListCells={ [
                                     <DataListCell key={ count++ }>
-                                        { `${item.id} - ${item.template_name}` }
+                                        { `${item.id} - ${item.cluster_name}` }
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
                                         <StatusIcon status={ item.status } />
@@ -59,14 +79,35 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                                         { item.org_id }
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
-                                        { item.job_ype }
+                                        { item.template_name }
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
-                                        { moment(item.finished).format() }
+                                        { item.job_type }
                                     </DataListCell>
                                 ] }
                             />
                         </DataListItemRow>
+                        <DataListContent
+                            aria-label={ `${item.id}-details` }
+                            id={ '${item.id}' }
+                            isHidden={ !isExpanded.includes(`${item.id}-toggle`) }
+                        >
+                            <DataListItemRow>
+                                <DataListItemCells
+                                    dataListCells={ [
+                                        <DataListCell key={ count++ }>
+                                        Created:  { moment(item.created).format() }
+                                        </DataListCell>,
+                                        <DataListCell key={ count++ }>
+                                           Started: { moment(item.started).format() }
+                                        </DataListCell>,
+                                        <DataListCell key={ count++ }>
+                                            Finished:  { moment(item.finished).format() }
+                                        </DataListCell>
+                                    ] }
+                                />
+                            </DataListItemRow>
+                        </DataListContent>
                     </DataListItem>
                 );
             }) }
@@ -77,60 +118,21 @@ const AllJobsTemplate = ({ jobs }) => {
     return buildListRow(jobs, 'All jobs view', 'all-jobs');
 };
 
-const FailedJobsTemplate = ({ jobs }) => {
-    return buildListRow(
-        jobs.filter((job) => job.status === 'failed'),
-        'Failed jobs view',
-        'failed-jobs'
-    );
-};
-
-const SuccessfulJobsTemplate = ({ jobs }) => {
-    return buildListRow(
-        jobs.filter((job) => job.status === 'successful'),
-        'Successful jobs view',
-        'successful-jobs'
-    );
-};
-
-const JobExplorerList = ({ filterByStatus, filterByType, jobs }) => (
+const JobExplorerList = ({ jobs }) => (
     <>
         { jobs.length <= 0 && <LoadingState /> }
-        { filterByStatus === '' && (
           <>
             { buildHeader(headerLabels) }
             <AllJobsTemplate jobs={ jobs } />
           </>
-        ) }
-        { filterByStatus === 'failed' && (
-          <>
-            { buildHeader(headerLabels) }
-            <FailedJobsTemplate jobs={ jobs } />
-          </>
-        ) }
-        { filterByStatus === 'success' && (
-          <>
-            { buildHeader(headerLabels) }
-            <SuccessfulJobsTemplate jobs={ jobs } />
-          </>
-        ) }
     </>
 );
 
 JobExplorerList.propTypes = {
-    jobs: PropTypes.array,
-    filterBy: PropTypes.string
+    jobs: PropTypes.array
 };
 
 AllJobsTemplate.propTypes = {
-    jobs: PropTypes.array
-};
-
-FailedJobsTemplate.propTypes = {
-    jobs: PropTypes.array
-};
-
-SuccessfulJobsTemplate.propTypes = {
     jobs: PropTypes.array
 };
 

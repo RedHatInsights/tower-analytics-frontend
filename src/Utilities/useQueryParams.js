@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
 
@@ -44,6 +45,22 @@ export const useQueryParams = initial => {
                 return { ...state, severity: action.severity };
             case 'SET_ATTRIBUTES':
                 return { ...state, attributes: [ ...action.attributes ]};
+            case 'SET_JOB_TYPE':
+                if (action.jobType === '') {
+                    const { job_type: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, job_type: action.jobType };
+
+            case 'SET_STATUS':
+
+                if (action.status === [ '' ]) {
+                    const { status: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, status: [ ...action.status ]};
             default:
                 throw new Error();
         }
@@ -93,6 +110,8 @@ export const useQueryParams = initial => {
         setLimit: limit => dispatch({ type: 'SET_LIMIT', limit }),
         setOffset: offset => dispatch({ type: 'SET_OFFSET', offset }),
         setSeverity: severity => dispatch({ type: 'SET_SEVERITY', severity }),
-        setAttributes: attributes => dispatch({ type: 'SET_ATTRIBUTES', attributes })
+        setAttributes: attributes => dispatch({ type: 'SET_ATTRIBUTES', attributes }),
+        setJobType: jobType => dispatch({ type: 'SET_JOB_TYPE', jobType }),
+        setStatus: status => dispatch({ type: 'SET_STATUS', status })
     };
 };
