@@ -2,17 +2,11 @@ import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
+import { useFetch, useLoading, useError } from '../../Utilities/useFetch';
 
 import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
-import {
-    preflightRequest,
-    readChart30,
-    readClusters,
-    readModules,
-    readTemplates
-} from '../../Api';
 
 import {
     Main,
@@ -95,103 +89,46 @@ const initialQueryParams = {
 };
 
 const Clusters = () => {
-    const [ preflightError, setPreFlightError ] = useState(null);
     const [ barChartData, setBarChartData ] = useState([]);
     const [ lineChartData, setLineChartData ] = useState([]);
-    const [ templatesData, setTemplatesData ] = useState([]);
-    const [ modulesData, setModulesData ] = useState([]);
     const [ clusterOptions, setClusterOptions ] = useState([]);
     const [ clusterTimeFrame, setClusterTimeFrame ] = useState(31);
     const [ selectedCluster, setSelectedCluster ] = useState('all');
-    const [ firstRender, setFirstRender ] = useState(true);
-    const [ isLoading, setIsLoading ] = useState(true);
     const { queryParams, setEndDate, setStartDate, setId } = useQueryParams(
         initialQueryParams
     );
+    const { templates: clusterTemplates, ...restCluster } = useFetch(
+        'clusters', { templates: []}
+    );
+    const { data: chartData, ...restChart30 } = useFetch(
+        'chart30', { data: []}, queryParams
+    );
+    const { modules: modulesData, ...restModules } = useFetch(
+        'modules', { modules: []}, queryParams
+    );
+    const { templates: templatesData, ...restTemplates } = useFetch(
+        'templates', { templates: []}, queryParams
+    );
+    const isLoading = useLoading([
+        restCluster.isLoading,
+        restChart30.isLoading,
+        restModules.isLoading,
+        restTemplates.isLoading
+    ]);
+    const preflightError = useError([
+        restCluster.preflightError,
+        restChart30.preflightError,
+        restModules.preflightError,
+        restTemplates.preflightError
+    ]);
 
     useEffect(() => {
-        if (firstRender) {
-            return;
-        }
-
-        const fetchEndpoints = () => {
-            return Promise.all(
-                [
-                    readChart30({ params: queryParams }),
-                    readModules({ params: queryParams }),
-                    readTemplates({ params: queryParams })
-                ].map(p => p.catch(() => []))
-            );
-        };
-
-        const update = async () => {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            fetchEndpoints().then(
-                ([
-                    { data: chartData = []},
-                    { modules: modulesData = []},
-                    { templates: templatesData = []}
-                ]) => {
-                    if (queryParams.id) {
-                        setLineChartData(chartData);
-                    } else {
-                        setBarChartData(chartData);
-                    }
-
-                    setModulesData(modulesData);
-                    setTemplatesData(templatesData);
-                    setIsLoading(false);
-                }
-            );
-        };
-
-        update();
-    }, [ queryParams ]);
+        queryParams.id ? setLineChartData(chartData) : setBarChartData(chartData);
+    }, [ chartData ]);
 
     useEffect(() => {
-        let ignore = false;
-        const getData = () => {
-            return Promise.all(
-                [
-                    readChart30({ params: queryParams }),
-                    readClusters(),
-                    readModules({ params: queryParams }),
-                    readTemplates({ params: queryParams })
-                ].map(p => p.catch(() => []))
-            );
-        };
-
-        async function initializeWithPreflight() {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            await preflightRequest().catch(error => {
-                setPreFlightError({ preflightError: error });
-            });
-            getData().then(
-                ([
-                    { data: barChartData = []},
-                    { templates: clustersData = []},
-                    { modules: modulesData = []},
-                    { templates: templatesData = []}
-                ]) => {
-                    if (!ignore) {
-                        const clusterOptions = formatClusterName(clustersData);
-
-                        setBarChartData(barChartData);
-                        setClusterOptions(clusterOptions);
-                        setModulesData(modulesData);
-                        setTemplatesData(templatesData);
-                        setFirstRender(false);
-                        setIsLoading(false);
-                    }
-                }
-            );
-        }
-
-        initializeWithPreflight();
-        return () => (ignore = true);
-    }, []);
+        setClusterOptions(formatClusterName(clusterTemplates));
+    }, [ clusterTemplates ]);
 
     return (
         <React.Fragment>
@@ -262,7 +199,7 @@ const Clusters = () => {
                       <h2>Job status</h2>
                   </PFCardHeader>
                   <CardBody>
-                      { isLoading && !preflightError && <LoadingState /> }
+                      { isLoading && <LoadingState /> }
                       { selectedCluster === 'all' &&
                   barChartData.length > 0 &&
                   !isLoading && (

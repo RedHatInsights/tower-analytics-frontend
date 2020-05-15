@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
+import { useFetch, useLoading, useError } from '../../Utilities/useFetch';
 
 import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoData from '../../Components/NoData';
-import { preflightRequest, readClusters, readNotifications } from '../../Api';
 
 import {
     Main,
@@ -124,13 +124,8 @@ const initialQueryParams = {
 };
 
 const Notifications = () => {
-    const [ preflightError, setPreFlightError ] = useState(null);
-    const [ notificationsData, setNotificationsData ] = useState([]);
     const [ clusterOptions, setClusterOptions ] = useState([]);
     const [ selectedCluster, setSelectedCluster ] = useState('');
-    const [ firstRender, setFirstRender ] = useState(true);
-    const [ isLoading, setIsLoading ] = useState(true);
-    const [ meta, setMeta ] = useState({});
     const [ currPage, setCurrPage ] = useState(1);
     const {
         queryParams,
@@ -139,67 +134,18 @@ const Notifications = () => {
         setOffset,
         setSeverity
     } = useQueryParams(initialQueryParams);
+    const { templates, ...restCluster } = useFetch(
+        'clusters', { templates: []}
+    );
+    const { notifications, meta, ...restNotif } = useFetch(
+        'notifications', { notifications: [], meta: {}}, queryParams
+    );
+    const isLoading = useLoading([ restCluster.isLoading, restNotif.isLoading ]);
+    const preflightError = useError([ restCluster.preflightError, restNotif.preflightError ]);
 
     useEffect(() => {
-        if (firstRender) {
-            return;
-        }
-
-        const getData = () => {
-            return readNotifications({ params: queryParams });
-        };
-
-        const update = async () => {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            getData().then(
-                ({ notifications: notificationsData = [], meta }) => {
-                    setNotificationsData(notificationsData);
-                    setMeta(meta);
-                    setIsLoading(false);
-                }
-            );
-        };
-
-        update();
-    }, [ queryParams ]);
-
-    useEffect(() => {
-        let ignore = false;
-        const fetchEndpoints = () => {
-            return Promise.all(
-                [ readClusters(), readNotifications({ params: queryParams }) ].map(p =>
-                    p.catch(() => [])
-                )
-            );
-        };
-
-        async function initializeWithPreflight() {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            await preflightRequest().catch(error => {
-                setPreFlightError({ preflightError: error });
-            });
-            fetchEndpoints().then(
-                ([
-                    { templates: clustersData = []},
-                    { notifications: notificationsData = [], meta }
-                ]) => {
-                    if (!ignore) {
-                        const clusterOptions = formatClusterName(clustersData);
-                        setClusterOptions(clusterOptions);
-                        setNotificationsData(notificationsData);
-                        setMeta(meta);
-                        setFirstRender(false);
-                        setIsLoading(false);
-                    }
-                }
-            );
-        }
-
-        initializeWithPreflight();
-        return () => (ignore = true);
-    }, []);
+        setClusterOptions(formatClusterName(templates));
+    }, [ templates ]);
 
     const returnOffsetVal = page => {
         let offsetVal = (page - 1) * queryParams.limit;
@@ -286,13 +232,13 @@ const Notifications = () => {
                   </CardHeader>
                   <CardBody>
                       { isLoading && <LoadingState /> }
-                      { !isLoading && notificationsData.length <= 0 && <NoData /> }
-                      { !isLoading && notificationsData.length > 0 && (
+                      { !isLoading && notifications.length <= 0 && <NoData /> }
+                      { !isLoading && notifications.length > 0 && (
                   <>
                     <NotificationsList
                         filterBy={ queryParams.severity || '' }
                         options={ notificationOptions }
-                        notifications={ notificationsData }
+                        notifications={ notifications }
                     />
                     <Pagination
                         itemCount={ meta.count ? meta.count : 0 }
