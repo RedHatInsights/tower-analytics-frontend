@@ -111,7 +111,9 @@ export const readJobExplorer = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(jobExplorerEndpoint, formattedUrl);
     const { strings } = formatQueryStrings(params);
-    url.search = Object.keys(strings).map(key => strings[key]).join('&');
+    let qs = Object.keys(strings).map(key => strings[key]).join('&');
+    url.search = qs;
+    console.log('url', url.search);
     return fetch(url).then(handleResponse);
 };
 

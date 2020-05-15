@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable camelcase */
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
 // import { useState, useEffect } from 'react';
@@ -8,7 +10,9 @@ export const formatQueryStrings = ({
     startDate = '',
     ids = [],
     limit = null,
-    offset = null
+    offset = null,
+    job_type = '',
+    status = []
 }) => {
     let strings = {};
 
@@ -28,10 +32,19 @@ export const formatQueryStrings = ({
         .join('&');
     };
 
+    const parseStatuses = statuses => {
+        return statuses
+        .map(status => {
+            return `status=${encodeURIComponent(status)}`;
+        })
+        .join('&');
+    };
+
     const parseStartDate = date => `startDate=${encodeURIComponent(date)}`;
     const parseEndDate = date => `endDate=${encodeURIComponent(date)}`;
     const parseLimit = limit => `limit=${encodeURIComponent(limit)}`;
     const parseOffset = offset => `offset=${encodeURIComponent(offset)}`;
+    const parseJobType = jobType => `job_type=${encodeURIComponent(jobType)}`;
 
     if (attributes) {
         strings.attributes = parseAttrs(attributes);
@@ -55,6 +68,14 @@ export const formatQueryStrings = ({
 
     if (ids) {
         strings.ids = parseIds(ids);
+    }
+
+    if (job_type) {
+        strings.jobType = parseJobType(job_type);
+    }
+
+    if (status) {
+        strings.status = parseStatuses(status);
     }
 
     return {
