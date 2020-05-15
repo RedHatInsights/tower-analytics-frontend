@@ -128,3 +128,17 @@ export const readROI = ({ params = {}}) => {
     );
     return fetch(url).then(handleResponse);
 };
+
+const API = {
+    getUser: window.insights.chrome.auth.getUser,
+    preflightRequest,
+    templateJobs: readTemplateJobs,
+    clusters: readClusters,
+    chart30: readChart30,
+    modules: readModules,
+    templates: readTemplates,
+    // ...
+    notifications: readNotifications
+};
+
+export default API;
