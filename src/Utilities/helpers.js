@@ -8,6 +8,10 @@ export function formatDateTime(dateTime) {
     return moment(dateTime).format('M/D/YYYY h:mma');
 }
 
+export function formatDate(date) {
+    return moment(date).utc().format('YYYY-MM-DD');
+}
+
 export function formatSeconds(seconds) {
     return moment.utc().startOf('day')
     .seconds(seconds)

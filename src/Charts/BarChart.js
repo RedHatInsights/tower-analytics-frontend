@@ -1,8 +1,15 @@
 import React, { Component } from 'react';
+import {
+    withRouter
+} from 'react-router-dom';
+
 import initializeChart from './BaseChart';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import Tooltip from '../Utilities/Tooltip';
+import { formatQueryStrings } from '../Utilities/formatQueryStrings';
+import { Paths } from '../paths';
+import { formatDate } from '../Utilities/helpers';
 
 class BarChart extends Component {
     constructor(props) {
@@ -10,11 +17,28 @@ class BarChart extends Component {
         this.draw = this.draw.bind(this);
         this.init = this.init.bind(this);
         this.resize = this.resize.bind(this);
+        this.redirectToJobExplorer = this.redirectToJobExplorer.bind(this);
         this.state = {
             formattedData: [],
             timeout: null
         };
     }
+
+    redirectToJobExplorer({ data: { DATE: date }}) {
+        const { jobExplorer } = Paths;
+        const formattedDate = formatDate(date);
+        const initialQueryParams = {
+            startDate: formattedDate,
+            endDate: formattedDate
+        };
+        const { strings } = formatQueryStrings(initialQueryParams);
+        const search = Object.keys(strings).map(key => strings[key]).join('&').slice(1, -1);
+        this.props.history.push({
+            pathname: jobExplorer,
+            search
+        });
+    };
+
     resize() {
         const { timeout } = this.state;
         clearTimeout(timeout);
@@ -26,6 +50,7 @@ class BarChart extends Component {
     init() {
         this.draw();
     }
+
     // Methods
     draw() {
         // Clear our chart container element first
@@ -165,7 +190,8 @@ class BarChart extends Component {
         .selectAll('rect')
         .on('mouseover', barTooltip.handleMouseOver)
         .on('mousemove', barTooltip.handleMouseOver)
-        .on('mouseout', barTooltip.handleMouseOut);
+        .on('mouseout', barTooltip.handleMouseOut)
+        .on('click', this.redirectToJobExplorer);
     }
 
     componentDidMount() {
@@ -197,7 +223,8 @@ BarChart.propTypes = {
     value: PropTypes.number,
     margin: PropTypes.object,
     getHeight: PropTypes.func,
-    getWidth: PropTypes.func
+    getWidth: PropTypes.func,
+    history: PropTypes.object
 };
 
-export default initializeChart(BarChart);
+export default initializeChart(withRouter(BarChart));
