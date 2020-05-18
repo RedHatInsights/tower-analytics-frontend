@@ -1,50 +1,18 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import initializeChart from './BaseChart';
 import PropTypes from 'prop-types';
 import Tooltip from '../Utilities/Tooltip';
 import * as d3 from 'd3';
 
-class LineChart extends Component {
-    constructor(props) {
-        super(props);
-        this.init = this.init.bind(this);
-        this.draw = this.draw.bind(this);
-        this.resize = this.resize.bind(this);
-        this.updateCluster = this.updateCluster.bind(this);
-        this.state = {
-            formattedData: [],
-            timeout: null
-        };
-    }
+const LineChart = (props) => {
+    let time = null;
 
-    resize() {
-        const { timeout } = this.state;
-        clearTimeout(timeout);
-        this.setState({
-            timeout: setTimeout(() => { this.init(); }, 500)
-        });
-    }
-
-    getTickCount() {
-        const { value } = this.props;
-        if (value > 20) {
-            return (value / 2);
-        } else {
-            return value;
-        }
-    }
-    updateCluster() {
-        this.init();
-    }
-    init() {
-        this.draw();
-    }
     // Methods
-    draw() {
+    const draw = () => {
     // Clear our chart container element first
-        d3.selectAll('#' + this.props.id + ' > *').remove();
-        const width = this.props.getWidth();
-        const height = this.props.getHeight();
+        d3.selectAll('#' + props.id + ' > *').remove();
+        const width = props.getWidth();
+        const height = props.getHeight();
 
         function transition(path) {
             path
@@ -67,26 +35,26 @@ class LineChart extends Component {
         //[success, fail, total]
         let colors = d3.scaleOrdinal([ '#6EC664', '#A30000', '#06C' ]);
         const svg = d3
-        .select('#' + this.props.id)
+        .select('#' + props.id)
         .append('svg')
-        .attr('width', width + this.props.margin.left + this.props.margin.right)
-        .attr('height', height + this.props.margin.top + this.props.margin.bottom)
+        .attr('width', width + props.margin.left + props.margin.right)
+        .attr('height', height + props.margin.top + props.margin.bottom)
         .attr('z', 100)
         .append('g')
         .attr(
             'transform',
             'translate(' +
-          this.props.margin.left +
+          props.margin.left +
           ',' +
-          this.props.margin.top +
+          props.margin.top +
           ')'
         );
         // Tooltip
         const tooltip = new Tooltip({
-            svg: '#' + this.props.id,
+            svg: '#' + props.id,
             colors
         });
-        const { data: unformattedData, value } = this.props;
+        const { data: unformattedData, value } = props;
         const parseTime = d3.timeParse('%Y-%m-%d');
 
         const data = unformattedData.reduce((formatted, { created, successful, failed }) => {
@@ -147,7 +115,7 @@ class LineChart extends Component {
         svg
         .append('text')
         .attr('transform', 'rotate(-90)')
-        .attr('y', 0 - this.props.margin.left)
+        .attr('y', 0 - props.margin.left)
         .attr('x', 0 - height / 2)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
@@ -184,7 +152,7 @@ class LineChart extends Component {
             'translate(' +
                 width / 2 +
                 ' ,' +
-                (height + this.props.margin.top + 20) +
+                (height + props.margin.top + 20) +
                 ')'
         )
         .style('text-anchor', 'middle')
@@ -277,30 +245,30 @@ class LineChart extends Component {
         .on('mouseover', handleMouseOver)
         .on('mousemove', handleMouseMove)
         .on('mouseout', handleMouseOut);
-    }
+    };
 
-    componentDidMount() {
-        this.updateCluster();
+    const resize = () => {
+        clearTimeout(time);
+        time = setTimeout(() => { draw(); }, 500);
+    };
+
+    useEffect(() => {
+        draw();
         // Call the resize function whenever a resize event occurs
-        window.addEventListener('resize', this.resize);
-    }
+        window.addEventListener('resize', resize);
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.value !== this.props.value) {
-            this.updateCluster();
-        }
-    }
+        return () => {
+            clearTimeout(time);
+            window.removeEventListener('resize', resize);
+        };
+    }, []);
 
-    componentWillUnmount() {
-        const { timeout } = this.state;
-        clearTimeout(timeout);
-        window.removeEventListener('resize', this.resize);
-    }
+    useEffect(() => draw(), [ props.value ]);
 
-    render() {
-        return <div id={ this.props.id } />;
-    }
-}
+    return (
+        <div id={ props.id } />
+    );
+};
 
 LineChart.propTypes = {
     id: PropTypes.string,
