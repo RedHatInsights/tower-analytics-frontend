@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 import initializeChart from './BaseChart';
 import { getTotal } from '../Utilities/helpers';
 import Legend from '../Utilities/Legend';
-import { pfmulti } from '../Utilities/colors';
+import { getColorForNames } from '../Utilities/colors';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -130,10 +130,9 @@ class Tooltip {
 const PieChart = (props) => {
     const [ colors, setColors ] = useState([]);
     const [ time, setTime ] = useState(null);
+    const colorToNames = getColorForNames(props.data);
 
     const draw = () => {
-        const color = d3.scaleOrdinal(pfmulti);
-
         d3.selectAll('#' + props.id + ' > *').remove();
         const width = props.getWidth();
         const height = props.getHeight();
@@ -175,23 +174,23 @@ const PieChart = (props) => {
         (height + props.margin.top + props.margin.bottom) / 2 +
         ')'
         );
-
+        /* eslint-disable */
         svg
         .selectAll('path')
         .data(pie(data))
         .enter()
         .append('path')
         .attr('d', arc)
-        .attr('fill', (d, i) => color(i));
+        .attr('fill', (d) => colorToNames[d.data.name]);
 
         svg
         .selectAll('path')
-        .on('mouseover', function(d, i) {
-            d3.select(this).style('fill', d3.rgb(color(i)).darker(1));
+        .on('mouseover', function(d) {
+            d3.select(this).style('fill', d3.rgb(colorToNames[d.data.name]).darker(1));
             donutTooltip.handleMouseOver();
         })
-        .on('mouseout', function(d, i) {
-            d3.select(this).style('fill', color(i));
+        .on('mouseout', function(d) {
+            d3.select(this).style('fill', colorToNames[d.data.name]);
             donutTooltip.handleMouseOut();
         })
         .on('mousemove', donutTooltip.handleMouseOver);
@@ -202,29 +201,8 @@ const PieChart = (props) => {
 
     const init = () => {
         const { data } = props;
-        const color = d3.scaleOrdinal(pfmulti);
-
-        // create our colors array to send to the Legend component
-        const calculatedColors = data.reduce((colors, org) => {
-            // format complement slice as "Others"
-            if (org.id === -1) {
-                colors.push({
-                    name: 'Others',
-                    value: color(org.name),
-                    count: Math.round(org.count)
-                });
-            } else {
-                colors.push({
-                    name: org.name,
-                    value: color(org.name),
-                    count: Math.round(org.count)
-                });
-            }
-
-            return colors;
-        }, []);
-
-        setColors(calculatedColors);
+        const legend = data.map(el => ({ name: el.name, value: colorToNames[el.name], count: Math.round(el.count) }));
+        setColors(legend.sort((a, b) => (a.count > b.count) ? -1 : ((b.count > a.count) ? 1 : 0)));
         draw();
     };
 

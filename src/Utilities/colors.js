@@ -1,3 +1,5 @@
+import { scaleOrdinal } from 'd3';
+
 const pfmulti = [
     '#06C',
     '#4CB140',
@@ -13,5 +15,22 @@ const pfmulti = [
     '#8F4700',
     '#002F5D'
 ];
+
+/**
+ * Creates a color map to names: for same data generates same colors.
+ * @param  {[{ name }]} data    Array of objects with name options to map to.
+ * @return {{ [name]: color }}  Object where the keys are the names an the values are the colors.
+ */
+export const getColorForNames = (data) => {
+    const colorFnc = scaleOrdinal(pfmulti);
+    const compObj = prop => (a, b) => (a[prop] > b[prop]) ? 1 : ((b[prop] > a[prop]) ? -1 : 0);
+
+    const colors = data.sort(compObj('name')).reduce((colors, org) => {
+        colors[org.name] = colorFnc(org.name);
+        return colors;
+    }, {});
+
+    return colors;
+};
 
 export { pfmulti };

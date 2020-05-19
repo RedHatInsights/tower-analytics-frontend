@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import initializeChart from './BaseChart';
 import * as d3 from 'd3';
 import Legend from '../Utilities/Legend';
-import { pfmulti } from '../Utilities/colors';
+import { getColorForNames } from '../Utilities/colors';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -12,8 +12,6 @@ const Wrapper = styled.div`
   flex-wrap: nowrap;
   flex-shrink: 0;
 `;
-
-const color = d3.scaleOrdinal(pfmulti);
 
 class Tooltip {
     constructor(props) {
@@ -160,6 +158,7 @@ const GroupedBarChart = (props) => {
     const [ selected, setSelected ] = useState([]);
     const [ time, setTime ] = useState(null);
     const orgsList = props.data[0].orgs;
+    const colorToNames = getColorForNames(orgsList.map(el => ({ name: el.org_name })));
     let selection = [];
 
     const draw = () => {
@@ -295,7 +294,7 @@ const GroupedBarChart = (props) => {
             return x1(d.org_name);
         }) // unsorted
         .style('fill', function(d) {
-            return color(d.org_name);
+            return colorToNames[d.org_name];
         })
         .attr('y', function(d) {
             return y(d.value);
@@ -304,12 +303,12 @@ const GroupedBarChart = (props) => {
             return height - y(d.value);
         })
         .on('mouseover', function(d) {
-            d3.select(this).style('fill', d3.rgb(color(d.org_name)).darker(1));
+            d3.select(this).style('fill', d3.rgb(colorToNames[d.org_name]).darker(1));
             tooltip.handleMouseOver();
         })
         .on('mousemove', tooltip.handleMouseOver)
         .on('mouseout', function(d) {
-            d3.select(this).style('fill', color(d.org_name));
+            d3.select(this).style('fill', colorToNames[d.org_name]);
             tooltip.handleMouseOut();
         });
         bars = bars.merge(subEnter);
@@ -336,17 +335,8 @@ const GroupedBarChart = (props) => {
             });
         }
 
-        // create our colors array to send to the Legend component
-        const colors = orgsList.reduce((colors, org) => {
-            colors.push({
-                name: org.org_name,
-                value: color(org.org_name),
-                id: org.id
-            });
-            return colors;
-        }, []);
-
-        setColors(colors);
+        const legend = orgsList.map(el => ({ name: el.org_name, value: colorToNames[el.org_name], id: el.id }));
+        setColors(legend);
         draw();
     };
 
