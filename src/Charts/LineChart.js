@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import Tooltip from '../Utilities/Tooltip';
 import * as d3 from 'd3';
 
-const LineChart = (props) => {
+export const LineChart = (props) => {
     let time = null;
 
     // Methods

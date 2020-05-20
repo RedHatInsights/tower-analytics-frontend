@@ -127,7 +127,7 @@ class Tooltip {
   };
 }
 
-const PieChart = (props) => {
+export const PieChart = (props) => {
     const [ colors, setColors ] = useState([]);
     let time = null;
 

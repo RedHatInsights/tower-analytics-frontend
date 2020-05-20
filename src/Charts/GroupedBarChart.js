@@ -155,7 +155,7 @@ class Tooltip {
   };
 }
 
-const GroupedBarChart = (props) => {
+export const GroupedBarChart = (props) => {
     const [ colors, setColors ] = useState([]);
     const [ selected, setSelected ] = useState([]);
     const [ updater, setUpdater ] = useState(0);
