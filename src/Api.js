@@ -113,7 +113,6 @@ export const readJobExplorer = ({ params = {}}) => {
     const { strings } = formatQueryStrings(params);
     let qs = Object.keys(strings).map(key => strings[key]).join('&');
     url.search = qs;
-    console.log('url', url.search);
     return fetch(url).then(handleResponse);
 };
 
