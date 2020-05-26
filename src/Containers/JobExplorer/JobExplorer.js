@@ -1,8 +1,7 @@
-/* eslint-disable no-debugger */
 /* eslint-disable no-console */
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
@@ -75,29 +74,16 @@ const initialQueryParams = {
 };
 
 const statusMenuItems = [
-    <SelectOption key="status-success"  value="Success" data-value="successful" />,
-    <SelectOption key="status-failed"  value="Failed" data-value="failed" />,
+    <SelectOption key="status-success"  value="successful" />,
+    <SelectOption key="status-failed"  value="failed" />,
     <SelectOption key="status-all"  value="All" data-value="all" />
 ];
 
-const typeMenuItems = [
-    <SelectOption key="type-template"  value="Template" data-value="job" />,
-    <SelectOption key="type-worklow"  value="Workflow" data-value="workflowjob" />,
+const jobTypeMenuItems = [
+    <SelectOption key="type-template"  value="job" />,
+    <SelectOption key="type-worklow"  value="workflowjob" />,
     <SelectOption key="type-all"  value="All" data-value="all" />
 ];
-
-const filters = {
-    type: [ 'job', 'workflowjob' ],
-    status: [ 'successful', 'failed' ]
-};
-
-// const buildListFilters = (options) => (
-//     options.map((option) => {
-//         return (
-//             <div key={ option }>{ option }</div>
-//         );
-//     })
-// );
 
 const JobExplorer = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
@@ -107,9 +93,11 @@ const JobExplorer = () => {
     const [ meta, setMeta ] = useState({});
     const [ currPage, setCurrPage ] = useState(1);
     const [ statusIsExpanded, setStatusIsExpanded ] = useState(false);
-    const [ riskIsExpanded, setRiskIsExpanded ] = useState(false);
-    // const [ selections, setSelections ] = useState([]);
-    const [ statusArr, setStatusArr ] = useState([]);
+    const [ jobTypeIsExpanded, setJobTypeIsExpanded ] = useState(false);
+    const [ filters, setFilters ] = useState({
+        status: [ 'successful', 'failed' ],
+        type: [ 'job', 'workflowjob' ]
+    });
     const {
         queryParams,
         // setId,
@@ -123,8 +111,6 @@ const JobExplorer = () => {
         if (firstRender) {
             return;
         }
-
-        console.log('query params', queryParams);
 
         const getData = () => {
             return readJobExplorer({ params: queryParams });
@@ -205,44 +191,49 @@ const JobExplorer = () => {
         setCurrPage(page);
     };
 
-    const handleJobTypeSelect = (event) => {
-        setJobType(event.target.dataset.value);
-    };
-
-    const handleStatusSelect = () => {
-        setStatus(statusArr);
+    const onSelect = (type, event, selection) => {
+        const checked = event.target.checked;
+        setFilters({
+            ...filters,
+            [type]: checked
+                ? [ ...filters[type], selection ]
+                : filters[type].filter(value => value !== selection)
+        });
     };
 
     const onStatusSelect = (event, selection) => {
-        console.log(event.target);
-        console.log('selection', selection);
-        if (!statusArr.includes(selection.toLowerCase())) {
-            statusArr.push(selection.toLowerCase());
-            setStatusArr(statusArr);
-            handleStatusSelect();
-        }
+        onSelect('status', event, selection);
+        setStatus(filters.status);
+    };
 
-        else if (statusArr.includes(selection.toLowerCase())) {
-            let idx = statusArr.indexOf(selection.toLowerCase());
-            if (idx >= 0) {
-                statusArr.splice(idx, 1);
-                setStatusArr(statusArr);
-                console.log(statusArr);
-                handleStatusSelect();
-            }
-        }
-
-        if (selection.toLowerCase() === 'all') {
-            statusArr.length = 0;
-            setStatusArr(statusArr);
-            console.log('here');
-            handleStatusSelect();
-        }
-
+    const onJobTypeSelect = (event, selection) => {
+        onSelect('type', event, selection);
+        console.log(event.target.value);
+        setJobType(filters.type);
     };
 
     const onStatusToggle = () => {
         setStatusIsExpanded(!statusIsExpanded);
+    };
+
+    const onJobTypeToggle = () => {
+        setJobTypeIsExpanded(!jobTypeIsExpanded);
+    };
+
+    const onDelete = (type = '', id = '') => {
+        if (type) {
+            setFilters({
+                ...filters,
+                [type.toLowerCase()]: filters[type.toLowerCase()].filter(value => value !== id)
+            });
+        } else {
+            setFilters({
+                filters: {
+                    status: [],
+                    type: []
+                }
+            });
+        }
     };
 
     return (
@@ -274,7 +265,7 @@ const JobExplorer = () => {
                                 { !isLoading && jobExplorerData.length <= 0 && <NoData /> }
                                 { !isLoading && jobExplorerData.length > 0 && (
                                     <>
-                                        <DataToolbar id="jobs-data-toolbar">
+                                        <DataToolbar id="jobs-data-toolbar" clearAllFilters={ onDelete }>
                                             <DataToolbarContent>
                                                 <DataToolbarToggleGroup
                                                     toggleIcon={ <FilterIcon /> }
@@ -284,6 +275,7 @@ const JobExplorer = () => {
                                                         <DataToolbarFilter
                                                             chips={ filters.status }
                                                             categoryName="Status"
+                                                            deleteChip={ onDelete }
                                                         >
                                                             <Select
                                                                 variant={ SelectVariant.checkbox }
@@ -297,30 +289,23 @@ const JobExplorer = () => {
                                                                 { statusMenuItems }
                                                             </Select>
                                                         </DataToolbarFilter>
-                                                        <DataToolbarFilter categoryName="Type">
-                                                            <Select
-                                                                aria-label="Type"
-                                                                onToggle={ (riskIsExpanded) => setRiskIsExpanded(riskIsExpanded) }
-                                                                onSelect={ handleJobTypeSelect }
-                                                                placeholderText="Job Type"
-                                                                isExpanded={ riskIsExpanded }
-                                                            >
-                                                                { typeMenuItems }
-                                                            </Select>
-                                                        </DataToolbarFilter>
-                                                        { /* <DataToolbarFilter
-                                                            categoryName="Status"
+                                                        <DataToolbarFilter
+                                                            categoryName="Type"
+                                                            chips={ filters.type }
+                                                            deleteChip={ onDelete }
                                                         >
                                                             <Select
-                                                                aria-label="Status"
-                                                                onToggle={ (statusIsExpanded) => setStatusIsExpanded(statusIsExpanded) }
-                                                                onSelect={ onStatusSelect }
-                                                                placeholderText="Status"
-                                                                isExpanded={ statusIsExpanded }
+                                                                aria-label="Type"
+                                                                variant={ SelectVariant.checkbox }
+                                                                onToggle={ onJobTypeToggle }
+                                                                onSelect={ onJobTypeSelect }
+                                                                selections={ filters.type }
+                                                                isExpanded={ jobTypeIsExpanded }
+                                                                placeholderText="Job Type"
                                                             >
-                                                                { statusMenuItems }
+                                                                { jobTypeMenuItems }
                                                             </Select>
-                                                        </DataToolbarFilter> */ }
+                                                        </DataToolbarFilter>
                                                     </DataToolbarGroup>
                                                 </DataToolbarToggleGroup>
                                             </DataToolbarContent>

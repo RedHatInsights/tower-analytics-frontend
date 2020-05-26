@@ -1,7 +1,4 @@
 /* eslint-disable react/jsx-key */
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-console */
 import React, { useState } from 'react';
 import moment from 'moment';
 import PropTypes from 'prop-types';
