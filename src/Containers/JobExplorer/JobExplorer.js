@@ -86,7 +86,7 @@ const jobTypeMenuItems = [
     <SelectOption key="type-all"  value="All" data-value="all" />
 ];
 
-const JobExplorer = () => {
+const JobExplorer = (props) => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ jobExplorerData, setJobExplorerData ] = useState([]);
     const [ firstRender, setFirstRender ] = useState(null);
@@ -108,12 +108,17 @@ const JobExplorer = () => {
         setStatus
     } = useQueryParams(initialQueryParams);
 
+    const { location: { search } } = props;
+    const initialSearchParams = [...new URLSearchParams(search).entries()].reduce((q, [k, v]) => Object.assign(q, { [k]: v }), {});
+    const combined = { ...queryParams, ...initialSearchParams };
+
     useEffect(() => {
         if (firstRender) {
             return;
         }
+
         const getData = () => {
-            return readJobExplorer({ params: queryParams });
+            return readJobExplorer({ params: combined });
         };
 
         const update = async () => {
@@ -144,7 +149,7 @@ const JobExplorer = () => {
         let ignore = false;
         const fetchEndpoints = () => {
             return Promise.all(
-                [ readJobExplorer({ params: queryParams }) ]
+                [ readJobExplorer({ params: combined }) ]
             );
         };
 

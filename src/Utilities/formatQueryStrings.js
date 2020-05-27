@@ -48,8 +48,8 @@ export const formatQueryStrings = ({
         .join('&');
     };
 
-    const parseStartDate = date => `startDate=${encodeURIComponent(date)}`;
-    const parseEndDate = date => `endDate=${encodeURIComponent(date)}`;
+    const parseStartDate = date => `start_date=${encodeURIComponent(date)}`;
+    const parseEndDate = date => `end_date=${encodeURIComponent(date)}`;
     const parseLimit = limit => `limit=${encodeURIComponent(limit)}`;
     const parseOffset = offset => `offset=${encodeURIComponent(offset)}`;
     // const parseJobType = jobType => `job_type=${encodeURIComponent(jobType)}`;

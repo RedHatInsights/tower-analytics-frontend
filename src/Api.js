@@ -110,8 +110,8 @@ export const readNotifications = ({ params = {}}) => {
 export const readJobExplorer = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(jobExplorerEndpoint, formattedUrl);
-    const { strings } = formatQueryStrings(params);
-    let qs = Object.keys(strings).map(key => strings[key]).join('&');
+    const { strings, stringify } = formatQueryStrings(params);
+    const qs = stringify(strings);
     url.search = qs;
     return fetch(url).then(handleResponse);
 };
