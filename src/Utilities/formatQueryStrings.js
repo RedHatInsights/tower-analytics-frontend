@@ -1,12 +1,14 @@
 /* eslint-disable camelcase */
+/* eslint-disable */
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
 // import { useState, useEffect } from 'react';
+import { parse } from 'query-string';
 
 export const formatQueryStrings = ({
     attributes,
-    endDate,
-    startDate,
+    end_date,
+    start_date,
     ids,
     limit,
     offset,
@@ -14,7 +16,6 @@ export const formatQueryStrings = ({
     status
 }) => {
     let strings = {};
-
     const parseAttrs = attrs => {
         return attrs
         .map(attr => {
@@ -57,12 +58,12 @@ export const formatQueryStrings = ({
         strings.attributes = parseAttrs(attributes);
     }
 
-    if (startDate) {
-        strings.startDate = parseStartDate(startDate);
+    if (start_date) {
+        strings.start_date = parseStartDate(start_date);
     }
 
-    if (endDate) {
-        strings.endDate = parseEndDate(endDate);
+    if (end_date) {
+        strings.end_date = parseEndDate(end_date);
     }
 
     if (limit) {
@@ -86,6 +87,11 @@ export const formatQueryStrings = ({
     }
 
     return {
-        strings
-    };
+        strings,
+        stringify: strings => {
+            return Object.keys(strings).map(key => strings[key]).join('&');
+        },
+        parse
+    }
+        
 };
