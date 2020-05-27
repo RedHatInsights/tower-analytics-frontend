@@ -82,3 +82,6 @@ section#refTab1Section, section#refTab2Section {
   outline: none;
 }
 
+#d3-bar-chart-root rect:hover {
+    cursor: pointer;
+}
