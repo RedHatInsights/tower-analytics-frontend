@@ -112,7 +112,6 @@ const JobExplorer = () => {
         if (firstRender) {
             return;
         }
-        console.log('queryparams', queryParams);
         const getData = () => {
             return readJobExplorer({ params: queryParams });
         };
