@@ -70,10 +70,10 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                                         { item.status }
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
-                                        { item.cluster_id }
+                                        { item.cluster_name }
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
-                                        { item.org_id }
+                                        { item.org_name }
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
                                         { item.template_name }
