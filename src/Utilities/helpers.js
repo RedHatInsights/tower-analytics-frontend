@@ -84,3 +84,11 @@ export function convertWithCommas(arr, key) {
     const split = arr.reduce((strs, datum) => { strs.push(datum[key]); return strs; }, []);
     return split.join(', ');
 }
+
+export function formatJobType(type) {
+    return (type === 'job' ? 'Playbook run' : 'Workflow job');
+}
+
+export function formatJobStatus(status) {
+    return (status === 'successful' ? 'Success' : 'Failed');
+}

@@ -14,7 +14,7 @@ import {
 
 import StatusIcon from '../Icons/StatusIcon/StatusIcon';
 import LoadingState from '../Components/LoadingState';
-import { formatDateTime } from '../Utilities/helpers';
+import { formatDateTime, formatJobType, formatJobStatus } from '../Utilities/helpers';
 
 const headerLabels = [
     'Id/Name',
@@ -66,7 +66,7 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                                         { `${item.id} - ${item.cluster_name}` }
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
-                                        <StatusIcon status={ item.status } />{ item.status }
+                                        <StatusIcon status={ item.status } />{ formatJobStatus(item.status) }
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
                                         { item.cluster_name }
@@ -75,7 +75,7 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                                     <DataListCell key={ count++ }>
                                         { item.template_name }
                                     </DataListCell>,
-                                    <DataListCell key={ count++ }>{ item.job_type }</DataListCell>
+                                    <DataListCell key={ count++ }>{ formatJobType(item.job_type) }</DataListCell>
                                 ] }
                             />
                         </DataListItemRow>
