@@ -5,7 +5,7 @@ export function trimStr(str) {
 }
 
 export function formatDateTime(dateTime) {
-    return moment(new Date(dateTime).toISOString()).utc().format('M/D/YYYY h:mma');
+    return moment(new Date(dateTime).toISOString()).utc().format('M/D/YYYY h:mm:ssa');
 }
 
 export function formatDate(date) {

@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-key */
 import React, { useState } from 'react';
-import moment from 'moment';
 import PropTypes from 'prop-types';
 
 import {
@@ -15,6 +14,7 @@ import {
 
 import StatusIcon from '../Icons/StatusIcon/StatusIcon';
 import LoadingState from '../Components/LoadingState';
+import { formatDateTime } from '../Utilities/helpers';
 
 const headerLabels = [
     'Id/Name',
@@ -25,13 +25,11 @@ const headerLabels = [
     'Type'
 ];
 
-const buildHeader = (labels) => (
-    <DataListItemRow>
-        { labels.map((label) =>
-            <DataListCell key = { label }>
-                { label }
-            </DataListCell>
-        ) }
+const buildHeader = labels => (
+    <DataListItemRow style={ { paddingLeft: '94px', fontWeight: '800' } }>
+        { labels.map(label => (
+            <DataListCell key={ label }>{ label }</DataListCell>
+        )) }
     </DataListItemRow>
 );
 
@@ -44,15 +42,17 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                     const expanded = isExpanded;
                     const idx = expanded.indexOf(id);
                     const newExpanded =
-                        idx >= 0 ? [
-                            ...expanded.slice(0, idx),
-                            ...expanded.slice(idx + 1, expanded.length) ] :
-                            [ ...expanded, id ];
+            idx >= 0
+                ? [
+                    ...expanded.slice(0, idx),
+                    ...expanded.slice(idx + 1, expanded.length)
+                ]
+                : [ ...expanded, id ];
                     setIsExpanded(newExpanded);
                 };
 
                 return (
-                    <DataListItem key={ item.id } aria-labelledby={ ariaLabelledBy }>
+                    <DataListItem key={ item.id } aria-labelledby={ ariaLabelledBy } isExpanded={ isExpanded.includes(`${item.id}-toggle`) } >
                         <DataListItemRow key={ item.id }>
                             <DataListToggle
                                 id={ `${item.id}-toggle` }
@@ -66,21 +66,16 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                                         { `${item.id} - ${item.cluster_name}` }
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
-                                        <StatusIcon status={ item.status } />
-                                        { item.status }
+                                        <StatusIcon status={ item.status } />{ item.status }
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
                                         { item.cluster_name }
                                     </DataListCell>,
-                                    <DataListCell key={ count++ }>
-                                        { item.org_name }
-                                    </DataListCell>,
+                                    <DataListCell key={ count++ }>{ item.org_name }</DataListCell>,
                                     <DataListCell key={ count++ }>
                                         { item.template_name }
                                     </DataListCell>,
-                                    <DataListCell key={ count++ }>
-                                        { item.job_type }
-                                    </DataListCell>
+                                    <DataListCell key={ count++ }>{ item.job_type }</DataListCell>
                                 ] }
                             />
                         </DataListItemRow>
@@ -89,26 +84,25 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                             id={ '${item.id}' }
                             isHidden={ !isExpanded.includes(`${item.id}-toggle`) }
                         >
-                            <DataListItemRow>
-                                <DataListItemCells
-                                    dataListCells={ [
-                                        <DataListCell key={ count++ }>
-                                        Created:  { moment(item.created).format() }
-                                        </DataListCell>,
-                                        <DataListCell key={ count++ }>
-                                           Started: { moment(item.started).format() }
-                                        </DataListCell>,
-                                        <DataListCell key={ count++ }>
-                                            Finished:  { moment(item.finished).format() }
-                                        </DataListCell>
-                                    ] }
-                                />
-                            </DataListItemRow>
+                            <DataListItemCells
+                                dataListCells={ [
+                                    <DataListCell key={ count++ }>
+                                        Created: { formatDateTime(item.created) }
+                                    </DataListCell>,
+                                    <DataListCell key={ count++ }>
+                                        Started: { formatDateTime(item.started) }
+                                    </DataListCell>,
+                                    <DataListCell key={ count++ }>
+                                        Finished: { formatDateTime(item.finished) }
+                                    </DataListCell>
+                                ] }
+                            />
                         </DataListContent>
                     </DataListItem>
                 );
             }) }
-        </DataList>);
+        </DataList>
+    );
 };
 
 const AllJobsTemplate = ({ jobs }) => {
@@ -116,13 +110,13 @@ const AllJobsTemplate = ({ jobs }) => {
 };
 
 const JobExplorerList = ({ jobs }) => (
+  <>
+    {jobs.length <= 0 && <LoadingState />}
     <>
-        { jobs.length <= 0 && <LoadingState /> }
-          <>
-            { buildHeader(headerLabels) }
-            <AllJobsTemplate jobs={ jobs } />
-          </>
+      {buildHeader(headerLabels)}
+      <AllJobsTemplate jobs={ jobs } />
     </>
+  </>
 );
 
 JobExplorerList.propTypes = {

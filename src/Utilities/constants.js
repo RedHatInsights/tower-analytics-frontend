@@ -1,6 +1,7 @@
 export const jobExplorer = {
     attributes: [
         'status',
+        'started',
         'finished',
         'elapsed',
         'created',
