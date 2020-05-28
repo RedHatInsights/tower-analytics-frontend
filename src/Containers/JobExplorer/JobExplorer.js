@@ -5,6 +5,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
+import { formatQueryStrings } from '../../Utilities/formatQueryStrings';
 
 import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
@@ -89,7 +90,7 @@ const jobTypeMenuItems = [
 const JobExplorer = (props) => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ jobExplorerData, setJobExplorerData ] = useState([]);
-    const [ firstRender, setFirstRender ] = useState(null);
+    const [ firstRender, setFirstRender ] = useState(true);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ meta, setMeta ] = useState({});
     const [ currPage, setCurrPage ] = useState(1);
@@ -108,15 +109,15 @@ const JobExplorer = (props) => {
         setStatus
     } = useQueryParams(initialQueryParams);
 
+    const { parse } = formatQueryStrings(queryParams)
     const { location: { search } } = props;
-    const initialSearchParams = [...new URLSearchParams(search).entries()].reduce((q, [k, v]) => Object.assign(q, { [k]: v }), {});
+    const initialSearchParams = parse(search);
     const combined = { ...queryParams, ...initialSearchParams };
 
     useEffect(() => {
         if (firstRender) {
             return;
         }
-
         const getData = () => {
             return readJobExplorer({ params: combined });
         };
@@ -137,6 +138,10 @@ const JobExplorer = (props) => {
     }, [ queryParams ]);
 
     useEffect(() => {
+        if (firstRender) {
+            return;
+        }
+
         if (filters.type) {
             setJobType(filters.type);
         }
@@ -147,6 +152,7 @@ const JobExplorer = (props) => {
 
     useEffect(() => {
         let ignore = false;
+
         const fetchEndpoints = () => {
             return Promise.all(
                 [ readJobExplorer({ params: combined }) ]
