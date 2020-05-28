@@ -92,3 +92,9 @@ export function formatJobType(type) {
 export function formatJobStatus(status) {
     return (status === 'successful' ? 'Success' : 'Failed');
 }
+
+export function formatJobDetailsURL(baseURL, jobId) {
+    const subDirectory1 = 'job';
+    const subDirectory2 = 'details';
+    return `${baseURL}/#/${subDirectory1}/${jobId}/${subDirectory2}/`;
+}

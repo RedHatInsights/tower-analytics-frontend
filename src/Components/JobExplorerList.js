@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-key */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import {
     DataListCell,
@@ -12,9 +13,11 @@ import {
     DataListToggle
 } from '@patternfly/react-core';
 
+import { ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
+
 import StatusIcon from '../Icons/StatusIcon/StatusIcon';
 import LoadingState from '../Components/LoadingState';
-import { formatDateTime, formatJobType, formatJobStatus } from '../Utilities/helpers';
+import { formatDateTime, formatJobType, formatJobStatus, formatJobDetailsURL } from '../Utilities/helpers';
 
 const headerLabels = [
     'Id/Name',
@@ -24,6 +27,10 @@ const headerLabels = [
     'Template',
     'Type'
 ];
+
+const ArrowIcon = styled(PFArrowIcon)`
+  margin-left: 7px;
+`;
 
 const buildHeader = labels => (
     <DataListItemRow style={ { paddingLeft: '94px', fontWeight: '800' } }>
@@ -63,7 +70,9 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                             <DataListItemCells
                                 dataListCells={ [
                                     <DataListCell key={ count++ }>
-                                        { `${item.id} - ${item.cluster_name}` }
+                                        <a href={ formatJobDetailsURL(item.cluster_url_base, item.id) } target='_blank' rel='noopener noreferrer'>
+                                            { `${item.id} - ${item.template_name}` } <ArrowIcon />
+                                        </a>
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
                                         <StatusIcon status={ item.status } />{ formatJobStatus(item.status) }
