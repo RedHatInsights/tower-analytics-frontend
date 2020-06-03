@@ -1,48 +1,46 @@
 /* eslint-disable */
-/* eslint-disable no-console */
-/* eslint-disable no-undef */
-/* eslint-disable no-unused-vars */
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from "react";
 
-import { useQueryParams } from '../../Utilities/useQueryParams';
-import { formatQueryStrings } from '../../Utilities/formatQueryStrings';
+import { useQueryParams } from "../../Utilities/useQueryParams";
+import { formatQueryStrings } from "../../Utilities/formatQueryStrings";
 
-import styled from 'styled-components';
-import LoadingState from '../../Components/LoadingState';
-import EmptyState from '../../Components/EmptyState';
-import NoData from '../../Components/NoData';
-import { preflightRequest, readJobExplorer } from '../../Api';
-import { jobExplorer } from '../../Utilities/constants';
+import styled from "styled-components";
+import LoadingState from "../../Components/LoadingState";
+import EmptyState from "../../Components/EmptyState";
+import NoData from "../../Components/NoData";
+import { preflightRequest, readJobExplorer } from "../../Api";
+import { jobExplorer } from "../../Utilities/constants";
 
 import {
-    Main,
-    PageHeader,
-    PageHeaderTitle
-} from '@redhat-cloud-services/frontend-components';
+  Main,
+  PageHeader,
+  PageHeaderTitle,
+} from "@redhat-cloud-services/frontend-components";
 
 import {
-    DataToolbar,
-    DataToolbarContent,
-    DataToolbarFilter,
-    DataToolbarToggleGroup,
-    DataToolbarGroup
-} from '@patternfly/react-core/dist/umd/experimental';
+  DataToolbar,
+  DataToolbarContent,
+  DataToolbarItem,
+  DataToolbarFilter,
+  DataToolbarToggleGroup,
+  DataToolbarGroup,
+} from "@patternfly/react-core/dist/umd/experimental";
 
-import { FilterIcon } from '@patternfly/react-icons';
+import { FilterIcon } from "@patternfly/react-icons";
 
 import {
-    Badge,
-    Card,
-    CardBody,
-    CardHeader as PFCardHeader,
-    Pagination,
-    PaginationVariant,
-    Select,
-    SelectOption,
-    SelectVariant
-} from '@patternfly/react-core';
+  Badge,
+  Card,
+  CardBody,
+  CardHeader as PFCardHeader,
+  Pagination,
+  PaginationVariant,
+  Select,
+  SelectOption,
+  SelectVariant,
+} from "@patternfly/react-core";
 
-import JobExplorerList from '../../Components/JobExplorerList';
+import JobExplorerList from "../../Components/JobExplorerList";
 
 const CardHeader = styled(PFCardHeader)`
   display: flex;
@@ -63,298 +61,353 @@ const TitleWithBadge = styled.div`
 `;
 
 const perPageOptions = [
-    { title: '5', value: 5 },
-    { title: '10', value: 10 },
-    { title: '20', value: 20 },
-    { title: '50', value: 50 },
-    { title: '100', value: 100 }
+  { title: "5", value: 5 },
+  { title: "10", value: 10 },
+  { title: "20", value: 20 },
+  { title: "50", value: 50 },
+  { title: "100", value: 100 },
 ];
 
 const initialQueryParams = {
-    attributes: jobExplorer.attributes,
-    limit: 5
+  attributes: jobExplorer.attributes,
+  limit: 5,
 };
 
 const statusMenuItems = [
-    <SelectOption key="status-success"  value="successful" />,
-    <SelectOption key="status-failed"  value="failed" />,
-    <SelectOption key="status-all"  value="All" data-value="all" />
+  <SelectOption key="status-success" value="successful" />,
+  <SelectOption key="status-failed" value="failed" />,
+  <SelectOption key="status-all" value="All" data-value="all" />,
 ];
 
 const jobTypeMenuItems = [
-    <SelectOption key="type-template"  value="job" />,
-    <SelectOption key="type-worklow"  value="workflowjob" />,
-    <SelectOption key="type-all"  value="All" data-value="all" />
+  <SelectOption key="type-template" value="job" />,
+  <SelectOption key="type-worklow" value="workflowjob" />,
+];
+
+const dateRangeMenuItems = [
+  <SelectOption key="date-week" value="Past week" />,
+  <SelectOption key="date-two-weeks" value="Past two weeks" />,
+  <SelectOption key="date-month" value="Past month" />,
 ];
 
 const JobExplorer = (props) => {
-    const [ preflightError, setPreFlightError ] = useState(null);
-    const [ jobExplorerData, setJobExplorerData ] = useState([]);
-    const [ firstRender, setFirstRender ] = useState(true);
-    const [ isLoading, setIsLoading ] = useState(true);
-    const [ meta, setMeta ] = useState({});
-    const [ currPage, setCurrPage ] = useState(1);
-    const [ statusIsExpanded, setStatusIsExpanded ] = useState(false);
-    const [ jobTypeIsExpanded, setJobTypeIsExpanded ] = useState(false);
-    const [ filters, setFilters ] = useState({
-        status: [ 'successful', 'failed' ],
-        type: [ 'job', 'workflowjob' ]
+  const [preflightError, setPreFlightError] = useState(null);
+  const [jobExplorerData, setJobExplorerData] = useState([]);
+  const [firstRender, setFirstRender] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [meta, setMeta] = useState({});
+  const [currPage, setCurrPage] = useState(1);
+  const [dateRange, setDateRange] = useState(null);
+  const [dayIsExpanded, setDayIsExpanded] = useState(false);
+  const [statusIsExpanded, setStatusIsExpanded] = useState(false);
+  const [jobIsExpanded, setJobIsExpanded] = useState(false);
+  const [filters, setFilters] = useState({
+    status: ["successful", "failed"],
+    type: ["job", "workflowjob"],
+    date: []
+  });
+  const {
+    queryParams,
+    setStartDate,
+    setLimit,
+    setOffset,
+    setJobType,
+    setStatus,
+  } = useQueryParams(initialQueryParams);
+
+  const { parse } = formatQueryStrings(queryParams);
+  const {
+    location: { search },
+  } = props;
+  const initialSearchParams = parse(search);
+  const combined = { ...queryParams, ...initialSearchParams };
+
+  useEffect(() => {
+    if (firstRender) {
+      return;
+    }
+    const getData = () => {
+      return readJobExplorer({ params: combined });
+    };
+
+    const update = async () => {
+      setIsLoading(true);
+      await window.insights.chrome.auth.getUser();
+      getData().then(({ items: jobExplorerData = [], meta }) => {
+        setJobExplorerData(jobExplorerData);
+        setMeta(meta);
+        setIsLoading(false);
+      });
+    };
+
+    update();
+  }, [queryParams]);
+
+  useEffect(() => {
+    if (firstRender) {
+      return;
+    }
+
+    if (filters.type) {
+      setJobType(filters.type);
+    }
+    if (filters.status) {
+      setStatus(filters.status);
+    }
+
+    if (filters.date) {
+        if (filters.date.includes("past week")) {
+            setStartDate(7)
+        }
+
+        if (filters.date.includes("past two weeks")) {
+            setStartDate(14)
+        }
+
+        if (filters.date.includes("past month")) {
+            setStartDate(31)
+        }
+    }
+  }, [filters]);
+
+  console.log('filters.date', filters.date);
+
+  useEffect(() => {
+    let ignore = false;
+
+    const fetchEndpoints = () => {
+      return Promise.all([readJobExplorer({ params: combined })]);
+    };
+
+    async function initializeWithPreflight() {
+      setIsLoading(true);
+      await window.insights.chrome.auth.getUser();
+      await preflightRequest().catch((error) => {
+        setPreFlightError({ preflightError: error });
+      });
+      fetchEndpoints().then(([{ items: jobExplorerData = [], meta }]) => {
+        if (!ignore) {
+          setJobExplorerData(jobExplorerData);
+          setMeta(meta);
+          setFirstRender(false);
+          setIsLoading(false);
+        }
+      });
+    }
+
+    initializeWithPreflight();
+    return () => (ignore = true);
+  }, []);
+
+  const returnOffsetVal = (page) => {
+    let offsetVal = (page - 1) * queryParams.limit;
+    return offsetVal;
+  };
+
+  const title = (
+    <span>
+      Automation Analytics
+      <span style={{ fontSize: "16px" }}>
+        {" "}
+        <span style={{ margin: "0 10px" }}>|</span> All Jobs
+      </span>
+    </span>
+  );
+
+  const handleSetPage = (page) => {
+    const nextOffset = returnOffsetVal(page);
+    setOffset(nextOffset);
+    setCurrPage(page);
+  };
+
+  const handlePerPageSelect = (perPage, page) => {
+    setLimit(perPage);
+    const nextOffset = returnOffsetVal(page);
+    setOffset(nextOffset);
+    setCurrPage(page);
+  };
+
+  const onSelect = (type, event, selection) => {
+    const checked = event.target.checked;
+
+    if (type === 'date') {
+      setFilters({...filters,
+        ['date']: [selection.toLowerCase()]
     });
-    const {
-        queryParams,
-        // setId,
-        setLimit,
-        setOffset,
-        setJobType,
-        setStatus
-    } = useQueryParams(initialQueryParams);
+        setDateRange(selection)
+    } else {
+      setFilters({
+        ...filters,
+        [type]: checked
+          ? [...filters[type], selection]
+          : filters[type].filter((value) => value !== selection),
+      });
+    }
+  };
 
-    const { parse } = formatQueryStrings(queryParams)
-    const { location: { search } } = props;
-    const initialSearchParams = parse(search);
-    const combined = { ...queryParams, ...initialSearchParams };
+  const onDaySelect = (event, selection) => {
+    onSelect("date", event, selection);
+  };
 
-    useEffect(() => {
-        if (firstRender) {
-            return;
-        }
-        const getData = () => {
-            return readJobExplorer({ params: combined });
-        };
+  const onStatusSelect = (event, selection) => {
+    onSelect("status", event, selection);
+  };
 
-        const update = async () => {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            getData().then(
-                ({ items: jobExplorerData = [], meta }) => {
-                    setJobExplorerData(jobExplorerData);
-                    setMeta(meta);
-                    setIsLoading(false);
-                }
-            );
-        };
+  const onJobTypeSelect = (event, selection) => {
+    onSelect("type", event, selection);
+  };
 
-        update();
-    }, [ queryParams ]);
+  const onDayToggle = () => {
+    setDayIsExpanded(!dayIsExpanded);
+  };
 
-    useEffect(() => {
-        if (firstRender) {
-            return;
-        }
+  const onStatusToggle = () => {
+    setStatusIsExpanded(!statusIsExpanded);
+  };
 
-        if (filters.type) {
-            setJobType(filters.type);
-        }
-        if (filters.status) {
-            setStatus(filters.status);
-        }
-    }, [ filters ])
+  const onJobTypeToggle = () => {
+    setJobIsExpanded(!jobIsExpanded);
+  };
 
-    useEffect(() => {
-        let ignore = false;
+  const onDelete = (type = "", id = "") => {
+    if (type) {
+      setFilters({
+        ...filters,
+        [type.toLowerCase()]: filters[type.toLowerCase()].filter(
+          (value) => value !== id
+        ),
+      });
+    } else {
+      setFilters({
+        status: [],
+        type: [],
+        date: [],
+      });
+      setDateRange([]);
+    }
+  };
 
-        const fetchEndpoints = () => {
-            return Promise.all(
-                [ readJobExplorer({ params: combined }) ]
-            );
-        };
+  return (
+    <React.Fragment>
+      <PageHeader>
+        <PageHeaderTitle title={title} />
+      </PageHeader>
 
-        async function initializeWithPreflight() {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            await preflightRequest().catch(error => {
-                setPreFlightError({ preflightError: error });
-            });
-            fetchEndpoints().then(
-                ([
-                    { items: jobExplorerData = [], meta }
-                ]) => {
-                    if (!ignore) {
-                        setJobExplorerData(jobExplorerData);
-                        setMeta(meta);
-                        setFirstRender(false);
-                        setIsLoading(false);
-                    }
-                }
-            );
-        }
+      {preflightError && (
+        <Main>
+          <EmptyState {...preflightError} />
+        </Main>
+      )}
 
-        initializeWithPreflight();
-        return () => (ignore = true);
-    }, []);
-
-    const returnOffsetVal = page => {
-        let offsetVal = (page - 1) * queryParams.limit;
-        return offsetVal;
-    };
-
-    const title = (
-        <span>
-        Automation Analytics
-            <span style={ { fontSize: '16px' } }>
-                { ' ' }
-                <span style={ { margin: '0 10px' } }>|</span> All Jobs
-            </span>
-        </span>
-    );
-
-    const handleSetPage = page => {
-        const nextOffset = returnOffsetVal(page);
-        setOffset(nextOffset);
-        setCurrPage(page);
-    };
-
-    const handlePerPageSelect = (perPage, page) => {
-        setLimit(perPage);
-        const nextOffset = returnOffsetVal(page);
-        setOffset(nextOffset);
-        setCurrPage(page);
-    };
-
-    const onSelect = (type, event, selection) => {
-        const checked = event.target.checked;
-        setFilters({
-            ...filters,
-            [type]: checked
-                ? [ ...filters[type], selection ]
-                : filters[type].filter(value => value !== selection)
-        });
-    };
-
-    const onStatusSelect = (event, selection) => {
-        onSelect('status', event, selection);
-    };
-
-    const onJobTypeSelect = (event, selection) => {
-        onSelect('type', event, selection);
-    };
-
-    const onStatusToggle = () => {
-        setStatusIsExpanded(!statusIsExpanded);
-    };
-
-    const onJobTypeToggle = () => {
-        setJobTypeIsExpanded(!jobTypeIsExpanded);
-    };
-
-    const onDelete = (type = '', id = '') => {
-        if (type) {
-            setFilters({
-                ...filters,
-                [type.toLowerCase()]: filters[type.toLowerCase()].filter(value => value !== id)
-            });
-        } else {
-            setFilters(
-                {
-                    status: [],
-                    type: []
-                }
-            );
-        }
-    };
-
-    return (
-        <React.Fragment>
-            <PageHeader>
-                <PageHeaderTitle title={ title } />
-            </PageHeader>
-
-            { preflightError && (
-                <Main>
-                    <EmptyState { ...preflightError }  />
-                </Main>
-            ) }
-
-            { !preflightError && (
+      {!preflightError && (
+        <>
+          <Main>
+            <Card>
+              <CardHeader>
+                <TitleWithBadge>
+                  <h2>
+                    <strong>Total Jobs</strong>
+                  </h2>
+                  <Badge isRead>{meta.count ? meta.count : 0}</Badge>
+                </TitleWithBadge>
+              </CardHeader>
+              <CardBody>
                 <>
-                    <Main>
-                        <Card>
-                            <CardHeader>
-                                <TitleWithBadge>
-                                    <h2>
-                                        <strong>Total Jobs</strong>
-                                    </h2>
-                                    <Badge isRead>{ meta.count ? meta.count : 0 }</Badge>
-                                </TitleWithBadge>
-                            </CardHeader>
-                            <CardBody>
-                                { isLoading && <LoadingState /> }
-                                { !isLoading && jobExplorerData.length <= 0 && <NoData /> }
-                                { !isLoading && jobExplorerData.length > 0 && (
-                                    <>
-                                        <DataToolbar id="jobs-data-toolbar" clearAllFilters={ onDelete }>
-                                            <DataToolbarContent>
-                                                <DataToolbarToggleGroup
-                                                    toggleIcon={ <FilterIcon /> }
-                                                    breakpoint="xl"
-                                                >
-                                                    <DataToolbarGroup variant="filter-group">
-                                                        <DataToolbarFilter
-                                                            chips={ filters.status }
-                                                            categoryName="Status"
-                                                            deleteChip={ onDelete }
-                                                        >
-                                                            <Select
-                                                                variant={ SelectVariant.checkbox }
-                                                                aria-label="Status"
-                                                                onToggle={ onStatusToggle }
-                                                                onSelect={ onStatusSelect }
-                                                                selections={ filters.status }
-                                                                isExpanded={ statusIsExpanded }
-                                                                placeholderText="Status"
-                                                            >
-                                                                { statusMenuItems }
-                                                            </Select>
-                                                        </DataToolbarFilter>
-                                                        <DataToolbarFilter
-                                                            categoryName="Type"
-                                                            chips={ filters.type }
-                                                            deleteChip={ onDelete }
-                                                        >
-                                                            <Select
-                                                                aria-label="Type"
-                                                                variant={ SelectVariant.checkbox }
-                                                                onToggle={ onJobTypeToggle }
-                                                                onSelect={ onJobTypeSelect }
-                                                                selections={ filters.type }
-                                                                isExpanded={ jobTypeIsExpanded }
-                                                                placeholderText="Job Type"
-                                                            >
-                                                                { jobTypeMenuItems }
-                                                            </Select>
-                                                        </DataToolbarFilter>
-                                                    </DataToolbarGroup>
-                                                </DataToolbarToggleGroup>
-                                            </DataToolbarContent>
-                                        </DataToolbar>
-                                        <JobExplorerList
-                                            jobs={ jobExplorerData }
-                                        />
-                                        <Pagination
-                                            itemCount={ meta.count ? meta.count : 0 }
-                                            widgetId="pagination-options-menu-bottom"
-                                            perPageOptions={ perPageOptions }
-                                            perPage={ queryParams.limit }
-                                            page={ currPage }
-                                            variant={ PaginationVariant.bottom }
-                                            dropDirection={ 'up' }
-                                            onPerPageSelect={ (_event, perPage, page) => {
-                                                handlePerPageSelect(perPage, page);
-                                            } }
-                                            onSetPage={ (_event, pageNumber) => {
-                                                handleSetPage(pageNumber);
-                                            } }
-                                            style={ { marginTop: '20px' } }
-                                        />
-                                    </>
-                                ) }
-                            </CardBody>
-                        </Card>
-                    </Main>
+                  <DataToolbar
+                    id="jobs-data-toolbar"
+                    clearAllFilters={onDelete}
+                  >
+                    <DataToolbarContent>
+                      <DataToolbarToggleGroup
+                        toggleIcon={<FilterIcon />}
+                        breakpoint="xl"
+                      >
+                        <DataToolbarItem>
+                          <FilterIcon color="gray" />
+                        </DataToolbarItem>
+                        <DataToolbarGroup variant="filter-group">
+                          <DataToolbarFilter categoryName="Date Range" chips={filters.date} deleteChip={onDelete}>
+                            <Select
+                              variant={SelectVariant.single}
+                              aria-label="Select Date Range"
+                              selections={dateRange}
+                              onToggle={onDayToggle}
+                              onSelect={onDaySelect}
+                              isExpanded={dayIsExpanded}
+                              placeholderText="Date Range"
+                            >
+                              {dateRangeMenuItems}
+                            </Select>
+                          </DataToolbarFilter>
+                          <DataToolbarFilter
+                            chips={filters.status}
+                            categoryName="Status"
+                            deleteChip={onDelete}
+                          >
+                            <Select
+                              variant={SelectVariant.checkbox}
+                              aria-label="Select Status"
+                              onToggle={onStatusToggle}
+                              onSelect={onStatusSelect}
+                              selections={filters.status}
+                              isExpanded={statusIsExpanded}
+                              placeholderText="Status"
+                            >
+                              {statusMenuItems}
+                            </Select>
+                          </DataToolbarFilter>
+                          <DataToolbarFilter
+                            categoryName="Type"
+                            chips={filters.type}
+                            deleteChip={onDelete}
+                          >
+                            <Select
+                              aria-label="Select Job Type"
+                              variant={SelectVariant.checkbox}
+                              onToggle={onJobTypeToggle}
+                              onSelect={onJobTypeSelect}
+                              selections={filters.type}
+                              isExpanded={jobIsExpanded}
+                              placeholderText="Job Type"
+                            >
+                              {jobTypeMenuItems}
+                            </Select>
+                          </DataToolbarFilter>
+                        </DataToolbarGroup>
+                      </DataToolbarToggleGroup>
+                    </DataToolbarContent>
+                  </DataToolbar>
                 </>
-            ) }
-        </React.Fragment>
-    );
+                {isLoading && <LoadingState />}
+                {!isLoading && jobExplorerData.length <= 0 && <NoData />}
+                {!isLoading && jobExplorerData.length > 0 && (
+                  <>
+                    <JobExplorerList jobs={jobExplorerData} />
+                    <Pagination
+                      itemCount={meta.count ? meta.count : 0}
+                      widgetId="pagination-options-menu-bottom"
+                      perPageOptions={perPageOptions}
+                      perPage={queryParams.limit}
+                      page={currPage}
+                      variant={PaginationVariant.bottom}
+                      dropDirection={"up"}
+                      onPerPageSelect={(_event, perPage, page) => {
+                        handlePerPageSelect(perPage, page);
+                      }}
+                      onSetPage={(_event, pageNumber) => {
+                        handleSetPage(pageNumber);
+                      }}
+                      style={{ marginTop: "20px" }}
+                    />
+                  </>
+                )}
+              </CardBody>
+            </Card>
+          </Main>
+        </>
+      )}
+    </React.Fragment>
+  );
 };
 
 export default JobExplorer;
