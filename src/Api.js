@@ -16,6 +16,7 @@ const templateJobsEndpoint = '/api/tower-analytics/template_jobs/';
 const templatesEndPoint = '/api/tower-analytics/templates/';
 const roiEndpoint = '/api/tower-analytics/roi_templates/';
 const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
+const jobExplorerOptionsEndpoint = '/api/tower-analytics/v1/job_explorer_options/';
 
 function getAbsoluteUrl() {
     const url = window.location.href;
@@ -110,6 +111,15 @@ export const readNotifications = ({ params = {}}) => {
 export const readJobExplorer = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(jobExplorerEndpoint, formattedUrl);
+    const { strings, stringify } = formatQueryStrings(params);
+    const qs = stringify(strings);
+    url.search = qs;
+    return fetch(url).then(handleResponse);
+};
+
+export const readJobExplorerOptions = ({ params = {}}) => {
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(jobExplorerOptionsEndpoint, formattedUrl);
     const { strings, stringify } = formatQueryStrings(params);
     const qs = stringify(strings);
     url.search = qs;
