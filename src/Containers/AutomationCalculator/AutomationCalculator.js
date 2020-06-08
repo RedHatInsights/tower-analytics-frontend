@@ -123,7 +123,7 @@ const title = (
     Automation Analytics
         <span style={ { fontSize: '16px' } }>
             { ' ' }
-            <span style={ { margin: '0 10px' } }>|</span> Automation Calculator
+            <span style={ { margin: '0 10px' } }>|</span> Automation calculator
         </span>
     </span>
 );

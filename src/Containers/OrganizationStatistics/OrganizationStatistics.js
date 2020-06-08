@@ -70,7 +70,7 @@ const TopCard = styled(Card)`
 `;
 
 const title =
-<span>Automation Analytics<span style={ { fontSize: '16px' } } > <span style={ { margin: '0 10px' } } >|</span> Organization Statistics</span></span>;
+<span>Automation Analytics<span style={ { fontSize: '16px' } } > <span style={ { margin: '0 10px' } } >|</span> Organization statistics</span></span>;
 
 const timeFrameOptions = [
     { value: 'please choose', label: 'Select Date Range', disabled: true },
@@ -236,7 +236,7 @@ const OrganizationStatistics = () => {
                 <Main>
                     <TopCard>
                         <CardHeader>
-                            <h2>Organization Status</h2>
+                            <h2>Organization status</h2>
                         </CardHeader>
                         <CardBody>
                             { isLoading && <LoadingState /> }
@@ -260,7 +260,7 @@ const OrganizationStatistics = () => {
                                     style={ { padding: 0 } }
                                 >
                                     <h2 style={ { marginLeft: '20px' } }>
-                                Job Runs by Organization
+                                Job runs by organization
                                     </h2>
                                 </CardHeader>
                                 { isLoading && <LoadingState /> }
@@ -282,7 +282,7 @@ const OrganizationStatistics = () => {
                                 <CardHeader
                                     style={ { padding: 0 } }
                                 >
-                                    <h2 style={ { marginLeft: '20px' } }>Usage by Organization (Tasks)</h2>
+                                    <h2 style={ { marginLeft: '20px' } }>Usage by organization (tasks)</h2>
                                 </CardHeader>
                                 { isLoading && <LoadingState /> }
                                 { !isLoading && pieChart2Data.length <= 0 && (
