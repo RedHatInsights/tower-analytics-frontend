@@ -131,6 +131,7 @@ const OrganizationStatistics = () => {
         const update = async () => {
             setIsLoading(true);
             await window.insights.chrome.auth.getUser();
+            console.log('calling fetch ...');
             fetchEndpoints().then(([
                 { dates: groupedBarChartData = []},
                 { usages: pieChart1Data = []},
@@ -138,6 +139,9 @@ const OrganizationStatistics = () => {
             ]) => {
                 setGroupedBarChartData(groupedBarChartData);
                 setPieChart1Data(pieChart1Data);
+                console.log('##########################');
+                console.log(pieChart1Data);
+                console.log('##########################');
                 setPieChart2Data(pieChart2Data);
                 setIsLoading(false);
             });
@@ -156,6 +160,9 @@ const OrganizationStatistics = () => {
             ]) => {
                 if (!ignore) {
                     setGroupedBarChartData(groupedBarChartData);
+                    console.log('##########################');
+                    console.log(pieChart1Data);
+                    console.log('##########################');
                     setPieChart1Data(pieChart1Data);
                     setPieChart2Data(pieChart2Data);
                     setFirstRender(false);
@@ -269,7 +276,7 @@ const OrganizationStatistics = () => {
                                 ) }
                                 { !isLoading && pieChart1Data.length > 0 && (
                                     <div id="testdiv">
-                                        <div>{ JSON.stringify(pieChart2Data) }</div>
+                                        <div>{ JSON.stringify(pieChart1Data) }</div>
                                         <PieChart
                                             margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
                                             id="d3-donut-1-chart-root"
@@ -292,15 +299,12 @@ const OrganizationStatistics = () => {
                                     <NoData />
                                 ) }
                                 { !isLoading && pieChart2Data.length > 0 && (
-                                    <div id="testdiv">
-                                        <div>{ JSON.stringify(pieChart2Data) }</div>
-                                        <PieChart
-                                            margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
-                                            id="d3-donut-2-chart-root"
-                                            data={ pieChart2Data }
-                                            timeFrame={ timeframe }
-                                        />
-                                    </div>
+                                    <PieChart
+                                        margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
+                                        id="d3-donut-2-chart-root"
+                                        data={ pieChart2Data }
+                                        timeFrame={ timeframe }
+                                    />
                                 ) }
                             </CardBody>
                         </Card>
