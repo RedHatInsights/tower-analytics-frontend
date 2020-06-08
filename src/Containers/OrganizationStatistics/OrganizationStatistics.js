@@ -268,12 +268,15 @@ const OrganizationStatistics = () => {
                                     <NoData />
                                 ) }
                                 { !isLoading && pieChart1Data.length > 0 && (
-                                    <PieChart
-                                        margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
-                                        id="d3-donut-1-chart-root"
-                                        data={ pieChart1Data }
-                                        timeFrame={ timeframe }
-                                    />
+                                    <div id="testdiv">
+                                        <div>{ JSON.stringify(pieChart2Data) }</div>
+                                        <PieChart
+                                            margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
+                                            id="d3-donut-1-chart-root"
+                                            data={ pieChart1Data }
+                                            timeFrame={ timeframe }
+                                        />
+                                    </div>
                                 ) }
                             </CardBody>
                         </Card>
@@ -289,12 +292,15 @@ const OrganizationStatistics = () => {
                                     <NoData />
                                 ) }
                                 { !isLoading && pieChart2Data.length > 0 && (
-                                    <PieChart
-                                        margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
-                                        id="d3-donut-2-chart-root"
-                                        data={ pieChart2Data }
-                                        timeFrame={ timeframe }
-                                    />
+                                    <div id="testdiv">
+                                        <div>{ JSON.stringify(pieChart2Data) }</div>
+                                        <PieChart
+                                            margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
+                                            id="d3-donut-2-chart-root"
+                                            data={ pieChart2Data }
+                                            timeFrame={ timeframe }
+                                        />
+                                    </div>
                                 ) }
                             </CardBody>
                         </Card>
