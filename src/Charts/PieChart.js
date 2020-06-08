@@ -114,14 +114,12 @@ class Tooltip {
       this.orgName.text(' ' + orgName);
       this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
       if (flipped) {
-          //this.orgName.text('FLIPPED ' + orgName);
           this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
           this.boundingBOx.attr('x', -125);
           this.orgName.attr('x', -112);
           this.percentageTotal.attr('x', -112);
           this.percentageSuccess.attr('x', -112);
       } else {
-          //this.orgName.text('!FLIPPED ' + orgName);
           this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
           this.boundingBOx.attr('x', 10);
           this.orgName.attr('x', 20);
