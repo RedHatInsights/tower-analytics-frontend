@@ -71,6 +71,7 @@ class Tooltip {
 
   handleMouseOver = d => {
       let perc;
+      let successPerc;
       let orgName;
       const x =
       d3.event.pageX -
@@ -93,6 +94,7 @@ class Tooltip {
       if (d && d.data) {
           const maxLength = 16;
           perc = d.data.percent;
+          percSuccess = d.data.success_rate;
           orgName = d.data.name;
           if (d.data.name.length > maxLength) {
               orgName = d.data.name.slice(0, maxLength - 3).concat('...');
@@ -108,7 +110,7 @@ class Tooltip {
       const flipped = overflow < (x / chartWidth) * 100;
 
       this.percentageTotal.text('' + perc + '%');
-      this.percentageSuccess.text('(100% successful)');
+      this.percentageSuccess.text('(' + percSuccess + '% successful)');
       this.orgName.text(' ' + orgName);
       this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
       if (flipped) {
