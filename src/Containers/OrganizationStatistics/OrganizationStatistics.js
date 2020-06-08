@@ -275,15 +275,12 @@ const OrganizationStatistics = () => {
                                     <NoData />
                                 ) }
                                 { !isLoading && pieChart1Data.length > 0 && (
-                                    <div id="testdiv">
-                                        <div>{ JSON.stringify(pieChart1Data) }</div>
-                                        <PieChart
-                                            margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
-                                            id="d3-donut-1-chart-root"
-                                            data={ pieChart1Data }
-                                            timeFrame={ timeframe }
-                                        />
-                                    </div>
+                                    <PieChart
+                                        margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
+                                        id="d3-donut-1-chart-root"
+                                        data={ pieChart1Data }
+                                        timeFrame={ timeframe }
+                                    />
                                 ) }
                             </CardBody>
                         </Card>
