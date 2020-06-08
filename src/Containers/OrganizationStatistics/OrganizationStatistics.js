@@ -131,7 +131,6 @@ const OrganizationStatistics = () => {
         const update = async () => {
             setIsLoading(true);
             await window.insights.chrome.auth.getUser();
-            console.log('calling fetch ...');
             fetchEndpoints().then(([
                 { dates: groupedBarChartData = []},
                 { usages: pieChart1Data = []},
@@ -139,9 +138,6 @@ const OrganizationStatistics = () => {
             ]) => {
                 setGroupedBarChartData(groupedBarChartData);
                 setPieChart1Data(pieChart1Data);
-                console.log('##########################');
-                console.log(pieChart1Data);
-                console.log('##########################');
                 setPieChart2Data(pieChart2Data);
                 setIsLoading(false);
             });
@@ -160,9 +156,6 @@ const OrganizationStatistics = () => {
             ]) => {
                 if (!ignore) {
                     setGroupedBarChartData(groupedBarChartData);
-                    console.log('##########################');
-                    console.log(pieChart1Data);
-                    console.log('##########################');
                     setPieChart1Data(pieChart1Data);
                     setPieChart2Data(pieChart2Data);
                     setFirstRender(false);
