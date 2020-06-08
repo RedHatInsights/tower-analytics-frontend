@@ -71,7 +71,7 @@ class Tooltip {
 
   handleMouseOver = d => {
       let perc;
-      let successPerc;
+      let percSuccess;
       let orgName;
       const x =
       d3.event.pageX -
