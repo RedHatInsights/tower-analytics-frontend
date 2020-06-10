@@ -9,7 +9,8 @@ import { preflightRequest, readROI } from '../../Api';
 
 import {
     Main,
-    PageHeader
+    PageHeader,
+    PageHeaderTitle
 } from '@redhat-cloud-services/frontend-components';
 
 import {
@@ -116,6 +117,16 @@ const WrapperRight = styled.div`
   display: flex;
   flex-direction: column;
 `;
+
+const title = (
+    <span>
+    Automation Analytics
+        <span style={ { fontSize: '16px' } }>
+            { ' ' }
+            <span style={ { margin: '0 10px' } }>|</span> Automation calculator
+        </span>
+    </span>
+);
 
 export const automationCalculatorMethods = () => {
     // create our array to feed to D3
@@ -347,13 +358,7 @@ const AutomationCalculator = () => {
     return (
     <>
       <PageHeader style={ { flex: '0' } }>
-          <Title headingLevel="h2" size="2xl" style={ { fontWeight: 400 } }>
-			Automation Analytics
-              <span style={ { fontSize: '16px' } }>
-                  { ' ' }
-                  <span style={ { margin: '0 10px' } }>|</span> Automation Calculator
-              </span>
-          </Title>
+          <PageHeaderTitle title={ title } />
       </PageHeader>
       {preflightError && (
           <Main>
