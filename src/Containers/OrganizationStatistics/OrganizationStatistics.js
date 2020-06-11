@@ -15,15 +15,14 @@ import {
     readJobEventsByOrg
 } from '../../Api';
 
-import { Main, PageHeader } from '@redhat-cloud-services/frontend-components';
+import { Main, PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components';
 
 import {
     Card,
     CardBody,
     CardTitle as PFCardTitle,
     FormSelect,
-    FormSelectOption,
-    Title
+    FormSelectOption
 } from '@patternfly/react-core';
 
 import { FilterIcon } from '@patternfly/react-icons';
@@ -65,6 +64,16 @@ const CardContainer = styled.div`
 const TopCard = styled(Card)`
   min-height: 500px;
 `;
+
+const title = (
+    <span style={ { fontWeight: 400 } }>
+    Automation Analytics
+        <span style={ { fontSize: '16px', fontWeight: 400 } }>
+            { ' ' }
+            <span style={ { margin: '0 10px' } }>|</span> Organization Statistics
+        </span>
+    </span>
+);
 
 const timeFrameOptions = [
     { value: 'please choose', label: 'Select Date Range', disabled: true },
@@ -178,13 +187,7 @@ const OrganizationStatistics = () => {
     return (
         <React.Fragment>
             <PageHeader>
-                <Title headingLevel="h2" size="2xl" style={ { fontWeight: 400 } }>
-          Automation Analytics
-                    <span style={ { fontSize: '16px' } }>
-                        { ' ' }
-                        <span style={ { margin: '0 10px' } }>|</span> Organization Statistics
-                    </span>
-                </Title>
+                <PageHeaderTitle title={ title } />
             </PageHeader>
             { preflightError && (
                 <Main>

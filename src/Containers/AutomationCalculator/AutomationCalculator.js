@@ -119,9 +119,9 @@ const WrapperRight = styled.div`
 `;
 
 const title = (
-    <span>
+    <span style={ { fontWeight: 400 } }>
     Automation Analytics
-        <span style={ { fontSize: '16px' } }>
+        <span style={ { fontSize: '16px', fontWeight: 400 } }>
             { ' ' }
             <span style={ { margin: '0 10px' } }>|</span> Automation calculator
         </span>
