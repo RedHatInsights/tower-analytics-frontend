@@ -4,6 +4,7 @@ import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Routes } from './Routes';
 import './App.scss';
+import packageJson from '../package.json';
 
 class App extends Component {
 
@@ -27,7 +28,9 @@ class App extends Component {
 
     render () {
         return (
-            <Routes childProps={ this.props } />
+            <div id="automation-analytics-application" version={ packageJson.version }>
+                <Routes childProps={ this.props } />
+            </div>
         );
     }
 }
