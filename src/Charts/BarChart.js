@@ -1,37 +1,18 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import initializeChart from './BaseChart';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import Tooltip from '../Utilities/Tooltip';
 
-class BarChart extends Component {
-    constructor(props) {
-        super(props);
-        this.draw = this.draw.bind(this);
-        this.init = this.init.bind(this);
-        this.resize = this.resize.bind(this);
-        this.state = {
-            formattedData: [],
-            timeout: null
-        };
-    }
-    resize() {
-        const { timeout } = this.state;
-        clearTimeout(timeout);
-        this.setState({
-            timeout: setTimeout(() => { this.init(); }, 500)
-        });
-    }
+export const BarChart = (props) => {
+    let time = null;
 
-    init() {
-        this.draw();
-    }
     // Methods
-    draw() {
+    const draw = () => {
         // Clear our chart container element first
-        d3.selectAll('#' + this.props.id + ' > *').remove();
+        d3.selectAll('#' + props.id + ' > *').remove();
         const parseTime = d3.timeParse('%Y-%m-%d');
-        let { data: unformattedData, value } = this.props;
+        let { data: unformattedData, value } = props;
         const data = unformattedData.reduce((formatted, { created, successful, failed }) => {
             let DATE = parseTime(created) || new Date();
             let RAN = +successful || 0;
@@ -39,8 +20,8 @@ class BarChart extends Component {
             let TOTAL = +successful + failed || 0;
             return formatted.concat({ DATE, RAN, FAIL, TOTAL });
         }, []);
-        const width = this.props.getWidth();
-        const height = this.props.getHeight();
+        const width = props.getWidth();
+        const height = props.getHeight();
         const x = d3
         .scaleBand()
         .rangeRound([ 0, width ])
@@ -48,24 +29,24 @@ class BarChart extends Component {
         const y = d3.scaleLinear().range([ height, 0 ]);
 
         const svg = d3
-        .select('#' + this.props.id)
+        .select('#' + props.id)
         .append('svg')
-        .attr('width', width + this.props.margin.left + this.props.margin.right)
-        .attr('height', height + this.props.margin.top + this.props.margin.bottom)
+        .attr('width', width + props.margin.left + props.margin.right)
+        .attr('height', height + props.margin.top + props.margin.bottom)
         .append('g')
         .attr(
             'transform',
             'translate(' +
-                this.props.margin.left +
+                props.margin.left +
                 ',' +
-                this.props.margin.top +
+                props.margin.top +
                 ')'
         );
         //[fail, success]
         let colors = d3.scaleOrdinal([ '#6EC664', '#A30000' ]);
 
         const barTooltip = new Tooltip({
-            svg: '#' + this.props.id,
+            svg: '#' + props.id,
             colors
         });
         const status = [ 'FAIL', 'RAN' ];
@@ -97,7 +78,7 @@ class BarChart extends Component {
         svg
         .append('text')
         .attr('transform', 'rotate(-90)')
-        .attr('y', 0 - this.props.margin.left)
+        .attr('y', 0 - props.margin.left)
         .attr('x', 0 - height / 2)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
@@ -134,7 +115,7 @@ class BarChart extends Component {
             'translate(' +
                 width / 2 +
                 ' ,' +
-                (height + this.props.margin.top + 20) +
+                (height + props.margin.top + 20) +
                 ')'
         )
         .style('text-anchor', 'middle')
@@ -166,30 +147,30 @@ class BarChart extends Component {
         .on('mouseover', barTooltip.handleMouseOver)
         .on('mousemove', barTooltip.handleMouseOver)
         .on('mouseout', barTooltip.handleMouseOut);
-    }
+    };
 
-    componentDidMount() {
-        this.init();
+    const resize = () => {
+        clearTimeout(time);
+        time = setTimeout(() => { draw(); }, 500);
+    };
+
+    useEffect(() => {
+        draw();
         // Call the resize function whenever a resize event occurs
-        window.addEventListener('resize', this.resize);
-    }
+        window.addEventListener('resize', resize);
 
-    componentDidUpdate(prevProps) {
-        if (prevProps.value !== this.props.value) {
-            this.init();
-        }
-    }
+        return () => {
+            clearTimeout(time);
+            window.removeEventListener('resize', resize);
+        };
+    }, []);
 
-    componentWillUnmount() {
-        const { timeout } = this.state;
-        clearTimeout(timeout);
-        window.removeEventListener('resize', this.resize);
-    }
+    useEffect(() => draw(), [ props.value ]);
 
-    render() {
-        return <div id={ this.props.id } />;
-    }
-}
+    return (
+        <div id={ props.id } />
+    );
+};
 
 BarChart.propTypes = {
     id: PropTypes.string,
