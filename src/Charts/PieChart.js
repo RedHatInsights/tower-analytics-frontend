@@ -40,8 +40,8 @@ class Tooltip {
         .attr('x', 10)
         .attr('y', -23)
         .attr('rx', 2)
-        .attr('height', 52)
-        .attr('width', 108)
+        .attr('height', 70)
+        .attr('width', 120)
         .attr('fill', '#393f44');
         this.orgName = this.toolTipBase
         .append('text')
@@ -51,7 +51,7 @@ class Tooltip {
         .attr('x', 20)
         .attr('y', 0)
         .text('Organization');
-        this.percentage = this.toolTipBase
+        this.percentageTotal = this.toolTipBase
         .append('text')
         .attr('fill', 'white')
         .attr('font-size', 12)
@@ -59,10 +59,19 @@ class Tooltip {
         .attr('x', 20)
         .attr('y', 16)
         .text('0');
+        this.percentageSuccess = this.toolTipBase
+        .append('text')
+        .attr('fill', 'white')
+        .attr('font-size', 12)
+        .attr('font-weight', 800)
+        .attr('x', 20)
+        .attr('y', 30)
+        .text('0');
     }
 
   handleMouseOver = d => {
       let perc;
+      let percSuccess;
       let orgName;
       const x =
       d3.event.pageX -
@@ -85,6 +94,7 @@ class Tooltip {
       if (d && d.data) {
           const maxLength = 16;
           perc = d.data.percent;
+          percSuccess = d.data.success_rate;
           orgName = d.data.name;
           if (d.data.name.length > maxLength) {
               orgName = d.data.name.slice(0, maxLength - 3).concat('...');
@@ -99,19 +109,22 @@ class Tooltip {
       const overflow = 100 - (toolTipWidth / chartWidth) * 100;
       const flipped = overflow < (x / chartWidth) * 100;
 
-      this.percentage.text('' + perc + ' %');
-      this.orgName.text('' + orgName);
+      this.percentageTotal.text('' + perc + '%');
+      this.percentageSuccess.text('(' + percSuccess + '% successful)');
+      this.orgName.text(' ' + orgName);
       this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
       if (flipped) {
           this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
           this.boundingBOx.attr('x', -125);
           this.orgName.attr('x', -112);
-          this.percentage.attr('x', -112);
+          this.percentageTotal.attr('x', -112);
+          this.percentageSuccess.attr('x', -112);
       } else {
           this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
           this.boundingBOx.attr('x', 10);
           this.orgName.attr('x', 20);
-          this.percentage.attr('x', 20);
+          this.percentageTotal.attr('x', 20);
+          this.percentageSuccess.attr('x', 20);
       }
 
       this.toolTipBase.style('opacity', 1);
