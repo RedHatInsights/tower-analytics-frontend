@@ -9,6 +9,7 @@
     "@patternfly/react-table": "4.5.7",
     "@redhat-cloud-services/frontend-components": "2.1.0-beta",
     "@redhat-cloud-services/frontend-components-utilities": "2.0.4",
+    "babel-plugin-transform-imports": "^2.0.0",
     "classnames": "^2.2.5",
     "moment": "^2.24.0",
     "react": "16.8.6",
@@ -34,7 +35,10 @@
     ],
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy"
-    }
+    },
+    "transformIgnorePatterns": [
+      "/node_modules/(?!@redhat-cloud-services)"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.3.4",
