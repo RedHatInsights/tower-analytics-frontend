@@ -398,14 +398,14 @@ const AutomationCalculator = () => {
                           <CardTitle>Automation formula</CardTitle>
                           <CardBody>
                               <p>
-                                  <b>Manual cost for template X</b> =
+                                  <b>Manual cost for template x</b> =
                                   <em>
                         (time for a manual run on one host * (sum of all hosts
                         across all job runs) ) * cost per hour
                                   </em>
                               </p>
                               <p>
-                                  <b>Automation cost for template X</b> =
+                                  <b>Automation cost for template x</b> =
                                   <em>
                         cost of automation per hour * sum of total elapsed hours
                         for a template
@@ -556,7 +556,7 @@ const AutomationCalculator = () => {
                                                               { data.failed_elapsed_sum.toFixed(2) }s
                                                           </p>
                                                           <p>
-                                                              <b>Automation Percentage</b>:{ ' ' }
+                                                              <b>Automation percentage</b>:{ ' ' }
                                                               { formatPercentage(
                                                                   data.template_automation_percentage.toFixed(
                                                                       2
