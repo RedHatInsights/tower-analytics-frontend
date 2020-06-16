@@ -86,7 +86,6 @@ export const formatQueryStrings = ({
     const parseEndDate = date => `end_date=${encodeURIComponent(date)}`;
     const parseLimit = limit => `limit=${encodeURIComponent(limit)}`;
     const parseOffset = offset => `offset=${encodeURIComponent(offset)}`;
-    // const parseJobType = jobType => `job_type=${encodeURIComponent(jobType)}`;
 
     if (attributes) {
         strings.attributes = parseAttrs(attributes);
