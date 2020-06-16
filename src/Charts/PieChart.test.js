@@ -1,19 +1,18 @@
-
+/* eslint-disable */ 
 import { mount, shallow } from 'enzyme';
 import PieChart from './PieChart.js';
 
-
 // for simulatting hover events
 const mouseover = new MouseEvent('mouseover', {
-    'view': window,
-    'bubbles': true,
-    'cancelable': true
+    view: window,
+    bubbles: true,
+    cancelable: true
 });
 // for simulating un-hover events
 const mouseout = new MouseEvent('mouseout', {
-    'view': window,
-    'bubbles': true,
-    'cancelable': true
+    view: window,
+    bubbles: true,
+    cancelable: true
 });
 
 // mock api data ...
@@ -22,14 +21,14 @@ const dataWithSuccess = [
     { name: 'maxcorp1', count: 5000, success_rate: 1.0 },
     { name: 'maxcorp2', count: 5000, success_rate: 2.0 },
     { name: 'maxcorp3', count: 5000, success_rate: 3.0 },
-    { name: 'maxcorp4', count: 5000, success_rate: 4.0 },
+    { name: 'maxcorp4', count: 5000, success_rate: 4.0 }
 ];
 const dataWithoutSuccess = [
-    { name: 'maxcorp0', count: 5000},
-    { name: 'maxcorp1', count: 5000},
-    { name: 'maxcorp2', count: 5000},
-    { name: 'maxcorp3', count: 5000},
-    { name: 'maxcorp4', count: 5000},
+    { name: 'maxcorp0', count: 5000 },
+    { name: 'maxcorp1', count: 5000 },
+    { name: 'maxcorp2', count: 5000 },
+    { name: 'maxcorp3', count: 5000 },
+    { name: 'maxcorp4', count: 5000 }
 ];
 
 describe('Charts/PieChart', () => {
@@ -54,17 +53,17 @@ describe('Charts/PieChart/Tooltip', () => {
 
     beforeAll(() => {
         // parent div to manipulate
-        container1 = document.createElement("div");
+        container1 = document.createElement('div');
         container1.setAttribute('id', thisid1);
         document.body.appendChild(container1);
 
-        container2 = document.createElement("div");
+        container2 = document.createElement('div');
         container2.setAttribute('id', thisid2);
         document.body.appendChild(container2);
 
         // props needed by the underlying rendering ...
         const baseprops = {
-            data: null, 
+            data: null,
             id: thisid1,
             margin: {
                 left: 0,
@@ -72,14 +71,8 @@ describe('Charts/PieChart/Tooltip', () => {
                 bottom: 0,
                 top: 0
             },
-            getWidth: function() {
-                console.log("getting width");
-                return 700;
-            },
-            getHeight: function() {
-                console.log("getting height");
-                return 450;
-            }
+            getWidth: () => 700,
+            getHeight: () => 450
         };
 
         // each piechart has a different data shape ...
@@ -127,12 +120,13 @@ describe('Charts/PieChart/Tooltip', () => {
             let thisPercent = rectangle.children[3].textContent.trim();
             let thisRate = rectangle.children[4].textContent.trim();
             let expectedRate = '(' + dataWithSuccess[i].success_rate + '% successful)';
-            
+
             expect(thisName).toBe(dataWithSuccess[i].name);
-            expect(thisPercent).toBe("20%");
+            expect(thisPercent).toBe('20%');
             expect(thisRate).toBe(expectedRate);
-            
+
             paths[i].dispatchEvent(mouseout);
+
         };
 
     });
@@ -155,8 +149,8 @@ describe('Charts/PieChart/Tooltip', () => {
             //console.log(rectangle.children);
 
             expect(rectangle.children.length).toBe(4);
-            expect(rectangle.children[2].textContent.trim()).toBe(dataWithoutSuccess[i].name)
-            expect(rectangle.children[3].textContent.trim()).toBe("20%");
+            expect(rectangle.children[2].textContent.trim()).toBe(dataWithoutSuccess[i].name);
+            expect(rectangle.children[3].textContent.trim()).toBe('20%');
 
             paths[i].dispatchEvent(mouseout);
         };
