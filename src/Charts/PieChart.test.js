@@ -112,8 +112,6 @@ describe('Charts/PieChart/Tooltip', () => {
             // (3% successful)
             paths[i].dispatchEvent(mouseover);
             let rectangle = document.getElementById('svg-chart-Tooltip.base-' + thisid1);
-            //console.log(rectangle.textContent);
-            //console.log(rectangle.children);
 
             // ensure the relevant lines are displayed ...
             let thisName = rectangle.children[2].textContent.trim();
@@ -144,9 +142,6 @@ describe('Charts/PieChart/Tooltip', () => {
             // 20%
             paths[i].dispatchEvent(mouseover);
             let rectangle = document.getElementById('svg-chart-Tooltip.base-' + thisid2);
-            //console.log(rectangle.textContent);
-            //console.log(rectangle.children.length);
-            //console.log(rectangle.children);
 
             expect(rectangle.children.length).toBe(4);
             expect(rectangle.children[2].textContent.trim()).toBe(dataWithoutSuccess[i].name);
