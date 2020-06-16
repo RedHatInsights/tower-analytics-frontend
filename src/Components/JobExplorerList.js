@@ -17,14 +17,13 @@ import { ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
 
 import StatusIcon from '../Icons/StatusIcon/StatusIcon';
 import LoadingState from '../Components/LoadingState';
-import { formatDateTime, formatJobType, formatJobStatus, formatJobDetailsURL } from '../Utilities/helpers';
+import { formatDateTime, formatJobType, formatJobStatus } from '../Utilities/helpers';
 
 const headerLabels = [
     'Id/Name',
     'Status',
     'Cluster',
     'Organization',
-    'Template',
     'Type'
 ];
 
@@ -59,19 +58,19 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                 };
 
                 return (
-                    <DataListItem key={ item.id } aria-labelledby={ ariaLabelledBy } isExpanded={ isExpanded.includes(`${item.id}-toggle`) } >
-                        <DataListItemRow key={ item.id }>
+                    <DataListItem key={ item.id.id } aria-labelledby={ ariaLabelledBy } isExpanded={ isExpanded.includes(`${item.id.id}-toggle`) } >
+                        <DataListItemRow key={ item.id.id }>
                             <DataListToggle
-                                id={ `${item.id}-toggle` }
-                                aria-controls={ `${item.id}-expand` }
-                                onClick={ () => toggle(`${item.id}-toggle`) }
-                                isExpanded={ isExpanded.includes(`${item.id}-toggle`) }
+                                id={ `${item.id.id}-toggle` }
+                                aria-controls={ `${item.id.id}-expand` }
+                                onClick={ () => toggle(`${item.id.id}-toggle`) }
+                                isExpanded={ isExpanded.includes(`${item.id.id}-toggle`) }
                             />
                             <DataListItemCells
                                 dataListCells={ [
                                     <DataListCell key={ count++ }>
-                                        <a href={ formatJobDetailsURL(item.cluster_url_base, item.id) } target='_blank' rel='noopener noreferrer'>
-                                            { `${item.id} - ${item.template_name}` } <ArrowIcon />
+                                        <a href={ item.id.tower_link } target='_blank' rel='noopener noreferrer'>
+                                            { `${item.id.id} - ${item.id.template_name}` } <ArrowIcon />
                                         </a>
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
@@ -81,17 +80,14 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                                         { item.cluster_name }
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>{ item.org_name }</DataListCell>,
-                                    <DataListCell key={ count++ }>
-                                        { item.template_name }
-                                    </DataListCell>,
                                     <DataListCell key={ count++ }>{ formatJobType(item.job_type) }</DataListCell>
                                 ] }
                             />
                         </DataListItemRow>
                         <DataListContent
-                            aria-label={ `${item.id}-details` }
-                            id={ '${item.id}' }
-                            isHidden={ !isExpanded.includes(`${item.id}-toggle`) }
+                            aria-label={ `${item.id.id}-details` }
+                            id={ '${item.id.id}' }
+                            isHidden={ !isExpanded.includes(`${item.id.id}-toggle`) }
                         >
                             <DataListItemCells
                                 dataListCells={ [

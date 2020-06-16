@@ -1,8 +1,6 @@
 /* eslint-disable camelcase */
-/* eslint-disable */
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
-// import { useState, useEffect } from 'react';
 import { parse } from 'query-string';
 
 export const formatQueryStrings = ({
@@ -13,7 +11,11 @@ export const formatQueryStrings = ({
     limit,
     offset,
     job_type,
-    status
+    status,
+    org_id,
+    cluster_id,
+    template_id,
+    sort_by
 }) => {
     let strings = {};
     const parseAttrs = attrs => {
@@ -44,6 +46,38 @@ export const formatQueryStrings = ({
         return jobTypes
         .map(jobType => {
             return `job_type=${encodeURIComponent(jobType)}`;
+        })
+        .join('&');
+    };
+
+    const parseOrganization = orgs => {
+        return orgs
+        .map(orgId => {
+            return `org_id=${encodeURIComponent(orgId)}`;
+        })
+        .join('&');
+    };
+
+    const parseCluster = clusters => {
+        return clusters
+        .map(clusterId => {
+            return `cluster_id=${encodeURIComponent(clusterId)}`;
+        })
+        .join('&');
+    };
+
+    const parseTemplate = templates => {
+        return templates
+        .map(templateId => {
+            return `template_id=${encodeURIComponent(templateId)}`;
+        })
+        .join('&');
+    };
+
+    const parseSortBy = sortBy => {
+        return sortBy
+        .map(attr => {
+            return `sort_by=${encodeURIComponent(attr)}`;
         })
         .join('&');
     };
@@ -86,12 +120,28 @@ export const formatQueryStrings = ({
         strings.status = parseStatuses(status);
     }
 
+    if (org_id) {
+        strings.org_id = parseOrganization(org_id);
+    }
+
+    if (cluster_id) {
+        strings.cluster_id = parseCluster(cluster_id);
+    }
+
+    if (template_id) {
+        strings.template_id = parseTemplate(template_id);
+    }
+
+    if (sort_by) {
+        strings.sort_by = parseSortBy(sort_by);
+    }
+
     return {
         strings,
         stringify: strings => {
             return Object.keys(strings).map(key => strings[key]).join('&');
         },
         parse
-    }
-        
+    };
+
 };

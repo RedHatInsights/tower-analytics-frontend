@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
 
@@ -46,13 +45,6 @@ export const useQueryParams = initial => {
             case 'SET_ATTRIBUTES':
                 return { ...state, attributes: [ ...action.attributes ]};
             case 'SET_JOB_TYPE':
-                console.log('action', action);
-                if (action.jobType.includes('workflowjob') && action.jobType.includes('job')) {
-                    console.log('both need to be removed');
-                    const { job_type: ignored, ...rest } = state;
-                    return rest;
-                }
-
                 if (action.jobType.length <= 0) {
                     const { job_type: ignored, ...rest } = state;
                     return rest;
@@ -61,18 +53,40 @@ export const useQueryParams = initial => {
                 return { ...state, job_type: [ ...action.jobType ]};
 
             case 'SET_STATUS':
-
                 if (action.status.length <= 0) {
                     const { status: ignored, ...rest } = state;
                     return rest;
                 }
 
-                if (action.status.includes('failed') && action.status.includes('successful')) {
-                    const { status: ignored, ...rest } = state;
+                return { ...state, status: [ ...action.status ]};
+            case 'SET_ORG':
+                if (action.org.length <= 0) {
+                    const { org_id: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, status: [ ...action.status ]};
+                return { ...state, org_id: [ ...action.org ]};
+            case 'SET_CLUSTER':
+                if (action.cluster.length <= 0) {
+                    const { cluster_id: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, cluster_id: [ ...action.cluster ]};
+            case 'SET_TEMPLATE':
+                if (action.template.length <= 0) {
+                    const { template_id: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, template_id: [ ...action.template ]};
+            case 'SET_SORTBY':
+                if (action.sortBy.length <= 0) {
+                    const { sort_by: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, sort_by: [ ...action.sortBy ]};
             default:
                 throw new Error();
         }
@@ -124,6 +138,10 @@ export const useQueryParams = initial => {
         setSeverity: severity => dispatch({ type: 'SET_SEVERITY', severity }),
         setAttributes: attributes => dispatch({ type: 'SET_ATTRIBUTES', attributes }),
         setJobType: jobType => dispatch({ type: 'SET_JOB_TYPE', jobType }),
-        setStatus: status => dispatch({ type: 'SET_STATUS', status })
+        setStatus: status => dispatch({ type: 'SET_STATUS', status }),
+        setOrg: org => dispatch({ type: 'SET_ORG', org }),
+        setCluster: cluster => dispatch({ type: 'SET_CLUSTER', cluster }),
+        setTemplate: template => dispatch({ type: 'SET_TEMPLATE', template }),
+        setSortBy2: sortBy => dispatch({ type: 'SET_SORTBY', sortBy })
     };
 };
