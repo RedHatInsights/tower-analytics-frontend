@@ -271,7 +271,8 @@ class PieChart extends Component {
         .selectAll('path')
         .on('mouseover', function(d, i) {
             d3.select(this).style('fill', d3.rgb(color(i)).darker(1));
-            donutTooltip.handleMouseOver();
+            //donutTooltip.handleMouseOver();
+            donutTooltip.handleMouseOver(d);
         })
         .on('mouseout', function(d, i) {
             d3.select(this).style('fill', color(i));
