@@ -1,5 +1,6 @@
 import { mount } from 'enzyme';
 import NotificationsList from './NotificationsList/';
+import { Alert } from '@patternfly/react-core';
 
 describe('Components/NotificationsList', () => {
     /*eslint camelcase: ["error", {properties: "never"}]*/
@@ -66,7 +67,7 @@ describe('Components/NotificationsList', () => {
             />
         );
         const notificationTemplate = wrapper.find('AllNotificationTemplate');
-        const alertItem = notificationTemplate.find('Alert');
+        const alertItem = notificationTemplate.find(Alert);
         expect(alertItem.length).toEqual(notifications.length);
     });
     it('ErrorNotificationsTemplate should render only error type notifications', () => {
@@ -80,7 +81,7 @@ describe('Components/NotificationsList', () => {
             />
         );
         const notificationTemplate = wrapper.find('ErrorNotificationTemplate');
-        const alertItem = notificationTemplate.find('Alert');
+        const alertItem = notificationTemplate.find(Alert);
         expect(alertItem.length).toEqual(
             notifications.filter(notification => notification.label === 'error')
             .length
@@ -97,7 +98,7 @@ describe('Components/NotificationsList', () => {
             />
         );
         const notificationTemplate = wrapper.find('WarningNotificationTemplate');
-        const alertItem = notificationTemplate.find('Alert');
+        const alertItem = notificationTemplate.find(Alert);
         expect(alertItem.length).toEqual(
             notifications.filter(notification => notification.label === 'warning')
             .length
@@ -114,7 +115,7 @@ describe('Components/NotificationsList', () => {
             />
         );
         const notificationTemplate = wrapper.find('NoticeNotificationTemplate');
-        const alertItem = notificationTemplate.find('Alert');
+        const alertItem = notificationTemplate.find(Alert);
         expect(alertItem.length).toEqual(
             notifications.filter(notification => notification.label === 'notice')
             .length
