@@ -1,43 +1,51 @@
+/* eslint react/prop-types: 0 */
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 
-const initializeChart = Chart => {
-    const BaseChart = (props) => {
-        const { id, margin } = props;
+function initializeChart(Chart) {
+    return class BaseChart extends React.Component {
+        constructor(props) {
+            super(props);
+            this.getWidth = this.getWidth.bind(this);
+            this.getHeight = this.getHeight.bind(this);
+        }
 
-        const getWidth = () => {
+        propTypes = {
+            id: PropTypes.string,
+            margin: PropTypes.object
+        }
+
+        // Methods
+        getWidth() {
             let width;
             width =
-            parseInt(d3.select('#' + id).style('width')) -
-                margin.left - margin.right || 700;
+            parseInt(d3.select('#' + this.props.id).style('width')) -
+            this.props.margin.left -
+            this.props.margin.right || 700;
             return width;
-        };
+        }
 
-        const getHeight = () => {
+        getHeight() {
             let height;
             height =
-            parseInt(d3.select('#' + id).style('height')) -
-                margin.top - margin.bottom || 450;
+            parseInt(d3.select('#' + this.props.id).style('height')) -
+            this.props.margin.top -
+            this.props.margin.bottom || 450;
             return height;
-        };
+        }
 
-        return (
-            <Chart
-                { ...props }
-                getWidth={ getWidth }
-                getHeight={ getHeight }
-            />
-        );
+        render() {
+            return (
+                <Chart
+                    { ...this.props }
+                    getWidth={ this.getWidth }
+                    getHeight={ this.getHeight }
+                />
+            );
+        }
     };
-
-    BaseChart.propTypes = {
-        id: PropTypes.string,
-        margin: PropTypes.object
-    };
-
-    return BaseChart;
-};
+}
 
 initializeChart.propTypes = {
     Chart: PropTypes.element
