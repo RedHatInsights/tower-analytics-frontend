@@ -62,14 +62,14 @@ class Tooltip {
         .attr('font-size', 12)
         .attr('x', 20)
         .attr('y', 16)
-        .text('Manual Cost $0');
+        .text('Manual cost $0');
         this.automationCost = this.toolTipBase
         .append('text')
         .attr('fill', 'white')
         .attr('font-size', 12)
         .attr('x', 20)
         .attr('y', 34)
-        .text('Automation Cost $0');
+        .text('Automation cost $0');
     }
 
     handleMouseOver = d => {
