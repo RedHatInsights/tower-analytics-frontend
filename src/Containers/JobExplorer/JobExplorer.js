@@ -78,6 +78,10 @@ const initialQueryParams = {
     limit: 5
 };
 
+const initialOptionsParams = {
+    attributes: jobExplorer.attributes
+};
+
 const JobExplorer = (props) => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ jobExplorerData, setJobExplorerData ] = useState([]);
@@ -86,6 +90,7 @@ const JobExplorer = (props) => {
     const [ meta, setMeta ] = useState({});
     const [ currPage, setCurrPage ] = useState(1);
     const [ statusIsExpanded, setStatusIsExpanded ] = useState(false);
+    const [ dateRangeIsExpanded, setDateRangeIsExpanded ] = useState(false);
     const [ jobTypeIsExpanded, setJobTypeIsExpanded ] = useState(false);
     const [ orgIsExpanded, setOrgIsExpanded ] = useState(false);
     const [ isCategoryExpanded, setIsCategoryExpanded ] = useState(false);
@@ -100,7 +105,8 @@ const JobExplorer = (props) => {
         org: [],
         cluster: [],
         template: [],
-        sortby: []
+        sortby: [],
+        date: null
     });
     const [ orgIds, setOrgIds ] = useState([]);
     const [ clusterIds, setClusterIds ] = useState([]);
@@ -119,6 +125,10 @@ const JobExplorer = (props) => {
         setTemplate,
         setSortBy2
     } = useQueryParams(initialQueryParams);
+
+    const {
+        queryParams: optionsQueryParams
+    } = useQueryParams(initialOptionsParams);
 
     const { parse } = formatQueryStrings(queryParams);
     const { location: { search }} = props;
@@ -148,7 +158,7 @@ const JobExplorer = (props) => {
         const getData = () => {
             return Promise.all(
                 [ readJobExplorer({ params: combined }) ],
-                [ readJobExplorerOptions({ params: {}}) ]
+                [ readJobExplorerOptions({ params: optionsQueryParams }) ]
             );
 
         };
@@ -206,7 +216,7 @@ const JobExplorer = (props) => {
         const fetchEndpoints = () => {
             return Promise.all([
                 readJobExplorer({ params: combined }),
-                readJobExplorerOptions({ params: {}})
+                readJobExplorerOptions({ params: optionsQueryParams })
 
             ].map(p => p.catch(() => [])));
         };
@@ -319,7 +329,7 @@ const JobExplorer = (props) => {
 
     const handleChips = (item, comparator) => {
         return item.reduce((acc, i) => {
-            Number.isInteger(i) ? i = parseInt(i) : i;
+            Number.isInteger(parseInt(i)) ? i = parseInt(i) : i;
             comparator.forEach(org => {
                 if (org.key === i) {
                     acc.push(org.value);
@@ -380,7 +390,8 @@ const JobExplorer = (props) => {
                     org: [],
                     cluster: [],
                     template: [],
-                    sortby: []
+                    sortby: [],
+                    date: null
                 }
             );
         }
@@ -431,6 +442,7 @@ const JobExplorer = (props) => {
                     isOpen={ isCategoryExpanded }
                     dropdownItems={ [
                         <DropdownItem key="cat0">Status</DropdownItem>,
+                        <DropdownItem key="cat6">Date</DropdownItem>,
                         <DropdownItem key="cat1">Job type</DropdownItem>,
                         <DropdownItem key="cat2">Organization</DropdownItem>,
                         <DropdownItem key="cat3">Cluster</DropdownItem>,
@@ -468,6 +480,15 @@ const JobExplorer = (props) => {
             <SelectOption key={ key } value={ key }>{ value }</SelectOption>
         ));
 
+        const dateRangeMenuItems = [
+            <SelectOption key="0" value="Last 3 months" />,
+            <SelectOption key="1" value="Last month" />,
+            <SelectOption key="2" value="Last 2 weeks" />,
+            <SelectOption key="3" value="Last week" />,
+            <SelectOption key="4" value="Last 24h" />,
+            <SelectOption key="5" value="Custom" />
+        ];
+
         const onSelect = (type, event, selection) => {
             const checked = event.target.checked;
 
@@ -477,6 +498,14 @@ const JobExplorer = (props) => {
                     ? [ ...filters[type], selection ]
                     : filters[type].filter((value) => value !== selection)
             });
+        };
+
+        const onDateSelect = (_event, selection) => {
+            setFilters({
+                ...filters,
+                date: selection
+            });
+            setDateRangeIsExpanded(!dateRangeIsExpanded);
         };
 
         return (
@@ -499,6 +528,25 @@ const JobExplorer = (props) => {
                         placeholderText="Filter by job status"
                     >
                         { statusMenuItems }
+                    </Select>
+                </DataToolbarFilter>
+                <DataToolbarFilter
+                    showToolbarItem={ currentCategory === 'Date' }
+                    categoryName="Date"
+                    deleteChip={ onDelete }
+                >
+                    <Select
+                        variant={ SelectVariant.single }
+                        aria-label="Date"
+                        onToggle={ () => { setDateRangeIsExpanded(!dateRangeIsExpanded); } }
+                        onSelect={ (event, selection) => {
+                            onDateSelect(event, selection);
+                        } }
+                        selections={ filters.date }
+                        isExpanded={ dateRangeIsExpanded }
+                        placeholderText="Filter by date range"
+                    >
+                        { dateRangeMenuItems }
                     </Select>
                 </DataToolbarFilter>
                 <DataToolbarFilter
