@@ -257,75 +257,6 @@ const JobExplorer = (props) => {
         initializeWithPreflight();
         return () => (ignore = true);
     }, []);
-    // const statusMenuItems = [
-    //     <SelectOption key="status-success" value="successful" />,
-    //     <SelectOption key="status-failed" value="failed" />,
-    //     <SelectOption key="status-all" value="All" data-value="all" />
-    // ];
-
-    // const jobTypeMenuItems = [
-    //     <SelectOption key="type-template" value="job" />,
-    //     <SelectOption key="type-worklow" value="workflowjob" />
-    // ];
-
-    // const dateRangeMenuItems = [
-    //     <SelectOption key="date-week" value="Past week" />,
-    //     <SelectOption key="date-two-weeks" value="Past two weeks" />,
-    //     <SelectOption key="date-month" value="Past month" />
-    // ];
-
-    // const JobExplorer = (props) => {
-    //   const [preflightError, setPreFlightError] = useState(null);
-    //   const [jobExplorerData, setJobExplorerData] = useState([]);
-    //   const [firstRender, setFirstRender] = useState(true);
-    //   const [isLoading, setIsLoading] = useState(true);
-    //   const [meta, setMeta] = useState({});
-    //   const [currPage, setCurrPage] = useState(1);
-    //   const [dateRange, setDateRange] = useState(null);
-    //   const [dayIsExpanded, setDayIsExpanded] = useState(false);
-    //   const [statusIsExpanded, setStatusIsExpanded] = useState(false);
-    //   const [jobIsExpanded, setJobIsExpanded] = useState(false);
-    //   const [filters, setFilters] = useState({
-    //     status: ["successful", "failed"],
-    //     type: ["job", "workflowjob"],
-    //     date: []
-    //   });
-    //   const {
-    //     queryParams,
-    //     setStartDate,
-    //     setLimit,
-    //     setOffset,
-    //     setJobType,
-    //     setStatus,
-    //   } = useQueryParams(initialQueryParams);
-
-    //   const { parse } = formatQueryStrings(queryParams);
-    //   const {
-    //     location: { search },
-    //   } = props;
-    //   const initialSearchParams = parse(search);
-    //   const combined = { ...queryParams, ...initialSearchParams };
-
-    //   useEffect(() => {
-    //     if (firstRender) {
-    //       return;
-    //     }
-    //     const getData = () => {
-    //       return readJobExplorer({ params: combined });
-    //     };
-
-    //     const update = async () => {
-    //       setIsLoading(true);
-    //       await window.insights.chrome.auth.getUser();
-    //       getData().then(({ items: jobExplorerData = [], meta }) => {
-    //         setJobExplorerData(jobExplorerData);
-    //         setMeta(meta);
-    //         setIsLoading(false);
-    //       });
-    //     };
-
-    //     update();
-    //   }, [queryParams]);
 
     const handleChips = (item, comparator) => {
         return item.reduce((acc, i) => {
@@ -338,16 +269,6 @@ const JobExplorer = (props) => {
             return acc;
         }, []);
     };
-
-    // const onSelect = (type, event, selection) => {
-    //     const checked = event.target.checked;
-    //     setFilters({
-    //         ...filters,
-    //         [type]: checked
-    //             ? [ ...filters[type], selection ]
-    //             : filters[type].filter(value => value !== selection)
-    //     });
-    // };
 
     const onDelete = (type, val) => {
         let filtered;
@@ -396,34 +317,6 @@ const JobExplorer = (props) => {
             );
         }
     };
-    // useEffect(() => {
-    //   if (firstRender) {
-    //     return;
-    //   }
-
-    //   if (filters.type) {
-    //     setJobType(filters.type);
-    //   }
-    //   if (filters.status) {
-    //     setStatus(filters.status);
-    //   }
-
-    //   if (filters.date) {
-    //       if (filters.date.includes("past week")) {
-    //           setStartDate(7)
-    //       }
-
-    //       if (filters.date.includes("past two weeks")) {
-    //           setStartDate(14)
-    //       }
-
-    //       if (filters.date.includes("past month")) {
-    //           setStartDate(31)
-    //       }
-    //   }
-    // }, [filters]);
-
-    // console.log('filters.date', filters.date);
 
     const buildCategoryDropdown = () => {
         return (
@@ -653,38 +546,6 @@ const JobExplorer = (props) => {
         );
     };
 
-    // return (
-    //     <React.Fragment>
-    //         <PageHeader>
-    //             <PageHeaderTitle title={ title } />
-    //         </PageHeader>
-    // useEffect(() => {
-    //   let ignore = false;
-
-    //   const fetchEndpoints = () => {
-    //     return Promise.all([readJobExplorer({ params: combined })]);
-    //   };
-
-    //   async function initializeWithPreflight() {
-    //     setIsLoading(true);
-    //     await window.insights.chrome.auth.getUser();
-    //     await preflightRequest().catch((error) => {
-    //       setPreFlightError({ preflightError: error });
-    //     });
-    //     fetchEndpoints().then(([{ items: jobExplorerData = [], meta }]) => {
-    //       if (!ignore) {
-    //         setJobExplorerData(jobExplorerData);
-    //         setMeta(meta);
-    //         setFirstRender(false);
-    //         setIsLoading(false);
-    //       }
-    //     });
-    //   }
-
-    //   initializeWithPreflight();
-    //   return () => (ignore = true);
-    // }, []);
-
     const returnOffsetVal = (page) => {
         let offsetVal = (page - 1) * queryParams.limit;
         return offsetVal;
@@ -713,66 +574,6 @@ const JobExplorer = (props) => {
         setCurrPage(page);
     };
 
-    // const onSelect = (type, event, selection) => {
-    //     const checked = event.target.checked;
-
-    //     if (type === 'date') {
-    //         setFilters({ ...filters,
-    //             ['date']: [ selection.toLowerCase() ]
-    //         });
-    //         setDateRange(selection);
-    //     } else {
-    //         setFilters({
-    //             ...filters,
-    //             [type]: checked
-    //                 ? [ ...filters[type], selection ]
-    //                 : filters[type].filter((value) => value !== selection)
-    //         });
-    //     }
-    // };
-
-    // const onDaySelect = (event, selection) => {
-    //     onSelect('date', event, selection);
-    // };
-
-    // const onStatusSelect = (event, selection) => {
-    //     onSelect('status', event, selection);
-    // };
-
-    // const onJobTypeSelect = (event, selection) => {
-    //     onSelect('type', event, selection);
-    // };
-
-    // const onDayToggle = () => {
-    //     setDayIsExpanded(!dayIsExpanded);
-    // };
-
-    // const onStatusToggle = () => {
-    //     setStatusIsExpanded(!statusIsExpanded);
-    // };
-
-    // const onJobTypeToggle = () => {
-    //     setJobIsExpanded(!jobIsExpanded);
-    // };
-
-    // const onDelete = (type = "", id = "") => {
-    //   if (type) {
-    //     setFilters({
-    //       ...filters,
-    //       [type.toLowerCase()]: filters[type.toLowerCase()].filter(
-    //         (value) => value !== id
-    //       ),
-    //     });
-    //   } else {
-    //     setFilters({
-    //       status: [],
-    //       type: [],
-    //       date: [],
-    //     });
-    //     setDateRange([]);
-    //   }
-    // };
-
     return (
         <React.Fragment>
             <PageHeader>
@@ -798,18 +599,6 @@ const JobExplorer = (props) => {
                       </TitleWithBadge>
                   </CardHeader>
                   <CardBody>
-                      { /* <>
-                    <Main>
-                        <Card>
-                            <CardHeader>
-                                <TitleWithBadge>
-                                    <h2>
-                                        <strong>Total Jobs</strong>
-                                    </h2>
-                                    <Badge isRead>{ meta.count ? meta.count : 0 }</Badge>
-                                </TitleWithBadge>
-                            </CardHeader>
-                            <CardBody> */ }
                       <DataToolbar
                           id="data-toolbar-with-chip-groups"
                           clearAllFilters={ onDelete }
@@ -852,70 +641,6 @@ const JobExplorer = (props) => {
                   </CardBody>
               </Card>
           </Main>
-                  {/* <DataToolbar
-                      id="jobs-data-toolbar"
-                      clearAllFilters={ onDelete }
-                  >
-                      <DataToolbarContent>
-                          <DataToolbarToggleGroup
-                              toggleIcon={ <FilterIcon /> }
-                              breakpoint="xl"
-                          >
-                              <DataToolbarItem>
-                                  <FilterIcon color="gray" />
-                              </DataToolbarItem>
-                              <DataToolbarGroup variant="filter-group">
-                                  <DataToolbarFilter categoryName="Date Range" chips={ filters.date } deleteChip={ onDelete }>
-                                      <Select
-                                          variant={ SelectVariant.single }
-                                          aria-label="Select Date Range"
-                                          selections={ dateRange }
-                                          onToggle={ onDayToggle }
-                                          onSelect={ onDaySelect }
-                                          isExpanded={ dayIsExpanded }
-                                          placeholderText="Date Range"
-                                      >
-                                          { dateRangeMenuItems }
-                                      </Select>
-                                  </DataToolbarFilter>
-                                  <DataToolbarFilter
-                                      chips={ filters.status }
-                                      categoryName="Status"
-                                      deleteChip={ onDelete }
-                                  >
-                                      <Select
-                                          variant={ SelectVariant.checkbox }
-                                          aria-label="Select Status"
-                                          onToggle={ onStatusToggle }
-                                          onSelect={ onStatusSelect }
-                                          selections={ filters.status }
-                                          isExpanded={ statusIsExpanded }
-                                          placeholderText="Status"
-                                      >
-                                          { statusMenuItems }
-                                      </Select>
-                                  </DataToolbarFilter>
-                                  <DataToolbarFilter
-                                      categoryName="Type"
-                                      chips={ filters.type }
-                                      deleteChip={ onDelete }
-                                  >
-                                      <Select
-                                          aria-label="Select Job Type"
-                                          variant={ SelectVariant.checkbox }
-                                          onToggle={ onJobTypeToggle }
-                                          onSelect={ onJobTypeSelect }
-                                          selections={ filters.type }
-                                          isExpanded={ jobIsExpanded }
-                                          placeholderText="Job Type"
-                                      >
-                                          { jobTypeMenuItems }
-                                      </Select>
-                                  </DataToolbarFilter>
-                              </DataToolbarGroup>
-                          </DataToolbarToggleGroup>
-                      </DataToolbarContent>
-                  </DataToolbar> */}
                 </>
 
             ) }
