@@ -20,7 +20,7 @@ const DataListItem = styled(PFDataListItem)`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  padding: 10px 15px;
+  padding: 0 15px 10px 15px;
 `;
 
 const DataCellEnd = styled(DataListCell)`
