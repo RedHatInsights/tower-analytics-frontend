@@ -15,7 +15,8 @@ export const formatQueryStrings = ({
     org_id,
     cluster_id,
     template_id,
-    sort_by
+    sort_by,
+    only_root_workflows_and_standalone_jobs
 }) => {
     let strings = {};
     const parseAttrs = attrs => {
@@ -87,6 +88,8 @@ export const formatQueryStrings = ({
     const parseLimit = limit => `limit=${encodeURIComponent(limit)}`;
     const parseOffset = offset => `offset=${encodeURIComponent(offset)}`;
 
+    const parseRootWorkflowsAndJobs = bool => `only_root_workflows_and_standalone_jobs=${encodeURIComponent(bool)}`;
+
     if (attributes) {
         strings.attributes = parseAttrs(attributes);
     }
@@ -133,6 +136,10 @@ export const formatQueryStrings = ({
 
     if (sort_by) {
         strings.sort_by = parseSortBy(sort_by);
+    }
+
+    if (only_root_workflows_and_standalone_jobs !== undefined) {
+        strings.only_root_workflows_and_standalone_jobs = parseRootWorkflowsAndJobs(only_root_workflows_and_standalone_jobs);
     }
 
     return {

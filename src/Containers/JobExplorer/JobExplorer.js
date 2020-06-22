@@ -114,6 +114,7 @@ const JobExplorer = (props) => {
     const [ sortBy, setSortBy ] = useState([]);
     const [ statuses, setStatuses ] = useState([]);
     const [ jobTypes, setJobTypes ] = useState([]);
+    const [ quickDateRanges, setQuickDateRanges ] = useState([]);
     const {
         queryParams,
         setLimit,
@@ -236,6 +237,7 @@ const JobExplorer = (props) => {
                         job_type,
                         status,
                         template_id,
+                        quick_date_range,
                         sort_by }
                 ]) => {
                     if (!ignore) {
@@ -247,6 +249,7 @@ const JobExplorer = (props) => {
                         setSortBy(sort_by);
                         setStatuses(status);
                         setJobTypes(job_type);
+                        setQuickDateRanges(quick_date_range);
                         setFirstRender(false);
                         setIsLoading(false);
                     }
@@ -268,6 +271,20 @@ const JobExplorer = (props) => {
             });
             return acc;
         }, []);
+    };
+
+    const handleDateChips = (date, comparator) => {
+        if (date && typeof date === 'string') {
+            let val;
+            comparator.forEach(i => {
+                if (i.key === date) {
+                    val = i.value;
+                }
+            });
+            return new Array(val);
+        }
+
+        return new Array();
     };
 
     const onDelete = (type, val) => {
@@ -299,10 +316,17 @@ const JobExplorer = (props) => {
         }
 
         if (type) {
-            setFilters({
-                ...filters,
-                [type.toLowerCase()]: filters[type.toLowerCase()].filter(value => value !== filtered[0].key)
-            });
+            if (type === 'Date') {
+                setFilters({
+                    ...filters,
+                    date: null
+                });
+            } else {
+                setFilters({
+                    ...filters,
+                    [type.toLowerCase()]: filters[type.toLowerCase()].filter(value => value !== filtered[0].key)
+                });
+            }
         } else {
             setFilters(
                 {
@@ -373,14 +397,9 @@ const JobExplorer = (props) => {
             <SelectOption key={ key } value={ key }>{ value }</SelectOption>
         ));
 
-        const dateRangeMenuItems = [
-            <SelectOption key="0" value="Last 3 months" />,
-            <SelectOption key="1" value="Last month" />,
-            <SelectOption key="2" value="Last 2 weeks" />,
-            <SelectOption key="3" value="Last week" />,
-            <SelectOption key="4" value="Last 24h" />,
-            <SelectOption key="5" value="Custom" />
-        ];
+        const dateRangeMenuItems = quickDateRanges.map(({ key, value }) => (
+            <SelectOption key={ key } value={ key }>{ value }</SelectOption>
+        ));
 
         const onSelect = (type, event, selection) => {
             const checked = event.target.checked;
@@ -426,6 +445,7 @@ const JobExplorer = (props) => {
                 <DataToolbarFilter
                     showToolbarItem={ currentCategory === 'Date' }
                     categoryName="Date"
+                    chips={ handleDateChips(filters.date, quickDateRanges) }
                     deleteChip={ onDelete }
                 >
                     <Select

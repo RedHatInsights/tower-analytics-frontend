@@ -87,6 +87,8 @@ export const useQueryParams = initial => {
                 }
 
                 return { ...state, sort_by: [ ...action.sortBy ]};
+            case 'SET_ROOTWORKFLOWSANDJOBS':
+                return { ...state, only_root_workflows_and_standalone_jobs: action.bool };
             default:
                 throw new Error();
         }
@@ -142,6 +144,7 @@ export const useQueryParams = initial => {
         setOrg: org => dispatch({ type: 'SET_ORG', org }),
         setCluster: cluster => dispatch({ type: 'SET_CLUSTER', cluster }),
         setTemplate: template => dispatch({ type: 'SET_TEMPLATE', template }),
-        setSortBy2: sortBy => dispatch({ type: 'SET_SORTBY', sortBy })
+        setSortBy2: sortBy => dispatch({ type: 'SET_SORTBY', sortBy }),
+        setRootWorkflowsAndJobs: bool => dispatch({ type: 'SET_ROOTWORKFLOWSANDJOBS', bool })
     };
 };

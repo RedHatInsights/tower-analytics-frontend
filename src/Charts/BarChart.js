@@ -31,7 +31,8 @@ class BarChart extends Component {
         const formattedDate = formatDate(date);
         const initialQueryParams = {
             start_date: formattedDate,
-            end_date: formattedDate
+            end_date: formattedDate,
+            only_root_workflows_and_standalone_jobs: false
         };
         const { strings, stringify } = formatQueryStrings(initialQueryParams);
         const search = stringify(strings);
