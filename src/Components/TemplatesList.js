@@ -62,7 +62,7 @@ const DataListFocus = styled.div`
     display: grid;
     grid-template-columns: repeat(3, auto);
     grid-gap: 10px;
-    padding: var(--pf-c-data-list__cell-cell--PaddingTop);
+    padding: var(--pf-global--spacer--lg);
     background: #ebebeb;
     border: 1px solid #ccc;
     border-top: none;
