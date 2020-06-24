@@ -16,7 +16,8 @@ export const formatQueryStrings = ({
     cluster_id,
     template_id,
     sort_by,
-    only_root_workflows_and_standalone_jobs
+    only_root_workflows_and_standalone_jobs,
+    quick_date_range
 }) => {
     let strings = {};
     const parseAttrs = attrs => {
@@ -89,6 +90,7 @@ export const formatQueryStrings = ({
     const parseOffset = offset => `offset=${encodeURIComponent(offset)}`;
 
     const parseRootWorkflowsAndJobs = bool => `only_root_workflows_and_standalone_jobs=${encodeURIComponent(bool)}`;
+    const parseQuickDateRange = quickDate => `quick_date_range=${encodeURIComponent(quickDate)}`;
 
     if (attributes) {
         strings.attributes = parseAttrs(attributes);
@@ -140,6 +142,10 @@ export const formatQueryStrings = ({
 
     if (only_root_workflows_and_standalone_jobs !== undefined) {
         strings.only_root_workflows_and_standalone_jobs = parseRootWorkflowsAndJobs(only_root_workflows_and_standalone_jobs);
+    }
+
+    if (quick_date_range) {
+        strings.quick_date_range = parseQuickDateRange(quick_date_range);
     }
 
     return {

@@ -32,14 +32,15 @@ class BarChart extends Component {
         const initialQueryParams = {
             start_date: formattedDate,
             end_date: formattedDate,
-            only_root_workflows_and_standalone_jobs: false
+            only_root_workflows_and_standalone_jobs: false,
+            quick_date_range: 'custom'
         };
         const { strings, stringify } = formatQueryStrings(initialQueryParams);
         const search = stringify(strings);
         this.props.history.push({
             pathname: jobExplorer,
             search
-        });
+        }); 
     };
 
     resize() {

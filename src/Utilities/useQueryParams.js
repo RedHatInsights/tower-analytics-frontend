@@ -87,8 +87,29 @@ export const useQueryParams = initial => {
                 }
 
                 return { ...state, sort_by: [ ...action.sortBy ]};
-            case 'SET_ROOTWORKFLOWSANDJOBS':
+            case 'SET_ROOT_WORKFLOWS_AND_JOBS':
                 return { ...state, only_root_workflows_and_standalone_jobs: action.bool };
+            case 'SET_QUICK_DATE_RANGE':
+                if (action.quickDate === null) {
+                    const { quick_date_range: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, quick_date_range: action.quickDate };
+            case 'SET_START_DATE':
+                if (action.date === null) {
+                    const { start_date: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, start_date: action.s };
+            case 'SET_END_DATE':
+                if (action.date === null) {
+                    const { end_date: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, end_date: action.e };
             default:
                 throw new Error();
         }
@@ -145,6 +166,9 @@ export const useQueryParams = initial => {
         setCluster: cluster => dispatch({ type: 'SET_CLUSTER', cluster }),
         setTemplate: template => dispatch({ type: 'SET_TEMPLATE', template }),
         setSortBy2: sortBy => dispatch({ type: 'SET_SORTBY', sortBy }),
-        setRootWorkflowsAndJobs: bool => dispatch({ type: 'SET_ROOTWORKFLOWSANDJOBS', bool })
+        setRootWorkflowsAndJobs: bool => dispatch({ type: 'SET_ROOT_WORKFLOWS_AND_JOBS', bool }),
+        setQuickDateRange: quickDate => dispatch({ type: 'SET_QUICK_DATE_RANGE', quickDate }),
+        setStart_Date: date => dispatch({ type: 'SET_START_DATE', date }),
+        setEnd_Date: date => dispatch({ type: 'SET_END_DATE', date })
     };
 };

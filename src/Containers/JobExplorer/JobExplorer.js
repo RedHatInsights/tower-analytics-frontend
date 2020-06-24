@@ -23,11 +23,11 @@ import {
     DataToolbarContent,
     DataToolbarFilter,
     DataToolbarToggleGroup,
-    DataToolbarGroup,
+    DataToolbarGroup as PFDataToolbarGroup,
     DataToolbarItem
 } from '@patternfly/react-core/dist/esm/experimental';
 
-import { FilterIcon } from '@patternfly/react-icons';
+import { FilterIcon, CalendarAltIcon } from '@patternfly/react-icons';
 
 import {
     Badge,
@@ -42,11 +42,21 @@ import {
     DropdownPosition,
     Dropdown,
     DropdownToggle,
-    DropdownItem
+    DropdownItem,
+    InputGroup,
+    InputGroupText,
+    TextInput
 } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
 
+const DataToolbarGroup = styled(PFDataToolbarGroup)`
+    button {
+        .pf-c-select__toggle-wrapper {
+            flex-wrap: nowrap;
+        }
+    }
+`;
 const CardHeader = styled(PFCardHeader)`
   display: flex;
   justify-content: space-between;
@@ -98,16 +108,7 @@ const JobExplorer = (props) => {
     const [ templateIsExpanded, setTemplateIsExpanded ] = useState(false);
     const [ sortByIsExpanded, setSortByIsExpanded ] = useState(false);
     const [ currentCategory, setCurrentCategory ] = useState('Status');
-    const [ filters, setFilters ] = useState({
-        status: [ 'successful', 'failed' ],
-        type: [ 'job', 'workflowjob' ],
-        location: [],
-        org: [],
-        cluster: [],
-        template: [],
-        sortby: [],
-        date: null
-    });
+
     const [ orgIds, setOrgIds ] = useState([]);
     const [ clusterIds, setClusterIds ] = useState([]);
     const [ templateIds, setTemplateIds ] = useState([]);
@@ -124,7 +125,10 @@ const JobExplorer = (props) => {
         setStatus,
         setCluster,
         setTemplate,
-        setSortBy2
+        setSortBy2,
+        setQuickDateRange,
+        setStart_Date,
+        setEnd_Date
     } = useQueryParams(initialQueryParams);
 
     const {
@@ -133,9 +137,19 @@ const JobExplorer = (props) => {
 
     const { parse } = formatQueryStrings(queryParams);
     const { location: { search }} = props;
-    const initialSearchParams = parse(search);
-    const combined = { ...queryParams, ...initialSearchParams };
-
+    let initialSearchParams = parse(search);
+    let combined = { ...initialSearchParams, ...queryParams };
+    const [ filters, setFilters ] = useState({
+        status: [ 'successful', 'failed' ],
+        type: [ 'job', 'workflowjob' ],
+        org: [],
+        cluster: [],
+        template: [],
+        sortby: [],
+        startDate: combined.start_date ? combined.start_date : '',
+        endDate: combined.end_date ? combined.end_date : '',
+        date: combined.quick_date_range ? combined.quick_date_range : ''
+    });
     useEffect(() => {
         const updateURL = () => {
             const { jobExplorer } = Paths;
@@ -159,7 +173,6 @@ const JobExplorer = (props) => {
         const getData = () => {
             return Promise.all(
                 [ readJobExplorer({ params: combined }) ],
-                [ readJobExplorerOptions({ params: optionsQueryParams }) ]
             );
 
         };
@@ -209,6 +222,12 @@ const JobExplorer = (props) => {
         if (filters.sortby) {
             setSortBy2(filters.sortby);
         }
+
+        setQuickDateRange(filters.date);
+
+        setStart_Date(filters.startDate);
+
+        setEnd_Date(filters.endDate);
     }, [ filters ]);
 
     useEffect(() => {
@@ -264,9 +283,9 @@ const JobExplorer = (props) => {
     const handleChips = (item, comparator) => {
         return item.reduce((acc, i) => {
             Number.isInteger(parseInt(i)) ? i = parseInt(i) : i;
-            comparator.forEach(org => {
-                if (org.key === i) {
-                    acc.push(org.value);
+            comparator.forEach(item => {
+                if (item.key === i) {
+                    acc.push(item.value);
                 }
             });
             return acc;
@@ -319,12 +338,14 @@ const JobExplorer = (props) => {
             if (type === 'Date') {
                 setFilters({
                     ...filters,
-                    date: null
+                    date: '',
+                    startDate: '',
+                    endDate: ''
                 });
             } else {
                 setFilters({
                     ...filters,
-                    [type.toLowerCase()]: filters[type.toLowerCase()].filter(value => value !== filtered[0].key)
+                    [type.toLowerCase()]: filters[type.toLowerCase()].filter(value => value !== filtered[0].key.toString())
                 });
             }
         } else {
@@ -336,7 +357,9 @@ const JobExplorer = (props) => {
                     cluster: [],
                     template: [],
                     sortby: [],
-                    date: null
+                    date: '',
+                    startDate: '',
+                    endDate: ''
                 }
             );
         }
@@ -594,6 +617,20 @@ const JobExplorer = (props) => {
         setCurrPage(page);
     };
 
+    const handleStartDate = e => {
+        setFilters({
+            ...filters,
+            startDate: e
+        });
+    };
+
+    const handleEndDate = e => {
+        setFilters({
+            ...filters,
+            endDate: e
+        });
+    };
+
     return (
         <React.Fragment>
             <PageHeader>
@@ -626,10 +663,30 @@ const JobExplorer = (props) => {
                       >
                           <DataToolbarContent>
                               <DataToolbarToggleGroup toggleIcon={ <FilterIcon /> } breakpoint="xl">
-                                  <DataToolbarGroup variant="filter-group">
-                                      { buildCategoryDropdown() }
-                                      { buildFilterDropdown() }
-                                  </DataToolbarGroup>
+                                  { quickDateRanges.length > 0 && (
+                                      <DataToolbarGroup variant="filter-group">
+                                          { buildCategoryDropdown() }
+                                          { buildFilterDropdown() }
+                                          { filters.date === 'custom' && (
+                                          <>
+                                        <InputGroup>
+                                            <InputGroupText component="label" htmlFor="startDate">
+                                                <CalendarAltIcon />
+                                            </InputGroupText>
+                                            <TextInput name="startDate" id="startDate" type="date" aria-label="Start Date" value={ filters.startDate }
+                                                onChange={ e => handleStartDate(e) }/>
+                                        </InputGroup>
+                                        <InputGroup>
+                                            <InputGroupText component="label" htmlFor="endDate">
+                                                <CalendarAltIcon />
+                                            </InputGroupText>
+                                            <TextInput name="endDate" id="endDate" type="date" aria-label="End Date" value={ filters.endDate }
+                                                onChange={ e => handleEndDate(e) } />
+                                        </InputGroup>
+                                        </>
+                                          ) }
+                                      </DataToolbarGroup>
+                                  ) }
                               </DataToolbarToggleGroup>
                           </DataToolbarContent>
                       </DataToolbar>
