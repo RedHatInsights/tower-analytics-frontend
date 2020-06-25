@@ -102,14 +102,14 @@ export const useQueryParams = initial => {
                     return rest;
                 }
 
-                return { ...state, start_date: action.s };
+                return { ...state, start_date: action.date };
             case 'SET_END_DATE':
                 if (action.date === null) {
                     const { end_date: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, end_date: action.e };
+                return { ...state, end_date: action.date };
             default:
                 throw new Error();
         }
