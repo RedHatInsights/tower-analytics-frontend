@@ -1,4 +1,3 @@
-/* eslint-disable */
 /*eslint camelcase: ["error", {properties: "never"}]*/
 import React, { Component } from 'react';
 import {
@@ -40,7 +39,7 @@ class BarChart extends Component {
         this.props.history.push({
             pathname: jobExplorer,
             search
-        }); 
+        });
     };
 
     resize() {

@@ -1,8 +1,16 @@
+/* eslint-disable camelcase */
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
+import {
+    withRouter
+} from 'react-router-dom';
+
 import initializeChart from './BaseChart';
 import * as d3 from 'd3';
 import Legend from '../Utilities/Legend';
+import { Paths } from '../paths';
+import { formatDate } from '../Utilities/helpers';
+import { formatQueryStrings } from '../Utilities/formatQueryStrings';
 import { pfmulti } from '../Utilities/colors';
 import styled from 'styled-components';
 
@@ -162,6 +170,7 @@ class GroupedBarChart extends Component {
         this.handleToggle = this.handleToggle.bind(this);
         this.draw = this.draw.bind(this);
         this.resize = this.resize.bind(this);
+        this.redirectToJobExplorer = this.redirectToJobExplorer.bind(this);
         this.orgsList = props.data[0].orgs;
         this.selection = [];
         this.state = {
@@ -180,6 +189,31 @@ class GroupedBarChart extends Component {
             timeout: setTimeout(() => { this.init(); }, 500)
         });
     }
+
+    redirectToJobExplorer({ date, id }) {
+        let org_id;
+        if (id === null) {
+            org_id = -2;
+        } else {
+            org_id = id;
+        }
+
+        const { jobExplorer } = Paths;
+        const formattedDate = formatDate(date);
+        const initialQueryParams = {
+            start_date: formattedDate,
+            end_date: formattedDate,
+            only_root_workflows_and_standalone_jobs: false,
+            quick_date_range: 'custom',
+            org_id
+        };
+        const { strings, stringify } = formatQueryStrings(initialQueryParams);
+        const search = stringify(strings);
+        this.props.history.push({
+            pathname: jobExplorer,
+            search
+        });
+    };
 
     handleToggle(selectedId) {
         if (this.selection.indexOf(selectedId) === -1) {
@@ -364,7 +398,8 @@ class GroupedBarChart extends Component {
         .on('mouseout', function(d) {
             d3.select(this).style('fill', color(d.org_name));
             tooltip.handleMouseOut();
-        });
+        })
+        .on('click', this.redirectToJobExplorer);
         bars = bars.merge(subEnter);
     };
 
@@ -407,7 +442,8 @@ GroupedBarChart.propTypes = {
     margin: PropTypes.object,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func,
-    timeFrame: PropTypes.number
+    timeFrame: PropTypes.number,
+    history: PropTypes.object
 };
 
-export default initializeChart(GroupedBarChart);
+export default initializeChart(withRouter(GroupedBarChart));

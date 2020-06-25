@@ -21,11 +21,15 @@ export const formatQueryStrings = ({
 }) => {
     let strings = {};
     const parseAttrs = attrs => {
-        return attrs
-        .map(attr => {
-            return `attributes=${encodeURIComponent(attr)}`;
-        })
-        .join('&');
+        if (Array.isArray(attrs)) {
+            return attrs
+            .map(attr => {
+                return `attributes=${encodeURIComponent(attr)}`;
+            })
+            .join('&');
+        } else {
+            return `attributes=${encodeURIComponent(attrs)}`;
+        }
     };
 
     const parseIds = ids => {
@@ -37,51 +41,75 @@ export const formatQueryStrings = ({
     };
 
     const parseStatuses = statuses => {
-        return statuses
-        .map(status => {
-            return `status=${encodeURIComponent(status)}`;
-        })
-        .join('&');
+        if (Array.isArray(statuses)) {
+            return statuses
+            .map(status => {
+                return `status=${encodeURIComponent(status)}`;
+            })
+            .join('&');
+        } else {
+            return `status=${encodeURIComponent(statuses)}`;
+        }
     };
 
     const parseJobType = jobTypes => {
-        return jobTypes
-        .map(jobType => {
-            return `job_type=${encodeURIComponent(jobType)}`;
-        })
-        .join('&');
+        if (Array.isArray(jobTypes)) {
+            return jobTypes
+            .map(jobType => {
+                return `job_type=${encodeURIComponent(jobType)}`;
+            })
+            .join('&');
+        } else {
+            return `job_type=${encodeURIComponent(jobTypes)}`;
+        }
     };
 
     const parseOrganization = orgs => {
-        return orgs
-        .map(orgId => {
-            return `org_id=${encodeURIComponent(orgId)}`;
-        })
-        .join('&');
+        if (Array.isArray(orgs)) {
+            return orgs
+            .map(orgId => {
+                return `org_id=${encodeURIComponent(orgId)}`;
+            })
+            .join('&');
+        } else {
+            return `org_id=${orgs}`;
+        }
     };
 
     const parseCluster = clusters => {
-        return clusters
-        .map(clusterId => {
-            return `cluster_id=${encodeURIComponent(clusterId)}`;
-        })
-        .join('&');
+        if (Array.isArray(clusters)) {
+            return clusters
+            .map(clusterId => {
+                return `cluster_id=${encodeURIComponent(clusterId)}`;
+            })
+            .join('&');
+        } else {
+            return `cluster_id=${encodeURIComponent(clusters)}`;
+        }
     };
 
     const parseTemplate = templates => {
-        return templates
-        .map(templateId => {
-            return `template_id=${encodeURIComponent(templateId)}`;
-        })
-        .join('&');
+        if (Array.isArray(templates)) {
+            return templates
+            .map(templateId => {
+                return `template_id=${encodeURIComponent(templateId)}`;
+            })
+            .join('&');
+        } else {
+            return `template_id=${encodeURIComponent(templates)}`;
+        }
     };
 
     const parseSortBy = sortBy => {
-        return sortBy
-        .map(attr => {
-            return `sort_by=${encodeURIComponent(attr)}`;
-        })
-        .join('&');
+        if (Array.isArray(sortBy)) {
+            return sortBy
+            .map(attr => {
+                return `sort_by=${encodeURIComponent(attr)}`;
+            })
+            .join('&');
+        } else {
+            return `sort_by=${encodeURIComponent(sortBy)}`;
+        }
     };
 
     const parseStartDate = date => `start_date=${encodeURIComponent(date)}`;

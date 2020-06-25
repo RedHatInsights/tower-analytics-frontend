@@ -139,13 +139,21 @@ const JobExplorer = (props) => {
     const { location: { search }} = props;
     let initialSearchParams = parse(search);
     let combined = { ...initialSearchParams, ...queryParams };
+    const formattedArray = datum => {
+        if (Array.isArray(datum)) {
+            return [ ...datum ];
+        } else {
+            return datum.split();
+        }
+    };
+
     const [ filters, setFilters ] = useState({
-        status: [ 'successful', 'failed' ],
-        type: [ 'job', 'workflowjob' ],
-        org: [],
-        cluster: [],
-        template: [],
-        sortby: [],
+        status: combined.status ? formattedArray(combined.status) : [ 'successful', 'failed' ],
+        type: combined.job_type ? formattedArray(combined.job_type) : [ 'job', 'workflowjob' ],
+        org: combined.org_id ? formattedArray(combined.org_id) : [],
+        cluster: combined.cluster_id ? formattedArray(combined.cluster_id) : [],
+        template: combined.template_id ? formattedArray(combined.template_id) : [],
+        sortby: combined.sort_by ? formattedArray(combined.sort_by) : [],
         startDate: combined.start_date ? combined.start_date : '',
         endDate: combined.end_date ? combined.end_date : '',
         date: combined.quick_date_range ? combined.quick_date_range : ''

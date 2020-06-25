@@ -85,3 +85,11 @@ section#refTab1Section, section#refTab2Section {
 #d3-bar-chart-root rect:hover {
     cursor: pointer;
 }
+
+#d3-grouped-bar-chart-root rect:hover {
+    cursor: pointer;
+}
+
+#d3-line-chart-root circle:hover {
+  cursor: pointer;
+}

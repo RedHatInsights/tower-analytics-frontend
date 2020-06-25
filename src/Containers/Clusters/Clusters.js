@@ -279,7 +279,7 @@ const Clusters = () => {
                   !isLoading && (
                           <LineChart
                               margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
-                              id="d3-bar-chart-root"
+                              id="d3-line-chart-root"
                               data={ lineChartData }
                               value={ clusterTimeFrame }
                           />
