@@ -7,7 +7,6 @@ export const formatQueryStrings = ({
     attributes,
     end_date,
     start_date,
-    ids,
     limit,
     offset,
     job_type,
@@ -30,14 +29,6 @@ export const formatQueryStrings = ({
         } else {
             return `attributes=${encodeURIComponent(attrs)}`;
         }
-    };
-
-    const parseIds = ids => {
-        return ids
-        .map(id => {
-            return encodeURIComponent(id);
-        })
-        .join('&');
     };
 
     const parseStatuses = statuses => {
@@ -140,12 +131,8 @@ export const formatQueryStrings = ({
         strings.offset = parseOffset(offset);
     }
 
-    if (ids) {
-        strings.ids = parseIds(ids);
-    }
-
     if (job_type) {
-        strings.jobType = parseJobType(job_type);
+        strings.job_type = parseJobType(job_type);
     }
 
     if (status) {
@@ -181,7 +168,20 @@ export const formatQueryStrings = ({
         stringify: strings => {
             return Object.keys(strings).map(key => strings[key]).join('&');
         },
-        parse
+        parse,
+        parseStatuses,
+        parseJobType,
+        parseOrganization,
+        parseCluster,
+        parseTemplate,
+        parseEndDate,
+        parseStartDate,
+        parseQuickDateRange,
+        parseSortBy,
+        parseAttrs,
+        parseLimit,
+        parseOffset,
+        parseRootWorkflowsAndJobs
     };
 
 };
