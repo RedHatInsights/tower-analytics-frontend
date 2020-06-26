@@ -30,7 +30,7 @@ class Tooltip {
         .attr('x', 10)
         .attr('y', -41)
         .attr('rx', 2)
-        .attr('height', 82)
+        .attr('height', 110)
         .attr('width', this.boxWidth)
         .attr('fill', '#393f44');
         this.circleGreen = this.toolTipBase
@@ -99,6 +99,13 @@ class Tooltip {
         .attr('y', -21)
         .attr('font-size', 12)
         .text('Never');
+        this.clickMore = this.toolTipBase
+        .append('text')
+        .attr('fill', 'white')
+        .attr('x', 20)
+        .attr('y', 55)
+        .attr('font-size', 12)
+        .text('Click for details');
     }
 
     handleMouseOver = (d) => {
@@ -165,7 +172,7 @@ class Tooltip {
         this.boundingBox.attr('width', adjustedWidth);
         this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
         if (flipped) {
-            this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
+            this.toolTipPoint.attr('transform', 'translate(-20, 0) rotate(45)');
             this.boundingBox.attr('x', -adjustedWidth - 20);
             this.circleGreen.attr('cx', -adjustedWidth);
             this.circleRed.attr('cx', -adjustedWidth);
@@ -176,8 +183,9 @@ class Tooltip {
             this.failed.attr('x', -this.failTextWidth - 20 - 12);
             this.date.attr('x', -adjustedWidth - 5);
             this.jobs.attr('x', -this.jobsWidth / 2 - 7);
+            this.clickMore.attr('x', -adjustedWidth);
         } else {
-            this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
+            this.toolTipPoint.attr('transform', 'translate(10, 0) rotate(45)');
             this.boundingBox.attr('x', 10);
             this.circleGreen.attr('cx', 26);
             this.circleRed.attr('cx', 26);
@@ -188,6 +196,7 @@ class Tooltip {
             this.failed.attr('x', (adjustedWidth - this.failTextWidth));
             this.date.attr('x', 20);
             this.jobs.attr('x', (adjustedWidth));
+            this.clickMore.attr('x', 20);
         }
 
         this.toolTipBase.style('opacity', 1);
