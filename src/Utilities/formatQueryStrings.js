@@ -23,11 +23,11 @@ export const formatQueryStrings = ({
         if (Array.isArray(attrs)) {
             return attrs
             .map(attr => {
-                return `attributes=${encodeURIComponent(attr)}`;
+                return `attributes[]=${encodeURIComponent(attr)}`;
             })
             .join('&');
         } else {
-            return `attributes=${encodeURIComponent(attrs)}`;
+            return `attributes[]=${encodeURIComponent(attrs)}`;
         }
     };
 
@@ -35,11 +35,11 @@ export const formatQueryStrings = ({
         if (Array.isArray(statuses)) {
             return statuses
             .map(status => {
-                return `status=${encodeURIComponent(status)}`;
+                return `status[]=${encodeURIComponent(status)}`;
             })
             .join('&');
         } else {
-            return `status=${encodeURIComponent(statuses)}`;
+            return `status[]=${encodeURIComponent(statuses)}`;
         }
     };
 
@@ -47,11 +47,11 @@ export const formatQueryStrings = ({
         if (Array.isArray(jobTypes)) {
             return jobTypes
             .map(jobType => {
-                return `job_type=${encodeURIComponent(jobType)}`;
+                return `job_type[]=${encodeURIComponent(jobType)}`;
             })
             .join('&');
         } else {
-            return `job_type=${encodeURIComponent(jobTypes)}`;
+            return `job_type[]=${encodeURIComponent(jobTypes)}`;
         }
     };
 
@@ -59,11 +59,11 @@ export const formatQueryStrings = ({
         if (Array.isArray(orgs)) {
             return orgs
             .map(orgId => {
-                return `org_id=${encodeURIComponent(orgId)}`;
+                return `org_id[]=${encodeURIComponent(orgId)}`;
             })
             .join('&');
         } else {
-            return `org_id=${orgs}`;
+            return `org_id[]=${encodeURIComponent(orgs)}`;
         }
     };
 
@@ -71,11 +71,11 @@ export const formatQueryStrings = ({
         if (Array.isArray(clusters)) {
             return clusters
             .map(clusterId => {
-                return `cluster_id=${encodeURIComponent(clusterId)}`;
+                return `cluster_id[]=${encodeURIComponent(clusterId)}`;
             })
             .join('&');
         } else {
-            return `cluster_id=${encodeURIComponent(clusters)}`;
+            return `cluster_id[]=${encodeURIComponent(clusters)}`;
         }
     };
 
@@ -83,11 +83,11 @@ export const formatQueryStrings = ({
         if (Array.isArray(templates)) {
             return templates
             .map(templateId => {
-                return `template_id=${encodeURIComponent(templateId)}`;
+                return `template_id[]=${encodeURIComponent(templateId)}`;
             })
             .join('&');
         } else {
-            return `template_id=${encodeURIComponent(templates)}`;
+            return `template_id[]=${encodeURIComponent(templates)}`;
         }
     };
 
@@ -95,11 +95,11 @@ export const formatQueryStrings = ({
         if (Array.isArray(sortBy)) {
             return sortBy
             .map(attr => {
-                return `sort_by=${encodeURIComponent(attr)}`;
+                return `sort_by[]=${encodeURIComponent(attr)}`;
             })
             .join('&');
         } else {
-            return `sort_by=${encodeURIComponent(sortBy)}`;
+            return `sort_by[]=${encodeURIComponent(sortBy)}`;
         }
     };
 
