@@ -42,6 +42,74 @@ export const useQueryParams = initial => {
                 }
 
                 return { ...state, severity: action.severity };
+            case 'SET_ATTRIBUTES':
+                return { ...state, attributes: [ ...action.attributes ]};
+            case 'SET_JOB_TYPE':
+                if (action.jobType.length <= 0) {
+                    const { job_type: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, job_type: [ ...action.jobType ]};
+
+            case 'SET_STATUS':
+                if (action.status.length <= 0) {
+                    const { status: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, status: [ ...action.status ]};
+            case 'SET_ORG':
+                if (action.org.length <= 0) {
+                    const { org_id: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, org_id: [ ...action.org ]};
+            case 'SET_CLUSTER':
+                if (action.cluster.length <= 0) {
+                    const { cluster_id: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, cluster_id: [ ...action.cluster ]};
+            case 'SET_TEMPLATE':
+                if (action.template.length <= 0) {
+                    const { template_id: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, template_id: [ ...action.template ]};
+            case 'SET_SORTBY':
+                if (action.sortBy.length <= 0) {
+                    const { sort_by: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, sort_by: [ ...action.sortBy ]};
+            case 'SET_ROOT_WORKFLOWS_AND_JOBS':
+                return { ...state, only_root_workflows_and_standalone_jobs: action.bool };
+            case 'SET_QUICK_DATE_RANGE':
+                if (action.quickDate === null) {
+                    const { quick_date_range: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, quick_date_range: action.quickDate };
+            case 'SET_START_DATE':
+                if (action.date === null) {
+                    const { start_date: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, start_date: action.date };
+            case 'SET_END_DATE':
+                if (action.date === null) {
+                    const { end_date: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, end_date: action.date };
             default:
                 throw new Error();
         }
@@ -90,6 +158,17 @@ export const useQueryParams = initial => {
         setSortBy: sort => dispatch({ type: 'SET_SORT_BY', sort }),
         setLimit: limit => dispatch({ type: 'SET_LIMIT', limit }),
         setOffset: offset => dispatch({ type: 'SET_OFFSET', offset }),
-        setSeverity: severity => dispatch({ type: 'SET_SEVERITY', severity })
+        setSeverity: severity => dispatch({ type: 'SET_SEVERITY', severity }),
+        setAttributes: attributes => dispatch({ type: 'SET_ATTRIBUTES', attributes }),
+        setJobType: jobType => dispatch({ type: 'SET_JOB_TYPE', jobType }),
+        setStatus: status => dispatch({ type: 'SET_STATUS', status }),
+        setOrg: org => dispatch({ type: 'SET_ORG', org }),
+        setCluster: cluster => dispatch({ type: 'SET_CLUSTER', cluster }),
+        setTemplate: template => dispatch({ type: 'SET_TEMPLATE', template }),
+        setSortBy2: sortBy => dispatch({ type: 'SET_SORTBY', sortBy }),
+        setRootWorkflowsAndJobs: bool => dispatch({ type: 'SET_ROOT_WORKFLOWS_AND_JOBS', bool }),
+        setQuickDateRange: quickDate => dispatch({ type: 'SET_QUICK_DATE_RANGE', quickDate }),
+        setStart_Date: date => dispatch({ type: 'SET_START_DATE', date }),
+        setEnd_Date: date => dispatch({ type: 'SET_END_DATE', date })
     };
 };
