@@ -48,6 +48,10 @@ const DataListItem = styled(PFDataListItem)`
   justify-content: center;
   align-items: center;
 `;
+const DataListItemNoBorders = styled(PFDataListItem)`
+    border-bottom: none;
+    border-top: none;
+`;
 const DataListItemCompact = styled(DataListItem)`
   padding: 0;
   > .pf-c-data-list__cell {
@@ -198,7 +202,7 @@ const TemplatesList = ({ templates, isLoading, queryParams }) => {
               ] }
           >
               <DataList aria-label="Selected Template Details">
-                  <PFDataListItem
+                  <DataListItemNoBorders
                       aria-labelledby="Selected Template Statistics"
                   >
                       <DataListFocus>
@@ -228,7 +232,10 @@ const TemplatesList = ({ templates, isLoading, queryParams }) => {
                                   formatTopFailedTask(selectedTemplate.most_failed_tasks) : 'Unavailable' }
                           </div>
                       </DataListFocus>
-                  </PFDataListItem>
+                  </DataListItemNoBorders>
+                  <DataListItemCompact>
+                      <PFDataListCell key="job count">Last { relatedJobs.length } jobs</PFDataListCell>
+                  </DataListItemCompact>
                   <DataListItemCompact aria-labelledby="datalist header">
                       <PFDataListCell key="job heading">Id/Name</PFDataListCell>
                       <PFDataListCell key="cluster heading">Cluster</PFDataListCell>
