@@ -10,7 +10,11 @@ import React, { useState, useEffect } from 'react';
 =======
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
+<<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
+=======
+import PropTypes from 'prop-types';
+>>>>>>> Address breaking changes due to PF4 upgrade.
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import { formatQueryStrings } from '../../Utilities/formatQueryStrings';
@@ -43,6 +47,7 @@ import {
 import {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Squashed commit of the following:
@@ -55,6 +60,8 @@ import {
 } from '@patternfly/react-core/dist/esm/experimental';
 
 import {
+=======
+>>>>>>> Address breaking changes due to PF4 upgrade.
     FilterIcon,
     CalendarAltIcon,
     QuestionCircleIcon
@@ -62,9 +69,18 @@ import {
 
 import {
 <<<<<<< HEAD
+<<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+    Toolbar,
+    ToolbarContent as PFToolbarContent,
+    ToolbarFilter,
+    ToolbarToggleGroup,
+    ToolbarItem,
+    ToolbarGroup as PFToolbarGroup,
+>>>>>>> Address breaking changes due to PF4 upgrade.
     Badge,
     Card,
     CardBody,
@@ -84,8 +100,8 @@ import FilterableToolbar from '../../Components/Toolbar';
     PaginationVariant,
     Select,
     SelectOption,
-    SelectVariant,
-    DropdownPosition,
+    // SelectVariant,
+    // DropdownPosition,
     Dropdown,
     DropdownToggle,
     DropdownItem,
@@ -99,7 +115,7 @@ import FilterableToolbar from '../../Components/Toolbar';
 
 import JobExplorerList from '../../Components/JobExplorerList';
 
-const DataToolbarGroup = styled(PFDataToolbarGroup)`
+const ToolbarGroup = styled(PFToolbarGroup)`
   button {
     .pf-c-select__toggle-wrapper {
       flex-wrap: nowrap;
@@ -150,8 +166,8 @@ const Switch = styled(PFSwitch)`
     }
 `;
 
-const DataToolbarContent = styled(PFDataToolbarContent)`
-    .pf-c-data-toolbar__content-section {
+const ToolbarContent = styled(PFToolbarContent)`
+    .pf-c-toolbar__content-section {
         justify-content: space-between;
     }
 `;
@@ -609,11 +625,16 @@ const JobExplorer = props => {
                 sortby: [],
                 date: null,
                 startDate: null,
+<<<<<<< HEAD
                 endDate: null
 <<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+                endDate: null,
+                showRootWorkflows: false
+>>>>>>> Address breaking changes due to PF4 upgrade.
             });
         }
     };
@@ -625,13 +646,13 @@ const JobExplorer = props => {
 >>>>>>> Squashed commit of the following:
     const buildCategoryDropdown = () => {
         return (
-            <DataToolbarItem>
+            <ToolbarItem>
                 <Dropdown
                     onSelect={ e => {
                         setCurrentCategory(e.target.innerText);
                         setIsCategoryExpanded(!isCategoryExpanded);
                     } }
-                    position={ DropdownPosition.left }
+                    position={ 'left' }
                     toggle={
                         <DropdownToggle
                             onToggle={ () => {
@@ -655,7 +676,7 @@ const JobExplorer = props => {
                     ] }
                     style={ { width: '100%' } }
                 />
-            </DataToolbarItem>
+            </ToolbarItem>
         );
     };
 
@@ -723,14 +744,15 @@ const JobExplorer = props => {
 
         return (
             <React.Fragment>
-                <DataToolbarFilter
+                <ToolbarFilter
                     showToolbarItem={ currentCategory === 'Status' }
                     chips={ handleChips(filters.status, statuses) }
                     categoryName="Status"
                     deleteChip={ onDelete }
                 >
                     <Select
-                        variant={ SelectVariant.checkbox }
+                        isOpen={ statusIsExpanded }
+                        variant={ 'checkbox' }
                         aria-label="Status"
                         onToggle={ () => {
                             setStatusIsExpanded(!statusIsExpanded);
@@ -744,15 +766,16 @@ const JobExplorer = props => {
                     >
                         { statusMenuItems }
                     </Select>
-                </DataToolbarFilter>
-                <DataToolbarFilter
+                </ToolbarFilter>
+                <ToolbarFilter
                     showToolbarItem={ currentCategory === 'Date' }
                     categoryName="Date"
                     chips={ handleDateChips(filters.date, quickDateRanges) }
                     deleteChip={ onDelete }
                 >
                     <Select
-                        variant={ SelectVariant.single }
+                        isOpen={ dateRangeIsExpanded }
+                        variant={ 'single' }
                         aria-label="Date"
                         onToggle={ () => {
                             setDateRangeIsExpanded(!dateRangeIsExpanded);
@@ -766,16 +789,17 @@ const JobExplorer = props => {
                     >
                         { dateRangeMenuItems }
                     </Select>
-                </DataToolbarFilter>
-                <DataToolbarFilter
+                </ToolbarFilter>
+                <ToolbarFilter
                     showToolbarItem={ currentCategory === 'Job type' }
                     categoryName="Type"
                     chips={ handleChips(filters.type, jobTypes) }
                     deleteChip={ onDelete }
                 >
                     <Select
+                        isOpen={ jobTypeIsExpanded }
                         aria-label="Type"
-                        variant={ SelectVariant.checkbox }
+                        variant={ 'checkbox' }
                         onToggle={ () => {
                             setJobTypeIsExpanded(!jobTypeIsExpanded);
                         } }
@@ -788,16 +812,17 @@ const JobExplorer = props => {
                     >
                         { jobTypeMenuItems }
                     </Select>
-                </DataToolbarFilter>
-                <DataToolbarFilter
+                </ToolbarFilter>
+                <ToolbarFilter
                     showToolbarItem={ currentCategory === 'Organization' }
                     categoryName="Org"
                     chips={ handleChips(filters.org, orgIds) }
                     deleteChip={ onDelete }
                 >
                     <Select
+                        isOpen={ orgIsExpanded }
                         aria-label="Filter by Org"
-                        variant={ SelectVariant.checkbox }
+                        variant={ 'checkbox' }
                         onToggle={ () => {
                             setOrgIsExpanded(!orgIsExpanded);
                         } }
@@ -810,16 +835,17 @@ const JobExplorer = props => {
                     >
                         { organizationIdMenuItems }
                     </Select>
-                </DataToolbarFilter>
-                <DataToolbarFilter
+                </ToolbarFilter>
+                <ToolbarFilter
                     showToolbarItem={ currentCategory === 'Cluster' }
                     categoryName="Cluster"
                     chips={ handleChips(filters.cluster, clusterIds) }
                     deleteChip={ onDelete }
                 >
                     <Select
+                        isOpen={ clusterIsExpanded }
                         aria-label="Filter by Cluster"
-                        variant={ SelectVariant.checkbox }
+                        variant={ 'checkbox' }
                         onToggle={ () => {
                             setClusterIsExpanded(!clusterIsExpanded);
                         } }
@@ -832,16 +858,17 @@ const JobExplorer = props => {
                     >
                         { clusterIdMenuItems }
                     </Select>
-                </DataToolbarFilter>
-                <DataToolbarFilter
+                </ToolbarFilter>
+                <ToolbarFilter
                     showToolbarItem={ currentCategory === 'Template' }
                     categoryName="Template"
                     chips={ handleChips(filters.template, templateIds) }
                     deleteChip={ onDelete }
                 >
                     <Select
+                        isOpen={ templateIsExpanded }
                         aria-label="Filter by template"
-                        variant={ SelectVariant.checkbox }
+                        variant={ 'checkbox' }
                         onToggle={ () => setTemplateIsExpanded(!templateIsExpanded) }
                         onSelect={ (event, selection) => {
                             onSelect('template', event, selection);
@@ -852,16 +879,17 @@ const JobExplorer = props => {
                     >
                         { templateIdMenuItems }
                     </Select>
-                </DataToolbarFilter>
-                <DataToolbarFilter
+                </ToolbarFilter>
+                <ToolbarFilter
                     showToolbarItem={ currentCategory === 'Sort by' }
                     categoryName="SortBy"
                     chips={ handleChips(filters.sortby, sortBy) }
                     deleteChip={ onDelete }
                 >
                     <Select
+                        isOpen={ sortByIsExpanded }
                         aria-label="Sort by"
-                        variant={ SelectVariant.checkbox }
+                        variant={ 'checkbox' }
                         onToggle={ () => {
                             setSortByIsExpanded(!sortByIsExpanded);
                         } }
@@ -874,7 +902,7 @@ const JobExplorer = props => {
                     >
                         { sortByMenuItems }
                     </Select>
-                </DataToolbarFilter>
+                </ToolbarFilter>
             </React.Fragment>
         );
     };
@@ -961,6 +989,7 @@ const JobExplorer = props => {
                   <CardBody>
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                       <FilterableToolbar
                           orgs={ orgIds }
                           statuses={ statuses }
@@ -981,48 +1010,22 @@ const JobExplorer = props => {
 =======
 >>>>>>> Squashed commit of the following:
                       <DataToolbar
+=======
+                      <Toolbar
+>>>>>>> Address breaking changes due to PF4 upgrade.
                           id="data-toolbar-with-chip-groups"
                           clearAllFilters={ onDelete }
                           collapseListedFiltersBreakpoint="xl"
                       >
-                          <DataToolbarContent>
-                              <DataToolbarToggleGroup
+                          <ToolbarContent>
+                              <ToolbarToggleGroup
                                   toggleIcon={ <FilterIcon /> }
                                   breakpoint="xl"
                               >
                                   { quickDateRanges.length > 0 && (
-                                      <DataToolbarGroup variant="filter-group">
+                                      <ToolbarGroup variant="filter-group">
                                           { buildCategoryDropdown() }
                                           { buildFilterDropdown() }
-                                          { /* { filters.type.includes('workflowjob') && (
-                            <>
-                              <Switch
-                                  id="showRootWorkflowJobs"
-                                  label="Ignore nested workflows and jobs"
-                                  labelOff="Ignore nested workflows and jobs"
-                                  isChecked={ filters.showRootWorkflows }
-                                  onChange={ () => {
-                                      setFilters({
-                                          ...filters,
-                                          showRootWorkflows: !filters.showRootWorkflows
-                                      });
-                                  } }
-                              />
-                              <Tooltip
-                                  position={ TooltipPosition.top }
-                                  content={
-                                      <div>
-                                          { ' ' }
-                                    If enabled, nested workflows and jobs
-                                    will not be included in the overall totals.
-                                    Enable this option to filter out duplicate entries.
-                                      </div>
-                                  }
-                              >
-                                  <QuestionCircleIcon />
-                              </Tooltip>
-                            </>
-                                          ) } */ }
                                           { filters.date === 'custom' && (
                             <>
                               <InputGroup>
@@ -1059,19 +1062,19 @@ const JobExplorer = props => {
                               </InputGroup>
                             </>
                                           ) }
-                                      </DataToolbarGroup>
+                                      </ToolbarGroup>
                                   ) }
-                              </DataToolbarToggleGroup>
+                              </ToolbarToggleGroup>
                               <div>
                                   <Switch
                                       id="showRootWorkflowJobs"
                                       label="Ignore nested workflows and jobs"
                                       labelOff="Ignore nested workflows and jobs"
                                       isChecked={ filters.showRootWorkflows }
-                                      onChange={ () => {
+                                      onChange={ val => {
                                           setFilters({
                                               ...filters,
-                                              showRootWorkflows: !filters.showRootWorkflows
+                                              showRootWorkflows: val
                                           });
                                       } }
                                   />
@@ -1089,8 +1092,8 @@ const JobExplorer = props => {
                                       <QuestionCircleIcon />
                                   </Tooltip>
                               </div>
-                          </DataToolbarContent>
-                      </DataToolbar>
+                          </ToolbarContent>
+                      </Toolbar>
                       { isLoading && <LoadingState /> }
                       { !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
                       { !isLoading && jobExplorerData.length > 0 && (
@@ -1131,13 +1134,19 @@ const JobExplorer = props => {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Address breaking changes due to PF4 upgrade.
 JobExplorer.propTypes = {
     location: PropTypes.object,
     history: PropTypes.object
 };
 
+<<<<<<< HEAD
 =======
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+>>>>>>> Address breaking changes due to PF4 upgrade.
 export default JobExplorer;
