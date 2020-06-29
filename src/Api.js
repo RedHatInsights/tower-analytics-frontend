@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
-/* eslint-disable no-console */
+/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
 /*eslint max-len: ["error", { "ignoreStrings": true }]*/
+/*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 
 import { formatQueryStrings } from './Utilities/formatQueryStrings';
 
@@ -16,7 +17,8 @@ const templateJobsEndpoint = '/api/tower-analytics/template_jobs/';
 const templatesEndPoint = '/api/tower-analytics/templates/';
 const roiEndpoint = '/api/tower-analytics/roi_templates/';
 const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
-const jobExplorerOptionsEndpoint = '/api/tower-analytics/v1/job_explorer_options/';
+const jobExplorerOptionsEndpoint =
+  '/api/tower-analytics/v1/job_explorer_options/';
 
 function getAbsoluteUrl() {
     const url = window.location.href;
@@ -49,9 +51,7 @@ export const readTemplateJobs = (id, { params = {}}) => {
 
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(templateJobsEndpoint + id + '/', formattedUrl);
-    Object.keys(params).forEach(key =>
-        url.searchParams.append(key, params[key])
-    );
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     return fetch(url).then(handleResponse);
 };
 
@@ -66,54 +66,35 @@ export const readClusters = () => {
 export const readChart30 = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(barChartEndpoint, formattedUrl);
-    Object.keys(params).forEach(key =>
-        url.searchParams.append(key, params[key])
-    );
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     return fetch(url).then(handleResponse);
 };
 
 export const readJobsByDateAndOrg = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(groupedBarChartEndpoint, formattedUrl);
-    Object.keys(params).forEach(key =>
-        url.searchParams.append(key, params[key])
-    );
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     return fetch(url).then(handleResponse);
 };
 
 export const readModules = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(modulesEndpoint, formattedUrl);
-    Object.keys(params).forEach(key =>
-        url.searchParams.append(key, params[key])
-    );
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     return fetch(url).then(handleResponse);
 };
 
 export const readTemplates = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(templatesEndPoint, formattedUrl);
-    Object.keys(params).forEach(key =>
-        url.searchParams.append(key, params[key])
-    );
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     return fetch(url).then(handleResponse);
 };
 
 export const readNotifications = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(notificationsEndPoint, formattedUrl);
-    Object.keys(params).forEach(key =>
-        url.searchParams.append(key, params[key])
-    );
-    return fetch(url).then(handleResponse);
-};
-
-export const readJobExplorer = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(jobExplorerEndpoint, formattedUrl);
-    const { strings, stringify } = formatQueryStrings(params);
-    const qs = stringify(strings);
-    url.search = qs;
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     return fetch(url).then(handleResponse);
 };
 
@@ -126,29 +107,36 @@ export const readJobExplorerOptions = ({ params = {}}) => {
     return fetch(url).then(handleResponse);
 };
 
+export const readJobExplorer = ({ params = {}}) => {
+    const { attributes: ignored, ...rest } = params;
+    const { strings, stringify } = formatQueryStrings(rest);
+    const qs = stringify(strings);
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(jobExplorerEndpoint, formattedUrl);
+    url.search = qs;
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(params)
+    }).then(handleResponse);
+};
+
 export const readJobRunsByOrg = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(pieChart1Endpoint, formattedUrl);
-    Object.keys(params).forEach(key =>
-        url.searchParams.append(key, params[key])
-    );
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     return fetch(url).then(handleResponse);
 };
 
 export const readJobEventsByOrg = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(pieChart2Endpoint, formattedUrl);
-    Object.keys(params).forEach(key =>
-        url.searchParams.append(key, params[key])
-    );
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     return fetch(url).then(handleResponse);
 };
 
 export const readROI = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(roiEndpoint, formattedUrl);
-    Object.keys(params).forEach(key =>
-        url.searchParams.append(key, params[key])
-    );
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     return fetch(url).then(handleResponse);
 };

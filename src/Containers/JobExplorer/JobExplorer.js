@@ -139,6 +139,13 @@ const JobExplorer = props => {
     const [ statuses, setStatuses ] = useState([]);
     const [ jobTypes, setJobTypes ] = useState([]);
     const [ quickDateRanges, setQuickDateRanges ] = useState([]);
+
+    const { parse } = formatQueryStrings({});
+    const {
+        location: { search }
+    } = props;
+    let initialSearchParams = parse(search, { arrayFormat: 'bracket' });
+    let combined = { ...initialSearchParams, ...initialQueryParams };
     const {
         queryParams,
         setLimit,
@@ -153,18 +160,11 @@ const JobExplorer = props => {
         setRootWorkflowsAndJobs,
         setStart_Date,
         setEnd_Date
-    } = useQueryParams(initialQueryParams);
-
+    } = useQueryParams(combined);
     const { queryParams: optionsQueryParams } = useQueryParams(
         initialOptionsParams
     );
 
-    const { parse } = formatQueryStrings(queryParams);
-    const {
-        location: { search }
-    } = props;
-    let initialSearchParams = parse(search);
-    let combined = { ...initialSearchParams, ...queryParams };
     const formattedArray = datum => {
         if (Array.isArray(datum)) {
             return [ ...datum ];
@@ -174,31 +174,32 @@ const JobExplorer = props => {
     };
 
     const [ filters, setFilters ] = useState({
-        status: combined.status
-            ? formattedArray(combined.status)
+        status: queryParams.status
+            ? formattedArray(queryParams.status)
             : [ 'successful', 'failed' ],
-        type: combined.job_type
-            ? formattedArray(combined.job_type)
+        type: queryParams.job_type
+            ? formattedArray(queryParams.job_type)
             : [ 'job', 'workflowjob' ],
-        org: combined.org_id ? formattedArray(combined.org_id) : [],
-        cluster: combined.cluster_id ? formattedArray(combined.cluster_id) : [],
-        template: combined.template_id ? formattedArray(combined.template_id) : [],
-        sortby: combined.sort_by ? formattedArray(combined.sort_by) : [],
-        startDate: combined.start_date ? combined.start_date : '',
-        endDate: combined.end_date ? combined.end_date : '',
-        date: combined.quick_date_range ? combined.quick_date_range : '',
-        showRootWorkflows: combined.only_root_workflows_and_standalone_jobs ? combined.only_root_workflows_and_standalone_jobs : false
+        org: queryParams.org_id ? formattedArray(queryParams.org_id) : [],
+        cluster: queryParams.cluster_id ? formattedArray(queryParams.cluster_id) : [],
+        template: queryParams.template_id ? formattedArray(queryParams.template_id) : [],
+        sortby: queryParams.sort_by ? formattedArray(queryParams.sort_by) : [],
+        startDate: queryParams.start_date ? queryParams.start_date : null,
+        endDate: queryParams.end_date ? queryParams.end_date : null,
+        date: queryParams.quick_date_range ? queryParams.quick_date_range : null,
+        showRootWorkflows: queryParams.only_root_workflows_and_standalone_jobs ? queryParams.only_root_workflows_and_standalone_jobs : false
     });
+    const updateURL = () => {
+        const { jobExplorer } = Paths;
+        const { strings, stringify } = formatQueryStrings(queryParams);
+        const search = stringify(strings);
+        props.history.push({
+            pathname: jobExplorer,
+            search
+        });
+    };
+
     useEffect(() => {
-        const updateURL = () => {
-            const { jobExplorer } = Paths;
-            const { strings, stringify } = formatQueryStrings(combined);
-            const search = stringify(strings);
-            props.history.push({
-                pathname: jobExplorer,
-                search
-            });
-        };
 
         insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
         updateURL();
@@ -210,7 +211,7 @@ const JobExplorer = props => {
         }
 
         const getData = () => {
-            return Promise.all([ readJobExplorer({ params: combined }) ]);
+            return Promise.all([ readJobExplorer({ params: queryParams }) ]);
         };
 
         const update = async () => {
@@ -224,6 +225,7 @@ const JobExplorer = props => {
         };
 
         update();
+        updateURL();
     }, [ queryParams ]);
 
     useEffect(() => {
@@ -270,7 +272,7 @@ const JobExplorer = props => {
         const fetchEndpoints = () => {
             return Promise.all(
                 [
-                    readJobExplorer({ params: combined }),
+                    readJobExplorer({ params: queryParams }),
                     readJobExplorerOptions({ params: optionsQueryParams })
                 ].map(p => p.catch(() => []))
             );
@@ -313,6 +315,8 @@ const JobExplorer = props => {
         }
 
         initializeWithPreflight();
+        updateURL();
+
         return () => (ignore = true);
     }, []);
 
@@ -374,9 +378,9 @@ const JobExplorer = props => {
             if (type === 'Date') {
                 setFilters({
                     ...filters,
-                    date: '',
-                    startDate: '',
-                    endDate: ''
+                    date: null,
+                    startDate: null,
+                    endDate: null
                 });
             } else {
                 setFilters({
@@ -394,9 +398,9 @@ const JobExplorer = props => {
                 cluster: [],
                 template: [],
                 sortby: [],
-                date: '',
-                startDate: '',
-                endDate: ''
+                date: null,
+                startDate: null,
+                endDate: null
             });
         }
     };
