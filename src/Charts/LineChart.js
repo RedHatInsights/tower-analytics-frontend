@@ -29,6 +29,7 @@ class LineChart extends Component {
         const { jobExplorer } = Paths;
         const formattedDate = formatDate(date);
 <<<<<<< HEAD
+<<<<<<< HEAD
         const { clusterId } = this.props;
         const initialQueryParams = {
             start_date: formattedDate,
@@ -37,10 +38,15 @@ class LineChart extends Component {
             status: [ 'failed', 'successful' ],
             cluster_id: clusterId
 =======
+=======
+>>>>>>> Squashed commit of the following:
         const initialQueryParams = {
             start_date: formattedDate,
             end_date: formattedDate,
             quick_date_range: 'custom'
+<<<<<<< HEAD
+>>>>>>> Squashed commit of the following:
+=======
 >>>>>>> Squashed commit of the following:
         };
         const { strings, stringify } = formatQueryStrings(initialQueryParams);
@@ -346,8 +352,12 @@ LineChart.propTypes = {
     getHeight: PropTypes.func,
     getWidth: PropTypes.func,
 <<<<<<< HEAD
+<<<<<<< HEAD
     history: PropTypes.object,
     clusterId: PropTypes.number
+=======
+    history: PropTypes.object
+>>>>>>> Squashed commit of the following:
 =======
     history: PropTypes.object
 >>>>>>> Squashed commit of the following:

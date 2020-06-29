@@ -84,7 +84,11 @@ export const useQueryParams = initial => {
                 return { ...state, template_id: [ ...action.template ]};
             case 'SET_SORTBY':
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (action.sortBy === null) {
+=======
+                if (action.sortBy.length <= 0) {
+>>>>>>> Squashed commit of the following:
 =======
                 if (action.sortBy.length <= 0) {
 >>>>>>> Squashed commit of the following:
@@ -93,7 +97,11 @@ export const useQueryParams = initial => {
                 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                 return { ...state, sort_by: action.sortBy };
+=======
+                return { ...state, sort_by: [ ...action.sortBy ]};
+>>>>>>> Squashed commit of the following:
 =======
                 return { ...state, sort_by: [ ...action.sortBy ]};
 >>>>>>> Squashed commit of the following:
@@ -113,7 +121,11 @@ export const useQueryParams = initial => {
                 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                 return { ...state, start_date: formatDate(action.date) };
+=======
+                return { ...state, start_date: action.date };
+>>>>>>> Squashed commit of the following:
 =======
                 return { ...state, start_date: action.date };
 >>>>>>> Squashed commit of the following:
@@ -124,7 +136,11 @@ export const useQueryParams = initial => {
                 }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                 return { ...state, end_date: formatDate(action.date) };
+=======
+                return { ...state, end_date: action.date };
+>>>>>>> Squashed commit of the following:
 =======
                 return { ...state, end_date: action.date };
 >>>>>>> Squashed commit of the following:

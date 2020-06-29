@@ -202,6 +202,7 @@ class GroupedBarChart extends Component {
     redirectToJobExplorer({ date, id }) {
         let org_id;
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (id === -1) {
             // disable clicking on "others" block
             return;
@@ -209,12 +210,17 @@ class GroupedBarChart extends Component {
 
         org_id = id;
 =======
+=======
+>>>>>>> Squashed commit of the following:
         if (id === null) {
             org_id = -2;
         } else {
             org_id = id;
         }
 
+<<<<<<< HEAD
+>>>>>>> Squashed commit of the following:
+=======
 >>>>>>> Squashed commit of the following:
         const { jobExplorer } = Paths;
         const formattedDate = formatDate(date);

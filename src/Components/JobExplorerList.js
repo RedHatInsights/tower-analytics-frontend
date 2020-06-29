@@ -7,6 +7,7 @@ import {
     DataListContent,
     DataList,
     DataListItem,
+<<<<<<< HEAD
     DataListItemRow as PFDataListItemRow,
     DataListItemCells as PFDataListItemCells,
     DataListToggle
@@ -23,6 +24,18 @@ import StatusIcon from '../Icons/StatusIcon/StatusIcon';
 import LoadingState from '../Components/LoadingState';
 import { formatDateTime, formatJobType, formatJobStatus } from '../Utilities/helpers';
 >>>>>>> Squashed commit of the following:
+=======
+    DataListItemRow,
+    DataListItemCells,
+    DataListToggle
+} from '@patternfly/react-core';
+
+import { ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
+
+import StatusIcon from '../Icons/StatusIcon/StatusIcon';
+import LoadingState from '../Components/LoadingState';
+import { formatDateTime, formatJobType, formatJobStatus } from '../Utilities/helpers';
+>>>>>>> Squashed commit of the following:
 
 const headerLabels = [
     'Id/Name',
@@ -32,6 +45,7 @@ const headerLabels = [
     'Type'
 ];
 
+<<<<<<< HEAD
 const ExternalLinkIcon = styled(PFExternalLinkIcon)`
   margin-left: 7px;
   color: var(--pf-global--Color--400);
@@ -57,14 +71,31 @@ const buildHeader = labels => (
                     <ExternalLinkIcon />
                 }
             </DataListCell>
+=======
+const ArrowIcon = styled(PFArrowIcon)`
+  margin-left: 7px;
+`;
+
+const buildHeader = labels => (
+    <DataListItemRow style={ { paddingLeft: '94px', fontWeight: '800' } }>
+        { labels.map(label => (
+            <DataListCell key={ label }>{ label }</DataListCell>
+>>>>>>> Squashed commit of the following:
         )) }
     </DataListItemRow>
 );
 
+<<<<<<< HEAD
 const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
     const [ isExpanded, setIsExpanded ] = useState([]);
     return (
         <DataList aria-label={ ariaLabel } isCompact>
+=======
+const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
+    const [ isExpanded, setIsExpanded ] = useState([]);
+    return (
+        <DataList aria-label={ ariaLabel }>
+>>>>>>> Squashed commit of the following:
             { items.map((item, count) => {
                 const toggle = id => {
                     const expanded = isExpanded;
@@ -81,7 +112,11 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
 
                 return (
                     <DataListItem key={ item.id.id } aria-labelledby={ ariaLabelledBy } isExpanded={ isExpanded.includes(`${item.id.id}-toggle`) } >
+<<<<<<< HEAD
                         <DataListItemRow>
+=======
+                        <DataListItemRow key={ item.id.id }>
+>>>>>>> Squashed commit of the following:
                             <DataListToggle
                                 id={ `${item.id.id}-toggle` }
                                 aria-controls={ `${item.id.id}-expand` }
@@ -92,6 +127,7 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
                                 dataListCells={ [
                                     <DataListCell key={ count++ }>
                                         <a href={ item.id.tower_link } target='_blank' rel='noopener noreferrer'>
+<<<<<<< HEAD
                                             { windowWidth < mobileBreakpoint &&
                                              <span style={ { color: 'initial', fontWeight: 'bold' } }>
                                                  Id/Name<ExternalLinkIcon />:
@@ -136,6 +172,19 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
                                          &nbsp;
                                         { formatJobType(item.job_type) }
                                     </DataListCell>
+=======
+                                            { `${item.id.id} - ${item.id.template_name}` } <ArrowIcon />
+                                        </a>
+                                    </DataListCell>,
+                                    <DataListCell key={ count++ }>
+                                        <StatusIcon status={ item.status } />{ formatJobStatus(item.status) }
+                                    </DataListCell>,
+                                    <DataListCell key={ count++ }>
+                                        { item.cluster_name }
+                                    </DataListCell>,
+                                    <DataListCell key={ count++ }>{ item.org_name }</DataListCell>,
+                                    <DataListCell key={ count++ }>{ formatJobType(item.job_type) }</DataListCell>
+>>>>>>> Squashed commit of the following:
                                 ] }
                             />
                         </DataListItemRow>
@@ -165,6 +214,7 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
     );
 };
 
+<<<<<<< HEAD
 const AllJobsTemplate = ({ jobs, windowWidth }) => {
     return buildListRow(jobs, 'All jobs view', 'all-jobs', windowWidth);
 };
@@ -186,11 +236,24 @@ const JobExplorerList = ({ jobs, windowWidth }) => (
       { windowWidth > mobileBreakpoint && buildHeader(headerLabels) }
       <AllJobsTemplate jobs={ jobs } windowWidth={ windowWidth }/>
 >>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
+=======
+const AllJobsTemplate = ({ jobs }) => {
+    return buildListRow(jobs, 'All jobs view', 'all-jobs');
+};
+
+const JobExplorerList = ({ jobs }) => (
+  <>
+    {jobs.length <= 0 && <LoadingState />}
+    <>
+      {buildHeader(headerLabels)}
+      <AllJobsTemplate jobs={ jobs } />
+>>>>>>> Squashed commit of the following:
     </>
   </>
 );
 
 JobExplorerList.propTypes = {
+<<<<<<< HEAD
     jobs: PropTypes.array,
     windowWidth: PropTypes.number
 };
@@ -198,6 +261,13 @@ JobExplorerList.propTypes = {
 AllJobsTemplate.propTypes = {
     jobs: PropTypes.array,
     windowWidth: PropTypes.number
+=======
+    jobs: PropTypes.array
+};
+
+AllJobsTemplate.propTypes = {
+    jobs: PropTypes.array
+>>>>>>> Squashed commit of the following:
 };
 
 export default JobExplorerList;

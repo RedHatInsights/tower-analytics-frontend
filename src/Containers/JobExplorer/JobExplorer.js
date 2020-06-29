@@ -1,7 +1,12 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*eslint camelcase: ["error", {allow: ["setStart_Date","setEnd_Date","cluster_id","org_id","job_type","template_id","quick_date_range","sort_by"]}]*/
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+=======
+/* eslint-disable camelcase */
+import React, { useState, useEffect } from 'react';
+>>>>>>> Squashed commit of the following:
 =======
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
@@ -15,7 +20,10 @@ import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
 <<<<<<< HEAD
+<<<<<<< HEAD
 import ApiErrorState from '../../Components/ApiErrorState';
+=======
+>>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
 import {
@@ -34,7 +42,10 @@ import {
 
 import {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> Squashed commit of the following:
     DataToolbar,
     DataToolbarContent as PFDataToolbarContent,
     DataToolbarFilter,
@@ -50,12 +61,16 @@ import {
 } from '@patternfly/react-icons';
 
 import {
+<<<<<<< HEAD
+>>>>>>> Squashed commit of the following:
+=======
 >>>>>>> Squashed commit of the following:
     Badge,
     Card,
     CardBody,
     CardHeader as PFCardHeader,
     Pagination,
+<<<<<<< HEAD
 <<<<<<< HEAD
     PaginationVariant
 } from '@patternfly/react-core';
@@ -64,6 +79,8 @@ import JobExplorerList from '../../Components/JobExplorerList';
 import FilterableToolbar from '../../Components/Toolbar';
 
 =======
+=======
+>>>>>>> Squashed commit of the following:
     PaginationVariant,
     Select,
     SelectOption,
@@ -89,6 +106,9 @@ const DataToolbarGroup = styled(PFDataToolbarGroup)`
     }
   }
 `;
+<<<<<<< HEAD
+>>>>>>> Squashed commit of the following:
+=======
 >>>>>>> Squashed commit of the following:
 const CardHeader = styled(PFCardHeader)`
   display: flex;
@@ -109,6 +129,7 @@ const TitleWithBadge = styled.div`
 `;
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 const perPageOptions = [
     { title: '5', value: 5 },
     { title: '10', value: 10 },
@@ -121,6 +142,8 @@ const initialQueryParams = {
     ...jobExplorer.defaultParams,
     attributes: jobExplorer.attributes
 =======
+=======
+>>>>>>> Squashed commit of the following:
 const Switch = styled(PFSwitch)`
     &&& {
         margin: 0 15px;
@@ -144,6 +167,9 @@ const perPageOptions = [
 const initialQueryParams = {
     attributes: jobExplorer.attributes,
     limit: 5
+<<<<<<< HEAD
+>>>>>>> Squashed commit of the following:
+=======
 >>>>>>> Squashed commit of the following:
 };
 
@@ -154,7 +180,10 @@ const initialOptionsParams = {
 const JobExplorer = props => {
     const [ preflightError, setPreFlightError ] = useState(null);
 <<<<<<< HEAD
+<<<<<<< HEAD
     const [ apiError, setApiError ] = useState(null);
+=======
+>>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
     const [ jobExplorerData, setJobExplorerData ] = useState([]);
@@ -163,11 +192,14 @@ const JobExplorer = props => {
     const [ meta, setMeta ] = useState({});
     const [ currPage, setCurrPage ] = useState(1);
 <<<<<<< HEAD
+<<<<<<< HEAD
     const [ orgIds, setOrgIds ] = useState([]);
     const [ clusterIds, setClusterIds ] = useState([]);
     const [ templateIds, setTemplateIds ] = useState([]);
     const [ sortBy, setSortBy ] = useState(null);
 =======
+=======
+>>>>>>> Squashed commit of the following:
     const [ statusIsExpanded, setStatusIsExpanded ] = useState(false);
     const [ dateRangeIsExpanded, setDateRangeIsExpanded ] = useState(false);
     const [ jobTypeIsExpanded, setJobTypeIsExpanded ] = useState(false);
@@ -182,11 +214,17 @@ const JobExplorer = props => {
     const [ clusterIds, setClusterIds ] = useState([]);
     const [ templateIds, setTemplateIds ] = useState([]);
     const [ sortBy, setSortBy ] = useState([]);
+<<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
     const [ statuses, setStatuses ] = useState([]);
     const [ jobTypes, setJobTypes ] = useState([]);
     const [ quickDateRanges, setQuickDateRanges ] = useState([]);
     const [ width, setWidth ] = useState(window.innerWidth);
+=======
+    const [ statuses, setStatuses ] = useState([]);
+    const [ jobTypes, setJobTypes ] = useState([]);
+    const [ quickDateRanges, setQuickDateRanges ] = useState([]);
+>>>>>>> Squashed commit of the following:
 
     const { parse } = formatQueryStrings({});
     const {
@@ -194,7 +232,11 @@ const JobExplorer = props => {
     } = props;
     let initialSearchParams = parse(search, { arrayFormat: 'bracket' });
 <<<<<<< HEAD
+<<<<<<< HEAD
     let combined = { ...initialQueryParams, ...initialSearchParams };
+=======
+    let combined = { ...initialSearchParams, ...initialQueryParams };
+>>>>>>> Squashed commit of the following:
 =======
     let combined = { ...initialSearchParams, ...initialQueryParams };
 >>>>>>> Squashed commit of the following:
@@ -236,15 +278,21 @@ const JobExplorer = props => {
         cluster: queryParams.cluster_id ? formattedArray(queryParams.cluster_id) : [],
         template: queryParams.template_id ? formattedArray(queryParams.template_id) : [],
 <<<<<<< HEAD
+<<<<<<< HEAD
         sortby: queryParams.sort_by ? queryParams.sort_by : null,
         startDate: queryParams.start_date ? queryParams.start_date : null,
         endDate: queryParams.end_date ? queryParams.end_date : null,
         date: queryParams.quick_date_range ? queryParams.quick_date_range : 'last_30_days',
 =======
+=======
+>>>>>>> Squashed commit of the following:
         sortby: queryParams.sort_by ? formattedArray(queryParams.sort_by) : [],
         startDate: queryParams.start_date ? queryParams.start_date : null,
         endDate: queryParams.end_date ? queryParams.end_date : null,
         date: queryParams.quick_date_range ? queryParams.quick_date_range : null,
+<<<<<<< HEAD
+>>>>>>> Squashed commit of the following:
+=======
 >>>>>>> Squashed commit of the following:
         showRootWorkflows: queryParams.only_root_workflows_and_standalone_jobs ? queryParams.only_root_workflows_and_standalone_jobs : false
     });
@@ -261,11 +309,15 @@ const JobExplorer = props => {
     useEffect(() => {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Add paginationParams to request URL for job explorer endpoint.
+=======
+
+>>>>>>> Squashed commit of the following:
         insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
         updateURL();
     }, []);
@@ -281,7 +333,10 @@ const JobExplorer = props => {
 
         const update = async () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
             setApiError(null);
+=======
+>>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
             setIsLoading(true);
@@ -290,8 +345,13 @@ const JobExplorer = props => {
                 setJobExplorerData(jobExplorerData);
                 setMeta(meta);
 <<<<<<< HEAD
+<<<<<<< HEAD
             }).catch(e => setApiError(e.error)
             ).finally(() => setIsLoading(false));
+=======
+                setIsLoading(false);
+            });
+>>>>>>> Squashed commit of the following:
 =======
                 setIsLoading(false);
             });
@@ -328,8 +388,14 @@ const JobExplorer = props => {
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         // The filter can change back to null too.
         setSortBy2(filters.sortby);
+=======
+        if (filters.sortby) {
+            setSortBy2(filters.sortby);
+        }
+>>>>>>> Squashed commit of the following:
 =======
         if (filters.sortby) {
             setSortBy2(filters.sortby);
@@ -341,6 +407,7 @@ const JobExplorer = props => {
         setQuickDateRange(filters.date);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         if (filters.date !== 'custom') {
             setStart_Date(null);
             setEnd_Date(null);
@@ -348,6 +415,11 @@ const JobExplorer = props => {
             setStart_Date(filters.startDate);
             setEnd_Date(filters.endDate);
         }
+=======
+        setStart_Date(filters.startDate);
+
+        setEnd_Date(filters.endDate);
+>>>>>>> Squashed commit of the following:
 =======
         setStart_Date(filters.startDate);
 
@@ -411,7 +483,10 @@ const JobExplorer = props => {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> Squashed commit of the following:
     const handleChips = (item, comparator) => {
         return item.reduce((acc, i) => {
             Number.isInteger(parseInt(i)) ? (i = parseInt(i)) : i;
@@ -438,6 +513,7 @@ const JobExplorer = props => {
         return new Array();
     };
 
+<<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
 =======
     useEffect(() => {
@@ -447,6 +523,8 @@ const JobExplorer = props => {
     }, []);
 
 >>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
+=======
+>>>>>>> Squashed commit of the following:
     const onDelete = (type, val) => {
         let filtered;
         Number.isInteger(val) ? (val = parseInt(val)) : val;
@@ -472,11 +550,17 @@ const JobExplorer = props => {
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> Squashed commit of the following:
         if (type === 'SortBy') {
             filtered = sortBy.filter(attr => attr.value === val);
         }
 
+<<<<<<< HEAD
+>>>>>>> Squashed commit of the following:
+=======
 >>>>>>> Squashed commit of the following:
         if (type) {
             if (type === 'Date') {
@@ -487,11 +571,14 @@ const JobExplorer = props => {
                     endDate: null
                 });
 <<<<<<< HEAD
+<<<<<<< HEAD
             } else if (type === 'SortBy') {
                 setFilters({
                     ...filters,
                     sortby: null
                 });
+=======
+>>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
             } else {
@@ -510,23 +597,32 @@ const JobExplorer = props => {
                 cluster: [],
                 template: [],
 <<<<<<< HEAD
+<<<<<<< HEAD
                 sortby: null,
                 date: null,
                 startDate: null,
                 endDate: null,
                 showRootWorkflows: false
 =======
+=======
+>>>>>>> Squashed commit of the following:
                 sortby: [],
                 date: null,
                 startDate: null,
                 endDate: null
+<<<<<<< HEAD
+>>>>>>> Squashed commit of the following:
+=======
 >>>>>>> Squashed commit of the following:
             });
         }
     };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> Squashed commit of the following:
     const buildCategoryDropdown = () => {
         return (
             <DataToolbarItem>
@@ -783,6 +879,9 @@ const JobExplorer = props => {
         );
     };
 
+<<<<<<< HEAD
+>>>>>>> Squashed commit of the following:
+=======
 >>>>>>> Squashed commit of the following:
     const returnOffsetVal = page => {
         let offsetVal = (page - 1) * queryParams.limit;
@@ -813,7 +912,10 @@ const JobExplorer = props => {
     };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> Squashed commit of the following:
     const handleStartDate = e => {
         setFilters({
             ...filters,
@@ -828,6 +930,9 @@ const JobExplorer = props => {
         });
     };
 
+<<<<<<< HEAD
+>>>>>>> Squashed commit of the following:
+=======
 >>>>>>> Squashed commit of the following:
     return (
         <React.Fragment>
@@ -855,6 +960,7 @@ const JobExplorer = props => {
                   </CardHeader>
                   <CardBody>
 <<<<<<< HEAD
+<<<<<<< HEAD
                       <FilterableToolbar
                           orgs={ orgIds }
                           statuses={ statuses }
@@ -872,6 +978,8 @@ const JobExplorer = props => {
                       { !apiError && !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
                       { !apiError && !isLoading && jobExplorerData.length > 0 && (
 =======
+=======
+>>>>>>> Squashed commit of the following:
                       <DataToolbar
                           id="data-toolbar-with-chip-groups"
                           clearAllFilters={ onDelete }
@@ -986,9 +1094,14 @@ const JobExplorer = props => {
                       { isLoading && <LoadingState /> }
                       { !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
                       { !isLoading && jobExplorerData.length > 0 && (
+<<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
                   <>
                     <JobExplorerList jobs={ jobExplorerData } windowWidth={ width } />
+=======
+                  <>
+                    <JobExplorerList jobs={ jobExplorerData } />
+>>>>>>> Squashed commit of the following:
                     <Pagination
                         itemCount={ meta.count ? meta.count : 0 }
                         widgetId="pagination-options-menu-bottom"
@@ -1017,11 +1130,14 @@ const JobExplorer = props => {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 JobExplorer.propTypes = {
     location: PropTypes.object,
     history: PropTypes.object
 };
 
+=======
+>>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
 export default JobExplorer;

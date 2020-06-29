@@ -32,8 +32,12 @@ class BarChart extends Component {
             start_date: formattedDate,
             end_date: formattedDate,
 <<<<<<< HEAD
+<<<<<<< HEAD
             quick_date_range: 'custom',
             status: [ 'failed', 'successful' ]
+=======
+            quick_date_range: 'custom'
+>>>>>>> Squashed commit of the following:
 =======
             quick_date_range: 'custom'
 >>>>>>> Squashed commit of the following:

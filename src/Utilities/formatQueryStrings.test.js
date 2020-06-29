@@ -10,6 +10,7 @@ const combined = {
     cluster_id: [ 'foo', 'bar' ],
     org_id: [ 'foo', 'bar' ],
 <<<<<<< HEAD
+<<<<<<< HEAD
     template_id: [ 'foo', 'bar' ]
 };
 const expected = {
@@ -20,6 +21,8 @@ const expected = {
     org_id: 'org_id[]=foo&org_id[]=bar',
     template_id: 'template_id[]=foo&template_id[]=bar'
 =======
+=======
+>>>>>>> Squashed commit of the following:
     template_id: [ 'foo', 'bar' ],
     sort_by: [ 'foo', 'bar' ]
 };
@@ -31,6 +34,9 @@ const expected = {
     org_id: 'org_id=foo&org_id=bar',
     template_id: 'template_id=foo&template_id=bar',
     sort_by: 'sort_by=foo&sort_by=bar'
+<<<<<<< HEAD
+>>>>>>> Squashed commit of the following:
+=======
 >>>>>>> Squashed commit of the following:
 };
 
@@ -51,6 +57,7 @@ const combinedStrings = {
 };
 const expectedStrings = {
 <<<<<<< HEAD
+<<<<<<< HEAD
     status: 'status[]=baz',
     job_type: 'job_type[]=baz',
     attributes: 'attributes[]=baz',
@@ -58,12 +65,17 @@ const expectedStrings = {
     org_id: 'org_id[]=baz',
     template_id: 'template_id[]=baz',
 =======
+=======
+>>>>>>> Squashed commit of the following:
     status: 'status=baz',
     job_type: 'job_type=baz',
     attributes: 'attributes=baz',
     cluster_id: 'cluster_id=baz',
     org_id: 'org_id=baz',
     template_id: 'template_id=baz',
+<<<<<<< HEAD
+>>>>>>> Squashed commit of the following:
+=======
 >>>>>>> Squashed commit of the following:
     sort_by: 'sort_by=baz',
     limit: 'limit=baz',
@@ -150,12 +162,18 @@ describe('Utilities/formatQueryStrings', () => {
     });
     describe('parseSortBy method', () => {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> Squashed commit of the following:
         it('formats "sort_by" array as "sort_by=a&sort_by=b"', () => {
             const { parseSortBy } = formatQueryStrings(combined);
             const string = parseSortBy(combined.sort_by);
             expect(string).toEqual(expected.sort_by);
         });
+<<<<<<< HEAD
+>>>>>>> Squashed commit of the following:
+=======
 >>>>>>> Squashed commit of the following:
         it('formats "sort_by" string as "sort_by=a"', () => {
             const { parseSortBy } = formatQueryStrings(combinedStrings);
