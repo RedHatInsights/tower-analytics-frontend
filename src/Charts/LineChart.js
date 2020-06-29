@@ -1,7 +1,14 @@
+/*eslint camelcase: ["error", {properties: "never"}]*/
 import React, { Component } from 'react';
+import {
+    withRouter
+} from 'react-router-dom';
 import initializeChart from './BaseChart';
 import PropTypes from 'prop-types';
 import Tooltip from '../Utilities/Tooltip';
+import { Paths } from '../paths';
+import { formatDate } from '../Utilities/helpers';
+import { formatQueryStrings } from '../Utilities/formatQueryStrings';
 import * as d3 from 'd3';
 
 class LineChart extends Component {
@@ -11,11 +18,28 @@ class LineChart extends Component {
         this.draw = this.draw.bind(this);
         this.resize = this.resize.bind(this);
         this.updateCluster = this.updateCluster.bind(this);
+        this.redirectToJobExplorer = this.redirectToJobExplorer.bind(this);
         this.state = {
             formattedData: [],
             timeout: null
         };
     }
+
+    redirectToJobExplorer({ DATE: date }) {
+        const { jobExplorer } = Paths;
+        const formattedDate = formatDate(date);
+        const initialQueryParams = {
+            start_date: formattedDate,
+            end_date: formattedDate,
+            quick_date_range: 'custom'
+        };
+        const { strings, stringify } = formatQueryStrings(initialQueryParams);
+        const search = stringify(strings);
+        this.props.history.push({
+            pathname: jobExplorer,
+            search
+        });
+    };
 
     resize() {
         const { timeout } = this.state;
@@ -258,7 +282,8 @@ class LineChart extends Component {
 
         .on('mouseover', handleMouseOver)
         .on('mousemove', handleMouseMove)
-        .on('mouseout', handleMouseOut);
+        .on('mouseout', handleMouseOut)
+        .on('click', this.redirectToJobExplorer);
         // create our failLine circles
         svg
         .selectAll('dot')
@@ -276,7 +301,8 @@ class LineChart extends Component {
         })
         .on('mouseover', handleMouseOver)
         .on('mousemove', handleMouseMove)
-        .on('mouseout', handleMouseOut);
+        .on('mouseout', handleMouseOut)
+        .on('click', this.redirectToJobExplorer);
     }
 
     componentDidMount() {
@@ -308,7 +334,8 @@ LineChart.propTypes = {
     value: PropTypes.number,
     margin: PropTypes.object,
     getHeight: PropTypes.func,
-    getWidth: PropTypes.func
+    getWidth: PropTypes.func,
+    history: PropTypes.object
 };
 
-export default initializeChart(LineChart);
+export default initializeChart(withRouter(LineChart));
