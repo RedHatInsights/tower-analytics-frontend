@@ -115,9 +115,9 @@ const AllJobsTemplate = ({ jobs }) => {
 
 const JobExplorerList = ({ jobs }) => (
   <>
-    {jobs.length <= 0 && <LoadingState />}
+    { jobs.length <= 0 && <LoadingState /> }
     <>
-      {buildHeader(headerLabels)}
+      { buildHeader(headerLabels) }
       <AllJobsTemplate jobs={ jobs } />
     </>
   </>
