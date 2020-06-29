@@ -1,6 +1,11 @@
+<<<<<<< HEAD
 /*eslint camelcase: ["error", {allow: ["setStart_Date","setEnd_Date","cluster_id","org_id","job_type","template_id","quick_date_range","sort_by"]}]*/
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+=======
+/* eslint-disable camelcase */
+import React, { useState, useEffect } from 'react';
+>>>>>>> Squashed commit of the following:
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import { formatQueryStrings } from '../../Utilities/formatQueryStrings';
@@ -9,7 +14,10 @@ import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
+<<<<<<< HEAD
 import ApiErrorState from '../../Components/ApiErrorState';
+=======
+>>>>>>> Squashed commit of the following:
 import {
     preflightRequest,
     readJobExplorer,
@@ -25,17 +33,63 @@ import {
 } from '@redhat-cloud-services/frontend-components';
 
 import {
+<<<<<<< HEAD
+=======
+    DataToolbar,
+    DataToolbarContent as PFDataToolbarContent,
+    DataToolbarFilter,
+    DataToolbarToggleGroup,
+    DataToolbarGroup as PFDataToolbarGroup,
+    DataToolbarItem
+} from '@patternfly/react-core/dist/esm/experimental';
+
+import {
+    FilterIcon,
+    CalendarAltIcon,
+    QuestionCircleIcon
+} from '@patternfly/react-icons';
+
+import {
+>>>>>>> Squashed commit of the following:
     Badge,
     Card,
     CardBody,
     CardHeader as PFCardHeader,
     Pagination,
+<<<<<<< HEAD
     PaginationVariant
 } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
 import FilterableToolbar from '../../Components/Toolbar';
 
+=======
+    PaginationVariant,
+    Select,
+    SelectOption,
+    SelectVariant,
+    DropdownPosition,
+    Dropdown,
+    DropdownToggle,
+    DropdownItem,
+    InputGroup,
+    InputGroupText,
+    TextInput,
+    Switch as PFSwitch,
+    Tooltip,
+    TooltipPosition
+} from '@patternfly/react-core';
+
+import JobExplorerList from '../../Components/JobExplorerList';
+
+const DataToolbarGroup = styled(PFDataToolbarGroup)`
+  button {
+    .pf-c-select__toggle-wrapper {
+      flex-wrap: nowrap;
+    }
+  }
+`;
+>>>>>>> Squashed commit of the following:
 const CardHeader = styled(PFCardHeader)`
   display: flex;
   justify-content: space-between;
@@ -54,6 +108,7 @@ const TitleWithBadge = styled.div`
   }
 `;
 
+<<<<<<< HEAD
 const perPageOptions = [
     { title: '5', value: 5 },
     { title: '10', value: 10 },
@@ -65,6 +120,31 @@ const perPageOptions = [
 const initialQueryParams = {
     ...jobExplorer.defaultParams,
     attributes: jobExplorer.attributes
+=======
+const Switch = styled(PFSwitch)`
+    &&& {
+        margin: 0 15px;
+    }
+`;
+
+const DataToolbarContent = styled(PFDataToolbarContent)`
+    .pf-c-data-toolbar__content-section {
+        justify-content: space-between;
+    }
+`;
+
+const perPageOptions = [
+    { title: '5', value: 5 },
+    { title: '10', value: 10 },
+    { title: '20', value: 20 },
+    { title: '50', value: 50 },
+    { title: '100', value: 100 }
+];
+
+const initialQueryParams = {
+    attributes: jobExplorer.attributes,
+    limit: 5
+>>>>>>> Squashed commit of the following:
 };
 
 const initialOptionsParams = {
@@ -73,16 +153,36 @@ const initialOptionsParams = {
 
 const JobExplorer = props => {
     const [ preflightError, setPreFlightError ] = useState(null);
+<<<<<<< HEAD
     const [ apiError, setApiError ] = useState(null);
+=======
+>>>>>>> Squashed commit of the following:
     const [ jobExplorerData, setJobExplorerData ] = useState([]);
     const [ firstRender, setFirstRender ] = useState(true);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ meta, setMeta ] = useState({});
     const [ currPage, setCurrPage ] = useState(1);
+<<<<<<< HEAD
     const [ orgIds, setOrgIds ] = useState([]);
     const [ clusterIds, setClusterIds ] = useState([]);
     const [ templateIds, setTemplateIds ] = useState([]);
     const [ sortBy, setSortBy ] = useState(null);
+=======
+    const [ statusIsExpanded, setStatusIsExpanded ] = useState(false);
+    const [ dateRangeIsExpanded, setDateRangeIsExpanded ] = useState(false);
+    const [ jobTypeIsExpanded, setJobTypeIsExpanded ] = useState(false);
+    const [ orgIsExpanded, setOrgIsExpanded ] = useState(false);
+    const [ isCategoryExpanded, setIsCategoryExpanded ] = useState(false);
+    const [ clusterIsExpanded, setClusterIsExpanded ] = useState(false);
+    const [ templateIsExpanded, setTemplateIsExpanded ] = useState(false);
+    const [ sortByIsExpanded, setSortByIsExpanded ] = useState(false);
+    const [ currentCategory, setCurrentCategory ] = useState('Status');
+
+    const [ orgIds, setOrgIds ] = useState([]);
+    const [ clusterIds, setClusterIds ] = useState([]);
+    const [ templateIds, setTemplateIds ] = useState([]);
+    const [ sortBy, setSortBy ] = useState([]);
+>>>>>>> Squashed commit of the following:
     const [ statuses, setStatuses ] = useState([]);
     const [ jobTypes, setJobTypes ] = useState([]);
     const [ quickDateRanges, setQuickDateRanges ] = useState([]);
@@ -92,7 +192,11 @@ const JobExplorer = props => {
         location: { search }
     } = props;
     let initialSearchParams = parse(search, { arrayFormat: 'bracket' });
+<<<<<<< HEAD
     let combined = { ...initialQueryParams, ...initialSearchParams };
+=======
+    let combined = { ...initialSearchParams, ...initialQueryParams };
+>>>>>>> Squashed commit of the following:
     const {
         queryParams,
         setLimit,
@@ -130,10 +234,17 @@ const JobExplorer = props => {
         org: queryParams.org_id ? formattedArray(queryParams.org_id) : [],
         cluster: queryParams.cluster_id ? formattedArray(queryParams.cluster_id) : [],
         template: queryParams.template_id ? formattedArray(queryParams.template_id) : [],
+<<<<<<< HEAD
         sortby: queryParams.sort_by ? queryParams.sort_by : null,
         startDate: queryParams.start_date ? queryParams.start_date : null,
         endDate: queryParams.end_date ? queryParams.end_date : null,
         date: queryParams.quick_date_range ? queryParams.quick_date_range : 'last_30_days',
+=======
+        sortby: queryParams.sort_by ? formattedArray(queryParams.sort_by) : [],
+        startDate: queryParams.start_date ? queryParams.start_date : null,
+        endDate: queryParams.end_date ? queryParams.end_date : null,
+        date: queryParams.quick_date_range ? queryParams.quick_date_range : null,
+>>>>>>> Squashed commit of the following:
         showRootWorkflows: queryParams.only_root_workflows_and_standalone_jobs ? queryParams.only_root_workflows_and_standalone_jobs : false
     });
     const updateURL = () => {
@@ -147,6 +258,10 @@ const JobExplorer = props => {
     };
 
     useEffect(() => {
+<<<<<<< HEAD
+=======
+
+>>>>>>> Squashed commit of the following:
         insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
         updateURL();
     }, []);
@@ -161,14 +276,22 @@ const JobExplorer = props => {
         };
 
         const update = async () => {
+<<<<<<< HEAD
             setApiError(null);
+=======
+>>>>>>> Squashed commit of the following:
             setIsLoading(true);
             await window.insights.chrome.auth.getUser();
             getData().then(([{ items: jobExplorerData = [], meta }]) => {
                 setJobExplorerData(jobExplorerData);
                 setMeta(meta);
+<<<<<<< HEAD
             }).catch(e => setApiError(e.error)
             ).finally(() => setIsLoading(false));
+=======
+                setIsLoading(false);
+            });
+>>>>>>> Squashed commit of the following:
         };
 
         update();
@@ -200,13 +323,20 @@ const JobExplorer = props => {
             setTemplate(filters.template);
         }
 
+<<<<<<< HEAD
         // The filter can change back to null too.
         setSortBy2(filters.sortby);
+=======
+        if (filters.sortby) {
+            setSortBy2(filters.sortby);
+        }
+>>>>>>> Squashed commit of the following:
 
         setRootWorkflowsAndJobs(filters.showRootWorkflows);
 
         setQuickDateRange(filters.date);
 
+<<<<<<< HEAD
         if (filters.date !== 'custom') {
             setStart_Date(null);
             setEnd_Date(null);
@@ -214,6 +344,11 @@ const JobExplorer = props => {
             setStart_Date(filters.startDate);
             setEnd_Date(filters.endDate);
         }
+=======
+        setStart_Date(filters.startDate);
+
+        setEnd_Date(filters.endDate);
+>>>>>>> Squashed commit of the following:
     }, [ filters ]);
 
     useEffect(() => {
@@ -270,6 +405,35 @@ const JobExplorer = props => {
         return () => (ignore = true);
     }, []);
 
+<<<<<<< HEAD
+=======
+    const handleChips = (item, comparator) => {
+        return item.reduce((acc, i) => {
+            Number.isInteger(parseInt(i)) ? (i = parseInt(i)) : i;
+            comparator.forEach(item => {
+                if (item.key === i) {
+                    acc.push(item.value);
+                }
+            });
+            return acc;
+        }, []);
+    };
+
+    const handleDateChips = (date, comparator) => {
+        if (date && typeof date === 'string') {
+            let val;
+            comparator.forEach(i => {
+                if (i.key === date) {
+                    val = i.value;
+                }
+            });
+            return new Array(val);
+        }
+
+        return new Array();
+    };
+
+>>>>>>> Squashed commit of the following:
     const onDelete = (type, val) => {
         let filtered;
         Number.isInteger(val) ? (val = parseInt(val)) : val;
@@ -294,6 +458,13 @@ const JobExplorer = props => {
             filtered = templateIds.filter(template => template.value === val);
         }
 
+<<<<<<< HEAD
+=======
+        if (type === 'SortBy') {
+            filtered = sortBy.filter(attr => attr.value === val);
+        }
+
+>>>>>>> Squashed commit of the following:
         if (type) {
             if (type === 'Date') {
                 setFilters({
@@ -302,11 +473,14 @@ const JobExplorer = props => {
                     startDate: null,
                     endDate: null
                 });
+<<<<<<< HEAD
             } else if (type === 'SortBy') {
                 setFilters({
                     ...filters,
                     sortby: null
                 });
+=======
+>>>>>>> Squashed commit of the following:
             } else {
                 setFilters({
                     ...filters,
@@ -322,15 +496,281 @@ const JobExplorer = props => {
                 org: [],
                 cluster: [],
                 template: [],
+<<<<<<< HEAD
                 sortby: null,
                 date: null,
                 startDate: null,
                 endDate: null,
                 showRootWorkflows: false
+=======
+                sortby: [],
+                date: null,
+                startDate: null,
+                endDate: null
+>>>>>>> Squashed commit of the following:
             });
         }
     };
 
+<<<<<<< HEAD
+=======
+    const buildCategoryDropdown = () => {
+        return (
+            <DataToolbarItem>
+                <Dropdown
+                    onSelect={ e => {
+                        setCurrentCategory(e.target.innerText);
+                        setIsCategoryExpanded(!isCategoryExpanded);
+                    } }
+                    position={ DropdownPosition.left }
+                    toggle={
+                        <DropdownToggle
+                            onToggle={ () => {
+                                setIsCategoryExpanded(!isCategoryExpanded);
+                            } }
+                            style={ { width: '100%' } }
+                        >
+                            <FilterIcon />
+              &nbsp;{ currentCategory }
+                        </DropdownToggle>
+                    }
+                    isOpen={ isCategoryExpanded }
+                    dropdownItems={ [
+                        <DropdownItem key="cat0">Status</DropdownItem>,
+                        <DropdownItem key="cat6">Date</DropdownItem>,
+                        <DropdownItem key="cat1">Job type</DropdownItem>,
+                        <DropdownItem key="cat2">Organization</DropdownItem>,
+                        <DropdownItem key="cat3">Cluster</DropdownItem>,
+                        <DropdownItem key="cat4">Template</DropdownItem>,
+                        <DropdownItem key="cat5">Sort by</DropdownItem>
+                    ] }
+                    style={ { width: '100%' } }
+                />
+            </DataToolbarItem>
+        );
+    };
+
+    const buildFilterDropdown = () => {
+        const organizationIdMenuItems = orgIds.map(({ key, value }) => (
+            <SelectOption key={ key } value={ `${key}` }>
+                { value }
+            </SelectOption>
+        ));
+
+        const statusMenuItems = statuses.map(({ key, value }) => (
+            <SelectOption key={ key } value={ key }>
+                { value }
+            </SelectOption>
+        ));
+
+        const jobTypeMenuItems = jobTypes.map(({ key, value }) => (
+            <SelectOption key={ key } value={ key }>
+                { value }
+            </SelectOption>
+        ));
+
+        const clusterIdMenuItems = clusterIds.map(({ key, value }) => (
+            <SelectOption key={ key } value={ `${key}` }>
+                { value }
+            </SelectOption>
+        ));
+
+        const templateIdMenuItems = templateIds.map(({ key, value }) => (
+            <SelectOption key={ key } value={ `${key}` }>
+                { value }
+            </SelectOption>
+        ));
+
+        const sortByMenuItems = sortBy.map(({ key, value }) => (
+            <SelectOption key={ key } value={ key }>
+                { value }
+            </SelectOption>
+        ));
+
+        const dateRangeMenuItems = quickDateRanges.map(({ key, value }) => (
+            <SelectOption key={ key } value={ key }>
+                { value }
+            </SelectOption>
+        ));
+
+        const onSelect = (type, event, selection) => {
+            const checked = event.target.checked;
+
+            setFilters({
+                ...filters,
+                [type]: checked
+                    ? [ ...filters[type], selection ]
+                    : filters[type].filter(value => value !== selection)
+            });
+        };
+
+        const onDateSelect = (_event, selection) => {
+            setFilters({
+                ...filters,
+                date: selection
+            });
+            setDateRangeIsExpanded(!dateRangeIsExpanded);
+        };
+
+        return (
+            <React.Fragment>
+                <DataToolbarFilter
+                    showToolbarItem={ currentCategory === 'Status' }
+                    chips={ handleChips(filters.status, statuses) }
+                    categoryName="Status"
+                    deleteChip={ onDelete }
+                >
+                    <Select
+                        variant={ SelectVariant.checkbox }
+                        aria-label="Status"
+                        onToggle={ () => {
+                            setStatusIsExpanded(!statusIsExpanded);
+                        } }
+                        onSelect={ (event, selection) => {
+                            onSelect('status', event, selection);
+                        } }
+                        selections={ filters.status }
+                        isExpanded={ statusIsExpanded }
+                        placeholderText="Filter by job status"
+                    >
+                        { statusMenuItems }
+                    </Select>
+                </DataToolbarFilter>
+                <DataToolbarFilter
+                    showToolbarItem={ currentCategory === 'Date' }
+                    categoryName="Date"
+                    chips={ handleDateChips(filters.date, quickDateRanges) }
+                    deleteChip={ onDelete }
+                >
+                    <Select
+                        variant={ SelectVariant.single }
+                        aria-label="Date"
+                        onToggle={ () => {
+                            setDateRangeIsExpanded(!dateRangeIsExpanded);
+                        } }
+                        onSelect={ (event, selection) => {
+                            onDateSelect(event, selection);
+                        } }
+                        selections={ filters.date }
+                        isExpanded={ dateRangeIsExpanded }
+                        placeholderText="Filter by date range"
+                    >
+                        { dateRangeMenuItems }
+                    </Select>
+                </DataToolbarFilter>
+                <DataToolbarFilter
+                    showToolbarItem={ currentCategory === 'Job type' }
+                    categoryName="Type"
+                    chips={ handleChips(filters.type, jobTypes) }
+                    deleteChip={ onDelete }
+                >
+                    <Select
+                        aria-label="Type"
+                        variant={ SelectVariant.checkbox }
+                        onToggle={ () => {
+                            setJobTypeIsExpanded(!jobTypeIsExpanded);
+                        } }
+                        onSelect={ (event, selection) => {
+                            onSelect('type', event, selection);
+                        } }
+                        selections={ filters.type }
+                        isExpanded={ jobTypeIsExpanded }
+                        placeholderText="Filter by job type"
+                    >
+                        { jobTypeMenuItems }
+                    </Select>
+                </DataToolbarFilter>
+                <DataToolbarFilter
+                    showToolbarItem={ currentCategory === 'Organization' }
+                    categoryName="Org"
+                    chips={ handleChips(filters.org, orgIds) }
+                    deleteChip={ onDelete }
+                >
+                    <Select
+                        aria-label="Filter by Org"
+                        variant={ SelectVariant.checkbox }
+                        onToggle={ () => {
+                            setOrgIsExpanded(!orgIsExpanded);
+                        } }
+                        onSelect={ (event, selection) => {
+                            onSelect('org', event, selection);
+                        } }
+                        selections={ filters.org }
+                        isExpanded={ orgIsExpanded }
+                        placeholderText="Filter by organization"
+                    >
+                        { organizationIdMenuItems }
+                    </Select>
+                </DataToolbarFilter>
+                <DataToolbarFilter
+                    showToolbarItem={ currentCategory === 'Cluster' }
+                    categoryName="Cluster"
+                    chips={ handleChips(filters.cluster, clusterIds) }
+                    deleteChip={ onDelete }
+                >
+                    <Select
+                        aria-label="Filter by Cluster"
+                        variant={ SelectVariant.checkbox }
+                        onToggle={ () => {
+                            setClusterIsExpanded(!clusterIsExpanded);
+                        } }
+                        onSelect={ (event, selection) => {
+                            onSelect('cluster', event, selection);
+                        } }
+                        selections={ filters.cluster }
+                        isExpanded={ clusterIsExpanded }
+                        placeholderText="Filter by cluster"
+                    >
+                        { clusterIdMenuItems }
+                    </Select>
+                </DataToolbarFilter>
+                <DataToolbarFilter
+                    showToolbarItem={ currentCategory === 'Template' }
+                    categoryName="Template"
+                    chips={ handleChips(filters.template, templateIds) }
+                    deleteChip={ onDelete }
+                >
+                    <Select
+                        aria-label="Filter by template"
+                        variant={ SelectVariant.checkbox }
+                        onToggle={ () => setTemplateIsExpanded(!templateIsExpanded) }
+                        onSelect={ (event, selection) => {
+                            onSelect('template', event, selection);
+                        } }
+                        selections={ filters.template }
+                        isExpanded={ templateIsExpanded }
+                        placeholderText="Filter by template"
+                    >
+                        { templateIdMenuItems }
+                    </Select>
+                </DataToolbarFilter>
+                <DataToolbarFilter
+                    showToolbarItem={ currentCategory === 'Sort by' }
+                    categoryName="SortBy"
+                    chips={ handleChips(filters.sortby, sortBy) }
+                    deleteChip={ onDelete }
+                >
+                    <Select
+                        aria-label="Sort by"
+                        variant={ SelectVariant.checkbox }
+                        onToggle={ () => {
+                            setSortByIsExpanded(!sortByIsExpanded);
+                        } }
+                        onSelect={ (event, selection) => {
+                            onSelect('sortby', event, selection);
+                        } }
+                        selections={ filters.sortby }
+                        isExpanded={ sortByIsExpanded }
+                        placeholderText="Sort by attribute"
+                    >
+                        { sortByMenuItems }
+                    </Select>
+                </DataToolbarFilter>
+            </React.Fragment>
+        );
+    };
+
+>>>>>>> Squashed commit of the following:
     const returnOffsetVal = page => {
         let offsetVal = (page - 1) * queryParams.limit;
         return offsetVal;
@@ -359,6 +799,23 @@ const JobExplorer = props => {
         setCurrPage(page);
     };
 
+<<<<<<< HEAD
+=======
+    const handleStartDate = e => {
+        setFilters({
+            ...filters,
+            startDate: e
+        });
+    };
+
+    const handleEndDate = e => {
+        setFilters({
+            ...filters,
+            endDate: e
+        });
+    };
+
+>>>>>>> Squashed commit of the following:
     return (
         <React.Fragment>
             <PageHeader>
@@ -384,6 +841,7 @@ const JobExplorer = props => {
                       </TitleWithBadge>
                   </CardHeader>
                   <CardBody>
+<<<<<<< HEAD
                       <FilterableToolbar
                           orgs={ orgIds }
                           statuses={ statuses }
@@ -400,6 +858,122 @@ const JobExplorer = props => {
                       { !apiError && isLoading && <LoadingState /> }
                       { !apiError && !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
                       { !apiError && !isLoading && jobExplorerData.length > 0 && (
+=======
+                      <DataToolbar
+                          id="data-toolbar-with-chip-groups"
+                          clearAllFilters={ onDelete }
+                          collapseListedFiltersBreakpoint="xl"
+                      >
+                          <DataToolbarContent>
+                              <DataToolbarToggleGroup
+                                  toggleIcon={ <FilterIcon /> }
+                                  breakpoint="xl"
+                              >
+                                  { quickDateRanges.length > 0 && (
+                                      <DataToolbarGroup variant="filter-group">
+                                          { buildCategoryDropdown() }
+                                          { buildFilterDropdown() }
+                                          { /* { filters.type.includes('workflowjob') && (
+                            <>
+                              <Switch
+                                  id="showRootWorkflowJobs"
+                                  label="Ignore nested workflows and jobs"
+                                  labelOff="Ignore nested workflows and jobs"
+                                  isChecked={ filters.showRootWorkflows }
+                                  onChange={ () => {
+                                      setFilters({
+                                          ...filters,
+                                          showRootWorkflows: !filters.showRootWorkflows
+                                      });
+                                  } }
+                              />
+                              <Tooltip
+                                  position={ TooltipPosition.top }
+                                  content={
+                                      <div>
+                                          { ' ' }
+                                    If enabled, nested workflows and jobs
+                                    will not be included in the overall totals.
+                                    Enable this option to filter out duplicate entries.
+                                      </div>
+                                  }
+                              >
+                                  <QuestionCircleIcon />
+                              </Tooltip>
+                            </>
+                                          ) } */ }
+                                          { filters.date === 'custom' && (
+                            <>
+                              <InputGroup>
+                                  <InputGroupText
+                                      component="label"
+                                      htmlFor="startDate"
+                                  >
+                                      <CalendarAltIcon />
+                                  </InputGroupText>
+                                  <TextInput
+                                      name="startDate"
+                                      id="startDate"
+                                      type="date"
+                                      aria-label="Start Date"
+                                      value={ filters.startDate }
+                                      onChange={ e => handleStartDate(e) }
+                                  />
+                              </InputGroup>
+                              <InputGroup>
+                                  <InputGroupText
+                                      component="label"
+                                      htmlFor="endDate"
+                                  >
+                                      <CalendarAltIcon />
+                                  </InputGroupText>
+                                  <TextInput
+                                      name="endDate"
+                                      id="endDate"
+                                      type="date"
+                                      aria-label="End Date"
+                                      value={ filters.endDate }
+                                      onChange={ e => handleEndDate(e) }
+                                  />
+                              </InputGroup>
+                            </>
+                                          ) }
+                                      </DataToolbarGroup>
+                                  ) }
+                              </DataToolbarToggleGroup>
+                              <div>
+                                  <Switch
+                                      id="showRootWorkflowJobs"
+                                      label="Ignore nested workflows and jobs"
+                                      labelOff="Ignore nested workflows and jobs"
+                                      isChecked={ filters.showRootWorkflows }
+                                      onChange={ () => {
+                                          setFilters({
+                                              ...filters,
+                                              showRootWorkflows: !filters.showRootWorkflows
+                                          });
+                                      } }
+                                  />
+                                  <Tooltip
+                                      position={ TooltipPosition.top }
+                                      content={
+                                          <div>
+                                              { ' ' }
+                                    If enabled, nested workflows and jobs
+                                    will not be included in the overall totals.
+                                    Enable this option to filter out duplicate entries.
+                                          </div>
+                                      }
+                                  >
+                                      <QuestionCircleIcon />
+                                  </Tooltip>
+                              </div>
+                          </DataToolbarContent>
+                      </DataToolbar>
+                      { isLoading && <LoadingState /> }
+                      { !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
+                      { !isLoading && jobExplorerData.length > 0 && (
+>>>>>>> Squashed commit of the following:
                   <>
                     <JobExplorerList jobs={ jobExplorerData } />
                     <Pagination
@@ -429,9 +1003,12 @@ const JobExplorer = props => {
     );
 };
 
+<<<<<<< HEAD
 JobExplorer.propTypes = {
     location: PropTypes.object,
     history: PropTypes.object
 };
 
+=======
+>>>>>>> Squashed commit of the following:
 export default JobExplorer;

@@ -95,11 +95,19 @@ export const formatQueryStrings = ({
         if (Array.isArray(sortBy)) {
             return sortBy
             .map(attr => {
+<<<<<<< HEAD
                 return `sort_by=${encodeURIComponent(attr)}`;
             })
             .join('&');
         } else {
             return `sort_by=${encodeURIComponent(sortBy)}`;
+=======
+                return `sort_by[]=${encodeURIComponent(attr)}`;
+            })
+            .join('&');
+        } else {
+            return `sort_by[]=${encodeURIComponent(sortBy)}`;
+>>>>>>> Squashed commit of the following:
         }
     };
 

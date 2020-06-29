@@ -31,8 +31,12 @@ class BarChart extends Component {
         const initialQueryParams = {
             start_date: formattedDate,
             end_date: formattedDate,
+<<<<<<< HEAD
             quick_date_range: 'custom',
             status: [ 'failed', 'successful' ]
+=======
+            quick_date_range: 'custom'
+>>>>>>> Squashed commit of the following:
         };
         const { strings, stringify } = formatQueryStrings(initialQueryParams);
         const search = stringify(strings);

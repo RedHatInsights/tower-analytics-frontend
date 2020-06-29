@@ -201,12 +201,21 @@ class GroupedBarChart extends Component {
 
     redirectToJobExplorer({ date, id }) {
         let org_id;
+<<<<<<< HEAD
         if (id === -1) {
             // disable clicking on "others" block
             return;
         }
 
         org_id = id;
+=======
+        if (id === null) {
+            org_id = -2;
+        } else {
+            org_id = id;
+        }
+
+>>>>>>> Squashed commit of the following:
         const { jobExplorer } = Paths;
         const formattedDate = formatDate(date);
         const initialQueryParams = {
