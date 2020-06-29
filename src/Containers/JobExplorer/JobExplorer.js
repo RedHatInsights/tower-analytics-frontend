@@ -8,7 +8,11 @@ import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
-import { preflightRequest, readJobExplorer, readJobExplorerOptions } from '../../Api';
+import {
+    preflightRequest,
+    readJobExplorer,
+    readJobExplorerOptions
+} from '../../Api';
 import { jobExplorer } from '../../Utilities/constants';
 import { Paths } from '../../paths';
 
@@ -20,14 +24,18 @@ import {
 
 import {
     DataToolbar,
-    DataToolbarContent,
+    DataToolbarContent as PFDataToolbarContent,
     DataToolbarFilter,
     DataToolbarToggleGroup,
     DataToolbarGroup as PFDataToolbarGroup,
     DataToolbarItem
 } from '@patternfly/react-core/dist/esm/experimental';
 
-import { FilterIcon, CalendarAltIcon } from '@patternfly/react-icons';
+import {
+    FilterIcon,
+    CalendarAltIcon,
+    QuestionCircleIcon
+} from '@patternfly/react-icons';
 
 import {
     Badge,
@@ -45,17 +53,20 @@ import {
     DropdownItem,
     InputGroup,
     InputGroupText,
-    TextInput
+    TextInput,
+    Switch as PFSwitch,
+    Tooltip,
+    TooltipPosition
 } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
 
 const DataToolbarGroup = styled(PFDataToolbarGroup)`
-    button {
-        .pf-c-select__toggle-wrapper {
-            flex-wrap: nowrap;
-        }
+  button {
+    .pf-c-select__toggle-wrapper {
+      flex-wrap: nowrap;
     }
+  }
 `;
 const CardHeader = styled(PFCardHeader)`
   display: flex;
@@ -75,6 +86,18 @@ const TitleWithBadge = styled.div`
   }
 `;
 
+const Switch = styled(PFSwitch)`
+    &&& {
+        margin: 0 15px;
+    }
+`;
+
+const DataToolbarContent = styled(PFDataToolbarContent)`
+    .pf-c-data-toolbar__content-section {
+        justify-content: space-between;
+    }
+`;
+
 const perPageOptions = [
     { title: '5', value: 5 },
     { title: '10', value: 10 },
@@ -92,7 +115,7 @@ const initialOptionsParams = {
     attributes: jobExplorer.attributes
 };
 
-const JobExplorer = (props) => {
+const JobExplorer = props => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ jobExplorerData, setJobExplorerData ] = useState([]);
     const [ firstRender, setFirstRender ] = useState(true);
@@ -127,16 +150,19 @@ const JobExplorer = (props) => {
         setTemplate,
         setSortBy2,
         setQuickDateRange,
+        setRootWorkflowsAndJobs,
         setStart_Date,
         setEnd_Date
     } = useQueryParams(initialQueryParams);
 
-    const {
-        queryParams: optionsQueryParams
-    } = useQueryParams(initialOptionsParams);
+    const { queryParams: optionsQueryParams } = useQueryParams(
+        initialOptionsParams
+    );
 
     const { parse } = formatQueryStrings(queryParams);
-    const { location: { search }} = props;
+    const {
+        location: { search }
+    } = props;
     let initialSearchParams = parse(search);
     let combined = { ...initialSearchParams, ...queryParams };
     const formattedArray = datum => {
@@ -148,15 +174,20 @@ const JobExplorer = (props) => {
     };
 
     const [ filters, setFilters ] = useState({
-        status: combined.status ? formattedArray(combined.status) : [ 'successful', 'failed' ],
-        type: combined.job_type ? formattedArray(combined.job_type) : [ 'job', 'workflowjob' ],
+        status: combined.status
+            ? formattedArray(combined.status)
+            : [ 'successful', 'failed' ],
+        type: combined.job_type
+            ? formattedArray(combined.job_type)
+            : [ 'job', 'workflowjob' ],
         org: combined.org_id ? formattedArray(combined.org_id) : [],
         cluster: combined.cluster_id ? formattedArray(combined.cluster_id) : [],
         template: combined.template_id ? formattedArray(combined.template_id) : [],
         sortby: combined.sort_by ? formattedArray(combined.sort_by) : [],
         startDate: combined.start_date ? combined.start_date : '',
         endDate: combined.end_date ? combined.end_date : '',
-        date: combined.quick_date_range ? combined.quick_date_range : ''
+        date: combined.quick_date_range ? combined.quick_date_range : '',
+        showRootWorkflows: combined.only_root_workflows_and_standalone_jobs ? combined.only_root_workflows_and_standalone_jobs : false
     });
     useEffect(() => {
         const updateURL = () => {
@@ -179,24 +210,17 @@ const JobExplorer = (props) => {
         }
 
         const getData = () => {
-            return Promise.all(
-                [ readJobExplorer({ params: combined }) ],
-            );
-
+            return Promise.all([ readJobExplorer({ params: combined }) ]);
         };
 
         const update = async () => {
             setIsLoading(true);
             await window.insights.chrome.auth.getUser();
-            getData().then(
-                ([
-                    { items: jobExplorerData = [], meta }
-                ]) => {
-                    setJobExplorerData(jobExplorerData);
-                    setMeta(meta);
-                    setIsLoading(false);
-                }
-            );
+            getData().then(([{ items: jobExplorerData = [], meta }]) => {
+                setJobExplorerData(jobExplorerData);
+                setMeta(meta);
+                setIsLoading(false);
+            });
         };
 
         update();
@@ -231,6 +255,8 @@ const JobExplorer = (props) => {
             setSortBy2(filters.sortby);
         }
 
+        setRootWorkflowsAndJobs(filters.showRootWorkflows);
+
         setQuickDateRange(filters.date);
 
         setStart_Date(filters.startDate);
@@ -242,11 +268,12 @@ const JobExplorer = (props) => {
         let ignore = false;
 
         const fetchEndpoints = () => {
-            return Promise.all([
-                readJobExplorer({ params: combined }),
-                readJobExplorerOptions({ params: optionsQueryParams })
-
-            ].map(p => p.catch(() => [])));
+            return Promise.all(
+                [
+                    readJobExplorer({ params: combined }),
+                    readJobExplorerOptions({ params: optionsQueryParams })
+                ].map(p => p.catch(() => []))
+            );
         };
 
         async function initializeWithPreflight() {
@@ -265,7 +292,8 @@ const JobExplorer = (props) => {
                         status,
                         template_id,
                         quick_date_range,
-                        sort_by }
+                        sort_by
+                    }
                 ]) => {
                     if (!ignore) {
                         setJobExplorerData(jobExplorerData);
@@ -290,7 +318,7 @@ const JobExplorer = (props) => {
 
     const handleChips = (item, comparator) => {
         return item.reduce((acc, i) => {
-            Number.isInteger(parseInt(i)) ? i = parseInt(i) : i;
+            Number.isInteger(parseInt(i)) ? (i = parseInt(i)) : i;
             comparator.forEach(item => {
                 if (item.key === i) {
                     acc.push(item.value);
@@ -316,7 +344,7 @@ const JobExplorer = (props) => {
 
     const onDelete = (type, val) => {
         let filtered;
-        Number.isInteger(val) ? val = parseInt(val) : val;
+        Number.isInteger(val) ? (val = parseInt(val)) : val;
 
         if (type === 'Status') {
             filtered = statuses.filter(status => status.value === val);
@@ -353,23 +381,23 @@ const JobExplorer = (props) => {
             } else {
                 setFilters({
                     ...filters,
-                    [type.toLowerCase()]: filters[type.toLowerCase()].filter(value => value !== filtered[0].key.toString())
+                    [type.toLowerCase()]: filters[type.toLowerCase()].filter(
+                        value => value !== filtered[0].key.toString()
+                    )
                 });
             }
         } else {
-            setFilters(
-                {
-                    status: [],
-                    type: [],
-                    org: [],
-                    cluster: [],
-                    template: [],
-                    sortby: [],
-                    date: '',
-                    startDate: '',
-                    endDate: ''
-                }
-            );
+            setFilters({
+                status: [],
+                type: [],
+                org: [],
+                cluster: [],
+                template: [],
+                sortby: [],
+                date: '',
+                startDate: '',
+                endDate: ''
+            });
         }
     };
 
@@ -377,14 +405,20 @@ const JobExplorer = (props) => {
         return (
             <DataToolbarItem>
                 <Dropdown
-                    onSelect={ (e) => {
+                    onSelect={ e => {
                         setCurrentCategory(e.target.innerText);
                         setIsCategoryExpanded(!isCategoryExpanded);
                     } }
                     position={ DropdownPosition.left }
                     toggle={
-                        <DropdownToggle onToggle={ () => { setIsCategoryExpanded(!isCategoryExpanded); } } style={ { width: '100%' } }>
-                            <FilterIcon />&nbsp;{ currentCategory }
+                        <DropdownToggle
+                            onToggle={ () => {
+                                setIsCategoryExpanded(!isCategoryExpanded);
+                            } }
+                            style={ { width: '100%' } }
+                        >
+                            <FilterIcon />
+              &nbsp;{ currentCategory }
                         </DropdownToggle>
                     }
                     isOpen={ isCategoryExpanded }
@@ -398,38 +432,52 @@ const JobExplorer = (props) => {
                         <DropdownItem key="cat5">Sort by</DropdownItem>
                     ] }
                     style={ { width: '100%' } }
-                ></Dropdown>
+                />
             </DataToolbarItem>
         );
     };
 
     const buildFilterDropdown = () => {
         const organizationIdMenuItems = orgIds.map(({ key, value }) => (
-            <SelectOption key={ key } value={ `${key}` }>{ value }</SelectOption>
+            <SelectOption key={ key } value={ `${key}` }>
+                { value }
+            </SelectOption>
         ));
 
         const statusMenuItems = statuses.map(({ key, value }) => (
-            <SelectOption key={ key } value={ key }>{ value }</SelectOption>
+            <SelectOption key={ key } value={ key }>
+                { value }
+            </SelectOption>
         ));
 
         const jobTypeMenuItems = jobTypes.map(({ key, value }) => (
-            <SelectOption key={ key } value={ key }>{ value }</SelectOption>
+            <SelectOption key={ key } value={ key }>
+                { value }
+            </SelectOption>
         ));
 
         const clusterIdMenuItems = clusterIds.map(({ key, value }) => (
-            <SelectOption key={ key } value={ `${key}` }>{ value }</SelectOption>
+            <SelectOption key={ key } value={ `${key}` }>
+                { value }
+            </SelectOption>
         ));
 
         const templateIdMenuItems = templateIds.map(({ key, value }) => (
-            <SelectOption key={ key } value={ `${key}` }>{ value }</SelectOption>
+            <SelectOption key={ key } value={ `${key}` }>
+                { value }
+            </SelectOption>
         ));
 
         const sortByMenuItems = sortBy.map(({ key, value }) => (
-            <SelectOption key={ key } value={ key }>{ value }</SelectOption>
+            <SelectOption key={ key } value={ key }>
+                { value }
+            </SelectOption>
         ));
 
         const dateRangeMenuItems = quickDateRanges.map(({ key, value }) => (
-            <SelectOption key={ key } value={ key }>{ value }</SelectOption>
+            <SelectOption key={ key } value={ key }>
+                { value }
+            </SelectOption>
         ));
 
         const onSelect = (type, event, selection) => {
@@ -439,7 +487,7 @@ const JobExplorer = (props) => {
                 ...filters,
                 [type]: checked
                     ? [ ...filters[type], selection ]
-                    : filters[type].filter((value) => value !== selection)
+                    : filters[type].filter(value => value !== selection)
             });
         };
 
@@ -462,7 +510,9 @@ const JobExplorer = (props) => {
                     <Select
                         variant={ SelectVariant.checkbox }
                         aria-label="Status"
-                        onToggle={ () => { setStatusIsExpanded(!statusIsExpanded); } }
+                        onToggle={ () => {
+                            setStatusIsExpanded(!statusIsExpanded);
+                        } }
                         onSelect={ (event, selection) => {
                             onSelect('status', event, selection);
                         } }
@@ -482,7 +532,9 @@ const JobExplorer = (props) => {
                     <Select
                         variant={ SelectVariant.single }
                         aria-label="Date"
-                        onToggle={ () => { setDateRangeIsExpanded(!dateRangeIsExpanded); } }
+                        onToggle={ () => {
+                            setDateRangeIsExpanded(!dateRangeIsExpanded);
+                        } }
                         onSelect={ (event, selection) => {
                             onDateSelect(event, selection);
                         } }
@@ -502,7 +554,9 @@ const JobExplorer = (props) => {
                     <Select
                         aria-label="Type"
                         variant={ SelectVariant.checkbox }
-                        onToggle={ () => { setJobTypeIsExpanded(!jobTypeIsExpanded);} }
+                        onToggle={ () => {
+                            setJobTypeIsExpanded(!jobTypeIsExpanded);
+                        } }
                         onSelect={ (event, selection) => {
                             onSelect('type', event, selection);
                         } }
@@ -522,7 +576,9 @@ const JobExplorer = (props) => {
                     <Select
                         aria-label="Filter by Org"
                         variant={ SelectVariant.checkbox }
-                        onToggle={ () => { setOrgIsExpanded(!orgIsExpanded); } }
+                        onToggle={ () => {
+                            setOrgIsExpanded(!orgIsExpanded);
+                        } }
                         onSelect={ (event, selection) => {
                             onSelect('org', event, selection);
                         } }
@@ -542,7 +598,9 @@ const JobExplorer = (props) => {
                     <Select
                         aria-label="Filter by Cluster"
                         variant={ SelectVariant.checkbox }
-                        onToggle={ () => { setClusterIsExpanded(!clusterIsExpanded); } }
+                        onToggle={ () => {
+                            setClusterIsExpanded(!clusterIsExpanded);
+                        } }
                         onSelect={ (event, selection) => {
                             onSelect('cluster', event, selection);
                         } }
@@ -582,7 +640,9 @@ const JobExplorer = (props) => {
                     <Select
                         aria-label="Sort by"
                         variant={ SelectVariant.checkbox }
-                        onToggle={ () => { setSortByIsExpanded(!sortByIsExpanded); } }
+                        onToggle={ () => {
+                            setSortByIsExpanded(!sortByIsExpanded);
+                        } }
                         onSelect={ (event, selection) => {
                             onSelect('sortby', event, selection);
                         } }
@@ -597,7 +657,7 @@ const JobExplorer = (props) => {
         );
     };
 
-    const returnOffsetVal = (page) => {
+    const returnOffsetVal = page => {
         let offsetVal = (page - 1) * queryParams.limit;
         return offsetVal;
     };
@@ -612,7 +672,7 @@ const JobExplorer = (props) => {
         </span>
     );
 
-    const handleSetPage = (page) => {
+    const handleSetPage = page => {
         const nextOffset = returnOffsetVal(page);
         setOffset(nextOffset);
         setCurrPage(page);
@@ -670,64 +730,138 @@ const JobExplorer = (props) => {
                           collapseListedFiltersBreakpoint="xl"
                       >
                           <DataToolbarContent>
-                              <DataToolbarToggleGroup toggleIcon={ <FilterIcon /> } breakpoint="xl">
+                              <DataToolbarToggleGroup
+                                  toggleIcon={ <FilterIcon /> }
+                                  breakpoint="xl"
+                              >
                                   { quickDateRanges.length > 0 && (
                                       <DataToolbarGroup variant="filter-group">
                                           { buildCategoryDropdown() }
                                           { buildFilterDropdown() }
+                                          { /* { filters.type.includes('workflowjob') && (
+                            <>
+                              <Switch
+                                  id="showRootWorkflowJobs"
+                                  label="Ignore nested workflows and jobs"
+                                  labelOff="Ignore nested workflows and jobs"
+                                  isChecked={ filters.showRootWorkflows }
+                                  onChange={ () => {
+                                      setFilters({
+                                          ...filters,
+                                          showRootWorkflows: !filters.showRootWorkflows
+                                      });
+                                  } }
+                              />
+                              <Tooltip
+                                  position={ TooltipPosition.top }
+                                  content={
+                                      <div>
+                                          { ' ' }
+                                    If enabled, nested workflows and jobs
+                                    will not be included in the overall totals.
+                                    Enable this option to filter out duplicate entries.
+                                      </div>
+                                  }
+                              >
+                                  <QuestionCircleIcon />
+                              </Tooltip>
+                            </>
+                                          ) } */ }
                                           { filters.date === 'custom' && (
-                                          <>
-                                        <InputGroup>
-                                            <InputGroupText component="label" htmlFor="startDate">
-                                                <CalendarAltIcon />
-                                            </InputGroupText>
-                                            <TextInput name="startDate" id="startDate" type="date" aria-label="Start Date" value={ filters.startDate }
-                                                onChange={ e => handleStartDate(e) }/>
-                                        </InputGroup>
-                                        <InputGroup>
-                                            <InputGroupText component="label" htmlFor="endDate">
-                                                <CalendarAltIcon />
-                                            </InputGroupText>
-                                            <TextInput name="endDate" id="endDate" type="date" aria-label="End Date" value={ filters.endDate }
-                                                onChange={ e => handleEndDate(e) } />
-                                        </InputGroup>
-                                        </>
+                            <>
+                              <InputGroup>
+                                  <InputGroupText
+                                      component="label"
+                                      htmlFor="startDate"
+                                  >
+                                      <CalendarAltIcon />
+                                  </InputGroupText>
+                                  <TextInput
+                                      name="startDate"
+                                      id="startDate"
+                                      type="date"
+                                      aria-label="Start Date"
+                                      value={ filters.startDate }
+                                      onChange={ e => handleStartDate(e) }
+                                  />
+                              </InputGroup>
+                              <InputGroup>
+                                  <InputGroupText
+                                      component="label"
+                                      htmlFor="endDate"
+                                  >
+                                      <CalendarAltIcon />
+                                  </InputGroupText>
+                                  <TextInput
+                                      name="endDate"
+                                      id="endDate"
+                                      type="date"
+                                      aria-label="End Date"
+                                      value={ filters.endDate }
+                                      onChange={ e => handleEndDate(e) }
+                                  />
+                              </InputGroup>
+                            </>
                                           ) }
                                       </DataToolbarGroup>
                                   ) }
                               </DataToolbarToggleGroup>
+                              <div>
+                                  <Switch
+                                      id="showRootWorkflowJobs"
+                                      label="Ignore nested workflows and jobs"
+                                      labelOff="Ignore nested workflows and jobs"
+                                      isChecked={ filters.showRootWorkflows }
+                                      onChange={ () => {
+                                          setFilters({
+                                              ...filters,
+                                              showRootWorkflows: !filters.showRootWorkflows
+                                          });
+                                      } }
+                                  />
+                                  <Tooltip
+                                      position={ TooltipPosition.top }
+                                      content={
+                                          <div>
+                                              { ' ' }
+                                    If enabled, nested workflows and jobs
+                                    will not be included in the overall totals.
+                                    Enable this option to filter out duplicate entries.
+                                          </div>
+                                      }
+                                  >
+                                      <QuestionCircleIcon />
+                                  </Tooltip>
+                              </div>
                           </DataToolbarContent>
                       </DataToolbar>
                       { isLoading && <LoadingState /> }
                       { !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
                       { !isLoading && jobExplorerData.length > 0 && (
-                                    <>
-                                        <JobExplorerList
-                                            jobs={ jobExplorerData }
-                                        />
-                                        <Pagination
-                                            itemCount={ meta.count ? meta.count : 0 }
-                                            widgetId="pagination-options-menu-bottom"
-                                            perPageOptions={ perPageOptions }
-                                            perPage={ queryParams.limit }
-                                            page={ currPage }
-                                            variant={ PaginationVariant.bottom }
-                                            dropDirection={ 'up' }
-                                            onPerPageSelect={ (_event, perPage, page) => {
-                                                handlePerPageSelect(perPage, page);
-                                            } }
-                                            onSetPage={ (_event, pageNumber) => {
-                                                handleSetPage(pageNumber);
-                                            } }
-                                            style={ { marginTop: '20px' } }
-                                        />
-                                    </>
+                  <>
+                    <JobExplorerList jobs={ jobExplorerData } />
+                    <Pagination
+                        itemCount={ meta.count ? meta.count : 0 }
+                        widgetId="pagination-options-menu-bottom"
+                        perPageOptions={ perPageOptions }
+                        perPage={ queryParams.limit }
+                        page={ currPage }
+                        variant={ PaginationVariant.bottom }
+                        dropDirection={ 'up' }
+                        onPerPageSelect={ (_event, perPage, page) => {
+                            handlePerPageSelect(perPage, page);
+                        } }
+                        onSetPage={ (_event, pageNumber) => {
+                            handleSetPage(pageNumber);
+                        } }
+                        style={ { marginTop: '20px' } }
+                    />
+                  </>
                       ) }
                   </CardBody>
               </Card>
           </Main>
-                </>
-
+        </>
             ) }
         </React.Fragment>
     );
