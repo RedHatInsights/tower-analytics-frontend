@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 /* eslint-disable camelcase */
 
+=======
+>>>>>>> Squashed commit of the following:
 export const jobExplorer = {
     attributes: [
         'id',
@@ -12,6 +15,7 @@ export const jobExplorer = {
         'cluster_name',
         'org_name',
         'most_failed_tasks'
+<<<<<<< HEAD
     ],
     defaultParams: {
         status: [ 'successful', 'failed' ],
@@ -32,3 +36,7 @@ export const toolbarCategories = [
     { name: 'Template', id: 6 },
     { name: 'Sort by', id: 7 }
 ];
+=======
+    ]
+};
+>>>>>>> Squashed commit of the following:

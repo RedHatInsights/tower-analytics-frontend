@@ -83,7 +83,11 @@ export const Routes = (props) => {
             <InsightsRoute path={ Paths.automationCalculator } component={ AutomationCalculator } rootClass="automationCalculator"/>
             <InsightsRoute path={ Paths.jobExplorer } component={ JobExplorer } rootClass="jobExplorer"/>
             { /* Finally, catch all unmatched routes and redirect to Clusters page */ }
+<<<<<<< HEAD
             <Route render={ () => some(Paths, p => p === path) ? null : (<Redirect to={ Paths.clusters } />) } />
+=======
+            <InsightsRoute path={ () => some(Paths, p => p === path) ? null : (<Redirect to={ Paths.clusters }/>) }/>
+>>>>>>> Squashed commit of the following:
         </Switch>
     );
 };

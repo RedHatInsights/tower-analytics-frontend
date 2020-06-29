@@ -14,9 +14,15 @@ import {
 
 import { ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
 
+<<<<<<< HEAD
 import LoadingState from '../Components/LoadingState';
 import { formatDateTime, formatJobType } from '../Utilities/helpers';
 import JobStatus from './JobStatus';
+=======
+import StatusIcon from '../Icons/StatusIcon/StatusIcon';
+import LoadingState from '../Components/LoadingState';
+import { formatDateTime, formatJobType, formatJobStatus } from '../Utilities/helpers';
+>>>>>>> Squashed commit of the following:
 
 const headerLabels = [
     'Id/Name',
@@ -73,7 +79,11 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                                         </a>
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
+<<<<<<< HEAD
                                         <JobStatus status={ item.status } />
+=======
+                                        <StatusIcon status={ item.status } />{ formatJobStatus(item.status) }
+>>>>>>> Squashed commit of the following:
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
                                         { item.cluster_name }
@@ -115,9 +125,15 @@ const AllJobsTemplate = ({ jobs }) => {
 
 const JobExplorerList = ({ jobs }) => (
   <>
+<<<<<<< HEAD
     { jobs.length <= 0 && <LoadingState /> }
     <>
       { buildHeader(headerLabels) }
+=======
+    {jobs.length <= 0 && <LoadingState />}
+    <>
+      {buildHeader(headerLabels)}
+>>>>>>> Squashed commit of the following:
       <AllJobsTemplate jobs={ jobs } />
     </>
   </>

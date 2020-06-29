@@ -83,12 +83,20 @@ export const useQueryParams = initial => {
 
                 return { ...state, template_id: [ ...action.template ]};
             case 'SET_SORTBY':
+<<<<<<< HEAD
                 if (action.sortBy === null) {
+=======
+                if (action.sortBy.length <= 0) {
+>>>>>>> Squashed commit of the following:
                     const { sort_by: ignored, ...rest } = state;
                     return rest;
                 }
 
+<<<<<<< HEAD
                 return { ...state, sort_by: action.sortBy };
+=======
+                return { ...state, sort_by: [ ...action.sortBy ]};
+>>>>>>> Squashed commit of the following:
             case 'SET_ROOT_WORKFLOWS_AND_JOBS':
                 return { ...state, only_root_workflows_and_standalone_jobs: action.bool };
             case 'SET_QUICK_DATE_RANGE':
@@ -104,14 +112,22 @@ export const useQueryParams = initial => {
                     return rest;
                 }
 
+<<<<<<< HEAD
                 return { ...state, start_date: formatDate(action.date) };
+=======
+                return { ...state, start_date: action.date };
+>>>>>>> Squashed commit of the following:
             case 'SET_END_DATE':
                 if (action.date === null) {
                     const { end_date: ignored, ...rest } = state;
                     return rest;
                 }
 
+<<<<<<< HEAD
                 return { ...state, end_date: formatDate(action.date) };
+=======
+                return { ...state, end_date: action.date };
+>>>>>>> Squashed commit of the following:
             default:
                 throw new Error();
         }
