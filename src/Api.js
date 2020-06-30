@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable max-len */
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
 /*eslint max-len: ["error", { "ignoreTemplateLiterals": true }]*/
@@ -108,8 +109,12 @@ export const readJobExplorerOptions = ({ params = {}}) => {
 };
 
 export const readJobExplorer = ({ params = {}}) => {
-    const { attributes: ignored, ...rest } = params;
-    const { strings, stringify } = formatQueryStrings(rest);
+    const { limit, sort_by } = params;
+    const paginationParams = {
+        limit,
+        sort_by
+    };
+    const { strings, stringify } = formatQueryStrings(paginationParams);
     const qs = stringify(strings);
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(jobExplorerEndpoint, formattedUrl);
