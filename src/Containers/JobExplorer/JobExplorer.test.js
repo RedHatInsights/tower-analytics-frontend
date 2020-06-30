@@ -1,10 +1,13 @@
-/*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
-import { mount } from 'enzyme';
-import { act } from 'react-dom/test-utils';
+
+import { shallow } from 'enzyme';
 import JobExplorer from './JobExplorer';
 
-describe('Components/JobExplorer', () => {
+describe('Containers/Clusters', () => {
+    it('Clusters loads', () => {
+        expect(JobExplorer).toBeTruthy();
+    });
     it('should render successfully', () => {
-        mount(<JobExplorer />);
+        const wrapper = shallow(<JobExplorer location={{ search: '&foo=bar'}} />);
+        console.log(wrapper.debug());
     });
 });
