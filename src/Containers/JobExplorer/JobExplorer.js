@@ -326,6 +326,7 @@ const JobExplorer = props => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 >>>>>>> Squashed commit of the following:
@@ -334,6 +335,8 @@ const JobExplorer = props => {
 =======
 
 >>>>>>> Squashed commit of the following:
+=======
+>>>>>>> Add paginationParams to request URL for job explorer endpoint.
         insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
         updateURL();
     }, []);

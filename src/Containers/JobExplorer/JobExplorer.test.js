@@ -12,6 +12,7 @@ describe('Containers/Clusters', () => {
     it('should render successfully', () => {
         shallow(<JobExplorer location={ { search: '&foo=bar' } } />);
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Squashed commit of the following:
@@ -41,5 +42,7 @@ describe('Containers/Clusters', () => {
         const wrapper = shallow(<JobExplorer location={{ search: '&foo=bar'}} />);
         console.log(wrapper.debug());
 >>>>>>> Begin writing unit tests for Job Explorer view.
+=======
+>>>>>>> Add paginationParams to request URL for job explorer endpoint.
     });
 });

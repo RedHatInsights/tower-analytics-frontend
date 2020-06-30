@@ -98,6 +98,7 @@ export const formatQueryStrings = ({
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 return `sort_by=${encodeURIComponent(attr)}`;
             })
             .join('&');
@@ -111,6 +112,9 @@ export const formatQueryStrings = ({
 =======
                 return `sort_by[]=${encodeURIComponent(attr)}`;
 >>>>>>> Squashed commit of the following:
+=======
+                return `sort_by=${encodeURIComponent(attr)}`;
+>>>>>>> Add paginationParams to request URL for job explorer endpoint.
             })
             .join('&');
         } else {
