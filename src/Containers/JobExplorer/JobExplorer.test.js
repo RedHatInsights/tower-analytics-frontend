@@ -7,7 +7,6 @@ describe('Containers/Clusters', () => {
         expect(JobExplorer).toBeTruthy();
     });
     it('should render successfully', () => {
-        const wrapper = shallow(<JobExplorer location={{ search: '&foo=bar'}} />);
-        console.log(wrapper.debug());
+        shallow(<JobExplorer location={ { search: '&foo=bar' } } />);
     });
 });

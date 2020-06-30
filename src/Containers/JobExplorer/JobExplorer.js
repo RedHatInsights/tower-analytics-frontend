@@ -198,7 +198,6 @@ const JobExplorer = props => {
     };
 
     useEffect(() => {
-
         insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
         updateURL();
     }, []);
