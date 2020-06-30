@@ -16,7 +16,7 @@ import {
 import {
     Card,
     CardBody,
-    CardHeader,
+    CardTitle,
     InputGroup,
     InputGroupText,
     TextInput,
@@ -101,29 +101,29 @@ const IconGroup = styled.div`
 `;
 
 const Wrapper = styled.div`
-    display: grid;
-    grid-template-columns: 5fr 2fr;
+  display: grid;
+  grid-template-columns: 5fr 2fr;
 `;
 
 const WrapperLeft = styled.div`
-    flex: 5;
-    display: flex;
-    flex-direction: column;
-    overflow: auto;
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
 `;
 
 const WrapperRight = styled.div`
-    flex: 2;
-    display: flex;
-    flex-direction: column;
+  flex: 2;
+  display: flex;
+  flex-direction: column;
 `;
 
 const title = (
-    <span>
+    <span style={ { fontWeight: 400 } }>
     Automation Analytics
-        <span style={ { fontSize: '16px' } }>
+        <span style={ { fontSize: '16px', fontWeight: 400 } }>
             { ' ' }
-            <span style={ { margin: '0 10px' } }>|</span> Automation Calculator
+            <span style={ { margin: '0 10px' } }>|</span> Automation calculator
         </span>
     </span>
 );
@@ -183,7 +183,7 @@ export const automationCalculatorMethods = () => {
 
     const updateData = (seconds, id, data) => {
         let updatedData = [ ...data ];
-        updatedData.map(datum => {
+        updatedData.map((datum) => {
             if (datum.id === id) {
                 // Update manual calculations
                 datum.calculations[0].avg_run = seconds;
@@ -193,7 +193,7 @@ export const automationCalculatorMethods = () => {
         return updatedData;
     };
 
-    const handleManualTimeChange = minutes => {
+    const handleManualTimeChange = (minutes) => {
         const seconds = convertMinsToSeconds(minutes);
         return seconds;
     };
@@ -201,7 +201,7 @@ export const automationCalculatorMethods = () => {
     const formatSelectedIds = (arr, id) => {
         let selected;
         if (arr.includes(id)) {
-            selected = [ ...arr ].filter(s => s !== id);
+            selected = [ ...arr ].filter((s) => s !== id);
         } else {
             selected = [ ...arr, id ];
         }
@@ -247,7 +247,7 @@ export const useAutomationFormula = () => {
         async function initializeWithPreflight() {
             setIsLoading(true);
             await window.insights.chrome.auth.getUser();
-            await preflightRequest().catch(error => {
+            await preflightRequest().catch((error) => {
                 setPreFlightError({ preflightError: error });
             });
             getData().then(({ templates: roiData = []}) => {
@@ -268,7 +268,7 @@ export const useAutomationFormula = () => {
         let costAutomationPerHour;
         let costManualPerHour;
 
-        data.forEach(datum => {
+        data.forEach((datum) => {
             costAutomationPerHour =
         convertSecondsToHours(datum.successful_elapsed_sum) * costAutomation;
             costManualPerHour =
@@ -291,7 +291,7 @@ export const useAutomationFormula = () => {
         const filteredData = unfilteredData.filter(
             ({ id }) => !selectedIds.includes(id)
         );
-        templatesList.map(l => {
+        templatesList.map((l) => {
             if (selectedIds.includes(l.id)) {
                 l.isActive = false;
             } else {
@@ -302,7 +302,11 @@ export const useAutomationFormula = () => {
     }, [ selectedIds ]);
 
     useEffect(() => {
-        const formatted = formatData(roiData, { defaultAvgRunVal, defaultCostAutomation, defaultCostManual });
+        const formatted = formatData(roiData, {
+            defaultAvgRunVal,
+            defaultCostAutomation,
+            defaultCostManual
+        });
         setUnfilteredData(formatted);
         setFormattedData(formatted);
         setTemplatesList(formatted);
@@ -356,7 +360,7 @@ const AutomationCalculator = () => {
       <PageHeader style={ { flex: '0' } }>
           <PageHeaderTitle title={ title } />
       </PageHeader>
-      {preflightError && (
+      { preflightError && (
           <Main>
               <Card>
                   <CardBody>
@@ -364,54 +368,54 @@ const AutomationCalculator = () => {
                   </CardBody>
               </Card>
           </Main>
-      )}
-      {!preflightError && (
-          <>
+      ) }
+      { !preflightError && (
+        <>
           <Wrapper className="automation-wrapper">
               <WrapperLeft>
                   <Main style={ { paddingBottom: '0' } }>
                       <Card>
-                          <CardHeader>Automation savings</CardHeader>
+                          <CardTitle>Automation savings</CardTitle>
                           <CardBody>
                               { isLoading && !preflightError && <LoadingState /> }
                               { !isLoading && formattedData.length <= 0 && <NoData /> }
                               { formattedData.length > 0 && !isLoading && (
-                    <>
-                      <TopTemplatesSavings
-                          margin={ { top: 20, right: 20, bottom: 20, left: 70 } }
-                          id="d3-roi-chart-root"
-                          data={ formattedData }
-                          selected={ selectedIds }
-                      />
-                      <p style={ { textAlign: 'center' } }>Templates</p>
-                    </>
+                      <>
+                        <TopTemplatesSavings
+                            margin={ { top: 20, right: 20, bottom: 20, left: 70 } }
+                            id="d3-roi-chart-root"
+                            data={ formattedData }
+                            selected={ selectedIds }
+                        />
+                        <p style={ { textAlign: 'center' } }>Templates</p>
+                      </>
                               ) }
                           </CardBody>
                       </Card>
                   </Main>
                   <Main>
                       <Card style={ { height: '100%' } }>
-                          <CardHeader>Automation formula</CardHeader>
+                          <CardTitle>Automation formula</CardTitle>
                           <CardBody>
                               <p>
-                                  <b>Manual cost for template X</b> =
+                                  <b>Manual cost for template x</b> =
                                   <em>
-                          (time for a manual run on one host * (sum of all hosts
-                          across all job runs) ) * cost per hour
+                        (time for a manual run on one host * (sum of all hosts
+                        across all job runs) ) * cost per hour
                                   </em>
                               </p>
                               <p>
-                                  <b>Automation cost for template X</b> =
+                                  <b>Automation cost for template x</b> =
                                   <em>
-                          cost of automation per hour * sum of total elapsed hours
-                          for a template
+                        cost of automation per hour * sum of total elapsed hours
+                        for a template
                                   </em>
                               </p>
                               <p>
                                   <b>Savings</b> =
                                   <em>
-                          Sum of (manual cost - automation cost) across all
-                          templates
+                        Sum of (manual cost - automation cost) across all
+                        templates
                                   </em>
                               </p>
                           </CardBody>
@@ -421,9 +425,9 @@ const AutomationCalculator = () => {
               <WrapperRight>
                   <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
                       <Card>
-                          <CardHeader style={ { paddingBottom: '0' } }>
-                  Total savings
-                          </CardHeader>
+                          <CardTitle style={ { paddingBottom: '0' } }>
+                    Total savings
+                          </CardTitle>
                           <CardBody>
                               <Title
                                   headingLevel="h3"
@@ -437,14 +441,18 @@ const AutomationCalculator = () => {
                   </Main>
                   <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
                       <Card>
-                          <CardHeader style={ { paddingBottom: '10px' } }>
-                  Calculate your automation
-                          </CardHeader>
+                          <CardTitle style={ { paddingBottom: '10px' } }>
+                    Calculate your automation
+                          </CardTitle>
                           <CardBody>
                               <InputAndText>
+
                                   <p>Manual cost of automation</p>
-                                  <em style={ { color: 'var(--pf-global--Color--dark-200)' } }>
-                      (e.g. average salary of mid-level SE)
+                                  <em
+                                      style={ { color: 'var(--pf-global--Color--dark-200)' } }
+                                  >
+                        (e.g. average salary of mid-level SE)
+
                                   </em>
                                   <InputGroup style={ { width: '50%' } }>
                                       <InputGroupText>
@@ -457,13 +465,13 @@ const AutomationCalculator = () => {
                                           min="0"
                                           aria-label="manual-cost"
                                           value={ parseFloat(costManual) }
-                                          onChange={ e => setCostManual(e) }
+                                          onChange={ (e) => setCostManual(e) }
                                       />
                                       <InputGroupText>/hr</InputGroupText>
                                   </InputGroup>
                               </InputAndText>
                               <InputAndText style={ { paddingTop: '10px' } }>
-                                  <p>Cost of automation</p>
+                                  <p>Automated process cost</p>
                                   <InputGroup style={ { width: '50%' } }>
                                       <InputGroupText>
                                           <DollarSignIcon />
@@ -475,7 +483,7 @@ const AutomationCalculator = () => {
                                           min="0"
                                           aria-label="automation-cost"
                                           value={ parseFloat(costAutomation) }
-                                          onChange={ e => setCostAutomation(e) }
+                                          onChange={ (e) => setCostAutomation(e) }
                                       />
                                       <InputGroupText>/hr</InputGroupText>
                                   </InputGroup>
@@ -483,14 +491,22 @@ const AutomationCalculator = () => {
                           </CardBody>
                       </Card>
                   </Main>
-                  <Main style={ { display: 'flex', flexDirection: 'column', flex: '1 1 0', paddingLeft: '0' } }>
-                      <Card style={ { overflow: 'auto', flex: '1 1 0' } } >
-                          <CardHeader>Top templates</CardHeader>
+                  <Main
+                      style={ {
+                          display: 'flex',
+                          flexDirection: 'column',
+                          flex: '1 1 0',
+                          paddingLeft: '0'
+                      } }
+                  >
+                      <Card style={ { overflow: 'auto', flex: '1 1 0' } }>
+                          <CardTitle>Top templates</CardTitle>
                           <CardBody>
                               <p>
-                              Enter the time it takes to manually perform the tasks that the following templates automate.
+                      Enter the time it takes to manually perform the tasks that
+                      the following templates automate.
                               </p>
-                              { templatesList.map(data => (
+                              { templatesList.map((data) => (
                                   <div key={ data.id }>
                                       <p style={ { padding: '15px 0 10px' } }>{ data.name }</p>
                                       <TemplateDetail>
@@ -503,7 +519,7 @@ const AutomationCalculator = () => {
                                                       value={ convertSecondsToMins(
                                                           data.calculations[0].avg_run
                                                       ) }
-                                                      onChange={ e => {
+                                                      onChange={ (e) => {
                                                           const seconds = handleManualTimeChange(e);
                                                           const updated = updateData(
                                                               seconds,
@@ -518,7 +534,7 @@ const AutomationCalculator = () => {
                                               </InputGroup>
                                           </InputAndText>
                                           <TemplateDetailSubTitle>
-                          x { data.run_count } runs, { data.host_count } hosts
+                            x { data.run_count } runs, { data.host_count } hosts
                                           </TemplateDetailSubTitle>
                                           <IconGroup>
                                               <Tooltip
@@ -540,8 +556,12 @@ const AutomationCalculator = () => {
                                                               { data.failed_elapsed_sum.toFixed(2) }s
                                                           </p>
                                                           <p>
-                                                              <b>Automation Percentage</b>:{ ' ' }
-                                                              { formatPercentage(data.template_automation_percentage.toFixed(2)) }
+                                                              <b>Automation percentage</b>:{ ' ' }
+                                                              { formatPercentage(
+                                                                  data.template_automation_percentage.toFixed(
+                                                                      2
+                                                                  )
+                                                              ) }
                                                           </p>
                                                           <p>
                                                               <b>Associated organizations</b>:{ ' ' }
@@ -587,7 +607,9 @@ const AutomationCalculator = () => {
                                               ) }
                                           </IconGroup>
                                       </TemplateDetail>
-                                      <p style={ { color: '#486B00' } }>${ data.delta.toFixed(2) }</p>
+                                      <p style={ { color: '#486B00' } }>
+                          ${ data.delta.toFixed(2) }
+                                      </p>
                                   </div>
                               )) }
                           </CardBody>
@@ -596,7 +618,7 @@ const AutomationCalculator = () => {
               </WrapperRight>
           </Wrapper>
         </>
-      )}
+      ) }
     </>
     );
 };

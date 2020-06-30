@@ -1,12 +1,12 @@
 
 import { shallow } from 'enzyme';
-import JobExplorer from './JobExplorer';
+import Clusters from './Clusters.js';
 
 describe('Containers/Clusters', () => {
     it('Clusters loads', () => {
-        expect(JobExplorer).toBeTruthy();
+        expect(Clusters).toBeTruthy();
     });
     it('should render successfully', () => {
-        shallow(<JobExplorer location={ { search: '&foo=bar' } } />);
+        shallow(<Clusters />);
     });
 });

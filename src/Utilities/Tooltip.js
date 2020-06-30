@@ -76,7 +76,7 @@ class Tooltip {
         .attr('y', -21)
         .attr('font-size', 12)
         .attr('text-anchor', 'end')
-        .text('No Jobs');
+        .text('No jobs');
         this.successful = this.toolTipBase
         .append('text')
         .attr('fill', 'white')
@@ -152,7 +152,7 @@ class Tooltip {
             this.date.text(formatTooltipDate(d.data.DATE || null));
         }
 
-        this.jobs.text('' + total + ' Jobs');
+        this.jobs.text('' + total + ' jobs');
         this.jobsWidth = this.jobs.node().getComputedTextLength();
         this.failed.text('' + fail);
         this.successful.text('' + success);

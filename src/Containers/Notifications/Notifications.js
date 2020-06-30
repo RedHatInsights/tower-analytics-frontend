@@ -17,7 +17,7 @@ import {
 import {
     Card,
     CardBody,
-    CardHeader as PFCardHeader,
+    CardTitle as PFCardTitle,
     FormSelect,
     FormSelectOption,
     Badge,
@@ -27,7 +27,7 @@ import {
 
 import NotificationsList from '../../Components/NotificationsList';
 
-const CardHeader = styled(PFCardHeader)`
+const CardTitle = styled(PFCardTitle)`
   display: flex;
   justify-content: space-between;
 
@@ -69,9 +69,9 @@ const DropdownGroup = styled.div`
 `;
 
 const title = (
-    <span>
+    <span style={ { fontWeight: 400 } }>
     Automation Analytics
-        <span style={ { fontSize: '16px' } }>
+        <span style={ { fontSize: '16px', fontWeight: 400 } }>
             { ' ' }
             <span style={ { margin: '0 10px' } }>|</span> Notifications
         </span>
@@ -233,7 +233,7 @@ const Notifications = () => {
         <>
           <Main>
               <Card>
-                  <CardHeader>
+                  <CardTitle>
                       <TitleWithBadge>
                           <h2>
                               <strong>Notifications</strong>
@@ -283,7 +283,7 @@ const Notifications = () => {
                               ) }
                           </FormSelect>
                       </DropdownGroup>
-                  </CardHeader>
+                  </CardTitle>
                   <CardBody>
                       { isLoading && <LoadingState /> }
                       { !isLoading && notificationsData.length <= 0 && <NoData /> }

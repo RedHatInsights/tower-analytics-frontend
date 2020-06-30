@@ -348,7 +348,7 @@ class GroupedBarChart extends Component {
         .attr('x', 0 - height / 2)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
-        .text('Jobs Across Orgs');
+        .text('Jobs across orgs');
 
         // add x axis
         svg

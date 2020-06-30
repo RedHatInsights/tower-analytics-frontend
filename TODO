@@ -1,0 +1,9 @@
+
+Cleanup Job List:
+  ✔ total jobs badge align right @done(20-06-25 16:01)
+  ✔ status icon + status text on same line @done(20-06-25 16:13)
+  ✔  rows: remove bottom padding; align-items center @done(20-06-25 16:45)
+  ✔ move linkout icon to table header @done(20-06-25 15:21)
+    ✔ make header icon light grey @done(20-06-25 16:49)
+  ☐ invoke mobile layout at 1120px or earlier
+  ☐  mobile view move labels inline

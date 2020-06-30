@@ -44,8 +44,9 @@ const DataListItem = styled(PFDataListItem)`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
-  padding: 10px 15px;
+  padding: 0 15px 10px 15px;
   justify-content: center;
+  align-items: center;
 `;
 const DataListItemCompact = styled(DataListItem)`
   padding: 0;
@@ -61,7 +62,7 @@ const DataListFocus = styled.div`
     display: grid;
     grid-template-columns: repeat(3, auto);
     grid-gap: 10px;
-    padding: var(--pf-c-data-list__cell-cell--PaddingTop);
+    padding: var(--pf-global--spacer--lg);
     background: #ebebeb;
     border: 1px solid #ccc;
     border-top: none;
@@ -202,27 +203,27 @@ const TemplatesList = ({ templates, isLoading, queryParams }) => {
                   >
                       <DataListFocus>
                           <div aria-labelledby="job runs">
-                              <b style={ { marginRight: '10px' } }>Number of Runs</b>
+                              <b style={ { marginRight: '10px' } }>Number of runs</b>
                               { selectedTemplate.total_run_count ?
                                   selectedTemplate.total_run_count : 'Unavailable' }
                           </div>
                           <div aria-labelledby="total time">
-                              <b style={ { marginRight: '10px' } }>Total Time</b>
+                              <b style={ { marginRight: '10px' } }>Total time</b>
                               { selectedTemplate.total_run ?
                                   selectedTemplate.total_run : 'Unavailable' }
                           </div>
                           <div aria-labelledby="Avg Time">
-                              <b style={ { marginRight: '10px' } }>Avg Time</b>
+                              <b style={ { marginRight: '10px' } }>Avg time</b>
                               { selectedTemplate.average_run ?
                                   selectedTemplate.average_run : 'Unavailable' }
                           </div>
                           <div aria-labelledby="success rate">
-                              <b style={ { marginRight: '10px' } }>Success Rate</b>
+                              <b style={ { marginRight: '10px' } }>Success rate</b>
                               { selectedTemplate.success_rate ?
                                   formatPercentage(selectedTemplate.success_rate) : 'Unavailable' }
                           </div>
                           <div aria-labelledby="most failed task">
-                              <b style={ { marginRight: '10px' } }>Most Failed Task</b>
+                              <b style={ { marginRight: '10px' } }>Most failed task</b>
                               { selectedTemplate.most_failed_tasks ?
                                   formatTopFailedTask(selectedTemplate.most_failed_tasks) : 'Unavailable' }
                           </div>

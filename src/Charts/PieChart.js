@@ -16,10 +16,18 @@ const Wrapper = styled.div`
 class Tooltip {
     constructor(props) {
         this.svg = props.svg;
-        this.draw();
+        // defer drawing until we know the data shape
+        this.drawn = false;
+        // show the success rate or not
+        this.showSuccess = false;
     }
 
-    draw() {
+    draw(d) {
+        // chart1 has success rate data and chart2 does not ...
+        this.showSuccess = (d && d.data && 'success_rate' in d.data) ? true : false;
+        const boundingHeight = (this.showSuccess) ? 70 : 52;
+        const boundingWidth = (this.showSuccess) ? 120 : 108;
+
         this.toolTipBase = d3.select(this.svg + '> svg').append('g');
         this.toolTipBase.attr('id', 'svg-chart-Tooltip.base-' + this.svg.slice(1));
         this.toolTipBase.attr('overflow', 'visible');
@@ -40,8 +48,8 @@ class Tooltip {
         .attr('x', 10)
         .attr('y', -23)
         .attr('rx', 2)
-        .attr('height', 52)
-        .attr('width', 108)
+        .attr('height', boundingHeight)
+        .attr('width', boundingWidth)
         .attr('fill', '#393f44');
         this.orgName = this.toolTipBase
         .append('text')
@@ -51,7 +59,7 @@ class Tooltip {
         .attr('x', 20)
         .attr('y', 0)
         .text('Organization');
-        this.percentage = this.toolTipBase
+        this.percentageTotal = this.toolTipBase
         .append('text')
         .attr('fill', 'white')
         .attr('font-size', 12)
@@ -59,10 +67,28 @@ class Tooltip {
         .attr('x', 20)
         .attr('y', 16)
         .text('0');
+        this.percentageSuccess = null;
+        if (this.showSuccess) {
+            this.percentageSuccess = this.toolTipBase
+            .append('text')
+            .attr('fill', 'white')
+            .attr('font-size', 12)
+            .attr('font-weight', 800)
+            .attr('x', 20)
+            .attr('y', 30)
+            .text('');
+        }
     }
 
   handleMouseOver = d => {
+      // treat draw() as a singleton to avoid a painted window effect
+      if (this.drawn !== true) {
+          this.draw(d);
+          this.drawn = true;
+      }
+
       let perc;
+      let percSuccess;
       let orgName;
       const x =
       d3.event.pageX -
@@ -85,6 +111,7 @@ class Tooltip {
       if (d && d.data) {
           const maxLength = 16;
           perc = d.data.percent;
+          percSuccess = d.data.success_rate;
           orgName = d.data.name;
           if (d.data.name.length > maxLength) {
               orgName = d.data.name.slice(0, maxLength - 3).concat('...');
@@ -99,19 +126,29 @@ class Tooltip {
       const overflow = 100 - (toolTipWidth / chartWidth) * 100;
       const flipped = overflow < (x / chartWidth) * 100;
 
-      this.percentage.text('' + perc + ' %');
-      this.orgName.text('' + orgName);
+      this.percentageTotal.text('' + perc + '%');
+      if (percSuccess && this.percentageSuccess) {
+          this.percentageSuccess.text('(' + percSuccess + '% successful)');
+      }
+
+      this.orgName.text(' ' + orgName);
       this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
       if (flipped) {
           this.toolTipPoint.attr('transform', 'translate(-20, -10) rotate(45)');
           this.boundingBOx.attr('x', -125);
           this.orgName.attr('x', -112);
-          this.percentage.attr('x', -112);
+          this.percentageTotal.attr('x', -112);
+          if (this.showSuccess) {
+              this.percentageSuccess.attr('x', -112);
+          }
       } else {
           this.toolTipPoint.attr('transform', 'translate(10, -10) rotate(45)');
           this.boundingBOx.attr('x', 10);
           this.orgName.attr('x', 20);
-          this.percentage.attr('x', 20);
+          this.percentageTotal.attr('x', 20);
+          if (this.showSuccess) {
+              this.percentageSuccess.attr('x', 20);
+          }
       }
 
       this.toolTipBase.style('opacity', 1);
@@ -234,7 +271,7 @@ class PieChart extends Component {
         .selectAll('path')
         .on('mouseover', function(d, i) {
             d3.select(this).style('fill', d3.rgb(color(i)).darker(1));
-            donutTooltip.handleMouseOver();
+            donutTooltip.handleMouseOver(d);
         })
         .on('mouseout', function(d, i) {
             d3.select(this).style('fill', color(i));
