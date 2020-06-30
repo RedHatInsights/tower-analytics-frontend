@@ -9,6 +9,7 @@ describe('Containers/Clusters', () => {
     });
     it('should render successfully', () => {
         shallow(<JobExplorer location={ { search: '&foo=bar' } } />);
+<<<<<<< HEAD
 =======
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 import { mount } from 'enzyme';
@@ -19,5 +20,7 @@ describe('Components/JobExplorer', () => {
     it('should render successfully', () => {
         mount(<JobExplorer />);
 >>>>>>> Squashed commit of the following:
+=======
+>>>>>>> Add paginationParams to request URL for job explorer endpoint.
     });
 });

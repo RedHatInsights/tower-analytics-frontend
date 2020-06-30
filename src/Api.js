@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Add paginationParams to request URL for job explorer endpoint.
 /* eslint-disable camelcase */
 /* eslint-disable max-len */
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
@@ -151,9 +154,18 @@ export const readJobExplorerOptions = ({ params = {}}) => {
 };
 
 export const readJobExplorer = ({ params = {}}) => {
+<<<<<<< HEAD
     const { attributes: ignored, ...rest } = params;
     const { strings, stringify } = formatQueryStrings(rest);
 >>>>>>> Squashed commit of the following:
+=======
+    const { limit, sort_by } = params;
+    const paginationParams = {
+        limit,
+        sort_by
+    };
+    const { strings, stringify } = formatQueryStrings(paginationParams);
+>>>>>>> Add paginationParams to request URL for job explorer endpoint.
     const qs = stringify(strings);
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(jobExplorerEndpoint, formattedUrl);
