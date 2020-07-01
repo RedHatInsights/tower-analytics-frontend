@@ -99,7 +99,11 @@ export const formatQueryStrings = ({
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 return `sort_by=${encodeURIComponent(attr)}`;
+=======
+                return `sort_by[]=${encodeURIComponent(attr)}`;
+>>>>>>> Fix tests.
             })
             .join('&');
         } else {

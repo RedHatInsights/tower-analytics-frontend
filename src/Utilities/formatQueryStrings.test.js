@@ -27,6 +27,7 @@ const expected = {
     sort_by: [ 'foo', 'bar' ]
 };
 const expected = {
+<<<<<<< HEAD
     status: 'status=foo&status=bar',
     job_type: 'job_type=foo&job_type=bar',
     attributes: 'attributes=foo&attributes=bar',
@@ -38,6 +39,15 @@ const expected = {
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+    status: 'status[]=foo&status[]=bar',
+    job_type: 'job_type[]=foo&job_type[]=bar',
+    attributes: 'attributes[]=foo&attributes[]=bar',
+    cluster_id: 'cluster_id[]=foo&cluster_id[]=bar',
+    org_id: 'org_id[]=foo&org_id[]=bar',
+    template_id: 'template_id[]=foo&template_id[]=bar',
+    sort_by: 'sort_by[]=foo&sort_by[]=bar'
+>>>>>>> Fix tests.
 };
 
 const combinedStrings = {
@@ -58,12 +68,16 @@ const combinedStrings = {
 const expectedStrings = {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Fix tests.
     status: 'status[]=baz',
     job_type: 'job_type[]=baz',
     attributes: 'attributes[]=baz',
     cluster_id: 'cluster_id[]=baz',
     org_id: 'org_id[]=baz',
     template_id: 'template_id[]=baz',
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Squashed commit of the following:
@@ -78,6 +92,9 @@ const expectedStrings = {
 =======
 >>>>>>> Squashed commit of the following:
     sort_by: 'sort_by=baz',
+=======
+    sort_by: 'sort_by[]=baz',
+>>>>>>> Fix tests.
     limit: 'limit=baz',
     offset: 'offset=baz',
     limit_number: 'limit_remove=baz',
