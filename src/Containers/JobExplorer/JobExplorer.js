@@ -48,6 +48,7 @@ import {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Squashed commit of the following:
@@ -81,11 +82,14 @@ import {
     ToolbarItem,
     ToolbarGroup as PFToolbarGroup,
 >>>>>>> Address breaking changes due to PF4 upgrade.
+=======
+>>>>>>> Break out filterable toolbar into it's own component.
     Badge,
     Card,
     CardBody,
     CardHeader as PFCardHeader,
     Pagination,
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     PaginationVariant
@@ -111,10 +115,15 @@ import FilterableToolbar from '../../Components/Toolbar';
     Switch as PFSwitch,
     Tooltip,
     TooltipPosition
+=======
+    PaginationVariant
+>>>>>>> Break out filterable toolbar into it's own component.
 } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
+import FilterableToolbar from '../../Components/Toolbar';
 
+<<<<<<< HEAD
 const ToolbarGroup = styled(PFToolbarGroup)`
   button {
     .pf-c-select__toggle-wrapper {
@@ -126,6 +135,8 @@ const ToolbarGroup = styled(PFToolbarGroup)`
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+>>>>>>> Break out filterable toolbar into it's own component.
 const CardHeader = styled(PFCardHeader)`
   display: flex;
   justify-content: space-between;
@@ -144,6 +155,7 @@ const TitleWithBadge = styled.div`
   }
 `;
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 const perPageOptions = [
@@ -172,6 +184,8 @@ const ToolbarContent = styled(PFToolbarContent)`
     }
 `;
 
+=======
+>>>>>>> Break out filterable toolbar into it's own component.
 const perPageOptions = [
     { title: '5', value: 5 },
     { title: '10', value: 10 },
@@ -209,6 +223,7 @@ const JobExplorer = props => {
     const [ currPage, setCurrPage ] = useState(1);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     const [ orgIds, setOrgIds ] = useState([]);
     const [ clusterIds, setClusterIds ] = useState([]);
     const [ templateIds, setTemplateIds ] = useState([]);
@@ -226,6 +241,8 @@ const JobExplorer = props => {
     const [ sortByIsExpanded, setSortByIsExpanded ] = useState(false);
     const [ currentCategory, setCurrentCategory ] = useState('Status');
 
+=======
+>>>>>>> Break out filterable toolbar into it's own component.
     const [ orgIds, setOrgIds ] = useState([]);
     const [ clusterIds, setClusterIds ] = useState([]);
     const [ templateIds, setTemplateIds ] = useState([]);
@@ -503,6 +520,7 @@ const JobExplorer = props => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Squashed commit of the following:
@@ -544,6 +562,8 @@ const JobExplorer = props => {
 >>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
 =======
 >>>>>>> Squashed commit of the following:
+=======
+>>>>>>> Break out filterable toolbar into it's own component.
     const onDelete = (type, val) => {
         let filtered;
         Number.isInteger(val) ? (val = parseInt(val)) : val;
@@ -642,6 +662,7 @@ const JobExplorer = props => {
         }
     };
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -914,6 +935,8 @@ const JobExplorer = props => {
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+>>>>>>> Break out filterable toolbar into it's own component.
     const returnOffsetVal = page => {
         let offsetVal = (page - 1) * queryParams.limit;
         return offsetVal;
@@ -944,6 +967,7 @@ const JobExplorer = props => {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Squashed commit of the following:
@@ -965,6 +989,8 @@ const JobExplorer = props => {
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+>>>>>>> Break out filterable toolbar into it's own component.
     return (
         <React.Fragment>
             <PageHeader>
@@ -993,6 +1019,9 @@ const JobExplorer = props => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Break out filterable toolbar into it's own component.
                       <FilterableToolbar
                           orgs={ orgIds }
                           statuses={ statuses }
@@ -1005,6 +1034,7 @@ const JobExplorer = props => {
                           passedFilters={ filters }
                           handleFilters={ setFilters }
                       />
+<<<<<<< HEAD
                       { apiError && <ApiErrorState message={ apiError } /> }
                       { !apiError && isLoading && <LoadingState /> }
                       { !apiError && !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
@@ -1097,6 +1127,8 @@ const JobExplorer = props => {
                               </div>
                           </ToolbarContent>
                       </Toolbar>
+=======
+>>>>>>> Break out filterable toolbar into it's own component.
                       { isLoading && <LoadingState /> }
                       { !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
                       { !isLoading && jobExplorerData.length > 0 && (

@@ -194,6 +194,7 @@ const FilterableToolbar = ({
             });
         };
 
+<<<<<<< HEAD
         const onSortSelect = (_event, selection) => {
             handleFilters({
                 ...passedFilters,
@@ -202,6 +203,8 @@ const FilterableToolbar = ({
             setSortByIsExpanded(!sortByIsExpanded);
         };
 
+=======
+>>>>>>> Break out filterable toolbar into it's own component.
         const onDateSelect = (_event, selection) => {
             handleFilters({
                 ...passedFilters,
@@ -259,7 +262,11 @@ const FilterableToolbar = ({
                     </Select>
                 </ToolbarFilter>
                 <ToolbarFilter
+<<<<<<< HEAD
                     showToolbarItem={ currentCategory === 'Job' }
+=======
+                    showToolbarItem={ currentCategory === 'Job type' }
+>>>>>>> Break out filterable toolbar into it's own component.
                     categoryName="Type"
                     chips={ handleChips(passedFilters.type, types) }
                     deleteChip={ onDelete }
@@ -300,10 +307,13 @@ const FilterableToolbar = ({
                         selections={ passedFilters.org }
                         isExpanded={ orgIsExpanded }
                         placeholderText="Filter by organization"
+<<<<<<< HEAD
                         style={ {
                             maxHeight: 500,
                             overflow: 'auto'
                         } }
+=======
+>>>>>>> Break out filterable toolbar into it's own component.
                     >
                         { organizationIdMenuItems }
                     </Select>
@@ -327,10 +337,13 @@ const FilterableToolbar = ({
                         selections={ passedFilters.cluster }
                         isExpanded={ clusterIsExpanded }
                         placeholderText="Filter by cluster"
+<<<<<<< HEAD
                         style={ {
                             maxHeight: 500,
                             overflow: 'auto'
                         } }
+=======
+>>>>>>> Break out filterable toolbar into it's own component.
                     >
                         { clusterIdMenuItems }
                     </Select>
@@ -351,7 +364,11 @@ const FilterableToolbar = ({
                         } }
                         selections={ passedFilters.template }
                         isExpanded={ templateIsExpanded }
+<<<<<<< HEAD
                         placeholderText="Filter by template"z
+=======
+                        placeholderText="Filter by template"
+>>>>>>> Break out filterable toolbar into it's own component.
                     >
                         { templateIdMenuItems }
                     </Select>
@@ -359,18 +376,30 @@ const FilterableToolbar = ({
                 <ToolbarFilter
                     showToolbarItem={ currentCategory === 'Sort by' }
                     categoryName="SortBy"
+<<<<<<< HEAD
                     chips={ handleDateChips(passedFilters.sortby, sortables) }
+=======
+                    chips={ handleChips(passedFilters.sortby, sortables) }
+>>>>>>> Break out filterable toolbar into it's own component.
                     deleteChip={ onDelete }
                 >
                     <Select
                         isOpen={ sortByIsExpanded }
                         aria-label="Sort by"
+<<<<<<< HEAD
                         variant={ 'single' }
+=======
+                        variant={ 'checkbox' }
+>>>>>>> Break out filterable toolbar into it's own component.
                         onToggle={ () => {
                             setSortByIsExpanded(!sortByIsExpanded);
                         } }
                         onSelect={ (event, selection) => {
+<<<<<<< HEAD
                             onSortSelect(event, selection);
+=======
+                            onSelect('sortby', event, selection);
+>>>>>>> Break out filterable toolbar into it's own component.
                         } }
                         selections={ passedFilters.sortby }
                         isExpanded={ sortByIsExpanded }
@@ -406,7 +435,11 @@ const FilterableToolbar = ({
                           id="startDate"
                           type="date"
                           aria-label="Start Date"
+<<<<<<< HEAD
                           value={ passedFilters.startDate || '' }
+=======
+                          value={ passedFilters.startDate }
+>>>>>>> Break out filterable toolbar into it's own component.
                           onChange={ e => handleStartDate(e) }
                       />
                   </InputGroup>
@@ -419,7 +452,11 @@ const FilterableToolbar = ({
                           id="endDate"
                           type="date"
                           aria-label="End Date"
+<<<<<<< HEAD
                           value={ passedFilters.endDate || '' }
+=======
+                          value={ passedFilters.endDate }
+>>>>>>> Break out filterable toolbar into it's own component.
                           onChange={ e => handleEndDate(e) }
                       />
                   </InputGroup>
@@ -433,7 +470,11 @@ const FilterableToolbar = ({
                         id="showRootWorkflowJobs"
                         label="Ignore nested workflows and jobs"
                         labelOff="Ignore nested workflows and jobs"
+<<<<<<< HEAD
                         isChecked={ !!passedFilters.showRootWorkflows }
+=======
+                        isChecked={ passedFilters.showRootWorkflows }
+>>>>>>> Break out filterable toolbar into it's own component.
                         onChange={ val => {
                             handleFilters({
                                 ...passedFilters,
