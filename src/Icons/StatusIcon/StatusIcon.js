@@ -77,61 +77,64 @@ const SkippedBottom = styled.div`
   background-color: #2dbaba;
 `;
 
-const FinishedTop = styled(WhiteTop)``;
-const FinishedBottom = styled.div`
-  background-color: 'pink';
-`;
+RunningJob.displayName = 'RunningJob';
+WaitingJob.displayName = 'WaitingJob';
+FinishedJob.displayName = 'FinishedJob';
+SuccessfulTop.displayName = 'SuccessfulTop';
+SuccessfulBottom.displayName = 'SuccessfulBottom';
+FailedTop.displayName = 'FailedTop';
+FailedBottom.displayName = 'FailedBottom';
+UnreachableTop.displayName = 'UnreachableTop';
+UnreachableBottom.displayName = 'UnreachableBottom';
+ChangedTop.displayName = 'ChangedTop';
+ChangedBottom.displayName = 'ChangedBottom';
+SkippedTop.displayName = 'SkippedTop';
+SkippedBottom.displayName = 'SkippedBottom';
 
 const StatusIcon = ({ status, ...props }) => {
-    return (
-        <div { ...props }>
-            { status === 'running' && <RunningJob /> }
-            { (status === 'new' ||
+  return (
+    <div {...props}>
+      {status === 'running' && <RunningJob />}
+      {(status === 'new' ||
         status === 'pending' ||
         status === 'waiting' ||
-        status === 'never updated') && <WaitingJob /> }
-            { (status === 'failed' || status === 'error' || status === 'canceled') && (
-                <FinishedJob>
-                    <FailedTop />
-                    <FailedBottom />
-                </FinishedJob>
-            ) }
-            { (status === 'successful' || status === 'ok') && (
-                <FinishedJob>
-                    <SuccessfulTop />
-                    <SuccessfulBottom />
-                </FinishedJob>
-            ) }
-            { status === 'changed' && (
-                <FinishedJob>
-                    <ChangedTop />
-                    <ChangedBottom />
-                </FinishedJob>
-            ) }
-            { status === 'skipped' && (
-                <FinishedJob>
-                    <SkippedTop />
-                    <SkippedBottom />
-                </FinishedJob>
-            ) }
-            { status === 'unreachable' && (
-                <FinishedJob>
-                    <UnreachableTop />
-                    <UnreachableBottom />
-                </FinishedJob>
-            ) }
-            { status === 'finished' && (
-                <FinishedJob>
-                    <FinishedTop />
-                    <FinishedBottom />
-                </FinishedJob>
-            ) }
-        </div>
-    );
+        status === 'never updated') && <WaitingJob />}
+      {(status === 'failed' || status === 'error' || status === 'canceled') && (
+        <FinishedJob>
+          <FailedTop />
+          <FailedBottom />
+        </FinishedJob>
+      )}
+      {(status === 'successful' || status === 'ok') && (
+        <FinishedJob>
+          <SuccessfulTop />
+          <SuccessfulBottom />
+        </FinishedJob>
+      )}
+      {status === 'changed' && (
+        <FinishedJob>
+          <ChangedTop />
+          <ChangedBottom />
+        </FinishedJob>
+      )}
+      {status === 'skipped' && (
+        <FinishedJob>
+          <SkippedTop />
+          <SkippedBottom />
+        </FinishedJob>
+      )}
+      {status === 'unreachable' && (
+        <FinishedJob>
+          <UnreachableTop />
+          <UnreachableBottom />
+        </FinishedJob>
+      )}
+    </div>
+  );
 };
 
 StatusIcon.propTypes = {
-    status: string.isRequired
+  status: string.isRequired,
 };
 
 export default StatusIcon;

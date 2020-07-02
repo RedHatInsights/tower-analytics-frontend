@@ -13,13 +13,13 @@ const combined = {
     sort_by: [ 'foo', 'bar' ]
 };
 const expected = {
-    status: 'status=foo&status=bar',
-    job_type: 'job_type=foo&job_type=bar',
-    attributes: 'attributes=foo&attributes=bar',
-    cluster_id: 'cluster_id=foo&cluster_id=bar',
-    org_id: 'org_id=foo&org_id=bar',
-    template_id: 'template_id=foo&template_id=bar',
-    sort_by: 'sort_by=foo&sort_by=bar'
+    status: 'status[]=foo&status[]=bar',
+    job_type: 'job_type[]=foo&job_type[]=bar',
+    attributes: 'attributes[]=foo&attributes[]=bar',
+    cluster_id: 'cluster_id[]=foo&cluster_id[]=bar',
+    org_id: 'org_id[]=foo&org_id[]=bar',
+    template_id: 'template_id[]=foo&template_id[]=bar',
+    sort_by: 'sort_by[]=foo&sort_by[]=bar'
 };
 
 const combinedStrings = {
@@ -38,13 +38,13 @@ const combinedStrings = {
     only_root_workflows_and_standalone_jobs: 'baz'
 };
 const expectedStrings = {
-    status: 'status=baz',
-    job_type: 'job_type=baz',
-    attributes: 'attributes=baz',
-    cluster_id: 'cluster_id=baz',
-    org_id: 'org_id=baz',
-    template_id: 'template_id=baz',
-    sort_by: 'sort_by=baz',
+    status: 'status[]=baz',
+    job_type: 'job_type[]=baz',
+    attributes: 'attributes[]=baz',
+    cluster_id: 'cluster_id[]=baz',
+    org_id: 'org_id[]=baz',
+    template_id: 'template_id[]=baz',
+    sort_by: 'sort_by[]=baz',
     limit: 'limit=baz',
     offset: 'offset=baz',
     limit_number: 'limit_remove=baz',

@@ -95,7 +95,7 @@ export const formatQueryStrings = ({
         if (Array.isArray(sortBy)) {
             return sortBy
             .map(attr => {
-                return `sort_by=${encodeURIComponent(attr)}`;
+                return `sort_by[]=${encodeURIComponent(attr)}`;
             })
             .join('&');
         } else {
