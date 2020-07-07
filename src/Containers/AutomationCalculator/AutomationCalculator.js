@@ -360,7 +360,7 @@ const AutomationCalculator = () => {
       <PageHeader style={ { flex: '0' } }>
           <PageHeaderTitle title={ title } />
       </PageHeader>
-      {preflightError && (
+      { preflightError && (
           <Main>
               <Card>
                   <CardBody>
@@ -368,8 +368,8 @@ const AutomationCalculator = () => {
                   </CardBody>
               </Card>
           </Main>
-      )}
-      {!preflightError && (
+      ) }
+      { !preflightError && (
         <>
           <Wrapper className="automation-wrapper">
               <WrapperLeft>
@@ -618,7 +618,7 @@ const AutomationCalculator = () => {
               </WrapperRight>
           </Wrapper>
         </>
-      )}
+      ) }
     </>
     );
 };
