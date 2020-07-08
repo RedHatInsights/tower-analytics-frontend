@@ -1,6 +1,9 @@
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
+import moment from 'moment';
 import styled from 'styled-components';
+
+import { useQueryParams } from '../../Utilities/useQueryParams';
 
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
@@ -17,6 +20,8 @@ import {
     Card,
     CardBody,
     CardTitle,
+    FormSelect,
+    FormSelectOption,
     InputGroup,
     InputGroupText,
     TextInput,
@@ -27,6 +32,7 @@ import {
 
 import {
     DollarSignIcon,
+    FilterIcon,
     InfoCircleIcon,
     ToggleOnIcon,
     ToggleOffIcon
@@ -42,6 +48,22 @@ import {
     convertWithCommas,
     formatPercentage
 } from '../../Utilities/helpers';
+
+const FilterCardTitle = styled(CardTitle)`
+  border-bottom: 2px solid #ebebeb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &&& {
+    min-height: 60px;
+    --pf-c-card--first-child--PaddingTop: 10px;
+    --pf-c-card__header--not-last-child--PaddingBottom: 10px;
+
+    h3 {
+      font-size: 0.875em;
+    }
+  }
+`;
 
 const defaultAvgRunVal = 3600; // 1 hr in seconds
 const defaultCostAutomation = 20;
@@ -127,6 +149,21 @@ const title = (
         </span>
     </span>
 );
+
+const initialQueryParams = {
+    startDate: moment
+    .utc()
+    .subtract(1, 'month')
+    .format('YYYY-MM-DD'),
+    endDate: moment.utc().format('YYYY-MM-DD')
+};
+
+const timeFrameOptions = [
+    { value: 'please choose', label: 'Select date range', disabled: true },
+    { value: 7, label: 'Past week', disabled: false },
+    { value: 14, label: 'Past 2 weeks', disabled: false },
+    { value: 31, label: 'Past month', disabled: false }
+];
 
 export const automationCalculatorMethods = () => {
     // create our array to feed to D3
@@ -224,7 +261,7 @@ export const automationCalculatorMethods = () => {
     };
 };
 
-export const useAutomationFormula = () => {
+export const useAutomationFormula = (queryParams) => {
     const [ isLoading, setIsLoading ] = useState(true);
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ costManual, setCostManual ] = useState(defaultCostManual);
@@ -250,7 +287,7 @@ export const useAutomationFormula = () => {
             await preflightRequest().catch((error) => {
                 setPreFlightError({ preflightError: error });
             });
-            getData().then(({ templates: roiData = []}) => {
+            getData(queryParams).then(({ templates: roiData = []}) => {
                 if (!ignore) {
                     setRoiData(roiData);
                     setIsLoading(false);
@@ -334,6 +371,18 @@ export const useAutomationFormula = () => {
 };
 
 const AutomationCalculator = () => {
+
+    const {
+        updateData,
+        handleManualTimeChange,
+        handleToggle
+    } = automationCalculatorMethods();
+
+    const [ roiTimeFrame, setRoiTimeFrame ] = useState(31);
+    const { queryParams, setEndDate, setStartDate } = useQueryParams(
+        initialQueryParams
+    );
+
     const {
         isLoading,
         costManual,
@@ -347,13 +396,7 @@ const AutomationCalculator = () => {
         selectedIds,
         setSelectedIds,
         preflightError
-    } = useAutomationFormula();
-
-    const {
-        updateData,
-        handleManualTimeChange,
-        handleToggle
-    } = automationCalculatorMethods();
+    } = useAutomationFormula(queryParams);
 
     return (
     <>
@@ -371,6 +414,38 @@ const AutomationCalculator = () => {
       ) }
       { !preflightError && (
         <>
+          <Main style={ { paddingBottom: '0' } }>
+              <Card>
+                  <FilterCardTitle style={ { paddingBottom: '0', paddingTop: '0' } }>
+                      <h2>
+                          <FilterIcon style={ { marginRight: '10px' } } />
+                  Filter
+                      </h2>
+                      <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
+                          <FormSelect
+                              name="roiTimeFrame"
+                              value={ roiTimeFrame }
+                              onChange={ value => {
+                                  setRoiTimeFrame(+value);
+                                  setEndDate();
+                                  setStartDate(+value);
+                              } }
+                              aria-label="Select Date Range"
+                              style={ { margin: '2px 10px' } }
+                          >
+                              { timeFrameOptions.map((option, index) => (
+                                  <FormSelectOption
+                                      isDisabled={ option.disabled }
+                                      key={ index }
+                                      value={ option.value }
+                                      label={ option.label }
+                                  />
+                              )) }
+                          </FormSelect>
+                      </div>
+                  </FilterCardTitle>
+              </Card>
+          </Main>
           <Wrapper className="automation-wrapper">
               <WrapperLeft>
                   <Main style={ { paddingBottom: '0' } }>
