@@ -153,16 +153,16 @@ const title = (
 const initialQueryParams = {
     startDate: moment
     .utc()
-    .subtract(1, 'month')
+    .subtract(1, 'year')
     .format('YYYY-MM-DD'),
     endDate: moment.utc().format('YYYY-MM-DD')
 };
 
 const timeFrameOptions = [
     { value: 'please choose', label: 'Select date range', disabled: true },
-    { value: 7, label: 'Past week', disabled: false },
-    { value: 14, label: 'Past 2 weeks', disabled: false },
-    { value: 31, label: 'Past month', disabled: false }
+    { value: 31, label: 'Past month', disabled: false },
+    { value: 50, label: 'Past quarter', disabled: false },
+    { value: 62, label: 'Past year', disabled: false }
 ];
 
 export const automationCalculatorMethods = () => {
@@ -278,7 +278,7 @@ export const useAutomationFormula = (queryParams) => {
     useEffect(() => {
         let ignore = false;
         const getData = () => {
-            return readROI({ params: {}});
+            return readROI({ params: queryParams });
         };
 
         async function initializeWithPreflight() {
@@ -378,7 +378,7 @@ const AutomationCalculator = () => {
         handleToggle
     } = automationCalculatorMethods();
 
-    const [ roiTimeFrame, setRoiTimeFrame ] = useState(31);
+    const [ roiTimeFrame, setRoiTimeFrame ] = useState(62);
     const { queryParams, setEndDate, setStartDate } = useQueryParams(
         initialQueryParams
     );
