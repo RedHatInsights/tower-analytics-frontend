@@ -49,7 +49,6 @@ const SubTitle = styled.span`
 `;
 
 const Switch = styled(PFSwitch)`
-  --pf-c-switch--Height: 15px;
   margin-left: 20px;
 
   svg {
