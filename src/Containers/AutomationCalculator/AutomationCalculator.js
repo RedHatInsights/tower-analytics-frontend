@@ -220,6 +220,7 @@ export const automationCalculatorMethods = () => {
     };
 
     const updateData = (seconds, id, data) => {
+        console.log('updateData ...');
         let updatedData = [ ...data ];
         updatedData.map((datum) => {
             if (datum.id === id) {
@@ -274,11 +275,16 @@ export const useAutomationFormula = (queryParams) => {
     const [ roiData, setRoiData ] = useState([]);
     const [ selectedIds, setSelectedIds ] = useState([]);
 
+    let [selectedStartValue, setSelectedStartValue] = useState(365);
+
     const { formatData } = automationCalculatorMethods();
 
     useEffect(() => {
+        console.log('useEffect 1 ...');
         let ignore = false;
         const getData = () => {
+            console.log('getdata with queryparams ...');
+            console.log(queryParams);
             return readROI({ params: queryParams });
         };
 
@@ -298,9 +304,11 @@ export const useAutomationFormula = (queryParams) => {
 
         initializeWithPreflight();
         return () => (ignore = true);
-    }, []);
+    }, [ selectedStartValue ]);
 
     useEffect(() => {
+        console.log('useEffect 2 ...');
+
         let data = [ ...formattedData ];
         let total = 0;
         let costAutomationPerHour;
@@ -322,10 +330,14 @@ export const useAutomationFormula = (queryParams) => {
         .toFixed(2)
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        console.log('totalWithCommas ...');
+        console.log(totalWithCommas);
         setTotalSavings('$' + totalWithCommas);
-    }, [ formattedData, costAutomation, costManual ]);
+    }, [ formattedData, costAutomation, costManual, selectedStartValue ]);
 
     useEffect(() => {
+        console.log('useEffect 3 ...');
+
         const filteredData = unfilteredData.filter(
             ({ id }) => !selectedIds.includes(id)
         );
@@ -337,9 +349,11 @@ export const useAutomationFormula = (queryParams) => {
             }
         });
         setFormattedData(filteredData);
-    }, [ selectedIds ]);
+    }, [ selectedIds, selectedStartValue ]);
 
     useEffect(() => {
+        console.log('useEffect 4 ...');
+
         const formatted = formatData(roiData, {
             defaultAvgRunVal,
             defaultCostAutomation,
@@ -348,7 +362,7 @@ export const useAutomationFormula = (queryParams) => {
         setUnfilteredData(formatted);
         setFormattedData(formatted);
         setTemplatesList(formatted);
-    }, [ roiData ]);
+    }, [ roiData, selectedStartValue ]);
 
     return {
         isLoading,
@@ -367,7 +381,9 @@ export const useAutomationFormula = (queryParams) => {
         roiData,
         setRoiData,
         selectedIds,
-        setSelectedIds
+        setSelectedIds,
+        selectedStartValue,
+        setSelectedStartValue
     };
 };
 
@@ -379,12 +395,14 @@ const AutomationCalculator = () => {
         handleToggle
     } = automationCalculatorMethods();
 
-    const [ roiTimeFrame, setRoiTimeFrame ] = useState(62);
-    const { queryParams, setEndDate, setStartDate } = useQueryParams(
+    let [ roiTimeFrame, setRoiTimeFrame ] = useState(62);
+    let { queryParams, setEndDate, setStartDate } = useQueryParams(
         initialQueryParams
     );
 
-    const {
+    /*let [selectedStartValue, setSelectedStartValue] = useState(365);*/
+
+    let {
         isLoading,
         costManual,
         setCostManual,
@@ -396,8 +414,29 @@ const AutomationCalculator = () => {
         templatesList,
         selectedIds,
         setSelectedIds,
-        preflightError
+        preflightError,
+        selectedStartValue,
+        setSelectedStartValue
     } = useAutomationFormula(queryParams);
+
+
+    useEffect(() => {
+        console.log('useEffect 5 ...');
+    }, [ selectedStartValue ]);
+
+
+    const onChange = (value) => {
+        console.log('onchange');
+        console.log(value);
+        setRoiTimeFrame(+value);
+        setEndDate();
+        setStartDate(+value);
+        /*useAutomationFormula(queryParams);*/
+        setSelectedStartValue(parseInt(value));
+        console.log("selectedStartValue ...");
+        console.log(selectedStartValue);
+        /*setIsLoading(true);*/
+    };
 
     return (
     <>
@@ -426,13 +465,7 @@ const AutomationCalculator = () => {
                           <FormSelect
                               name="roiTimeFrame"
                               value={ roiTimeFrame }
-                              onChange={ value => {
-                                  console.log('onchange');
-                                  console.log(value);
-                                  setRoiTimeFrame(+value);
-                                  setEndDate();
-                                  setStartDate(+value);
-                              } }
+                              onChange={ onChange }
                               aria-label="Select Date Range"
                               style={ { margin: '2px 10px' } }
                           >
