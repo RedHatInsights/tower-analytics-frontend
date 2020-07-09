@@ -1,3 +1,4 @@
+/*eslint-disable */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
@@ -161,8 +162,8 @@ const initialQueryParams = {
 const timeFrameOptions = [
     { value: 'please choose', label: 'Select date range', disabled: true },
     { value: 31, label: 'Past month', disabled: false },
-    { value: 50, label: 'Past quarter', disabled: false },
-    { value: 62, label: 'Past year', disabled: false }
+    { value: 31*4, label: 'Past quarter', disabled: false },
+    { value: 365, label: 'Past year', disabled: false }
 ];
 
 export const automationCalculatorMethods = () => {
@@ -398,6 +399,15 @@ const AutomationCalculator = () => {
         preflightError
     } = useAutomationFormula(queryParams);
 
+    useEffect(() => {
+        console.log('use effect running ...');
+
+        const update = async () => {
+            console.log('use effect update ...')
+        }
+
+    }, []);
+
     return (
     <>
       <PageHeader style={ { flex: '0' } }>
@@ -426,6 +436,8 @@ const AutomationCalculator = () => {
                               name="roiTimeFrame"
                               value={ roiTimeFrame }
                               onChange={ value => {
+                                  console.log('onchange');
+                                  console.log(value);
                                   setRoiTimeFrame(+value);
                                   setEndDate();
                                   setStartDate(+value);
