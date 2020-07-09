@@ -161,9 +161,9 @@ const initialQueryParams = {
 
 const timeFrameOptions = [
     { value: 'please choose', label: 'Select date range', disabled: true },
-    { value: 31, label: 'Past month', disabled: false },
+    { value: 365, label: 'Past year', disabled: false },
     { value: 31*4, label: 'Past quarter', disabled: false },
-    { value: 365, label: 'Past year', disabled: false }
+    { value: 31, label: 'Past month', disabled: false }
 ];
 
 export const automationCalculatorMethods = () => {
@@ -398,15 +398,6 @@ const AutomationCalculator = () => {
         setSelectedIds,
         preflightError
     } = useAutomationFormula(queryParams);
-
-    useEffect(() => {
-        console.log('use effect running ...');
-
-        const update = async () => {
-            console.log('use effect update ...')
-        }
-
-    }, []);
 
     return (
     <>
