@@ -251,7 +251,7 @@ const FilterableToolbar = ({
                     </Select>
                 </ToolbarFilter>
                 <ToolbarFilter
-                    showToolbarItem={ currentCategory === 'Job type' }
+                    showToolbarItem={ currentCategory === 'Job' }
                     categoryName="Type"
                     chips={ handleChips(passedFilters.type, types) }
                     deleteChip={ onDelete }
