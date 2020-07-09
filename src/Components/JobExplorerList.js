@@ -1,14 +1,15 @@
-import React, { useState } from 'react';
+/* eslint-disable no-console */
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import {
-    DataListCell,
+    DataListCell as PFDataListCell,
     DataListContent,
     DataList,
     DataListItem,
     DataListItemRow,
-    DataListItemCells,
+    DataListItemCells as PFDataListItemCells,
     DataListToggle
 } from '@patternfly/react-core';
 
@@ -28,18 +29,64 @@ const headerLabels = [
 
 const ArrowIcon = styled(PFArrowIcon)`
   margin-left: 7px;
+  color: var(--pf-global--palette--black-500);
+`;
+
+const DataListCell = styled(PFDataListCell)`
+    display: flex;
+    align-items: flex-start;
+`;
+
+const DataListItemCells = styled(PFDataListItemCells)`
+    padding-bottom: 0;
+    @media (max-width: 1120px) {
+        flex-direction: column;
+    }
+`;
+
+const StyledStatusIcon = styled(StatusIcon)`
+    margin-right: 15px;
+`;
+
+const Label = styled.span`
+    margin-right: 5px;
 `;
 
 const buildHeader = labels => (
     <DataListItemRow style={ { paddingLeft: '94px', fontWeight: '800' } }>
-        { labels.map(label => (
-            <DataListCell key={ label }>{ label }</DataListCell>
-        )) }
+        { labels.map(label => {
+            if (label === 'Id/Name') {
+                return (
+                    <DataListCell key={ label } style={ { alignItems: 'center' } }>
+                        { label }
+                        <ArrowIcon />
+                    </DataListCell>
+                );
+            }
+
+            return <DataListCell key={ label }>{ label }</DataListCell>;
+        }) }
     </DataListItemRow>
 );
 
 const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
-    const [ isExpanded, setIsExpanded ] = useState([]);
+    const [ isExpanded, setIsExpanded ] = useState([]);;
+    const [ width, setWitdh ] = useState(window.innerWidth);
+
+    const handleSetWidth = () => {
+        setWitdh(window.innerWidth);
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', () => {
+            handleSetWidth();
+        });
+
+        return () => {
+            window.removeEventListener('resize', handleSetWidth());
+        };
+    });
+
     return (
         <DataList aria-label={ ariaLabel }>
             { items.map((item, count) => {
@@ -47,12 +94,12 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                     const expanded = isExpanded;
                     const idx = expanded.indexOf(id);
                     const newExpanded =
-            idx >= 0
-                ? [
-                    ...expanded.slice(0, idx),
-                    ...expanded.slice(idx + 1, expanded.length)
-                ]
-                : [ ...expanded, id ];
+                        idx >= 0
+                            ? [
+                                ...expanded.slice(0, idx),
+                                ...expanded.slice(idx + 1, expanded.length)
+                            ]
+                            : [ ...expanded, id ];
                     setIsExpanded(newExpanded);
                 };
 
@@ -68,18 +115,30 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                             <DataListItemCells
                                 dataListCells={ [
                                     <DataListCell key={ count++ }>
+                                        { width <= 1120 && <Label>Id/Name<ArrowIcon/>:</Label> }
                                         <a href={ item.id.tower_link } target='_blank' rel='noopener noreferrer'>
-                                            { `${item.id.id} - ${item.id.template_name}` } <ArrowIcon />
+                                            { `${item.id.id} - ${item.id.template_name}` }
                                         </a>
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
-                                        <StatusIcon status={ item.status } />{ formatJobStatus(item.status) }
+                                        { width <= 1120 && <Label>Status:</Label> }
+                                        <StyledStatusIcon
+                                            status={ item.status }
+                                        />
+                                        { formatJobStatus(item.status) }
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
+                                        { width <= 1120 && <Label>Cluster:</Label> }
                                         { item.cluster_name }
                                     </DataListCell>,
-                                    <DataListCell key={ count++ }>{ item.org_name }</DataListCell>,
-                                    <DataListCell key={ count++ }>{ formatJobType(item.job_type) }</DataListCell>
+                                    <DataListCell key={ count++ }>
+                                        { width <= 1120 && <Label>Organization:</Label> }
+                                        { item.org_name }
+                                    </DataListCell>,
+                                    <DataListCell key={ count++ }>
+                                        { width <= 1120 && <Label>Type:</Label> }
+                                        { formatJobType(item.job_type) }
+                                    </DataListCell>
                                 ] }
                             />
                         </DataListItemRow>
@@ -113,15 +172,33 @@ const AllJobsTemplate = ({ jobs }) => {
     return buildListRow(jobs, 'All jobs view', 'all-jobs');
 };
 
-const JobExplorerList = ({ jobs }) => (
-  <>
-    { jobs.length <= 0 && <LoadingState /> }
-    <>
-      { buildHeader(headerLabels) }
-      <AllJobsTemplate jobs={ jobs } />
+const JobExplorerList = ({ jobs }) => {
+    const [ width, setWitdh ] = useState(window.innerWidth);
+
+    const handleSetWidth = () => {
+        setWitdh(window.innerWidth);
+    };
+
+    useEffect(() => {
+        window.addEventListener('resize', () => {
+            handleSetWidth();
+        });
+
+        return () => {
+            window.removeEventListener('resize', handleSetWidth());
+        };
+    });
+    return (
+        <>
+        {jobs.length <= 0 && <LoadingState />}
+        <>
+            { width >= 1120 ? buildHeader(headerLabels) : null}
+            <AllJobsTemplate jobs={ jobs } />
+
+        </>
     </>
-  </>
-);
+    );
+};
 
 JobExplorerList.propTypes = {
     jobs: PropTypes.array

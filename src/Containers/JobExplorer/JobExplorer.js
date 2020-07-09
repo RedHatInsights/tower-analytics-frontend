@@ -47,9 +47,10 @@ const CardHeader = styled(PFCardHeader)`
 const TitleWithBadge = styled.div`
   display: flex;
   align-items: center;
+  margin-bottom: 55px;
 
   h2 {
-    margin-right: 10px;
+		margin-right: 10px;
   }
 `;
 
@@ -368,15 +369,7 @@ const JobExplorer = props => {
         <>
           <Main>
               <Card>
-                  <CardHeader>
-                      <TitleWithBadge>
-                          <h2>
-                              <strong>Total Jobs</strong>
-                          </h2>
-                          <Badge isRead>{ meta.count ? meta.count : 0 }</Badge>
-                      </TitleWithBadge>
-                  </CardHeader>
-                  <CardBody>
+                  <CardHeader style={ { display: 'flex' } }>
                       <FilterableToolbar
                           orgs={ orgIds }
                           statuses={ statuses }
@@ -389,6 +382,14 @@ const JobExplorer = props => {
                           passedFilters={ filters }
                           handleFilters={ setFilters }
                       />
+                      <TitleWithBadge>
+                          <h2>
+                              <strong>Total Jobs</strong>
+                          </h2>
+                          <Badge isRead>{ meta.count ? meta.count : 0 }</Badge>
+                      </TitleWithBadge>
+                  </CardHeader>
+                  <CardBody>
                       { isLoading && <LoadingState /> }
                       { !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
                       { !isLoading && jobExplorerData.length > 0 && (

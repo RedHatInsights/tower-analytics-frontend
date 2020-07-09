@@ -48,6 +48,15 @@ const Switch = styled(PFSwitch)`
     }
 `;
 
+const SwitchContainer = styled.div`
+    display: flex;
+    align-items: center;
+
+    @media (max-width: 1700px) {
+        margin-top: 10px;
+    }
+`;
+
 const handleChips = (item, comparator) => {
     return item.reduce((acc, i) => {
         Number.isInteger(parseInt(i)) ? (i = parseInt(i)) : i;
@@ -412,7 +421,7 @@ const FilterableToolbar = ({
                         </ToolbarGroup>
                     ) }
                 </ToolbarToggleGroup>
-                <div>
+                <SwitchContainer>
                     <Switch
                         id="showRootWorkflowJobs"
                         label="Ignore nested workflows and jobs"
@@ -438,7 +447,7 @@ const FilterableToolbar = ({
                     >
                         <QuestionCircleIcon />
                     </Tooltip>
-                </div>
+                </SwitchContainer>
             </ToolbarContent>
         </Toolbar>
     );
