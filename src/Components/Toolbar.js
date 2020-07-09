@@ -263,10 +263,14 @@ const FilterableToolbar = ({
                 </ToolbarFilter>
                 <ToolbarFilter
 <<<<<<< HEAD
+<<<<<<< HEAD
                     showToolbarItem={ currentCategory === 'Job' }
 =======
                     showToolbarItem={ currentCategory === 'Job type' }
 >>>>>>> Break out filterable toolbar into it's own component.
+=======
+                    showToolbarItem={ currentCategory === 'Job' }
+>>>>>>> Fix job type category dropdown not showing.
                     categoryName="Type"
                     chips={ handleChips(passedFilters.type, types) }
                     deleteChip={ onDelete }
