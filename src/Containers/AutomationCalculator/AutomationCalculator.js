@@ -1,4 +1,3 @@
-/*eslint-disable */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
@@ -162,7 +161,7 @@ const initialQueryParams = {
 const timeFrameOptions = [
     { value: 'please choose', label: 'Select date range', disabled: true },
     { value: 365, label: 'Past year', disabled: false },
-    { value: 31*4, label: 'Past quarter', disabled: false },
+    { value: 31 * 4, label: 'Past quarter', disabled: false },
     { value: 31, label: 'Past month', disabled: false }
 ];
 
@@ -274,15 +273,14 @@ export const useAutomationFormula = (queryParams) => {
     const [ roiData, setRoiData ] = useState([]);
     const [ selectedIds, setSelectedIds ] = useState([]);
 
-    let [selectedStartValue, setSelectedStartValue] = useState(365);
+    /* this drives the start date parameter sent to the API */
+    let [ selectedStartValue, setSelectedStartValue ] = useState(365);
 
     const { formatData } = automationCalculatorMethods();
 
     useEffect(() => {
         let ignore = false;
         const getData = () => {
-            console.log('getdata with queryparams ...');
-            console.log(queryParams);
             return readROI({ params: queryParams });
         };
 
@@ -326,8 +324,6 @@ export const useAutomationFormula = (queryParams) => {
         .toFixed(2)
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-        console.log('totalWithCommas ...');
-        console.log(totalWithCommas);
         setTotalSavings('$' + totalWithCommas);
     }, [ formattedData, costAutomation, costManual, selectedStartValue ]);
 
@@ -346,8 +342,6 @@ export const useAutomationFormula = (queryParams) => {
     }, [ selectedIds, selectedStartValue ]);
 
     useEffect(() => {
-        console.log('useEffect 4 ...');
-
         const formatted = formatData(roiData, {
             defaultAvgRunVal,
             defaultCostAutomation,
