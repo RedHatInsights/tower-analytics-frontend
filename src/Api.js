@@ -3,6 +3,7 @@
 const barChartEndpoint = '/api/tower-analytics/chart30/';
 const clustersEndpoint = '/api/tower-analytics/clusters/';
 const groupedBarChartEndpoint = '/api/tower-analytics/jobs_by_date_and_org_30/';
+const hostsEndpoint = '/api/tower-analytics/hosts_by_date_and_org/';
 const modulesEndpoint = '/api/tower-analytics/modules/';
 const notificationsEndPoint = '/api/tower-analytics/notifications/';
 const pieChart1Endpoint = '/api/tower-analytics/job_runs_by_org_30/';
@@ -69,6 +70,15 @@ export const readChart30 = ({ params = {}}) => {
 export const readJobsByDateAndOrg = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(groupedBarChartEndpoint, formattedUrl);
+    Object.keys(params).forEach(key =>
+        url.searchParams.append(key, params[key])
+    );
+    return fetch(url).then(handleResponse);
+};
+
+export const readHostsByDateAndOrg = ({ params = {}}) => {
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(hostsEndpoint, formattedUrl);
     Object.keys(params).forEach(key =>
         url.searchParams.append(key, params[key])
     );

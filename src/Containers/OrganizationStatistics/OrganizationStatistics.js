@@ -12,7 +12,8 @@ import {
     preflightRequest,
     readJobsByDateAndOrg,
     readJobRunsByOrg,
-    readJobEventsByOrg
+    readJobEventsByOrg,
+    readHostsByDateAndOrg
 } from '../../Api';
 
 import { Main, PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components';
@@ -22,12 +23,16 @@ import {
     CardBody,
     CardTitle as PFCardTitle,
     FormSelect,
-    FormSelectOption
+    FormSelectOption,
+    Tabs,
+    Tab,
+    TabTitleText
 } from '@patternfly/react-core';
 
 import { FilterIcon } from '@patternfly/react-icons';
 
 import GroupedBarChart from '../../Charts/GroupedBarChart';
+import HostsBarChart from '../../Charts/HostsBarChart';
 import PieChart from '../../Charts/PieChart';
 
 const CardTitle = styled(PFCardTitle)`
@@ -101,10 +106,11 @@ const OrganizationStatistics = () => {
     const [ pieChart1Data, setPieChart1Data ] = useState([]);
     const [ pieChart2Data, setPieChart2Data ] = useState([]);
     const [ groupedBarChartData, setGroupedBarChartData ] = useState([]);
+    const [ hostsChartData, setHostsChartData ] = useState([]);
     const [ timeframe, setTimeframe ] = useState(31);
     const [ sortOrder, setSortOrder ] = useState('count:desc');
-    const [ firstRender, setFirstRender ] = useState(true);
     const [ isLoading, setIsLoading ] = useState(true);
+    const [ activeTabKey, setActiveTabKey ] = useState(0);
     const {
         queryParams,
         setEndDate,
@@ -124,64 +130,42 @@ const OrganizationStatistics = () => {
         return setLimit(limit);
     };
 
+    // Toggle currently active tab
+    const handleTabClick = (event, tabIndex) => {
+        setActiveTabKey(tabIndex);
+    };
+
+    // First render
     useEffect(() => {
-        let ignore = false;
-        const fetchEndpoints = () => {
-            return Promise.all(
-                [
-                    readJobsByDateAndOrg({ params: queryParams }),
-                    readJobRunsByOrg({ params: queryParams }),
-                    readJobEventsByOrg({ params: queryParams })
-                ].map((p) => p.catch(() => []))
-            );
-        };
-
-        const update = async () => {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            fetchEndpoints().then(
-                ([
-                    { dates: groupedBarChartData = []},
-                    { usages: pieChart1Data = []},
-                    { usages: pieChart2Data = []}
-                ]) => {
-                    setGroupedBarChartData(groupedBarChartData);
-                    setPieChart1Data(pieChart1Data);
-                    setPieChart2Data(pieChart2Data);
-                    setIsLoading(false);
-                }
-            );
-        };
-
-        async function initializeWithPreflight() {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            await preflightRequest().catch((error) => {
+        window.insights.chrome.auth.getUser().then(() =>
+            preflightRequest().catch((error) => {
                 setPreFlightError({ preflightError: error });
-            });
-            fetchEndpoints().then(
-                ([
-                    { dates: groupedBarChartData = []},
-                    { usages: pieChart1Data = []},
-                    { usages: pieChart2Data = []}
-                ]) => {
-                    if (!ignore) {
-                        setGroupedBarChartData(groupedBarChartData);
-                        setPieChart1Data(pieChart1Data);
-                        setPieChart2Data(pieChart2Data);
-                        setFirstRender(false);
-                        setIsLoading(false);
-                    }
-                }
-            );
-        }
+            })
+        );
+    }, []);
 
-        if (firstRender) {
-            initializeWithPreflight();
-            return () => (ignore = true);
-        } else {
-            update();
-        }
+    // Get and update the data
+    useEffect(() => {
+        setIsLoading(true);
+        window.insights.chrome.auth.getUser().then(() =>
+            Promise.all([
+                readJobsByDateAndOrg({ params: queryParams }),
+                readJobRunsByOrg({ params: queryParams }),
+                readJobEventsByOrg({ params: queryParams }),
+                readHostsByDateAndOrg({ params: queryParams })
+            ]).then(([
+                { dates: groupedBarChartData = []},
+                { usages: pieChart1Data = []},
+                { usages: pieChart2Data = []},
+                { dates: hostsChartData = []}
+            ]) => {
+                setGroupedBarChartData(groupedBarChartData);
+                setPieChart1Data(pieChart1Data);
+                setPieChart2Data(pieChart2Data);
+                setHostsChartData(hostsChartData);
+                setIsLoading(false);
+            })
+        );
     }, [ queryParams ]);
 
     return (
@@ -201,7 +185,7 @@ const OrganizationStatistics = () => {
                   <CardTitle style={ { paddingBottom: '0', paddingTop: '0' } }>
                       <h2>
                           <FilterIcon style={ { marginRight: '10px' } } />
-                  Filter
+                          Filter
                       </h2>
                       <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
                           <FormSelect
@@ -253,18 +237,36 @@ const OrganizationStatistics = () => {
                   <CardTitle>
                       <h2>Organization Status</h2>
                   </CardTitle>
-                  <CardBody>
-                      { isLoading && <LoadingState /> }
-                      { !isLoading && groupedBarChartData.length <= 0 && <NoData /> }
-                      { !isLoading && groupedBarChartData.length > 0 && (
-                          <GroupedBarChart
-                              margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
-                              id="d3-grouped-bar-chart-root"
-                              data={ groupedBarChartData }
-                              timeFrame={ timeframe }
-                          />
-                      ) }
-                  </CardBody>
+                  <Tabs activeKey={ activeTabKey } onSelect={ handleTabClick }>
+                      <Tab eventKey={ 0 } title={ <TabTitleText>Jobs</TabTitleText> }>
+                          <CardBody>
+                              { isLoading && <LoadingState /> }
+                              { !isLoading && groupedBarChartData.length <= 0 && <NoData /> }
+                              { activeTabKey === 0 && !isLoading && groupedBarChartData.length > 0 && (
+                                  <GroupedBarChart
+                                      margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
+                                      id="d3-grouped-bar-chart-root"
+                                      data={ groupedBarChartData }
+                                      timeFrame={ timeframe }
+                                  />
+                              ) }
+                          </CardBody>
+                      </Tab>
+                      <Tab eventKey={ 2 } title={ <TabTitleText>Hosts</TabTitleText> }>
+                          <CardBody>
+                              { isLoading && <LoadingState /> }
+                              { !isLoading && hostsChartData.length <= 0 && <NoData /> }
+                              { activeTabKey === 2 && !isLoading && hostsChartData.length > 0 && (
+                                  <HostsBarChart
+                                      margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
+                                      id="d3-hosts-chart-root"
+                                      data={ hostsChartData }
+                                      timeFrame={ timeframe }
+                                  />
+                              ) }
+                          </CardBody>
+                      </Tab>
+                  </Tabs>
               </TopCard>
               <CardContainer>
                   <Card>
