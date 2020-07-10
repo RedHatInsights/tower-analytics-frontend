@@ -220,7 +220,6 @@ export const automationCalculatorMethods = () => {
     };
 
     const updateData = (seconds, id, data) => {
-        console.log('updateData ...');
         let updatedData = [ ...data ];
         updatedData.map((datum) => {
             if (datum.id === id) {
@@ -280,7 +279,6 @@ export const useAutomationFormula = (queryParams) => {
     const { formatData } = automationCalculatorMethods();
 
     useEffect(() => {
-        console.log('useEffect 1 ...');
         let ignore = false;
         const getData = () => {
             console.log('getdata with queryparams ...');
@@ -307,8 +305,6 @@ export const useAutomationFormula = (queryParams) => {
     }, [ selectedStartValue ]);
 
     useEffect(() => {
-        console.log('useEffect 2 ...');
-
         let data = [ ...formattedData ];
         let total = 0;
         let costAutomationPerHour;
@@ -336,8 +332,6 @@ export const useAutomationFormula = (queryParams) => {
     }, [ formattedData, costAutomation, costManual, selectedStartValue ]);
 
     useEffect(() => {
-        console.log('useEffect 3 ...');
-
         const filteredData = unfilteredData.filter(
             ({ id }) => !selectedIds.includes(id)
         );
