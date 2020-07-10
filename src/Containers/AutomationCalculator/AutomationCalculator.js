@@ -382,7 +382,6 @@ export const useAutomationFormula = (queryParams) => {
         setRoiData,
         selectedIds,
         setSelectedIds,
-        selectedStartValue,
         setSelectedStartValue
     };
 };
@@ -395,14 +394,12 @@ const AutomationCalculator = () => {
         handleToggle
     } = automationCalculatorMethods();
 
-    let [ roiTimeFrame, setRoiTimeFrame ] = useState(62);
-    let { queryParams, setEndDate, setStartDate } = useQueryParams(
+    const [ roiTimeFrame, setRoiTimeFrame ] = useState(62);
+    const { queryParams, setEndDate, setStartDate } = useQueryParams(
         initialQueryParams
     );
 
-    /*let [selectedStartValue, setSelectedStartValue] = useState(365);*/
-
-    let {
+    const {
         isLoading,
         costManual,
         setCostManual,
@@ -415,27 +412,14 @@ const AutomationCalculator = () => {
         selectedIds,
         setSelectedIds,
         preflightError,
-        selectedStartValue,
         setSelectedStartValue
     } = useAutomationFormula(queryParams);
 
-
-    useEffect(() => {
-        console.log('useEffect 5 ...');
-    }, [ selectedStartValue ]);
-
-
     const onChange = (value) => {
-        console.log('onchange');
-        console.log(value);
-        setRoiTimeFrame(+value);
+        setRoiTimeFrame(+parseInt(value));
         setEndDate();
-        setStartDate(+value);
-        /*useAutomationFormula(queryParams);*/
+        setStartDate(+parseInt(value));
         setSelectedStartValue(parseInt(value));
-        console.log("selectedStartValue ...");
-        console.log(selectedStartValue);
-        /*setIsLoading(true);*/
     };
 
     return (
