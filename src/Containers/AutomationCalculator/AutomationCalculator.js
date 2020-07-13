@@ -161,7 +161,7 @@ const initialQueryParams = {
 const timeFrameOptions = [
     { value: 'please choose', label: 'Select date range', disabled: true },
     { value: 365, label: 'Past year', disabled: false },
-    { value: 31 * 4, label: 'Past quarter', disabled: false },
+    { value: 31 * 3, label: 'Past quarter', disabled: false },
     { value: 31, label: 'Past month', disabled: false }
 ];
 
