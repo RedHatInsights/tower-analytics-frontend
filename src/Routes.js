@@ -85,6 +85,7 @@ export const Routes = (props) => {
             { /* Finally, catch all unmatched routes and redirect to Clusters page */ }
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             <Route render={ () => some(Paths, p => p === path) ? null : (<Redirect to={ Paths.clusters } />) } />
 =======
             <InsightsRoute path={ () => some(Paths, p => p === path) ? null : (<Redirect to={ Paths.clusters }/>) }/>
@@ -92,6 +93,9 @@ export const Routes = (props) => {
 =======
             <InsightsRoute path={ () => some(Paths, p => p === path) ? null : (<Redirect to={ Paths.clusters }/>) }/>
 >>>>>>> Squashed commit of the following:
+=======
+            <Route render={ () => some(Paths, p => p === path) ? null : (<Redirect to={ Paths.clusters } />) } />
+>>>>>>> Undo part of 94ec4fb2b835d71337bd917eb81d40d8e272c7e9 and fix root page not redirecting to Clusters view.
         </Switch>
     );
 };
