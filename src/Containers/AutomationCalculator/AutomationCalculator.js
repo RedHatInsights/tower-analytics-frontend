@@ -153,11 +153,14 @@ const title = (
 
 const pastYear = moment.utc().subtract(1, 'year');
 const pastYTD = moment().startOf('year');
-/*const pastQuarter = moment().startOf('quarter').format('YYYY-MM-DD');*/
-const pastQuarter = moment.utc().subtract(3, 'months');
+const pastQuarter = moment().startOf('quarter');
+/* const pastQuarter = moment.utc().subtract(3, 'months'); */
 const pastMonth = moment().startOf('month');
 const today = moment.utc();
 
+/* we want a simple integer value to use in the form as the selected value */
+/* useQueryParam's setStartDate only handles integers for setStartDate */
+/* useQueryParam's setEndDate always forces the date to today and ignores any input */
 const timeFrameOptions = [
     { id: 0, value: 'please choose', label: 'Select date range', disabled: true },
     { id: 1, value: 1, range: [today.diff(pastYear, 'days'), today.format('YYYY-MM-DD')], label: 'Past year', disabled: false },
@@ -166,10 +169,7 @@ const timeFrameOptions = [
     { id: 4, value: 4, range: [today.diff(pastMonth, 'days'), today.format('YYYY-MM-DD')], label: 'Past month', disabled: false }
 ];
 
-console.log('---------------------------------');
-console.log(timeFrameOptions);
-console.log('---------------------------------');
-
+/* readROI must take datestrings for startDate and endDate */
 const initialQueryParams = { 
     startDate: pastYear.format('YYYY-MM-DD'),
     endDate: today.format('YYYY-MM-DD')
