@@ -1,9 +1,11 @@
 /*eslint camelcase: ["error", {properties: "never"}]*/
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import moment from 'moment';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
+import { getColorForNames } from '../../Utilities/colors';
 
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
@@ -111,6 +113,7 @@ const OrganizationStatistics = () => {
     const [ sortOrder, setSortOrder ] = useState('count:desc');
     const [ isLoading, setIsLoading ] = useState(true);
     const [ activeTabKey, setActiveTabKey ] = useState(0);
+    const [ colorToNames, setColorToNames ] = useState({});
     const {
         queryParams,
         setEndDate,
@@ -133,6 +136,17 @@ const OrganizationStatistics = () => {
     // Toggle currently active tab
     const handleTabClick = (event, tabIndex) => {
         setActiveTabKey(tabIndex);
+    };
+
+    const getColorForAllNames = (groupedBarChartData, pieChart1Data, pieChart2Data, hostsChartData) => {
+        // Get the unique names from the data for orgs
+        const namesToMap = [...new Set([
+            ...groupedBarChartData[0].orgs.map(el => el.org_name),
+            ...hostsChartData[0].orgs.map(el => el.name),
+            ...pieChart1Data.map(el => el.name),
+            ...pieChart2Data.map(el => el.name)
+        ])];
+        setColorToNames(getColorForNames(namesToMap.map(el => ({ name: el }))));
     };
 
     // First render
@@ -163,6 +177,7 @@ const OrganizationStatistics = () => {
                 setPieChart1Data(pieChart1Data);
                 setPieChart2Data(pieChart2Data);
                 setHostsChartData(hostsChartData);
+                getColorForAllNames(groupedBarChartData, pieChart1Data, pieChart2Data, hostsChartData);
                 setIsLoading(false);
             })
         );
@@ -247,6 +262,7 @@ const OrganizationStatistics = () => {
                                       margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
                                       id="d3-grouped-bar-chart-root"
                                       data={ groupedBarChartData }
+                                      colorToNames={ colorToNames }
                                       timeFrame={ timeframe }
                                   />
                               ) }
@@ -261,6 +277,7 @@ const OrganizationStatistics = () => {
                                       margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
                                       id="d3-hosts-chart-root"
                                       data={ hostsChartData }
+                                      colorToNames={ colorToNames }
                                       timeFrame={ timeframe }
                                   />
                               ) }
@@ -283,6 +300,7 @@ const OrganizationStatistics = () => {
                                   margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
                                   id="d3-donut-1-chart-root"
                                   data={ pieChart1Data }
+                                  colorToNames={ colorToNames }
                                   timeFrame={ timeframe }
                               />
                           ) }
@@ -302,6 +320,7 @@ const OrganizationStatistics = () => {
                                   margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
                                   id="d3-donut-2-chart-root"
                                   data={ pieChart2Data }
+                                  colorToNames={ colorToNames }
                                   timeFrame={ timeframe }
                               />
                           ) }

@@ -1,4 +1,4 @@
-/* eslint-disable */ 
+/* eslint-disable */
 import { mount, shallow } from 'enzyme';
 import PieChart from './PieChart.js';
 
@@ -30,6 +30,14 @@ const dataWithoutSuccess = [
     { name: 'maxcorp3', count: 5000 },
     { name: 'maxcorp4', count: 5000 }
 ];
+
+const coloursForData = {
+    maxcorp0: '#111',
+    maxcorp1: '#222',
+    maxcorp2: '#333',
+    maxcorp3: '#444',
+    maxcorp4: '#555',
+};
 
 describe('Charts/PieChart', () => {
     it('PieChart loads', () => {
@@ -79,9 +87,11 @@ describe('Charts/PieChart/Tooltip', () => {
         let props1 = { ...baseprops };
         props1.id = thisid1;
         props1.data = dataWithSuccess;
+        props1.colorToNames = coloursForData;
         let props2 = { ...baseprops };
         props2.id = thisid2;
         props2.data = dataWithoutSuccess;
+        props2.colorToNames = coloursForData;
 
         // mount+init the piecharts ...
         wrapper1 = mount(<PieChart { ...props1 } />);
