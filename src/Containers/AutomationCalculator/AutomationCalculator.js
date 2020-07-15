@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
@@ -150,20 +151,29 @@ const title = (
     </span>
 );
 
-const initialQueryParams = {
-    startDate: moment
-    .utc()
-    .subtract(1, 'year')
-    .format('YYYY-MM-DD'),
-    endDate: moment.utc().format('YYYY-MM-DD')
-};
+const pastYear = moment.utc().subtract(1, 'year');
+const pastYTD = moment().startOf('year');
+/*const pastQuarter = moment().startOf('quarter').format('YYYY-MM-DD');*/
+const pastQuarter = moment.utc().subtract(3, 'months');
+const pastMonth = moment().startOf('month');
+const today = moment.utc();
 
 const timeFrameOptions = [
-    { value: 'please choose', label: 'Select date range', disabled: true },
-    { value: 365, label: 'Past year', disabled: false },
-    { value: 31 * 3, label: 'Past quarter', disabled: false },
-    { value: 31, label: 'Past month', disabled: false }
+    { id: 0, value: 'please choose', label: 'Select date range', disabled: true },
+    { id: 1, value: 1, range: [today.diff(pastYear, 'days'), today.format('YYYY-MM-DD')], label: 'Past year', disabled: false },
+    { id: 2, value: 2, range: [today.diff(pastYTD, 'days'), today.format('YYYY-MM-DD')], label: 'Past year to date', disabled: false },
+    { id: 3, value: 3, range: [today.diff(pastQuarter, 'days'), today.format('YYYY-MM-DD')], label: 'Past quarter', disabled: false },
+    { id: 4, value: 4, range: [today.diff(pastMonth, 'days'), today.format('YYYY-MM-DD')], label: 'Past month', disabled: false }
 ];
+
+console.log('---------------------------------');
+console.log(timeFrameOptions);
+console.log('---------------------------------');
+
+const initialQueryParams = { 
+    startDate: pastYear.format('YYYY-MM-DD'),
+    endDate: today.format('YYYY-MM-DD')
+};
 
 export const automationCalculatorMethods = () => {
     // create our array to feed to D3
@@ -261,7 +271,7 @@ export const automationCalculatorMethods = () => {
     };
 };
 
-export const useAutomationFormula = (queryParams) => {
+export const useAutomationFormula = () => {
     const [ isLoading, setIsLoading ] = useState(true);
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ costManual, setCostManual ] = useState(defaultCostManual);
@@ -273,14 +283,20 @@ export const useAutomationFormula = (queryParams) => {
     const [ roiData, setRoiData ] = useState([]);
     const [ selectedIds, setSelectedIds ] = useState([]);
 
-    /* this drives the start date parameter sent to the API */
-    let [ selectedStartValue, setSelectedStartValue ] = useState(365);
-
     const { formatData } = automationCalculatorMethods();
+
+    const { queryParams, setEndDate, setStartDate } = useQueryParams(
+        initialQueryParams
+    );
+
+    console.log('UAF.queryparams ...');
+    console.log(queryParams);
 
     useEffect(() => {
         let ignore = false;
         const getData = () => {
+            console.log('UAF.useeffect1.getData ...');
+            console.log(queryParams);
             return readROI({ params: queryParams });
         };
 
@@ -290,7 +306,7 @@ export const useAutomationFormula = (queryParams) => {
             await preflightRequest().catch((error) => {
                 setPreFlightError({ preflightError: error });
             });
-            getData(queryParams).then(({ templates: roiData = []}) => {
+            getData().then(({ templates: roiData = []}) => {
                 if (!ignore) {
                     setRoiData(roiData);
                     setIsLoading(false);
@@ -300,7 +316,7 @@ export const useAutomationFormula = (queryParams) => {
 
         initializeWithPreflight();
         return () => (ignore = true);
-    }, [ selectedStartValue ]);
+    }, [queryParams]);
 
     useEffect(() => {
         let data = [ ...formattedData ];
@@ -325,7 +341,7 @@ export const useAutomationFormula = (queryParams) => {
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         setTotalSavings('$' + totalWithCommas);
-    }, [ formattedData, costAutomation, costManual, selectedStartValue ]);
+    }, [ formattedData, costAutomation, costManual ]);
 
     useEffect(() => {
         const filteredData = unfilteredData.filter(
@@ -339,7 +355,7 @@ export const useAutomationFormula = (queryParams) => {
             }
         });
         setFormattedData(filteredData);
-    }, [ selectedIds, selectedStartValue ]);
+    }, [ selectedIds ]);
 
     useEffect(() => {
         const formatted = formatData(roiData, {
@@ -350,7 +366,7 @@ export const useAutomationFormula = (queryParams) => {
         setUnfilteredData(formatted);
         setFormattedData(formatted);
         setTemplatesList(formatted);
-    }, [ roiData, selectedStartValue ]);
+    }, [ roiData ]);
 
     return {
         isLoading,
@@ -370,7 +386,9 @@ export const useAutomationFormula = (queryParams) => {
         setRoiData,
         selectedIds,
         setSelectedIds,
-        setSelectedStartValue
+        queryParams,
+        setStartDate,
+        setEndDate
     };
 };
 
@@ -382,10 +400,7 @@ const AutomationCalculator = () => {
         handleToggle
     } = automationCalculatorMethods();
 
-    const [ roiTimeFrame, setRoiTimeFrame ] = useState(62);
-    const { queryParams, setEndDate, setStartDate } = useQueryParams(
-        initialQueryParams
-    );
+    const [ roiTimeFrame, setRoiTimeFrame ] = useState(1);
 
     const {
         isLoading,
@@ -400,14 +415,25 @@ const AutomationCalculator = () => {
         selectedIds,
         setSelectedIds,
         preflightError,
-        setSelectedStartValue
-    } = useAutomationFormula(queryParams);
+        queryParams,
+        setStartDate,
+        setEndDate
+    } = useAutomationFormula();
 
-    const onChange = (value) => {
-        setRoiTimeFrame(+parseInt(value));
-        setEndDate();
-        setStartDate(+parseInt(value));
-        setSelectedStartValue(parseInt(value));
+    const onChange = (index) => {
+        console.log('AC.onchange ...');
+        console.log(index);
+        console.log(timeFrameOptions[parseInt(index)]);
+        console.log('AC.onchange setstartdate to ...');
+        setStartDate(timeFrameOptions[parseInt(index)]['range'][0]);
+        console.log(timeFrameOptions[parseInt(index)]['range'][0]);
+        console.log(queryParams);
+        console.log('AC.onchange setenddate to ...');
+        setEndDate(timeFrameOptions[parseInt(index)]['range'][1]);
+        console.log(timeFrameOptions[parseInt(index)]['range'][1]);
+        console.log(queryParams);
+
+        setRoiTimeFrame(index);
     };
 
     return (
@@ -445,7 +471,7 @@ const AutomationCalculator = () => {
                                   <FormSelectOption
                                       isDisabled={ option.disabled }
                                       key={ index }
-                                      value={ option.value }
+                                      value={ index }
                                       label={ option.label }
                                   />
                               )) }
