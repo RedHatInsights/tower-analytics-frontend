@@ -33,6 +33,7 @@ class BarChart extends Component {
             end_date: formattedDate,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             quick_date_range: 'custom',
             status: [ 'failed', 'successful' ]
 =======
@@ -41,6 +42,10 @@ class BarChart extends Component {
 =======
             quick_date_range: 'custom'
 >>>>>>> Squashed commit of the following:
+=======
+            quick_date_range: 'custom',
+            status: [ 'failed', 'successful' ]
+>>>>>>> Return only successful and failed jobs from bar and line charts.
         };
         const { strings, stringify } = formatQueryStrings(initialQueryParams);
         const search = stringify(strings);

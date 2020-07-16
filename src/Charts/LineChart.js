@@ -43,11 +43,16 @@ class LineChart extends Component {
         const initialQueryParams = {
             start_date: formattedDate,
             end_date: formattedDate,
+<<<<<<< HEAD
             quick_date_range: 'custom'
 <<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+            quick_date_range: 'custom',
+            status: [ 'failed', 'successful' ]
+>>>>>>> Return only successful and failed jobs from bar and line charts.
         };
         const { strings, stringify } = formatQueryStrings(initialQueryParams);
         const search = stringify(strings);
