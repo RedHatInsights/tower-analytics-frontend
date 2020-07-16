@@ -386,7 +386,8 @@ export const useAutomationFormula = () => {
         preflightError,
         setPreFlightError,
         setIsLoading,
-        setRoiData
+        setRoiData,
+        unfilteredData
     };
 };
 
