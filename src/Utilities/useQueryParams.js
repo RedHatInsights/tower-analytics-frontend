@@ -1,3 +1,4 @@
+/* eslint-disable */
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
 
@@ -6,6 +7,8 @@ import moment from 'moment';
 
 export const useQueryParams = initial => {
     const paramsReducer = (state, action) => {
+        console.log('usequeryparams.paramsreducer action ...');
+        console.log(action);
         switch (action.type) {
             case 'SET_STARTDATE':
                 return { ...state, startDate: action.startDate };
@@ -49,6 +52,9 @@ export const useQueryParams = initial => {
 
     const [ queryParams, dispatch ] = useReducer(paramsReducer, { ...initial });
 
+    console.log('usequeryparams.queryparams ...');
+    console.log(queryParams);
+
     return {
         queryParams,
         dispatch,
@@ -58,6 +64,8 @@ export const useQueryParams = initial => {
         },
         setId: id => dispatch({ type: 'SET_ID', id }),
         setStartDate: days => {
+            console.log('setStartDate days ...');
+            console.log(days);
             let startDate;
             if (days === 7) {
                 startDate = moment
@@ -85,6 +93,8 @@ export const useQueryParams = initial => {
                 .format('YYYY-MM-DD');
             }
 
+            console.log('dispatch SET_STARTDATE startDate ...');
+            console.log(startDate);
             dispatch({ type: 'SET_STARTDATE', startDate });
         },
         setSortBy: sort => dispatch({ type: 'SET_SORT_BY', sort }),
