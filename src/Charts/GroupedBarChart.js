@@ -201,6 +201,11 @@ class GroupedBarChart extends Component {
 
     redirectToJobExplorer({ date, id }) {
         let org_id;
+        if (id === -1) {
+            // disable clicking on "others" block
+            return;
+        }
+
         if (id === null) {
             org_id = -2;
         } else {
