@@ -203,15 +203,21 @@ class GroupedBarChart extends Component {
         let org_id;
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Disable click through for "Others" block.
         if (id === -1) {
             // disable clicking on "others" block
             return;
         }
 
+<<<<<<< HEAD
         org_id = id;
 =======
 =======
 >>>>>>> Squashed commit of the following:
+=======
+>>>>>>> Disable click through for "Others" block.
         if (id === null) {
             org_id = -2;
         } else {
