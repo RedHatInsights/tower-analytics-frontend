@@ -150,25 +150,23 @@ const title = (
     </span>
 );
 
-const pastYear = moment.utc().subtract(1, 'year');
+/* helper variables for further date ranges */
+const today = moment.utc();
+const pastYear = today.subtract(1, 'year');
 const pastYTD = moment().startOf('year');
 const pastQuarter = moment().startOf('quarter');
-/* const pastQuarter = moment.utc().subtract(3, 'months'); */
-const pastMonth = moment().startOf('month');
-const today = moment.utc();
+const pastMonth = today.subtract(1, 'month');
 
-/* we want a simple integer value to use in the form as the selected value */
-/* useQueryParam's setStartDate only handles integers for setStartDate */
-/* useQueryParam's setEndDate always forces the date to today and ignores any input */
+/* these are the buckets of time the user's are able to select ... */
 const timeFrameOptions = [
     { value: 'please choose', label: 'Select date range', disabled: true },
-    { value: 1, range: [ today.diff(pastYear, 'days'), today.format('YYYY-MM-DD') ], label: 'Past year', disabled: false },
-    { value: 2, range: [ today.diff(pastYTD, 'days'), today.format('YYYY-MM-DD') ], label: 'Past year to date', disabled: false },
-    { value: 3, range: [ today.diff(pastQuarter, 'days'), today.format('YYYY-MM-DD') ], label: 'Past quarter', disabled: false },
-    { value: 4, range: [ today.diff(pastMonth, 'days'), today.format('YYYY-MM-DD') ], label: 'Past month', disabled: false }
+    { value: pastYear.format('YYYY-MM-DD'), label: 'Past year', disabled: false },
+    { value: pastYTD.format('YYYY-MM-DD'), label: 'Past year to date', disabled: false },
+    { value: pastQuarter.format('YYYY-MM-DD'), label: 'Past quarter', disabled: false },
+    { value: pastMonth.format('YYYY-MM-DD'), label: 'Past month', disabled: false }
 ];
 
-/* readROI must take datestrings for startDate and endDate */
+/* set the default bucket to 365 days */
 const initialQueryParams = {
     startDate: pastYear.format('YYYY-MM-DD'),
     endDate: today.format('YYYY-MM-DD')
@@ -284,41 +282,6 @@ export const useAutomationFormula = () => {
 
     const { formatData } = automationCalculatorMethods();
 
-    /*
-    const { queryParams, setEndDate, setStartDate } = useQueryParams(
-        initialQueryParams
-    );
-
-    console.log('UAF.queryparams ...');
-    console.log(queryParams);
-
-    useEffect(() => {
-        let ignore = false;
-        const getData = () => {
-            console.log('UAF.useeffect1.getData ...');
-            console.log(queryParams);
-            return readROI({ params: queryParams });
-        };
-
-        async function initializeWithPreflight() {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            await preflightRequest().catch((error) => {
-                setPreFlightError({ preflightError: error });
-            });
-            getData().then(({ templates: roiData = []}) => {
-                if (!ignore) {
-                    setRoiData(roiData);
-                    setIsLoading(false);
-                }
-            });
-        }
-
-        initializeWithPreflight();
-        return () => (ignore = true);
-    }, [queryParams]);
-    */
-
     useEffect(() => {
         let data = [ ...formattedData ];
         let total = 0;
@@ -372,7 +335,6 @@ export const useAutomationFormula = () => {
     return {
         isLoading,
         setIsLoading,
-        /*setPreFlightError,*/
         costManual,
         setCostManual,
         costAutomation,
@@ -402,7 +364,6 @@ const AutomationCalculator = () => {
     const {
         isLoading,
         setIsLoading,
-        /*setPreFlightError,*/
         costManual,
         setCostManual,
         costAutomation,
@@ -416,13 +377,12 @@ const AutomationCalculator = () => {
         setRoiData
     } = useAutomationFormula();
 
-    const { queryParams, setEndDate, setStartDate } = useQueryParams(
+    const { queryParams, setStartDateAsString } = useQueryParams(
         initialQueryParams
     );
 
-    const onChange = (value) => {
-        setStartDate(timeFrameOptions[parseInt(value)].range[0]);
-        setEndDate(timeFrameOptions[parseInt(value)].range[1]);
+    const handleOnChange = (value) => {
+        setStartDateAsString(value);
         setRoiTimeFrame(value);
     };
 
@@ -477,7 +437,7 @@ const AutomationCalculator = () => {
                           <FormSelect
                               name="roiTimeFrame"
                               value={ roiTimeFrame }
-                              onChange={ onChange }
+                              onChange={ handleOnChange }
                               aria-label="Select Date Range"
                               style={ { margin: '2px 10px' } }
                           >
