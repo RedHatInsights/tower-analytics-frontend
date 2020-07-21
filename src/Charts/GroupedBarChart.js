@@ -212,6 +212,7 @@ class GroupedBarChart extends Component {
         }
 
 <<<<<<< HEAD
+<<<<<<< HEAD
         org_id = id;
 =======
 =======
@@ -228,6 +229,9 @@ class GroupedBarChart extends Component {
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+        org_id = id;
+>>>>>>> Compliment github/RedHatInsights/tower-analytics-backend/commit/e5c9c1c4aef564f3f9a9b4bcf730eae17764f130
         const { jobExplorer } = Paths;
         const formattedDate = formatDate(date);
         const initialQueryParams = {
