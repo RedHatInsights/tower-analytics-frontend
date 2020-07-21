@@ -1,6 +1,32 @@
+/*eslint-disable */
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
+
+//const fetchMock = require('fetch-mock-jest');
+//jest.mock('node-fetch', () => require('fetch-mock-jest').sandbox())
+//const fetchMock = require('node-fetch')
+//import fetchMock from "jest-fetch-mock";
+
+const fetch = require('node-fetch');
+
+import configureMockStore from 'redux-mock-store'
+import configureStore from 'redux-mock-store'
+import { createStore } from 'redux'
+import { Provider } from 'react-redux'
+import PropTypes from 'prop-types';
+import { FormSelect } from '@patternfly/react-core';
+
 import { act } from 'react-dom/test-utils';
 import { automationCalculatorMethods, useAutomationFormula } from './AutomationCalculator';
+
+import AutomationCalculator from './AutomationCalculator';
+//import { timeFrameOptions } from './AutomationCalculator';
+//import { mount, shallow } from 'enzyme';
+//const UserContext = React.createContext();
+
+import Adapter from 'enzyme-adapter-react-16';
+import Enzyme from 'enzyme';
+Enzyme.configure({adapter: new Adapter()});
+
 
 const testResponse = [
     {
@@ -289,5 +315,82 @@ describe('automationCalculatorMethods()', () => {
         expect(automationCalculatorMethods().handleToggle(1, [])).toEqual([ 1 ]);
         expect(automationCalculatorMethods().handleToggle('1', [ 1 ])).toEqual([ 1, '1' ]);
         expect(automationCalculatorMethods().handleToggle('1', [ 1, '1' ])).toEqual([ 1 ]);
+    });
+});
+
+
+
+describe('AutomationCalculator()', () => {
+
+    let wrapper;
+    let mockHandleOnChange = jest.fn();
+    AutomationCalculator.handleOnChange = jest.fn();
+
+    const mockInsights = {
+        chrome: {
+            auth: {
+                getUser: function() {
+                    return 'bob';
+                }
+            }
+        }
+    };
+
+
+    beforeEach(() => {
+
+        const mockStore = configureStore();
+        const store = mockStore({});
+
+        //await window.insights.chrome.auth.getUser();
+        //global.insights = jest.fn();
+        global.insights = mockInsights;
+
+        //wrapper = mount(<AutomationCalculator/>);
+        wrapper = mount(<Provider store={store} ><AutomationCalculator /></Provider>);
+        //wrapper = mount(<Provider store={store} ><AutomationCalculator handleOnChange={ mockHandleOnChange }/></Provider>);
+        //wrapper = mount(<Provider store={store} ><AutomationCalculator action={ handleOnChange }/></Provider>);
+
+    });
+
+    afterEach(() => {
+        //fetch.mockClear();
+    });
+
+    it('mount the calculator', () => {
+
+        console.log('acting!!!');
+
+        //console.log(wrapper.debug());
+        console.log(wrapper.find('FormSelect').html());
+        const fselect = wrapper.find('FormSelect');
+
+        console.log(fselect.find('option'));
+
+        // default to n-365 days
+        const selectedValue = fselect.find('select').props().value;
+        expect(selectedValue).toEqual(365);
+
+        // ensure 4 options plus 'please choose'
+        //console.log(fselect.find('option').debug());
+        const optionValues = fselect.find('option').map(option => {
+            return option.props().value;
+        })
+        console.log(optionValues);
+        expect(optionValues.length).toEqual(5);
+
+
+        //wrapper.find('FormSelect').simulate('change', {target: {value: optionValues[3]}});
+        const event = {
+            currentTarget: { value: optionValues[3] }
+        }
+        wrapper.find('FormSelect').simulate('change', event);
+        //console.log(wrapper.find('FormSelect').debug());
+
+        //console.log(mockHandleOnChange);
+        //expect(mockHandleOnChange).toBeCalled();
+
+
+
     });
 });
