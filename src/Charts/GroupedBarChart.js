@@ -206,12 +206,7 @@ class GroupedBarChart extends Component {
             return;
         }
 
-        if (id === null) {
-            org_id = -2;
-        } else {
-            org_id = id;
-        }
-
+        org_id = id;
         const { jobExplorer } = Paths;
         const formattedDate = formatDate(date);
         const initialQueryParams = {
