@@ -323,8 +323,7 @@ describe('automationCalculatorMethods()', () => {
 describe('AutomationCalculator()', () => {
 
     let wrapper;
-    let mockHandleOnChange = jest.fn();
-    AutomationCalculator.handleOnChange = jest.fn();
+    //let mockHandleOnChange = jest.fn();
 
     const mockInsights = {
         chrome: {
@@ -339,17 +338,15 @@ describe('AutomationCalculator()', () => {
 
     beforeEach(() => {
 
+        //newSpy = jest.spyOn(AutomationCalculator.prototype, 'handleOnChange');
         const mockStore = configureStore();
         const store = mockStore({});
 
         //await window.insights.chrome.auth.getUser();
-        //global.insights = jest.fn();
         global.insights = mockInsights;
 
-        //wrapper = mount(<AutomationCalculator/>);
+        // full mount ...
         wrapper = mount(<Provider store={store} ><AutomationCalculator /></Provider>);
-        //wrapper = mount(<Provider store={store} ><AutomationCalculator handleOnChange={ mockHandleOnChange }/></Provider>);
-        //wrapper = mount(<Provider store={store} ><AutomationCalculator action={ handleOnChange }/></Provider>);
 
     });
 
@@ -358,8 +355,6 @@ describe('AutomationCalculator()', () => {
     });
 
     it('mount the calculator', () => {
-
-        console.log('acting!!!');
 
         //console.log(wrapper.debug());
         console.log(wrapper.find('FormSelect').html());
@@ -372,25 +367,34 @@ describe('AutomationCalculator()', () => {
         expect(selectedValue).toEqual(365);
 
         // ensure 4 options plus 'please choose'
-        //console.log(fselect.find('option').debug());
         const optionValues = fselect.find('option').map(option => {
             return option.props().value;
         })
         console.log(optionValues);
         expect(optionValues.length).toEqual(5);
 
+        optionValues.map(option => {
+            // skip the disabled option
+            if ( option === 'please choose' ) {
+                return;
+            }
 
-        //wrapper.find('FormSelect').simulate('change', {target: {value: optionValues[3]}});
-        const event = {
-            currentTarget: { value: optionValues[3] }
-        }
-        wrapper.find('FormSelect').simulate('change', event);
-        //console.log(wrapper.find('FormSelect').debug());
+            // define the event that creates the selection
+            let event = {
+                currentTarget: { value: option }
+            };
+            console.log(event);
 
-        //console.log(mockHandleOnChange);
-        //expect(mockHandleOnChange).toBeCalled();
+            // fire off the event
+            act(() => {
+                wrapper.find('FormSelect').find('select').prop('onChange')(event)
+            });
+            wrapper.update();
+            //console.log(wrapper.find('FormSelect').debug());
+            //console.log(wrapper.find('FormSelect').find('select').props().value);
+            expect(wrapper.find('FormSelect').find('select').props().value).toBe(option);
 
-
+        });
 
     });
 });
