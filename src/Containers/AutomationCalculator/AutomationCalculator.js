@@ -1,3 +1,4 @@
+/*eslint-disable */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
@@ -152,10 +153,10 @@ const title = (
 
 /* helper variables for further date ranges */
 const today = moment.utc();
-const pastYear = today.subtract(1, 'year');
+const pastYear = moment.utc().subtract(1, 'year');
 const pastYTD = moment().startOf('year');
 const pastQuarter = moment().startOf('quarter');
-const pastMonth = today.subtract(1, 'month');
+const pastMonth = moment.utc().subtract(1, 'month');
 
 /* these are the buckets of time the user's are able to select ... */
 const timeFrameOptions = [
@@ -169,7 +170,7 @@ const timeFrameOptions = [
 /* set the default bucket to 365 days */
 const initialQueryParams = {
     startDate: pastYear.format('YYYY-MM-DD'),
-    endDate: today.format('YYYY-MM-DD')
+    endDate: moment.utc().format('YYYY-MM-DD')
 };
 
 export const automationCalculatorMethods = () => {
@@ -352,14 +353,14 @@ export const useAutomationFormula = () => {
 
 const AutomationCalculator = () => {
 
+    const [ roiTimeFrame, setRoiTimeFrame ] = useState(365);
+    const [ preflightError, setPreFlightError ] = useState(null);
+
     const {
         updateData,
         handleManualTimeChange,
         handleToggle
     } = automationCalculatorMethods();
-
-    const [ roiTimeFrame, setRoiTimeFrame ] = useState(365);
-    const [ preflightError, setPreFlightError ] = useState(null);
 
     const {
         isLoading,
@@ -382,6 +383,7 @@ const AutomationCalculator = () => {
     );
 
     const handleOnChange = (value) => {
+        console.log('handleOnChange !!!', value);
         setStartDateAsString(value);
         setRoiTimeFrame(value);
     };
