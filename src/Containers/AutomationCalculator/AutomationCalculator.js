@@ -383,7 +383,6 @@ const AutomationCalculator = () => {
     );
 
     const handleOnChange = (value) => {
-        console.log('handleOnChange !!!', value);
         setStartDateAsString(value);
         setRoiTimeFrame(value);
     };
