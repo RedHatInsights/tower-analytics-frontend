@@ -1,32 +1,15 @@
-/*eslint-disable */
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
-
-//const fetchMock = require('fetch-mock-jest');
-//jest.mock('node-fetch', () => require('fetch-mock-jest').sandbox())
-//const fetchMock = require('node-fetch')
-//import fetchMock from "jest-fetch-mock";
-
-const fetch = require('node-fetch');
-
-import configureMockStore from 'redux-mock-store'
-import configureStore from 'redux-mock-store'
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
-import PropTypes from 'prop-types';
-import { FormSelect } from '@patternfly/react-core';
+/*eslint-disable padding-line-between-statements */
 
 import { act } from 'react-dom/test-utils';
 import { automationCalculatorMethods, useAutomationFormula } from './AutomationCalculator';
 
+import configureStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
 import AutomationCalculator from './AutomationCalculator';
-//import { timeFrameOptions } from './AutomationCalculator';
-//import { mount, shallow } from 'enzyme';
-//const UserContext = React.createContext();
-
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
-Enzyme.configure({adapter: new Adapter()});
-
+Enzyme.configure({ adapter: new Adapter() });
 
 const testResponse = [
     {
@@ -318,8 +301,6 @@ describe('automationCalculatorMethods()', () => {
     });
 });
 
-
-
 describe('AutomationCalculator()', () => {
 
     let wrapper;
@@ -328,13 +309,12 @@ describe('AutomationCalculator()', () => {
     const mockInsights = {
         chrome: {
             auth: {
-                getUser: function() {
+                getUser: () => {
                     return 'bob';
                 }
             }
         }
     };
-
 
     beforeEach(() => {
 
@@ -346,7 +326,7 @@ describe('AutomationCalculator()', () => {
         global.insights = mockInsights;
 
         // full mount ...
-        wrapper = mount(<Provider store={store} ><AutomationCalculator /></Provider>);
+        wrapper = mount(<Provider store={ store } ><AutomationCalculator /></Provider>);
 
     });
 
@@ -354,44 +334,45 @@ describe('AutomationCalculator()', () => {
         //fetch.mockClear();
     });
 
-    it('mount the calculator', () => {
+    it('mounts and selection changes the startDate value', () => {
 
-        //console.log(wrapper.debug());
-        console.log(wrapper.find('FormSelect').html());
         const fselect = wrapper.find('FormSelect');
-
-        console.log(fselect.find('option'));
 
         // default to n-365 days
         const selectedValue = fselect.find('select').props().value;
         expect(selectedValue).toEqual(365);
 
         // ensure 4 options plus 'please choose'
+        /*
+        const optionValues = fselect.find('option').filter(option => {
+            if (option !== 'please choose') {
+                return true;
+            };
+            return false;
+        }).map(option => {
+            return option.props().value;
+        });
+        */
+
         const optionValues = fselect.find('option').map(option => {
             return option.props().value;
-        })
-        console.log(optionValues);
+        });
+
         expect(optionValues.length).toEqual(5);
 
         optionValues.map(option => {
-            // skip the disabled option
-            if ( option === 'please choose' ) {
-                return;
-            }
 
             // define the event that creates the selection
             let event = {
                 currentTarget: { value: option }
             };
-            console.log(event);
 
             // fire off the event
             act(() => {
-                wrapper.find('FormSelect').find('select').prop('onChange')(event)
+                wrapper.find('FormSelect').find('select').prop('onChange')(event);
             });
             wrapper.update();
-            //console.log(wrapper.find('FormSelect').debug());
-            //console.log(wrapper.find('FormSelect').find('select').props().value);
+            // verify the value change was made
             expect(wrapper.find('FormSelect').find('select').props().value).toBe(option);
 
         });
