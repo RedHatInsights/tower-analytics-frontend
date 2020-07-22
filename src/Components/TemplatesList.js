@@ -1,9 +1,12 @@
+/*eslint camelcase: ["error", {allow: ["template_id"]}]*/
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { formatDateTime, formatSeconds, formatPercentage } from '../Utilities/helpers';
 import styled from 'styled-components';
 import LoadingState from '../Components/LoadingState';
 import NoData from '../Components/NoData';
+import { Paths } from '../paths';
+import { formatQueryStrings } from '../Utilities/formatQueryStrings';
 
 import {
     Badge,
@@ -88,7 +91,14 @@ const formatTopFailedTask = data => {
     return `Unavailable`;
 };
 
-const TemplatesList = ({ templates, isLoading, queryParams }) => {
+const borderedButtonStyle = {
+    border: 'solid 1px #AAA',
+    borderRadius: '20px',
+    padding: '7px',
+    fontWeight: 'normal'
+};
+
+const TemplatesList = ({ history, templates, isLoading, queryParams }) => {
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ selectedId, setSelectedId ] = useState(null);
     const [ selectedTemplate, setSelectedTemplate ] = useState([]);
@@ -113,6 +123,20 @@ const TemplatesList = ({ templates, isLoading, queryParams }) => {
 
         ;
     }, [ selectedId ]);
+
+    const redirectToJobExplorer = () => {
+        const { jobExplorer } = Paths;
+        const initialQueryParams = {
+            template_id: selectedId
+        };
+
+        const { strings, stringify } = formatQueryStrings(initialQueryParams);
+        const search = stringify(strings);
+        history.push({
+            pathname: jobExplorer,
+            search
+        });
+    };
 
     return (
     <>
@@ -229,15 +253,21 @@ const TemplatesList = ({ templates, isLoading, queryParams }) => {
                           </div>
                       </DataListFocus>
                   </PFDataListItem>
+                  <DataListItemCompact>
+                      <PFDataListCell key="last5jobs">
+                          <span style={ borderedButtonStyle } >Last 5 jobs</span>
+                      </PFDataListCell>,
+                      <DataCellEnd>
+                          <Button component="a" onClick={ redirectToJobExplorer } variant="link">
+                              View all jobs
+                          </Button>
+                      </DataCellEnd>
+                  </DataListItemCompact>
                   <DataListItemCompact aria-labelledby="datalist header">
                       <PFDataListCell key="job heading">Id/Name</PFDataListCell>
                       <PFDataListCell key="cluster heading">Cluster</PFDataListCell>
-                      <PFDataListCell key="start time heading">
-                Start Time
-                      </PFDataListCell>
-                      <PFDataListCell key="total time heading">
-                Total Time
-                      </PFDataListCell>
+                      <PFDataListCell key="start time heading">Start Time</PFDataListCell>
+                      <PFDataListCell key="total time heading">Total Time</PFDataListCell>
                   </DataListItemCompact>
                   { relatedJobs.length <= 0 && <LoadingState /> }
                   { relatedJobs.length > 0 &&
