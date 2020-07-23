@@ -475,10 +475,14 @@ const FilterableToolbar = ({
                         label="Ignore nested workflows and jobs"
                         labelOff="Ignore nested workflows and jobs"
 <<<<<<< HEAD
+<<<<<<< HEAD
                         isChecked={ !!passedFilters.showRootWorkflows }
 =======
                         isChecked={ passedFilters.showRootWorkflows }
 >>>>>>> Break out filterable toolbar into it's own component.
+=======
+                        isChecked={ !!passedFilters.showRootWorkflows }
+>>>>>>> Fix: Fixed hard-refresh switch default value error by passing bool
                         onChange={ val => {
                             handleFilters({
                                 ...passedFilters,
