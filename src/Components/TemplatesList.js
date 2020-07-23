@@ -195,10 +195,10 @@ const TemplatesList = ({ history, templates, isLoading, queryParams }) => {
               </DataListItem>
           )) }
       </DataList>
-      { selectedTemplate && (
+      { selectedTemplate && selectedTemplate !== [] && (
           <Modal
               width={ '80%' }
-              title={ selectedTemplate.name ? selectedTemplate.name : '' }
+              title={ selectedTemplate.name ? selectedTemplate.name : 'no-template-name' }
               isOpen={ isModalOpen }
               onClose={ () => {
                   setIsModalOpen(false);
