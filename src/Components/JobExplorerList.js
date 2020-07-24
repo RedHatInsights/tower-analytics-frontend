@@ -14,9 +14,9 @@ import {
 
 import { ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
 
-import StatusIcon from '../Icons/StatusIcon/StatusIcon';
 import LoadingState from '../Components/LoadingState';
-import { formatDateTime, formatJobType, formatJobStatus } from '../Utilities/helpers';
+import { formatDateTime, formatJobType } from '../Utilities/helpers';
+import JobStatus from './JobStatus';
 
 const headerLabels = [
     'Id/Name',
@@ -73,7 +73,7 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                                         </a>
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
-                                        <StatusIcon status={ item.status } />{ formatJobStatus(item.status) }
+                                        <JobStatus status={ item.status } />
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
                                         { item.cluster_name }
