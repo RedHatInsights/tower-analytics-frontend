@@ -320,7 +320,82 @@ const AutomationCalculator = ({ history }) => {
     const [ formattedData, setFormattedData ] = useState([]);
     const [ templatesList, setTemplatesList ] = useState([]);
     const [ selectedIds, setSelectedIds ] = useState([]);
+<<<<<<< HEAD
     const [ preflightError, setPreFlightError ] = useState(null);
+=======
+
+    const { formatData } = automationCalculatorMethods();
+
+    useEffect(() => {
+        let data = [ ...formattedData ];
+        let total = 0;
+        let costAutomationPerHour;
+        let costManualPerHour;
+
+        data.forEach((datum) => {
+            costAutomationPerHour =
+        convertSecondsToHours(datum.successful_elapsed_sum) * costAutomation;
+            costManualPerHour =
+        convertSecondsToHours(datum.calculations[0].avg_run) *
+        datum.successful_host_run_count *
+        costManual;
+            total += calculateDelta(costAutomationPerHour, costManualPerHour);
+            datum.delta = calculateDelta(costAutomationPerHour, costManualPerHour);
+            datum.calculations[0].cost = costManualPerHour;
+            datum.calculations[1].cost = costAutomationPerHour;
+        });
+        const totalWithCommas = total
+        .toFixed(2)
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        setTotalSavings('$' + totalWithCommas);
+    }, [ formattedData, costAutomation, costManual ]);
+
+    useEffect(() => {
+        const filteredData = unfilteredData.filter(
+            ({ id }) => !selectedIds.includes(id)
+        );
+        templatesList.map((l) => {
+            if (selectedIds.includes(l.id)) {
+                l.isActive = false;
+            } else {
+                l.isActive = true;
+            }
+        });
+        setFormattedData(filteredData);
+    }, [ selectedIds ]);
+
+    useEffect(() => {
+        const formatted = formatData(roiData, {
+            defaultAvgRunVal,
+            defaultCostAutomation,
+            defaultCostManual
+        });
+        setUnfilteredData(formatted);
+        setFormattedData(formatted);
+        setTemplatesList(formatted);
+    }, [ roiData ]);
+
+    return {
+        isLoading,
+        setIsLoading,
+        costManual,
+        setCostManual,
+        costAutomation,
+        setCostAutomation,
+        totalSavings,
+        formattedData,
+        setFormattedData,
+        templatesList,
+        selectedIds,
+        setSelectedIds,
+        setRoiData,
+        unfilteredData
+    };
+};
+
+const AutomationCalculator = ({ history }) => {
+>>>>>>> Feature: Add link from ROI calculator to job expoler for templates
 
     // default to the past year (n - 365 days)
     const [ roiTimeFrame, setRoiTimeFrame ] = useState(timeFrameOptions[1].value);
@@ -380,10 +455,14 @@ const AutomationCalculator = ({ history }) => {
     const redirectToJobExplorer = (templateId) => {
         const { jobExplorer } = Paths;
         const initialQueryParams = {
+<<<<<<< HEAD
             template_id: templateId,
             status: [ 'successful' ],
             job_type: [ 'job' ],
             quick_date_range: 'last_30_days'
+=======
+            template_id: templateId
+>>>>>>> Feature: Add link from ROI calculator to job expoler for templates
         };
 
         const { strings, stringify } = formatQueryStrings(initialQueryParams);
@@ -575,6 +654,7 @@ const AutomationCalculator = ({ history }) => {
                               </p>
                               { templatesList.map((data) => (
                                   <div key={ data.id }>
+<<<<<<< HEAD
                                       <Tooltip content={ 'Click for list of jobs in the past month' } >
                                           <Button
                                               style={ { padding: '15px 0 10px' } }
@@ -585,6 +665,16 @@ const AutomationCalculator = ({ history }) => {
                                               { data.name }
                                           </Button>
                                       </Tooltip>
+=======
+                                      <Button
+                                          style={ { padding: '15px 0 10px' } }
+                                          component="a"
+                                          onClick={ () => redirectToJobExplorer(data.id) }
+                                          variant="link"
+                                      >
+                                          { data.name }
+                                      </Button>
+>>>>>>> Feature: Add link from ROI calculator to job expoler for templates
                                       <TemplateDetail>
                                           <InputAndText key={ data.id }>
                                               <InputGroup>
