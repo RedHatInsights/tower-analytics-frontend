@@ -9,6 +9,8 @@ import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
 import EmptyState from '../../Components/EmptyState';
 import { preflightRequest, readROI } from '../../Api';
+import { Paths } from '../../paths';
+import { formatQueryStrings } from '../../Utilities/formatQueryStrings';
 
 import {
     Main,
@@ -17,6 +19,7 @@ import {
 } from '@redhat-cloud-services/frontend-components';
 
 import {
+    Button,
     Card,
     CardBody,
     CardTitle,
@@ -349,7 +352,7 @@ export const useAutomationFormula = () => {
     };
 };
 
-const AutomationCalculator = () => {
+const AutomationCalculator = ({ history }) => {
 
     // default to the past year (n - 365 days)
     const [ roiTimeFrame, setRoiTimeFrame ] = useState(timeFrameOptions[1].value);
@@ -409,6 +412,20 @@ const AutomationCalculator = () => {
         initializeWithPreflight();
         return () => (ignore = true);
     }, [ queryParams ]);
+
+    const redirectToJobExplorer = (templateId) => {
+        const { jobExplorer } = Paths;
+        const initialQueryParams = {
+            template_id: templateId
+        };
+
+        const { strings, stringify } = formatQueryStrings(initialQueryParams);
+        const search = stringify(strings);
+        history.push({
+            pathname: jobExplorer,
+            search
+        });
+    };
 
     return (
     <>
@@ -591,7 +608,14 @@ const AutomationCalculator = () => {
                               </p>
                               { templatesList.map((data) => (
                                   <div key={ data.id }>
-                                      <p style={ { padding: '15px 0 10px' } }>{ data.name }</p>
+                                      <Button
+                                          style={ { padding: '15px 0 10px' } }
+                                          component="a"
+                                          onClick={ () => redirectToJobExplorer(data.id) }
+                                          variant="link"
+                                      >
+                                          { data.name }
+                                      </Button>
                                       <TemplateDetail>
                                           <InputAndText key={ data.id }>
                                               <InputGroup>
