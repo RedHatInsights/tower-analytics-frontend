@@ -16,16 +16,14 @@ Enzyme.configure({ adapter: new Adapter() });
 
 ApiFuncs.preflightRequest = jest.fn();
 ApiFuncs.readROI = jest.fn();
-//const mockApi = jest.mock('../../Api')
 const mockResponse = {
-      ok: true,
-      json: () => Promise.resolve({}),
-}
-//preflightRequest.mockResolvedValue(mockResponse)
+    ok: true,
+    json: () => Promise.resolve({})
+};
 ApiFuncs.preflightRequest = jest.fn();
-ApiFuncs.preflightRequest.mockResolvedValue(mockResponse)
+ApiFuncs.preflightRequest.mockResolvedValue(mockResponse);
 ApiFuncs.readROI = jest.fn();
-ApiFuncs.readROI.mockResolvedValue(mockResponse)
+ApiFuncs.readROI.mockResolvedValue(mockResponse);
 
 const testResponse = [
     {
@@ -360,70 +358,26 @@ describe('AutomationCalculator()', () => {
         expect(selectedValue).toEqual(365);
 
         // ensure 4 options plus 'please choose'
-        /*
-        const optionValues = fselect.find('option').filter(option => {
-            if (option !== 'please choose') {
-                return true;
-            };
-            return false;
-        }).map(option => {
-            return option.props().value;
-        });
-        */
-
         const optionValues = fselect.find('option').map(option => {
             return option.props().value;
         });
-
         expect(optionValues.length).toEqual(5);
 
-        /*
-        optionValues.map(option => {
-
-            // define the event that creates the selection
-            let event = {
-                currentTarget: { value: option }
-            };
-
-            // fire off the event
-            await act(async() => {
-                wrapper.find('FormSelect').find('select').prop('onChange')(event);
-            });
-            wrapper.update();
-            // verify the value change was made
-            expect(wrapper.find('FormSelect').find('select').props().value).toBe(option);
-
-            console.log(mockApi);
-            //console.log(mockApi.mock);
-            //console.log(mockApi.mock());
-            //console.log(mockApi.mock.instances);
-            //console.log(mockApi.mock.calls);
-            //console.log(mockApi.readROI);
-
-        });
-        */
-
+        // fire off a selection event
         let event = {
             currentTarget: { value: optionValues[3] }
         };
-
-        // fire off the event
         await act(async() => {
             wrapper.find('FormSelect').find('select').prop('onChange')(event);
         });
         wrapper.update();
+
         // verify the value change was made
         expect(wrapper.find('FormSelect').find('select').props().value).toBe(optionValues[3]);
 
-
-        expect(ApiFuncs.readROI).toHaveBeenCalled()
-        const total_calls = ApiFuncs.readROI.mock.calls.length
-        console.log(total_calls)
-        console.log(ApiFuncs.readROI.mock.calls[total_calls-1])
-        const last_params = ApiFuncs.readROI.mock.calls[total_calls-1][0].params
-        console.log(last_params)
-        expect(last_params.startDate).toBe(optionValues[3])
-
-
+        expect(ApiFuncs.readROI).toHaveBeenCalled();
+        const totalCalls = ApiFuncs.readROI.mock.calls.length;
+        const lastParams = ApiFuncs.readROI.mock.calls[totalCalls - 1][0].params;
+        expect(lastParams.startDate).toBe(optionValues[3]);
     });
 });
