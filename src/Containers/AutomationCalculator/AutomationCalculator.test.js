@@ -353,15 +353,15 @@ describe('AutomationCalculator()', () => {
 
         const fselect = wrapper.find('FormSelect');
 
-        // default to n-365 days
-        const selectedValue = fselect.find('select').props().value;
-        expect(selectedValue).toEqual(365);
-
         // ensure 4 options plus 'please choose'
         const optionValues = fselect.find('option').map(option => {
             return option.props().value;
         });
         expect(optionValues.length).toEqual(5);
+
+        // default to n-365 days
+        const selectedValue = fselect.find('select').props().value;
+        expect(selectedValue).toEqual(optionValues[1]);
 
         // fire off a selection event
         let event = {

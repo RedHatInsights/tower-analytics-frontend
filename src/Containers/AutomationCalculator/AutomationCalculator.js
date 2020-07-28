@@ -353,7 +353,8 @@ export const useAutomationFormula = () => {
 
 const AutomationCalculator = () => {
 
-    const [ roiTimeFrame, setRoiTimeFrame ] = useState(365);
+    // default to the past year (n - 365 days)
+    const [ roiTimeFrame, setRoiTimeFrame ] = useState(timeFrameOptions[1].value);
     const [ preflightError, setPreFlightError ] = useState(null);
 
     const {
