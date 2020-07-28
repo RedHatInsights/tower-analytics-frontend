@@ -103,6 +103,7 @@ const IconGroup = styled.div`
 const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 5fr 2fr;
+  height: 100%;
 `;
 
 const WrapperLeft = styled.div`
