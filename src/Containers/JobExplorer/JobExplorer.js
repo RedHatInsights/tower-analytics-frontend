@@ -1089,6 +1089,7 @@ const JobExplorer = props => {
                       />
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                       { apiError && <ApiErrorState message={ apiError } /> }
                       { !apiError && isLoading && <LoadingState /> }
                       { !apiError && !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
@@ -1193,6 +1194,9 @@ const JobExplorer = props => {
 =======
 =======
                       { apiError && <ApiErrorState message={ apiError }/> }
+=======
+                      { apiError && <ApiErrorState message={ apiError } /> }
+>>>>>>> Test: API Error State component
                       { !apiError && isLoading && <LoadingState /> }
                       { !apiError && !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
                       { !apiError && !isLoading && jobExplorerData.length > 0 && (

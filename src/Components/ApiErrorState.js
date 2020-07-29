@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
 <<<<<<< HEAD
+<<<<<<< HEAD
     EmptyState,
     EmptyStateBody,
     EmptyStateIcon,
@@ -20,19 +21,29 @@ const ApiErrorState = ({ message }) => (
         </EmptyStateBody>
 =======
     Title,
+=======
+>>>>>>> Test: API Error State component
     EmptyState,
+    EmptyStateBody,
+    EmptyStateIcon,
     EmptyStateVariant,
-    EmptyStateIcon
+    Title
 } from '@patternfly/react-core';
-import { CubesIcon } from '@patternfly/react-icons';
+import { ExclamationCircleIcon } from '@patternfly/react-icons';
+import { global_danger_color_200 as globalDangerColor200 } from '@patternfly/react-tokens';
 
 const ApiErrorState = ({ message }) => (
-    <EmptyState variant={ EmptyStateVariant.full }>
-        <EmptyStateIcon icon={ CubesIcon } />
-        <Title headingLevel="h5" size="lg">
+    <EmptyState variant={ EmptyStateVariant.small }>
+        <EmptyStateIcon icon={ ExclamationCircleIcon } color={ globalDangerColor200.value } />
+        <Title headingLevel="h2" size="lg">Error</Title>
+        <EmptyStateBody>
             { message }
+<<<<<<< HEAD
         </Title>
 >>>>>>> Fix: Catch api call errors and display the message nicely
+=======
+        </EmptyStateBody>
+>>>>>>> Test: API Error State component
     </EmptyState>
 );
 
