@@ -1,4 +1,4 @@
-/* eslint-disable camelcase */
+/*eslint camelcase: ["error", {allow: ["setStart_Date","setEnd_Date","cluster_id","org_id","job_type","template_id","quick_date_range","sort_by"]}]*/
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
@@ -9,6 +9,7 @@ import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
+import ApiErrorState from '../../Components/ApiErrorState';
 import {
     preflightRequest,
     readJobExplorer,
@@ -72,6 +73,7 @@ const initialOptionsParams = {
 
 const JobExplorer = props => {
     const [ preflightError, setPreFlightError ] = useState(null);
+    const [ apiError, setApiError ] = useState(null);
     const [ jobExplorerData, setJobExplorerData ] = useState([]);
     const [ firstRender, setFirstRender ] = useState(true);
     const [ isLoading, setIsLoading ] = useState(true);
@@ -159,13 +161,14 @@ const JobExplorer = props => {
         };
 
         const update = async () => {
+            setApiError(null);
             setIsLoading(true);
             await window.insights.chrome.auth.getUser();
             getData().then(([{ items: jobExplorerData = [], meta }]) => {
                 setJobExplorerData(jobExplorerData);
                 setMeta(meta);
-                setIsLoading(false);
-            });
+            }).catch(e => setApiError(e.error)
+            ).finally(() => setIsLoading(false));
         };
 
         update();
@@ -393,9 +396,10 @@ const JobExplorer = props => {
                           passedFilters={ filters }
                           handleFilters={ setFilters }
                       />
-                      { isLoading && <LoadingState /> }
-                      { !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
-                      { !isLoading && jobExplorerData.length > 0 && (
+                      { apiError && <ApiErrorState message={ apiError }/> }
+                      { !apiError && isLoading && <LoadingState /> }
+                      { !apiError && !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
+                      { !apiError && !isLoading && jobExplorerData.length > 0 && (
                   <>
                     <JobExplorerList jobs={ jobExplorerData } />
                     <Pagination
