@@ -440,10 +440,14 @@ const FilterableToolbar = ({
                           type="date"
                           aria-label="Start Date"
 <<<<<<< HEAD
+<<<<<<< HEAD
                           value={ passedFilters.startDate || '' }
 =======
                           value={ passedFilters.startDate }
 >>>>>>> Break out filterable toolbar into it's own component.
+=======
+                          value={ passedFilters.startDate || '' }
+>>>>>>> Fix: No default value to date picker causing errors fixed
                           onChange={ e => handleStartDate(e) }
                       />
                   </InputGroup>
@@ -457,10 +461,14 @@ const FilterableToolbar = ({
                           type="date"
                           aria-label="End Date"
 <<<<<<< HEAD
+<<<<<<< HEAD
                           value={ passedFilters.endDate || '' }
 =======
                           value={ passedFilters.endDate }
 >>>>>>> Break out filterable toolbar into it's own component.
+=======
+                          value={ passedFilters.endDate || '' }
+>>>>>>> Fix: No default value to date picker causing errors fixed
                           onChange={ e => handleEndDate(e) }
                       />
                   </InputGroup>
