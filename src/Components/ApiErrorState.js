@@ -1,19 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-    Title,
     EmptyState,
+    EmptyStateBody,
+    EmptyStateIcon,
     EmptyStateVariant,
-    EmptyStateIcon
+    Title
 } from '@patternfly/react-core';
-import { CubesIcon } from '@patternfly/react-icons';
+import { ExclamationCircleIcon } from '@patternfly/react-icons';
+import { global_danger_color_200 as globalDangerColor200 } from '@patternfly/react-tokens';
 
 const ApiErrorState = ({ message }) => (
-    <EmptyState variant={ EmptyStateVariant.full }>
-        <EmptyStateIcon icon={ CubesIcon } />
-        <Title headingLevel="h5" size="lg">
+    <EmptyState variant={ EmptyStateVariant.small }>
+        <EmptyStateIcon icon={ ExclamationCircleIcon } color={ globalDangerColor200.value } />
+        <Title headingLevel="h2" size="lg">Error</Title>
+        <EmptyStateBody>
             { message }
-        </Title>
+        </EmptyStateBody>
     </EmptyState>
 );
 
