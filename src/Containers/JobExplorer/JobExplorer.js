@@ -392,7 +392,7 @@ const JobExplorer = props => {
                           passedFilters={ filters }
                           handleFilters={ setFilters }
                       />
-                      { apiError && <ApiErrorState message={ apiError }/> }
+                      { apiError && <ApiErrorState message={ apiError } /> }
                       { !apiError && isLoading && <LoadingState /> }
                       { !apiError && !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
                       { !apiError && !isLoading && jobExplorerData.length > 0 && (
