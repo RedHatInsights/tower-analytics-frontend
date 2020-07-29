@@ -1,5 +1,6 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 /*eslint camelcase: ["error", {allow: ["setStart_Date","setEnd_Date","cluster_id","org_id","job_type","template_id","quick_date_range","sort_by"]}]*/
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -9,6 +10,9 @@ import React, { useState, useEffect } from 'react';
 >>>>>>> Squashed commit of the following:
 =======
 /* eslint-disable camelcase */
+=======
+/*eslint camelcase: ["error", {allow: ["setStart_Date","setEnd_Date","cluster_id","org_id","job_type","template_id","quick_date_range","sort_by"]}]*/
+>>>>>>> Fix: Catch api call errors and display the message nicely
 import React, { useState, useEffect } from 'react';
 <<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
@@ -25,11 +29,15 @@ import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import ApiErrorState from '../../Components/ApiErrorState';
 =======
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+import ApiErrorState from '../../Components/ApiErrorState';
+>>>>>>> Fix: Catch api call errors and display the message nicely
 import {
     preflightRequest,
     readJobExplorer,
@@ -211,11 +219,15 @@ const JobExplorer = props => {
     const [ preflightError, setPreFlightError ] = useState(null);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     const [ apiError, setApiError ] = useState(null);
 =======
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+    const [ apiError, setApiError ] = useState(null);
+>>>>>>> Fix: Catch api call errors and display the message nicely
     const [ jobExplorerData, setJobExplorerData ] = useState([]);
     const [ firstRender, setFirstRender ] = useState(true);
     const [ isLoading, setIsLoading ] = useState(true);
@@ -378,16 +390,21 @@ const JobExplorer = props => {
         const update = async () => {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
             setApiError(null);
 =======
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+            setApiError(null);
+>>>>>>> Fix: Catch api call errors and display the message nicely
             setIsLoading(true);
             await window.insights.chrome.auth.getUser();
             getData().then(([{ items: jobExplorerData = [], meta }]) => {
                 setJobExplorerData(jobExplorerData);
                 setMeta(meta);
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
             }).catch(e => setApiError(e.error)
@@ -400,6 +417,10 @@ const JobExplorer = props => {
                 setIsLoading(false);
             });
 >>>>>>> Squashed commit of the following:
+=======
+            }).catch(e => setApiError(e.error)
+            ).finally(() => setIsLoading(false));
+>>>>>>> Fix: Catch api call errors and display the message nicely
         };
 
         update();
@@ -1067,6 +1088,7 @@ const JobExplorer = props => {
                           handleFilters={ setFilters }
                       />
 <<<<<<< HEAD
+<<<<<<< HEAD
                       { apiError && <ApiErrorState message={ apiError } /> }
                       { !apiError && isLoading && <LoadingState /> }
                       { !apiError && !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
@@ -1169,6 +1191,12 @@ const JobExplorer = props => {
                   <>
                     <JobExplorerList jobs={ jobExplorerData } windowWidth={ width } />
 =======
+=======
+                      { apiError && <ApiErrorState message={ apiError }/> }
+                      { !apiError && isLoading && <LoadingState /> }
+                      { !apiError && !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
+                      { !apiError && !isLoading && jobExplorerData.length > 0 && (
+>>>>>>> Fix: Catch api call errors and display the message nicely
                   <>
                     <JobExplorerList jobs={ jobExplorerData } />
 >>>>>>> Squashed commit of the following:

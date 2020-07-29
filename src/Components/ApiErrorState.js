@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
+<<<<<<< HEAD
     EmptyState,
     EmptyStateBody,
     EmptyStateIcon,
@@ -17,6 +18,21 @@ const ApiErrorState = ({ message }) => (
         <EmptyStateBody>
             { message }
         </EmptyStateBody>
+=======
+    Title,
+    EmptyState,
+    EmptyStateVariant,
+    EmptyStateIcon
+} from '@patternfly/react-core';
+import { CubesIcon } from '@patternfly/react-icons';
+
+const ApiErrorState = ({ message }) => (
+    <EmptyState variant={ EmptyStateVariant.full }>
+        <EmptyStateIcon icon={ CubesIcon } />
+        <Title headingLevel="h5" size="lg">
+            { message }
+        </Title>
+>>>>>>> Fix: Catch api call errors and display the message nicely
     </EmptyState>
 );
 
