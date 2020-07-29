@@ -205,9 +205,13 @@ const JobExplorer = props => {
 
         setQuickDateRange(filters.date);
 
-        setStart_Date(filters.startDate);
-
-        setEnd_Date(filters.endDate);
+        if (filters.date !== 'custom') {
+            setStart_Date(null);
+            setEnd_Date(null);
+        } else {
+            setStart_Date(filters.startDate);
+            setEnd_Date(filters.endDate);
+        }
     }, [ filters ]);
 
     useEffect(() => {
