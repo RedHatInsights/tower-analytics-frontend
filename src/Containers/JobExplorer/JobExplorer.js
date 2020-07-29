@@ -444,6 +444,9 @@ const JobExplorer = props => {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Fix: switching back from custom date in job expoler works properly
         if (filters.date !== 'custom') {
             setStart_Date(null);
             setEnd_Date(null);
@@ -451,6 +454,7 @@ const JobExplorer = props => {
             setStart_Date(filters.startDate);
             setEnd_Date(filters.endDate);
         }
+<<<<<<< HEAD
 =======
         setStart_Date(filters.startDate);
 
@@ -461,6 +465,8 @@ const JobExplorer = props => {
 
         setEnd_Date(filters.endDate);
 >>>>>>> Squashed commit of the following:
+=======
+>>>>>>> Fix: switching back from custom date in job expoler works properly
     }, [ filters ]);
 
     useEffect(() => {
