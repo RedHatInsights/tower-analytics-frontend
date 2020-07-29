@@ -390,7 +390,7 @@ const FilterableToolbar = ({
                           id="startDate"
                           type="date"
                           aria-label="Start Date"
-                          value={ passedFilters.startDate }
+                          value={ passedFilters.startDate || '' }
                           onChange={ e => handleStartDate(e) }
                       />
                   </InputGroup>
@@ -403,7 +403,7 @@ const FilterableToolbar = ({
                           id="endDate"
                           type="date"
                           aria-label="End Date"
-                          value={ passedFilters.endDate }
+                          value={ passedFilters.endDate || '' }
                           onChange={ e => handleEndDate(e) }
                       />
                   </InputGroup>
