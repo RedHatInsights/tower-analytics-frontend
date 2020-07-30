@@ -9,8 +9,7 @@ const combined = {
     attributes: [ 'foo', 'bar' ],
     cluster_id: [ 'foo', 'bar' ],
     org_id: [ 'foo', 'bar' ],
-    template_id: [ 'foo', 'bar' ],
-    sort_by: [ 'foo', 'bar' ]
+    template_id: [ 'foo', 'bar' ]
 };
 const expected = {
     status: 'status[]=foo&status[]=bar',
@@ -18,8 +17,7 @@ const expected = {
     attributes: 'attributes[]=foo&attributes[]=bar',
     cluster_id: 'cluster_id[]=foo&cluster_id[]=bar',
     org_id: 'org_id[]=foo&org_id[]=bar',
-    template_id: 'template_id[]=foo&template_id[]=bar',
-    sort_by: 'sort_by[]=foo&sort_by[]=bar'
+    template_id: 'template_id[]=foo&template_id[]=bar'
 };
 
 const combinedStrings = {
@@ -44,7 +42,7 @@ const expectedStrings = {
     cluster_id: 'cluster_id[]=baz',
     org_id: 'org_id[]=baz',
     template_id: 'template_id[]=baz',
-    sort_by: 'sort_by[]=baz',
+    sort_by: 'sort_by=baz',
     limit: 'limit=baz',
     offset: 'offset=baz',
     limit_number: 'limit_remove=baz',
@@ -128,11 +126,6 @@ describe('Utilities/formatQueryStrings', () => {
         });
     });
     describe('parseSortBy method', () => {
-        it('formats "sort_by" array as "sort_by=a&sort_by=b"', () => {
-            const { parseSortBy } = formatQueryStrings(combined);
-            const string = parseSortBy(combined.sort_by);
-            expect(string).toEqual(expected.sort_by);
-        });
         it('formats "sort_by" string as "sort_by=a"', () => {
             const { parseSortBy } = formatQueryStrings(combinedStrings);
             const string = parseSortBy(combinedStrings.sort_by);
