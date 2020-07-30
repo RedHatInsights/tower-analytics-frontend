@@ -100,6 +100,7 @@ export const formatQueryStrings = ({
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 return `sort_by=${encodeURIComponent(attr)}`;
 =======
                 return `sort_by[]=${encodeURIComponent(attr)}`;
@@ -127,6 +128,13 @@ export const formatQueryStrings = ({
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+                return `sort_by=${encodeURIComponent(attr)}`;
+            })
+            .join('&');
+        } else {
+            return `sort_by=${encodeURIComponent(sortBy)}`;
+>>>>>>> Fix: sort_by is passed to API without the []
         }
     };
 

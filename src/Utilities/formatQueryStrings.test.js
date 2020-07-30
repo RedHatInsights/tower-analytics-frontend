@@ -11,6 +11,7 @@ const combined = {
     org_id: [ 'foo', 'bar' ],
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     template_id: [ 'foo', 'bar' ]
 };
 const expected = {
@@ -25,6 +26,9 @@ const expected = {
 >>>>>>> Squashed commit of the following:
     template_id: [ 'foo', 'bar' ],
     sort_by: [ 'foo', 'bar' ]
+=======
+    template_id: [ 'foo', 'bar' ]
+>>>>>>> Fix: sort_by is passed to API without the []
 };
 const expected = {
 <<<<<<< HEAD
@@ -45,9 +49,13 @@ const expected = {
     attributes: 'attributes[]=foo&attributes[]=bar',
     cluster_id: 'cluster_id[]=foo&cluster_id[]=bar',
     org_id: 'org_id[]=foo&org_id[]=bar',
+<<<<<<< HEAD
     template_id: 'template_id[]=foo&template_id[]=bar',
     sort_by: 'sort_by[]=foo&sort_by[]=bar'
 >>>>>>> Fix tests.
+=======
+    template_id: 'template_id[]=foo&template_id[]=bar'
+>>>>>>> Fix: sort_by is passed to API without the []
 };
 
 const combinedStrings = {
@@ -78,6 +86,7 @@ const expectedStrings = {
     org_id: 'org_id[]=baz',
     template_id: 'template_id[]=baz',
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Squashed commit of the following:
@@ -95,6 +104,9 @@ const expectedStrings = {
 =======
     sort_by: 'sort_by[]=baz',
 >>>>>>> Fix tests.
+=======
+    sort_by: 'sort_by=baz',
+>>>>>>> Fix: sort_by is passed to API without the []
     limit: 'limit=baz',
     offset: 'offset=baz',
     limit_number: 'limit_remove=baz',
@@ -180,6 +192,7 @@ describe('Utilities/formatQueryStrings', () => {
     describe('parseSortBy method', () => {
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Squashed commit of the following:
@@ -192,6 +205,8 @@ describe('Utilities/formatQueryStrings', () => {
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+>>>>>>> Fix: sort_by is passed to API without the []
         it('formats "sort_by" string as "sort_by=a"', () => {
             const { parseSortBy } = formatQueryStrings(combinedStrings);
             const string = parseSortBy(combinedStrings.sort_by);
