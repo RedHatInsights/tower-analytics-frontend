@@ -6,7 +6,7 @@ import {
     ExclamationCircleIcon,
     ClockIcon,
     SyncAltIcon,
-    TimesCircleIcon
+    ExclamationTriangleIcon
 } from '@patternfly/react-icons';
 
 const JobStatus = ({ status }) => {
@@ -20,8 +20,11 @@ const JobStatus = ({ status }) => {
             case 'error':
                 return 'red';
             case 'running':
+            case 'pending':
                 return 'blue';
-            // case new, waiting, pending, canceled
+            case 'canceled':
+                return 'orange';
+            // case new, waiting
             default: return 'grey';
         }
     };
@@ -36,7 +39,7 @@ const JobStatus = ({ status }) => {
             case 'running':
                 return <SyncAltIcon />;
             case 'canceled':
-                return <TimesCircleIcon />;
+                return <ExclamationTriangleIcon />;
             // case new, waiting, pending
             default: return <ClockIcon />;
         }
