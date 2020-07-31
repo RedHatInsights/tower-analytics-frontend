@@ -85,6 +85,7 @@ export const useQueryParams = initial => {
             case 'SET_SORTBY':
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 if (action.sortBy === null) {
 =======
                 if (action.sortBy.length <= 0) {
@@ -92,10 +93,14 @@ export const useQueryParams = initial => {
 =======
                 if (action.sortBy.length <= 0) {
 >>>>>>> Squashed commit of the following:
+=======
+                if (action.sortBy === null) {
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
                     const { sort_by: ignored, ...rest } = state;
                     return rest;
                 }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
                 return { ...state, sort_by: action.sortBy };
@@ -105,6 +110,9 @@ export const useQueryParams = initial => {
 =======
                 return { ...state, sort_by: [ ...action.sortBy ]};
 >>>>>>> Squashed commit of the following:
+=======
+                return { ...state, sort_by: action.sortBy };
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
             case 'SET_ROOT_WORKFLOWS_AND_JOBS':
                 return { ...state, only_root_workflows_and_standalone_jobs: action.bool };
             case 'SET_QUICK_DATE_RANGE':

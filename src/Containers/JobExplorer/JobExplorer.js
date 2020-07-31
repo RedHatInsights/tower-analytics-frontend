@@ -246,6 +246,7 @@ const JobExplorer = props => {
     const [ orgIds, setOrgIds ] = useState([]);
     const [ clusterIds, setClusterIds ] = useState([]);
     const [ templateIds, setTemplateIds ] = useState([]);
+<<<<<<< HEAD
     const [ sortBy, setSortBy ] = useState([]);
 <<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
@@ -254,6 +255,9 @@ const JobExplorer = props => {
     const [ quickDateRanges, setQuickDateRanges ] = useState([]);
     const [ width, setWidth ] = useState(window.innerWidth);
 =======
+=======
+    const [ sortBy, setSortBy ] = useState(null);
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
     const [ statuses, setStatuses ] = useState([]);
     const [ jobTypes, setJobTypes ] = useState([]);
     const [ quickDateRanges, setQuickDateRanges ] = useState([]);
@@ -312,6 +316,7 @@ const JobExplorer = props => {
         template: queryParams.template_id ? formattedArray(queryParams.template_id) : [],
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         sortby: queryParams.sort_by ? queryParams.sort_by : null,
         startDate: queryParams.start_date ? queryParams.start_date : null,
         endDate: queryParams.end_date ? queryParams.end_date : null,
@@ -320,6 +325,9 @@ const JobExplorer = props => {
 =======
 >>>>>>> Squashed commit of the following:
         sortby: queryParams.sort_by ? formattedArray(queryParams.sort_by) : [],
+=======
+        sortby: queryParams.sort_by ? queryParams.sort_by : null,
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
         startDate: queryParams.start_date ? queryParams.start_date : null,
         endDate: queryParams.end_date ? queryParams.end_date : null,
         date: queryParams.quick_date_range ? queryParams.quick_date_range : null,
@@ -425,6 +433,7 @@ const JobExplorer = props => {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         // The filter can change back to null too.
         setSortBy2(filters.sortby);
 =======
@@ -437,6 +446,10 @@ const JobExplorer = props => {
             setSortBy2(filters.sortby);
         }
 >>>>>>> Squashed commit of the following:
+=======
+        // The filter can change back to null too.
+        setSortBy2(filters.sortby);
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
 
         setRootWorkflowsAndJobs(filters.showRootWorkflows);
 
@@ -596,6 +609,7 @@ const JobExplorer = props => {
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Squashed commit of the following:
@@ -607,6 +621,8 @@ const JobExplorer = props => {
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
         if (type) {
             if (type === 'Date') {
                 setFilters({
@@ -617,15 +633,21 @@ const JobExplorer = props => {
                 });
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
             } else if (type === 'SortBy') {
                 setFilters({
                     ...filters,
                     sortby: null
                 });
+<<<<<<< HEAD
 =======
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
             } else {
                 setFilters({
                     ...filters,
@@ -643,6 +665,7 @@ const JobExplorer = props => {
                 template: [],
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 sortby: null,
                 date: null,
                 startDate: null,
@@ -652,6 +675,9 @@ const JobExplorer = props => {
 =======
 >>>>>>> Squashed commit of the following:
                 sortby: [],
+=======
+                sortby: null,
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
                 date: null,
                 startDate: null,
 <<<<<<< HEAD

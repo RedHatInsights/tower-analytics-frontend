@@ -195,6 +195,9 @@ const FilterableToolbar = ({
         };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
         const onSortSelect = (_event, selection) => {
             handleFilters({
                 ...passedFilters,
@@ -203,8 +206,11 @@ const FilterableToolbar = ({
             setSortByIsExpanded(!sortByIsExpanded);
         };
 
+<<<<<<< HEAD
 =======
 >>>>>>> Break out filterable toolbar into it's own component.
+=======
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
         const onDateSelect = (_event, selection) => {
             handleFilters({
                 ...passedFilters,
@@ -381,29 +387,41 @@ const FilterableToolbar = ({
                     showToolbarItem={ currentCategory === 'Sort by' }
                     categoryName="SortBy"
 <<<<<<< HEAD
+<<<<<<< HEAD
                     chips={ handleDateChips(passedFilters.sortby, sortables) }
 =======
                     chips={ handleChips(passedFilters.sortby, sortables) }
 >>>>>>> Break out filterable toolbar into it's own component.
+=======
+                    chips={ handleDateChips(passedFilters.sortby, sortables) }
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
                     deleteChip={ onDelete }
                 >
                     <Select
                         isOpen={ sortByIsExpanded }
                         aria-label="Sort by"
 <<<<<<< HEAD
+<<<<<<< HEAD
                         variant={ 'single' }
 =======
                         variant={ 'checkbox' }
 >>>>>>> Break out filterable toolbar into it's own component.
+=======
+                        variant={ 'single' }
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
                         onToggle={ () => {
                             setSortByIsExpanded(!sortByIsExpanded);
                         } }
                         onSelect={ (event, selection) => {
 <<<<<<< HEAD
+<<<<<<< HEAD
                             onSortSelect(event, selection);
 =======
                             onSelect('sortby', event, selection);
 >>>>>>> Break out filterable toolbar into it's own component.
+=======
+                            onSortSelect(event, selection);
+>>>>>>> Fix: sort by filter converted to select instead of multiselect
                         } }
                         selections={ passedFilters.sortby }
                         isExpanded={ sortByIsExpanded }
