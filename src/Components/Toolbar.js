@@ -194,6 +194,14 @@ const FilterableToolbar = ({
             });
         };
 
+        const onSortSelect = (_event, selection) => {
+            handleFilters({
+                ...passedFilters,
+                sortby: selection
+            });
+            setSortByIsExpanded(!sortByIsExpanded);
+        };
+
         const onDateSelect = (_event, selection) => {
             handleFilters({
                 ...passedFilters,
@@ -343,18 +351,18 @@ const FilterableToolbar = ({
                 <ToolbarFilter
                     showToolbarItem={ currentCategory === 'Sort by' }
                     categoryName="SortBy"
-                    chips={ handleChips(passedFilters.sortby, sortables) }
+                    chips={ handleDateChips(passedFilters.sortby, sortables) }
                     deleteChip={ onDelete }
                 >
                     <Select
                         isOpen={ sortByIsExpanded }
                         aria-label="Sort by"
-                        variant={ 'checkbox' }
+                        variant={ 'single' }
                         onToggle={ () => {
                             setSortByIsExpanded(!sortByIsExpanded);
                         } }
                         onSelect={ (event, selection) => {
-                            onSelect('sortby', event, selection);
+                            onSortSelect(event, selection);
                         } }
                         selections={ passedFilters.sortby }
                         isExpanded={ sortByIsExpanded }

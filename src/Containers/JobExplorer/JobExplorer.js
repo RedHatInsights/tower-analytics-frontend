@@ -80,7 +80,7 @@ const JobExplorer = props => {
     const [ orgIds, setOrgIds ] = useState([]);
     const [ clusterIds, setClusterIds ] = useState([]);
     const [ templateIds, setTemplateIds ] = useState([]);
-    const [ sortBy, setSortBy ] = useState([]);
+    const [ sortBy, setSortBy ] = useState(null);
     const [ statuses, setStatuses ] = useState([]);
     const [ jobTypes, setJobTypes ] = useState([]);
     const [ quickDateRanges, setQuickDateRanges ] = useState([]);
@@ -128,7 +128,7 @@ const JobExplorer = props => {
         org: queryParams.org_id ? formattedArray(queryParams.org_id) : [],
         cluster: queryParams.cluster_id ? formattedArray(queryParams.cluster_id) : [],
         template: queryParams.template_id ? formattedArray(queryParams.template_id) : [],
-        sortby: queryParams.sort_by ? formattedArray(queryParams.sort_by) : [],
+        sortby: queryParams.sort_by ? queryParams.sort_by : null,
         startDate: queryParams.start_date ? queryParams.start_date : null,
         endDate: queryParams.end_date ? queryParams.end_date : null,
         date: queryParams.quick_date_range ? queryParams.quick_date_range : null,
@@ -197,9 +197,8 @@ const JobExplorer = props => {
             setTemplate(filters.template);
         }
 
-        if (filters.sortby) {
-            setSortBy2(filters.sortby);
-        }
+        // The filter can change back to null too.
+        setSortBy2(filters.sortby);
 
         setRootWorkflowsAndJobs(filters.showRootWorkflows);
 
@@ -288,10 +287,6 @@ const JobExplorer = props => {
             filtered = templateIds.filter(template => template.value === val);
         }
 
-        if (type === 'SortBy') {
-            filtered = sortBy.filter(attr => attr.value === val);
-        }
-
         if (type) {
             if (type === 'Date') {
                 setFilters({
@@ -299,6 +294,11 @@ const JobExplorer = props => {
                     date: null,
                     startDate: null,
                     endDate: null
+                });
+            } else if (type === 'SortBy') {
+                setFilters({
+                    ...filters,
+                    sortby: null
                 });
             } else {
                 setFilters({
@@ -315,7 +315,7 @@ const JobExplorer = props => {
                 org: [],
                 cluster: [],
                 template: [],
-                sortby: [],
+                sortby: null,
                 date: null,
                 startDate: null,
                 endDate: null,
