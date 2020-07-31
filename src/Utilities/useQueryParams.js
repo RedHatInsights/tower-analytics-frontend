@@ -81,12 +81,12 @@ export const useQueryParams = initial => {
 
                 return { ...state, template_id: [ ...action.template ]};
             case 'SET_SORTBY':
-                if (action.sortBy.length <= 0) {
+                if (action.sortBy === null) {
                     const { sort_by: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, sort_by: [ ...action.sortBy ]};
+                return { ...state, sort_by: action.sortBy };
             case 'SET_ROOT_WORKFLOWS_AND_JOBS':
                 return { ...state, only_root_workflows_and_standalone_jobs: action.bool };
             case 'SET_QUICK_DATE_RANGE':
