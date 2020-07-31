@@ -7,10 +7,14 @@ import {
     ClockIcon,
     SyncAltIcon,
 <<<<<<< HEAD
+<<<<<<< HEAD
     ExclamationTriangleIcon
 =======
     TimesCircleIcon
 >>>>>>> Feature: added a better component for displaying a job's status
+=======
+    ExclamationTriangleIcon
+>>>>>>> Update: cancel and pending job status indicator
 } from '@patternfly/react-icons';
 
 const JobStatus = ({ status }) => {
@@ -25,6 +29,7 @@ const JobStatus = ({ status }) => {
                 return 'red';
             case 'running':
 <<<<<<< HEAD
+<<<<<<< HEAD
             case 'pending':
                 return 'blue';
             case 'canceled':
@@ -34,6 +39,13 @@ const JobStatus = ({ status }) => {
                 return 'blue';
             // case new, waiting, pending, canceled
 >>>>>>> Feature: added a better component for displaying a job's status
+=======
+            case 'pending':
+                return 'blue';
+            case 'canceled':
+                return 'orange';
+            // case new, waiting
+>>>>>>> Update: cancel and pending job status indicator
             default: return 'grey';
         }
     };
@@ -49,10 +61,14 @@ const JobStatus = ({ status }) => {
                 return <SyncAltIcon />;
             case 'canceled':
 <<<<<<< HEAD
+<<<<<<< HEAD
                 return <ExclamationTriangleIcon />;
 =======
                 return <TimesCircleIcon />;
 >>>>>>> Feature: added a better component for displaying a job's status
+=======
+                return <ExclamationTriangleIcon />;
+>>>>>>> Update: cancel and pending job status indicator
             // case new, waiting, pending
             default: return <ClockIcon />;
         }
