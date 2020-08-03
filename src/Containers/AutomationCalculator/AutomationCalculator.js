@@ -151,7 +151,6 @@ const title = (
 );
 
 /* helper variables for further date ranges */
-const today = moment.utc();
 const pastYear = moment.utc().subtract(1, 'year');
 const pastYTD = moment().startOf('year');
 const pastQuarter = moment().startOf('quarter');
