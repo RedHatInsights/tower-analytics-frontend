@@ -271,7 +271,6 @@ export const automationCalculatorMethods = () => {
 
 export const useAutomationFormula = () => {
     const [ isLoading, setIsLoading ] = useState(true);
-    /*const [ preflightError, setPreFlightError ] = useState(null);*/
     const [ costManual, setCostManual ] = useState(defaultCostManual);
     const [ costAutomation, setCostAutomation ] = useState(defaultCostAutomation);
     const [ totalSavings, setTotalSavings ] = useState(0);
