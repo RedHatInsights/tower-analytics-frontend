@@ -1,4 +1,3 @@
-/*eslint-disable */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
