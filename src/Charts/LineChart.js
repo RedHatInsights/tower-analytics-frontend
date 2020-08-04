@@ -28,11 +28,13 @@ class LineChart extends Component {
     redirectToJobExplorer({ DATE: date }) {
         const { jobExplorer } = Paths;
         const formattedDate = formatDate(date);
+        const { clusterId } = this.props;
         const initialQueryParams = {
             start_date: formattedDate,
             end_date: formattedDate,
             quick_date_range: 'custom',
-            status: [ 'failed', 'successful' ]
+            status: [ 'failed', 'successful' ],
+            cluster_id: clusterId
         };
         const { strings, stringify } = formatQueryStrings(initialQueryParams);
         const search = stringify(strings);
@@ -336,7 +338,8 @@ LineChart.propTypes = {
     margin: PropTypes.object,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func,
-    history: PropTypes.object
+    history: PropTypes.object,
+    clusterId: PropTypes.number
 };
 
 export default initializeChart(withRouter(LineChart));
