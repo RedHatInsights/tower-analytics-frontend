@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 
@@ -233,6 +232,7 @@ const Clusters = ({ history }) => {
                               id="d3-line-chart-root"
                               data={ lineChartData }
                               value={ clusterTimeFrame }
+                              clusterId={ queryParams.id }
                           />
                       ) }
                   </CardBody>
