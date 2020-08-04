@@ -4,8 +4,6 @@
 import { act } from 'react-dom/test-utils';
 import { automationCalculatorMethods, useAutomationFormula } from './AutomationCalculator';
 
-//import Api, { preflightRequest, readROI } from '../../Api';
-//import * as math from "./math";
 import * as ApiFuncs from '../../Api';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
@@ -14,8 +12,6 @@ import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 Enzyme.configure({ adapter: new Adapter() });
 
-ApiFuncs.preflightRequest = jest.fn();
-ApiFuncs.readROI = jest.fn();
 const mockResponse = {
     ok: true,
     json: () => Promise.resolve({})
@@ -318,8 +314,6 @@ describe('automationCalculatorMethods()', () => {
 describe('AutomationCalculator()', () => {
 
     let wrapper;
-    //let mockHandleOnChange = jest.fn();
-    //const spy = jest.spyOn(Api, 'readROI');
 
     const mockInsights = {
         chrome: {
@@ -333,20 +327,14 @@ describe('AutomationCalculator()', () => {
 
     beforeEach(() => {
 
-        //newSpy = jest.spyOn(AutomationCalculator.prototype, 'handleOnChange');
         const mockStore = configureStore();
         const store = mockStore({});
 
-        //await window.insights.chrome.auth.getUser();
         global.insights = mockInsights;
 
         // full mount ...
         wrapper = mount(<Provider store={ store } ><AutomationCalculator /></Provider>);
 
-    });
-
-    afterEach(() => {
-        //fetch.mockClear();
     });
 
     it('mounts and selection changes the startDate value', async () => {
