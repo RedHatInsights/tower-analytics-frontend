@@ -1,6 +1,24 @@
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
+
 import { act } from 'react-dom/test-utils';
 import { automationCalculatorMethods, useAutomationFormula } from './AutomationCalculator';
+
+import * as ApiFuncs from '../../Api';
+import configureStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
+import AutomationCalculator from './AutomationCalculator';
+import Adapter from 'enzyme-adapter-react-16';
+import Enzyme from 'enzyme';
+Enzyme.configure({ adapter: new Adapter() });
+
+const mockResponse = {
+    ok: true,
+    json: () => Promise.resolve({})
+};
+ApiFuncs.preflightRequest = jest.fn();
+ApiFuncs.preflightRequest.mockResolvedValue(mockResponse);
+ApiFuncs.readROI = jest.fn();
+ApiFuncs.readROI.mockResolvedValue(mockResponse);
 
 const testResponse = [
     {
@@ -289,5 +307,64 @@ describe('automationCalculatorMethods()', () => {
         expect(automationCalculatorMethods().handleToggle(1, [])).toEqual([ 1 ]);
         expect(automationCalculatorMethods().handleToggle('1', [ 1 ])).toEqual([ 1, '1' ]);
         expect(automationCalculatorMethods().handleToggle('1', [ 1, '1' ])).toEqual([ 1 ]);
+    });
+});
+
+describe('AutomationCalculator()', () => {
+
+    let wrapper;
+
+    const mockInsights = {
+        chrome: {
+            auth: {
+                getUser: () => {
+                    return 'bob';
+                }
+            }
+        }
+    };
+
+    beforeEach(() => {
+
+        const mockStore = configureStore();
+        const store = mockStore({});
+
+        global.insights = mockInsights;
+
+        // full mount ...
+        wrapper = mount(<Provider store={ store } ><AutomationCalculator /></Provider>);
+
+    });
+
+    it('mounts and selection changes the startDate value', async () => {
+
+        const fselect = wrapper.find('FormSelect');
+
+        // ensure 4 options plus 'please choose'
+        const optionValues = fselect.find('option').map(option => {
+            return option.props().value;
+        });
+        expect(optionValues.length).toEqual(5);
+
+        // default to n-365 days
+        const selectedValue = fselect.find('select').props().value;
+        expect(selectedValue).toEqual(optionValues[1]);
+
+        // fire off a selection event
+        let event = {
+            currentTarget: { value: optionValues[3] }
+        };
+        await act(async() => {
+            wrapper.find('FormSelect').find('select').prop('onChange')(event);
+        });
+        wrapper.update();
+
+        // verify the value change was made
+        expect(wrapper.find('FormSelect').find('select').props().value).toBe(optionValues[3]);
+
+        expect(ApiFuncs.readROI).toHaveBeenCalled();
+        const totalCalls = ApiFuncs.readROI.mock.calls.length;
+        const lastParams = ApiFuncs.readROI.mock.calls[totalCalls - 1][0].params;
+        expect(lastParams.startDate).toBe(optionValues[3]);
     });
 });

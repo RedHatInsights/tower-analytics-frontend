@@ -87,6 +87,7 @@ export const useQueryParams = initial => {
 
             dispatch({ type: 'SET_STARTDATE', startDate });
         },
+        setStartDateAsString: startDate => dispatch({ type: 'SET_STARTDATE', startDate }),
         setSortBy: sort => dispatch({ type: 'SET_SORT_BY', sort }),
         setLimit: limit => dispatch({ type: 'SET_LIMIT', limit }),
         setOffset: offset => dispatch({ type: 'SET_OFFSET', offset }),
