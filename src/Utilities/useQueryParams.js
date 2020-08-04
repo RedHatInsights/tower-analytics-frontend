@@ -4,6 +4,8 @@
 import { useReducer } from 'react';
 import moment from 'moment';
 
+import { formatDate } from '../Utilities/helpers';
+
 export const useQueryParams = initial => {
     const paramsReducer = (state, action) => {
         switch (action.type) {
@@ -102,14 +104,14 @@ export const useQueryParams = initial => {
                     return rest;
                 }
 
-                return { ...state, start_date: action.date };
+                return { ...state, start_date: formatDate(action.date) };
             case 'SET_END_DATE':
                 if (action.date === null) {
                     const { end_date: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, end_date: action.date };
+                return { ...state, end_date: formatDate(action.date) };
             default:
                 throw new Error();
         }
