@@ -203,12 +203,17 @@ const perPageOptions = [
 ];
 
 const initialQueryParams = {
+<<<<<<< HEAD
     attributes: jobExplorer.attributes,
     limit: 5
 <<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+    ...jobExplorer.defaultParams,
+    attributes: jobExplorer.attributes
+>>>>>>> Add default filters for job explorer.
 };
 
 const initialOptionsParams = {
@@ -342,11 +347,15 @@ const JobExplorer = props => {
 >>>>>>> Fix: sort by filter converted to select instead of multiselect
         startDate: queryParams.start_date ? queryParams.start_date : null,
         endDate: queryParams.end_date ? queryParams.end_date : null,
+<<<<<<< HEAD
         date: queryParams.quick_date_range ? queryParams.quick_date_range : null,
 <<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+        date: queryParams.quick_date_range ? queryParams.quick_date_range : 'last_30_days',
+>>>>>>> Add default filters for job explorer.
         showRootWorkflows: queryParams.only_root_workflows_and_standalone_jobs ? queryParams.only_root_workflows_and_standalone_jobs : false
     });
     const updateURL = () => {

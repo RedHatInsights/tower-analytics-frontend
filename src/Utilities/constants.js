@@ -1,11 +1,16 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 /* eslint-disable camelcase */
 
 =======
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Squashed commit of the following:
+=======
+/* eslint-disable camelcase */
+
+>>>>>>> Add default filters for job explorer.
 export const jobExplorer = {
     attributes: [
         'id',
@@ -18,6 +23,7 @@ export const jobExplorer = {
         'cluster_name',
         'org_name',
         'most_failed_tasks'
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
     ],
@@ -46,6 +52,15 @@ export const toolbarCategories = [
 >>>>>>> Squashed commit of the following:
 =======
     ]
+=======
+    ],
+    defaultParams: {
+        status: [ 'successful', 'failed' ],
+        quick_date_range: 'last_30_days',
+        limit: 5,
+        only_root_workflows_and_standalone_jobs: false
+    }
+>>>>>>> Add default filters for job explorer.
 };
 <<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
