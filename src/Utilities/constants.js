@@ -1,3 +1,5 @@
+/* eslint-disable camelcase */
+
 export const jobExplorer = {
     attributes: [
         'id',
@@ -10,7 +12,13 @@ export const jobExplorer = {
         'cluster_name',
         'org_name',
         'most_failed_tasks'
-    ]
+    ],
+    defaultParams: {
+        status: [ 'successful', 'failed' ],
+        quick_date_range: 'last_30_days',
+        limit: 5,
+        only_root_workflows_and_standalone_jobs: false
+    }
 };
 
 export const toolbarCategories = [
