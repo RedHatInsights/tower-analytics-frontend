@@ -30,6 +30,9 @@ class LineChart extends Component {
         const formattedDate = formatDate(date);
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Add cluster_id to properly filter jobs from Line Chart.
         const { clusterId } = this.props;
         const initialQueryParams = {
             start_date: formattedDate,
@@ -37,6 +40,7 @@ class LineChart extends Component {
             quick_date_range: 'custom',
             status: [ 'failed', 'successful' ],
             cluster_id: clusterId
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Squashed commit of the following:
@@ -53,6 +57,8 @@ class LineChart extends Component {
             quick_date_range: 'custom',
             status: [ 'failed', 'successful' ]
 >>>>>>> Return only successful and failed jobs from bar and line charts.
+=======
+>>>>>>> Add cluster_id to properly filter jobs from Line Chart.
         };
         const { strings, stringify } = formatQueryStrings(initialQueryParams);
         const search = stringify(strings);
@@ -358,6 +364,7 @@ LineChart.propTypes = {
     getWidth: PropTypes.func,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     history: PropTypes.object,
     clusterId: PropTypes.number
 =======
@@ -366,6 +373,10 @@ LineChart.propTypes = {
 =======
     history: PropTypes.object
 >>>>>>> Squashed commit of the following:
+=======
+    history: PropTypes.object,
+    clusterId: PropTypes.number
+>>>>>>> Add cluster_id to properly filter jobs from Line Chart.
 };
 
 export default initializeChart(withRouter(LineChart));
