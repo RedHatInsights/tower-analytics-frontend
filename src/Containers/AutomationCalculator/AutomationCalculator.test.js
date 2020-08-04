@@ -1,5 +1,4 @@
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
-/*eslint-disable padding-line-between-statements */
 
 import { act } from 'react-dom/test-utils';
 import { automationCalculatorMethods, useAutomationFormula } from './AutomationCalculator';
