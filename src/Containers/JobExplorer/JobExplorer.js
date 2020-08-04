@@ -63,8 +63,8 @@ const perPageOptions = [
 ];
 
 const initialQueryParams = {
-    attributes: jobExplorer.attributes,
-    limit: 5
+    ...jobExplorer.defaultParams,
+    attributes: jobExplorer.attributes
 };
 
 const initialOptionsParams = {
@@ -133,7 +133,7 @@ const JobExplorer = props => {
         sortby: queryParams.sort_by ? queryParams.sort_by : null,
         startDate: queryParams.start_date ? queryParams.start_date : null,
         endDate: queryParams.end_date ? queryParams.end_date : null,
-        date: queryParams.quick_date_range ? queryParams.quick_date_range : null,
+        date: queryParams.quick_date_range ? queryParams.quick_date_range : 'last_30_days',
         showRootWorkflows: queryParams.only_root_workflows_and_standalone_jobs ? queryParams.only_root_workflows_and_standalone_jobs : false
     });
     const updateURL = () => {
