@@ -287,6 +287,7 @@ const JobExplorer = props => {
     let initialSearchParams = parse(search, { arrayFormat: 'bracket' });
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     let combined = { ...initialQueryParams, ...initialSearchParams };
 =======
     let combined = { ...initialSearchParams, ...initialQueryParams };
@@ -294,6 +295,9 @@ const JobExplorer = props => {
 =======
     let combined = { ...initialSearchParams, ...initialQueryParams };
 >>>>>>> Squashed commit of the following:
+=======
+    let combined = { ...initialQueryParams, ...initialSearchParams };
+>>>>>>> Default params can be overwritten by passed search params.
     const {
         queryParams,
         setLimit,
