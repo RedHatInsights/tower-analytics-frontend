@@ -59,7 +59,8 @@ export const toolbarCategories = [
         job_type: [ 'workflowjob', 'job' ],
         quick_date_range: 'last_30_days',
         limit: 5,
-        only_root_workflows_and_standalone_jobs: false
+        only_root_workflows_and_standalone_jobs: false,
+        sort_by: 'created:desc'
     }
 >>>>>>> Add default filters for job explorer.
 };
