@@ -165,10 +165,10 @@ export const readJobExplorer = ({ params = {}}) => {
 export const readJobExplorerOptions = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(jobExplorerOptionsEndpoint, formattedUrl);
-    const { strings, stringify } = formatQueryStrings(params);
-    const qs = stringify(strings);
-    url.search = qs;
-    return fetch(url).then(handleResponse);
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(params)
+    }).then(handleResponse);
 };
 
 export const readJobExplorer = ({ params = {}}) => {
