@@ -92,7 +92,7 @@ const JobExplorer = props => {
         location: { search }
     } = props;
     let initialSearchParams = parse(search, { arrayFormat: 'bracket' });
-    let combined = { ...initialSearchParams, ...initialQueryParams };
+    let combined = { ...initialQueryParams, ...initialSearchParams };
     const {
         queryParams,
         setLimit,
