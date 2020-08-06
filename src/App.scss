@@ -67,6 +67,9 @@ h2 {
 .d3-chart {
   min-height: 450px;
   min-width: 75%;
+  circle:hover {
+    cursor: pointer;
+  }
   rect:hover {
     cursor: pointer;
   }
@@ -94,8 +97,4 @@ section#refTab1Section, section#refTab2Section {
 
 #d3-grouped-bar-chart-root rect:hover {
     cursor: pointer;
-}
-
-#d3-line-chart-root circle:hover {
-  cursor: pointer;
 }
