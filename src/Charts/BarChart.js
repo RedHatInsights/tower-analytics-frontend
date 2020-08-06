@@ -55,7 +55,7 @@ const BarChart = props => {
     .on('mouseover', tooltip.handleMouseOver)
     .on('mouseover', tooltip.handleMouseOver)
     .on('mouseout', tooltip.handleMouseOut)
-    .on('click', ({ xAxis }) => props.onClick(xAxis));
+    .on('click', ({ data }) => props.onClick(data.xAxis));
 };
 
 export default BarChart;
