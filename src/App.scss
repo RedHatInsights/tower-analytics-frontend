@@ -59,7 +59,7 @@ h2 {
   color: #393f44;
 }
 
-#d3-grouped-bar-chart-root, #d3-line-chart-root, #d3-bar-chart-root, #d3-pie-1-chart-root, #d3-roi-chart-root {
+#d3-grouped-bar-chart-root, #d3-pie-1-chart-root, #d3-roi-chart-root {
   min-height: 450px;
   min-width: 75%;
 }
@@ -89,10 +89,6 @@ h2 {
 
 section#refTab1Section, section#refTab2Section {
   outline: none;
-}
-
-#d3-bar-chart-root rect:hover {
-    cursor: pointer;
 }
 
 #d3-grouped-bar-chart-root rect:hover {
