@@ -1,3 +1,4 @@
+/*eslint camelcase: ["error", { properties: "never" }]*/
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 
@@ -30,10 +31,15 @@ import {
 
 import { FilterIcon } from '@patternfly/react-icons';
 
-import BarChart from '../../Charts/BarChart';
-import LineChart from '../../Charts/LineChart';
+import lineChart from '../../Charts/LineChart';
+import barChart from '../../Charts/BarChart';
+import tooltip from '../../Charts/Tooltips/FailedSuccessTotalTooltip';
+import ChartWrapper from '../../Charts/ChartWrapper';
 import ModulesList from '../../Components/ModulesList';
 import TemplatesList from '../../Components/TemplatesList';
+
+import { formatDate } from '../../Utilities/helpers';
+import useRedirect from '../../Utilities/useRedirect';
 
 const CardTitle = styled(PFCardTitle)`
   border-bottom: 2px solid #ebebeb;
@@ -95,9 +101,9 @@ const initialQueryParams = {
 };
 
 const Clusters = ({ history }) => {
+    const toJobExplorer = useRedirect(history, 'jobExplorer');
     const [ preflightError, setPreFlightError ] = useState(null);
-    const [ barChartData, setBarChartData ] = useState([]);
-    const [ lineChartData, setLineChartData ] = useState([]);
+    const [ mainChartData, setMainChartData ] = useState([]);
     const [ templatesData, setTemplatesData ] = useState([]);
     const [ modulesData, setModulesData ] = useState([]);
     const [ clusterOptions, setClusterOptions ] = useState([]);
@@ -123,6 +129,18 @@ const Clusters = ({ history }) => {
         );
     }, []);
 
+    const redirectToJobExplorer = date => {
+        const formattedDate = formatDate(date);
+        const query = {
+            start_date: formattedDate,
+            end_date: formattedDate,
+            quick_date_range: 'custom',
+            status: [ 'failed', 'successful' ],
+            cluster_id: queryParams.id
+        };
+        toJobExplorer(query);
+    };
+
     // Get and update the data
     useEffect(() => {
         setIsLoading(true);
@@ -136,13 +154,32 @@ const Clusters = ({ history }) => {
                 { modules: modulesData = []},
                 { templates: templatesData = []}
             ]) => {
-                queryParams.id ? setLineChartData(chartData) : setBarChartData(chartData);
+                setMainChartData(chartData.map(el => ({
+                    xAxis: new Date(el.created),
+                    yAxis: el.successful + el.failed,
+                    successful: el.successful,
+                    failed: el.failed
+                })));
                 setModulesData(modulesData);
                 setTemplatesData(templatesData);
                 setIsLoading(false);
             })
         );
     }, [ queryParams ]);
+
+    const currentChart = () => {
+        if (queryParams.id) {
+            return {
+                chart: lineChart,
+                yLabel: 'Job runs'
+            };
+        } else {
+            return {
+                chart: barChart,
+                yLabel: 'Jobs across all clusters'
+            };
+        }
+    };
 
     return (
         <React.Fragment>
@@ -214,25 +251,25 @@ const Clusters = ({ history }) => {
                   </PFCardTitle>
                   <CardBody>
                       { isLoading && !preflightError && <LoadingState /> }
-                      { selectedCluster === 'all' &&
-                  barChartData.length > 0 &&
-                  !isLoading && (
-                          <BarChart
-                              margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
-                              id="d3-bar-chart-root"
-                              data={ barChartData }
+                      { !isLoading && (
+                          // change id to more general when find out how to modify css
+                          <ChartWrapper
+                              data={ mainChartData }
+                              lineNames={ [ 'successful', 'failed' ] }
+                              colors={ [ '#6EC664', '#A30000' ] }
+                              xAxis={ {
+                                  text: 'Date'
+                              } }
+                              yAxis={ {
+                                  text: currentChart().yLabel
+                              } }
                               value={ clusterTimeFrame }
-                          />
-                      ) }
-                      { selectedCluster !== 'all' &&
-                  lineChartData.length > 0 &&
-                  !isLoading && (
-                          <LineChart
-                              margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
-                              id="d3-line-chart-root"
-                              data={ lineChartData }
-                              value={ clusterTimeFrame }
-                              clusterId={ queryParams.id }
+                              onClick={ redirectToJobExplorer }
+                              chart={ currentChart().chart }
+                              tooltip={ tooltip({
+                                  lineNames: [ 'successful', 'failed' ],
+                                  colors: [ '#6EC664', '#A30000' ]
+                              }) }
                           />
                       ) }
                   </CardBody>
