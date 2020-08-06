@@ -1,39 +1,29 @@
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Routes } from './Routes';
 import './App.scss';
 import packageJson from '../package.json';
 
-class App extends Component {
+const App = (props) => {
 
-    componentDidMount () {
+    useEffect(() => {
         insights.chrome.init();
-        // TODO change this to your appname
-        // TODO should the sample app webpack just rewrite this automatically?
-
         insights.chrome.identifyApp('automation-analytics');
+        const appNav = insights.chrome.on('APP_NAVIGATION', event => props.history.push(`/${event.navId}`));
 
-        insights.chrome.navigation(buildNavigation());
+        return () => {
+            appNav();
+        };
+    }, []);
 
-        this.appNav = insights.chrome.on('APP_NAVIGATION', event => this.props.history.push(`/${event.navId}`));
-        this.buildNav = this.props.history.listen(() => insights.chrome.navigation(buildNavigation()));
-    }
-
-    componentWillUnmount () {
-        this.appNav();
-        this.buildNav();
-    }
-
-    render () {
-        return (
-            <div id="automation-analytics-application" version={ packageJson.version }>
-                <Routes childProps={ this.props } />
-            </div>
-        );
-    }
-}
+    return (
+        <div id="automation-analytics-application" version={ packageJson.version }>
+            <Routes childProps={ props } />
+        </div>
+    );
+};
 
 App.propTypes = {
     history: PropTypes.object
@@ -45,17 +35,3 @@ App.propTypes = {
  *          https://reactjs.org/docs/higher-order-components.html
  */
 export default withRouter (connect()(App));
-
-function buildNavigation () {
-    const currentPath = window.location.pathname.split('/').slice(-1)[0];
-    return [{
-        title: 'Actions',
-        id: 'actions'
-    }, {
-        title: 'Rules',
-        id: 'rules'
-    }].map(item => ({
-        ...item,
-        active: item.id === currentPath
-    }));
-}
