@@ -416,7 +416,10 @@ const AutomationCalculator = ({ history }) => {
     const redirectToJobExplorer = (templateId) => {
         const { jobExplorer } = Paths;
         const initialQueryParams = {
-            template_id: templateId
+            template_id: templateId,
+            status: [ 'successful' ],
+            job_type: [ 'job' ],
+            quick_date_range: 'last_30_days'
         };
 
         const { strings, stringify } = formatQueryStrings(initialQueryParams);
@@ -608,14 +611,16 @@ const AutomationCalculator = ({ history }) => {
                               </p>
                               { templatesList.map((data) => (
                                   <div key={ data.id }>
-                                      <Button
-                                          style={ { padding: '15px 0 10px' } }
-                                          component="a"
-                                          onClick={ () => redirectToJobExplorer(data.id) }
-                                          variant="link"
-                                      >
-                                          { data.name }
-                                      </Button>
+                                      <Tooltip content={ 'Click for list of jobs in the past month' } >
+                                          <Button
+                                              style={ { padding: '15px 0 10px' } }
+                                              component="a"
+                                              onClick={ () => redirectToJobExplorer(data.id) }
+                                              variant="link"
+                                          >
+                                              { data.name }
+                                          </Button>
+                                      </Tooltip>
                                       <TemplateDetail>
                                           <InputAndText key={ data.id }>
                                               <InputGroup>
