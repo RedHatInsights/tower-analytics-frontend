@@ -456,13 +456,19 @@ const AutomationCalculator = ({ history }) => {
         const { jobExplorer } = Paths;
         const initialQueryParams = {
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Feature: ROI Calculator to job expoler: added tooltip
             template_id: templateId,
             status: [ 'successful' ],
             job_type: [ 'job' ],
             quick_date_range: 'last_30_days'
+<<<<<<< HEAD
 =======
             template_id: templateId
 >>>>>>> Feature: Add link from ROI calculator to job expoler for templates
+=======
+>>>>>>> Feature: ROI Calculator to job expoler: added tooltip
         };
 
         const { strings, stringify } = formatQueryStrings(initialQueryParams);
@@ -655,6 +661,9 @@ const AutomationCalculator = ({ history }) => {
                               { templatesList.map((data) => (
                                   <div key={ data.id }>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Feature: ROI Calculator to job expoler: added tooltip
                                       <Tooltip content={ 'Click for list of jobs in the past month' } >
                                           <Button
                                               style={ { padding: '15px 0 10px' } }
@@ -665,6 +674,7 @@ const AutomationCalculator = ({ history }) => {
                                               { data.name }
                                           </Button>
                                       </Tooltip>
+<<<<<<< HEAD
 =======
                                       <Button
                                           style={ { padding: '15px 0 10px' } }
@@ -675,6 +685,8 @@ const AutomationCalculator = ({ history }) => {
                                           { data.name }
                                       </Button>
 >>>>>>> Feature: Add link from ROI calculator to job expoler for templates
+=======
+>>>>>>> Feature: ROI Calculator to job expoler: added tooltip
                                       <TemplateDetail>
                                           <InputAndText key={ data.id }>
                                               <InputGroup>
