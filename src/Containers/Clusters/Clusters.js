@@ -244,6 +244,7 @@ const Clusters = ({ history }) => {
                   <TemplatesList
                       history={ history }
                       queryParams={ queryParams }
+                      clusterId={ queryParams.id }
                       templates={ templatesData.slice(0, 10) }
                       isLoading={ isLoading }
                   />

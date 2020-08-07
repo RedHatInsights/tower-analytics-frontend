@@ -107,7 +107,7 @@ const formatTopFailedTask = data => {
     return `Unavailable`;
 };
 
-const TemplatesList = ({ history, templates, isLoading, queryParams }) => {
+const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }) => {
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ selectedId, setSelectedId ] = useState(null);
     const [ selectedTemplate, setSelectedTemplate ] = useState([]);
@@ -140,7 +140,8 @@ const TemplatesList = ({ history, templates, isLoading, queryParams }) => {
             status: [ 'successful', 'failed', 'new', 'pending', 'waiting', 'error', 'canceled', 'running' ],
             job_type: [ 'job' ],
             start_date: queryParams.startDate,
-            end_date: queryParams.endDate
+            end_date: queryParams.endDate,
+            cluster_id: clusterId
         };
 
         const { strings, stringify } = formatQueryStrings(initialQueryParams);
