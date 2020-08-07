@@ -108,10 +108,14 @@ const formatTopFailedTask = data => {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }) => {
 =======
 const TemplatesList = ({ history, templates, isLoading, queryParams }) => {
 >>>>>>> Feature: added a link an text to the top templates modal with link
+=======
+const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }) => {
+>>>>>>> Fix: Add cluster id to the query from templates to job expoler
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ selectedId, setSelectedId ] = useState(null);
     const [ selectedTemplate, setSelectedTemplate ] = useState([]);
@@ -145,12 +149,17 @@ const TemplatesList = ({ history, templates, isLoading, queryParams }) => {
             job_type: [ 'job' ],
             start_date: queryParams.startDate,
 <<<<<<< HEAD
+<<<<<<< HEAD
             end_date: queryParams.endDate,
             quick_date_range: 'custom',
             cluster_id: clusterId
 =======
             end_date: queryParams.endDate
 >>>>>>> Feature: added a link an text to the top templates modal with link
+=======
+            end_date: queryParams.endDate,
+            cluster_id: clusterId
+>>>>>>> Fix: Add cluster id to the query from templates to job expoler
         };
 
         const { strings, stringify } = formatQueryStrings(initialQueryParams);
