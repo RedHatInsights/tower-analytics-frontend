@@ -41,7 +41,9 @@ import {
     ToggleOffIcon
 } from '@patternfly/react-icons';
 
-import TopTemplatesSavings from '../../Charts/ROITopTemplates';
+import ChartWrapper from '../../Charts/ChartWrapper';
+import scalableBarChart from '../../Charts/ScalableBarChart';
+import tooltip from '../../Charts/Tooltips/ROIChartTooltip.js';
 
 import {
     calculateDelta,
@@ -178,53 +180,46 @@ const initialQueryParams = {
 export const automationCalculatorMethods = () => {
     // create our array to feed to D3
     const formatData = (response, defaults) => {
-        return response.reduce(
-            (
-                formatted,
-                {
-                    name,
-                    template_id: id,
-                    successful_run_count,
-                    successful_elapsed_sum,
-                    successful_host_run_count_avg,
-                    successful_host_run_count,
-                    elapsed_sum,
-                    failed_elapsed_sum,
-                    orgs,
-                    clusters,
-                    template_automation_percentage
-                }
-            ) => {
-                formatted.push({
-                    name,
-                    id,
-                    run_count: successful_run_count,
-                    host_count: successful_host_run_count_avg || 0,
-                    successful_host_run_count,
-                    delta: 0,
-                    isActive: true,
-                    calculations: [
-                        {
-                            type: 'Manual',
-                            avg_run: defaults.defaultAvgRunVal,
-                            cost: 0
-                        },
-                        {
-                            type: 'Automated',
-                            avg_run: successful_elapsed_sum || 0,
-                            cost: 0
-                        }
-                    ],
-                    orgs,
-                    clusters,
-                    elapsed_sum,
-                    failed_elapsed_sum,
-                    successful_elapsed_sum,
-                    template_automation_percentage
-                });
-                return formatted;
-            },
-            []
+        return response.map(
+            ({
+                name,
+                template_id,
+                successful_run_count,
+                successful_elapsed_sum,
+                successful_host_run_count_avg,
+                successful_host_run_count,
+                elapsed_sum,
+                failed_elapsed_sum,
+                orgs,
+                clusters,
+                template_automation_percentage
+            }) => ({
+                name,
+                id: template_id,
+                run_count: successful_run_count,
+                host_count: successful_host_run_count_avg || 0,
+                successful_host_run_count,
+                delta: 0,
+                isActive: true,
+                calculations: [
+                    {
+                        type: 'Manual',
+                        avg_run: defaults.defaultAvgRunVal,
+                        cost: 0
+                    },
+                    {
+                        type: 'Automated',
+                        avg_run: successful_elapsed_sum || 0,
+                        cost: 0
+                    }
+                ],
+                orgs,
+                clusters,
+                elapsed_sum,
+                failed_elapsed_sum,
+                successful_elapsed_sum,
+                template_automation_percentage
+            }),
         );
     };
 
@@ -474,7 +469,7 @@ const AutomationCalculator = ({ history }) => {
                   </FilterCardTitle>
               </Card>
           </Main>
-          <Wrapper className="automation-wrapper">
+          <Wrapper className="chart-overflow-wrapper">
               <WrapperLeft>
                   <Main style={ { paddingBottom: '0' } }>
                       <Card>
@@ -484,12 +479,28 @@ const AutomationCalculator = ({ history }) => {
                               { !isLoading && formattedData.length <= 0 && <NoData /> }
                               { formattedData.length > 0 && !isLoading && (
                       <>
-                        <TopTemplatesSavings
-                            margin={ { top: 20, right: 20, bottom: 20, left: 70 } }
-                            id="d3-roi-chart-root"
-                            data={ formattedData }
-                            selected={ selectedIds }
-                        />
+                          <ChartWrapper
+                              data={ formattedData.filter(({ id }) => !selectedIds.includes(id)).map(el => ({
+                                  xAxis: el.name,
+                                  delta: el.delta,
+                                  calculations: el.calculations
+                              })) }
+                              lineNames={ [ 'delta', 'successful' ] }
+                              colors={ [ '#0066CC' ] }
+                              xAxis={ {
+                                  text: ''
+                              } }
+                              yAxis={ {
+                                  text: 'Savings per template ($)'
+                              } }
+                              chart={ scalableBarChart }
+                              overflow={ {
+                                  enabled: true,
+                                  wrapperClass: 'chart-overflow-wrapper',
+                                  visibleCols: 15
+                              } }
+                              tooltip={ tooltip() }
+                          />
                         <p style={ { textAlign: 'center' } }>Templates</p>
                       </>
                               ) }
