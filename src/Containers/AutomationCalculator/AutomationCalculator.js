@@ -278,6 +278,7 @@ export const useAutomationFormula = () => {
     const [ templatesList, setTemplatesList ] = useState([]);
     const [ roiData, setRoiData ] = useState([]);
     const [ selectedIds, setSelectedIds ] = useState([]);
+    const [ graphKey, setGraphKey ] = useState(null);
 
     const { formatData } = automationCalculatorMethods();
 
@@ -303,7 +304,12 @@ export const useAutomationFormula = () => {
         .toFixed(2)
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
         setTotalSavings('$' + totalWithCommas);
+
+        const randomNum = Math.floor(Math.random() * 100);
+        setGraphKey(randomNum);
+
     }, [ formattedData, costAutomation, costManual ]);
 
     useEffect(() => {
@@ -345,7 +351,8 @@ export const useAutomationFormula = () => {
         selectedIds,
         setSelectedIds,
         setRoiData,
-        unfilteredData
+        unfilteredData,
+        graphKey
     };
 };
 
@@ -374,7 +381,9 @@ const AutomationCalculator = () => {
         templatesList,
         selectedIds,
         setSelectedIds,
-        setRoiData
+        setRoiData,
+        unfilteredData,
+        graphKey
     } = useAutomationFormula();
 
     const { queryParams, setStartDateAsString } = useQueryParams(
@@ -465,6 +474,7 @@ const AutomationCalculator = () => {
                               { formattedData.length > 0 && !isLoading && (
                       <>
                         <TopTemplatesSavings
+                            key={ graphKey }
                             margin={ { top: 20, right: 20, bottom: 20, left: 70 } }
                             id="d3-roi-chart-root"
                             data={ formattedData }
