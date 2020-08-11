@@ -351,7 +351,6 @@ export const useAutomationFormula = () => {
         selectedIds,
         setSelectedIds,
         setRoiData,
-        unfilteredData,
         graphKey
     };
 };
@@ -382,7 +381,6 @@ const AutomationCalculator = () => {
         selectedIds,
         setSelectedIds,
         setRoiData,
-        unfilteredData,
         graphKey
     } = useAutomationFormula();
 
