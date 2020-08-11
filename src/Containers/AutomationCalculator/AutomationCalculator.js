@@ -400,13 +400,6 @@ const AutomationCalculator = () => {
             });
             getData().then(({ templates: roiData = []}) => {
                 if (!ignore) {
-
-                    // if the api data between two selections is the same,
-                    // state will not update properly to redraw the graph
-                    // this forces each selection to create a change in
-                    // state and thereby the graph
-                    setRoiData([]);
-
                     setRoiData(roiData);
                     setIsLoading(false);
                 }
