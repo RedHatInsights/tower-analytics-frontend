@@ -41,7 +41,9 @@ import {
     ToggleOffIcon
 } from '@patternfly/react-icons';
 
-import TopTemplatesSavings from '../../Charts/ROITopTemplates';
+import ChartWrapper from '../../Charts/ChartWrapper';
+import scalableBarChart from '../../Charts/ScalableBarChart';
+import tooltip from '../../Charts/Tooltips/ROIChartTooltip.js';
 
 import {
     calculateDelta,
@@ -438,7 +440,7 @@ const AutomationCalculator = ({ history }) => {
                   </FilterCardTitle>
               </Card>
           </Main>
-          <Wrapper className="automation-wrapper">
+          <Wrapper className="chart-overflow-wrapper">
               <WrapperLeft>
                   <Main style={ { paddingBottom: '0' } }>
                       <Card>
@@ -448,12 +450,28 @@ const AutomationCalculator = ({ history }) => {
                               { !isLoading && formattedData.length <= 0 && <NoData /> }
                               { formattedData.length > 0 && !isLoading && (
                       <>
-                        <TopTemplatesSavings
-                            margin={ { top: 20, right: 20, bottom: 20, left: 70 } }
-                            id="d3-roi-chart-root"
-                            data={ formattedData }
-                            selected={ selectedIds }
-                        />
+                          <ChartWrapper
+                              data={ formattedData.filter(({ id }) => !selectedIds.includes(id)).map(el => ({
+                                  xAxis: el.name,
+                                  delta: el.delta,
+                                  calculations: el.calculations
+                              })) }
+                              lineNames={ [ 'delta' ] }
+                              colors={ [ '#0066CC' ] }
+                              xAxis={ {
+                                  text: ''
+                              } }
+                              yAxis={ {
+                                  text: 'Savings per template ($)'
+                              } }
+                              chart={ scalableBarChart }
+                              overflow={ {
+                                  enabled: true,
+                                  wrapperClass: 'chart-overflow-wrapper',
+                                  visibleCols: 15
+                              } }
+                              tooltip={ tooltip() }
+                          />
                         <p style={ { textAlign: 'center' } }>Templates</p>
                       </>
                               ) }
