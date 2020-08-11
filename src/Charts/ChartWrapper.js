@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 
 export const ChartWrapper = props => {
     let time = null;
-    const margin = { top: 20, right: 20, bottom: 50, left: 70 };
+    const margin = { top: 20, right: 20, bottom: props.xAxis.text ? 50 : 20, left: 70 };
 
     const draw = () => {
         // Clear our chart container element first
@@ -12,8 +12,17 @@ export const ChartWrapper = props => {
 
         // Get the charts inner sizes
         const wrapper = d3.select('#' + props.id);
-        const width = parseInt(wrapper.style('width')) - margin.left - margin.right || 700;
-        const height = parseInt(wrapper.style('height')) - margin.top - margin.bottom || 450;;
+        const height = parseInt(wrapper.style('height')) - margin.top - margin.bottom || 450;
+
+        let width = 0;
+        if (props.overflow.enabled) {
+            if (props.data.length >= props.overflow.visibleCols) {
+                const containerWidth = d3.select('.' + props.overflow.wrapperClass).node();
+                width = containerWidth.getBoundingClientRect().width - margin.left - margin.right;
+            }
+        } else {
+            width = parseInt(wrapper.style('width')) - margin.left - margin.right || 700;
+        }
 
         // Create the box holding the chart (axes and labels included)
         const svg = wrapper
@@ -87,6 +96,7 @@ export const ChartWrapper = props => {
             addYAxis,
             height,
             width,
+            margin,
             ...props
         });
     };
@@ -129,7 +139,12 @@ ChartWrapper.propTypes = {
         text: PropTypes.string.required
     }).isRequired,
     onClick: PropTypes.func,
-    chart: PropTypes.func.isRequired
+    chart: PropTypes.func.isRequired,
+    overflow: PropTypes.shape({
+        enabled: PropTypes.boolean,
+        wrapperClass: PropTypes.string,
+        visibleCols: PropTypes.number
+    })
 };
 
 ChartWrapper.defaultProps = {
@@ -138,7 +153,12 @@ ChartWrapper.defaultProps = {
     data: [],
     lineNames: [],
     value: 31,
-    onClick: () => {}
+    onClick: () => {},
+    overflow: {
+        enabled: false,
+        wrapperClass: 'chart-overflow-wrapper',
+        visibleCols: 15
+    }
 };
 
 export default ChartWrapper;
