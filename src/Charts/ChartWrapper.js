@@ -1,30 +1,41 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
+import Legend from '../Utilities/Legend';
 
 export const ChartWrapper = props => {
+    const [ legendHeight, setLegendHeight ] = useState('0px');
+    const margin = props.noMargin ?
+        { top: 0, right: 20, bottom: 0, left: 20 }
+        : { top: 20, right: 20, bottom: props.xAxis.text ? 50 : 20, left: 70 };
     let time = null;
-    const margin = { top: 20, right: 20, bottom: props.xAxis.text ? 50 : 20, left: 70 };
+    let width = 0;
+    let height = 0;
 
-    const draw = () => {
-        // Clear our chart container element first
-        d3.selectAll('#' + props.id + ' > *').remove();
+    const getWrapper = () => d3.select('#' + props.id);
 
-        // Get the charts inner sizes
-        const wrapper = d3.select('#' + props.id);
-        const height = parseInt(wrapper.style('height')) - margin.top - margin.bottom || 450;
+    const clearWrapper = () => d3.selectAll('#' + props.id + ' > *').remove();
 
-        let width = 0;
+    const getSizes = wrapper => {
+        let w = 0;
+        let h = 0;
+
+        h = parseInt(wrapper.style('height')) - margin.top - margin.bottom || 450;
+
         if (props.overflow.enabled) {
             if (props.data.length >= props.overflow.visibleCols) {
                 const containerWidth = d3.select('.' + props.overflow.wrapperClass).node();
-                width = containerWidth.getBoundingClientRect().width - margin.left - margin.right;
+                w = containerWidth.getBoundingClientRect().width - margin.left - margin.right;
             }
         } else {
-            width = parseInt(wrapper.style('width')) - margin.left - margin.right || 700;
+            w = parseInt(wrapper.style('width')) - margin.left - margin.right || 700;
         }
 
-        // Create the box holding the chart (axes and labels included)
+        return [ w, h ];
+    };
+
+    const draw = (wrapper) => {
+        // Create the box holding the chart
         const svg = wrapper
         .append('svg')
         .attr('width', width + margin.left + margin.right)
@@ -101,13 +112,24 @@ export const ChartWrapper = props => {
         });
     };
 
+    const init = () => {
+        const wrapper = getWrapper();
+        const [ w, h ] = getSizes(wrapper);
+        width = w;
+        height = h;
+        setLegendHeight(h + 'px');
+
+        clearWrapper();
+        draw(wrapper);
+    };
+
     const resize = () => {
         clearTimeout(time);
-        time = setTimeout(() => { draw(); }, 500);
+        time = setTimeout(() => { init(); }, 500);
     };
 
     useEffect(() => {
-        draw();
+        init();
 
         // Call the resize function whenever a resize event occurs
         window.addEventListener('resize', resize);
@@ -118,10 +140,20 @@ export const ChartWrapper = props => {
         };
     }, []);
 
-    useEffect(() => draw(), [ props.data, props.value ]);
+    useEffect(() => init(), [ props.data, props.value ]);
 
     return (
-        <div id={ props.id } className={ props.chartClass } />
+        <>
+            <div id={ props.id } className={ props.chartClass + (props.legend ? ' small' : '') } />
+            { props.legend &&
+                <Legend
+                    data={ props.legend }
+                    selected={ null }
+                    onToggle={ null }
+                    height={ legendHeight }
+                />
+            }
+        </>
     );
 };
 
@@ -133,18 +165,20 @@ ChartWrapper.propTypes = {
     colors: PropTypes.array.isRequired,
     value: PropTypes.number,
     xAxis: PropTypes.shape({
-        text: PropTypes.string.required
-    }).isRequired,
+        text: PropTypes.string
+    }),
     yAxis: PropTypes.shape({
-        text: PropTypes.string.required
-    }).isRequired,
+        text: PropTypes.string
+    }),
     onClick: PropTypes.func,
     chart: PropTypes.func.isRequired,
     overflow: PropTypes.shape({
         enabled: PropTypes.boolean,
         wrapperClass: PropTypes.string,
         visibleCols: PropTypes.number
-    })
+    }),
+    legend: PropTypes.array,
+    noMargin: PropTypes.bool
 };
 
 ChartWrapper.defaultProps = {
@@ -153,12 +187,16 @@ ChartWrapper.defaultProps = {
     data: [],
     lineNames: [],
     value: 31,
+    xAxis: { text: null },
+    yAxis: { text: null },
     onClick: () => {},
     overflow: {
         enabled: false,
         wrapperClass: 'chart-overflow-wrapper',
         visibleCols: 15
-    }
+    },
+    legend: null,
+    noMargin: false
 };
 
 export default ChartWrapper;
