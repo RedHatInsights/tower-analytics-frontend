@@ -28,7 +28,10 @@ import {
 import { FilterIcon } from '@patternfly/react-icons';
 
 import GroupedBarChart from '../../Charts/GroupedBarChart';
-import PieChart from '../../Charts/PieChart';
+import pieChart from '../../Charts/PieChart';
+import pieChartTooltip from '../../Charts/Tooltips/PieChartTooltip';
+import { pfmulti } from '../../Utilities/colors';
+import ChartWrapper from '../../Charts/ChartWrapper';
 
 const CardTitle = styled(PFCardTitle)`
   border-bottom: 2px solid #ebebeb;
@@ -277,12 +280,27 @@ const OrganizationStatistics = () => {
                           { isLoading && <LoadingState /> }
                           { !isLoading && pieChart1Data.length <= 0 && <NoData /> }
                           { !isLoading && pieChart1Data.length > 0 && (
-                              <PieChart
-                                  margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
-                                  id="d3-donut-1-chart-root"
-                                  data={ pieChart1Data }
-                                  timeFrame={ timeframe }
-                              />
+                              <div className="d3-chart-with-legend-wrapper">
+                                  <ChartWrapper
+                                      id="pie-chart-1"
+                                      data={ pieChart1Data.filter(d => d.id !== -1) }
+                                      lineNames={ [ 'count' ] }
+                                      colors={ [] }
+                                      chart={ pieChart }
+                                      tooltip={ pieChartTooltip }
+                                      legend={
+                                          pieChart1Data.reduce((colors, org) => {
+                                              colors.push({
+                                                  name: org.id === -1 ?  'Others' : org.name,
+                                                  value: pfmulti[colors.length],
+                                                  count: Math.round(org.count)
+                                              });
+                                              return colors;
+                                          }, [])
+                                      }
+                                      noMargin
+                                  />
+                              </div>
                           ) }
                       </CardBody>
                   </Card>
@@ -296,12 +314,27 @@ const OrganizationStatistics = () => {
                           { isLoading && <LoadingState /> }
                           { !isLoading && pieChart2Data.length <= 0 && <NoData /> }
                           { !isLoading && pieChart2Data.length > 0 && (
-                              <PieChart
-                                  margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
-                                  id="d3-donut-2-chart-root"
-                                  data={ pieChart2Data }
-                                  timeFrame={ timeframe }
-                              />
+                              <div className="d3-chart-with-legend-wrapper">
+                                  <ChartWrapper
+                                      id="pie-chart-2"
+                                      data={ pieChart2Data.filter(d => d.id !== -1) }
+                                      lineNames={ [ 'count' ] }
+                                      colors={ [] }
+                                      chart={ pieChart }
+                                      tooltip={ pieChartTooltip }
+                                      legend={
+                                          pieChart2Data.reduce((colors, org) => {
+                                              colors.push({
+                                                  name: org.id === -1 ?  'Others' : org.name,
+                                                  value: pfmulti[colors.length],
+                                                  count: Math.round(org.count)
+                                              });
+                                              return colors;
+                                          }, [])
+                                      }
+                                      noMargin
+                                  />
+                              </div>
                           ) }
                       </CardBody>
                   </Card>
