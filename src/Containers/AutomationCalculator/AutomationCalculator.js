@@ -304,7 +304,6 @@ export const useAutomationFormula = () => {
         .toFixed(2)
         .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
         setTotalSavings('$' + totalWithCommas);
 
         const randomNum = Math.floor(Math.random() * 100);
