@@ -351,6 +351,7 @@ export const useAutomationFormula = () => {
         selectedIds,
         setSelectedIds,
         setRoiData,
+        unfilteredData,
         graphKey
     };
 };
