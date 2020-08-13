@@ -1,11 +1,16 @@
-/* eslint-disable camelcase */
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
+import moment from 'moment';
 import styled from 'styled-components';
+
+import { useQueryParams } from '../../Utilities/useQueryParams';
 
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
 import EmptyState from '../../Components/EmptyState';
 import { preflightRequest, readROI } from '../../Api';
+import { Paths } from '../../paths';
+import { formatQueryStrings } from '../../Utilities/formatQueryStrings';
 
 import {
     Main,
@@ -14,9 +19,12 @@ import {
 } from '@redhat-cloud-services/frontend-components';
 
 import {
+    Button,
     Card,
     CardBody,
     CardTitle,
+    FormSelect,
+    FormSelectOption,
     InputGroup,
     InputGroupText,
     TextInput,
@@ -27,6 +35,7 @@ import {
 
 import {
     DollarSignIcon,
+    FilterIcon,
     InfoCircleIcon,
     ToggleOnIcon,
     ToggleOffIcon
@@ -42,6 +51,22 @@ import {
     convertWithCommas,
     formatPercentage
 } from '../../Utilities/helpers';
+
+const FilterCardTitle = styled(CardTitle)`
+  border-bottom: 2px solid #ebebeb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  &&& {
+    min-height: 60px;
+    --pf-c-card--first-child--PaddingTop: 10px;
+    --pf-c-card__header--not-last-child--PaddingBottom: 10px;
+
+    h3 {
+      font-size: 0.875em;
+    }
+  }
+`;
 
 const defaultAvgRunVal = 3600; // 1 hr in seconds
 const defaultCostAutomation = 20;
@@ -129,7 +154,39 @@ const title = (
     </span>
 );
 
-export const automationCalculatorMethods = () => {
+/* helper variables for further date ranges */
+const pastYear = moment.utc().subtract(1, 'year');
+const pastYTD = moment().startOf('year');
+const pastQuarter = moment().startOf('quarter');
+const pastMonth = moment.utc().subtract(1, 'month');
+
+/* these are the buckets of time the user's are able to select ... */
+const timeFrameOptions = [
+    { value: 'please choose', label: 'Select date range', disabled: true },
+    { value: pastYear.format('YYYY-MM-DD'), label: 'Past year something else', disabled: false },
+    { value: pastYTD.format('YYYY-MM-DD'), label: 'Past year to date', disabled: false },
+    { value: pastQuarter.format('YYYY-MM-DD'), label: 'Past quarter', disabled: false },
+    { value: pastMonth.format('YYYY-MM-DD'), label: 'Past month', disabled: false }
+];
+
+/* set the default bucket to 365 days */
+const initialQueryParams = {
+    startDate: pastYear.format('YYYY-MM-DD'),
+    endDate: moment.utc().format('YYYY-MM-DD')
+};
+
+
+const AutomationCalculator = ({ history }) => {
+
+    const [ isLoading, setIsLoading ] = useState(true);
+    const [ costManual, setCostManual ] = useState(defaultCostManual);
+    const [ costAutomation, setCostAutomation ] = useState(defaultCostAutomation);
+    const [ totalSavings, setTotalSavings ] = useState(0);
+    const [ unfilteredData, setUnfilteredData ] = useState([]);
+    const [ formattedData, setFormattedData ] = useState([]);
+    const [ templatesList, setTemplatesList ] = useState([]);
+    const [ selectedIds, setSelectedIds ] = useState([]);
+
     // create our array to feed to D3
     const formatData = (response, defaults) => {
         return response.reduce(
@@ -216,53 +273,6 @@ export const automationCalculatorMethods = () => {
         return newSelection;
     };
 
-    return {
-        formatData,
-        updateData,
-        handleManualTimeChange,
-        formatSelectedIds,
-        handleToggle
-    };
-};
-
-export const useAutomationFormula = () => {
-    const [ isLoading, setIsLoading ] = useState(true);
-    const [ preflightError, setPreFlightError ] = useState(null);
-    const [ costManual, setCostManual ] = useState(defaultCostManual);
-    const [ costAutomation, setCostAutomation ] = useState(defaultCostAutomation);
-    const [ totalSavings, setTotalSavings ] = useState(0);
-    const [ unfilteredData, setUnfilteredData ] = useState([]);
-    const [ formattedData, setFormattedData ] = useState([]);
-    const [ templatesList, setTemplatesList ] = useState([]);
-    const [ roiData, setRoiData ] = useState([]);
-    const [ selectedIds, setSelectedIds ] = useState([]);
-
-    const { formatData } = automationCalculatorMethods();
-
-    useEffect(() => {
-        let ignore = false;
-        const getData = () => {
-            return readROI({ params: {}});
-        };
-
-        async function initializeWithPreflight() {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            await preflightRequest().catch((error) => {
-                setPreFlightError({ preflightError: error });
-            });
-            getData().then(({ templates: roiData = []}) => {
-                if (!ignore) {
-                    setRoiData(roiData);
-                    setIsLoading(false);
-                }
-            });
-        }
-
-        initializeWithPreflight();
-        return () => (ignore = true);
-    }, []);
-
     useEffect(() => {
         let data = [ ...formattedData ];
         let total = 0;
@@ -302,59 +312,66 @@ export const useAutomationFormula = () => {
         setFormattedData(filteredData);
     }, [ selectedIds ]);
 
-    useEffect(() => {
-        const formatted = formatData(roiData, {
-            defaultAvgRunVal,
-            defaultCostAutomation,
-            defaultCostManual
-        });
-        setUnfilteredData(formatted);
-        setFormattedData(formatted);
-        setTemplatesList(formatted);
-    }, [ roiData ]);
+    // default to the past year (n - 365 days)
+    const [ roiTimeFrame, setRoiTimeFrame ] = useState(timeFrameOptions[1].value);
+    const [ preflightError, setPreFlightError ] = useState(null);
 
-    return {
-        isLoading,
-        preflightError,
-        costManual,
-        setCostManual,
-        costAutomation,
-        setCostAutomation,
-        totalSavings,
-        unfilteredData,
-        setUnfilteredData,
-        formattedData,
-        setFormattedData,
-        templatesList,
-        setTemplatesList,
-        roiData,
-        setRoiData,
-        selectedIds,
-        setSelectedIds
+    const { queryParams, setStartDateAsString } = useQueryParams(
+        initialQueryParams
+    );
+
+    const handleOnChange = (value) => {
+        setStartDateAsString(value);
+        setRoiTimeFrame(value);
     };
-};
 
-const AutomationCalculator = () => {
-    const {
-        isLoading,
-        costManual,
-        setCostManual,
-        costAutomation,
-        setCostAutomation,
-        totalSavings,
-        formattedData,
-        setFormattedData,
-        templatesList,
-        selectedIds,
-        setSelectedIds,
-        preflightError
-    } = useAutomationFormula();
+    useEffect(() => {
+        let ignore = false;
+        const getData = () => {
+            return readROI({ params: queryParams });
+        };
 
-    const {
-        updateData,
-        handleManualTimeChange,
-        handleToggle
-    } = automationCalculatorMethods();
+        async function initializeWithPreflight() {
+            setIsLoading(true);
+            await window.insights.chrome.auth.getUser();
+            await preflightRequest().catch((error) => {
+                setPreFlightError({ preflightError: error });
+            });
+            getData().then(({ templates: roiData = []}) => {
+                if (!ignore) {
+                    const formatted = formatData(roiData, {
+                        defaultAvgRunVal,
+                        defaultCostAutomation,
+                        defaultCostManual
+                    });
+                    setUnfilteredData(formatted);
+                    setFormattedData(formatted);
+                    setTemplatesList(formatted);
+                    setIsLoading(false);
+                }
+            });
+        }
+
+        initializeWithPreflight();
+        return () => (ignore = true);
+    }, [ queryParams ]);
+
+    const redirectToJobExplorer = (templateId) => {
+        const { jobExplorer } = Paths;
+        const initialQueryParams = {
+            template_id: templateId,
+            status: [ 'successful' ],
+            job_type: [ 'job' ],
+            quick_date_range: 'last_30_days'
+        };
+
+        const { strings, stringify } = formatQueryStrings(initialQueryParams);
+        const search = stringify(strings);
+        history.push({
+            pathname: jobExplorer,
+            search
+        });
+    };
 
     return (
     <>
@@ -372,6 +389,34 @@ const AutomationCalculator = () => {
       ) }
       { !preflightError && (
         <>
+          <Main style={ { paddingBottom: '0' } }>
+              <Card>
+                  <FilterCardTitle style={ { paddingBottom: '0', paddingTop: '0' } }>
+                      <h2>
+                          <FilterIcon style={ { marginRight: '10px' } } />
+                  Filter
+                      </h2>
+                      <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
+                          <FormSelect
+                              name="roiTimeFrame"
+                              value={ roiTimeFrame }
+                              onChange={ handleOnChange }
+                              aria-label="Select Date Range"
+                              style={ { margin: '2px 10px' } }
+                          >
+                              { timeFrameOptions.map((option, index) => (
+                                  <FormSelectOption
+                                      isDisabled={ option.disabled }
+                                      key={ index }
+                                      value={ option.value }
+                                      label={ option.label }
+                                  />
+                              )) }
+                          </FormSelect>
+                      </div>
+                  </FilterCardTitle>
+              </Card>
+          </Main>
           <Wrapper className="automation-wrapper">
               <WrapperLeft>
                   <Main style={ { paddingBottom: '0' } }>
@@ -509,7 +554,16 @@ const AutomationCalculator = () => {
                               </p>
                               { templatesList.map((data) => (
                                   <div key={ data.id }>
-                                      <p style={ { padding: '15px 0 10px' } }>{ data.name }</p>
+                                      <Tooltip content={ 'Click for list of jobs in the past month' } >
+                                          <Button
+                                              style={ { padding: '15px 0 10px' } }
+                                              component="a"
+                                              onClick={ () => redirectToJobExplorer(data.id) }
+                                              variant="link"
+                                          >
+                                              { data.name }
+                                          </Button>
+                                      </Tooltip>
                                       <TemplateDetail>
                                           <InputAndText key={ data.id }>
                                               <InputGroup>
