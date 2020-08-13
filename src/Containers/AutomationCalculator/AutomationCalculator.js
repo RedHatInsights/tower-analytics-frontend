@@ -175,7 +175,17 @@ const initialQueryParams = {
     endDate: moment.utc().format('YYYY-MM-DD')
 };
 
-export const automationCalculatorMethods = () => {
+const AutomationCalculator = ({ history }) => {
+
+    const [ isLoading, setIsLoading ] = useState(true);
+    const [ costManual, setCostManual ] = useState(defaultCostManual);
+    const [ costAutomation, setCostAutomation ] = useState(defaultCostAutomation);
+    const [ totalSavings, setTotalSavings ] = useState(0);
+    const [ unfilteredData, setUnfilteredData ] = useState([]);
+    const [ formattedData, setFormattedData ] = useState([]);
+    const [ templatesList, setTemplatesList ] = useState([]);
+    const [ selectedIds, setSelectedIds ] = useState([]);
+
     // create our array to feed to D3
     const formatData = (response, defaults) => {
         return response.reduce(
@@ -262,28 +272,6 @@ export const automationCalculatorMethods = () => {
         return newSelection;
     };
 
-    return {
-        formatData,
-        updateData,
-        handleManualTimeChange,
-        formatSelectedIds,
-        handleToggle
-    };
-};
-
-export const useAutomationFormula = () => {
-    const [ isLoading, setIsLoading ] = useState(true);
-    const [ costManual, setCostManual ] = useState(defaultCostManual);
-    const [ costAutomation, setCostAutomation ] = useState(defaultCostAutomation);
-    const [ totalSavings, setTotalSavings ] = useState(0);
-    const [ unfilteredData, setUnfilteredData ] = useState([]);
-    const [ formattedData, setFormattedData ] = useState([]);
-    const [ templatesList, setTemplatesList ] = useState([]);
-    const [ roiData, setRoiData ] = useState([]);
-    const [ selectedIds, setSelectedIds ] = useState([]);
-
-    const { formatData } = automationCalculatorMethods();
-
     useEffect(() => {
         let data = [ ...formattedData ];
         let total = 0;
@@ -323,62 +311,9 @@ export const useAutomationFormula = () => {
         setFormattedData(filteredData);
     }, [ selectedIds ]);
 
-    useEffect(() => {
-        const formatted = formatData(roiData, {
-            defaultAvgRunVal,
-            defaultCostAutomation,
-            defaultCostManual
-        });
-        setUnfilteredData(formatted);
-        setFormattedData(formatted);
-        setTemplatesList(formatted);
-    }, [ roiData ]);
-
-    return {
-        isLoading,
-        setIsLoading,
-        costManual,
-        setCostManual,
-        costAutomation,
-        setCostAutomation,
-        totalSavings,
-        formattedData,
-        setFormattedData,
-        templatesList,
-        selectedIds,
-        setSelectedIds,
-        setRoiData,
-        unfilteredData
-    };
-};
-
-const AutomationCalculator = ({ history }) => {
-
     // default to the past year (n - 365 days)
     const [ roiTimeFrame, setRoiTimeFrame ] = useState(timeFrameOptions[1].value);
     const [ preflightError, setPreFlightError ] = useState(null);
-
-    const {
-        updateData,
-        handleManualTimeChange,
-        handleToggle
-    } = automationCalculatorMethods();
-
-    const {
-        isLoading,
-        setIsLoading,
-        costManual,
-        setCostManual,
-        costAutomation,
-        setCostAutomation,
-        totalSavings,
-        formattedData,
-        setFormattedData,
-        templatesList,
-        selectedIds,
-        setSelectedIds,
-        setRoiData
-    } = useAutomationFormula();
 
     const { queryParams, setStartDateAsString } = useQueryParams(
         initialQueryParams
@@ -403,7 +338,14 @@ const AutomationCalculator = ({ history }) => {
             });
             getData().then(({ templates: roiData = []}) => {
                 if (!ignore) {
-                    setRoiData(roiData);
+                    const formatted = formatData(roiData, {
+                        defaultAvgRunVal,
+                        defaultCostAutomation,
+                        defaultCostManual
+                    });
+                    setUnfilteredData(formatted);
+                    setFormattedData(formatted);
+                    setTemplatesList(formatted);
                     setIsLoading(false);
                 }
             });
