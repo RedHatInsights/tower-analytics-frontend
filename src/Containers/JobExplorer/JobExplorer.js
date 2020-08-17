@@ -2,15 +2,18 @@
 /*eslint camelcase: ["error", {allow: ["setStart_Date","setEnd_Date","cluster_id","org_id","job_type","template_id","quick_date_range","sort_by"]}]*/
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+<<<<<<< HEAD
 =======
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 >>>>>>> Squashed commit of the following:
+=======
+import styled from 'styled-components';
+>>>>>>> Add compact pagination to top of list. Add styles to align toolbar and compact pagination. Update page title.
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import { formatQueryStrings } from '../../Utilities/formatQueryStrings';
 
-import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
@@ -33,6 +36,7 @@ import {
 } from '@redhat-cloud-services/frontend-components';
 
 import {
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
     DataToolbar,
@@ -57,12 +61,18 @@ import {
     CardHeader as PFCardHeader,
     Pagination,
 <<<<<<< HEAD
+=======
+    Card,
+    CardBody,
+    Pagination as PFPagination,
+>>>>>>> Add compact pagination to top of list. Add styles to align toolbar and compact pagination. Update page title.
     PaginationVariant
 } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
 import FilterableToolbar from '../../Components/Toolbar';
 
+<<<<<<< HEAD
 =======
     PaginationVariant,
     Select,
@@ -91,24 +101,27 @@ const DataToolbarGroup = styled(PFDataToolbarGroup)`
 `;
 >>>>>>> Squashed commit of the following:
 const CardHeader = styled(PFCardHeader)`
+=======
+const CompactPagination = styled(PFPagination)`
+>>>>>>> Add compact pagination to top of list. Add styles to align toolbar and compact pagination. Update page title.
+  display: flex;
+  align-items: flex-start;
+  margin: 0;
+`;
+
+const Pagination = styled(PFPagination)`
+  margin-top: 20px;
+`;
+
+const ToolbarContainer = styled('div')`
   display: flex;
   justify-content: space-between;
-
-  @media screen and (max-width: 1035px) {
-    display: block;
-  }
 `;
-
-const TitleWithBadge = styled.div`
-  display: flex;
-  align-items: center;
-
-  h2 {
-    margin-right: 10px;
-  }
-`;
+<<<<<<< HEAD
 
 <<<<<<< HEAD
+=======
+>>>>>>> Add compact pagination to top of list. Add styles to align toolbar and compact pagination. Update page title.
 const perPageOptions = [
     { title: '5', value: 5 },
     { title: '10', value: 10 },
@@ -784,7 +797,7 @@ const JobExplorer = props => {
       Automation Analytics
             <span style={ { fontSize: '16px' } }>
                 { ' ' }
-                <span style={ { margin: '0 10px' } }>|</span> All Jobs
+                <span style={ { margin: '0 10px' } }>|</span> Jobs explorer
             </span>
         </span>
     );
@@ -835,15 +848,8 @@ const JobExplorer = props => {
         <>
           <Main>
               <Card>
-                  <CardHeader>
-                      <TitleWithBadge>
-                          <h2>
-                              <strong>Total Jobs</strong>
-                          </h2>
-                          <Badge isRead>{ meta.count ? meta.count : 0 }</Badge>
-                      </TitleWithBadge>
-                  </CardHeader>
                   <CardBody>
+<<<<<<< HEAD
 <<<<<<< HEAD
                       <FilterableToolbar
                           orgs={ orgIds }
@@ -857,6 +863,38 @@ const JobExplorer = props => {
                           passedFilters={ filters }
                           handleFilters={ setFilters }
                       />
+=======
+                      <ToolbarContainer>
+                          <FilterableToolbar
+                              orgs={ orgIds }
+                              statuses={ statuses }
+                              clusters={ clusterIds }
+                              templates={ templateIds }
+                              types={ jobTypes }
+                              sortables={ sortBy }
+                              dateRanges={ quickDateRanges }
+                              onDelete={ onDelete }
+                              passedFilters={ filters }
+                              handleFilters={ setFilters }
+                          />
+                          <CompactPagination
+                              itemCount={ meta.count ? meta.count : 0 }
+                              widgetId="pagination-options-menu-top"
+                              perPageOptions={ perPageOptions }
+                              perPage={ queryParams.limit }
+                              page={ currPage }
+                              variant={ PaginationVariant.bottom }
+                              dropDirection={ 'up' }
+                              onPerPageSelect={ (_event, perPage, page) => {
+                                  handlePerPageSelect(perPage, page);
+                              } }
+                              onSetPage={ (_event, pageNumber) => {
+                                  handleSetPage(pageNumber);
+                              } }
+                              isCompact
+                          />
+                      </ToolbarContainer>
+>>>>>>> Add compact pagination to top of list. Add styles to align toolbar and compact pagination. Update page title.
                       { apiError && <ApiErrorState message={ apiError } /> }
                       { !apiError && isLoading && <LoadingState /> }
                       { !apiError && !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
@@ -993,7 +1031,6 @@ const JobExplorer = props => {
                         onSetPage={ (_event, pageNumber) => {
                             handleSetPage(pageNumber);
                         } }
-                        style={ { marginTop: '20px' } }
                     />
                   </>
                       ) }
