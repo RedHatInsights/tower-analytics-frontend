@@ -14,7 +14,7 @@ import {
     ToolbarToggleGroup,
     ToolbarItem,
     ToolbarGroup as PFToolbarGroup,
-    Select as PFSelect,
+    Select,
     SelectOption,
     Switch as PFSwitch,
     Tooltip,
@@ -46,11 +46,6 @@ const Switch = styled(PFSwitch)`
     &&& {
         margin: 0 15px;
     }
-`;
-
-const Select = styled(PFSelect)`
-    max-height: 500px;
-    overflow: 'auto';
 `;
 
 const handleChips = (item, comparator) => {
@@ -305,6 +300,10 @@ const FilterableToolbar = ({
                         selections={ passedFilters.org }
                         isExpanded={ orgIsExpanded }
                         placeholderText="Filter by organization"
+                        style={ {
+                            maxHeight: 500,
+                            overflow: 'auto'
+                        } }
                     >
                         { organizationIdMenuItems }
                     </Select>
@@ -328,6 +327,10 @@ const FilterableToolbar = ({
                         selections={ passedFilters.cluster }
                         isExpanded={ clusterIsExpanded }
                         placeholderText="Filter by cluster"
+                        style={ {
+                            maxHeight: 500,
+                            overflow: 'auto'
+                        } }
                     >
                         { clusterIdMenuItems }
                     </Select>
@@ -349,6 +352,10 @@ const FilterableToolbar = ({
                         selections={ passedFilters.template }
                         isExpanded={ templateIsExpanded }
                         placeholderText="Filter by template"
+                        style={ {
+                            maxHeight: 500,
+                            overflow: 'auto'
+                        } }
                     >
                         { templateIdMenuItems }
                     </Select>
