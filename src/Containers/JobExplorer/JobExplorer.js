@@ -186,6 +186,7 @@ const JobExplorer = props => {
     const [ statuses, setStatuses ] = useState([]);
     const [ jobTypes, setJobTypes ] = useState([]);
     const [ quickDateRanges, setQuickDateRanges ] = useState([]);
+    const [ width, setWidth ] = useState(window.innerWidth);
 
     const { parse } = formatQueryStrings({});
     const {
@@ -409,6 +410,7 @@ const JobExplorer = props => {
     }, []);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
     const handleChips = (item, comparator) => {
         return item.reduce((acc, i) => {
@@ -437,6 +439,14 @@ const JobExplorer = props => {
     };
 
 >>>>>>> Squashed commit of the following:
+=======
+    useEffect(() => {
+        window.addEventListener('resize', () => setWidth(window.innerWidth));
+
+        return () => window.removeEventListener('resize', () => setWidth(null));
+    }, []);
+
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
     const onDelete = (type, val) => {
         let filtered;
         Number.isInteger(val) ? (val = parseInt(val)) : val;
@@ -978,7 +988,7 @@ const JobExplorer = props => {
                       { !isLoading && jobExplorerData.length > 0 && (
 >>>>>>> Squashed commit of the following:
                   <>
-                    <JobExplorerList jobs={ jobExplorerData } />
+                    <JobExplorerList jobs={ jobExplorerData } windowWidth={ width } />
                     <Pagination
                         itemCount={ meta.count ? meta.count : 0 }
                         widgetId="pagination-options-menu-bottom"

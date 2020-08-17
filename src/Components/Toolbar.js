@@ -14,7 +14,7 @@ import {
     ToolbarToggleGroup,
     ToolbarItem,
     ToolbarGroup as PFToolbarGroup,
-    Select,
+    Select as PFSelect,
     SelectOption,
     Switch as PFSwitch,
     Tooltip,
@@ -46,6 +46,11 @@ const Switch = styled(PFSwitch)`
     &&& {
         margin: 0 15px;
     }
+`;
+
+const Select = styled(PFSelect)`
+    max-height: 500px;
+    overflow: 'auto';
 `;
 
 const handleChips = (item, comparator) => {
