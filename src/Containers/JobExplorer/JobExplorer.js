@@ -278,7 +278,11 @@ const JobExplorer = props => {
     const [ statuses, setStatuses ] = useState([]);
     const [ jobTypes, setJobTypes ] = useState([]);
     const [ quickDateRanges, setQuickDateRanges ] = useState([]);
+<<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
+=======
+    const [ width, setWidth ] = useState(window.innerWidth);
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
 
     const { parse } = formatQueryStrings({});
     const {
@@ -574,6 +578,7 @@ const JobExplorer = props => {
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 =======
 >>>>>>> Squashed commit of the following:
@@ -606,17 +611,22 @@ const JobExplorer = props => {
 <<<<<<< HEAD
 >>>>>>> Squashed commit of the following:
 =======
+=======
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
     useEffect(() => {
         window.addEventListener('resize', () => setWidth(window.innerWidth));
 
         return () => window.removeEventListener('resize', () => setWidth(null));
     }, []);
 
+<<<<<<< HEAD
 >>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
 =======
 >>>>>>> Squashed commit of the following:
 =======
 >>>>>>> Break out filterable toolbar into it's own component.
+=======
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
     const onDelete = (type, val) => {
         let filtered;
         Number.isInteger(val) ? (val = parseInt(val)) : val;
@@ -1215,8 +1225,12 @@ const JobExplorer = props => {
                       { !apiError && !isLoading && jobExplorerData.length > 0 && (
 >>>>>>> Fix: Catch api call errors and display the message nicely
                   <>
+<<<<<<< HEAD
                     <JobExplorerList jobs={ jobExplorerData } />
 >>>>>>> Squashed commit of the following:
+=======
+                    <JobExplorerList jobs={ jobExplorerData } windowWidth={ width } />
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
                     <Pagination
                         itemCount={ meta.count ? meta.count : 0 }
                         widgetId="pagination-options-menu-bottom"

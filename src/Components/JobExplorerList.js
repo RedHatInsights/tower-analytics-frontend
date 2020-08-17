@@ -30,7 +30,7 @@ import { formatDateTime, formatJobType, formatJobStatus } from '../Utilities/hel
     DataListToggle
 } from '@patternfly/react-core';
 
-import { ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
+import { ExternalLinkAltIcon as PFExternalLinkIcon } from '@patternfly/react-icons';
 
 import LoadingState from '../Components/LoadingState';
 <<<<<<< HEAD
@@ -49,6 +49,7 @@ const headerLabels = [
     'Type'
 ];
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 const ExternalLinkIcon = styled(PFExternalLinkIcon)`
   margin-left: 7px;
@@ -77,18 +78,34 @@ const buildHeader = labels => (
             </DataListCell>
 =======
 const ArrowIcon = styled(PFArrowIcon)`
+=======
+const ExternalLinkIcon = styled(PFExternalLinkIcon)`
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
   margin-left: 7px;
+  color: var(--pf-global--Color--400);
 `;
+
+const mobileBreakpoint = 765;
 
 const buildHeader = labels => (
     <DataListItemRow style={ { paddingLeft: '94px', fontWeight: '800' } }>
         { labels.map(label => (
+<<<<<<< HEAD
             <DataListCell key={ label }>{ label }</DataListCell>
 >>>>>>> Squashed commit of the following:
+=======
+            <DataListCell key={ label }>
+                { label }
+                { label === 'Id/Name' &&
+                    <ExternalLinkIcon />
+                }
+            </DataListCell>
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
         )) }
     </DataListItemRow>
 );
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
     const [ isExpanded, setIsExpanded ] = useState([]);
@@ -100,6 +117,12 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
     return (
         <DataList aria-label={ ariaLabel }>
 >>>>>>> Squashed commit of the following:
+=======
+const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
+    const [ isExpanded, setIsExpanded ] = useState([]);
+    return (
+        <DataList aria-label={ ariaLabel } isCompact>
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
             { items.map((item, count) => {
                 const toggle = id => {
                     const expanded = isExpanded;
@@ -132,6 +155,9 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                                     <DataListCell key={ count++ }>
                                         <a href={ item.id.tower_link } target='_blank' rel='noopener noreferrer'>
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
                                             { windowWidth < mobileBreakpoint &&
                                              <span style={ { color: 'initial', fontWeight: 'bold' } }>
                                                  Id/Name<ExternalLinkIcon />:
@@ -139,6 +165,7 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                                             }
                                             &nbsp;
                                             { `${item.id.id} - ${item.id.template_name}` }
+<<<<<<< HEAD
                                         </a>
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
@@ -178,17 +205,44 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                                     </DataListCell>
 =======
                                             { `${item.id.id} - ${item.id.template_name}` } <ArrowIcon />
+=======
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
                                         </a>
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
+                                        { windowWidth < mobileBreakpoint &&
+                                            <span style={ { color: 'initial', fontWeight: 'bold' } }>Status:</span>
+                                        }
+                                            &nbsp;
                                         <JobStatus status={ item.status } />
                                     </DataListCell>,
                                     <DataListCell key={ count++ }>
+                                        { windowWidth < mobileBreakpoint &&
+                                         <span style={ { color: 'initial', fontWeight: 'bold' } }>Cluster:</span>
+                                        }
+                                        &nbsp;
                                         { item.cluster_name }
                                     </DataListCell>,
+<<<<<<< HEAD
                                     <DataListCell key={ count++ }>{ item.org_name }</DataListCell>,
                                     <DataListCell key={ count++ }>{ formatJobType(item.job_type) }</DataListCell>
 >>>>>>> Squashed commit of the following:
+=======
+                                    <DataListCell key={ count++ }>
+                                        { windowWidth < mobileBreakpoint &&
+                                         <span style={ { color: 'initial', fontWeight: 'bold' } }>Organization:</span>
+                                        }
+                                        &nbsp;
+                                        { item.org_name }
+                                    </DataListCell>,
+                                    <DataListCell key={ count++ }>
+                                        { windowWidth < mobileBreakpoint &&
+                                         <span style={ { color: 'initial', fontWeight: 'bold' } }>Type:</span>
+                                        }
+                                         &nbsp;
+                                        { formatJobType(item.job_type) }
+                                    </DataListCell>
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
                                 ] }
                             />
                         </DataListItemRow>
@@ -219,6 +273,7 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
 };
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 const AllJobsTemplate = ({ jobs, windowWidth }) => {
     return buildListRow(jobs, 'All jobs view', 'all-jobs', windowWidth);
 };
@@ -243,20 +298,30 @@ const JobExplorerList = ({ jobs, windowWidth }) => (
 =======
 const AllJobsTemplate = ({ jobs }) => {
     return buildListRow(jobs, 'All jobs view', 'all-jobs');
+=======
+const AllJobsTemplate = ({ jobs, windowWidth }) => {
+    return buildListRow(jobs, 'All jobs view', 'all-jobs', windowWidth);
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
 };
 
-const JobExplorerList = ({ jobs }) => (
+const JobExplorerList = ({ jobs, windowWidth }) => (
   <>
     { jobs.length <= 0 && <LoadingState /> }
     <>
+<<<<<<< HEAD
       { buildHeader(headerLabels) }
       <AllJobsTemplate jobs={ jobs } />
 >>>>>>> Squashed commit of the following:
+=======
+      { windowWidth > mobileBreakpoint && buildHeader(headerLabels) }
+      <AllJobsTemplate jobs={ jobs } windowWidth={ windowWidth }/>
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
     </>
   </>
 );
 
 JobExplorerList.propTypes = {
+<<<<<<< HEAD
 <<<<<<< HEAD
     jobs: PropTypes.array,
     windowWidth: PropTypes.number
@@ -272,6 +337,15 @@ AllJobsTemplate.propTypes = {
 AllJobsTemplate.propTypes = {
     jobs: PropTypes.array
 >>>>>>> Squashed commit of the following:
+=======
+    jobs: PropTypes.array,
+    windowWidth: PropTypes.number
+};
+
+AllJobsTemplate.propTypes = {
+    jobs: PropTypes.array,
+    windowWidth: PropTypes.number
+>>>>>>> Handle long dropdowns by setting max height. Use compact datalist. Conditionally render datacell item labels when widnow is mobile sized. Remove datalist headers when window is mobile size.
 };
 
 export default JobExplorerList;
