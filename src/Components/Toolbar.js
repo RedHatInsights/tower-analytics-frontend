@@ -14,7 +14,7 @@ import {
     ToolbarToggleGroup,
     ToolbarItem,
     ToolbarGroup as PFToolbarGroup,
-    Select as PFSelect,
+    Select,
     SelectOption,
     Switch as PFSwitch,
     Tooltip,
@@ -46,11 +46,6 @@ const Switch = styled(PFSwitch)`
     &&& {
         margin: 0 15px;
     }
-`;
-
-const Select = styled(PFSelect)`
-    max-height: 500px;
-    overflow: 'auto';
 `;
 
 const handleChips = (item, comparator) => {
@@ -323,12 +318,18 @@ const FilterableToolbar = ({
                         isExpanded={ orgIsExpanded }
                         placeholderText="Filter by organization"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Add style to select inline instead of using styled component.
                         style={ {
                             maxHeight: 500,
                             overflow: 'auto'
                         } }
+<<<<<<< HEAD
 =======
 >>>>>>> Break out filterable toolbar into it's own component.
+=======
+>>>>>>> Add style to select inline instead of using styled component.
                     >
                         { organizationIdMenuItems }
                     </Select>
@@ -353,12 +354,18 @@ const FilterableToolbar = ({
                         isExpanded={ clusterIsExpanded }
                         placeholderText="Filter by cluster"
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> Add style to select inline instead of using styled component.
                         style={ {
                             maxHeight: 500,
                             overflow: 'auto'
                         } }
+<<<<<<< HEAD
 =======
 >>>>>>> Break out filterable toolbar into it's own component.
+=======
+>>>>>>> Add style to select inline instead of using styled component.
                     >
                         { clusterIdMenuItems }
                     </Select>
@@ -383,7 +390,14 @@ const FilterableToolbar = ({
                         placeholderText="Filter by template"z
 =======
                         placeholderText="Filter by template"
+<<<<<<< HEAD
 >>>>>>> Break out filterable toolbar into it's own component.
+=======
+                        style={ {
+                            maxHeight: 500,
+                            overflow: 'auto'
+                        } }
+>>>>>>> Add style to select inline instead of using styled component.
                     >
                         { templateIdMenuItems }
                     </Select>
