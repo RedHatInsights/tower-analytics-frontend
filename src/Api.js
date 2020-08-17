@@ -1,16 +1,17 @@
-/*eslint max-len: ["error", { "ignoreStrings": true }]*/
+/*eslint max-len: ["error", { "ignoreTemplateLiterals": true }]*/
 
-const barChartEndpoint = '/api/tower-analytics/chart30/';
-const clustersEndpoint = '/api/tower-analytics/clusters/';
-const groupedBarChartEndpoint = '/api/tower-analytics/jobs_by_date_and_org_30/';
-const modulesEndpoint = '/api/tower-analytics/modules/';
-const notificationsEndPoint = '/api/tower-analytics/notifications/';
-const pieChart1Endpoint = '/api/tower-analytics/job_runs_by_org_30/';
-const pieChart2Endpoint = '/api/tower-analytics/job_events_by_org_30/';
-const preflightEndpoint = '/api/tower-analytics/authorized/';
-const templateJobsEndpoint = '/api/tower-analytics/template_jobs/';
-const templatesEndPoint = '/api/tower-analytics/templates/';
-const roiEndpoint = '/api/tower-analytics/roi_templates/';
+const apiVersion = 'v0';
+const barChartEndpoint = `/api/tower-analytics/${apiVersion}/chart30/`;
+const clustersEndpoint = `/api/tower-analytics/${apiVersion}/clusters/`;
+const groupedBarChartEndpoint = `/api/tower-analytics/${apiVersion}/jobs_by_date_and_org_30/`;
+const modulesEndpoint = `/api/tower-analytics/${apiVersion}/modules/`;
+const notificationsEndPoint = `/api/tower-analytics/${apiVersion}/notifications/`;
+const pieChart1Endpoint = `/api/tower-analytics/${apiVersion}/job_runs_by_org_30/`;
+const pieChart2Endpoint = `/api/tower-analytics/${apiVersion}/job_events_by_org_30/`;
+const preflightEndpoint = `/api/tower-analytics/${apiVersion}/authorized/`;
+const templateJobsEndpoint = `/api/tower-analytics/${apiVersion}/template_jobs/`;
+const templatesEndPoint = `/api/tower-analytics/${apiVersion}/templates/`;
+const roiEndpoint = `/api/tower-analytics/${apiVersion}/roi_templates/`;
 
 function getAbsoluteUrl() {
     const url = window.location.href;
