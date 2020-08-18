@@ -5,6 +5,8 @@
 /*eslint max-len: ["error", { "ignoreStrings": true }]*/
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 
+import { formatQueryStrings } from './Utilities/formatQueryStrings';
+
 const apiVersion = 'v0';
 const barChartEndpoint = `/api/tower-analytics/${apiVersion}/chart30/`;
 const clustersEndpoint = `/api/tower-analytics/${apiVersion}/clusters/`;
