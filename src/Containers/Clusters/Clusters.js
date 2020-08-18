@@ -94,7 +94,7 @@ const initialQueryParams = {
     endDate: moment.utc().format('YYYY-MM-DD')
 };
 
-const Clusters = () => {
+const Clusters = ({ history }) => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ barChartData, setBarChartData ] = useState([]);
     const [ lineChartData, setLineChartData ] = useState([]);
@@ -103,95 +103,46 @@ const Clusters = () => {
     const [ clusterOptions, setClusterOptions ] = useState([]);
     const [ clusterTimeFrame, setClusterTimeFrame ] = useState(31);
     const [ selectedCluster, setSelectedCluster ] = useState('all');
-    const [ firstRender, setFirstRender ] = useState(true);
     const [ isLoading, setIsLoading ] = useState(true);
     const { queryParams, setEndDate, setStartDate, setId } = useQueryParams(
         initialQueryParams
     );
 
     useEffect(() => {
-        if (firstRender) {
-            return;
-        }
-
-        const fetchEndpoints = () => {
-            return Promise.all(
-                [
-                    readChart30({ params: queryParams }),
-                    readModules({ params: queryParams }),
-                    readTemplates({ params: queryParams })
-                ].map(p => p.catch(() => []))
-            );
-        };
-
-        const update = async () => {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            fetchEndpoints().then(
-                ([
-                    { data: chartData = []},
-                    { modules: modulesData = []},
-                    { templates: templatesData = []}
-                ]) => {
-                    if (queryParams.id) {
-                        setLineChartData(chartData);
-                    } else {
-                        setBarChartData(chartData);
-                    }
-
-                    setModulesData(modulesData);
-                    setTemplatesData(templatesData);
+        setIsLoading(true);
+        window.insights.chrome.auth.getUser().then(() =>
+            preflightRequest().then(() =>
+                readClusters().then(({ templates: clustersData = []}) => {
+                    const clusterOptions = formatClusterName(clustersData);
+                    setClusterOptions(clusterOptions);
                     setIsLoading(false);
-                }
-            );
-        };
-
-        update();
-    }, [ queryParams ]);
-
-    useEffect(() => {
-        let ignore = false;
-        const getData = () => {
-            return Promise.all(
-                [
-                    readChart30({ params: queryParams }),
-                    readClusters(),
-                    readModules({ params: queryParams }),
-                    readTemplates({ params: queryParams })
-                ].map(p => p.catch(() => []))
-            );
-        };
-
-        async function initializeWithPreflight() {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            await preflightRequest().catch(error => {
+                })
+            ).catch((error) => {
                 setPreFlightError({ preflightError: error });
-            });
-            getData().then(
-                ([
-                    { data: barChartData = []},
-                    { templates: clustersData = []},
-                    { modules: modulesData = []},
-                    { templates: templatesData = []}
-                ]) => {
-                    if (!ignore) {
-                        const clusterOptions = formatClusterName(clustersData);
-
-                        setBarChartData(barChartData);
-                        setClusterOptions(clusterOptions);
-                        setModulesData(modulesData);
-                        setTemplatesData(templatesData);
-                        setFirstRender(false);
-                        setIsLoading(false);
-                    }
-                }
-            );
-        }
-
-        initializeWithPreflight();
-        return () => (ignore = true);
+            })
+        );
     }, []);
+
+    // Get and update the data
+    useEffect(() => {
+        setIsLoading(true);
+        window.insights.chrome.auth.getUser().then(() =>
+            Promise.all([
+                readChart30({ params: queryParams }),
+                readModules({ params: queryParams }),
+                readTemplates({ params: queryParams })
+            ]).then(([
+                { data: chartData = []},
+                { modules: modulesData = []},
+                { templates: templatesData = []}
+            ]) => {
+                queryParams.id ? setLineChartData(chartData) : setBarChartData(chartData);
+                setModulesData(modulesData);
+                setTemplatesData(templatesData);
+                setIsLoading(false);
+            })
+        );
+    }, [ queryParams ]);
 
     return (
         <React.Fragment>
@@ -278,9 +229,10 @@ const Clusters = () => {
                   !isLoading && (
                           <LineChart
                               margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
-                              id="d3-bar-chart-root"
+                              id="d3-line-chart-root"
                               data={ lineChartData }
                               value={ clusterTimeFrame }
+                              clusterId={ queryParams.id }
                           />
                       ) }
                   </CardBody>
@@ -290,7 +242,9 @@ const Clusters = () => {
                   style={ { display: 'flex', marginTop: '20px' } }
               >
                   <TemplatesList
+                      history={ history }
                       queryParams={ queryParams }
+                      clusterId={ queryParams.id }
                       templates={ templatesData.slice(0, 10) }
                       isLoading={ isLoading }
                   />
