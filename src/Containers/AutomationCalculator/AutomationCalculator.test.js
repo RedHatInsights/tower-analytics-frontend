@@ -20,6 +20,9 @@ import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 Enzyme.configure({ adapter: new Adapter() });
 
+const defaultCostAutomation = 20;
+const defaultCostManual = 50;
+
 // the insights object
 const mockInsights = {
     chrome: {
@@ -102,7 +105,10 @@ const testHook = (callback) => {
 
 let page;
 
-describe('automationCalculatorFormula()', () => {
+describe('AutomationCalculator Formulas', () => {
+    const defaultCostAutomation = 20;
+    const defaultCostManual = 50;
+
     /*
     beforeEach(() => {
         testHook(() => {
@@ -155,31 +161,34 @@ describe('automationCalculatorFormula()', () => {
         .toString();
         expect(page.totalSavings).toEqual('$' + expected);
     });
-    xit('setCostManual triggers totalSavings calculation', () => {
-        act(() => {
-            page.setCostManual(0);
-        });
-        expect(page.totalSavings).toEqual('$0.00');
+    it('setCostManual triggers totalSavings calculation', () => {
+        const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
+        const total = computeTotalSavings(formattedData, defaultCostAutomation, 0);
+        console.log(formattedData);
+        const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost
+        console.log('expected', expected);
+        expect(total).toEqual(0);
+
     });
-    xit('setCostAutomation triggers totalSavings calculation', () => {
-        act(() => {
-            page.setCostAutomation(0);
-        });
-        const expected = (page.formattedData[0].calculations[0].cost - page.formattedData[0].calculations[1].cost).toFixed(2)
-        .toString();
-        expect(page.totalSavings).toEqual('$' + expected);
+    it('setCostAutomation triggers totalSavings calculation', () => {
+        const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
+        const total = computeTotalSavings(formattedData, 0, defaultCostManual);
+        console.log('total', total);
+        expect(total).toEqual(50);
+
     });
-    xit('setCostManual triggers correct totalSavings calculation', () => {
-        act(() => {
-            page.setCostManual(10);
-        });
-        const expected = (page.formattedData[0].calculations[0].cost - page.formattedData[0].calculations[1].cost).toFixed(2)
-        .toString();
-        expect(page.totalSavings).toEqual('$' + expected);
+    it('setCostManual triggers correct totalSavings calculation', () => {
+        const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
+        const total = computeTotalSavings(formattedData, defaultCostAutomation, 10);
+        console.log(formattedData);
+        const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost
+        console.log('expected', expected);
+        expect(total).toEqual(expected);
+
     });
     it('setCostManual sets correct delta calculation for formattedData', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
-        const total = computeTotalSavings(formattedData, 1, 10);
+        const total = computeTotalSavings(formattedData, defaultCostAutomation, 10);
         console.log(formattedData);
         const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost
         console.log('expected', expected);
@@ -188,14 +197,14 @@ describe('automationCalculatorFormula()', () => {
     });
     it('setCostAutomation triggers correct totalSavings calculation', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
-        const total = computeTotalSavings(formattedData, 1, 10);
+        const total = computeTotalSavings(formattedData, 10, defaultCostManual);
         console.log('total', total);
-        expect(total).toEqual(9.999722222222223);
+        expect(total).toEqual(49.99722222222222);
 
     });
 });
 
-describe('automationCalculatorMethods()', () => {
+describe('AutomationCalculator Functions()', () => {
     it('formatData should return correctly formatted array', () => {
         const testDefaults = {
             defaultAvgRunVal: 0
@@ -331,69 +340,7 @@ describe('automationCalculatorMethods()', () => {
     });
 });
 
-/*
-xdescribe('AutomationCalculator()', () => {
-
-    let wrapper;
-
-    const mockInsights = {
-        chrome: {
-            auth: {
-                getUser: () => {
-                    return 'bob';
-                }
-            }
-        }
-    };
-
-    beforeEach(() => {
-
-        const mockStore = configureStore();
-        const store = mockStore({});
-
-        global.insights = mockInsights;
-
-        // full mount ...
-        wrapper = mount(<Provider store={ store } ><AutomationCalculator /></Provider>);
-
-    });
-
-    it('mounts and selection changes the startDate value', async () => {
-
-        const fselect = wrapper.find('FormSelect');
-
-        // ensure 4 options plus 'please choose'
-        const optionValues = fselect.find('option').map(option => {
-            return option.props().value;
-        });
-        expect(optionValues.length).toEqual(5);
-
-        // default to n-365 days
-        const selectedValue = fselect.find('select').props().value;
-        expect(selectedValue).toEqual(optionValues[1]);
-
-        // fire off a selection event
-        let event = {
-            currentTarget: { value: optionValues[3] }
-        };
-        await act(async() => {
-            wrapper.find('FormSelect').find('select').prop('onChange')(event);
-        });
-        wrapper.update();
-
-        // verify the value change was made
-        expect(wrapper.find('FormSelect').find('select').props().value).toBe(optionValues[3]);
-
-        expect(ApiFuncs.readROI).toHaveBeenCalled();
-        const totalCalls = ApiFuncs.readROI.mock.calls.length;
-        const lastParams = ApiFuncs.readROI.mock.calls[totalCalls - 1][0].params;
-        expect(lastParams.startDate).toBe(optionValues[3]);
-    });
-
-});
-*/
-
-describe('AutomationCalculator2()', () => {
+describe('AutomationCalculator()', () => {
 
     let wrapper;
 
@@ -458,64 +405,6 @@ describe('AutomationCalculator2()', () => {
         const totalCalls = ApiFuncs.readROI.mock.calls.length;
         const lastParams = ApiFuncs.readROI.mock.calls[totalCalls - 1][0].params;
         expect(lastParams.startDate).toBe(optionValues[3]);
-    });
-
-    /*
-    it('does something else 2', async () => {
-        await act(async () => {
-            //jest.runAllImmediates();
-            console.log('acting !!!!');
-            //jest.runAllImmediates();
-        });
-    });
-    */
-
-    xit('setCostAutomation triggers correct totalSavings calculation', async () => {
-        /*
-        act(() => {
-            page.setCostManual(1);
-            page.setCostAutomation(100);
-        });
-        if (page.formattedData.length > 0) {
-            expect(page.totalSavings).toEqual('$' + page.formattedData[0].delta.toFixed(2));
-        }
-        */
-        /*
-          <TextInput
-              id="manual-cost"
-              type="number"
-              step="any"
-              min="0"
-              aria-label="manual-cost"
-              value={ parseFloat(costManual) }
-              onChange={ (e) => setCostManual(e) }
-          />
-        */
-
-        // fire off a selection event
-        let event = {
-            currentTarget: { value: '1999-01-01' }
-        };
-        await act(async () => {
-            wrapper.find('FormSelect').find('select').prop('onChange')(event);
-            //wrapper.update();
-        });
-        wrapper.update();
-        console.log(wrapper.find('TextInput').length);
-
-        let manualinput;
-        let automationinput;
-        //wrapper.update();
-        await act(async () => {
-            console.log(wrapper.find('PageHeaderTitle').props().title);
-            console.log(wrapper.find('CardBody').length);
-            console.log(wrapper.find('EmptyState').length);
-            console.log(wrapper.find('TextInput').length);
-            wrapper.find('TextInput').map(ti => {
-                console.log(ti);
-            })
-        });
-
     });
 
 });
