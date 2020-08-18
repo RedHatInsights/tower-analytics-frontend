@@ -1,3 +1,4 @@
+/*eslint-disable */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
@@ -175,103 +176,123 @@ const initialQueryParams = {
     endDate: moment.utc().format('YYYY-MM-DD')
 };
 
-export const automationCalculatorMethods = () => {
-    // create our array to feed to D3
-    const formatData = (response, defaults) => {
-        return response.reduce(
-            (
-                formatted,
-                {
-                    name,
-                    template_id: id,
-                    successful_run_count,
-                    successful_elapsed_sum,
-                    successful_host_run_count_avg,
-                    successful_host_run_count,
-                    elapsed_sum,
-                    failed_elapsed_sum,
-                    orgs,
-                    clusters,
-                    template_automation_percentage
-                }
-            ) => {
-                formatted.push({
-                    name,
-                    id,
-                    run_count: successful_run_count,
-                    host_count: successful_host_run_count_avg || 0,
-                    successful_host_run_count,
-                    delta: 0,
-                    isActive: true,
-                    calculations: [
-                        {
-                            type: 'Manual',
-                            avg_run: defaults.defaultAvgRunVal,
-                            cost: 0
-                        },
-                        {
-                            type: 'Automated',
-                            avg_run: successful_elapsed_sum || 0,
-                            cost: 0
-                        }
-                    ],
-                    orgs,
-                    clusters,
-                    elapsed_sum,
-                    failed_elapsed_sum,
-                    successful_elapsed_sum,
-                    template_automation_percentage
-                });
-                return formatted;
-            },
-            []
-        );
-    };
-
-    const updateData = (seconds, id, data) => {
-        let updatedData = [ ...data ];
-        updatedData.map((datum) => {
-            if (datum.id === id) {
-                // Update manual calculations
-                datum.calculations[0].avg_run = seconds;
-                datum.calculations[0].total = seconds * datum.successful_host_run_count;
+// create our array to feed to D3
+export const formatData = (response, defaults) => {
+    return response.reduce(
+        (
+            formatted,
+            {
+                name,
+                template_id: id,
+                successful_run_count,
+                successful_elapsed_sum,
+                successful_host_run_count_avg,
+                successful_host_run_count,
+                elapsed_sum,
+                failed_elapsed_sum,
+                orgs,
+                clusters,
+                template_automation_percentage
             }
-        });
-        return updatedData;
-    };
-
-    const handleManualTimeChange = (minutes) => {
-        const seconds = convertMinsToSeconds(minutes);
-        return seconds;
-    };
-
-    const formatSelectedIds = (arr, id) => {
-        let selected;
-        if (arr.includes(id)) {
-            selected = [ ...arr ].filter((s) => s !== id);
-        } else {
-            selected = [ ...arr, id ];
-        }
-
-        return selected;
-    };
-
-    const handleToggle = (id, selected) => {
-        const currentSelection = [ ...selected ];
-        const newSelection = formatSelectedIds(currentSelection, id);
-        return newSelection;
-    };
-
-    return {
-        formatData,
-        updateData,
-        handleManualTimeChange,
-        formatSelectedIds,
-        handleToggle
-    };
+        ) => {
+            formatted.push({
+                name,
+                id,
+                run_count: successful_run_count,
+                host_count: successful_host_run_count_avg || 0,
+                successful_host_run_count,
+                delta: 0,
+                isActive: true,
+                calculations: [
+                    {
+                        type: 'Manual',
+                        avg_run: defaults.defaultAvgRunVal,
+                        cost: 0
+                    },
+                    {
+                        type: 'Automated',
+                        avg_run: successful_elapsed_sum || 0,
+                        cost: 0
+                    }
+                ],
+                orgs,
+                clusters,
+                elapsed_sum,
+                failed_elapsed_sum,
+                successful_elapsed_sum,
+                template_automation_percentage
+            });
+            return formatted;
+        },
+        []
+    );
 };
 
-export const useAutomationFormula = () => {
+export const updateData = (seconds, id, data) => {
+    let updatedData = [ ...data ];
+    updatedData.map((datum) => {
+        if (datum.id === id) {
+            // Update manual calculations
+            datum.calculations[0].avg_run = seconds;
+            datum.calculations[0].total = seconds * datum.successful_host_run_count;
+        }
+    });
+    return updatedData;
+};
+
+export const handleManualTimeChange = (minutes) => {
+    const seconds = convertMinsToSeconds(minutes);
+    return seconds;
+};
+
+export const formatSelectedIds = (arr, id) => {
+    let selected;
+    if (arr.includes(id)) {
+        selected = [ ...arr ].filter((s) => s !== id);
+    } else {
+        selected = [ ...arr, id ];
+    }
+
+    return selected;
+};
+
+export const handleToggle = (id, selected) => {
+    const currentSelection = [ ...selected ];
+    const newSelection = formatSelectedIds(currentSelection, id);
+    return newSelection;
+};
+
+export const computeTotalSavings = (formattedData, costAutomation, costManual) => {
+    let data = [ ...formattedData ];
+    let total = 0;
+    let costAutomationPerHour;
+    let costManualPerHour;
+
+    data.forEach((datum) => {
+        costAutomationPerHour =
+            convertSecondsToHours(datum.successful_elapsed_sum) * costAutomation;
+        costManualPerHour =
+            convertSecondsToHours(datum.calculations[0].avg_run) *
+            datum.successful_host_run_count *
+            costManual;
+        total += calculateDelta(costAutomationPerHour, costManualPerHour);
+        datum.delta = calculateDelta(costAutomationPerHour, costManualPerHour);
+        datum.calculations[0].cost = costManualPerHour;
+        datum.calculations[1].cost = costAutomationPerHour;
+    });
+
+    return total;
+};
+
+export const floatToStringWithCommas = (total) => {
+    return total
+        .toFixed(2)
+        .toString()
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+const AutomationCalculator = ({ history }) => {
+
     const [ isLoading, setIsLoading ] = useState(true);
     const [ costManual, setCostManual ] = useState(defaultCostManual);
     const [ costAutomation, setCostAutomation ] = useState(defaultCostAutomation);
@@ -279,33 +300,23 @@ export const useAutomationFormula = () => {
     const [ unfilteredData, setUnfilteredData ] = useState([]);
     const [ formattedData, setFormattedData ] = useState([]);
     const [ templatesList, setTemplatesList ] = useState([]);
-    const [ roiData, setRoiData ] = useState([]);
     const [ selectedIds, setSelectedIds ] = useState([]);
+    const [ preflightError, setPreFlightError ] = useState(null);
 
-    const { formatData } = automationCalculatorMethods();
+    // default to the past year (n - 365 days)
+    const [ roiTimeFrame, setRoiTimeFrame ] = useState(timeFrameOptions[1].value);
+    const { queryParams, setStartDateAsString } = useQueryParams(
+        initialQueryParams
+    );
+
+    const handleOnChange = (value) => {
+        setStartDateAsString(value);
+        setRoiTimeFrame(value);
+    };
 
     useEffect(() => {
-        let data = [ ...formattedData ];
-        let total = 0;
-        let costAutomationPerHour;
-        let costManualPerHour;
-
-        data.forEach((datum) => {
-            costAutomationPerHour =
-        convertSecondsToHours(datum.successful_elapsed_sum) * costAutomation;
-            costManualPerHour =
-        convertSecondsToHours(datum.calculations[0].avg_run) *
-        datum.successful_host_run_count *
-        costManual;
-            total += calculateDelta(costAutomationPerHour, costManualPerHour);
-            datum.delta = calculateDelta(costAutomationPerHour, costManualPerHour);
-            datum.calculations[0].cost = costManualPerHour;
-            datum.calculations[1].cost = costAutomationPerHour;
-        });
-        const totalWithCommas = total
-        .toFixed(2)
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        const total = computeTotalSavings(formattedData, costAutomation, costManual);
+        const totalWithCommas = floatToStringWithCommas(total);
         setTotalSavings('$' + totalWithCommas);
     }, [ formattedData, costAutomation, costManual ]);
 
@@ -324,72 +335,6 @@ export const useAutomationFormula = () => {
     }, [ selectedIds ]);
 
     useEffect(() => {
-        const formatted = formatData(roiData, {
-            defaultAvgRunVal,
-            defaultCostAutomation,
-            defaultCostManual
-        });
-        setUnfilteredData(formatted);
-        setFormattedData(formatted);
-        setTemplatesList(formatted);
-    }, [ roiData ]);
-
-    return {
-        isLoading,
-        setIsLoading,
-        costManual,
-        setCostManual,
-        costAutomation,
-        setCostAutomation,
-        totalSavings,
-        formattedData,
-        setFormattedData,
-        templatesList,
-        selectedIds,
-        setSelectedIds,
-        setRoiData,
-        unfilteredData
-    };
-};
-
-const AutomationCalculator = ({ history }) => {
-
-    // default to the past year (n - 365 days)
-    const [ roiTimeFrame, setRoiTimeFrame ] = useState(timeFrameOptions[1].value);
-    const [ preflightError, setPreFlightError ] = useState(null);
-
-    const {
-        updateData,
-        handleManualTimeChange,
-        handleToggle
-    } = automationCalculatorMethods();
-
-    const {
-        isLoading,
-        setIsLoading,
-        costManual,
-        setCostManual,
-        costAutomation,
-        setCostAutomation,
-        totalSavings,
-        formattedData,
-        setFormattedData,
-        templatesList,
-        selectedIds,
-        setSelectedIds,
-        setRoiData
-    } = useAutomationFormula();
-
-    const { queryParams, setStartDateAsString } = useQueryParams(
-        initialQueryParams
-    );
-
-    const handleOnChange = (value) => {
-        setStartDateAsString(value);
-        setRoiTimeFrame(value);
-    };
-
-    useEffect(() => {
         let ignore = false;
         const getData = () => {
             return readROI({ params: queryParams });
@@ -403,7 +348,14 @@ const AutomationCalculator = ({ history }) => {
             });
             getData().then(({ templates: roiData = []}) => {
                 if (!ignore) {
-                    setRoiData(roiData);
+                    const formatted = formatData(roiData, {
+                        defaultAvgRunVal,
+                        defaultCostAutomation,
+                        defaultCostManual
+                    });
+                    setUnfilteredData(formatted);
+                    setFormattedData(formatted);
+                    setTemplatesList(formatted);
                     setIsLoading(false);
                 }
             });
