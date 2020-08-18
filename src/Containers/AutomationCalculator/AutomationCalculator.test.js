@@ -5,6 +5,7 @@ import { act } from 'react-dom/test-utils';
 import { automationCalculatorMethods, useAutomationFormula } from './AutomationCalculator';
 import { 
     computeTotalSavings,
+    filterDataBySelectedIds,
     formatData,
     formatSelectedIds,
     handleManualTimeChange,
@@ -34,6 +35,7 @@ const mockInsights = {
     }
 };
 
+/*
 // roidata
 const mockResponse = {
     ok: true,
@@ -43,6 +45,7 @@ ApiFuncs.preflightRequest = jest.fn();
 ApiFuncs.preflightRequest.mockResolvedValue(mockResponse);
 ApiFuncs.readROI = jest.fn();
 ApiFuncs.readROI.mockResolvedValue(mockResponse);
+*/
 
 const testResponse = [
     {
@@ -94,6 +97,17 @@ const expectedObj = {
     template_automation_percentage: expect.any(Number)
 };
 
+// roidata
+const mockResponse = {
+    ok: true,
+    json: () => Promise.resolve(testResponse)
+};
+ApiFuncs.preflightRequest = jest.fn();
+ApiFuncs.preflightRequest.mockResolvedValue(mockResponse);
+ApiFuncs.readROI = jest.fn();
+ApiFuncs.readROI.mockResolvedValue(mockResponse);
+
+/*
 const TestHook = ({ callback }) => {
     callback();
     return null;
@@ -102,6 +116,7 @@ const TestHook = ({ callback }) => {
 const testHook = (callback) => {
     mount(<TestHook callback={ callback } />);
 };
+*/
 
 let page;
 
@@ -137,12 +152,14 @@ describe('AutomationCalculator Formulas', () => {
             expect(page.templatesList).toStrictEqual(expect.arrayContaining([ expect.objectContaining(expectedObj) ]));
         }
     });
-    xit('setSelectedIds removes templates that match Id(s) passed from formattedData', () => {
-        expect(page.formattedData).toStrictEqual(expect.arrayContaining([ expect.objectContaining(expectedObj) ]));
-        act(() => {
-            page.setSelectedIds([ 1 ]);
-        });
-        expect(page.formattedData).toEqual([]);
+    it('setSelectedIds removes templates that match Id(s) passed from formattedData', () => {
+        let testResponses = [testResponse, {...testResponse}]
+        testResponses[0].id = 0;
+        testResponses[1].id = 1;
+        const filteredData = filterDataBySelectedIds(testResponses, [1]);
+        expect(filteredData.length).toEqual(1);
+        expect(filteredData[0].id).toEqual(0);
+
     });
     xit('setSelectedIds sets isActive to false in templatesList if the template matches the passed id', () => {
         if (page.templatesList.length > 0) {
@@ -362,7 +379,7 @@ describe('AutomationCalculator()', () => {
 
     });
 
-    it('mounts and there are 5 data values', async () => {
+    it('mounts and there are 5 dropdown values', async () => {
         await act(async () => {
             //console.log('acting !!!!');
             const fselect = wrapper.find('FormSelect');
@@ -405,6 +422,22 @@ describe('AutomationCalculator()', () => {
         const totalCalls = ApiFuncs.readROI.mock.calls.length;
         const lastParams = ApiFuncs.readROI.mock.calls[totalCalls - 1][0].params;
         expect(lastParams.startDate).toBe(optionValues[3]);
+    });
+
+    it('setSelectedIds removes templates that match Id(s) passed from formattedData', async () => {
+
+        await act(async () => {
+            wrapper.find('FormSelect').find('select').prop('onChange')({currentTarget: {value: '1999-01-01'}});
+        });
+        wrapper.update();
+        const templateDetails = wrapper.find('TemplateDetail');
+        const toggleOnIcons = wrapper.find('ToggleOnIcon');
+        const toggleOffIcons = wrapper.find('ToggleOffIcon');
+        console.log('templateDetails', templateDetails.length);
+        console.log('toggleOnIcons', toggleOnIcons.length);
+        console.log('toggleOffIcons', toggleOffIcons.length);
+
+        //console.log(wrapper.debug());
     });
 
 });
