@@ -125,35 +125,7 @@ describe('AutomationCalculator Formulas', () => {
     const defaultCostAutomation = 20;
     const defaultCostManual = 50;
 
-    /*
-    beforeEach(() => {
-        testHook(() => {
-            page = useAutomationFormula();
-        });
-        act(() => {
-            page.setRoiData(testResponse);
-        });
-    });
-    afterEach(() => {
-        act(() => {
-            page.setSelectedIds([]);
-        });
-    });
-    */
-    xit('setRoiData creates unfilteredData, templatesList and formattedData arrays', () => {
-        if (page.unfilteredData.length > 0) {
-            expect(page.unfilteredData).toStrictEqual(expect.arrayContaining([ expect.objectContaining(expectedObj) ]));
-        }
-
-        if (page.formattedData.length > 0) {
-            expect(page.formattedData).toStrictEqual(expect.arrayContaining([ expect.objectContaining(expectedObj) ]));
-        }
-
-        if (page.templatesList.length > 0) {
-            expect(page.templatesList).toStrictEqual(expect.arrayContaining([ expect.objectContaining(expectedObj) ]));
-        }
-    });
-    it('setSelectedIds removes templates that match Id(s) passed from formattedData', () => {
+    it('filterDataBySelectedIds removes templates that match Id(s) passed from formattedData', () => {
         let testResponses = [testResponse, {...testResponse}]
         testResponses[0].id = 0;
         testResponses[1].id = 1;
@@ -162,35 +134,19 @@ describe('AutomationCalculator Formulas', () => {
         expect(filteredData[0].id).toEqual(0);
 
     });
-    it('setSelectedIds sets isActive to false in templatesList if the template matches the passed id', () => {
-        /*
-        if (page.templatesList.length > 0) {
-            expect(page.templatesList[0].isActive).toEqual(true);
-        }
-
-        act(() => {
-            page.setSelectedIds([ 1 ]);
-        });
-        if (page.templatesList.length > 0) {
-            expect(page.templatesList[0].isActive).toEqual(false);
-        }
-        */
-        let testResponses = [{...testResponse}, {...testResponse}]
+    it('setTemplatesIsActive sets isActive to false in templatesList if the template matches the passed id', () => {
+        let testResponses = [{...testResponse[0]}, {...testResponse[0]}]
         testResponses[0].id = 0;
+        testResponses[0].template_id = 0;
         testResponses[1].id = 1;
+        testResponses[1].template_id = 1;
 
-        const templatesList = formatData(testResponses, { defaultAvgRunVal: 3600 });
-        console.log(templatesList);
-        setTemplatesIsActive(templatesList, [1]);
-        //console.log(templatesList);
+        setTemplatesIsActive(testResponses, [1]);
+        expect(testResponses[0].isActive).toEqual(true);
+        expect(testResponses[1].isActive).toEqual(false);
 
     });
-    xit('setformattedData triggers totalSavings calculation', () => {
-        const expected = (page.formattedData[0].calculations[0].cost - page.formattedData[0].calculations[1].cost).toFixed(2)
-        .toString();
-        expect(page.totalSavings).toEqual('$' + expected);
-    });
-    it('setCostManual triggers totalSavings calculation', () => {
+    it('computeTotalSavings makes the correct total with manual cost set to 0', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, defaultCostAutomation, 0);
         //console.log(formattedData);
@@ -199,14 +155,7 @@ describe('AutomationCalculator Formulas', () => {
         expect(total).toEqual(0);
 
     });
-    it('setCostAutomation triggers totalSavings calculation', () => {
-        const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
-        const total = computeTotalSavings(formattedData, 0, defaultCostManual);
-        //console.log('total', total);
-        expect(total).toEqual(50);
-
-    });
-    it('setCostManual triggers correct totalSavings calculation', () => {
+    it('computeTotalSavings makes the correct total with manual cost set to 10', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, defaultCostAutomation, 10);
         //console.log(formattedData);
@@ -215,20 +164,27 @@ describe('AutomationCalculator Formulas', () => {
         expect(total).toEqual(expected);
 
     });
-    it('setCostManual sets correct delta calculation for formattedData', () => {
+    it('computeTotalSavings makes the correct total with automated cost set to 0', () => {
+        const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
+        const total = computeTotalSavings(formattedData, 0, defaultCostManual);
+        //console.log('total', total);
+        expect(total).toEqual(50);
+
+    });
+    it('computeTotalSavings makes the correct total with automated cost set to 10', () => {
+        const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
+        const total = computeTotalSavings(formattedData, 10, defaultCostManual);
+        //console.log('total', total);
+        expect(total).toEqual(49.99722222222222);
+
+    });
+    it('computeTotalSavings sets correct delta calculation for formattedData', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, defaultCostAutomation, 10);
         //console.log(formattedData);
         const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost
         //console.log('expected', expected);
         expect(formattedData[0].delta).toEqual(expected);
-
-    });
-    it('setCostAutomation triggers correct totalSavings calculation', () => {
-        const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
-        const total = computeTotalSavings(formattedData, 10, defaultCostManual);
-        //console.log('total', total);
-        expect(total).toEqual(49.99722222222222);
 
     });
 });
