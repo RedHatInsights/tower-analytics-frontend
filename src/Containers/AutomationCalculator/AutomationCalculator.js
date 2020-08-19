@@ -351,9 +351,12 @@ const AutomationCalculator = ({ history }) => {
 
     useEffect(() => {
         let ignore = false;
+        console.log('ignore == false');
         const getData = () => {
-            //console.log('calling readROI ...', queryParams);
-            return readROI({ params: queryParams });
+            console.log('useeffect.getData readROI ...', queryParams);
+            const result = readROI({ params: queryParams });
+            console.log('useeffect.getData readROI.result', result);
+            return result;
         };
 
         async function initializeWithPreflight() {
@@ -362,14 +365,16 @@ const AutomationCalculator = ({ history }) => {
             //console.log('isLoading', isLoading);
             await window.insights.chrome.auth.getUser();
             await preflightRequest().catch((error) => {
-                //console.log('preflightError', error);
+                console.log('useeffect.preflightrequest preflightError', error);
                 setPreFlightError({ preflightError: error });
             });
             getData().then(({ templates: roiData = []}) => {
-                //console.log('getData.then() ...');
+                console.log('getData.then() ...');
+                console.log('useeffect.getData.then roiData', roiData);
+                console.log('useeffect.getData.then ignore', ignore);
                 //console.log('roiData', roiData);
                 if (!ignore) {
-                    //console.log('call formatData ...');
+                    console.log('call formatData ...');
                     const formatted = formatData(roiData, {
                         defaultAvgRunVal,
                         defaultCostAutomation,
@@ -380,6 +385,7 @@ const AutomationCalculator = ({ history }) => {
                     setFormattedData(formatted);
                     setTemplatesList(formatted);
                     setIsLoading(false);
+                    console.log('useeffect.getData.then formatted', formatted);
                 }
             });
         }
@@ -390,8 +396,10 @@ const AutomationCalculator = ({ history }) => {
 
 
     useEffect(() => {
-        //console.log('preflightError', preflightError);
-        //console.log('isLoading', isLoading);
+        console.log('preflightError', preflightError);
+        console.log('isLoading', isLoading);
+        console.log('unfilteredData', unfilteredData);
+        console.log('formattedData', formattedData);
     }, []);
 
     const redirectToJobExplorer = (templateId) => {

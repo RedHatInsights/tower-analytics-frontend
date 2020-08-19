@@ -2,6 +2,7 @@
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 
 import { act } from 'react-dom/test-utils';
+import { when } from 'jest-when';
 import { automationCalculatorMethods, useAutomationFormula } from './AutomationCalculator';
 import { 
     computeTotalSavings,
@@ -99,14 +100,85 @@ const expectedObj = {
 };
 
 // roidata
-const mockResponse = {
+const mockPreflightResponse = {
+    ok: true,
+    json: () => Promise.resolve({})
+};
+const mockRoiResponse = {
     ok: true,
     json: () => Promise.resolve(testResponse)
 };
-ApiFuncs.preflightRequest = jest.fn();
-ApiFuncs.preflightRequest.mockResolvedValue(mockResponse);
+
+/*
+const mockRoiResponseFunction = () => {
+    console.log('mockResponseFunction called ...');
+    return Promise.resolve(mockRoiResponse());
+};
+*/
+
+
+//ApiFuncs.preflightRequest = jest.fn();
+//ApiFuncs.preflightRequest.mockResolvedValue(mockPreflightResponse);
+/*
 ApiFuncs.readROI = jest.fn();
-ApiFuncs.readROI.mockResolvedValue(mockResponse);
+ApiFuncs.readROI.mockResolvedValue([testResponse]);
+//ApiFuncs.readROI.mockReturnValue(mockRoiResponse);
+//ApiFuncs.readROI.bind(mockRoiResponseFunction);
+//ApiFuncs.readROI.mockResolvedValue(mockRoiResponseFunction);
+ApiFuncs.readROI((err, val) => console.log(val));
+*/
+
+
+/*
+const mockSuccessResponse = [testResponse];
+const mockJsonPromise = Promise.resolve(mockSuccessResponse);
+const mockFetchPromise = Promise.resolve({
+    json: () => mockJsonPromise,
+});
+*/
+//jest.spyOn(global, 'fetch').mockImplementation(() => mockFetchPromise);
+//global.fetch = jest.fn().mockImplementation(() => mockFetchPromise);
+
+/*
+global.fetch = jest.fn(async (args) => {
+  const nargs = await args;
+  console.log(args);
+  console.log(nargs);
+  console.log(args.URL);
+  console.log(args['URL']);
+  //console.log(this);
+  //console.log(this.mock);
+  return Promise.resolve({
+    json: () => Promise.resolve({}),
+  })
+});
+*/
+global.fetch = jest.fn();
+
+//const preflightEndpoint = `/api/tower-analytics/${apiVersion}/authorized/`;
+when(global.fetch).calledWith(expect.stringContaining('/authorized/')).mockReturnValue(
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve({}),
+  })
+);
+
+//const roiEndpoint = `/api/tower-analytics/${apiVersion}/roi_templates/`;
+when(global.fetch).calledWith(expect.not.stringContaining('/authorized/')).mockReturnValue(
+  Promise.resolve({
+    ok: true,
+    json: () => Promise.resolve([testResponse]),
+  })
+);
+
+/*
+//const preflightEndpoint = `/api/tower-analytics/${apiVersion}/authorized/`;
+when(global.fetch).calledWith('/api/tower-analytics/v0/authorized/').mockReturnValue(
+  Promise.resolve({
+    json: () => Promise.resolve({}),
+  })
+);
+*/
 
 /*
 const TestHook = ({ callback }) => {
@@ -331,6 +403,9 @@ describe('AutomationCalculator()', () => {
 
     beforeEach(async () => {
 
+        fetch.mockClear();
+        //fetch.resetMocks();
+
         //const mockStore = configureStore();
         //const store = mockStore({});
         //global.insights = mockInsights;
@@ -364,7 +439,6 @@ describe('AutomationCalculator()', () => {
         });
     });
 
-    // FIXME
     it('changes the api params according to selection', async () => {
         const fselect = wrapper.find('FormSelect');
 
@@ -386,10 +460,12 @@ describe('AutomationCalculator()', () => {
         // verify the value change was made
         expect(wrapper.find('FormSelect').find('select').props().value).toBe(optionValues[3]);
 
-        expect(ApiFuncs.readROI).toHaveBeenCalled();
-        const totalCalls = ApiFuncs.readROI.mock.calls.length;
-        const lastParams = ApiFuncs.readROI.mock.calls[totalCalls - 1][0].params;
-        expect(lastParams.startDate).toBe(optionValues[3]);
+        // verify the correct startDate url param was used
+        const totalCalls = global.fetch.mock.calls.length;
+        const lastUrl = global.fetch.mock.calls[totalCalls - 1][0].toString();
+        console.log('lastUrl', lastUrl);
+        expect(lastUrl.includes('startDate=' + optionValues[3])).toBe(true);
+
     });
 
     it('setSelectedIds removes templates that match Id(s) passed from formattedData', async () => {
@@ -406,6 +482,9 @@ describe('AutomationCalculator()', () => {
         //console.log('toggleOffIcons', toggleOffIcons.length);
 
         //console.log(wrapper.debug());
+        //someMockFunction.mock.calls.length
+        //someMockFunction.mock.calls.length
+        //console.log(ApiFuncs.readROI.mock.calls.length);
     });
 
 });
