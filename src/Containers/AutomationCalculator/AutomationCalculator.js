@@ -292,15 +292,26 @@ export const floatToStringWithCommas = (total) => {
 }
 
 export const filterDataBySelectedIds = (unfilteredData, selectedIds) => {
-    console.log('filtering by id (data) ...', unfilteredData);
-    console.log('filtering by id (selectedids) ...', selectedIds);
+    //console.log('filtering by id (data) ...', unfilteredData);
+    //console.log('filtering by id (selectedids) ...', selectedIds);
     const filteredData = unfilteredData.filter(
         ({ id }) => {
-            console.log('thisid', id);
+            //console.log('thisid', id);
             return !selectedIds.includes(id)
         }
     );
     return filteredData;
+}
+
+export const setTemplatesIsActive = (templatesList, selectedIds) => {
+    templatesList.map((l) => {
+        if (selectedIds.includes(l.id)) {
+            l.isActive = false;
+        } else {
+            l.isActive = true;
+        }
+    });
+    return templatesList;
 }
 
 const AutomationCalculator = ({ history }) => {
@@ -333,50 +344,38 @@ const AutomationCalculator = ({ history }) => {
     }, [ formattedData, costAutomation, costManual ]);
 
     useEffect(() => {
-        //console.log({ id });
-        /*
-        const filteredData = unfilteredData.filter(
-            ({ id }) => !selectedIds.includes(id)
-        );
-        */
         const filteredData = filterDataBySelectedIds(unfilteredData, selectedIds);
-        templatesList.map((l) => {
-            if (selectedIds.includes(l.id)) {
-                l.isActive = false;
-            } else {
-                l.isActive = true;
-            }
-        });
+        setTemplatesIsActive(templatesList, selectedIds);
         setFormattedData(filteredData);
     }, [ selectedIds ]);
 
     useEffect(() => {
         let ignore = false;
         const getData = () => {
-            console.log('calling readROI ...', queryParams);
+            //console.log('calling readROI ...', queryParams);
             return readROI({ params: queryParams });
         };
 
         async function initializeWithPreflight() {
-            console.log('isLoading', isLoading);
+            //console.log('isLoading', isLoading);
             setIsLoading(true);
-            console.log('isLoading', isLoading);
+            //console.log('isLoading', isLoading);
             await window.insights.chrome.auth.getUser();
             await preflightRequest().catch((error) => {
-                console.log('preflightError', error);
+                //console.log('preflightError', error);
                 setPreFlightError({ preflightError: error });
             });
             getData().then(({ templates: roiData = []}) => {
-                console.log('getData.then() ...');
-                console.log('roiData', roiData);
+                //console.log('getData.then() ...');
+                //console.log('roiData', roiData);
                 if (!ignore) {
-                    console.log('call formatData ...');
+                    //console.log('call formatData ...');
                     const formatted = formatData(roiData, {
                         defaultAvgRunVal,
                         defaultCostAutomation,
                         defaultCostManual
                     });
-                    console.log('formatted.length', formatted.length);
+                    //console.log('formatted.length', formatted.length);
                     setUnfilteredData(formatted);
                     setFormattedData(formatted);
                     setTemplatesList(formatted);
@@ -391,8 +390,8 @@ const AutomationCalculator = ({ history }) => {
 
 
     useEffect(() => {
-        console.log('preflightError', preflightError);
-        console.log('isLoading', isLoading);
+        //console.log('preflightError', preflightError);
+        //console.log('isLoading', isLoading);
     }, []);
 
     const redirectToJobExplorer = (templateId) => {

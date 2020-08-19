@@ -10,6 +10,7 @@ import {
     formatSelectedIds,
     handleManualTimeChange,
     handleToggle,
+    setTemplatesIsActive,
     updateData 
 } from './AutomationCalculator';
 
@@ -161,7 +162,8 @@ describe('AutomationCalculator Formulas', () => {
         expect(filteredData[0].id).toEqual(0);
 
     });
-    xit('setSelectedIds sets isActive to false in templatesList if the template matches the passed id', () => {
+    it('setSelectedIds sets isActive to false in templatesList if the template matches the passed id', () => {
+        /*
         if (page.templatesList.length > 0) {
             expect(page.templatesList[0].isActive).toEqual(true);
         }
@@ -172,6 +174,16 @@ describe('AutomationCalculator Formulas', () => {
         if (page.templatesList.length > 0) {
             expect(page.templatesList[0].isActive).toEqual(false);
         }
+        */
+        let testResponses = [{...testResponse}, {...testResponse}]
+        testResponses[0].id = 0;
+        testResponses[1].id = 1;
+
+        const templatesList = formatData(testResponses, { defaultAvgRunVal: 3600 });
+        console.log(templatesList);
+        setTemplatesIsActive(templatesList, [1]);
+        //console.log(templatesList);
+
     });
     xit('setformattedData triggers totalSavings calculation', () => {
         const expected = (page.formattedData[0].calculations[0].cost - page.formattedData[0].calculations[1].cost).toFixed(2)
@@ -181,41 +193,41 @@ describe('AutomationCalculator Formulas', () => {
     it('setCostManual triggers totalSavings calculation', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, defaultCostAutomation, 0);
-        console.log(formattedData);
+        //console.log(formattedData);
         const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost
-        console.log('expected', expected);
+        //console.log('expected', expected);
         expect(total).toEqual(0);
 
     });
     it('setCostAutomation triggers totalSavings calculation', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, 0, defaultCostManual);
-        console.log('total', total);
+        //console.log('total', total);
         expect(total).toEqual(50);
 
     });
     it('setCostManual triggers correct totalSavings calculation', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, defaultCostAutomation, 10);
-        console.log(formattedData);
+        //console.log(formattedData);
         const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost
-        console.log('expected', expected);
+        //console.log('expected', expected);
         expect(total).toEqual(expected);
 
     });
     it('setCostManual sets correct delta calculation for formattedData', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, defaultCostAutomation, 10);
-        console.log(formattedData);
+        //console.log(formattedData);
         const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost
-        console.log('expected', expected);
+        //console.log('expected', expected);
         expect(formattedData[0].delta).toEqual(expected);
 
     });
     it('setCostAutomation triggers correct totalSavings calculation', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, 10, defaultCostManual);
-        console.log('total', total);
+        //console.log('total', total);
         expect(total).toEqual(49.99722222222222);
 
     });
@@ -433,9 +445,9 @@ describe('AutomationCalculator()', () => {
         const templateDetails = wrapper.find('TemplateDetail');
         const toggleOnIcons = wrapper.find('ToggleOnIcon');
         const toggleOffIcons = wrapper.find('ToggleOffIcon');
-        console.log('templateDetails', templateDetails.length);
-        console.log('toggleOnIcons', toggleOnIcons.length);
-        console.log('toggleOffIcons', toggleOffIcons.length);
+        //console.log('templateDetails', templateDetails.length);
+        //console.log('toggleOnIcons', toggleOnIcons.length);
+        //console.log('toggleOffIcons', toggleOffIcons.length);
 
         //console.log(wrapper.debug());
     });
