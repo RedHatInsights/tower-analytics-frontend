@@ -163,11 +163,14 @@ when(global.fetch).calledWith(expect.stringContaining('/authorized/')).mockRetur
   })
 );
 
+let roiTemplateJson = { 'templates': [...testResponse] };
+roiTemplateJson.templates[0].delta = 0
+
 //const roiEndpoint = `/api/tower-analytics/${apiVersion}/roi_templates/`;
 when(global.fetch).calledWith(expect.not.stringContaining('/authorized/')).mockReturnValue(
   Promise.resolve({
     ok: true,
-    json: () => Promise.resolve([testResponse]),
+    json: () => Promise.resolve(roiTemplateJson),
   })
 );
 
@@ -410,6 +413,10 @@ describe('AutomationCalculator()', () => {
         //const store = mockStore({});
         //global.insights = mockInsights;
 
+        let d3Container = document.createElement('div');
+        d3Container.setAttribute('id', 'd3-roi-chart-root');
+        document.body.appendChild(d3Container);
+
         // full mount ...
         await act(async () => {
             const mockStore = configureStore();
@@ -422,7 +429,13 @@ describe('AutomationCalculator()', () => {
 
     });
 
+    afterEach(async () => {
+        let d3Container = document.getElementById('d3-roi-chart-root');
+        d3Container.remove();
+    });
+
     it('mounts and there are 5 dropdown values', async () => {
+
         await act(async () => {
             //console.log('acting !!!!');
             const fselect = wrapper.find('FormSelect');
@@ -470,6 +483,7 @@ describe('AutomationCalculator()', () => {
 
     it('setSelectedIds removes templates that match Id(s) passed from formattedData', async () => {
 
+
         await act(async () => {
             wrapper.find('FormSelect').find('select').prop('onChange')({currentTarget: {value: '1999-01-01'}});
         });
@@ -477,11 +491,18 @@ describe('AutomationCalculator()', () => {
         const templateDetails = wrapper.find('TemplateDetail');
         const toggleOnIcons = wrapper.find('ToggleOnIcon');
         const toggleOffIcons = wrapper.find('ToggleOffIcon');
-        //console.log('templateDetails', templateDetails.length);
-        //console.log('toggleOnIcons', toggleOnIcons.length);
-        //console.log('toggleOffIcons', toggleOffIcons.length);
 
-        //console.log(wrapper.debug());
+        global.fetch.mock.calls.forEach((call) => {
+            //console.log(call);
+            //console.log(call[0]);
+            console.log(call[0].toString());
+        });
+
+        console.log('templateDetails', templateDetails.length);
+        console.log('toggleOnIcons', toggleOnIcons.length);
+        console.log('toggleOffIcons', toggleOffIcons.length);
+
+        console.log(wrapper.debug());
         //someMockFunction.mock.calls.length
         //someMockFunction.mock.calls.length
         //console.log(ApiFuncs.readROI.mock.calls.length);
