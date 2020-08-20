@@ -1,4 +1,3 @@
-/*eslint-disable */
 /* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
@@ -286,22 +285,19 @@ export const computeTotalSavings = (formattedData, costAutomation, costManual) =
 
 export const floatToStringWithCommas = (total) => {
     return total
-        .toFixed(2)
-        .toString()
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-}
+    .toFixed(2)
+    .toString()
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+};
 
 export const filterDataBySelectedIds = (unfilteredData, selectedIds) => {
-    //console.log('filtering by id (data) ...', unfilteredData);
-    //console.log('filtering by id (selectedids) ...', selectedIds);
     const filteredData = unfilteredData.filter(
         ({ id }) => {
-            //console.log('thisid', id);
-            return !selectedIds.includes(id)
+            return !selectedIds.includes(id);
         }
     );
     return filteredData;
-}
+};
 
 export const setTemplatesIsActive = (templatesList, selectedIds) => {
     templatesList.map((l) => {
@@ -312,7 +308,7 @@ export const setTemplatesIsActive = (templatesList, selectedIds) => {
         }
     });
     return templatesList;
-}
+};
 
 const AutomationCalculator = ({ history }) => {
 
@@ -351,41 +347,28 @@ const AutomationCalculator = ({ history }) => {
 
     useEffect(() => {
         let ignore = false;
-        console.log('ignore == false');
         const getData = () => {
-            console.log('useeffect.getData readROI ...', queryParams);
             const result = readROI({ params: queryParams });
-            console.log('useeffect.getData readROI.result', result);
             return result;
         };
 
         async function initializeWithPreflight() {
-            //console.log('isLoading', isLoading);
             setIsLoading(true);
-            //console.log('isLoading', isLoading);
             await window.insights.chrome.auth.getUser();
             await preflightRequest().catch((error) => {
-                console.log('useeffect.preflightrequest preflightError', error);
                 setPreFlightError({ preflightError: error });
             });
             getData().then(({ templates: roiData = []}) => {
-                console.log('getData.then() ...');
-                console.log('useeffect.getData.then roiData', roiData);
-                console.log('useeffect.getData.then ignore', ignore);
-                //console.log('roiData', roiData);
                 if (!ignore) {
-                    console.log('call formatData ...');
                     const formatted = formatData(roiData, {
                         defaultAvgRunVal,
                         defaultCostAutomation,
                         defaultCostManual
                     });
-                    //console.log('formatted.length', formatted.length);
                     setUnfilteredData(formatted);
                     setFormattedData(formatted);
                     setTemplatesList(formatted);
                     setIsLoading(false);
-                    console.log('useeffect.getData.then formatted', formatted);
                 }
             });
         }
@@ -393,14 +376,6 @@ const AutomationCalculator = ({ history }) => {
         initializeWithPreflight();
         return () => (ignore = true);
     }, [ queryParams ]);
-
-
-    useEffect(() => {
-        console.log('preflightError', preflightError);
-        console.log('isLoading', isLoading);
-        console.log('unfilteredData', unfilteredData);
-        console.log('formattedData', formattedData);
-    }, []);
 
     const redirectToJobExplorer = (templateId) => {
         const { jobExplorer } = Paths;
