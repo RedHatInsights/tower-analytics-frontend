@@ -27,11 +27,15 @@ import {
 
 import { FilterIcon } from '@patternfly/react-icons';
 
-import GroupedBarChart from '../../Charts/GroupedBarChart';
+import groupedBarChart from '../../Charts/GroupedBarChart';
 import pieChart from '../../Charts/PieChart';
 import pieChartTooltip from '../../Charts/Tooltips/PieChartTooltip';
+import groupedBarChartTooltip from '../../Charts/Tooltips/GroupedBarChartTooltip';
 import { pfmulti } from '../../Utilities/colors';
 import ChartWrapper from '../../Charts/ChartWrapper';
+
+import { formatDate } from '../../Utilities/helpers';
+import useRedirect from '../../Utilities/useRedirect';
 
 const CardTitle = styled(PFCardTitle)`
   border-bottom: 2px solid #ebebeb;
@@ -99,14 +103,14 @@ const initialQueryParams = {
     limit: 5
 };
 
-const OrganizationStatistics = () => {
+const OrganizationStatistics = ({ history }) => {
+    const toJobExplorer = useRedirect(history, 'jobExplorer');
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ pieChart1Data, setPieChart1Data ] = useState([]);
     const [ pieChart2Data, setPieChart2Data ] = useState([]);
     const [ groupedBarChartData, setGroupedBarChartData ] = useState([]);
     const [ timeframe, setTimeframe ] = useState(31);
     const [ sortOrder, setSortOrder ] = useState('count:desc');
-    const [ firstRender, setFirstRender ] = useState(true);
     const [ isLoading, setIsLoading ] = useState(true);
     const {
         queryParams,
@@ -127,64 +131,53 @@ const OrganizationStatistics = () => {
         return setLimit(limit);
     };
 
+    const redirectToJobExplorer = ({ date, id }) => {
+        const formattedDate = formatDate(date);
+        const query = {
+            start_date: formattedDate,
+            end_date: formattedDate,
+            quick_date_range: 'custom',
+            org_id: id
+        };
+        toJobExplorer(query);
+    };
+
     useEffect(() => {
-        let ignore = false;
-        const fetchEndpoints = () => {
-            return Promise.all(
-                [
-                    readJobsByDateAndOrg({ params: queryParams }),
-                    readJobRunsByOrg({ params: queryParams }),
-                    readJobEventsByOrg({ params: queryParams })
-                ].map((p) => p.catch(() => []))
-            );
-        };
-
-        const update = async () => {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            fetchEndpoints().then(
-                ([
-                    { dates: groupedBarChartData = []},
-                    { usages: pieChart1Data = []},
-                    { usages: pieChart2Data = []}
-                ]) => {
-                    setGroupedBarChartData(groupedBarChartData);
-                    setPieChart1Data(pieChart1Data);
-                    setPieChart2Data(pieChart2Data);
-                    setIsLoading(false);
-                }
-            );
-        };
-
-        async function initializeWithPreflight() {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            await preflightRequest().catch((error) => {
+        window.insights.chrome.auth.getUser().then(() =>
+            preflightRequest().catch((error) => {
                 setPreFlightError({ preflightError: error });
-            });
-            fetchEndpoints().then(
-                ([
-                    { dates: groupedBarChartData = []},
-                    { usages: pieChart1Data = []},
-                    { usages: pieChart2Data = []}
-                ]) => {
-                    if (!ignore) {
-                        setGroupedBarChartData(groupedBarChartData);
-                        setPieChart1Data(pieChart1Data);
-                        setPieChart2Data(pieChart2Data);
-                        setFirstRender(false);
-                        setIsLoading(false);
-                    }
-                }
-            );
-        }
+            })
+        );
+    }, []);
 
-        if (firstRender) {
-            initializeWithPreflight();
-            return () => (ignore = true);
-        } else {
-            update();
-        }
+    useEffect(() => {
+        setIsLoading(true);
+        window.insights.chrome.auth.getUser().then(() => Promise.all(
+            [
+                readJobsByDateAndOrg({ params: queryParams }),
+                readJobRunsByOrg({ params: queryParams }),
+                readJobEventsByOrg({ params: queryParams })
+            ].map((p) => p.catch(() => []))
+        ).then(
+            ([
+                { dates: groupedBarChartData = []},
+                { usages: pieChart1Data = []},
+                { usages: pieChart2Data = []}
+            ]) => {
+                setGroupedBarChartData(groupedBarChartData.map(el => ({
+                    xAxis: new Date(el.date),
+                    group: el.orgs.map(k => ({
+                        id: k.id,
+                        name: k.org_name,
+                        value: k.value,
+                        date: new Date(el.date)
+                    }))
+                })));
+                setPieChart1Data(pieChart1Data);
+                setPieChart2Data(pieChart2Data);
+                setIsLoading(false);
+            }
+        ));
     }, [ queryParams ]);
 
     return (
@@ -260,12 +253,34 @@ const OrganizationStatistics = () => {
                       { isLoading && <LoadingState /> }
                       { !isLoading && groupedBarChartData.length <= 0 && <NoData /> }
                       { !isLoading && groupedBarChartData.length > 0 && (
-                          <GroupedBarChart
-                              margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
-                              id="d3-grouped-bar-chart-root"
-                              data={ groupedBarChartData }
-                              timeFrame={ timeframe }
-                          />
+                          <div className="d3-chart-with-legend-wrapper">
+                              <ChartWrapper
+                                  id="bar-chart-1"
+                                  data={ groupedBarChartData }
+                                  xAxis={ {
+                                      text: 'Date'
+                                  } }
+                                  yAxis={ {
+                                      text: 'Jobs across orgs'
+                                  } }
+                                  lineNames={ [ 'value' ] }
+                                  colors={ [] }
+                                  onClick={ redirectToJobExplorer }
+                                  chart={ groupedBarChart }
+                                  tooltip={ groupedBarChartTooltip }
+                                  legend={
+                                      groupedBarChartData[0].group.reduce((colors, org) => {
+                                          colors.push({
+                                              id: org.id,
+                                              name: org.name,
+                                              value: pfmulti[colors.length]
+                                          });
+                                          return colors;
+                                      }, [])
+                                  }
+                                  legendSelector
+                              />
+                          </div>
                       ) }
                   </CardBody>
               </TopCard>
@@ -299,6 +314,7 @@ const OrganizationStatistics = () => {
                                           }, [])
                                       }
                                       noMargin
+                                      small
                                   />
                               </div>
                           ) }
@@ -333,6 +349,7 @@ const OrganizationStatistics = () => {
                                           }, [])
                                       }
                                       noMargin
+                                      small
                                   />
                               </div>
                           ) }
