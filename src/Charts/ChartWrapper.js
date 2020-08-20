@@ -4,13 +4,14 @@ import * as d3 from 'd3';
 import Legend from '../Utilities/Legend';
 
 export const ChartWrapper = props => {
-    const [ legendHeight, setLegendHeight ] = useState('0px');
+    const [ legendHeight, setLegendHeight ] = useState(100);
+    const [ height, setHeight ] = useState(null);
+    const [ width, setWidth ] = useState(null);
+    const [ legendSelected, setLegendSelected ] = useState([]);
     const margin = props.noMargin ?
         { top: 0, right: 20, bottom: 0, left: 20 }
         : { top: 20, right: 20, bottom: props.xAxis.text ? 50 : 20, left: 70 };
     let time = null;
-    let width = 0;
-    let height = 0;
 
     const getWrapper = () => d3.select('#' + props.id);
 
@@ -108,19 +109,22 @@ export const ChartWrapper = props => {
             height,
             width,
             margin,
+            selected: legendSelected,
             ...props
         });
     };
 
     const init = () => {
         const wrapper = getWrapper();
-        const [ w, h ] = getSizes(wrapper);
-        width = w;
-        height = h;
-        setLegendHeight(h + 'px');
-
-        clearWrapper();
-        draw(wrapper);
+        if (!width || !height) {
+            const [ w, h ] = getSizes(wrapper);
+            setWidth(w);
+            setHeight(h);
+            setLegendHeight(h - margin.top - margin.bottom);
+        } else {
+            clearWrapper();
+            draw(wrapper);
+        }
     };
 
     const resize = () => {
@@ -140,16 +144,16 @@ export const ChartWrapper = props => {
         };
     }, []);
 
-    useEffect(() => init(), [ props.data, props.value ]);
+    useEffect(() => init(), [ props.data, props.value, legendSelected, width, height ]);
 
     return (
         <>
-            <div id={ props.id } className={ props.chartClass + (props.legend ? ' small' : '') } />
+            <div id={ props.id } className={ props.chartClass + (props.small ? ' small' : '') } />
             { props.legend &&
                 <Legend
                     data={ props.legend }
-                    selected={ null }
-                    onToggle={ null }
+                    selected={ props.legendSelector ? legendSelected : null }
+                    setSelected={ props.legendSelector ? setLegendSelected : null }
                     height={ legendHeight }
                 />
             }
@@ -178,7 +182,9 @@ ChartWrapper.propTypes = {
         visibleCols: PropTypes.number
     }),
     legend: PropTypes.array,
-    noMargin: PropTypes.bool
+    legendSelector: PropTypes.bool,
+    noMargin: PropTypes.bool,
+    small: PropTypes.bool
 };
 
 ChartWrapper.defaultProps = {
@@ -196,7 +202,9 @@ ChartWrapper.defaultProps = {
         visibleCols: 15
     },
     legend: null,
-    noMargin: false
+    legendSelector: false,
+    noMargin: false,
+    small: false
 };
 
 export default ChartWrapper;
