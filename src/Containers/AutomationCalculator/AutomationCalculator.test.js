@@ -1,10 +1,8 @@
-/*eslint-disable */
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 
 import { act } from 'react-dom/test-utils';
 import { when } from 'jest-when';
-import { automationCalculatorMethods, useAutomationFormula } from './AutomationCalculator';
-import { 
+import {
     computeTotalSavings,
     filterDataBySelectedIds,
     formatData,
@@ -12,19 +10,15 @@ import {
     handleManualTimeChange,
     handleToggle,
     setTemplatesIsActive,
-    updateData 
+    updateData
 } from './AutomationCalculator';
 
-import * as ApiFuncs from '../../Api';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import AutomationCalculator from './AutomationCalculator';
 import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 Enzyme.configure({ adapter: new Adapter() });
-
-const defaultCostAutomation = 20;
-const defaultCostManual = 50;
 
 // the insights object
 const mockInsights = {
@@ -36,18 +30,6 @@ const mockInsights = {
         }
     }
 };
-
-/*
-// roidata
-const mockResponse = {
-    ok: true,
-    json: () => Promise.resolve({})
-};
-ApiFuncs.preflightRequest = jest.fn();
-ApiFuncs.preflightRequest.mockResolvedValue(mockResponse);
-ApiFuncs.readROI = jest.fn();
-ApiFuncs.readROI.mockResolvedValue(mockResponse);
-*/
 
 const testResponse = [
     {
@@ -82,6 +64,7 @@ const testResponse = [
     }
 ];
 
+/*
 const expectedObj = {
     id: expect.any(Number),
     name: expect.any(String),
@@ -98,125 +81,50 @@ const expectedObj = {
     successful_elapsed_sum: expect.any(Number),
     template_automation_percentage: expect.any(Number)
 };
-
-// roidata
-const mockPreflightResponse = {
-    ok: true,
-    json: () => Promise.resolve({})
-};
-const mockRoiResponse = {
-    ok: true,
-    json: () => Promise.resolve(testResponse)
-};
-
-/*
-const mockRoiResponseFunction = () => {
-    console.log('mockResponseFunction called ...');
-    return Promise.resolve(mockRoiResponse());
-};
 */
 
-
-//ApiFuncs.preflightRequest = jest.fn();
-//ApiFuncs.preflightRequest.mockResolvedValue(mockPreflightResponse);
-/*
-ApiFuncs.readROI = jest.fn();
-ApiFuncs.readROI.mockResolvedValue([testResponse]);
-//ApiFuncs.readROI.mockReturnValue(mockRoiResponse);
-//ApiFuncs.readROI.bind(mockRoiResponseFunction);
-//ApiFuncs.readROI.mockResolvedValue(mockRoiResponseFunction);
-ApiFuncs.readROI((err, val) => console.log(val));
-*/
-
-
-/*
-const mockSuccessResponse = [testResponse];
-const mockJsonPromise = Promise.resolve(mockSuccessResponse);
-const mockFetchPromise = Promise.resolve({
-    json: () => mockJsonPromise,
-});
-*/
-//jest.spyOn(global, 'fetch').mockImplementation(() => mockFetchPromise);
-//global.fetch = jest.fn().mockImplementation(() => mockFetchPromise);
-
-/*
-global.fetch = jest.fn(async (args) => {
-  const nargs = await args;
-  console.log(args);
-  console.log(nargs);
-  console.log(args.URL);
-  console.log(args['URL']);
-  //console.log(this);
-  //console.log(this.mock);
-  return Promise.resolve({
-    json: () => Promise.resolve({}),
-  })
-});
-*/
+// mock out the fetch api
 global.fetch = jest.fn();
 
-//const preflightEndpoint = `/api/tower-analytics/${apiVersion}/authorized/`;
+// preflight is just a check for authorization ...
 when(global.fetch).calledWith(expect.stringContaining('/authorized/')).mockReturnValue(
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve({}),
-  })
+    Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve({})
+    })
 );
 
-let roiTemplateJson = { 'templates': [...testResponse] };
-roiTemplateJson.templates[0].delta = 0
-
-//const roiEndpoint = `/api/tower-analytics/${apiVersion}/roi_templates/`;
+// all other calls should be for roi data ...
+let roiTemplateJson = { templates: [ ...testResponse ]};
+roiTemplateJson.templates[0].delta = 0;
 when(global.fetch).calledWith(expect.not.stringContaining('/authorized/')).mockReturnValue(
-  Promise.resolve({
-    ok: true,
-    json: () => Promise.resolve(roiTemplateJson),
-  })
+    Promise.resolve({
+        ok: true,
+        json: () => Promise.resolve(roiTemplateJson)
+    })
 );
-
-/*
-//const preflightEndpoint = `/api/tower-analytics/${apiVersion}/authorized/`;
-when(global.fetch).calledWith('/api/tower-analytics/v0/authorized/').mockReturnValue(
-  Promise.resolve({
-    json: () => Promise.resolve({}),
-  })
-);
-*/
-
-/*
-const TestHook = ({ callback }) => {
-    callback();
-    return null;
-};
-
-const testHook = (callback) => {
-    mount(<TestHook callback={ callback } />);
-};
-*/
-
-let page;
 
 describe('AutomationCalculator Formulas', () => {
     const defaultCostAutomation = 20;
     const defaultCostManual = 50;
 
     it('filterDataBySelectedIds removes templates that match Id(s) passed from formattedData', () => {
-        let testResponses = [testResponse, {...testResponse}]
+        let testResponses = [ testResponse, { ...testResponse }];
         testResponses[0].id = 0;
         testResponses[1].id = 1;
-        const filteredData = filterDataBySelectedIds(testResponses, [1]);
+        const filteredData = filterDataBySelectedIds(testResponses, [ 1 ]);
         expect(filteredData.length).toEqual(1);
         expect(filteredData[0].id).toEqual(0);
 
     });
     it('setTemplatesIsActive sets isActive to false in templatesList if the template matches the passed id', () => {
-        let testResponses = [{...testResponse[0]}, {...testResponse[0]}]
+        let testResponses = [{ ...testResponse[ 0 ] }, { ...testResponse[ 0 ] }];
         testResponses[0].id = 0;
         testResponses[0].template_id = 0;
         testResponses[1].id = 1;
         testResponses[1].template_id = 1;
 
-        setTemplatesIsActive(testResponses, [1]);
+        setTemplatesIsActive(testResponses, [ 1 ]);
         expect(testResponses[0].isActive).toEqual(true);
         expect(testResponses[1].isActive).toEqual(false);
 
@@ -224,41 +132,33 @@ describe('AutomationCalculator Formulas', () => {
     it('computeTotalSavings makes the correct total with manual cost set to 0', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, defaultCostAutomation, 0);
-        //console.log(formattedData);
-        const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost
-        //console.log('expected', expected);
+        //const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost;
         expect(total).toEqual(0);
 
     });
     it('computeTotalSavings makes the correct total with manual cost set to 10', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, defaultCostAutomation, 10);
-        //console.log(formattedData);
-        const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost
-        //console.log('expected', expected);
+        const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost;
         expect(total).toEqual(expected);
 
     });
     it('computeTotalSavings makes the correct total with automated cost set to 0', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, 0, defaultCostManual);
-        //console.log('total', total);
         expect(total).toEqual(50);
 
     });
     it('computeTotalSavings makes the correct total with automated cost set to 10', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, 10, defaultCostManual);
-        //console.log('total', total);
         expect(total).toEqual(49.99722222222222);
 
     });
     it('computeTotalSavings sets correct delta calculation for formattedData', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
-        const total = computeTotalSavings(formattedData, defaultCostAutomation, 10);
-        //console.log(formattedData);
-        const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost
-        //console.log('expected', expected);
+        //const total = computeTotalSavings(formattedData, defaultCostAutomation, 10);
+        const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost;
         expect(formattedData[0].delta).toEqual(expected);
 
     });
@@ -407,11 +307,6 @@ describe('AutomationCalculator()', () => {
     beforeEach(async () => {
 
         fetch.mockClear();
-        //fetch.resetMocks();
-
-        //const mockStore = configureStore();
-        //const store = mockStore({});
-        //global.insights = mockInsights;
 
         let d3Container = document.createElement('div');
         d3Container.setAttribute('id', 'd3-roi-chart-root');
@@ -422,9 +317,7 @@ describe('AutomationCalculator()', () => {
             const mockStore = configureStore();
             const store = mockStore({});
             global.insights = mockInsights;
-            //jest.runAllImmediates();
             wrapper = mount(<Provider store={ store } ><AutomationCalculator /></Provider>);
-            //jest.runAllImmediates();
         });
 
     });
@@ -437,7 +330,6 @@ describe('AutomationCalculator()', () => {
     it('mounts and there are 5 dropdown values', async () => {
 
         await act(async () => {
-            //console.log('acting !!!!');
             const fselect = wrapper.find('FormSelect');
 
             // ensure 4 options plus 'please choose'
@@ -476,47 +368,48 @@ describe('AutomationCalculator()', () => {
         // verify the correct startDate url param was used
         const totalCalls = global.fetch.mock.calls.length;
         const lastUrl = global.fetch.mock.calls[totalCalls - 1][0].toString();
-        console.log('lastUrl', lastUrl);
+        //console.log('lastUrl', lastUrl);
         expect(lastUrl.includes('startDate=' + optionValues[3])).toBe(true);
 
     });
 
     xit('setSelectedIds removes templates that match Id(s) passed from formattedData', async () => {
 
-
         await act(async () => {
-            wrapper.find('FormSelect').find('select').prop('onChange')({currentTarget: {value: '1999-01-01'}});
+            wrapper.find('FormSelect').find('select').prop('onChange')({ currentTarget: { value: '1999-01-01' }});
         });
         wrapper.update();
-        const templateDetails = wrapper.find('TemplateDetail');
+        //const templateDetails = wrapper.find('TemplateDetail');
         const toggleOnIcons = wrapper.find('ToggleOnIcon');
-        const toggleOffIcons = wrapper.find('ToggleOffIcon');
+        //const toggleOffIcons = wrapper.find('ToggleOffIcon');
 
+        /*
         global.fetch.mock.calls.forEach((call) => {
             //console.log(call);
             //console.log(call[0]);
-            console.log(call[0].toString());
+            //console.log(call[0].toString());
         });
+        */
 
-        console.log('templateDetails', templateDetails.length);
-        console.log('toggleOnIcons', toggleOnIcons.length);
-        console.log('toggleOffIcons', toggleOffIcons.length);
+        //console.log('templateDetails', templateDetails.length);
+        //console.log('toggleOnIcons', toggleOnIcons.length);
+        //console.log('toggleOffIcons', toggleOffIcons.length);
 
         expect(toggleOnIcons.length).toBe(1);
 
-        console.log(toggleOnIcons.debug());
-        console.log(toggleOnIcons.parent().debug());
-        console.log(toggleOnIcons.parent().parent().debug());
-        console.log(toggleOnIcons.parent().parent().parent().debug());
+        //console.log(toggleOnIcons.debug());
+        //console.log(toggleOnIcons.parent().debug());
+        //console.log(toggleOnIcons.parent().parent().debug());
+        //console.log(toggleOnIcons.parent().parent().parent().debug());
 
-        console.log(wrapper.debug());
-        const svgs = wrapper.find('svg');
-        console.log(svgs);
-        console.log(svgs.debug());
+        //console.log(wrapper.debug());
+        //const svgs = wrapper.find('svg');
+        //console.log(svgs);
+        //console.log(svgs.debug());
 
-        const texts = wrapper.find('text');
-        console.log(texts);
-        console.log(texts.debug());
+        //const texts = wrapper.find('text');
+        //console.log(texts);
+        //console.log(texts.debug());
 
         //let d3Container = document.getElementById('d3-roi-chart-root');
         //console.log(d3Container);
