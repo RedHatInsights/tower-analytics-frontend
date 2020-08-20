@@ -481,7 +481,7 @@ describe('AutomationCalculator()', () => {
 
     });
 
-    it('setSelectedIds removes templates that match Id(s) passed from formattedData', async () => {
+    xit('setSelectedIds removes templates that match Id(s) passed from formattedData', async () => {
 
 
         await act(async () => {
@@ -502,7 +502,25 @@ describe('AutomationCalculator()', () => {
         console.log('toggleOnIcons', toggleOnIcons.length);
         console.log('toggleOffIcons', toggleOffIcons.length);
 
+        expect(toggleOnIcons.length).toBe(1);
+
+        console.log(toggleOnIcons.debug());
+        console.log(toggleOnIcons.parent().debug());
+        console.log(toggleOnIcons.parent().parent().debug());
+        console.log(toggleOnIcons.parent().parent().parent().debug());
+
         console.log(wrapper.debug());
+        const svgs = wrapper.find('svg');
+        console.log(svgs);
+        console.log(svgs.debug());
+
+        const texts = wrapper.find('text');
+        console.log(texts);
+        console.log(texts.debug());
+
+        //let d3Container = document.getElementById('d3-roi-chart-root');
+        //console.log(d3Container);
+
         //someMockFunction.mock.calls.length
         //someMockFunction.mock.calls.length
         //console.log(ApiFuncs.readROI.mock.calls.length);
