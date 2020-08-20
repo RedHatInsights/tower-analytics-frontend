@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Switch as PFSwitch } from '@patternfly/react-core';
 
 import styled from 'styled-components';
@@ -56,51 +56,78 @@ const Switch = styled(PFSwitch)`
   }
 `;
 
-class Legend extends Component {
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-    }
-    handleChange(_isChecked, { target: { value }}) {
-        const { onToggle } = this.props;
+const Legend = props => {
+    const { data, selected, setSelected, height } = props;
+
+    const handleChange = (_isChecked, { target: { value }}) => {
         const selectedId = parseFloat(value);
-        onToggle(selectedId);
+        let sel = selected;
+        if (sel.indexOf(selectedId) === -1) {
+            sel = [ ...sel, selectedId ];
+        } else if (sel.includes(selectedId)) {
+            sel = [ ...sel ].filter(s => s !== selectedId);
+        }
+
+        setSelected(sel);
     };
-    render() {
-        const { data, selected, height } = this.props;
-        return (
-            <Container height={ height }>
-                { data.map(
-                    ({ name, value, id, count }, index) => (
-                        <LegendDetail key={ index }>
-                            <Wrapper>
-                                <Color color={ value } />
-                                <Title>{ name }</Title>
-                            </Wrapper>
-                            { count && (
-                                <SubTitle>{ count }</SubTitle>
-                            ) }
-                            { selected && (
-                                <Switch
-                                    isChecked={ selected.some(selection => selection === id) }
-                                    onChange={ this.handleChange }
-                                    aria-label={ name }
-                                    value={ id }
-                                    id={ `${name}-${id}` }
-                                />
-                            ) }
-                        </LegendDetail>
-                    )) }
-            </Container>
-        );
-    }
-}
+
+    const setDefaultSelected = num => {
+        let sel = [];
+        data.forEach(({ id }, index) => {
+            if (index <= num) {
+                sel.push(id);
+            }
+        });
+        setSelected(sel);
+    };
+
+    useEffect(() => {
+        if (selected && selected.length === 0) {
+            setDefaultSelected(props.defaultSelectedNum);
+        }
+    }, []);
+
+    return (
+        <Container height={ height + 'px' }>
+            { data.map(
+                ({ name, value, id, count }, index) => (
+                    <LegendDetail key={ index }>
+                        <Wrapper>
+                            <Color color={ value } />
+                            <Title>{ name }</Title>
+                        </Wrapper>
+                        { count && (
+                            <SubTitle>{ count }</SubTitle>
+                        ) }
+                        { selected && (
+                            <Switch
+                                isChecked={ selected.some(selection => selection === id) }
+                                onChange={ handleChange }
+                                aria-label={ name }
+                                value={ id }
+                                id={ `${name}-${id}` }
+                            />
+                        ) }
+                    </LegendDetail>
+                )) }
+        </Container>
+    );
+};
 
 Legend.propTypes = {
     data: PropTypes.array,
     selected: PropTypes.array,
-    onToggle: PropTypes.func,
-    height: PropTypes.string
+    setSelected: PropTypes.func,
+    height: PropTypes.number,
+    defaultSelectedNum: PropTypes.number
+};
+
+Legend.defaultProps = {
+    data: [],
+    selected: [],
+    setSelected: () => {},
+    height: 100,
+    defaultSelectedNum: 7
 };
 
 export default Legend;
