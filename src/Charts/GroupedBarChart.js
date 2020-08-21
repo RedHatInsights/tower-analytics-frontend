@@ -1,10 +1,8 @@
 import * as d3 from 'd3';
-import { pfmulti } from '../Utilities/colors';
 
 const GroupedBarChart = props => {
-    const { svg, data, addXAxis, addYAxis, width, height, selected, lineNames } = props;
+    const { svg, data, addXAxis, addYAxis, width, height, selected, lineNames, colorFunc } = props;
     const tooltip = props.tooltip({ svg: '#' + props.id });
-    const color = d3.scaleOrdinal(pfmulti);
     const filteredData = data.map(el => ({
         ...el,
         group: el.group.filter(({ id }) => selected.includes(id))
@@ -51,7 +49,7 @@ const GroupedBarChart = props => {
         return x1(d.name);
     }) // unsorted
     .style('fill', function(d) {
-        return color(d.name);
+        return colorFunc(d.name);
     })
     .attr('y', function(d) {
         return y(d[lineNames[0]]);
@@ -60,12 +58,12 @@ const GroupedBarChart = props => {
         return height - y(d[lineNames[0]]);
     })
     .on('mouseover', function(d) {
-        d3.select(this).style('fill', d3.rgb(color(d.name)).darker(1));
+        d3.select(this).style('fill', d3.rgb(colorFunc(d.name)).darker(1));
         tooltip.handleMouseOver();
     })
     .on('mousemove', tooltip.handleMouseOver)
     .on('mouseout', function(d) {
-        d3.select(this).style('fill', color(d.name));
+        d3.select(this).style('fill', colorFunc(d.name));
         tooltip.handleMouseOut();
     })
     .on('click', props.onClick);
