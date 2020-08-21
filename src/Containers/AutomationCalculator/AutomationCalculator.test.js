@@ -325,6 +325,7 @@ describe('AutomationCalculator()', () => {
     afterEach(async () => {
         let d3Container = document.getElementById('d3-roi-chart-root');
         d3Container.remove();
+        wrapper.unmount();
     });
 
     it('mounts and there are 5 dropdown values', async () => {
