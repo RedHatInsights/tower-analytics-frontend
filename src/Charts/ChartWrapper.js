@@ -166,7 +166,7 @@ ChartWrapper.propTypes = {
     data: PropTypes.array,
     chartClass: PropTypes.string,
     lineNames: PropTypes.array,
-    colors: PropTypes.array.isRequired,
+    colors: PropTypes.array,
     value: PropTypes.number,
     xAxis: PropTypes.shape({
         text: PropTypes.string
@@ -192,6 +192,7 @@ ChartWrapper.defaultProps = {
     chartClass: 'd3-chart',
     data: [],
     lineNames: [],
+    colors: [],
     value: 31,
     xAxis: { text: null },
     yAxis: { text: null },

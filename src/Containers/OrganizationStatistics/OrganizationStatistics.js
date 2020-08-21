@@ -32,6 +32,7 @@ import pieChart from '../../Charts/PieChart';
 import pieChartTooltip from '../../Charts/Tooltips/PieChartTooltip';
 import groupedBarChartTooltip from '../../Charts/Tooltips/GroupedBarChartTooltip';
 import { pfmulti } from '../../Utilities/colors';
+import { scaleOrdinal } from 'd3';
 import ChartWrapper from '../../Charts/ChartWrapper';
 
 import { formatDate } from '../../Utilities/helpers';
@@ -119,6 +120,7 @@ const OrganizationStatistics = ({ history }) => {
         setSortBy,
         setLimit
     } = useQueryParams(initialQueryParams);
+    const color = scaleOrdinal(pfmulti);
 
     const setLimitValue = (val) => {
         let limit;
@@ -264,19 +266,16 @@ const OrganizationStatistics = ({ history }) => {
                                       text: 'Jobs across orgs'
                                   } }
                                   lineNames={ [ 'value' ] }
-                                  colors={ [] }
+                                  colorFunc={ color }
                                   onClick={ redirectToJobExplorer }
                                   chart={ groupedBarChart }
                                   tooltip={ groupedBarChartTooltip }
                                   legend={
-                                      groupedBarChartData[0].group.reduce((colors, org) => {
-                                          colors.push({
-                                              id: org.id,
-                                              name: org.name,
-                                              value: pfmulti[colors.length]
-                                          });
-                                          return colors;
-                                      }, [])
+                                      groupedBarChartData[0].group.map(org => ({
+                                          id: org.id,
+                                          name: org.name,
+                                          value: color(org.name)
+                                      }))
                                   }
                                   legendSelector
                               />
@@ -300,18 +299,15 @@ const OrganizationStatistics = ({ history }) => {
                                       id="pie-chart-1"
                                       data={ pieChart1Data.filter(d => d.id !== -1) }
                                       lineNames={ [ 'count' ] }
-                                      colors={ [] }
+                                      colorFunc={ color }
                                       chart={ pieChart }
                                       tooltip={ pieChartTooltip }
                                       legend={
-                                          pieChart1Data.reduce((colors, org) => {
-                                              colors.push({
-                                                  name: org.id === -1 ?  'Others' : org.name,
-                                                  value: pfmulti[colors.length],
-                                                  count: Math.round(org.count)
-                                              });
-                                              return colors;
-                                          }, [])
+                                          pieChart1Data.map(org => ({
+                                              name: org.id === -1 ?  'Others' : org.name,
+                                              value: color(org.name),
+                                              count: Math.round(org.count)
+                                          }))
                                       }
                                       noMargin
                                       small
@@ -335,18 +331,15 @@ const OrganizationStatistics = ({ history }) => {
                                       id="pie-chart-2"
                                       data={ pieChart2Data.filter(d => d.id !== -1) }
                                       lineNames={ [ 'count' ] }
-                                      colors={ [] }
+                                      colorFunc={ color }
                                       chart={ pieChart }
                                       tooltip={ pieChartTooltip }
                                       legend={
-                                          pieChart2Data.reduce((colors, org) => {
-                                              colors.push({
-                                                  name: org.id === -1 ?  'Others' : org.name,
-                                                  value: pfmulti[colors.length],
-                                                  count: Math.round(org.count)
-                                              });
-                                              return colors;
-                                          }, [])
+                                          pieChart2Data.map(org => ({
+                                              name: org.id === -1 ?  'Others' : org.name,
+                                              value: color(org.name),
+                                              count: Math.round(org.count)
+                                          }))
                                       }
                                       noMargin
                                       small

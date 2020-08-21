@@ -1,5 +1,4 @@
 import * as d3 from 'd3';
-import { pfmulti } from '../Utilities/colors';
 
 function getTotal(data, attr) {
     if (!data) {
@@ -14,8 +13,7 @@ function getTotal(data, attr) {
 }
 
 const PieChart = props => {
-    const { svg, data, height, width, margin, lineNames } = props;
-    const color = d3.scaleOrdinal(pfmulti);
+    const { svg, data, height, width, margin, lineNames, colorFunc } = props;
 
     // Translate again because the pie chart has it different
     // This is ugly, FIXME
@@ -52,16 +50,16 @@ const PieChart = props => {
     .enter()
     .append('path')
     .attr('d', arc)
-    .attr('fill', (d, i) => color(i));
+    .attr('fill', ({ data }) => colorFunc(data.name));
 
     svg
     .selectAll('path')
-    .on('mouseover', function(d, i) {
-        d3.select(this).style('fill', d3.rgb(color(i)).darker(1));
+    .on('mouseover', function(d) {
+        d3.select(this).style('fill', d3.rgb(colorFunc(d.data.name)).darker(1));
         donutTooltip.handleMouseOver(d);
     })
-    .on('mouseout', function(d, i) {
-        d3.select(this).style('fill', color(i));
+    .on('mouseout', function(d) {
+        d3.select(this).style('fill', colorFunc(d.data.name));
         donutTooltip.handleMouseOut();
     })
     .on('mousemove', donutTooltip.handleMouseOver);
