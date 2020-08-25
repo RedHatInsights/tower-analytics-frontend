@@ -8,6 +8,7 @@ import {
     DataList,
     DataListItem,
 <<<<<<< HEAD
+<<<<<<< HEAD
     DataListItemRow as PFDataListItemRow,
     DataListItemCells as PFDataListItemCells,
     DataListToggle
@@ -27,6 +28,10 @@ import { formatDateTime, formatJobType, formatJobStatus } from '../Utilities/hel
 =======
     DataListItemRow,
     DataListItemCells,
+=======
+    DataListItemRow as PFDataListItemRow,
+    DataListItemCells as PFDataListItemCells,
+>>>>>>> Remove comment. Vertically align datalist row content.
     DataListToggle
 } from '@patternfly/react-core';
 
@@ -140,10 +145,14 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
                 return (
                     <DataListItem key={ item.id.id } aria-labelledby={ ariaLabelledBy } isExpanded={ isExpanded.includes(`${item.id.id}-toggle`) } >
 <<<<<<< HEAD
+<<<<<<< HEAD
                         <DataListItemRow>
 =======
                         <DataListItemRow key={ item.id.id }>
 >>>>>>> Squashed commit of the following:
+=======
+                        <DataListItemRow>
+>>>>>>> Remove comment. Vertically align datalist row content.
                             <DataListToggle
                                 id={ `${item.id.id}-toggle` }
                                 aria-controls={ `${item.id.id}-expand` }

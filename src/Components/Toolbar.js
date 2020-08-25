@@ -387,6 +387,7 @@ const FilterableToolbar = ({
                         selections={ passedFilters.template }
                         isExpanded={ templateIsExpanded }
 <<<<<<< HEAD
+<<<<<<< HEAD
                         placeholderText="Filter by template"z
 =======
                         placeholderText="Filter by template"
@@ -398,6 +399,9 @@ const FilterableToolbar = ({
                             overflow: 'auto'
                         } }
 >>>>>>> Add style to select inline instead of using styled component.
+=======
+                        placeholderText="Filter by template"z
+>>>>>>> Remove comment. Vertically align datalist row content.
                     >
                         { templateIdMenuItems }
                     </Select>
