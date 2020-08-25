@@ -351,11 +351,7 @@ const FilterableToolbar = ({
                         } }
                         selections={ passedFilters.template }
                         isExpanded={ templateIsExpanded }
-                        placeholderText="Filter by template"
-                        style={ {
-                            maxHeight: 500,
-                            overflow: 'auto'
-                        } }
+                        placeholderText="Filter by template"z
                     >
                         { templateIdMenuItems }
                     </Select>

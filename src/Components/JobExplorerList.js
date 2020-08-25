@@ -7,8 +7,8 @@ import {
     DataListContent,
     DataList,
     DataListItem,
-    DataListItemRow,
-    DataListItemCells,
+    DataListItemRow as PFDataListItemRow,
+    DataListItemCells as PFDataListItemCells,
     DataListToggle
 } from '@patternfly/react-core';
 
@@ -35,6 +35,15 @@ const headerLabels = [
 const ExternalLinkIcon = styled(PFExternalLinkIcon)`
   margin-left: 7px;
   color: var(--pf-global--Color--400);
+`;
+
+const DataListItemCells = styled(PFDataListItemCells)`
+align-items: center;
+margin-top: 5px;
+`;
+
+const DataListItemRow = styled(PFDataListItemRow)`
+align-items: center; 
 `;
 
 const mobileBreakpoint = 765;
@@ -72,7 +81,7 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
 
                 return (
                     <DataListItem key={ item.id.id } aria-labelledby={ ariaLabelledBy } isExpanded={ isExpanded.includes(`${item.id.id}-toggle`) } >
-                        <DataListItemRow key={ item.id.id }>
+                        <DataListItemRow>
                             <DataListToggle
                                 id={ `${item.id.id}-toggle` }
                                 aria-controls={ `${item.id.id}-expand` }
