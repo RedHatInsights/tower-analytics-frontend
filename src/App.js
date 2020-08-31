@@ -16,7 +16,6 @@ class App extends Component {
 
     componentWillUnmount () {
         this.appNav();
-        this.buildNav();
     }
 
     render () {
