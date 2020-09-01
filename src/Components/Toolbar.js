@@ -425,7 +425,7 @@ const FilterableToolbar = ({
                         id="showRootWorkflowJobs"
                         label="Ignore nested workflows and jobs"
                         labelOff="Ignore nested workflows and jobs"
-                        isChecked={ !!passedFilters.showRootWorkflows }
+                        isChecked={ passedFilters.showRootWorkflows }
                         onChange={ val => {
                             handleFilters({
                                 ...passedFilters,
