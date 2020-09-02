@@ -309,7 +309,7 @@ describe('AutomationCalculator()', () => {
         fetch.mockClear();
 
         let d3Container = document.createElement('div');
-        d3Container.setAttribute('id', 'd3-roi-chart-root');
+        d3Container.setAttribute('id', 'd3-chart-wrapper');
         document.body.appendChild(d3Container);
 
         // full mount ...
@@ -323,7 +323,7 @@ describe('AutomationCalculator()', () => {
     });
 
     afterEach(async () => {
-        let d3Container = document.getElementById('d3-roi-chart-root');
+        let d3Container = document.getElementById('d3-chart-wrapper');
         d3Container.remove();
         wrapper.unmount();
     });
@@ -369,7 +369,6 @@ describe('AutomationCalculator()', () => {
         // verify the correct startDate url param was used
         const totalCalls = global.fetch.mock.calls.length;
         const lastUrl = global.fetch.mock.calls[totalCalls - 1][0].toString();
-        //console.log('lastUrl', lastUrl);
         expect(lastUrl.includes('startDate=' + optionValues[3])).toBe(true);
 
     });
