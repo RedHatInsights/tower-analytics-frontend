@@ -3,19 +3,43 @@ import PropTypes from 'prop-types';
 import * as d3 from 'd3';
 import Legend from '../Utilities/Legend';
 
-export const ChartWrapper = props => {
+// Default objects to prevent unnecesary rerender
+const defOverflow = {
+    enabled: false,
+    wrapperClass: 'chart-overflow-wrapper',
+    visibleCols: 15
+};
+const defAxis = { text: null };
+
+export const ChartWrapper = ({
+    id = 'd3-chart-wrapper',
+    chartClass = 'd3-chart',
+    data = [],
+    lineNames = [],
+    colors = [],
+    value = 31,
+    xAxis = defAxis,
+    yAxis = defAxis,
+    onClick = () => {},
+    overflow = defOverflow,
+    legend = null,
+    legendSelector = false,
+    noMargin = false,
+    small = false,
+    ...props
+}) => {
     const [ legendHeight, setLegendHeight ] = useState(100);
     const [ height, setHeight ] = useState(null);
     const [ width, setWidth ] = useState(null);
     const [ legendSelected, setLegendSelected ] = useState([]);
-    const margin = props.noMargin ?
+    const margin = noMargin ?
         { top: 0, right: 20, bottom: 0, left: 20 }
-        : { top: 20, right: 20, bottom: props.xAxis.text ? 50 : 20, left: 70 };
+        : { top: 20, right: 20, bottom: xAxis.text ? 50 : 20, left: 70 };
     let time = null;
 
-    const getWrapper = () => d3.select('#' + props.id);
+    const getWrapper = () => d3.select('#' + id);
 
-    const clearWrapper = () => d3.selectAll('#' + props.id + ' > *').remove();
+    const clearWrapper = () => d3.selectAll('#' + id + ' > *').remove();
 
     const getSizes = wrapper => {
         let w = 0;
@@ -23,9 +47,9 @@ export const ChartWrapper = props => {
 
         h = parseInt(wrapper.style('height')) - margin.top - margin.bottom || 450;
 
-        if (props.overflow.enabled) {
-            if (props.data.length >= props.overflow.visibleCols) {
-                const containerWidth = d3.select('.' + props.overflow.wrapperClass).node();
+        if (overflow.enabled) {
+            if (data.length >= overflow.visibleCols) {
+                const containerWidth = d3.select('.' + overflow.wrapperClass).node();
                 w = containerWidth.getBoundingClientRect().width - margin.left - margin.right;
             }
         } else {
@@ -67,11 +91,10 @@ export const ChartWrapper = props => {
             .attr('x', 0 - height / 2)
             .attr('dy', '1em')
             .style('text-anchor', 'middle')
-            .text(props.yAxis.text);
+            .text(yAxis.text);
         };
 
         const addXAxis = (svg, x) => {
-            const { data, value } = props;
             const maxTicks = Math.round(data.length / (value / 2));
             let ticks = data.map(d => d.xAxis);
             if (value === 31) {
@@ -99,7 +122,7 @@ export const ChartWrapper = props => {
             .append('text')
             .attr('transform', `translate(${width / 2}, ${height + margin.top + 20})`)
             .style('text-anchor', 'middle')
-            .text(props.xAxis.text);
+            .text(xAxis.text);
         };
 
         props.chart({
@@ -110,6 +133,21 @@ export const ChartWrapper = props => {
             width,
             margin,
             selected: legendSelected,
+            // Data because of the destructuring
+            lineNames,
+            colors,
+            onClick,
+            id,
+            chartClass,
+            data,
+            value,
+            xAxis,
+            yAxis,
+            overflow,
+            legend,
+            legendSelector,
+            noMargin,
+            small,
             ...props
         });
     };
@@ -144,16 +182,16 @@ export const ChartWrapper = props => {
         };
     }, []);
 
-    useEffect(() => init(), [ props.data, props.value, legendSelected, width, height ]);
+    useEffect(() => init(), [ data, value, legendSelected, width, height ]);
 
     return (
         <>
-            <div id={ props.id } className={ props.chartClass + (props.small ? ' small' : '') } />
-            { props.legend &&
+            <div id={ id } className={ chartClass + (small ? ' small' : '') } />
+            { legend &&
                 <Legend
-                    data={ props.legend }
-                    selected={ props.legendSelector ? legendSelected : null }
-                    setSelected={ props.legendSelector ? setLegendSelected : null }
+                    data={ legend }
+                    selected={ legendSelector ? legendSelected : null }
+                    setSelected={ legendSelector ? setLegendSelected : null }
                     height={ legendHeight }
                 />
             }
@@ -185,27 +223,6 @@ ChartWrapper.propTypes = {
     legendSelector: PropTypes.bool,
     noMargin: PropTypes.bool,
     small: PropTypes.bool
-};
-
-ChartWrapper.defaultProps = {
-    id: 'd3-chart-wrapper',
-    chartClass: 'd3-chart',
-    data: [],
-    lineNames: [],
-    colors: [],
-    value: 31,
-    xAxis: { text: null },
-    yAxis: { text: null },
-    onClick: () => {},
-    overflow: {
-        enabled: false,
-        wrapperClass: 'chart-overflow-wrapper',
-        visibleCols: 15
-    },
-    legend: null,
-    legendSelector: false,
-    noMargin: false,
-    small: false
 };
 
 export default ChartWrapper;
