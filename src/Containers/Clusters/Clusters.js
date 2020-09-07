@@ -1,12 +1,13 @@
 /*eslint camelcase: ["error", { properties: "never" }]*/
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
 import styled from 'styled-components';
-import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
+import ApiResource from '../../Components/ApiResource';
 import {
     preflightRequest,
     readChart30,
@@ -102,29 +103,19 @@ const initialQueryParams = {
 
 const Clusters = ({ history }) => {
     const toJobExplorer = useRedirect(history, 'jobExplorer');
-    const [ preflightError, setPreFlightError ] = useState(null);
     const [ mainChartData, setMainChartData ] = useState([]);
-    const [ templatesData, setTemplatesData ] = useState([]);
-    const [ modulesData, setModulesData ] = useState([]);
     const [ clusterOptions, setClusterOptions ] = useState([]);
     const [ clusterTimeFrame, setClusterTimeFrame ] = useState(31);
     const [ selectedCluster, setSelectedCluster ] = useState('all');
-    const [ isLoading, setIsLoading ] = useState(true);
     const { queryParams, setEndDate, setStartDate, setId } = useQueryParams(
         initialQueryParams
     );
 
     useEffect(() => {
-        setIsLoading(true);
         window.insights.chrome.auth.getUser().then(() =>
-            preflightRequest().then(() =>
-                readClusters().then(({ templates: clustersData = []}) => {
-                    const clusterOptions = formatClusterName(clustersData);
-                    setClusterOptions(clusterOptions);
-                    setIsLoading(false);
-                })
-            ).catch((error) => {
-                setPreFlightError({ preflightError: error });
+            readClusters().then(({ templates: clustersData = []}) => {
+                const clusterOptions = formatClusterName(clustersData);
+                setClusterOptions(clusterOptions);
             })
         );
     }, []);
@@ -140,32 +131,6 @@ const Clusters = ({ history }) => {
         };
         toJobExplorer(query);
     };
-
-    // Get and update the data
-    useEffect(() => {
-        setIsLoading(true);
-        window.insights.chrome.auth.getUser().then(() =>
-            Promise.all([
-                readChart30({ params: queryParams }),
-                readModules({ params: queryParams }),
-                readTemplates({ params: queryParams })
-            ]).then(([
-                { data: chartData = []},
-                { modules: modulesData = []},
-                { templates: templatesData = []}
-            ]) => {
-                setMainChartData(chartData.map(el => ({
-                    xAxis: new Date(el.created),
-                    yAxis: el.successful + el.failed,
-                    successful: el.successful,
-                    failed: el.failed
-                })));
-                setModulesData(modulesData);
-                setTemplatesData(templatesData);
-                setIsLoading(false);
-            })
-        );
-    }, [ queryParams ]);
 
     const currentChart = () => {
         if (queryParams.id) {
@@ -186,115 +151,145 @@ const Clusters = ({ history }) => {
             <PageHeader>
                 <PageHeaderTitle title={ title } />
             </PageHeader>
-            { preflightError && (
-                <Main>
-                    <EmptyState { ...preflightError } />
+            <ApiResource
+                request={ preflightRequest }
+                errorHook={ ({ error }) => ({ message: error }) }
+                errorComponent={ <EmptyState /> }
+                loadingComponent= { null }
+                dataDefaultValue={ [] }
+                passPropsToError={ true }
+            >
+                <Main style={ { paddingBottom: '0' } }>
+                    <Card>
+                        <CardTitle style={ { paddingBottom: '0', paddingTop: '0' } }>
+                            <h2>
+                                <FilterIcon style={ { marginRight: '10px' } } />
+                      Filter
+                            </h2>
+                            <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
+                                <FormSelect
+                                    name="selectedCluster"
+                                    value={ selectedCluster }
+                                    onChange={ value => {
+                                        setSelectedCluster(value);
+                                        setId(value);
+                                    } }
+                                    aria-label="Select Cluster"
+                                    style={ { margin: '2px 10px' } }
+                                >
+                                    { clusterOptions.map(({ value, label, disabled }, index) => (
+                                        <FormSelectOption
+                                            isDisabled={ disabled }
+                                            key={ index }
+                                            value={ value }
+                                            label={ label }
+                                        />
+                                    )) }
+                                </FormSelect>
+                                <FormSelect
+                                    name="clusterTimeFrame"
+                                    value={ clusterTimeFrame }
+                                    onChange={ value => {
+                                        setClusterTimeFrame(+value);
+                                        setEndDate();
+                                        setStartDate(+value);
+                                    } }
+                                    aria-label="Select Date Range"
+                                    style={ { margin: '2px 10px' } }
+                                >
+                                    { timeFrameOptions.map((option, index) => (
+                                        <FormSelectOption
+                                            isDisabled={ option.disabled }
+                                            key={ index }
+                                            value={ option.value }
+                                            label={ option.label }
+                                        />
+                                    )) }
+                                </FormSelect>
+                            </div>
+                        </CardTitle>
+                    </Card>
                 </Main>
-            ) }
-            { !preflightError && (
-        <>
-          <Main style={ { paddingBottom: '0' } }>
-              <Card>
-                  <CardTitle style={ { paddingBottom: '0', paddingTop: '0' } }>
-                      <h2>
-                          <FilterIcon style={ { marginRight: '10px' } } />
-                  Filter
-                      </h2>
-                      <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
-                          <FormSelect
-                              name="selectedCluster"
-                              value={ selectedCluster }
-                              onChange={ value => {
-                                  setSelectedCluster(value);
-                                  setId(value);
-                              } }
-                              aria-label="Select Cluster"
-                              style={ { margin: '2px 10px' } }
-                          >
-                              { clusterOptions.map(({ value, label, disabled }, index) => (
-                                  <FormSelectOption
-                                      isDisabled={ disabled }
-                                      key={ index }
-                                      value={ value }
-                                      label={ label }
-                                  />
-                              )) }
-                          </FormSelect>
-                          <FormSelect
-                              name="clusterTimeFrame"
-                              value={ clusterTimeFrame }
-                              onChange={ value => {
-                                  setClusterTimeFrame(+value);
-                                  setEndDate();
-                                  setStartDate(+value);
-                              } }
-                              aria-label="Select Date Range"
-                              style={ { margin: '2px 10px' } }
-                          >
-                              { timeFrameOptions.map((option, index) => (
-                                  <FormSelectOption
-                                      isDisabled={ option.disabled }
-                                      key={ index }
-                                      value={ option.value }
-                                      label={ option.label }
-                                  />
-                              )) }
-                          </FormSelect>
-                      </div>
-                  </CardTitle>
-              </Card>
-          </Main>
-          <Main>
-              <Card>
-                  <PFCardTitle>
-                      <h2>Job status</h2>
-                  </PFCardTitle>
-                  <CardBody>
-                      { isLoading && !preflightError && <LoadingState /> }
-                      { !isLoading && (
-                          // change id to more general when find out how to modify css
-                          <ChartWrapper
-                              data={ mainChartData }
-                              lineNames={ [ 'successful', 'failed' ] }
-                              colors={ [ '#6EC664', '#A30000' ] }
-                              xAxis={ {
-                                  text: 'Date'
-                              } }
-                              yAxis={ {
-                                  text: currentChart().yLabel
-                              } }
-                              value={ clusterTimeFrame }
-                              onClick={ redirectToJobExplorer }
-                              chart={ currentChart().chart }
-                              tooltip={ tooltip({
-                                  lineNames: [ 'successful', 'failed' ],
-                                  colors: [ '#6EC664', '#A30000' ]
-                              }) }
-                          />
-                      ) }
-                  </CardBody>
-              </Card>
-              <div
-                  className="dataCard"
-                  style={ { display: 'flex', marginTop: '20px' } }
-              >
-                  <TemplatesList
-                      history={ history }
-                      queryParams={ queryParams }
-                      clusterId={ queryParams.id }
-                      templates={ templatesData.slice(0, 10) }
-                      isLoading={ isLoading }
-                  />
-                  <ModulesList
-                      modules={ modulesData.slice(0, 10) }
-                      isLoading={ isLoading }
-                  />
-              </div>
-          </Main>
-        </>
-            ) }
+                <Main>
+                    <Card>
+                        <PFCardTitle>
+                            <h2>Job status</h2>
+                        </PFCardTitle>
+                        <CardBody>
+                            <ApiResource
+                                request={ readChart30 }
+                                params={ { params: queryParams } }
+                                thenHook={ ({ data }) => data.map(el => ({
+                                    xAxis: new Date(el.created),
+                                    yAxis: el.successful + el.failed,
+                                    successful: el.successful,
+                                    failed: el.failed
+                                })) }
+                                errorHook={ ({ error }) => ({ message: error }) }
+                                dataDefaultValue={ [] }
+                                setters={ { data: setMainChartData } }
+                                passPropsToError={ true }
+                            >
+                                <ChartWrapper
+                                    data={ mainChartData }
+                                    lineNames={ [ 'successful', 'failed' ] }
+                                    colors={ [ '#6EC664', '#A30000' ] }
+                                    xAxis={ {
+                                        text: 'Date'
+                                    } }
+                                    yAxis={ {
+                                        text: currentChart().yLabel
+                                    } }
+                                    value={ clusterTimeFrame }
+                                    onClick={ redirectToJobExplorer }
+                                    chart={ currentChart().chart }
+                                    tooltip={ tooltip({
+                                        lineNames: [ 'successful', 'failed' ],
+                                        colors: [ '#6EC664', '#A30000' ]
+                                    }) }
+                                />
+                            </ApiResource>
+                        </CardBody>
+                    </Card>
+                    <div
+                        className="dataCard"
+                        style={ { display: 'flex', marginTop: '20px' } }
+                    >
+                        { /* The next two could be remade to use the isLoading props */ }
+                        { /* to do it we need a state and pass setters: { loading } */ }
+                        <ApiResource
+                            request={ readTemplates }
+                            params={ { params: queryParams } }
+                            thenHook={ ({ templates }) => ({ templates: templates.slice(0, 10) }) }
+                            errorHook={ ({ error }) => ({ message: error }) }
+                            dataDefaultValue={ { templates: []} }
+                            passPropsToError={ true }
+                            passPropsToChild={ true }
+                        >
+                            <TemplatesList
+                                history={ history }
+                            />
+                        </ApiResource>
+                        <ApiResource
+                            request={ readModules }
+                            params={ { params: queryParams } }
+                            thenHook={ ({ modules }) => ({ modules: modules.slice(0, 10) }) }
+                            errorHook={ ({ error }) => ({ message: error }) }
+                            dataDefaultValue={ { modules: []} }
+                            passPropsToError={ true }
+                            passPropsToChild={ true }
+                        >
+                            <ModulesList />
+                        </ApiResource>
+                    </div>
+                </Main>
+            </ApiResource>
         </React.Fragment>
     );
+};
+
+Clusters.propTypes = {
+    history: PropTypes.object
 };
 
 export default Clusters;

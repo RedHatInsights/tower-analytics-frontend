@@ -5,8 +5,8 @@ import { formatDateTime, formatSeconds, formatPercentage } from '../Utilities/he
 import styled from 'styled-components';
 import LoadingState from '../Components/LoadingState';
 import NoData from '../Components/NoData';
-import { Paths } from '../paths';
-import { formatQueryStrings } from '../Utilities/formatQueryStrings';
+import useRedirect from '../Utilities/useRedirect';
+import { useQueryParams } from '../Utilities/useQueryParams';
 
 import {
     Badge,
@@ -107,11 +107,13 @@ const formatTopFailedTask = data => {
     return `Unavailable`;
 };
 
-const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }) => {
+const TemplatesList = ({ history, templates }) => {
+    const toJobExplorer = useRedirect(history, 'jobExplorer');
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ selectedId, setSelectedId ] = useState(null);
     const [ selectedTemplate, setSelectedTemplate ] = useState([]);
     const [ relatedJobs, setRelatedJobs ] = useState([]);
+    const { queryParams } = useQueryParams();
 
     useEffect(() => {
         const fetchTemplateDetails = () => {
@@ -134,22 +136,16 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
     }, [ selectedId ]);
 
     const redirectToJobExplorer = () => {
-        const { jobExplorer } = Paths;
-        const initialQueryParams = {
+        const query = {
             template_id: selectedId,
             status: [ 'successful', 'failed', 'new', 'pending', 'waiting', 'error', 'canceled', 'running' ],
             job_type: [ 'job' ],
             start_date: queryParams.startDate,
             end_date: queryParams.endDate,
-            cluster_id: clusterId
+            cluster_id: queryParams.id
         };
 
-        const { strings, stringify } = formatQueryStrings(initialQueryParams);
-        const search = stringify(strings);
-        history.push({
-            pathname: jobExplorer,
-            search
-        });
+        toJobExplorer(query);
     };
 
     return (
@@ -168,22 +164,10 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
                   <h3>Usage</h3>
               </DataCellEnd>
           </DataListItem>
-          { isLoading && (
-              <PFDataListItem
-                  aria-labelledby="templates-loading"
-                  key={ isLoading }
-                  style={ { border: 'none' } }
-
-              >
-                  <PFDataListCell>
-                      <LoadingState />
-                  </PFDataListCell>
-              </PFDataListItem>
-          ) }
-          { !isLoading && templates.length <= 0 && (
+          { templates.length <= 0 && (
               <PFDataListItem
                   aria-labelledby="templates-no-data"
-                  key={ isLoading }
+                  key={ 1 }
                   style={ { border: 'none' } }
               >
                   <PFDataListCell>
@@ -191,7 +175,7 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
                   </PFDataListCell>
               </PFDataListItem>
           ) }
-          { !isLoading && templates.map(({ name, count, id }, index) => (
+          { templates.map(({ name, count, id }, index) => (
               <DataListItem aria-labelledby="top-templates-detail" key={ index }>
                   <DataListCell>
                       <a
@@ -315,8 +299,7 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
 
 TemplatesList.propTypes = {
     templates: PropTypes.array,
-    isLoading: PropTypes.bool,
-    queryParams: PropTypes.object
+    history: PropTypes.object
 };
 
 export default TemplatesList;

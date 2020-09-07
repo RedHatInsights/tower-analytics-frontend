@@ -29,7 +29,7 @@ const DataCellEnd = styled(DataListCell)`
   align-items: center;
 `;
 
-const ModulesList = ({ modules, isLoading }) => (
+const ModulesList = ({ modules }) => (
     <DataList aria-label="Top Modules" style={ {
         maxHeight: '400px',
         overflow: 'auto',
@@ -44,21 +44,10 @@ const ModulesList = ({ modules, isLoading }) => (
                 <h3>Usage</h3>
             </DataCellEnd>
         </DataListItem>
-        { isLoading && (
-            <PFDataListItem
-                aria-labelledby="modules-loading"
-                key={ isLoading }
-                style={ { border: 'none' } }
-            >
-                <PFDataListCell>
-                    <LoadingState />
-                </PFDataListCell>
-            </PFDataListItem>
-        ) }
-        { !isLoading && modules.length <= 0 && (
+        { modules.length <= 0 && (
             <PFDataListItem
                 aria-labelledby="modules-no-data"
-                key={ isLoading }
+                key={ 0 }
                 style={ { border: 'none' } }
             >
                 <PFDataListCell>
@@ -67,7 +56,7 @@ const ModulesList = ({ modules, isLoading }) => (
                 </PFDataListCell>
             </PFDataListItem>
         ) }
-        { !isLoading && modules.filter(module => module.module !== null).map(({ module, count }, index) => (
+        { modules.filter(module => module.module !== null).map(({ module, count }, index) => (
             <DataListItem aria-labelledby="top-modules-detail" key={ index }>
                 <DataListCell>
                     <span>{ trimStr(module) }</span>
@@ -81,8 +70,7 @@ const ModulesList = ({ modules, isLoading }) => (
 );
 
 ModulesList.propTypes = {
-    modules: PropTypes.array,
-    isLoading: PropTypes.bool
+    modules: PropTypes.array
 };
 
 export default ModulesList;
