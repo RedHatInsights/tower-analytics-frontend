@@ -135,20 +135,12 @@ export const ChartWrapper = ({
             width,
             margin,
             selected: legendSelected,
-            // Data because of the destructuring
             lineNames,
             colors,
             onClick,
             id,
-            chartClass,
             data,
             value,
-            xAxis,
-            yAxis,
-            overflow,
-            legend,
-            legendSelector,
-            noMargin,
             ...props
         });
     };
