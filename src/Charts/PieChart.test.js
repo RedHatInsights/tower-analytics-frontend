@@ -21,7 +21,7 @@ beforeEach(() => {
 
 });
 
-describe('Charts/BarChart', () => {
+describe('Charts/PieChart', () => {
     it('should render successfully', () => {
         mount(<ChartWrapper
             data={ data }

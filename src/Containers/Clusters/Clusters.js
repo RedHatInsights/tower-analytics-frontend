@@ -1,6 +1,7 @@
 /*eslint camelcase: ["error", { properties: "never" }]*/
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+import { scaleOrdinal } from 'd3';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
@@ -112,6 +113,7 @@ const Clusters = ({ history }) => {
     const { queryParams, setEndDate, setStartDate, setId } = useQueryParams(
         initialQueryParams
     );
+    const colors = scaleOrdinal([ '#6EC664', '#A30000' ]);
 
     useEffect(() => {
         setIsLoading(true);
@@ -255,7 +257,7 @@ const Clusters = ({ history }) => {
                           <ChartWrapper
                               data={ mainChartData }
                               lineNames={ [ 'successful', 'failed' ] }
-                              colors={ [ '#6EC664', '#A30000' ] }
+                              colors={ colors }
                               xAxis={ {
                                   text: 'Date'
                               } }
@@ -265,10 +267,7 @@ const Clusters = ({ history }) => {
                               value={ clusterTimeFrame }
                               onClick={ redirectToJobExplorer }
                               chart={ currentChart().chart }
-                              tooltip={ tooltip({
-                                  lineNames: [ 'successful', 'failed' ],
-                                  colors: [ '#6EC664', '#A30000' ]
-                              }) }
+                              tooltip={ tooltip }
                           />
                       ) }
                   </CardBody>

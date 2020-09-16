@@ -45,7 +45,7 @@ beforeEach(() => {
 
 });
 
-describe('Charts/LineChart', () => {
+describe('Charts/GroupedBarChart', () => {
     it('should render successfully', () => {
         mount(<ChartWrapper
             data={ data }

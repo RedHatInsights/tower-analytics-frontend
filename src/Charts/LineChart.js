@@ -1,9 +1,18 @@
 import * as d3 from 'd3';
 
-export const LineChart = props => {
-    const { addXAxis, addYAxis, svg, data, height, width, lineNames } = props;
-    const colors = d3.scaleOrdinal(props.colors);
-
+export const LineChart = ({
+    addXAxis,
+    addYAxis,
+    svg,
+    data,
+    height,
+    width,
+    lineNames,
+    colors,
+    tooltip: tooltipFnc,
+    id,
+    onClick
+}) => {
     const setDomains = () => ({
         x: d3
         .scaleTime()
@@ -20,7 +29,7 @@ export const LineChart = props => {
     addXAxis(svg, x);
 
     // Tooltip
-    const tooltip = props.tooltip({ svg: '#' + props.id });
+    const tooltip = tooltipFnc({ svg: '#' + id, lineNames, colors });
 
     const transition = path => {
         function tweenDash() {
@@ -100,7 +109,7 @@ export const LineChart = props => {
         .on('mouseover', handleMouseOver)
         .on('mousemove', handleMouseMove)
         .on('mouseout', handleMouseOut)
-        .on('click', ({ xAxis }) => props.onClick(xAxis));
+        .on('click', ({ xAxis }) => onClick(xAxis));
     });
 };
 

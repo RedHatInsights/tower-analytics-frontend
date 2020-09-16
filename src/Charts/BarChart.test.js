@@ -30,9 +30,9 @@ describe('Charts/BarChart', () => {
         mount(<ChartWrapper
             data={ data }
             lineNames={ [ 'successful', 'failed' ] }
-            colors={ [ 'green', 'red' ] }
+            colors={ () => 'red' }
             chart={ barChart }
-            tooltip={ tooltip({ lineNames: [ 'successful', 'failed' ], colors: [ 'green', 'red' ]}) }
+            tooltip={ tooltip }
         />);
     });
 });

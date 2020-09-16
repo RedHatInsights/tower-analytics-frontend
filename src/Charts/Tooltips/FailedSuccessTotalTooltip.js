@@ -1,6 +1,6 @@
 import * as d3 from 'd3';
 
-const Tooltip = ({ lineNames, colors }) => ({ svg }) => {
+const Tooltip = ({ lineNames, colors, svg }) => {
     const toolTipBase = d3.select(svg + '> svg').append('g')
     .attr('id', 'svg-chart-Tooltip.base-' + svg.slice(1))
     .attr('overflow', 'visible')
@@ -31,14 +31,14 @@ const Tooltip = ({ lineNames, colors }) => ({ svg }) => {
     .attr('cy', 0)
     .attr('r', 7)
     .attr('stroke', 'white')
-    .attr('fill', colors[0]);
+    .attr('fill', colors(lineNames[0]));
     const circleRed = toolTipBase
     .append('circle')
     .attr('cx', 26)
     .attr('cy', 26)
     .attr('r', 7)
     .attr('stroke', 'white')
-    .attr('fill', colors[1]);
+    .attr('fill', colors(lineNames[1]));
     const successText = toolTipBase
     .append('text')
     .attr('x', 43)

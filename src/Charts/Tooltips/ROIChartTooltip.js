@@ -5,7 +5,7 @@ const formatDollars = amount => {
     .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 };
 
-const Tooltip = () => ({ svg }) => {
+const Tooltip = ({ svg }) => {
     const toolTipBase = d3.select(svg + '> svg')
     .append('g')
     .attr('id', 'svg-chart-Tooltip.base-' + svg.slice(1))

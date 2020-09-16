@@ -25,7 +25,6 @@ export const ChartWrapper = ({
     legend = null,
     legendSelector = false,
     noMargin = false,
-    small = false,
     ...props
 }) => {
     const [ legendHeight, setLegendHeight ] = useState(100);
@@ -40,6 +39,8 @@ export const ChartWrapper = ({
     const getWrapper = () => d3.select('#' + id);
 
     const clearWrapper = () => d3.selectAll('#' + id + ' > *').remove();
+
+    const hasLegend = () => (xAxis && xAxis.text) || (yAxis && yAxis.text);
 
     const getSizes = wrapper => {
         let w = 0;
@@ -129,6 +130,7 @@ export const ChartWrapper = ({
             svg,
             addXAxis,
             addYAxis,
+            yAxis,
             height,
             width,
             margin,
@@ -147,7 +149,6 @@ export const ChartWrapper = ({
             legend,
             legendSelector,
             noMargin,
-            small,
             ...props
         });
     };
@@ -186,7 +187,7 @@ export const ChartWrapper = ({
 
     return (
         <>
-            <div id={ id } className={ chartClass + (small ? ' small' : '') } />
+            <div id={ id } className={ chartClass + (!hasLegend ? ' small' : '') } />
             { legend &&
                 <Legend
                     data={ legend }
@@ -204,7 +205,7 @@ ChartWrapper.propTypes = {
     data: PropTypes.array,
     chartClass: PropTypes.string,
     lineNames: PropTypes.array,
-    colors: PropTypes.array,
+    colors: PropTypes.func,
     value: PropTypes.number,
     xAxis: PropTypes.shape({
         text: PropTypes.string
@@ -221,8 +222,7 @@ ChartWrapper.propTypes = {
     }),
     legend: PropTypes.array,
     legendSelector: PropTypes.bool,
-    noMargin: PropTypes.bool,
-    small: PropTypes.bool
+    noMargin: PropTypes.bool
 };
 
 export default ChartWrapper;

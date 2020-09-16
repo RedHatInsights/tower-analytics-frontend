@@ -1,9 +1,19 @@
 import * as d3 from 'd3';
 
-const BarChart = props => {
-    const { svg, data, addXAxis, addYAxis, width, height, lineNames } = props;
-    const colors = d3.scaleOrdinal(props.colors);
-    const tooltip = props.tooltip({ svg: '#' + props.id });
+const BarChart = ({
+    svg,
+    data,
+    addXAxis,
+    addYAxis,
+    width,
+    height,
+    lineNames,
+    colors,
+    tooltip: tooltipFnc,
+    id,
+    onClick
+}) => {
+    const tooltip = tooltipFnc({ svg: '#' + id, lineNames, colors });
 
     const setDomains = () => ({
         x: d3
@@ -55,7 +65,7 @@ const BarChart = props => {
     .on('mouseover', tooltip.handleMouseOver)
     .on('mouseover', tooltip.handleMouseOver)
     .on('mouseout', tooltip.handleMouseOut)
-    .on('click', ({ data }) => props.onClick(data.xAxis));
+    .on('click', ({ data }) => onClick(data.xAxis));
 };
 
 export default BarChart;

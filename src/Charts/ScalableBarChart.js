@@ -1,8 +1,17 @@
 import * as d3 from 'd3';
 
-const ScalableBarChart = (props) => {
-    const { margin, svg, data, height, width, lineNames, colors } = props;
-
+const ScalableBarChart = ({
+    margin,
+    svg,
+    data,
+    height,
+    width,
+    lineNames,
+    colors,
+    tooltip: tooltipFnc,
+    id,
+    yAxis: yLabel
+}) => {
     const setDomains = () => ({
         x: d3
         .scaleBand()
@@ -29,7 +38,7 @@ const ScalableBarChart = (props) => {
     .tickSize(-width, 0, 0);
 
     // Tooltip
-    const tooltip = props.tooltip({ svg: '#' + props.id });
+    const tooltip = tooltipFnc({ svg: '#' + id });
 
     // add y axis
     svg
@@ -52,7 +61,7 @@ const ScalableBarChart = (props) => {
     .attr('x', 0 - height / 2)
     .attr('dy', '1em')
     .style('text-anchor', 'middle')
-    .text(props.yAxis.text);
+    .text(yLabel.text);
 
     // add x axis
     svg
@@ -74,15 +83,15 @@ const ScalableBarChart = (props) => {
     .attr('x', d => x(d.xAxis))
     .attr('width', x.bandwidth() - 2)
     .attr('y', d => y(d[lineNames[0]]))
-    .style('fill', () => colors[0])
+    .style('fill', () => colors(lineNames[0]))
     .attr('height', d => height - y(d[lineNames[0]]))
     .on('mouseover', function(d) {
-        d3.select(this).style('fill', d3.rgb(colors[0]).darker(1));
+        d3.select(this).style('fill', d3.rgb(colors(lineNames[0])).darker(1));
         tooltip.handleMouseOver(d);
     })
     .on('mousemove', tooltip.handleMouseOver)
     .on('mouseout', function() {
-        d3.select(this).style('fill', colors[0]);
+        d3.select(this).style('fill', colors(lineNames[0]));
         tooltip.handleMouseOut();
     });
 };

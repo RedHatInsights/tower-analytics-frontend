@@ -47,19 +47,19 @@ beforeEach(() => {
 
 });
 
-describe('Charts/BarChart', () => {
+describe('Charts/ScalableBarChart', () => {
     it('should render successfully', () => {
         mount(<ChartWrapper
             data={ data }
             lineNames={ [ 'delta' ] }
-            colors={ [ 'green' ] }
+            colors={ () => 'green' }
             chart={ chart }
             overflow={ {
                 enabled: true,
                 wrapperClass: 'chart-overflow-wrapper',
                 visibleCols: 15
             } }
-            tooltip={ tooltip() }
+            tooltip={ tooltip }
         />);
     });
 });

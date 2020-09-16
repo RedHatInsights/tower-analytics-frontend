@@ -457,7 +457,7 @@ const AutomationCalculator = ({ history }) => {
                                   calculations: el.calculations
                               })) }
                               lineNames={ [ 'delta' ] }
-                              colors={ [ '#0066CC' ] }
+                              colors={ () => '#0066CC' }
                               xAxis={ {
                                   text: ''
                               } }
@@ -470,7 +470,7 @@ const AutomationCalculator = ({ history }) => {
                                   wrapperClass: 'chart-overflow-wrapper',
                                   visibleCols: 15
                               } }
-                              tooltip={ tooltip() }
+                              tooltip={ tooltip }
                           />
                         <p style={ { textAlign: 'center' } }>Templates</p>
                       </>

@@ -310,7 +310,6 @@ const OrganizationStatistics = ({ history }) => {
                                           }))
                                       }
                                       noMargin
-                                      small
                                   />
                               </div>
                           ) }
@@ -342,7 +341,6 @@ const OrganizationStatistics = ({ history }) => {
                                           }))
                                       }
                                       noMargin
-                                      small
                                   />
                               </div>
                           ) }
