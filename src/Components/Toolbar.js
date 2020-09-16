@@ -300,6 +300,10 @@ const FilterableToolbar = ({
                         selections={ passedFilters.org }
                         isExpanded={ orgIsExpanded }
                         placeholderText="Filter by organization"
+                        style={ {
+                            maxHeight: 500,
+                            overflow: 'auto'
+                        } }
                     >
                         { organizationIdMenuItems }
                     </Select>
@@ -323,6 +327,10 @@ const FilterableToolbar = ({
                         selections={ passedFilters.cluster }
                         isExpanded={ clusterIsExpanded }
                         placeholderText="Filter by cluster"
+                        style={ {
+                            maxHeight: 500,
+                            overflow: 'auto'
+                        } }
                     >
                         { clusterIdMenuItems }
                     </Select>
@@ -343,7 +351,7 @@ const FilterableToolbar = ({
                         } }
                         selections={ passedFilters.template }
                         isExpanded={ templateIsExpanded }
-                        placeholderText="Filter by template"
+                        placeholderText="Filter by template"z
                     >
                         { templateIdMenuItems }
                     </Select>

@@ -25,11 +25,10 @@ import {
 } from '@redhat-cloud-services/frontend-components';
 
 import {
-    Badge,
     Card,
     CardBody,
     CardHeader as PFCardHeader,
-    Pagination,
+    Pagination as PFPagination,
     PaginationVariant
 } from '@patternfly/react-core';
 
@@ -45,13 +44,14 @@ const CardHeader = styled(PFCardHeader)`
   }
 `;
 
-const TitleWithBadge = styled.div`
+const CompactPagination = styled(PFPagination)`
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  margin: 0;
+`;
 
-  h2 {
-    margin-right: 10px;
-  }
+const Pagination = styled(PFPagination)`
+  margin-top: 20px;
 `;
 
 const perPageOptions = [
@@ -341,7 +341,7 @@ const JobExplorer = props => {
       Automation Analytics
             <span style={ { fontSize: '16px' } }>
                 { ' ' }
-                <span style={ { margin: '0 10px' } }>|</span> All Jobs
+                <span style={ { margin: '0 10px' } }>|</span> Jobs explorer
             </span>
         </span>
     );
@@ -376,12 +376,6 @@ const JobExplorer = props => {
           <Main>
               <Card>
                   <CardHeader>
-                      <TitleWithBadge>
-                          <h2>
-                              <strong>Total Jobs</strong>
-                          </h2>
-                          <Badge isRead>{ meta.count ? meta.count : 0 }</Badge>
-                      </TitleWithBadge>
                   </CardHeader>
                   <CardBody>
                       <FilterableToolbar
@@ -395,6 +389,22 @@ const JobExplorer = props => {
                           onDelete={ onDelete }
                           passedFilters={ filters }
                           handleFilters={ setFilters }
+                      />
+                      <CompactPagination
+                          itemCount={ meta.count ? meta.count : 0 }
+                          widgetId="pagination-options-menu-top"
+                          perPageOptions={ perPageOptions }
+                          perPage={ queryParams.limit }
+                          page={ currPage }
+                          variant={ PaginationVariant.bottom }
+                          dropDirection={ 'up' }
+                          onPerPageSelect={ (_event, perPage, page) => {
+                              handlePerPageSelect(perPage, page);
+                          } }
+                          onSetPage={ (_event, pageNumber) => {
+                              handleSetPage(pageNumber);
+                          } }
+                          isCompact
                       />
                       { apiError && <ApiErrorState message={ apiError } /> }
                       { !apiError && isLoading && <LoadingState /> }
@@ -435,3 +445,4 @@ JobExplorer.propTypes = {
 };
 
 export default JobExplorer;
+
