@@ -53,7 +53,7 @@ const Switch = styled(PFSwitch)`
  * Get comparator values if their key is in the item list
  */
 export const handleChips = (item, comparator) => {
-    if (item === null && comparator == null) {
+    if (item === null || item === undefined || comparator === null || comparator === undefined) {
         return new Array();
     };
     const result = item.reduce((acc, i) => {
@@ -72,9 +72,10 @@ export const handleChips = (item, comparator) => {
  * Convert a list of objects to a list of the last value if defined
  */
 export const handleDateChips = (date, comparator) => {
-    console.log('date', date);
-    console.log('comparator', comparator);
-    if (date && typeof date === 'string' && comparator !== null) {
+    if (date === null || date === undefined || comparator === null || comparator === undefined) {
+        return new Array();
+    };
+    if (date && typeof date === 'string') {
         let val;
         comparator.forEach(i => {
             if (i.key === date) {
@@ -86,7 +87,6 @@ export const handleDateChips = (date, comparator) => {
             return new Array(val);
         }
     }
-
     return new Array();
 };
 
@@ -111,8 +111,6 @@ const FilterableToolbar = ({
     const [ templateIsExpanded, setTemplateIsExpanded ] = useState(false);
     const [ sortByIsExpanded, setSortByIsExpanded ] = useState(false);
     const [ currentCategory, setCurrentCategory ] = useState('Status');
-
-    console.log('FTB dr', dateRanges);
 
     const handleStartDate = e => {
         handleFilters({

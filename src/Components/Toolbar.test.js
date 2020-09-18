@@ -12,7 +12,7 @@ describe('Components/Toolbar/handleChips', () => {
         const result = handleChips(statusParam, statusesParam);
         expect(result).toEqual(expect.arrayContaining(expected));
     });
-    it('should accept two empy arrays and return an empty array', () => {
+    it('should accept two empty arrays and return an empty array', () => {
         const statusParam = [];
         const statusesParam = [];
         const expected = [];
@@ -36,28 +36,42 @@ describe('Components/Toolbar/handleChips', () => {
 });
 
 describe('Components/Toolbar/handleDateChips', () => {
-    it('should accept two nulls and return an empty list', () => {
+    it('should accept two nulls and return an empty array', () => {
         const date = null;
         const comparator = null;
         const expected = new Array();
         const result = handleDateChips(date, comparator);
         expect(result).toEqual(expect.arrayContaining(expected));
     });
-    it('should accept an null date and return an empty list', () => {
+    it('should accept a null date and return an empty array', () => {
         const date = null;
         const comparator = [{key: 'id:asc', value: 'ID ascending'}];
         const expected = new Array();
         const result = handleDateChips(date, comparator);
-        console.log(result);
         expect(result).toEqual(expect.arrayContaining(expected));
     });
-    it('should accept an valid date param and return a non-empty list', () => {
+    it('should accept a valid date param and return a non-empty array', () => {
         const date = 'id:asc';
         const comparator = [{key: 'id:asc', value: 'ID ascending'}, {key: 'id:desc', value: 'ID descending'}];
         const expected = ['ID ascending'];
         const result = handleDateChips(date, comparator);
-        console.log(result);
         expect(result).toEqual(expect.arrayContaining(expected));
     });
 
+});
+
+describe('Components/Toolbar/FilterableToolbar', () => {
+    it('should shallow mount', () => {
+        let wrapper = shallow(
+            <FilterableToolbar
+                orgs={[]}
+                statuses={[]}
+                types={[]}
+                clusters={[]}
+                templates={[]}
+                sortables={[]}
+                dateRanges={[]}
+                passedFilters={{ status: null }}
+            />);
+    });
 });
