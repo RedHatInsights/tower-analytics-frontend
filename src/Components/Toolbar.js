@@ -62,8 +62,6 @@ const handleChips = (item, comparator) => {
 };
 
 const handleDateChips = (date, comparator) => {
-    console.log('handleDateChips date', date);
-    console.log('handleDateChips comparator', comparator);
     if (date && typeof date === 'string') {
         let val;
         comparator.forEach(i => {
@@ -72,15 +70,14 @@ const handleDateChips = (date, comparator) => {
                 val = i.value;
             }
         });
-        console.log('handleDateChips return 1');
-        //return new Array(val);
-        //return {};
-        return {val};
+
+        // ToolbarFilter errors out on [undefined]
+        if (val !== undefined) {
+            return new Array(val);
+        }
     }
 
-    console.log('handleDateChips return 2');
-    //return new Array();
-    return {};
+    return new Array();
 };
 
 const FilterableToolbar = ({
