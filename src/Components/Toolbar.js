@@ -49,30 +49,39 @@ const Switch = styled(PFSwitch)`
     }
 `;
 
-const handleChips = (item, comparator) => {
-    return item.reduce((acc, i) => {
+/**
+ * Get comparator values if their key is in the item list
+ */
+export const handleChips = (item, comparator) => {
+    if (item === null && comparator == null) {
+        return new Array();
+    };
+    const result = item.reduce((acc, i) => {
         Number.isInteger(parseInt(i)) ? (i = parseInt(i)) : i;
-        comparator.forEach(item => {
-            if (item.key === i) {
-                acc.push(item.value);
+        comparator.forEach(cmpItem => {
+            if (cmpItem.key === i) {
+                acc.push(cmpItem.value);
             }
         });
         return acc;
     }, []);
+    return result;
 };
 
-const handleDateChips = (date, comparator) => {
-    // comparator can not be null or forEach will throw an error
+/**
+ * Convert a list of objects to a list of the last value if defined
+ */
+export const handleDateChips = (date, comparator) => {
+    console.log('date', date);
+    console.log('comparator', comparator);
     if (date && typeof date === 'string' && comparator !== null) {
         let val;
         comparator.forEach(i => {
-            console.log(i);
             if (i.key === date) {
                 val = i.value;
             }
         });
 
-        // ToolbarFilter errors out on [undefined]
         if (val !== undefined) {
             return new Array(val);
         }
@@ -102,6 +111,8 @@ const FilterableToolbar = ({
     const [ templateIsExpanded, setTemplateIsExpanded ] = useState(false);
     const [ sortByIsExpanded, setSortByIsExpanded ] = useState(false);
     const [ currentCategory, setCurrentCategory ] = useState('Status');
+
+    console.log('FTB dr', dateRanges);
 
     const handleStartDate = e => {
         handleFilters({
