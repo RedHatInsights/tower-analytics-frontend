@@ -3,6 +3,8 @@ import { mount,shallow } from 'enzyme';
 import FilterableToolbar from './Toolbar';
 import { handleChips } from './Toolbar';
 import { handleDateChips } from './Toolbar';
+import { toolbarCategories } from '../Utilities/constants';
+import { ToolbarFilter } from '@patternfly/react-core';
 
 describe('Components/Toolbar/handleChips', () => {
     it('should accept two nulls and return an empty array', () => {
@@ -73,5 +75,42 @@ describe('Components/Toolbar/FilterableToolbar', () => {
                 dateRanges={[]}
                 passedFilters={{ status: null }}
             />);
+        expect(wrapper).toBeTruthy();
     });
+    it('should only have 1 button (Status) when the dropdown is not activated', () => {
+        let wrapper = mount( 
+            <FilterableToolbar
+                orgs={[]}
+                statuses={[]}
+                types={[]}
+                clusters={[]}
+                templates={[]}
+                sortables={[]}
+                dateRanges={[]}
+                passedFilters={{ status: null, date: null }}
+            />);
+        const buttons = wrapper.find({className: "pf-c-dropdown__toggle"});
+        expect(buttons.length).toBe(1);
+        const buttonTexts = buttons.map((b) => {
+            return b.text().trim();
+        });
+        expect(buttonTexts).toEqual(expect.arrayContaining(['Status']));
+    });
+    it('should have the correct number of categories', () => {
+        let wrapper = mount( 
+            <FilterableToolbar
+                orgs={[]}
+                statuses={[]}
+                types={[]}
+                clusters={[]}
+                templates={[]}
+                sortables={[]}
+                dateRanges={[]}
+                passedFilters={{ status: null, date: null }}
+            />);
+
+        const categories = wrapper.find(ToolbarFilter).map((x) => x.props().categoryName);
+        expect(categories.length).toBe(toolbarCategories.length);
+    });
+
 });
