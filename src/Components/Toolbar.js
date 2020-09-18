@@ -1,3 +1,4 @@
+/*eslint-disable */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -61,17 +62,25 @@ const handleChips = (item, comparator) => {
 };
 
 const handleDateChips = (date, comparator) => {
+    console.log('handleDateChips date', date);
+    console.log('handleDateChips comparator', comparator);
     if (date && typeof date === 'string') {
         let val;
         comparator.forEach(i => {
+            console.log(i);
             if (i.key === date) {
                 val = i.value;
             }
         });
-        return new Array(val);
+        console.log('handleDateChips return 1');
+        //return new Array(val);
+        //return {};
+        return {val};
     }
 
-    return new Array();
+    console.log('handleDateChips return 2');
+    //return new Array();
+    return {};
 };
 
 const FilterableToolbar = ({
@@ -171,6 +180,11 @@ const FilterableToolbar = ({
             </SelectOption>
         ));
 
+        // sortables must be a map'able object ...
+        if ( sortables === null ) {
+            sortables = [];
+        };
+
         const sortByMenuItems = sortables.map(({ key, value }) => (
             <SelectOption key={ key } value={ key }>
                 { value }
@@ -257,6 +271,7 @@ const FilterableToolbar = ({
                     >
                         { dateRangeMenuItems }
                     </Select>
+
                 </ToolbarFilter>
                 <ToolbarFilter
                     showToolbarItem={ currentCategory === 'Job' }
@@ -383,42 +398,40 @@ const FilterableToolbar = ({
         >
             <ToolbarContent>
                 <ToolbarToggleGroup toggleIcon={ <FilterIcon /> } breakpoint="xl">
-                    { dateRanges.length > 0 && (
-                        <ToolbarGroup variant="filter-group">
-                            { buildCategoryDropdown(toolbarCategories) }
-                            { buildFilterDropdown() }
-                            { passedFilters.date === 'custom' && (
-                <>
-                  <InputGroup>
-                      <InputGroupText component="label" htmlFor="startDate">
-                          <CalendarAltIcon />
-                      </InputGroupText>
-                      <TextInput
-                          name="startDate"
-                          id="startDate"
-                          type="date"
-                          aria-label="Start Date"
-                          value={ passedFilters.startDate || '' }
-                          onChange={ e => handleStartDate(e) }
-                      />
-                  </InputGroup>
-                  <InputGroup>
-                      <InputGroupText component="label" htmlFor="endDate">
-                          <CalendarAltIcon />
-                      </InputGroupText>
-                      <TextInput
-                          name="endDate"
-                          id="endDate"
-                          type="date"
-                          aria-label="End Date"
-                          value={ passedFilters.endDate || '' }
-                          onChange={ e => handleEndDate(e) }
-                      />
-                  </InputGroup>
-                </>
-                            ) }
-                        </ToolbarGroup>
-                    ) }
+                    <ToolbarGroup variant="filter-group">
+                        { buildCategoryDropdown(toolbarCategories) }
+                        { buildFilterDropdown() }
+                        { ( currentCategory === 'Date' && passedFilters.date === 'custom' ) && (
+                            <>
+                              <InputGroup>
+                                  <InputGroupText component="label" htmlFor="startDate">
+                                      <CalendarAltIcon />
+                                  </InputGroupText>
+                                  <TextInput
+                                      name="startDate"
+                                      id="startDate"
+                                      type="date"
+                                      aria-label="Start Date"
+                                      value={ passedFilters.startDate || '' }
+                                      onChange={ e => handleStartDate(e) }
+                                  />
+                              </InputGroup>
+                              <InputGroup>
+                                  <InputGroupText component="label" htmlFor="endDate">
+                                      <CalendarAltIcon />
+                                  </InputGroupText>
+                                  <TextInput
+                                      name="endDate"
+                                      id="endDate"
+                                      type="date"
+                                      aria-label="End Date"
+                                      value={ passedFilters.endDate || '' }
+                                      onChange={ e => handleEndDate(e) }
+                                  />
+                              </InputGroup>
+                            </>
+                        )}
+                    </ToolbarGroup>
                 </ToolbarToggleGroup>
                 <div>
                     <Switch
