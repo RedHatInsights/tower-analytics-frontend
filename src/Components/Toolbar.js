@@ -62,7 +62,8 @@ const handleChips = (item, comparator) => {
 };
 
 const handleDateChips = (date, comparator) => {
-    if (date && typeof date === 'string') {
+    // comparator can not be null or forEach will throw an error
+    if (date && typeof date === 'string' && comparator !== null) {
         let val;
         comparator.forEach(i => {
             console.log(i);
@@ -177,16 +178,14 @@ const FilterableToolbar = ({
             </SelectOption>
         ));
 
-        // sortables must be a map'able object ...
-        if ( sortables === null ) {
-            sortables = [];
+        let sortByMenuItems = [];
+        if ( sortables !== null ) {
+            sortByMenuItems = sortables.map(({ key, value }) => (
+                <SelectOption key={ key } value={ key }>
+                    { value }
+                </SelectOption>
+            ));
         };
-
-        const sortByMenuItems = sortables.map(({ key, value }) => (
-            <SelectOption key={ key } value={ key }>
-                { value }
-            </SelectOption>
-        ));
 
         const dateRangeMenuItems = dateRanges.map(({ key, value }) => (
             <SelectOption key={ key } value={ key }>
