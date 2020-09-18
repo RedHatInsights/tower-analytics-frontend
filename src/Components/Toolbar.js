@@ -1,4 +1,3 @@
-/*eslint-disable */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -54,17 +53,21 @@ const Switch = styled(PFSwitch)`
  */
 export const handleChips = (item, comparator) => {
     if (item === null || item === undefined || comparator === null || comparator === undefined) {
-        return new Array();
-    };
+        return [];
+    }
+
     const result = item.reduce((acc, i) => {
         Number.isInteger(parseInt(i)) ? (i = parseInt(i)) : i;
+
         comparator.forEach(cmpItem => {
             if (cmpItem.key === i) {
                 acc.push(cmpItem.value);
             }
         });
+
         return acc;
     }, []);
+
     return result;
 };
 
@@ -74,7 +77,8 @@ export const handleChips = (item, comparator) => {
 export const handleDateChips = (date, comparator) => {
     if (date === null || date === undefined || comparator === null || comparator === undefined) {
         return new Array();
-    };
+    }
+
     if (date && typeof date === 'string') {
         let val;
         comparator.forEach(i => {
@@ -87,6 +91,7 @@ export const handleDateChips = (date, comparator) => {
             return new Array(val);
         }
     }
+
     return new Array();
 };
 
@@ -188,13 +193,14 @@ const FilterableToolbar = ({
         ));
 
         let sortByMenuItems = [];
-        if ( sortables !== null ) {
+        if (sortables !== null) {
+
             sortByMenuItems = sortables.map(({ key, value }) => (
                 <SelectOption key={ key } value={ key }>
                     { value }
                 </SelectOption>
             ));
-        };
+        }
 
         const dateRangeMenuItems = dateRanges.map(({ key, value }) => (
             <SelectOption key={ key } value={ key }>
@@ -406,7 +412,7 @@ const FilterableToolbar = ({
                     <ToolbarGroup variant="filter-group">
                         { buildCategoryDropdown(toolbarCategories) }
                         { buildFilterDropdown() }
-                        { ( currentCategory === 'Date' && passedFilters.date === 'custom' ) && (
+                        { (currentCategory === 'Date' && passedFilters.date === 'custom') && (
                             <>
                               <InputGroup>
                                   <InputGroupText component="label" htmlFor="startDate">
@@ -435,7 +441,7 @@ const FilterableToolbar = ({
                                   />
                               </InputGroup>
                             </>
-                        )}
+                        ) }
                     </ToolbarGroup>
                 </ToolbarToggleGroup>
                 <div>
