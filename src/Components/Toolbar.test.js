@@ -40,14 +40,14 @@ describe('Components/Toolbar/handleDateChips', () => {
     it('should accept two nulls and return an empty array', () => {
         const date = null;
         const comparator = null;
-        const expected = new Array();
+        const expected = [];
         const result = handleDateChips(date, comparator);
         expect(result).toEqual(expect.arrayContaining(expected));
     });
     it('should accept a null date and return an empty array', () => {
         const date = null;
         const comparator = [{ key: 'id:asc', value: 'ID ascending' }];
-        const expected = new Array();
+        const expected = [];
         const result = handleDateChips(date, comparator);
         expect(result).toEqual(expect.arrayContaining(expected));
     });
