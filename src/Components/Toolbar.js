@@ -75,11 +75,7 @@ export const handleChips = (item, comparator) => {
  * Convert a list of objects to a list of the last value if defined
  */
 export const handleDateChips = (date, comparator) => {
-    if (date === null || date === undefined || comparator === null || comparator === undefined) {
-        return [];
-    }
-
-    if (date && typeof date === 'string') {
+    if (date && typeof date === 'string' && comparator) {
         let val;
         comparator.forEach(i => {
             if (i.key === date) {
