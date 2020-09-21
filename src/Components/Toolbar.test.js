@@ -1,4 +1,3 @@
-import { mount, shallow } from 'enzyme';
 import FilterableToolbar from './Toolbar';
 import { handleChips } from './Toolbar';
 import { handleDateChips } from './Toolbar';
@@ -37,26 +36,49 @@ describe('Components/Toolbar/handleChips', () => {
 });
 
 describe('Components/Toolbar/handleDateChips', () => {
+    it('should accept two undefineds and return an empty array', () => {
+        const date = undefined;
+        const comparator = undefined;
+        const expected = [];
+        const result = handleDateChips(date, comparator);
+        expect(result).toEqual(expected);
+    });
     it('should accept two nulls and return an empty array', () => {
         const date = null;
         const comparator = null;
         const expected = [];
         const result = handleDateChips(date, comparator);
-        expect(result).toEqual(expect.arrayContaining(expected));
+        expect(result).toEqual(expected);
     });
     it('should accept a null date and return an empty array', () => {
         const date = null;
         const comparator = [{ key: 'id:asc', value: 'ID ascending' }];
         const expected = [];
         const result = handleDateChips(date, comparator);
-        expect(result).toEqual(expect.arrayContaining(expected));
+        expect(result).toEqual(expected);
     });
     it('should accept a valid date param and return a non-empty array', () => {
         const date = 'id:asc';
         const comparator = [{ key: 'id:asc', value: 'ID ascending' }, { key: 'id:desc', value: 'ID descending' }];
         const expected = [ 'ID ascending' ];
         const result = handleDateChips(date, comparator);
-        expect(result).toEqual(expect.arrayContaining(expected));
+        expect(result).toEqual(expected);
+    });
+    it('should accept a valid date param and a comparator of empty objects and return an empty array, not an array of undefined', () => {
+        const date = 'id:asc';
+        const comparator = [{ }, { }];
+        const expected = [];
+        const result = handleDateChips(date, comparator);
+        console.log('result', result);
+        expect(result).toEqual([]);
+    });
+    it('should accept a valid date param and a null comparator and return an empty array, not an array of undefined', () => {
+        const date = 'id:asc';
+        const comparator = null;
+        const expected = [];
+        const result = handleDateChips(date, comparator);
+        console.log('result', result);
+        expect(result).toEqual([]);
     });
 
 });
