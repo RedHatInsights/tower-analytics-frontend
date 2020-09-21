@@ -88,7 +88,7 @@ export const handleDateChips = (date, comparator) => {
         });
 
         if (val !== undefined) {
-            return [val];
+            return [ val ];
         }
     }
 
