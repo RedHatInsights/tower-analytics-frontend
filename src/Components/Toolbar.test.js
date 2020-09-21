@@ -67,14 +67,12 @@ describe('Components/Toolbar/handleDateChips', () => {
     it('should accept a valid date param and a comparator of empty objects and return an empty array, not an array of undefined', () => {
         const date = 'id:asc';
         const comparator = [{ }, { }];
-        const expected = [];
         const result = handleDateChips(date, comparator);
         expect(result).toEqual([]);
     });
     it('should accept a valid date param and a null comparator and return an empty array, not an array of undefined', () => {
         const date = 'id:asc';
         const comparator = null;
-        const expected = [];
         const result = handleDateChips(date, comparator);
         expect(result).toEqual([]);
     });
