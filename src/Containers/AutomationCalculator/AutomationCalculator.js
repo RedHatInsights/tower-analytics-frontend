@@ -348,7 +348,7 @@ const AutomationCalculator = ({ history }) => {
     useEffect(() => {
         let ignore = false;
         const getData = () => {
-            const result = readROI({ params: queryParams });
+            const result = readROI({ params: queryParams }).catch(() => []);
             return result;
         };
 
