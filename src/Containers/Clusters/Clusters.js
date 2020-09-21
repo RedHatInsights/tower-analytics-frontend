@@ -140,7 +140,7 @@ const Clusters = ({ history }) => {
                 setModulesData(modulesData);
                 setTemplatesData(templatesData);
                 setIsLoading(false);
-            })
+            }).catch(() => [])
         );
     }, [ queryParams ]);
 
