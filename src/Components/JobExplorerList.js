@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -158,9 +157,12 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
 const AllJobsTemplate = ({ jobs }) => {
     const [ windowWidth, setWindowWidth ] = useState(window.innerWidth);
 
+    const onResize = () => setWindowWidth(window.innerWidth);
+
     useEffect(() => {
-        return window.addEventListener('resize', () => setWindowWidth(window.innerWidth));
-    }, [ windowWidth ]);
+        window.addEventListener('resize', onResize());
+        return () => window.removeEventListener('resize', onResize());
+    }, []);
 
     return buildListRow(jobs, 'All jobs view', 'all-jobs', windowWidth);
 };
@@ -168,18 +170,21 @@ const AllJobsTemplate = ({ jobs }) => {
 const JobExplorerList = ({ jobs }) => {
     const [ windowWidth, setWindowWidth ] = useState(window.innerWidth);
 
+    const onResize = () => setWindowWidth(window.innerWidth);
+
     useEffect(() => {
-        return window.addEventListener('resize', () => setWindowWidth(window.innerWidth));
-    }, [ windowWidth ]);
+        window.addEventListener('resize', onResize());
+        return () => window.removeEventListener('resize', onResize());
+    }, []);
 
     return (
         <>
-        {jobs.length <= 0 && <LoadingState />}
-        <>
-        { windowWidth >= mobileBreakpoint && buildHeader(headerLabels) }
-        <AllJobsTemplate jobs={ jobs } windowWidth={ windowWidth }/>
+            {jobs.length <= 0 && <LoadingState />}
+            <>
+                { windowWidth >= mobileBreakpoint && buildHeader(headerLabels) }
+                <AllJobsTemplate jobs={ jobs } windowWidth={ windowWidth }/>
+            </>
         </>
-    </>
     );
 };
 
