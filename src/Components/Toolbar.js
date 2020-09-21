@@ -52,23 +52,23 @@ const Switch = styled(PFSwitch)`
  * Get comparator values if their key is in the item list
  */
 export const handleChips = (item, comparator) => {
-    if (item === null || item === undefined || comparator === null || comparator === undefined) {
-        return [];
+    if (item && comparator) {
+        const result = item.reduce((acc, i) => {
+            Number.isInteger(parseInt(i)) ? (i = parseInt(i)) : i;
+
+            comparator.forEach(cmpItem => {
+                if (cmpItem.key === i) {
+                    acc.push(cmpItem.value);
+                }
+            });
+
+            return acc;
+        }, []);
+
+        return result;
     }
 
-    const result = item.reduce((acc, i) => {
-        Number.isInteger(parseInt(i)) ? (i = parseInt(i)) : i;
-
-        comparator.forEach(cmpItem => {
-            if (cmpItem.key === i) {
-                acc.push(cmpItem.value);
-            }
-        });
-
-        return acc;
-    }, []);
-
-    return result;
+    return [];
 };
 
 /**
