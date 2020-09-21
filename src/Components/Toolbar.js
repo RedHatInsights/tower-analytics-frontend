@@ -53,7 +53,7 @@ const Switch = styled(PFSwitch)`
  */
 export const handleChips = (item, comparator) => {
     if (item && comparator) {
-        const result = item.reduce((acc, i) => {
+        return item.reduce((acc, i) => {
             Number.isInteger(parseInt(i)) ? (i = parseInt(i)) : i;
 
             comparator.forEach(cmpItem => {
@@ -64,8 +64,6 @@ export const handleChips = (item, comparator) => {
 
             return acc;
         }, []);
-
-        return result;
     }
 
     return [];
