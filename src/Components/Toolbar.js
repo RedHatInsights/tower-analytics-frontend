@@ -76,7 +76,7 @@ export const handleChips = (item, comparator) => {
  */
 export const handleDateChips = (date, comparator) => {
     if (date === null || date === undefined || comparator === null || comparator === undefined) {
-        return new Array();
+        return [];
     }
 
     if (date && typeof date === 'string') {
@@ -88,11 +88,11 @@ export const handleDateChips = (date, comparator) => {
         });
 
         if (val !== undefined) {
-            return new Array(val);
+            return [val];
         }
     }
 
-    return new Array();
+    return [];
 };
 
 const FilterableToolbar = ({
