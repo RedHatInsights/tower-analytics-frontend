@@ -187,8 +187,7 @@ const FilterableToolbar = ({
         ));
 
         let sortByMenuItems = [];
-        if (sortables !== null) {
-
+        if (Array.isArray(sortables)) {
             sortByMenuItems = sortables.map(({ key, value }) => (
                 <SelectOption key={ key } value={ key }>
                     { value }
