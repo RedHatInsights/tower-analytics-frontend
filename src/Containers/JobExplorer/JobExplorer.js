@@ -134,7 +134,7 @@ const JobExplorer = props => {
         startDate: queryParams.start_date ? queryParams.start_date : null,
         endDate: queryParams.end_date ? queryParams.end_date : null,
         date: queryParams.quick_date_range ? queryParams.quick_date_range : 'last_30_days',
-        showRootWorkflows: queryParams.only_root_workflows_and_standalone_jobs ? queryParams.only_root_workflows_and_standalone_jobs : false
+        showRootWorkflows: queryParams.only_root_workflows_and_standalone_jobs === 'true' ? true : false
     });
     const updateURL = () => {
         const { jobExplorer } = Paths;
