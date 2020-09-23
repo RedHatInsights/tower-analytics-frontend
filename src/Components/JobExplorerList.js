@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import {
-    DataListCell,
+    DataListCell as PFDataListCell,
     DataListContent,
     DataList,
     DataListItem,
-    DataListItemRow as PFDataListItemRow,
+    DataListItemRow,
     DataListItemCells as PFDataListItemCells,
-    DataListToggle
+    DataListToggle as PFDataListToggle,
+    Tooltip
 } from '@patternfly/react-core';
 
 import { ExternalLinkAltIcon as PFExternalLinkIcon } from '@patternfly/react-icons';
@@ -27,39 +28,57 @@ const headerLabels = [
 ];
 
 const ExternalLinkIcon = styled(PFExternalLinkIcon)`
-  margin-left: 7px;
-  color: var(--pf-global--Color--400);
+    margin-left: 7px;
+    color: var(--pf-global--Color--400);
+`;
+
+const DataListCell = styled(PFDataListCell)`
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    text-align: center;
+`;
+
+const DataListCellHeader = styled(DataListCell)`
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-weight: bold;
 `;
 
 const DataListItemCells = styled(PFDataListItemCells)`
-align-items: center;
-margin-top: 5px;
+    align-items: center;
 `;
 
-const DataListItemRow = styled(PFDataListItemRow)`
-align-items: center; 
+const DataListToggle = styled(PFDataListToggle)`
+    align-items: center;
 `;
 
 const mobileBreakpoint = 765;
 
 const buildHeader = labels => (
-    <DataListItemRow style={ { paddingLeft: '94px', fontWeight: '800' } }>
-        { labels.map(label => (
-            <DataListCell key={ label }>
-                { label }
-                { label === 'Id/Name' &&
-                    <ExternalLinkIcon />
+    <DataListItem>
+        <DataListItemRow style={ { paddingLeft: '80px' } }>
+            <DataListItemCells
+                dataListCells={ labels.map(label => (
+                    <DataListCellHeader key={ label }>
+                        { label }
+                        { label === 'Id/Name' &&
+                              <ExternalLinkIcon />
+                        }
+                    </DataListCellHeader>
+                ))
                 }
-            </DataListCell>
-        )) }
-    </DataListItemRow>
+            />
+        </DataListItemRow>
+    </DataListItem>
 );
 
 const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
     const [ isExpanded, setIsExpanded ] = useState([]);
 
     return (
-        <DataList aria-label={ ariaLabel } isCompact>
+        <>
             { items.map((item, count) => {
                 const toggle = id => {
                     const expanded = isExpanded;
@@ -104,13 +123,15 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
                                             &nbsp;
                                         <JobStatus status={ item.status } />
                                     </DataListCell>,
-                                    <DataListCell key={ count++ }>
-                                        { windowWidth <= mobileBreakpoint &&
-                                         <span style={ { color: 'initial', fontWeight: 'bold' } }>Cluster:</span>
-                                        }
-                                        &nbsp;
-                                        { item.cluster_name }
-                                    </DataListCell>,
+                                    <Tooltip key={ count++ } content={ <p>{ item.cluster_name }</p> }>
+                                        <DataListCell>
+                                            { windowWidth <= mobileBreakpoint &&
+                                            <span style={ { color: 'initial', fontWeight: 'bold' } }>Cluster:</span>
+                                            }
+                                            &nbsp;
+                                            { item.cluster_name }
+                                        </DataListCell>
+                                    </Tooltip>,
                                     <DataListCell key={ count++ }>
                                         { windowWidth <= mobileBreakpoint &&
                                          <span style={ { color: 'initial', fontWeight: 'bold' } }>Organization:</span>
@@ -150,7 +171,7 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
                     </DataListItem>
                 );
             }) }
-        </DataList>
+        </>
     );
 };
 
@@ -180,10 +201,10 @@ const JobExplorerList = ({ jobs }) => {
     return (
         <>
             {jobs.length <= 0 && <LoadingState />}
-            <>
+            <DataList isCompact>
                 { windowWidth >= mobileBreakpoint && buildHeader(headerLabels) }
                 <AllJobsTemplate jobs={ jobs } windowWidth={ windowWidth }/>
-            </>
+            </DataList>
         </>
     );
 };
