@@ -160,8 +160,8 @@ const AllJobsTemplate = ({ jobs }) => {
     const onResize = () => setWindowWidth(window.innerWidth);
 
     useEffect(() => {
-        window.addEventListener('resize', onResize());
-        return () => window.removeEventListener('resize', onResize());
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
     }, []);
 
     return buildListRow(jobs, 'All jobs view', 'all-jobs', windowWidth);
@@ -173,8 +173,8 @@ const JobExplorerList = ({ jobs }) => {
     const onResize = () => setWindowWidth(window.innerWidth);
 
     useEffect(() => {
-        window.addEventListener('resize', onResize());
-        return () => window.removeEventListener('resize', onResize());
+        window.addEventListener('resize', onResize);
+        return () => window.removeEventListener('resize', onResize);
     }, []);
 
     return (
