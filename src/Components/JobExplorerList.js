@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import {
-    DataListCell,
+    DataListCell as PFDataListCell,
     DataListContent,
     DataList,
     DataListItem,
     DataListItemRow,
     DataListItemCells,
-    DataListToggle
+    DataListToggle,
+    Tooltip
 } from '@patternfly/react-core';
 
 import { ArrowIcon as PFArrowIcon } from '@patternfly/react-icons';
@@ -28,6 +29,12 @@ const headerLabels = [
 
 const ArrowIcon = styled(PFArrowIcon)`
   margin-left: 7px;
+`;
+
+const DataListCell = styled(PFDataListCell)`
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 `;
 
 const buildHeader = labels => (
@@ -75,9 +82,11 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy) => {
                                     <DataListCell key={ count++ }>
                                         <JobStatus status={ item.status } />
                                     </DataListCell>,
-                                    <DataListCell key={ count++ }>
-                                        { item.cluster_name }
-                                    </DataListCell>,
+                                    <Tooltip key={ count++ } content={ <p>{ item.cluster_name }</p> }>
+                                        <DataListCell>
+                                            { item.cluster_name }
+                                        </DataListCell>
+                                    </Tooltip>,
                                     <DataListCell key={ count++ }>{ item.org_name }</DataListCell>,
                                     <DataListCell key={ count++ }>{ formatJobType(item.job_type) }</DataListCell>
                                 ] }
