@@ -25,6 +25,7 @@ export const ChartWrapper = ({
     legend = null,
     legendSelector = false,
     noMargin = false,
+    small = false,
     ...props
 }) => {
     const [ legendHeight, setLegendHeight ] = useState(100);
@@ -39,8 +40,6 @@ export const ChartWrapper = ({
     const getWrapper = () => d3.select('#' + id);
 
     const clearWrapper = () => d3.selectAll('#' + id + ' > *').remove();
-
-    const hasLegend = () => (xAxis && xAxis.text) || (yAxis && yAxis.text);
 
     const getSizes = wrapper => {
         let w = 0;
@@ -180,7 +179,7 @@ export const ChartWrapper = ({
 
     return (
         <>
-            <div id={ id } className={ chartClass + (!hasLegend ? ' small' : '') + (overflow.enabled ? ' overflow' : '') } />
+            <div id={ id } className={ chartClass + (small ? ' small' : '') + (overflow.enabled ? ' overflow' : '') } />
             { legend &&
                 <Legend
                     data={ legend }
@@ -215,7 +214,8 @@ ChartWrapper.propTypes = {
     }),
     legend: PropTypes.array,
     legendSelector: PropTypes.bool,
-    noMargin: PropTypes.bool
+    noMargin: PropTypes.bool,
+    small: PropTypes.bool
 };
 
 export default ChartWrapper;
