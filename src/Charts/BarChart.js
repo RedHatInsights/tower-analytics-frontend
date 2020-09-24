@@ -1,4 +1,5 @@
-/*eslint camelcase: ["error", {properties: "never"}]*/
+/*eslint camelcase: ["error", {allow: ["created_date", "successful_count", "failed_count", "start_date", "end_date", "quick_date_range"]}]*/
+
 import React, { Component } from 'react';
 import {
     withRouter
@@ -60,11 +61,11 @@ class BarChart extends Component {
         d3.selectAll('#' + this.props.id + ' > *').remove();
         const parseTime = d3.timeParse('%Y-%m-%d');
         let { data: unformattedData, value } = this.props;
-        const data = unformattedData.reduce((formatted, { created, successful, failed }) => {
-            let DATE = parseTime(created) || new Date();
-            let RAN = +successful || 0;
-            let FAIL = +failed || 0;
-            let TOTAL = +successful + failed || 0;
+        const data = unformattedData.reduce((formatted, { created_date, successful_count, failed_count }) => {
+            let DATE = parseTime(created_date) || new Date();
+            let RAN = +successful_count || 0;
+            let FAIL = +failed_count || 0;
+            let TOTAL = +successful_count + failed_count || 0;
             return formatted.concat({ DATE, RAN, FAIL, TOTAL });
         }, []);
         const width = this.props.getWidth();

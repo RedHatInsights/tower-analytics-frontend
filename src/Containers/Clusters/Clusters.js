@@ -1,3 +1,5 @@
+/*eslint camelcase: ["error", {allow: ["start_date", "end_date", "group_by_time"]}]*/
+
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 
@@ -8,10 +10,10 @@ import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import {
     preflightRequest,
-    readChart30,
     readClusters,
     readModules,
-    readTemplates
+    readTemplates,
+    readClustersBarChart
 } from '../../Api';
 
 import {
@@ -94,6 +96,16 @@ const initialQueryParams = {
     endDate: moment.utc().format('YYYY-MM-DD')
 };
 
+const barChartParams = {
+    status: [ 'successful', 'failed' ],
+    start_date: moment
+    .utc()
+    .subtract(1, 'month')
+    .format('YYYY-MM-DD'),
+    end_date: moment.utc().format('YYYY-MM-DD'),
+    group_by_time: true
+};
+
 const Clusters = ({ history }) => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ barChartData, setBarChartData ] = useState([]);
@@ -128,13 +140,13 @@ const Clusters = ({ history }) => {
         setIsLoading(true);
         window.insights.chrome.auth.getUser().then(() =>
             Promise.all([
-                readChart30({ params: queryParams }),
                 readModules({ params: queryParams }),
-                readTemplates({ params: queryParams })
+                readTemplates({ params: queryParams }),
+                readClustersBarChart({ params: barChartParams })
             ]).then(([
-                { data: chartData = []},
                 { modules: modulesData = []},
-                { templates: templatesData = []}
+                { templates: templatesData = []},
+                { items: chartData = []}
             ]) => {
                 queryParams.id ? setLineChartData(chartData) : setBarChartData(chartData);
                 setModulesData(modulesData);

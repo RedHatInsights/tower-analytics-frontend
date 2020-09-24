@@ -127,6 +127,15 @@ export const readJobExplorer = ({ params = {}}) => {
     }).then(handleResponse);
 };
 
+export const readClustersBarChart = ({ params = {}}) => {
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(jobExplorerEndpoint, formattedUrl);
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(params)
+    }).then(handleResponse);
+};
+
 export const readJobRunsByOrg = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(pieChart1Endpoint, formattedUrl);
