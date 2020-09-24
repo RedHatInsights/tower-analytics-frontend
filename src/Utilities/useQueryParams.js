@@ -63,7 +63,8 @@ export const useQueryParams = initial => {
             }
 
             case 'RESET_FILTER':
-                return { ...state,
+                return {
+                    ...state,
                     status: [],
                     quick_date_range: '',
                     job_type: [],

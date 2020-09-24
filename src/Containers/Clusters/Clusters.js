@@ -1,18 +1,20 @@
+/* eslint-disable max-len */
+/*eslint camelcase: ["error", {allow: ["setStart_Date","setEnd_Date","cluster_id","org_id","job_type","template_id","quick_date_range","sort_by", "start_date", "end_date", "group_by_time", "group_by"]}]*/
+
 import React, { useState, useEffect } from 'react';
-import moment from 'moment';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
-import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import {
     preflightRequest,
-    readChart30,
-    readClusters,
-    readModules,
-    readTemplates
+    readClustersOptions,
+    readJobExplorer,
+    readEventExplorer
 } from '../../Api';
+
+import { jobExplorer } from '../../Utilities/constants';
 
 import {
     Main,
@@ -23,182 +25,201 @@ import {
 import {
     Card,
     CardBody,
-    CardTitle as PFCardTitle,
-    FormSelect,
-    FormSelectOption
+    CardTitle as PFCardTitle
 } from '@patternfly/react-core';
-
-import { FilterIcon } from '@patternfly/react-icons';
 
 import BarChart from '../../Charts/BarChart';
 import LineChart from '../../Charts/LineChart';
 import ModulesList from '../../Components/ModulesList';
 import TemplatesList from '../../Components/TemplatesList';
+import FilterableToolbar from '../../Components/Toolbar';
+import ApiErrorState from '../../Components/ApiErrorState';
 
-const CardTitle = styled(PFCardTitle)`
-  border-bottom: 2px solid #ebebeb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  &&& {
-    min-height: 60px;
-    --pf-c-card--first-child--PaddingTop: 10px;
-    --pf-c-card__header--not-last-child--PaddingBottom: 10px;
+import { clusters } from '../../Utilities/constants';
 
-    h3 {
-      font-size: 0.875em;
-    }
-  }
-`;
+const initialTopTemplateParams = {
+    groupBy: 'template',
+    limit: 10,
+    jobType: [ 'job' ],
+    groupByTime: false,
+    status: [ 'successful', 'failed' ]
+};
 
-const timeFrameOptions = [
-    { value: 'please choose', label: 'Select date range', disabled: true },
-    { value: 7, label: 'Past week', disabled: false },
-    { value: 14, label: 'Past 2 weeks', disabled: false },
-    { value: 31, label: 'Past month', disabled: false }
-];
+const initialTopWorkflowParams = {
+    groupBy: 'template',
+    limit: 10,
+    jobType: [ 'workflowjob' ],
+    groupByTime: false,
+    status: [ 'successful', 'failed' ]
+};
 
-function formatClusterName(data) {
-    const defaultClusterOptions = [
-        { value: 'please choose', label: 'Select cluster', disabled: true },
-        { value: 'all', label: 'All clusters', disabled: false }
-    ];
-    return data.reduce(
-        (formatted, { label, cluster_id: id, install_uuid: uuid }) => {
-            if (label.length === 0) {
-                formatted.push({ value: id, label: uuid, disabled: false });
-            } else {
-                formatted.push({ value: id, label, disabled: false });
-            }
-
-            return formatted;
-        },
-        defaultClusterOptions
-    );
-}
-
-const initialQueryParams = {
-    startDate: moment()
-    .subtract(1, 'month')
-    .format('YYYY-MM-DD'),
-    endDate: moment().format('YYYY-MM-DD')
+const initialModuleParams = {
+    groupBy: 'module',
+    sortBy: 'host_task_count:desc',
+    limit: 10
 };
 
 const Clusters = ({ history }) => {
     const [ preflightError, setPreFlightError ] = useState(null);
+    const [ apiError, setApiError ] = useState(null);
     const [ barChartData, setBarChartData ] = useState([]);
     const [ lineChartData, setLineChartData ] = useState([]);
     const [ templatesData, setTemplatesData ] = useState([]);
+    const [ workflowData, setWorkflowsData ] = useState([]);
     const [ modulesData, setModulesData ] = useState([]);
-    const [ clusterOptions, setClusterOptions ] = useState([]);
-    const [ clusterTimeFrame, setClusterTimeFrame ] = useState(31);
-    const [ selectedCluster, setSelectedCluster ] = useState('all');
     const [ isLoading, setIsLoading ] = useState(true);
-    const { queryParams, setEndDate, setStartDate, setId } = useQueryParams(
-        initialQueryParams
+
+    const [ orgIds, setOrgIds ] = useState([]);
+    const [ clusterIds, setClusterIds ] = useState([]);
+    const [ templateIds, setTemplateIds ] = useState([]);
+    const [ sortBy, setSortBy ] = useState(null);
+    const [ jobTypes, setJobTypes ] = useState([]);
+    const [ quickDateRanges, setQuickDateRanges ] = useState([]);
+    const {
+        queryParams,
+        urlMappedQueryParams,
+        setFromToolbar
+    } = useQueryParams({ ...clusters.defaultParams });
+
+    const initialOptionsParams = {
+        attributes: jobExplorer.attributes
+    };
+
+    const { queryParams: optionsQueryParams } = useQueryParams(
+        initialOptionsParams
     );
 
-    useEffect(() => {
-        insights.chrome.appNavClick({ id: 'clusters', secondaryNav: true });
+    const { clusterId, orgId, templateId, quickDateRange } = queryParams;
 
-        setIsLoading(true);
-        window.insights.chrome.auth.getUser().then(() =>
-            preflightRequest().then(() =>
-                readClusters().then(({ templates: clustersData = []}) => {
-                    const clusterOptions = formatClusterName(clustersData);
-                    setClusterOptions(clusterOptions);
-                    setIsLoading(false);
-                })
-            ).catch((error) => {
+    const topTemplatesParams = {
+        clusterId,
+        orgId,
+        templateId,
+        quickDateRange,
+        ...initialTopTemplateParams
+    };
+
+    const topWorkflowParams = {
+        clusterId,
+        orgId,
+        templateId,
+        quickDateRange,
+        ...initialTopWorkflowParams
+    };
+
+    const topModuleParams = {
+        clusterId,
+        orgId,
+        templateId,
+        quickDateRange,
+        ...initialModuleParams
+    };
+
+    useEffect(() => {
+        let ignore = false;
+
+        async function initializeWithPreflight() {
+            await window.insights.chrome.auth.getUser();
+            await preflightRequest().catch(error => {
                 setPreFlightError({ preflightError: error });
-            })
-        );
+            });
+            readClustersOptions({ params: optionsQueryParams }).then(
+                ({
+                    cluster_id,
+                    org_id,
+                    job_type,
+                    template_id,
+                    quick_date_range,
+                    sort_by
+                }) => {
+                    if (!ignore) {
+                        setClusterIds(cluster_id);
+                        setOrgIds(org_id);
+                        setTemplateIds(template_id);
+                        setSortBy(sort_by);
+                        setJobTypes(job_type);
+                        setQuickDateRanges(quick_date_range);
+                    }
+                })
+            .catch(e => setApiError(e.error));
+        }
+
+        initializeWithPreflight();
+
+        return () => (ignore = true);
     }, []);
 
     // Get and update the data
     useEffect(() => {
-        setIsLoading(true);
-        window.insights.chrome.auth.getUser().then(() =>
-            Promise.all([
-                readChart30({ params: queryParams }),
-                readModules({ params: queryParams }),
-                readTemplates({ params: queryParams })
-            ]).then(([
-                { data: chartData = []},
-                { modules: modulesData = []},
-                { templates: templatesData = []}
-            ]) => {
-                queryParams.id ? setLineChartData(chartData) : setBarChartData(chartData);
-                setModulesData(modulesData);
+        let ignore = false;
+
+        const fetchEndpoints = async () => {
+            await window.insights.chrome.auth.getUser();
+            readJobExplorer({ params: urlMappedQueryParams(queryParams) })
+            .then(({ items: chartData }) => {
+                queryParams.clusterId.length > 0 ? setLineChartData(chartData) : setBarChartData(chartData);
+            })
+            .catch(e => setApiError(e.error));
+
+            readJobExplorer({ params: urlMappedQueryParams(topTemplatesParams) })
+            .then(({ items: templatesData }) => {
                 setTemplatesData(templatesData);
+            })
+            .catch(e => setApiError(e.error));
+
+            readJobExplorer({ params: urlMappedQueryParams(topWorkflowParams) })
+            .then(({ items: workflowData }) => {
+                setWorkflowsData(workflowData);
+            })
+            .catch(e => setApiError(e.error));
+
+            readEventExplorer({ params: urlMappedQueryParams(topModuleParams) }).then(({ items: modulesData }) => {
+                setModulesData(modulesData);
+            })
+            .catch(e => setApiError(e.error));
+        };
+
+        const update = async () => {
+            if (!ignore) {
+                setIsLoading(true);
+                await fetchEndpoints();
                 setIsLoading(false);
-            }).catch(() => [])
-        );
+            }
+        };
+
+        update();
+        return () => (ignore = true);
     }, [ queryParams ]);
 
     return (
         <React.Fragment>
             <PageHeader>
                 <PageHeaderTitle title={ 'Clusters' } />
+                <FilterableToolbar
+                    categories={ {
+                        jobType: jobTypes,
+                        orgId: orgIds,
+                        clusterId: clusterIds,
+                        templateId: templateIds,
+                        quickDateRange: quickDateRanges,
+                        sortBy
+                    } }
+                    filters={ queryParams }
+                    setFilters={ setFromToolbar }
+                />
             </PageHeader>
             { preflightError && (
                 <Main>
                     <EmptyState { ...preflightError } />
                 </Main>
             ) }
-            { !preflightError && (
+            { apiError && (
+                <Main>
+                    <ApiErrorState message={ apiError } />
+                </Main>
+            ) }
+            { !preflightError && !apiError && (
         <>
-          <Main style={ { paddingBottom: '0' } }>
-              <Card>
-                  <CardTitle style={ { paddingBottom: '0', paddingTop: '0' } }>
-                      <h2>
-                          <FilterIcon style={ { marginRight: '10px' } } />
-                  Filter
-                      </h2>
-                      <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
-                          <FormSelect
-                              name="selectedCluster"
-                              value={ selectedCluster }
-                              onChange={ value => {
-                                  setSelectedCluster(value);
-                                  setId(value);
-                              } }
-                              aria-label="Select Cluster"
-                              style={ { margin: '2px 10px' } }
-                          >
-                              { clusterOptions.map(({ value, label, disabled }, index) => (
-                                  <FormSelectOption
-                                      isDisabled={ disabled }
-                                      key={ index }
-                                      value={ value }
-                                      label={ label }
-                                  />
-                              )) }
-                          </FormSelect>
-                          <FormSelect
-                              name="clusterTimeFrame"
-                              value={ clusterTimeFrame }
-                              onChange={ value => {
-                                  setClusterTimeFrame(+value);
-                                  setEndDate();
-                                  setStartDate(+value);
-                              } }
-                              aria-label="Select Date Range"
-                              style={ { margin: '2px 10px' } }
-                          >
-                              { timeFrameOptions.map((option, index) => (
-                                  <FormSelectOption
-                                      isDisabled={ option.disabled }
-                                      key={ index }
-                                      value={ option.value }
-                                      label={ option.label }
-                                  />
-                              )) }
-                          </FormSelect>
-                      </div>
-                  </CardTitle>
-              </Card>
-          </Main>
           <Main>
               <Card>
                   <PFCardTitle>
@@ -206,25 +227,25 @@ const Clusters = ({ history }) => {
                   </PFCardTitle>
                   <CardBody>
                       { isLoading && !preflightError && <LoadingState /> }
-                      { selectedCluster === 'all' &&
-                  barChartData.length > 0 &&
-                  !isLoading && (
+                      { queryParams.clusterId.length <= 0 &&
+                                    !isLoading && !apiError && (
                           <BarChart
                               margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                               id="d3-bar-chart-root"
                               data={ barChartData }
-                              value={ clusterTimeFrame }
+                              templateId={ queryParams.templateId }
+                              orgId={ queryParams.orgId }
                           />
                       ) }
-                      { selectedCluster !== 'all' &&
-                  lineChartData.length > 0 &&
-                  !isLoading && (
+                      { queryParams.clusterId.length > 0  &&
+                                    !isLoading && !apiError && (
                           <LineChart
                               margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                               id="d3-line-chart-root"
                               data={ lineChartData }
-                              value={ clusterTimeFrame }
-                              clusterId={ queryParams.id }
+                              clusterId={ queryParams.clusterId }
+                              templateId={ queryParams.templateId }
+                              orgId={ queryParams.orgId }
                           />
                       ) }
                   </CardBody>
@@ -236,12 +257,25 @@ const Clusters = ({ history }) => {
                   <TemplatesList
                       history={ history }
                       queryParams={ queryParams }
-                      clusterId={ queryParams.id }
-                      templates={ templatesData.slice(0, 10) }
+                      qp={ urlMappedQueryParams(queryParams) }
+                      clusterId={ queryParams.cluster_id }
+                      templates={ workflowData }
                       isLoading={ isLoading }
+                      title={ 'Top workflows' }
+                      jobType={ 'workflowjob' }
+                  />
+                  <TemplatesList
+                      history={ history }
+                      queryParams={ queryParams }
+                      qp={ urlMappedQueryParams(queryParams) }
+                      clusterId={ queryParams.cluster_id }
+                      templates={ templatesData }
+                      isLoading={ isLoading }
+                      title={ 'Top templates' }
+                      jobType={ 'job' }
                   />
                   <ModulesList
-                      modules={ modulesData.slice(0, 10) }
+                      modules={ modulesData }
                       isLoading={ isLoading }
                   />
               </div>

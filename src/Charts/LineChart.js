@@ -1,7 +1,5 @@
 import React, { Component } from 'react';
-import {
-    withRouter
-} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import initializeChart from './BaseChart';
 import PropTypes from 'prop-types';
 import Tooltip from '../Utilities/Tooltip';
@@ -27,13 +25,15 @@ class LineChart extends Component {
     redirectToJobExplorer({ DATE: date }) {
         const { jobExplorer } = Paths;
         const formattedDate = formatDate(date);
-        const { clusterId } = this.props;
+        const { clusterId, templateId, orgId } = this.props;
         const initialQueryParams = {
             start_date: formattedDate,
             end_date: formattedDate,
             quick_date_range: 'custom',
             status: [ 'failed', 'successful' ],
-            cluster_id: [ clusterId ]
+            clusterId,
+            orgId,
+            templateId
         };
 
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
@@ -41,24 +41,18 @@ class LineChart extends Component {
             pathname: jobExplorer,
             search
         });
-    };
+    }
 
     resize() {
         const { timeout } = this.state;
         clearTimeout(timeout);
         this.setState({
-            timeout: setTimeout(() => { this.init(); }, 500)
+            timeout: setTimeout(() => {
+                this.init();
+            }, 500)
         });
     }
 
-    getTickCount() {
-        const { value } = this.props;
-        if (value > 20) {
-            return (value / 2);
-        } else {
-            return value;
-        }
-    }
     updateCluster() {
         this.init();
     }
@@ -112,16 +106,19 @@ class LineChart extends Component {
             svg: '#' + this.props.id,
             colors
         });
-        const { data: unformattedData, value } = this.props;
+        const { data: unformattedData } = this.props;
         const parseTime = d3.timeParse('%Y-%m-%d');
 
-        const data = unformattedData.reduce((formatted, { created, successful, failed }) => {
-            let DATE = parseTime(created) || new Date();
-            let RAN = +successful || 0;
-            let FAIL = +failed || 0;
-            let TOTAL = +successful + failed || 0;
-            return formatted.concat({ DATE, RAN, FAIL, TOTAL });
-        }, []);
+        const data = unformattedData.reduce(
+            (formatted, { created_date, successful_count, failed_count }) => {
+                let DATE = parseTime(created_date) || new Date();
+                let RAN = +successful_count || 0;
+                let FAIL = +failed_count || 0;
+                let TOTAL = +successful_count + failed_count || 0;
+                return formatted.concat({ DATE, RAN, FAIL, TOTAL });
+            },
+            []
+        );
         // Scale the range of the data
         x.domain(
             d3.extent(data, function(d) {
@@ -180,11 +177,12 @@ class LineChart extends Component {
         .text('Job runs');
         // Add the X Axis
         let ticks;
-        const maxTicks = Math.round(data.length / (value / 2));
+        const maxTicks = Math.round(data.length / (data.length / 2));
         ticks = data.map(d => d.DATE);
-        if (value === 31) {
-            ticks = data.map((d, i) =>
-                i % maxTicks === 0 ? d.DATE : undefined).filter(item => item);
+        if (data.length > 14) {
+            ticks = data
+            .map((d, i) => (i % maxTicks === 0 ? d.DATE : undefined))
+            .filter(item => item);
         }
 
         svg
@@ -208,10 +206,10 @@ class LineChart extends Component {
         .attr(
             'transform',
             'translate(' +
-                width / 2 +
-                ' ,' +
-                (height + this.props.margin.top + 20) +
-                ')'
+          width / 2 +
+          ' ,' +
+          (height + this.props.margin.top + 20) +
+          ')'
         )
         .style('text-anchor', 'middle')
         .text('Date');
@@ -220,7 +218,7 @@ class LineChart extends Component {
         .attr('class', 'mouse-line')
         .style('stroke', 'black')
         .style('stroke-width', '3px')
-        .style('stroke-dasharray', ('3, 3'))
+        .style('stroke-dasharray', '3, 3')
         .style('opacity', '0');
 
         const handleMouseOver = function(d) {
@@ -231,8 +229,7 @@ class LineChart extends Component {
 
         const handleMouseMove = function() {
             let intersectX = this.cx.baseVal.value;
-            vertical
-            .attr('d', function () {
+            vertical.attr('d', function() {
                 let d = 'M' + intersectX + ',' + height;
                 d += ' ' + intersectX + ',' + 0;
                 return d;
@@ -314,7 +311,7 @@ class LineChart extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.value !== this.props.value) {
+        if (prevProps.data !== this.props.data) {
             this.updateCluster();
         }
     }
@@ -332,13 +329,14 @@ class LineChart extends Component {
 
 LineChart.propTypes = {
     id: PropTypes.string,
+    clusterId: PropTypes.array,
+    templateId: PropTypes.array,
+    orgId: PropTypes.array,
     data: PropTypes.array,
-    value: PropTypes.number,
     margin: PropTypes.object,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func,
-    history: PropTypes.object,
-    clusterId: PropTypes.number
+    history: PropTypes.object
 };
 
 export default initializeChart(withRouter(LineChart));
