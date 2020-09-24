@@ -32,7 +32,7 @@ export const ChartWrapper = ({
     const [ width, setWidth ] = useState(null);
     const [ legendSelected, setLegendSelected ] = useState([]);
     const margin = noMargin ?
-        { top: 0, right: 20, bottom: 0, left: 20 }
+        { top: 0, right: 20, bottom: 20, left: 20 }
         : { top: 20, right: 20, bottom: xAxis.text ? 50 : 20, left: 70 };
     let time = null;
 
@@ -150,7 +150,8 @@ export const ChartWrapper = ({
         if (!width || !height) {
             const [ w, h ] = getSizes(wrapper);
             setWidth(w);
-            setHeight(h);
+            // -15 form the height to prevent increasing the height at every resize.
+            setHeight(h - 15);
             setLegendHeight(h - margin.top - margin.bottom);
         } else {
             clearWrapper();
@@ -179,7 +180,7 @@ export const ChartWrapper = ({
 
     return (
         <>
-            <div id={ id } className={ chartClass + (!hasLegend ? ' small' : '') } />
+            <div id={ id } className={ chartClass + (!hasLegend ? ' small' : '') + (overflow.enabled ? ' overflow' : '') } />
             { legend &&
                 <Legend
                     data={ legend }

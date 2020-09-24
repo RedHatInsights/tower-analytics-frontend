@@ -67,13 +67,15 @@ h2 {
     min-height: 300px;
     min-width: 60%;
   }
+  &.overflow {
+    overflow-x: auto;
+  }
   circle:hover {
     cursor: pointer;
   }
   rect:hover {
     cursor: pointer;
   }
-  overflow-x: auto;
 }
 
 #fail-icon {
@@ -86,8 +88,4 @@ h2 {
 
 section#refTab1Section, section#refTab2Section {
   outline: none;
-}
-
-#d3-grouped-bar-chart-root rect:hover {
-    cursor: pointer;
 }
