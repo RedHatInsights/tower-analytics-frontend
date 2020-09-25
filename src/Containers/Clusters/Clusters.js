@@ -111,7 +111,7 @@ const Clusters = ({ history }) => {
     const [ clusterTimeFrame, setClusterTimeFrame ] = useState(31);
     const [ selectedCluster, setSelectedCluster ] = useState('all');
     const [ isLoading, setIsLoading ] = useState(true);
-    const { queryParams, setEnd_Date, setStart_Date, setId } = useQueryParams(
+    const { queryParams, setEnd_Date, setStart_Date, setCluster } = useQueryParams(
         initialQueryParams
     );
 
@@ -148,7 +148,7 @@ const Clusters = ({ history }) => {
                 { templates: templatesData = []},
                 { items: chartData = []}
             ]) => {
-                queryParams.id ? setLineChartData(chartData) : setBarChartData(chartData);
+                queryParams.cluster_id ? setLineChartData(chartData) : setBarChartData(chartData);
                 setModulesData(modulesData);
                 setTemplatesData(templatesData);
                 setIsLoading(false);
@@ -181,7 +181,7 @@ const Clusters = ({ history }) => {
                               value={ selectedCluster }
                               onChange={ value => {
                                   setSelectedCluster(value);
-                                  setId(value);
+                                  setCluster(value);
                               } }
                               aria-label="Select Cluster"
                               style={ { margin: '2px 10px' } }
@@ -244,7 +244,7 @@ const Clusters = ({ history }) => {
                               id="d3-line-chart-root"
                               data={ lineChartData }
                               value={ clusterTimeFrame }
-                              clusterId={ queryParams.id }
+                              clusterId={ queryParams.cluster_id }
                           />
                       ) }
                   </CardBody>
@@ -256,7 +256,7 @@ const Clusters = ({ history }) => {
                   <TemplatesList
                       history={ history }
                       queryParams={ queryParams }
-                      clusterId={ queryParams.id }
+                      clusterId={ queryParams.cluster_id }
                       templates={ templatesData.slice(0, 10) }
                       isLoading={ isLoading }
                   />

@@ -320,7 +320,7 @@ class LineChart extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.value !== this.props.value) {
+        if (prevProps.data !== this.props.data) {
             this.updateCluster();
         }
     }
