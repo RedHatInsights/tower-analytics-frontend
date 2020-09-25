@@ -1,20 +1,22 @@
-/*eslint camelcase: ["error", {allow: ["start_date", "end_date", "group_by_time", "setStart_Date", "setEnd_Date"]}]*/
+/* eslint-disable max-len */
+/*eslint camelcase: ["error", {allow: ["setStart_Date","setEnd_Date","cluster_id","org_id","job_type","template_id","quick_date_range","sort_by", "start_date", "end_date", "group_by_time"]}]*/
 
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
-import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import {
     preflightRequest,
-    readClusters,
     readModules,
     readTemplates,
-    readClustersBarChart
+    readClustersBarChart,
+    readJobExplorerOptions
 } from '../../Api';
+
+import { jobExplorer } from '../../Utilities/constants';
 
 import {
     Main,
@@ -25,33 +27,15 @@ import {
 import {
     Card,
     CardBody,
-    CardTitle as PFCardTitle,
-    FormSelect,
-    FormSelectOption
+    CardTitle as PFCardTitle
 } from '@patternfly/react-core';
-
-import { FilterIcon } from '@patternfly/react-icons';
 
 import BarChart from '../../Charts/BarChart';
 import LineChart from '../../Charts/LineChart';
 import ModulesList from '../../Components/ModulesList';
 import TemplatesList from '../../Components/TemplatesList';
+import FilterableToolbar from '../../Components/Toolbar';
 
-const CardTitle = styled(PFCardTitle)`
-  border-bottom: 2px solid #ebebeb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  &&& {
-    min-height: 60px;
-    --pf-c-card--first-child--PaddingTop: 10px;
-    --pf-c-card__header--not-last-child--PaddingBottom: 10px;
-
-    h3 {
-      font-size: 0.875em;
-    }
-  }
-`;
 const title = (
     <span style={ { fontWeight: 400 } }>
     Automation Analytics
@@ -61,32 +45,6 @@ const title = (
         </span>
     </span>
 );
-
-const timeFrameOptions = [
-    { value: 'please choose', label: 'Select date range', disabled: true },
-    { value: 7, label: 'Past week', disabled: false },
-    { value: 14, label: 'Past 2 weeks', disabled: false },
-    { value: 31, label: 'Past month', disabled: false }
-];
-
-function formatClusterName(data) {
-    const defaultClusterOptions = [
-        { value: 'please choose', label: 'Select cluster', disabled: true },
-        { value: 'all', label: 'All clusters', disabled: false }
-    ];
-    return data.reduce(
-        (formatted, { label, cluster_id: id, install_uuid: uuid }) => {
-            if (label.length === 0) {
-                formatted.push({ value: id, label: uuid, disabled: false });
-            } else {
-                formatted.push({ value: id, label, disabled: false });
-            }
-
-            return formatted;
-        },
-        defaultClusterOptions
-    );
-}
 
 const initialQueryParams = {
     start_date: moment
@@ -107,32 +65,221 @@ const Clusters = ({ history }) => {
     const [ lineChartData, setLineChartData ] = useState([]);
     const [ templatesData, setTemplatesData ] = useState([]);
     const [ modulesData, setModulesData ] = useState([]);
-    const [ clusterOptions, setClusterOptions ] = useState([]);
-    const [ clusterTimeFrame, setClusterTimeFrame ] = useState(31);
-    const [ selectedCluster, setSelectedCluster ] = useState('all');
     const [ isLoading, setIsLoading ] = useState(true);
-    const { queryParams, setEnd_Date, setStart_Date, setCluster } = useQueryParams(
-        initialQueryParams
-    );
+    const [ firstRender, setFirstRender ] = useState(true);
+
+    const [ orgIds, setOrgIds ] = useState([]);
+    const [ clusterIds, setClusterIds ] = useState([]);
+    const [ templateIds, setTemplateIds ] = useState([]);
+    const [ sortBy, setSortBy ] = useState(null);
+    const [ statuses, setStatuses ] = useState([]);
+    const [ jobTypes, setJobTypes ] = useState([]);
+    const [ quickDateRanges, setQuickDateRanges ] = useState([]);
+
+    const {
+        queryParams,
+        setJobType,
+        setOrg,
+        setStatus,
+        setCluster,
+        setTemplate,
+        setSortBy2,
+        setQuickDateRange,
+        setRootWorkflowsAndJobs,
+        setStart_Date,
+        setEnd_Date
+    } = useQueryParams(initialQueryParams);
 
     const combinedParams = {
         ...queryParams,
         ...barChartParams
     };
 
+    const initialOptionsParams = {
+        attributes: jobExplorer.attributes
+    };
+
+    const { queryParams: optionsQueryParams } = useQueryParams(
+        initialOptionsParams
+    );
+
+    const formattedArray = datum => {
+        if (Array.isArray(datum)) {
+            return [ ...datum ];
+        } else {
+            return datum.split();
+        }
+    };
+
+    const [ filters, setFilters ] = useState({
+        status: queryParams.status
+            ? formattedArray(queryParams.status)
+            : [ 'successful', 'failed' ],
+        type: queryParams.job_type
+            ? formattedArray(queryParams.job_type)
+            : [ 'job', 'workflowjob' ],
+        org: queryParams.org_id ? formattedArray(queryParams.org_id) : [],
+        cluster: queryParams.cluster_id ? formattedArray(queryParams.cluster_id) : [],
+        template: queryParams.template_id ? formattedArray(queryParams.template_id) : [],
+        sortby: queryParams.sort_by ? queryParams.sort_by : null,
+        startDate: queryParams.start_date ? queryParams.start_date : null,
+        endDate: queryParams.end_date ? queryParams.end_date : null,
+        date: queryParams.quick_date_range ? queryParams.quick_date_range : 'last_30_days',
+        showRootWorkflows: queryParams.only_root_workflows_and_standalone_jobs === 'true' ? true : false
+    });
+
+    const onDelete = (type, val) => {
+        let filtered;
+        Number.isInteger(val) ? (val = parseInt(val)) : val;
+
+        if (type === 'Status') {
+            filtered = statuses.filter(status => status.value === val);
+        }
+
+        if (type === 'Type') {
+            filtered = jobTypes.filter(job => job.value === val);
+        }
+
+        if (type === 'Org') {
+            filtered = orgIds.filter(org => org.value === val);
+        }
+
+        if (type === 'Cluster') {
+            filtered = clusterIds.filter(cluster => cluster.value === val);
+        }
+
+        if (type === 'Template') {
+            filtered = templateIds.filter(template => template.value === val);
+        }
+
+        if (type) {
+            if (type === 'Date') {
+                setFilters({
+                    ...filters,
+                    date: null,
+                    startDate: null,
+                    endDate: null
+                });
+            } else if (type === 'SortBy') {
+                setFilters({
+                    ...filters,
+                    sortby: null
+                });
+            } else {
+                setFilters({
+                    ...filters,
+                    [type.toLowerCase()]: filters[type.toLowerCase()].filter(
+                        value => value !== filtered[0].key.toString()
+                    )
+                });
+            }
+        } else {
+            setFilters({
+                status: [],
+                type: [],
+                org: [],
+                cluster: [],
+                template: [],
+                sortby: null,
+                date: null,
+                startDate: null,
+                endDate: null,
+                showRootWorkflows: false
+            });
+        }
+    };
+
     useEffect(() => {
-        setIsLoading(true);
-        window.insights.chrome.auth.getUser().then(() =>
-            preflightRequest().then(() =>
-                readClusters().then(({ templates: clustersData = []}) => {
-                    const clusterOptions = formatClusterName(clustersData);
-                    setClusterOptions(clusterOptions);
-                    setIsLoading(false);
-                })
-            ).catch((error) => {
+        if (firstRender) {
+            return;
+        }
+
+        if (filters.type) {
+            setJobType(filters.type);
+        }
+
+        if (filters.status) {
+            setStatus(filters.status);
+        }
+
+        if (filters.org) {
+            setOrg(filters.org);
+        }
+
+        if (filters.cluster) {
+            setCluster(filters.cluster);
+        }
+
+        if (filters.template) {
+            setTemplate(filters.template);
+        }
+
+        // The filter can change back to null too.
+        setSortBy2(filters.sortby);
+
+        setRootWorkflowsAndJobs(filters.showRootWorkflows);
+
+        setQuickDateRange(filters.date);
+
+        if (filters.date !== 'custom') {
+            setStart_Date(null);
+            setEnd_Date(null);
+        } else {
+            setStart_Date(filters.startDate);
+            setEnd_Date(filters.endDate);
+        }
+    }, [ filters ]);
+
+    useEffect(() => {
+        let ignore = false;
+
+        const fetchEndpoints = () => {
+            return Promise.all(
+                [
+                    readClustersBarChart({ params: combinedParams }),
+                    readJobExplorerOptions({ params: optionsQueryParams })
+                ].map(p => p.catch(() => []))
+            );
+        };
+
+        async function initializeWithPreflight() {
+            setIsLoading(true);
+            await window.insights.chrome.auth.getUser();
+            await preflightRequest().catch(error => {
                 setPreFlightError({ preflightError: error });
-            })
-        );
+            });
+            fetchEndpoints().then(
+                ([
+                    { items: jobExplorerData = []},
+                    {
+                        cluster_id,
+                        org_id,
+                        job_type,
+                        status,
+                        template_id,
+                        quick_date_range,
+                        sort_by
+                    }
+                ]) => {
+                    if (!ignore) {
+                        queryParams.cluster_id ? setLineChartData(jobExplorerData) : setBarChartData(jobExplorerData);
+                        setClusterIds(cluster_id);
+                        setOrgIds(org_id);
+                        setTemplateIds(template_id);
+                        setSortBy(sort_by);
+                        setStatuses(status);
+                        setJobTypes(job_type);
+                        setQuickDateRanges(quick_date_range);
+                        setFirstRender(false);
+                        setIsLoading(false);
+                    }
+                }
+            );
+        }
+
+        initializeWithPreflight();
+
+        return () => (ignore = true);
     }, []);
 
     // Get and update the data
@@ -160,6 +307,18 @@ const Clusters = ({ history }) => {
         <React.Fragment>
             <PageHeader>
                 <PageHeaderTitle title={ title } />
+                <FilterableToolbar
+                    orgs={ orgIds }
+                    statuses={ statuses }
+                    clusters={ clusterIds }
+                    templates={ templateIds }
+                    types={ jobTypes }
+                    sortables={ sortBy }
+                    dateRanges={ quickDateRanges }
+                    onDelete={ onDelete }
+                    passedFilters={ filters }
+                    handleFilters={ setFilters }
+                />
             </PageHeader>
             { preflightError && (
                 <Main>
@@ -168,57 +327,6 @@ const Clusters = ({ history }) => {
             ) }
             { !preflightError && (
         <>
-          <Main style={ { paddingBottom: '0' } }>
-              <Card>
-                  <CardTitle style={ { paddingBottom: '0', paddingTop: '0' } }>
-                      <h2>
-                          <FilterIcon style={ { marginRight: '10px' } } />
-                  Filter
-                      </h2>
-                      <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
-                          <FormSelect
-                              name="selectedCluster"
-                              value={ selectedCluster }
-                              onChange={ value => {
-                                  setSelectedCluster(value);
-                                  setCluster(value);
-                              } }
-                              aria-label="Select Cluster"
-                              style={ { margin: '2px 10px' } }
-                          >
-                              { clusterOptions.map(({ value, label, disabled }, index) => (
-                                  <FormSelectOption
-                                      isDisabled={ disabled }
-                                      key={ index }
-                                      value={ value }
-                                      label={ label }
-                                  />
-                              )) }
-                          </FormSelect>
-                          <FormSelect
-                              name="clusterTimeFrame"
-                              value={ clusterTimeFrame }
-                              onChange={ value => {
-                                  setClusterTimeFrame(+value);
-                                  setEnd_Date();
-                                  setStart_Date(+value);
-                              } }
-                              aria-label="Select Date Range"
-                              style={ { margin: '2px 10px' } }
-                          >
-                              { timeFrameOptions.map((option, index) => (
-                                  <FormSelectOption
-                                      isDisabled={ option.disabled }
-                                      key={ index }
-                                      value={ option.value }
-                                      label={ option.label }
-                                  />
-                              )) }
-                          </FormSelect>
-                      </div>
-                  </CardTitle>
-              </Card>
-          </Main>
           <Main>
               <Card>
                   <PFCardTitle>
@@ -226,24 +334,24 @@ const Clusters = ({ history }) => {
                   </PFCardTitle>
                   <CardBody>
                       { isLoading && !preflightError && <LoadingState /> }
-                      { selectedCluster === 'all' &&
+                      { !queryParams.cluster_id &&
                   barChartData.length > 0 &&
                   !isLoading && (
                           <BarChart
                               margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                               id="d3-bar-chart-root"
                               data={ barChartData }
-                              value={ clusterTimeFrame }
+                              value={ barChartData.length }
                           />
                       ) }
-                      { selectedCluster !== 'all' &&
+                      { queryParams.cluster_id  &&
                   lineChartData.length > 0 &&
                   !isLoading && (
                           <LineChart
                               margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                               id="d3-line-chart-root"
                               data={ lineChartData }
-                              value={ clusterTimeFrame }
+                              value={ lineChartData.length }
                               clusterId={ queryParams.cluster_id }
                           />
                       ) }
