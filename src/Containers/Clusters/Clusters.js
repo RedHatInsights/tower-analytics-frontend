@@ -1,4 +1,4 @@
-/*eslint camelcase: ["error", {allow: ["start_date", "end_date", "group_by_time"]}]*/
+/*eslint camelcase: ["error", {allow: ["start_date", "end_date", "group_by_time", "setStart_Date", "setEnd_Date"]}]*/
 
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
@@ -89,20 +89,15 @@ function formatClusterName(data) {
 }
 
 const initialQueryParams = {
-    startDate: moment
-    .utc()
-    .subtract(1, 'month')
-    .format('YYYY-MM-DD'),
-    endDate: moment.utc().format('YYYY-MM-DD')
-};
-
-const barChartParams = {
-    status: [ 'successful', 'failed' ],
     start_date: moment
     .utc()
     .subtract(1, 'month')
     .format('YYYY-MM-DD'),
-    end_date: moment.utc().format('YYYY-MM-DD'),
+    end_date: moment.utc().format('YYYY-MM-DD')
+};
+
+const barChartParams = {
+    status: [ 'successful', 'failed' ],
     group_by_time: true
 };
 
@@ -116,9 +111,14 @@ const Clusters = ({ history }) => {
     const [ clusterTimeFrame, setClusterTimeFrame ] = useState(31);
     const [ selectedCluster, setSelectedCluster ] = useState('all');
     const [ isLoading, setIsLoading ] = useState(true);
-    const { queryParams, setEndDate, setStartDate, setId } = useQueryParams(
+    const { queryParams, setEnd_Date, setStart_Date, setId } = useQueryParams(
         initialQueryParams
     );
+
+    const combinedParams = {
+        ...queryParams,
+        ...barChartParams
+    };
 
     useEffect(() => {
         setIsLoading(true);
@@ -142,7 +142,7 @@ const Clusters = ({ history }) => {
             Promise.all([
                 readModules({ params: queryParams }),
                 readTemplates({ params: queryParams }),
-                readClustersBarChart({ params: barChartParams })
+                readClustersBarChart({ params: combinedParams })
             ]).then(([
                 { modules: modulesData = []},
                 { templates: templatesData = []},
@@ -200,8 +200,8 @@ const Clusters = ({ history }) => {
                               value={ clusterTimeFrame }
                               onChange={ value => {
                                   setClusterTimeFrame(+value);
-                                  setEndDate();
-                                  setStartDate(+value);
+                                  setEnd_Date();
+                                  setStart_Date(+value);
                               } }
                               aria-label="Select Date Range"
                               style={ { margin: '2px 10px' } }
