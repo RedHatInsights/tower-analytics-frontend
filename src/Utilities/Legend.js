@@ -14,7 +14,7 @@ const Container = styled.div`
 
 const LegendDetail = styled.div`
   display: flex;
-  padding: 5px 10px;
+  padding: 7.5px 15px;
   align-items: center;
   justify-content: space-between;
 `;
@@ -44,7 +44,7 @@ const Title = styled.span`
 `;
 
 const SubTitle = styled.span`
-    font-size: 12px;
+    font-size: 14px;
     margin-left: 20px;
 `;
 
