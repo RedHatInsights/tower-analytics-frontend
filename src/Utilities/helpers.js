@@ -31,7 +31,7 @@ export function getTotal(data) {
 }
 
 export function formatPercentage(val) {
-    if (!parseFloat(val)) {
+    if (isNaN(val)) {
         return;
     }
 
