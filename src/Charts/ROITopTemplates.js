@@ -33,14 +33,6 @@ class Tooltip {
         .attr('height', 20)
         .attr('width', 20)
         .attr('fill', '#393f44');
-        this.boundingBox = this.toolTipBase
-        .append('rect')
-        .attr('x', 10)
-        .attr('y', -23)
-        .attr('rx', 2)
-        .attr('height', 92)
-        .attr('width', this.boxWidth)
-        .attr('fill', '#393f44');
         this.name = this.toolTipBase
         .append('text')
         .attr('fill', 'white')
@@ -128,18 +120,15 @@ class Tooltip {
             adjustedWidth = this.boxWidth;
         }
 
-        this.boundingBox.attr('width', adjustedWidth);
         this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
         if (flipped) {
             this.toolTipPoint.attr('transform', 'translate(-20, 15) rotate(45)');
-            this.boundingBox.attr('x', -adjustedWidth - 20);
             this.name.attr('x', -(toolTipWidth - 7));
             this.savings.attr('x', -(toolTipWidth - 7));
             this.manualCost.attr('x', -(toolTipWidth - 7));
             this.automationCost.attr('x', -(toolTipWidth - 7));
         } else {
             this.toolTipPoint.attr('transform', 'translate(10, 15) rotate(45)');
-            this.boundingBox.attr('x', 10);
             this.name.attr('x', 20);
             this.savings.attr('x', 20);
             this.manualCost.attr('x', 20);
