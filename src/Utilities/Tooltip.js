@@ -71,9 +71,9 @@ class Tooltip {
         this.failedIcon = this.toolTipBase
         .append('text')
         .attr('class', 'fas fa-sm')
-        .attr('fill', 'red')
-        .attr('x', 19)
-        .attr('y', 31.5)
+        .attr('fill', this.colors(0))
+        .attr('x', 20)
+        .attr('y', 31)
         .text('\uf06a');
         this.jobs = this.toolTipBase
         .append('text')
