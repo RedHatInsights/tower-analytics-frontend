@@ -44,7 +44,7 @@ const Title = styled.span`
 `;
 
 const SubTitle = styled.span`
-    font-size: 14px;
+    font-size: 15px;
     margin-left: 20px;
 `;
 
@@ -78,7 +78,7 @@ class Legend extends Component {
                                 <Title>{ name }</Title>
                             </Wrapper>
                             { count && (
-                                <SubTitle>{ count }</SubTitle>
+                                <SubTitle>{ count }%</SubTitle>
                             ) }
                             { selected && (
                                 <Switch
