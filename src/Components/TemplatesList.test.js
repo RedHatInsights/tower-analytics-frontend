@@ -1,5 +1,4 @@
 /*eslint-disable camelcase*/
-/*eslint-disable no-console*/
 import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 import TemplatesList from './TemplatesList/';
@@ -14,6 +13,9 @@ describe('Components/TemplatesList', () => {
 
 describe('Components/TemplatesList Modal', () => {
 
+    let wrapper = null;
+
+    // called inside the component before data fetch ...
     const mockInsights = {
         chrome: {
             auth: {
@@ -24,6 +26,16 @@ describe('Components/TemplatesList Modal', () => {
         }
     };
 
+    // list of templates for the main page ...
+    const templatesData = [
+        {
+            name: 'template_foo',
+            count: 100,
+            id: 1
+        }
+    ];
+
+    // data for the modal ...
     const templateResponse = {
         name: 'template_foo',
         id: 1,
@@ -44,32 +56,42 @@ describe('Components/TemplatesList Modal', () => {
         apiModule.readTemplateJobs.mockReturnValue(
             Promise.resolve(templateResponse)
         );
+        wrapper = mount(<TemplatesList isLoading={ false } templates={ templatesData } />);
+    });
+
+    afterEach(() => {
+        wrapper.unmount();
     });
 
     it('should open the modal on click', async () => {
 
-        const templateData = [
-            {
-                name: 'template_foo',
-                count: 100,
-                id: 1
-            }
-        ];
+        // should not be open by default
+        let isOpen = wrapper.find('Modal').props().isOpen;
+        expect(!isOpen);
 
-        let wrapper = mount(<TemplatesList isLoading={ false } templates={ templateData } />);
-        //let a = wrapper.find('a');
-
+        // click on the template ...
         await act(async () => {
             wrapper.find('a').simulate('click');
         });
         wrapper.update();
 
-        console.log(wrapper.debug());
-        //console.log(readTemplateJobs);
-        //console.log(readTemplateJobs.mock.calls.length);
-        //console.log(global.fetch.mock.calls.length);
-        console.log(apiModule.readTemplateJobs);
-        console.log(apiModule.readTemplateJobs.mock);
-        console.log(apiModule.readTemplateJobs.mock.calls);
+        // should be open after click
+        isOpen = wrapper.find('Modal').props().isOpen;
+        expect(isOpen);
+
     });
+
+    it('should display 0% success in the modal', async () => {
+
+        // click on the template ...
+        await act(async () => {
+            wrapper.find('a').simulate('click');
+        });
+        wrapper.update();
+
+        // 0% success rate should not be "unavailable"
+        let sr = wrapper.find({ 'aria-labelledby': 'success rate' });
+        expect(sr.text()).toBe('Success rate0%');
+    });
+
 });
