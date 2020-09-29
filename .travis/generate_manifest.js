@@ -4,7 +4,7 @@
 
 const fs = require('fs');
 
-const PREFIX = 'tower-analytics-frontend:master/'
+const PREFIX = 'services-ansible-automation-analytics/'
 
 
 function processPackage(name, pkg, result) {
