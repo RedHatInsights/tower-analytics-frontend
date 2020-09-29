@@ -130,7 +130,6 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
             update();
         }
 
-        ;
     }, [ selectedId ]);
 
     const redirectToJobExplorer = () => {
@@ -258,7 +257,7 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
                           </div>
                           <div aria-labelledby="success rate">
                               <b style={ { marginRight: '10px' } }>Success rate</b>
-                              { selectedTemplate.success_rate ?
+                              { !isNaN(selectedTemplate.success_rate) ?
                                   formatPercentage(selectedTemplate.success_rate) : 'Unavailable' }
                           </div>
                           <div aria-labelledby="most failed task">
