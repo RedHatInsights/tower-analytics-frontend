@@ -1,4 +1,3 @@
-/*eslint-disable */
 /*eslint camelcase: ["error", {allow: ["template_id", "job_type", "cluster_id", "start_date", "end_date", "quick_date_range"]}]*/
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
@@ -124,7 +123,6 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
             fetchTemplateDetails().then(data => {
                 setSelectedTemplate(data);
                 setRelatedJobs(data.related_jobs);
-                console.log('selected data', data);
             });
         };
 
@@ -132,7 +130,6 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
             update();
         }
 
-        ;
     }, [ selectedId ]);
 
     const redirectToJobExplorer = () => {

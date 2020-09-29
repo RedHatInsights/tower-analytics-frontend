@@ -1,35 +1,10 @@
+/*eslint-disable camelcase*/
+/*eslint-disable no-console*/
 import { act } from 'react-dom/test-utils';
-import { when } from 'jest-when';
 import { mount } from 'enzyme';
 import TemplatesList from './TemplatesList/';
 
 import * as apiModule from '../Api';
-
-const mockInsights = {
-    chrome: {
-        auth: {
-            getUser: () => {
-                return 'bob';
-            }
-        }
-    }
-};
-
-
-const templateResponse = {
-    name: 'template_foo',
-    id: 1,
-    type: 'job',
-    average_run: "00h 00m 05s",
-    failed_run_count: 0,
-    success_rate: 0,
-    successful_run_count: 0,
-    total_run: "00h 35m 49s",
-    total_run_count: 366,
-    most_failed_tasks: [],
-    related_jobs: []
-};
-
 
 describe('Components/TemplatesList', () => {
     it('should render successfully', () => {
@@ -38,6 +13,30 @@ describe('Components/TemplatesList', () => {
 });
 
 describe('Components/TemplatesList Modal', () => {
+
+    const mockInsights = {
+        chrome: {
+            auth: {
+                getUser: () => {
+                    return 'bob';
+                }
+            }
+        }
+    };
+
+    const templateResponse = {
+        name: 'template_foo',
+        id: 1,
+        type: 'job',
+        average_run: '00h 00m 05s',
+        failed_run_count: 0,
+        success_rate: 0,
+        successful_run_count: 0,
+        total_run: '00h 35m 49s',
+        total_run_count: 366,
+        most_failed_tasks: [],
+        related_jobs: []
+    };
 
     beforeEach(() => {
         global.insights = mockInsights;
@@ -58,7 +57,7 @@ describe('Components/TemplatesList Modal', () => {
         ];
 
         let wrapper = mount(<TemplatesList isLoading={ false } templates={ templateData } />);
-        let a = wrapper.find('a');
+        //let a = wrapper.find('a');
 
         await act(async () => {
             wrapper.find('a').simulate('click');
