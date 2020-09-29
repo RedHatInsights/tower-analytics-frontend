@@ -111,9 +111,10 @@ export const readJobExplorerOptions = ({ params = {}}) => {
 };
 
 export const readJobExplorer = ({ params = {}}) => {
-    const { limit, sort_by } = params;
+    const { limit, offset, sort_by } = params;
     const paginationParams = {
         limit,
+        offset,
         sort_by
     };
     const { strings, stringify } = formatQueryStrings(paginationParams);
