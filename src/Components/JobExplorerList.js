@@ -9,7 +9,8 @@ import {
     DataListItem,
     DataListItemRow as PFDataListItemRow,
     DataListItemCells as PFDataListItemCells,
-    DataListToggle
+    DataListToggle,
+    Tooltip
 } from '@patternfly/react-core';
 
 import { ExternalLinkAltIcon as PFExternalLinkIcon } from '@patternfly/react-icons';
@@ -112,18 +113,13 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
                                     </DataListCell>,
                                     <Tooltip key={ count++ } content={ <p>{ item.cluster_name }</p> }>
                                         <DataListCell>
+                                            { windowWidth <= mobileBreakpoint &&
+                                            <span style={ { color: 'initial', fontWeight: 'bold' } }>Cluster:</span>
+                                            }
+                                            &nbsp;
                                             { item.cluster_name }
                                         </DataListCell>
                                     </Tooltip>,
-                                    <DataListCell key={ count++ }>{ item.org_name }</DataListCell>,
-                                    <DataListCell key={ count++ }>{ formatJobType(item.job_type) }</DataListCell>
-                                    <DataListCell key={ count++ }>
-                                        { windowWidth <= mobileBreakpoint &&
-                                         <span style={ { color: 'initial', fontWeight: 'bold' } }>Cluster:</span>
-                                        }
-                                        &nbsp;
-                                        { item.cluster_name }
-                                    </DataListCell>,
                                     <DataListCell key={ count++ }>
                                         { windowWidth <= mobileBreakpoint &&
                                          <span style={ { color: 'initial', fontWeight: 'bold' } }>Organization:</span>
