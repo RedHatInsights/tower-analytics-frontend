@@ -7,16 +7,10 @@ import {
     DataListContent,
     DataList,
     DataListItem,
-<<<<<<< HEAD
     DataListItemRow,
     DataListItemCells as PFDataListItemCells,
     DataListToggle as PFDataListToggle,
     Tooltip
-=======
-    DataListItemRow as PFDataListItemRow,
-    DataListItemCells as PFDataListItemCells,
-    DataListToggle
->>>>>>> 394969a... Fix merge conflict
 } from '@patternfly/react-core';
 
 import { ExternalLinkAltIcon as PFExternalLinkIcon } from '@patternfly/react-icons';
@@ -138,18 +132,6 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
                                             { item.cluster_name }
                                         </DataListCell>
                                     </Tooltip>,
-<<<<<<< HEAD
-=======
-                                    <DataListCell key={ count++ }>{ item.org_name }</DataListCell>,
-                                    <DataListCell key={ count++ }>{ formatJobType(item.job_type) }</DataListCell>
-                                    <DataListCell key={ count++ }>
-                                        { windowWidth <= mobileBreakpoint &&
-                                         <span style={ { color: 'initial', fontWeight: 'bold' } }>Cluster:</span>
-                                        }
-                                        &nbsp;
-                                        { item.cluster_name }
-                                    </DataListCell>,
->>>>>>> 394969a... Fix merge conflict
                                     <DataListCell key={ count++ }>
                                         { windowWidth <= mobileBreakpoint &&
                                          <span style={ { color: 'initial', fontWeight: 'bold' } }>Organization:</span>
