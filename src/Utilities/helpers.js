@@ -5,11 +5,11 @@ export function trimStr(str) {
 }
 
 export function formatDateTime(dateTime) {
-    return moment(new Date(dateTime).toISOString()).utc().format('M/D/YYYY h:mm:ssa');
+    return moment.utc(new Date(dateTime).toISOString()).format('M/D/YYYY h:mm:ssa');
 }
 
 export function formatDate(date) {
-    return moment(date).utc().format('YYYY-MM-DD');
+    return moment.utc(date).format('YYYY-MM-DD');
 }
 
 export function formatSeconds(seconds) {
@@ -31,7 +31,7 @@ export function getTotal(data) {
 }
 
 export function formatPercentage(val) {
-    if (!parseFloat(val)) {
+    if (isNaN(val)) {
         return;
     }
 

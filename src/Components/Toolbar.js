@@ -48,30 +48,45 @@ const Switch = styled(PFSwitch)`
     }
 `;
 
-const handleChips = (item, comparator) => {
-    return item.reduce((acc, i) => {
-        Number.isInteger(parseInt(i)) ? (i = parseInt(i)) : i;
-        comparator.forEach(item => {
-            if (item.key === i) {
-                acc.push(item.value);
-            }
-        });
-        return acc;
-    }, []);
+/**
+ * Get comparator values if their key is in the item list
+ */
+export const handleChips = (item, comparator) => {
+    if (item && comparator) {
+        return item.reduce((acc, i) => {
+            Number.isInteger(parseInt(i)) ? (i = parseInt(i)) : i;
+
+            comparator.forEach(cmpItem => {
+                if (cmpItem.key === i) {
+                    acc.push(cmpItem.value);
+                }
+            });
+
+            return acc;
+        }, []);
+    }
+
+    return [];
 };
 
-const handleDateChips = (date, comparator) => {
-    if (date && typeof date === 'string') {
+/**
+ * Convert a list of objects to a list of the last value if defined
+ */
+export const handleDateChips = (date, comparator) => {
+    if (date && typeof date === 'string' && comparator) {
         let val;
         comparator.forEach(i => {
             if (i.key === date) {
                 val = i.value;
             }
         });
-        return new Array(val);
+
+        if (val !== undefined) {
+            return [ val ];
+        }
     }
 
-    return new Array();
+    return [];
 };
 
 const FilterableToolbar = ({
@@ -171,11 +186,14 @@ const FilterableToolbar = ({
             </SelectOption>
         ));
 
-        const sortByMenuItems = sortables.map(({ key, value }) => (
-            <SelectOption key={ key } value={ key }>
-                { value }
-            </SelectOption>
-        ));
+        let sortByMenuItems = [];
+        if (Array.isArray(sortables)) {
+            sortByMenuItems = sortables.map(({ key, value }) => (
+                <SelectOption key={ key } value={ key }>
+                    { value }
+                </SelectOption>
+            ));
+        }
 
         const dateRangeMenuItems = dateRanges.map(({ key, value }) => (
             <SelectOption key={ key } value={ key }>
@@ -257,6 +275,7 @@ const FilterableToolbar = ({
                     >
                         { dateRangeMenuItems }
                     </Select>
+
                 </ToolbarFilter>
                 <ToolbarFilter
                     showToolbarItem={ currentCategory === 'Job' }
@@ -300,6 +319,10 @@ const FilterableToolbar = ({
                         selections={ passedFilters.org }
                         isExpanded={ orgIsExpanded }
                         placeholderText="Filter by organization"
+                        style={ {
+                            maxHeight: 500,
+                            overflow: 'auto'
+                        } }
                     >
                         { organizationIdMenuItems }
                     </Select>
@@ -323,6 +346,10 @@ const FilterableToolbar = ({
                         selections={ passedFilters.cluster }
                         isExpanded={ clusterIsExpanded }
                         placeholderText="Filter by cluster"
+                        style={ {
+                            maxHeight: 500,
+                            overflow: 'auto'
+                        } }
                     >
                         { clusterIdMenuItems }
                     </Select>
@@ -383,49 +410,47 @@ const FilterableToolbar = ({
         >
             <ToolbarContent>
                 <ToolbarToggleGroup toggleIcon={ <FilterIcon /> } breakpoint="xl">
-                    { dateRanges.length > 0 && (
-                        <ToolbarGroup variant="filter-group">
-                            { buildCategoryDropdown(toolbarCategories) }
-                            { buildFilterDropdown() }
-                            { passedFilters.date === 'custom' && (
-                <>
-                  <InputGroup>
-                      <InputGroupText component="label" htmlFor="startDate">
-                          <CalendarAltIcon />
-                      </InputGroupText>
-                      <TextInput
-                          name="startDate"
-                          id="startDate"
-                          type="date"
-                          aria-label="Start Date"
-                          value={ passedFilters.startDate || '' }
-                          onChange={ e => handleStartDate(e) }
-                      />
-                  </InputGroup>
-                  <InputGroup>
-                      <InputGroupText component="label" htmlFor="endDate">
-                          <CalendarAltIcon />
-                      </InputGroupText>
-                      <TextInput
-                          name="endDate"
-                          id="endDate"
-                          type="date"
-                          aria-label="End Date"
-                          value={ passedFilters.endDate || '' }
-                          onChange={ e => handleEndDate(e) }
-                      />
-                  </InputGroup>
-                </>
-                            ) }
-                        </ToolbarGroup>
-                    ) }
+                    <ToolbarGroup variant="filter-group">
+                        { buildCategoryDropdown(toolbarCategories) }
+                        { buildFilterDropdown() }
+                        { (currentCategory === 'Date' && passedFilters.date === 'custom') && (
+                            <>
+                              <InputGroup>
+                                  <InputGroupText component="label" htmlFor="startDate">
+                                      <CalendarAltIcon />
+                                  </InputGroupText>
+                                  <TextInput
+                                      name="startDate"
+                                      id="startDate"
+                                      type="date"
+                                      aria-label="Start Date"
+                                      value={ passedFilters.startDate || '' }
+                                      onChange={ e => handleStartDate(e) }
+                                  />
+                              </InputGroup>
+                              <InputGroup>
+                                  <InputGroupText component="label" htmlFor="endDate">
+                                      <CalendarAltIcon />
+                                  </InputGroupText>
+                                  <TextInput
+                                      name="endDate"
+                                      id="endDate"
+                                      type="date"
+                                      aria-label="End Date"
+                                      value={ passedFilters.endDate || '' }
+                                      onChange={ e => handleEndDate(e) }
+                                  />
+                              </InputGroup>
+                            </>
+                        ) }
+                    </ToolbarGroup>
                 </ToolbarToggleGroup>
                 <div>
                     <Switch
                         id="showRootWorkflowJobs"
                         label="Ignore nested workflows and jobs"
                         labelOff="Ignore nested workflows and jobs"
-                        isChecked={ !!passedFilters.showRootWorkflows }
+                        isChecked={ passedFilters.showRootWorkflows }
                         onChange={ val => {
                             handleFilters({
                                 ...passedFilters,
