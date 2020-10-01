@@ -7,16 +7,9 @@ import {
     DataListContent,
     DataList,
     DataListItem,
-<<<<<<< HEAD
-    DataListItemRow,
-    DataListItemCells,
-    DataListToggle,
-    Tooltip
-=======
     DataListItemRow as PFDataListItemRow,
     DataListItemCells as PFDataListItemCells,
     DataListToggle
->>>>>>> devel
 } from '@patternfly/react-core';
 
 import { ExternalLinkAltIcon as PFExternalLinkIcon } from '@patternfly/react-icons';
@@ -38,14 +31,12 @@ const ExternalLinkIcon = styled(PFExternalLinkIcon)`
   color: var(--pf-global--Color--400);
 `;
 
-<<<<<<< HEAD
 const DataListCell = styled(PFDataListCell)`
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
 `;
 
-=======
 const DataListItemCells = styled(PFDataListItemCells)`
 align-items: center;
 margin-top: 5px;
@@ -57,7 +48,6 @@ align-items: center;
 
 const mobileBreakpoint = 765;
 
->>>>>>> devel
 const buildHeader = labels => (
     <DataListItemRow style={ { paddingLeft: '94px', fontWeight: '800' } }>
         { labels.map(label => (
@@ -120,7 +110,6 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
                                             &nbsp;
                                         <JobStatus status={ item.status } />
                                     </DataListCell>,
-<<<<<<< HEAD
                                     <Tooltip key={ count++ } content={ <p>{ item.cluster_name }</p> }>
                                         <DataListCell>
                                             { item.cluster_name }
@@ -128,7 +117,6 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
                                     </Tooltip>,
                                     <DataListCell key={ count++ }>{ item.org_name }</DataListCell>,
                                     <DataListCell key={ count++ }>{ formatJobType(item.job_type) }</DataListCell>
-=======
                                     <DataListCell key={ count++ }>
                                         { windowWidth <= mobileBreakpoint &&
                                          <span style={ { color: 'initial', fontWeight: 'bold' } }>Cluster:</span>
@@ -150,7 +138,6 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
                                          &nbsp;
                                         { formatJobType(item.job_type) }
                                     </DataListCell>
->>>>>>> devel
                                 ] }
                             />
                         </DataListItemRow>
