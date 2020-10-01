@@ -212,7 +212,6 @@ class GroupedBarChart extends Component {
         const initialQueryParams = {
             start_date: formattedDate,
             end_date: formattedDate,
-            status: [ 'successful', 'failed', 'new', 'pending', 'waiting', 'error', 'canceled', 'running' ],
             quick_date_range: 'custom',
             org_id
         };
