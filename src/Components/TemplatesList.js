@@ -1,4 +1,4 @@
-/*eslint camelcase: ["error", {allow: ["template_id", "job_type", "cluster_id", "start_date", "end_date"]}]*/
+/*eslint camelcase: ["error", {allow: ["template_id", "job_type", "cluster_id", "start_date", "end_date", "quick_date_range"]}]*/
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { formatDateTime, formatSeconds, formatPercentage } from '../Utilities/helpers';
@@ -141,6 +141,7 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
             job_type: [ 'job' ],
             start_date: queryParams.startDate,
             end_date: queryParams.endDate,
+            quick_date_range: 'custom',
             cluster_id: clusterId
         };
 
