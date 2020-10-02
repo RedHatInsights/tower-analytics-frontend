@@ -8,6 +8,9 @@ import NoData from '../Components/NoData';
 import { Paths } from '../paths';
 import { stringify } from 'query-string';
 
+import TemplateHostStatuses from '../Charts/TemplateHostStatuses';
+//import { useResize } from '../Charts/TemplateHostStatuses';
+
 import {
     Button,
     DataList,
@@ -233,6 +236,9 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
                   </Button>
               ] }
           >
+              <div id='host-status-chart'>
+                  <TemplateHostStatuses parentid='host-status-chart' />
+              </div>
               <DataList aria-label="Selected Template Details">
                   <PFDataListItemNoBorder
                       aria-labelledby="Selected Template Statistics"
