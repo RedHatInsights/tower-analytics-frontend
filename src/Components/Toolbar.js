@@ -58,7 +58,7 @@ const Select = styled(PFSelect)`
 /**
  * Get comparator values if their key is in the item list
  */
-export const handleChips = (item, comparator) => {
+export const handleCheckboxChips = (item, comparator) => {
     if (item && comparator) {
         return item.reduce((acc, i) => {
             Number.isInteger(parseInt(i)) ? (i = parseInt(i)) : i;
@@ -79,7 +79,7 @@ export const handleChips = (item, comparator) => {
 /**
  * Convert a list of objects to a list of the last value if defined
  */
-export const handleDateChips = (date, comparator) => {
+export const handleSingleChips = (date, comparator) => {
     if (date && typeof date === 'string' && comparator) {
         let val;
         comparator.forEach(i => {
@@ -96,49 +96,73 @@ export const handleDateChips = (date, comparator) => {
     return [];
 };
 
+const camelToSentence = str => {
+    const result = str.replace(/([A-Z])/g, ' $1').toLowerCase();
+    return result.charAt(0).toUpperCase() + result.slice(1);
+};
+
+const optionsForCategories = {
+    status: {
+        variant: 'checkbox',
+        placeholder: 'Filter by job status'
+    },
+    date: {
+        variant: 'single',
+        placeholder: 'Filter by date'
+    },
+    job: {
+        variant: 'checkbox',
+        placeholder: 'Filter by job type'
+    },
+    organization: {
+        variant: 'checkbox',
+        placeholder: 'Filter by organization'
+    },
+    cluster: {
+        variant: 'checkbox',
+        placeholder: 'Filter by cluster'
+    },
+    template: {
+        variant: 'checkbox',
+        placeholder: 'Filter by template'
+    },
+    sortBy: {
+        variant: 'single',
+        placeholder: 'Sort by attribute'
+    }
+};
+
 const FilterableToolbar = ({
-    orgs,
-    statuses,
-    types,
-    clusters,
-    templates,
-    sortables,
-    dateRanges,
+    categories,
     onDelete,
-    passedFilters,
-    handleFilters
+    filters,
+    setFilters
 }) => {
-    const [ statusIsExpanded, setStatusIsExpanded ] = useState(false);
-    const [ dateRangeIsExpanded, setDateRangeIsExpanded ] = useState(false);
-    const [ jobTypeIsExpanded, setJobTypeIsExpanded ] = useState(false);
-    const [ orgIsExpanded, setOrgIsExpanded ] = useState(false);
+    const [ expandedItems, setExpandedItems ] = useState({});
     const [ isCategoryExpanded, setIsCategoryExpanded ] = useState(false);
-    const [ clusterIsExpanded, setClusterIsExpanded ] = useState(false);
-    const [ templateIsExpanded, setTemplateIsExpanded ] = useState(false);
-    const [ sortByIsExpanded, setSortByIsExpanded ] = useState(false);
     const [ currentCategory, setCurrentCategory ] = useState('Status');
 
     const handleStartDate = e => {
-        handleFilters({
-            ...passedFilters,
+        setFilters({
+            ...filters,
             startDate: e
         });
     };
 
     const handleEndDate = e => {
-        handleFilters({
-            ...passedFilters,
+        setFilters({
+            ...filters,
             endDate: e
         });
     };
 
-    const buildCategoryDropdown = categories => {
+    const buildCategoryDropdown = () => {
         return (
             <ToolbarItem>
                 <Dropdown
                     onSelect={ e => {
                         setCurrentCategory(e.target.innerText);
-                        setIsCategoryExpanded(!isCategoryExpanded);
+                        setIsCategoryExpanded(false);
                     } }
                     position={ 'left' }
                     toggle={
@@ -149,12 +173,12 @@ const FilterableToolbar = ({
                             style={ { width: '100%' } }
                         >
                             <FilterIcon />
-            &nbsp;{ currentCategory }
+                            &nbsp;{ currentCategory }
                         </DropdownToggle>
                     }
                     isOpen={ isCategoryExpanded }
-                    dropdownItems={ categories.map(category => (
-                        <DropdownItem key={ category.id }>{ category.name }</DropdownItem>
+                    dropdownItems={ Object.keys(categories).map(key => (
+                        <DropdownItem key={ key }>{ camelToSentence(key) }</DropdownItem>
                     )) }
                     style={ { width: '100%' } }
                 />
@@ -163,240 +187,87 @@ const FilterableToolbar = ({
     };
 
     const buildFilterDropdown = () => {
-        const organizationIdMenuItems = orgs.map(({ key, value }) => (
-            <SelectOption key={ key } value={ `${key}` }>
-                { value }
-            </SelectOption>
-        ));
-
-        const statusMenuItems = statuses.map(({ key, value }) => (
-            <SelectOption key={ key } value={ key }>
-                { value }
-            </SelectOption>
-        ));
-
-        const jobTypeMenuItems = types.map(({ key, value }) => (
-            <SelectOption key={ key } value={ key }>
-                { value }
-            </SelectOption>
-        ));
-
-        const clusterIdMenuItems = clusters.map(({ key, value }) => (
-            <SelectOption key={ key } value={ `${key}` }>
-                { value }
-            </SelectOption>
-        ));
-
-        const templateIdMenuItems = templates.map(({ key, value }) => (
-            <SelectOption key={ key } value={ `${key}` }>
-                { value }
-            </SelectOption>
-        ));
-
-        let sortByMenuItems = [];
-        if (Array.isArray(sortables)) {
-            sortByMenuItems = sortables.map(({ key, value }) => (
-                <SelectOption key={ key } value={ key }>
-                    { value }
-                </SelectOption>
-            ));
-        }
-
-        const dateRangeMenuItems = dateRanges.map(({ key, value }) => (
-            <SelectOption key={ key } value={ key }>
-                { value }
-            </SelectOption>
-        ));
-
-        const onSelect = (type, event, selection) => {
-            const checked = event.target.checked;
-
-            handleFilters({
-                ...passedFilters,
-                [type]: checked
-                    ? [ ...passedFilters[type], selection ]
-                    : passedFilters[type].filter(value => value !== selection)
+        const onSelectCheckbox = (type, event, selection) => {
+            setFilters({
+                ...filters,
+                [type]: event.target.checked
+                    ? [ ...filters[type], selection ]
+                    : filters[type].filter(value => value !== selection)
             });
         };
 
-        const onSortSelect = (_event, selection) => {
-            handleFilters({
-                ...passedFilters,
-                sortby: selection
+        const onToggle = type => {
+            setExpandedItems({
+                ...expandedItems,
+                [type]: !expandedItems[type]
             });
-            setSortByIsExpanded(!sortByIsExpanded);
         };
 
-        const onDateSelect = (_event, selection) => {
-            handleFilters({
-                ...passedFilters,
-                date: selection
+        const onSelectSingle = (type, event, selection) => {
+            setFilters({
+                ...filters,
+                [type]: selection
             });
-            setDateRangeIsExpanded(!dateRangeIsExpanded);
+            onToggle(type);
+        };
+
+        const toolbarFilterRender = categoryKey  => {
+            const options = optionsForCategories[categoryKey];
+
+            const handleChips = () => {
+                if (options.variant === 'single') {
+                    return handleSingleChips(
+                        filters[categoryKey],
+                        categories[categoryKey]
+                    );
+                } else if (options.variant === 'checkbox') {
+                    return handleCheckboxChips(
+                        filters[categoryKey],
+                        categories[categoryKey]);
+                }
+            };
+
+            const onSelect = (event, selection) => {
+                if (options.variant === 'single') {
+                    onSelectSingle(categoryKey, event, selection);
+                } else if (options.variant === 'checkbox') {
+                    onSelectCheckbox(categoryKey, event, selection);
+                }
+            };
+
+            return (
+                <ToolbarFilter
+                    key = { categoryKey }
+                    showToolbarItem={ currentCategory === camelToSentence(categoryKey) }
+                    chips={ handleChips() }
+                    categoryName={ camelToSentence(categoryKey) }
+                    deleteChip={ onDelete }
+                >
+                    <Select
+                        variant={ options.variant }
+                        aria-label={ categoryKey }
+                        onToggle={ () => onToggle(categoryKey) }
+                        onSelect={ onSelect }
+                        selections={ filters[categoryKey] }
+                        isOpen={ !!expandedItems[categoryKey] }
+                        placeholderText={ options.placeholder }
+                    >
+                        {
+                            categories[categoryKey] &&
+                            categories[categoryKey].map(({ key, value }) => (
+                                <SelectOption key={ key } value={ key }>
+                                    { value }
+                                </SelectOption>
+                            ))
+                        }
+                    </Select>
+                </ToolbarFilter>
+            );
         };
 
         return (
             <React.Fragment>
-                <ToolbarFilter
-                    showToolbarItem={ currentCategory === 'Status' }
-                    chips={ handleChips(passedFilters.status, statuses) }
-                    categoryName="Status"
-                    deleteChip={ onDelete }
-                >
-                    <Select
-                        isOpen={ statusIsExpanded }
-                        variant={ 'checkbox' }
-                        aria-label="Status"
-                        onToggle={ () => {
-                            setStatusIsExpanded(!statusIsExpanded);
-                        } }
-                        onSelect={ (event, selection) => {
-                            onSelect('status', event, selection);
-                        } }
-                        selections={ passedFilters.status }
-                        isExpanded={ statusIsExpanded }
-                        placeholderText="Filter by job status"
-                    >
-                        { statusMenuItems }
-                    </Select>
-                </ToolbarFilter>
-                <ToolbarFilter
-                    showToolbarItem={ currentCategory === 'Date' }
-                    categoryName="Date"
-                    chips={ handleDateChips(passedFilters.date, dateRanges) }
-                    deleteChip={ onDelete }
-                >
-                    <Select
-                        isOpen={ dateRangeIsExpanded }
-                        variant={ 'single' }
-                        aria-label="Date"
-                        onToggle={ () => {
-                            setDateRangeIsExpanded(!dateRangeIsExpanded);
-                        } }
-                        onSelect={ (event, selection) => {
-                            onDateSelect(event, selection);
-                        } }
-                        selections={ passedFilters.date }
-                        isExpanded={ dateRangeIsExpanded }
-                        placeholderText="Filter by date range"
-                    >
-                        { dateRangeMenuItems }
-                    </Select>
-
-                </ToolbarFilter>
-                <ToolbarFilter
-                    showToolbarItem={ currentCategory === 'Job' }
-                    categoryName="Type"
-                    chips={ handleChips(passedFilters.type, types) }
-                    deleteChip={ onDelete }
-                >
-                    <Select
-                        isOpen={ jobTypeIsExpanded }
-                        aria-label="Type"
-                        variant={ 'checkbox' }
-                        onToggle={ () => {
-                            setJobTypeIsExpanded(!jobTypeIsExpanded);
-                        } }
-                        onSelect={ (event, selection) => {
-                            onSelect('type', event, selection);
-                        } }
-                        selections={ passedFilters.type }
-                        isExpanded={ jobTypeIsExpanded }
-                        placeholderText="Filter by job type"
-                    >
-                        { jobTypeMenuItems }
-                    </Select>
-                </ToolbarFilter>
-                <ToolbarFilter
-                    showToolbarItem={ currentCategory === 'Organization' }
-                    categoryName="Org"
-                    chips={ handleChips(passedFilters.org, orgs) }
-                    deleteChip={ onDelete }
-                >
-                    <Select
-                        isOpen={ orgIsExpanded }
-                        aria-label="Filter by Org"
-                        variant={ 'checkbox' }
-                        onToggle={ () => {
-                            setOrgIsExpanded(!orgIsExpanded);
-                        } }
-                        onSelect={ (event, selection) => {
-                            onSelect('org', event, selection);
-                        } }
-                        selections={ passedFilters.org }
-                        isExpanded={ orgIsExpanded }
-                        placeholderText="Filter by organization"
-                    >
-                        { organizationIdMenuItems }
-                    </Select>
-                </ToolbarFilter>
-                <ToolbarFilter
-                    showToolbarItem={ currentCategory === 'Cluster' }
-                    categoryName="Cluster"
-                    chips={ handleChips(passedFilters.cluster, clusters) }
-                    deleteChip={ onDelete }
-                >
-                    <Select
-                        isOpen={ clusterIsExpanded }
-                        aria-label="Filter by Cluster"
-                        variant={ 'checkbox' }
-                        onToggle={ () => {
-                            setClusterIsExpanded(!clusterIsExpanded);
-                        } }
-                        onSelect={ (event, selection) => {
-                            onSelect('cluster', event, selection);
-                        } }
-                        selections={ passedFilters.cluster }
-                        isExpanded={ clusterIsExpanded }
-                        placeholderText="Filter by cluster"
-                    >
-                        { clusterIdMenuItems }
-                    </Select>
-                </ToolbarFilter>
-                <ToolbarFilter
-                    showToolbarItem={ currentCategory === 'Template' }
-                    categoryName="Template"
-                    chips={ handleChips(passedFilters.template, templates) }
-                    deleteChip={ onDelete }
-                >
-                    <Select
-                        isOpen={ templateIsExpanded }
-                        aria-label="Filter by template"
-                        variant={ 'checkbox' }
-                        onToggle={ () => setTemplateIsExpanded(!templateIsExpanded) }
-                        onSelect={ (event, selection) => {
-                            onSelect('template', event, selection);
-                        } }
-                        selections={ passedFilters.template }
-                        isExpanded={ templateIsExpanded }
-                        placeholderText="Filter by template"
-                    >
-                        { templateIdMenuItems }
-                    </Select>
-                </ToolbarFilter>
-                <ToolbarFilter
-                    showToolbarItem={ currentCategory === 'Sort by' }
-                    categoryName="SortBy"
-                    chips={ handleDateChips(passedFilters.sortby, sortables) }
-                    deleteChip={ onDelete }
-                >
-                    <PFSelect
-                        isOpen={ sortByIsExpanded }
-                        aria-label="Sort by"
-                        variant={ 'single' }
-                        onToggle={ () => {
-                            setSortByIsExpanded(!sortByIsExpanded);
-                        } }
-                        onSelect={ (event, selection) => {
-                            onSortSelect(event, selection);
-                        } }
-                        selections={ passedFilters.sortby }
-                        isExpanded={ sortByIsExpanded }
-                        placeholderText="Sort by attribute"
-                    >
-                        { sortByMenuItems }
-                    </PFSelect>
-                </ToolbarFilter>
+                { Object.keys(categories).map(key => toolbarFilterRender(key)) }
             </React.Fragment>
         );
     };
@@ -412,7 +283,7 @@ const FilterableToolbar = ({
                     <ToolbarGroup variant="filter-group">
                         { buildCategoryDropdown(toolbarCategories) }
                         { buildFilterDropdown() }
-                        { (currentCategory === 'Date' && passedFilters.date === 'custom') && (
+                        { (currentCategory === 'Date' && filters.date === 'custom') && (
                             <>
                               <InputGroup>
                                   <InputGroupText component="label" htmlFor="startDate">
@@ -423,7 +294,7 @@ const FilterableToolbar = ({
                                       id="startDate"
                                       type="date"
                                       aria-label="Start Date"
-                                      value={ passedFilters.startDate || '' }
+                                      value={ filters.startDate || '' }
                                       onChange={ e => handleStartDate(e) }
                                   />
                               </InputGroup>
@@ -436,7 +307,7 @@ const FilterableToolbar = ({
                                       id="endDate"
                                       type="date"
                                       aria-label="End Date"
-                                      value={ passedFilters.endDate || '' }
+                                      value={ filters.endDate || '' }
                                       onChange={ e => handleEndDate(e) }
                                   />
                               </InputGroup>
@@ -449,10 +320,10 @@ const FilterableToolbar = ({
                         id="showRootWorkflowJobs"
                         label="Ignore nested workflows and jobs"
                         labelOff="Ignore nested workflows and jobs"
-                        isChecked={ passedFilters.showRootWorkflows }
+                        isChecked={ filters.showRootWorkflows }
                         onChange={ val => {
-                            handleFilters({
-                                ...passedFilters,
+                            setFilters({
+                                ...filters,
                                 showRootWorkflows: val
                             });
                         } }
@@ -477,16 +348,10 @@ const FilterableToolbar = ({
 };
 
 FilterableToolbar.propTypes = {
-    orgs: PropTypes.array,
-    statuses: PropTypes.array,
-    types: PropTypes.array,
-    clusters: PropTypes.array,
-    templates: PropTypes.array,
-    sortables: PropTypes.array,
-    dateRanges: PropTypes.array,
+    categories: PropTypes.object,
     onDelete: PropTypes.func,
-    passedFilters: PropTypes.object,
-    handleFilters: PropTypes.func
+    filters: PropTypes.object,
+    setFilters: PropTypes.func
 };
 
 export default FilterableToolbar;
