@@ -3,13 +3,14 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import {
-    DataListCell,
+    DataListCell as PFDataListCell,
     DataListContent,
     DataList,
     DataListItem,
     DataListItemRow as PFDataListItemRow,
     DataListItemCells as PFDataListItemCells,
-    DataListToggle
+    DataListToggle,
+    Tooltip
 } from '@patternfly/react-core';
 
 import { ExternalLinkAltIcon as PFExternalLinkIcon } from '@patternfly/react-icons';
@@ -29,6 +30,12 @@ const headerLabels = [
 const ExternalLinkIcon = styled(PFExternalLinkIcon)`
   margin-left: 7px;
   color: var(--pf-global--Color--400);
+`;
+
+const DataListCell = styled(PFDataListCell)`
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 `;
 
 const DataListItemCells = styled(PFDataListItemCells)`
@@ -104,13 +111,15 @@ const buildListRow = (items, ariaLabel, ariaLabelledBy, windowWidth) => {
                                             &nbsp;
                                         <JobStatus status={ item.status } />
                                     </DataListCell>,
-                                    <DataListCell key={ count++ }>
-                                        { windowWidth <= mobileBreakpoint &&
-                                         <span style={ { color: 'initial', fontWeight: 'bold' } }>Cluster:</span>
-                                        }
-                                        &nbsp;
-                                        { item.cluster_name }
-                                    </DataListCell>,
+                                    <Tooltip key={ count++ } content={ <p>{ item.cluster_name }</p> }>
+                                        <DataListCell>
+                                            { windowWidth <= mobileBreakpoint &&
+                                            <span style={ { color: 'initial', fontWeight: 'bold' } }>Cluster:</span>
+                                            }
+                                            &nbsp;
+                                            { item.cluster_name }
+                                        </DataListCell>
+                                    </Tooltip>,
                                     <DataListCell key={ count++ }>
                                         { windowWidth <= mobileBreakpoint &&
                                          <span style={ { color: 'initial', fontWeight: 'bold' } }>Organization:</span>
