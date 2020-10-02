@@ -124,13 +124,13 @@ const JobExplorer = props => {
         status: queryParams.status
             ? formattedArray(queryParams.status)
             : [ 'successful', 'failed' ],
-        type: queryParams.job_type
+        job: queryParams.job_type
             ? formattedArray(queryParams.job_type)
             : [ 'job', 'workflowjob' ],
-        org: queryParams.org_id ? formattedArray(queryParams.org_id) : [],
+        organization: queryParams.org_id ? formattedArray(queryParams.org_id) : [],
         cluster: queryParams.cluster_id ? formattedArray(queryParams.cluster_id) : [],
         template: queryParams.template_id ? formattedArray(queryParams.template_id) : [],
-        sortby: queryParams.sort_by ? queryParams.sort_by : null,
+        sortBy: queryParams.sort_by ? queryParams.sort_by : null,
         startDate: queryParams.start_date ? queryParams.start_date : null,
         endDate: queryParams.end_date ? queryParams.end_date : null,
         date: queryParams.quick_date_range ? queryParams.quick_date_range : 'last_30_days',
@@ -180,16 +180,16 @@ const JobExplorer = props => {
             return;
         }
 
-        if (filters.type) {
-            setJobType(filters.type);
+        if (filters.job) {
+            setJobType(filters.job);
         }
 
         if (filters.status) {
             setStatus(filters.status);
         }
 
-        if (filters.org) {
-            setOrg(filters.org);
+        if (filters.organization) {
+            setOrg(filters.organization);
         }
 
         if (filters.cluster) {
@@ -201,7 +201,7 @@ const JobExplorer = props => {
         }
 
         // The filter can change back to null too.
-        setSortBy2(filters.sortby);
+        setSortBy2(filters.sortBy);
 
         setRootWorkflowsAndJobs(filters.showRootWorkflows);
 
@@ -278,11 +278,11 @@ const JobExplorer = props => {
             filtered = statuses.filter(status => status.value === val);
         }
 
-        if (type === 'Type') {
+        if (type === 'Job') {
             filtered = jobTypes.filter(job => job.value === val);
         }
 
-        if (type === 'Org') {
+        if (type === 'Organization') {
             filtered = orgIds.filter(org => org.value === val);
         }
 
@@ -305,7 +305,7 @@ const JobExplorer = props => {
             } else if (type === 'SortBy') {
                 setFilters({
                     ...filters,
-                    sortby: null
+                    sortBy: null
                 });
             } else {
                 setFilters({
@@ -318,11 +318,11 @@ const JobExplorer = props => {
         } else {
             setFilters({
                 status: [],
-                type: [],
-                org: [],
+                job: [],
+                organization: [],
                 cluster: [],
                 template: [],
-                sortby: null,
+                sortBy: null,
                 date: null,
                 startDate: null,
                 endDate: null,
@@ -379,16 +379,18 @@ const JobExplorer = props => {
                   </CardHeader>
                   <CardBody>
                       <FilterableToolbar
-                          orgs={ orgIds }
-                          statuses={ statuses }
-                          clusters={ clusterIds }
-                          templates={ templateIds }
-                          types={ jobTypes }
-                          sortables={ sortBy }
-                          dateRanges={ quickDateRanges }
+                          categories={ {
+                              organization: orgIds,
+                              cluster: clusterIds,
+                              status: statuses,
+                              job: jobTypes,
+                              template: templateIds,
+                              sortBy,
+                              date: quickDateRanges
+                          } }
                           onDelete={ onDelete }
-                          passedFilters={ filters }
-                          handleFilters={ setFilters }
+                          filters={ filters }
+                          setFilters={ setFilters }
                       />
                       <CompactPagination
                           itemCount={ meta.count ? meta.count : 0 }
