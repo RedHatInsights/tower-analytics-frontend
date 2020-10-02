@@ -2,9 +2,6 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {
-    Dropdown,
-    DropdownToggle,
-    DropdownItem,
     InputGroup,
     InputGroupText,
     TextInput,
@@ -12,7 +9,6 @@ import {
     ToolbarContent as PFToolbarContent,
     ToolbarFilter,
     ToolbarToggleGroup,
-    ToolbarItem,
     ToolbarGroup as PFToolbarGroup,
     Select as PFSelect,
     SelectOption,
@@ -26,7 +22,7 @@ import {
     QuestionCircleIcon
 } from '@patternfly/react-icons';
 
-import { toolbarCategories } from '../Utilities/constants';
+import CategoryDropdown from './CategoryDropdown';
 
 const ToolbarGroup = styled(PFToolbarGroup)`
   button {
@@ -139,8 +135,7 @@ const FilterableToolbar = ({
     setFilters
 }) => {
     const [ expandedItems, setExpandedItems ] = useState({});
-    const [ isCategoryExpanded, setIsCategoryExpanded ] = useState(false);
-    const [ currentCategory, setCurrentCategory ] = useState('Status');
+    const [ currentCategory, setCurrentCategory ] = useState('status');
 
     const handleStartDate = e => {
         setFilters({
@@ -154,36 +149,6 @@ const FilterableToolbar = ({
             ...filters,
             endDate: e
         });
-    };
-
-    const buildCategoryDropdown = () => {
-        return (
-            <ToolbarItem>
-                <Dropdown
-                    onSelect={ e => {
-                        setCurrentCategory(e.target.innerText);
-                        setIsCategoryExpanded(false);
-                    } }
-                    position={ 'left' }
-                    toggle={
-                        <DropdownToggle
-                            onToggle={ () => {
-                                setIsCategoryExpanded(!isCategoryExpanded);
-                            } }
-                            style={ { width: '100%' } }
-                        >
-                            <FilterIcon />
-                            &nbsp;{ currentCategory }
-                        </DropdownToggle>
-                    }
-                    isOpen={ isCategoryExpanded }
-                    dropdownItems={ Object.keys(categories).map(key => (
-                        <DropdownItem key={ key }>{ camelToSentence(key) }</DropdownItem>
-                    )) }
-                    style={ { width: '100%' } }
-                />
-            </ToolbarItem>
-        );
     };
 
     const buildFilterDropdown = () => {
@@ -238,7 +203,7 @@ const FilterableToolbar = ({
             return (
                 <ToolbarFilter
                     key = { categoryKey }
-                    showToolbarItem={ currentCategory === camelToSentence(categoryKey) }
+                    showToolbarItem={ currentCategory === categoryKey }
                     chips={ handleChips() }
                     categoryName={ camelToSentence(categoryKey) }
                     deleteChip={ onDelete }
@@ -281,7 +246,16 @@ const FilterableToolbar = ({
             <ToolbarContent>
                 <ToolbarToggleGroup toggleIcon={ <FilterIcon /> } breakpoint="xl">
                     <ToolbarGroup variant="filter-group">
-                        { buildCategoryDropdown(toolbarCategories) }
+                        <CategoryDropdown
+                            selected={ currentCategory }
+                            setSelected={ setCurrentCategory }
+                            categories={
+                                Object.keys(categories).map(el => ({
+                                    key: el,
+                                    name: camelToSentence(el)
+                                }))
+                            }
+                        />
                         { buildFilterDropdown() }
                         { (currentCategory === 'Date' && filters.date === 'custom') && (
                             <>

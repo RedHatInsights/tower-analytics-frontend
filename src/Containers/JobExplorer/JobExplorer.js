@@ -33,7 +33,7 @@ import {
 } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
-import FilterableToolbar from '../../Components/Toolbar';
+import FilterableToolbar from '../../Components/Toolbar/';
 
 const CardHeader = styled(PFCardHeader)`
   display: flex;
