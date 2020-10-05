@@ -43,3 +43,5 @@ export const camelToSentence = str => {
     const result = str.replace(/([A-Z])/g, ' $1').toLowerCase();
     return result.charAt(0).toUpperCase() + result.slice(1);
 };
+
+export const sentenceToCamel = str => str.toLowerCase().replace(/\s+(.)/g, (match, group1) => group1.toUpperCase());
