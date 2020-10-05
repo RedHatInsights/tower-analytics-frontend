@@ -23,7 +23,8 @@ import CustomDateSelector from './CustomDateSelector';
 import {
     handleCheckboxChips,
     handleSingleChips,
-    camelToSentence
+    camelToSentence,
+    sentenceToCamel
 } from './helpers';
 
 const ToolbarGroup = styled(PFToolbarGroup)`
@@ -55,43 +56,79 @@ const Select = styled(PFSelect)`
 
 const optionsForCategories = {
     status: {
-        variant: 'checkbox',
+        single: false,
         placeholder: 'Filter by job status'
     },
     date: {
-        variant: 'single',
+        single: true,
         placeholder: 'Filter by date'
     },
     job: {
-        variant: 'checkbox',
+        single: false,
         placeholder: 'Filter by job type'
     },
     organization: {
-        variant: 'checkbox',
+        single: false,
         placeholder: 'Filter by organization'
     },
     cluster: {
-        variant: 'checkbox',
+        single: false,
         placeholder: 'Filter by cluster'
     },
     template: {
-        variant: 'checkbox',
+        single: false,
         placeholder: 'Filter by template'
     },
     sortBy: {
-        variant: 'single',
+        single: true,
         placeholder: 'Sort by attribute'
     }
 };
 
 const FilterableToolbar = ({
     categories,
-    onDelete,
     filters,
     setFilters
 }) => {
     const [ expandedItems, setExpandedItems ] = useState({});
     const [ currentCategory, setCurrentCategory ] = useState('status');
+
+    const onDelete = (type, val) => {
+        if (!type) {
+            setFilters({
+                status: [],
+                job: [],
+                organization: [],
+                cluster: [],
+                template: [],
+                sortBy: null,
+                date: null,
+                startDate: null,
+                endDate: null,
+                showRootWorkflows: false
+            });
+            return;
+        }
+
+        const categoryKey = sentenceToCamel(type);
+        const single = optionsForCategories[categoryKey].single;
+
+        if (single) {
+            setFilters({
+                ...filters,
+                [categoryKey]: null
+            });
+        } else {
+            const filteredArr = filters[categoryKey].filter(value =>
+                value !== categories[categoryKey].find((
+                    { value }) => value === val).key
+            );
+            setFilters({
+                ...filters,
+                [categoryKey]: filteredArr
+            });
+        }
+    };
 
     const onInputChange = (type, value) => {
         setFilters({
@@ -129,12 +166,12 @@ const FilterableToolbar = ({
             const options = optionsForCategories[categoryKey];
 
             const handleChips = () => {
-                if (options.variant === 'single') {
+                if (options.single) {
                     return handleSingleChips(
                         filters[categoryKey],
                         categories[categoryKey]
                     );
-                } else if (options.variant === 'checkbox') {
+                } else {
                     return handleCheckboxChips(
                         filters[categoryKey],
                         categories[categoryKey]);
@@ -142,9 +179,9 @@ const FilterableToolbar = ({
             };
 
             const onSelect = (event, selection) => {
-                if (options.variant === 'single') {
+                if (options.single) {
                     onSelectSingle(categoryKey, event, selection);
-                } else if (options.variant === 'checkbox') {
+                } else {
                     onSelectCheckbox(categoryKey, event, selection);
                 }
             };
@@ -158,7 +195,7 @@ const FilterableToolbar = ({
                     deleteChip={ onDelete }
                 >
                     <Select
-                        variant={ options.variant }
+                        variant={ options.single ? 'single' : 'checkbox' }
                         aria-label={ categoryKey }
                         onToggle={ () => onToggle(categoryKey) }
                         onSelect={ onSelect }
@@ -249,7 +286,6 @@ const FilterableToolbar = ({
 
 FilterableToolbar.propTypes = {
     categories: PropTypes.object,
-    onDelete: PropTypes.func,
     filters: PropTypes.object,
     setFilters: PropTypes.func
 };
