@@ -58,7 +58,7 @@ class BarChart extends Component {
     draw() {
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
-        const parseTime = d3.timeParse('%Y-%m-%d');
+        const parseTime = d3.utcParse('%Y-%m-%d');
         let { data: unformattedData, value } = this.props;
         const data = unformattedData.reduce((formatted, { created, successful, failed }) => {
             let DATE = parseTime(created) || new Date();
