@@ -16,10 +16,6 @@ jobs:
     script: npm run test && npx codecov
   - stage: Deploy
     script: npm run deploy && curl -sSL https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master/src/bootstrap.sh | bash -s
-  - stage: Build
-    script: "docker build -t benthomasson/tower-analytics-frontend:${BRANCH} ."
-  #- stage: Push (disabled until full integration testing is created)
-  #  script: bash docker_push
 env:
     global:
     - REPO="git@github.com:RedHatInsights/tower-analytics-frontend-build.git"
