@@ -112,24 +112,16 @@ const JobExplorer = props => {
         initialOptionsParams
     );
 
-    const formattedArray = datum => {
-        if (Array.isArray(datum)) {
-            return [ ...datum ];
-        } else {
-            return datum.split();
-        }
-    };
-
     const [ filters, setFilters ] = useState({
         status: queryParams.status
-            ? formattedArray(queryParams.status)
+            ? queryParams.status
             : [ 'successful', 'failed' ],
         job: queryParams.job_type
-            ? formattedArray(queryParams.job_type)
+            ? queryParams.job_type
             : [ 'job', 'workflowjob' ],
-        organization: queryParams.org_id ? formattedArray(queryParams.org_id) : [],
-        cluster: queryParams.cluster_id ? formattedArray(queryParams.cluster_id) : [],
-        template: queryParams.template_id ? formattedArray(queryParams.template_id) : [],
+        organization: queryParams.org_id ? queryParams.org_id : [],
+        cluster: queryParams.cluster_id ? queryParams.cluster_id : [],
+        template: queryParams.template_id ? queryParams.template_id : [],
         sortBy: queryParams.sort_by ? queryParams.sort_by : null,
         startDate: queryParams.start_date ? queryParams.start_date : null,
         endDate: queryParams.end_date ? queryParams.end_date : null,
