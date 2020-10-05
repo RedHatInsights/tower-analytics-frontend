@@ -263,7 +263,7 @@ class GroupedBarChart extends Component {
         d3.selectAll('#' + this.props.id + ' > *').remove();
         let { data: unformattedData, timeFrame } = this.props;
         const selected = this.selection;
-        const parseTime = d3.timeParse('%Y-%m-%d');
+        const parseTime = d3.utcParse('%Y-%m-%d');
         const data = unformattedData.reduce((formatted, { date, orgs: orgsList }) => {
             date = parseTime(date);
             const selectedOrgs = orgsList.filter(({ id }) => selected.includes(id));
