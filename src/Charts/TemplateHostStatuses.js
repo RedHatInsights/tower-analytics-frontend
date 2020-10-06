@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { useRef } from 'react';
 //import Dimensions from 'react-dimensions'
 
 import { Chart, ChartBar, ChartAxis, ChartStack, ChartThemeColor, ChartTooltip } from '@patternfly/react-charts';
@@ -76,10 +77,15 @@ const getHeight = (id) => {
 
 const TemplateHostStatuses = (props) =>{
 
+  const ref = useRef(null);
+  const [ xWidth, setXwidth ] = useState(1000);
+  const [ yHeight, setYheight ] = useState(90);
+
   const parentid = props.parentid;
   console.log('parentid', parentid);
   //const width = getWidth(parentid);
   const twidth = getWidth(parentid);
+  console.log('twidth', twidth);
   const width = 1600;
 
   //const width = 900;
@@ -130,6 +136,15 @@ const TemplateHostStatuses = (props) =>{
     })
   })
 
+
+  useEffect(() => {
+      console.log('###########################################');
+      console.log('width', ref.current ? ref.current.offsetWidth : 0);
+      console.log('###########################################');
+      setXwidth(ref.current.offsetWidth);
+      setYheight(ref.current.offsetHeight);
+  }, [ref.current]);
+
   //let theme = { ...ChartThemeColor.purple };
   //console.log('theme', theme);
   //let theme = ['blue', 'red', 'yellow', 'pink'];
@@ -144,13 +159,13 @@ const TemplateHostStatuses = (props) =>{
   return (
     <div style={{ marginTop: '0px', marginLeft: '0px'}}>
     {/*<div style={{ height: `${height}px`, width: `${width}px`, background: 'white', border: '2px solid red' }}> */}
-    <div style={{ height: `${height}px`, width: '100%', background: 'white', border: '2px solid red' }}>
+    <div ref={ ref } style={{ height: `${height}px`, width: '100%', background: 'white', border: '2px solid red' }}>
       <Chart
         ariaDesc="job status summary"
         ariaTitle="Job Statuses"
         padding={{ left: 10, right: 10, top: 0, bottom: 0 }}
-        width={ width }
-        height={ height }
+        height={ yHeight }
+        width={ xWidth }
       >
 
         <ChartLegend
@@ -158,7 +173,7 @@ const TemplateHostStatuses = (props) =>{
           titleOrientation='left'
           style={{ title: {fontSize: 14, fontWeight: 'normal' } }}
           padding={ 100 }
-          y={ height - 70 }
+          y={ yHeight - 70 }
           x={ 10 }
           gutter={ 0 }
           data={ [] }
@@ -167,8 +182,8 @@ const TemplateHostStatuses = (props) =>{
         <ChartLegend
           title={ `Tasks ${taskCount}` }
           gutter={ 0 }
-          x={ width - 200 }
-          y={ height - 70 }
+          x={ xWidth - 200 }
+          y={ yHeight - 70 }
           titleOrientation='right'
           padding={{ left: 100, right: 100}}
           data={ [] }
@@ -177,8 +192,8 @@ const TemplateHostStatuses = (props) =>{
         <ChartLegend
           title={ `Hosts ${hostCount}` }
           gutter={ 0 }
-          x={ width - 120 }
-          y={ height - 70 }
+          x={ xWidth - 120 }
+          y={ yHeight - 70 }
           titleOrientation='right'
           data={[]}
         />
@@ -188,8 +203,8 @@ const TemplateHostStatuses = (props) =>{
           gutter={ 20 }
           data={ legendData }
           titleOrientation='right'
-          y={ height - 40 }
-          x={ width - 585 }
+          y={ yHeight - 40 }
+          x={ xWidth - 585 }
         />
 
         {/* horizontal axis */}
