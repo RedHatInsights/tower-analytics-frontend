@@ -163,7 +163,7 @@ export const useQueryParams = initial => {
             const endDate = moment().format('YYYY-MM-DD');
             dispatch({ type: 'SET_ENDDATE', endDate });
         },
-        setId: id => dispatch({ type: 'SET_ID', id }),
+        setId: value => dispatch({ type: 'SET_ID', value }),
         setStartDate: days => {
             let startDate;
             if (days === 7) {
