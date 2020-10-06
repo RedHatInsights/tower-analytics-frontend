@@ -24,6 +24,7 @@ import {
     handleCheckboxChips,
     handleSingleChips
 } from './helpers';
+import { optionsForCategories } from './constants';
 
 const ToolbarGroup = styled(PFToolbarGroup)`
   button {
@@ -52,49 +53,6 @@ const Select = styled(PFSelect)`
     }
 `;
 
-const optionsForCategories = {
-    status: {
-        single: false,
-        name: 'Status',
-        placeholder: 'Filter by job status'
-    },
-    quickDateRange: {
-        single: true,
-        name: 'Date',
-        placeholder: 'Filter by date'
-    },
-    jobType: {
-        single: false,
-        name: 'Job',
-        placeholder: 'Filter by job type'
-    },
-    orgId: {
-        single: false,
-        name: 'Organization',
-        placeholder: 'Filter by organization'
-    },
-    clusterId: {
-        single: false,
-        name: 'Cluster',
-        placeholder: 'Filter by cluster'
-    },
-    templateId: {
-        single: false,
-        name: 'Template',
-        placeholder: 'Filter by template'
-    },
-    sortBy: {
-        single: true,
-        name: 'Sort by',
-        placeholder: 'Sort by attribute'
-    }
-};
-
-const optionsFindByName = value =>
-    Object.keys(optionsForCategories).find(
-        el => optionsForCategories[el].name === value
-    );
-
 const FilterableToolbar = ({
     categories,
     filters,
@@ -110,6 +68,11 @@ const FilterableToolbar = ({
             setFilters(null);
             return;
         }
+
+        const optionsFindByName = value =>
+            Object.keys(optionsForCategories).find(
+                el => optionsForCategories[el].name === value
+            );
 
         const categoryKey = optionsFindByName(name);
         const single = optionsForCategories[categoryKey].single;
