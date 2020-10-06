@@ -30,89 +30,50 @@ export const useQueryParams = initial => {
             case 'SET_OFFSET':
                 return { ...state, offset: value };
             case 'SET_SEVERITY':
-                if (value.length <= 0) {
-                    const { severity: ignored, ...rest } = state;
-                    return rest;
-                }
-
                 return { ...state, severity: value };
             case 'SET_ATTRIBUTES':
                 return { ...state, attributes: [ ...value ]};
             case 'SET_JOB_TYPE':
-                if (value.length <= 0) {
-                    const { jobType: ignored, ...rest } = state;
-                    return rest;
-                }
-
                 return { ...state, jobType: [ ...value ]};
-
             case 'SET_STATUS':
-                if (value.length <= 0) {
-                    const { status: ignored, ...rest } = state;
-                    return rest;
-                }
-
                 return { ...state, status: [ ...value ]};
             case 'SET_ORG':
-                if (value.length <= 0) {
-                    const { orgId: ignored, ...rest } = state;
-                    return rest;
-                }
-
                 return { ...state, orgId: [ ...value ]};
             case 'SET_CLUSTER':
-                if (value.length <= 0) {
-                    const { clusterId: ignored, ...rest } = state;
-                    return rest;
-                }
-
                 return { ...state, clusterId: [ ...value ]};
             case 'SET_TEMPLATE':
-                if (value.length <= 0) {
-                    const { templateId: ignored, ...rest } = state;
-                    return rest;
-                }
-
                 return { ...state, templateId: [ ...value ]};
             case 'SET_SORTBY':
-                if (value === null) {
-                    const { sortBy: ignored, ...rest } = state;
-                    return rest;
-                }
-
                 return { ...state, sortBy: value };
             case 'SET_ROOT_WORKFLOWS_AND_JOBS':
                 return { ...state, onlyRootWorkflowsAndStandaloneJobs: value };
-            case 'SET_QUICK_DATE_RANGE':
-                if (value === null) {
-                    const { quickDateRange: ignored, ...rest } = state;
-                    return rest;
-                } else {
-                    let newState = { ...state };
-                    if (value !== 'custom') {
-                        newState = { ...newState, startDate: null, endDate: null };
-                    }
-
-                    newState = { ...newState, quickDateRange: value };
-                    return newState;
+            case 'SET_QUICK_DATE_RANGE': {
+                let newState = { ...state };
+                if (value !== 'custom') {
+                    newState = { ...newState, startDate: null, endDate: null };
                 }
+
+                newState = { ...newState, quickDateRange: value };
+                return newState;
+            }
 
             case 'SET_START_DATE':
-                if (value === null) {
-                    const { startDate: ignored, ...rest } = state;
-                    return rest;
-                }
-
                 return { ...state, startDate: formatDate(value) };
             case 'SET_END_DATE':
-                if (value === null) {
-                    const { endDate: ignored, ...rest } = state;
-                    return rest;
-                }
-
                 return { ...state, endDate: formatDate(value) };
-            case 'RESET':
-                return { ...initial };
+            case 'RESET_FILTER':
+                return { ...state,
+                    status: [],
+                    quickDateRange: null,
+                    jobType: [],
+                    orgId: [],
+                    clusterId: [],
+                    templateId: [],
+                    sortBy: null,
+                    startDate: null,
+                    endDate: null,
+                    onlyRootWorkflowsAndStandaloneJobs: false
+                };
             default:
                 throw new Error();
         }
@@ -128,7 +89,16 @@ export const useQueryParams = initial => {
         let urlFormatted = {};
 
         Object.keys(queryParams).forEach((key) => {
-            urlFormatted[camelToSnakeCase(key)] = queryParams[key];
+            // Filter out null and empty array elements
+            if (queryParams[key]) {
+                if (Array.isArray(queryParams[key])) {
+                    if (queryParams[key].length < 1) {
+                        return;
+                    }
+                }
+
+                urlFormatted[camelToSnakeCase(key)] = queryParams[key];
+            }
         });
 
         return urlFormatted;
@@ -156,7 +126,7 @@ export const useQueryParams = initial => {
         setSeverity: value => dispatch({ type: 'SET_SEVERITY', value }),
         setFromToolbar: (varName, value = null) => {
             if (!varName) {
-                dispatch({ type: 'RESET' });
+                dispatch({ type: 'RESET_FILTER' });
             } else {
                 dispatch({ type: actionMapper[varName], value });
             }
