@@ -50,7 +50,7 @@ align-items: center;
 const mobileBreakpoint = 765;
 
 const buildHeader = labels => (
-    <DataListItemRow style={ { paddingLeft: '94px', fontWeight: '800' } }>
+    <DataListItemRow style={ { paddingLeft: '80px', fontWeight: '800' } }>
         { labels.map(label => (
             <DataListCell key={ label }>
                 { label }
