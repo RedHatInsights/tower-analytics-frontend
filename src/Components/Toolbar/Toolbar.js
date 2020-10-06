@@ -22,9 +22,7 @@ import CategoryDropdown from './CategoryDropdown';
 import CustomDateSelector from './CustomDateSelector';
 import {
     handleCheckboxChips,
-    handleSingleChips,
-    camelToSentence,
-    sentenceToCamel
+    handleSingleChips
 } from './helpers';
 
 const ToolbarGroup = styled(PFToolbarGroup)`
@@ -57,33 +55,45 @@ const Select = styled(PFSelect)`
 const optionsForCategories = {
     status: {
         single: false,
+        name: 'Status',
         placeholder: 'Filter by job status'
     },
-    date: {
+    quickDateRange: {
         single: true,
+        name: 'Date',
         placeholder: 'Filter by date'
     },
-    job: {
+    jobType: {
         single: false,
+        name: 'Job',
         placeholder: 'Filter by job type'
     },
-    organization: {
+    orgId: {
         single: false,
+        name: 'Organization',
         placeholder: 'Filter by organization'
     },
-    cluster: {
+    clusterId: {
         single: false,
+        name: 'Cluster',
         placeholder: 'Filter by cluster'
     },
-    template: {
+    templateId: {
         single: false,
+        name: 'Template',
         placeholder: 'Filter by template'
     },
     sortBy: {
         single: true,
+        name: 'Sort by',
         placeholder: 'Sort by attribute'
     }
 };
+
+const optionsFindByName = value =>
+    Object.keys(optionsForCategories).find(
+        el => optionsForCategories[el].name === value
+    );
 
 const FilterableToolbar = ({
     categories,
@@ -91,50 +101,32 @@ const FilterableToolbar = ({
     setFilters
 }) => {
     const [ expandedItems, setExpandedItems ] = useState({});
-    const [ currentCategory, setCurrentCategory ] = useState('status');
+    const [ currentCategory, setCurrentCategory ] = useState(
+        Object.keys(categories)[0]
+    );
 
-    const onDelete = (type, val) => {
-        if (!type) {
-            setFilters({
-                status: [],
-                job: [],
-                organization: [],
-                cluster: [],
-                template: [],
-                sortBy: null,
-                date: null,
-                startDate: null,
-                endDate: null,
-                showRootWorkflows: false
-            });
+    const onDelete = (name, val) => {
+        if (!name) {
+            setFilters(null);
             return;
         }
 
-        const categoryKey = sentenceToCamel(type);
+        const categoryKey = optionsFindByName(name);
         const single = optionsForCategories[categoryKey].single;
 
         if (single) {
-            setFilters({
-                ...filters,
-                [categoryKey]: null
-            });
+            setFilters(categoryKey, null);
         } else {
             const filteredArr = filters[categoryKey].filter(value =>
                 value !== categories[categoryKey].find((
                     { value }) => value === val).key
             );
-            setFilters({
-                ...filters,
-                [categoryKey]: filteredArr
-            });
+            setFilters(categoryKey, filteredArr);
         }
     };
 
     const onInputChange = (type, value) => {
-        setFilters({
-            ...filters,
-            [type]: value
-        });
+        setFilters(type, value);
     };
 
     const buildFilterDropdown = () => {
@@ -146,19 +138,14 @@ const FilterableToolbar = ({
         };
 
         const onSelectCheckbox = (type, event, selection) => {
-            setFilters({
-                ...filters,
-                [type]: event.target.checked
-                    ? [ ...filters[type], selection ]
-                    : filters[type].filter(value => value !== selection)
-            });
+            setFilters(type, event.target.checked
+                ? [ ...filters[type], selection ]
+                : filters[type].filter(value => value !== selection)
+            );
         };
 
         const onSelectSingle = (type, event, selection) => {
-            setFilters({
-                ...filters,
-                [type]: selection
-            });
+            setFilters(type, selection);
             onToggle(type);
         };
 
@@ -191,7 +178,7 @@ const FilterableToolbar = ({
                     key = { categoryKey }
                     showToolbarItem={ currentCategory === categoryKey }
                     chips={ handleChips() }
-                    categoryName={ camelToSentence(categoryKey) }
+                    categoryName={ options.name }
                     deleteChip={ onDelete }
                 >
                     <Select
@@ -238,12 +225,12 @@ const FilterableToolbar = ({
                             categories={
                                 Object.keys(categories).map(el => ({
                                     key: el,
-                                    name: camelToSentence(el)
+                                    name: optionsForCategories[el].name
                                 }))
                             }
                         />
                         { buildFilterDropdown() }
-                        { (currentCategory === 'date' && filters.date === 'custom') && (
+                        { (currentCategory === 'quickDateRange' && filters.quickDateRange === 'custom') && (
                             <CustomDateSelector
                                 startDate={ filters.startDate }
                                 endDate={ filters.endDate }
@@ -257,12 +244,9 @@ const FilterableToolbar = ({
                         id="showRootWorkflowJobs"
                         label="Ignore nested workflows and jobs"
                         labelOff="Ignore nested workflows and jobs"
-                        isChecked={ filters.showRootWorkflows }
+                        isChecked={ filters.onlyRootWorkflowsAndStandaloneJobs }
                         onChange={ val => {
-                            setFilters({
-                                ...filters,
-                                showRootWorkflows: val
-                            });
+                            setFilters('onlyRootWorkflowsAndStandaloneJobs', val);
                         } }
                     />
                     <Tooltip

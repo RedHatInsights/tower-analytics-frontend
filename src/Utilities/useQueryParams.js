@@ -95,9 +95,16 @@ export const useQueryParams = initial => {
                 if (action.value === null) {
                     const { quickDateRange: ignored, ...rest } = state;
                     return rest;
+                } else {
+                    let newState = { ...state };
+                    if (action.value !== 'custom') {
+                        newState = { ...newState, startDate: null, endDate: null };
+                    }
+
+                    newState = { ...newState, quickDateRange: action.value };
+                    return newState;
                 }
 
-                return { ...state, quickDateRange: action.value };
             case 'SET_START_DATE':
                 if (action.value === null) {
                     const { startDate: ignored, ...rest } = state;
@@ -112,6 +119,8 @@ export const useQueryParams = initial => {
                 }
 
                 return { ...state, endDate: formatDate(action.value) };
+            case 'RESET':
+                return { ...initial };
             default:
                 throw new Error();
         }
@@ -131,6 +140,19 @@ export const useQueryParams = initial => {
         });
 
         return urlFormatted;
+    };
+
+    const actionMapper = {
+        status: 'SET_STATUS',
+        quickDateRange: 'SET_QUICK_DATE_RANGE',
+        jobType: 'SET_JOB_TYPE',
+        orgId: 'SET_ORG',
+        clusterId: 'SET_CLUSTER',
+        templateId: 'SET_TEMPLATE',
+        sortBy: 'SET_SORTBY',
+        startDate: 'SET_START_DATE',
+        endDate: 'SET_END_DATE',
+        onlyRootWorkflowsAndStandaloneJobs: 'SET_ROOT_WORKFLOWS_AND_JOBS'
     };
 
     return {
@@ -173,16 +195,12 @@ export const useQueryParams = initial => {
         setLimit: value => dispatch({ type: 'SET_LIMIT', value }),
         setOffset: value => dispatch({ type: 'SET_OFFSET', value }),
         setSeverity: value => dispatch({ type: 'SET_SEVERITY', value }),
-        setAttributes: value => dispatch({ type: 'SET_ATTRIBUTES', value }),
-        setJobType: value => dispatch({ type: 'SET_JOB_TYPE', value }),
-        setStatus: value => dispatch({ type: 'SET_STATUS', value }),
-        setOrg: value => dispatch({ type: 'SET_ORG', value }),
-        setCluster: value => dispatch({ type: 'SET_CLUSTER', value }),
-        setTemplate: value => dispatch({ type: 'SET_TEMPLATE', value }),
-        setSortBy2: value => dispatch({ type: 'SET_SORTBY', value }),
-        setRootWorkflowsAndJobs: value => dispatch({ type: 'SET_ROOT_WORKFLOWS_AND_JOBS', value }),
-        setQuickDateRange: value => dispatch({ type: 'SET_QUICK_DATE_RANGE', value }),
-        setStart_Date: value => dispatch({ type: 'SET_START_DATE', value }),
-        setEnd_Date: value => dispatch({ type: 'SET_END_DATE', value })
+        setFromToolbar: (varName, value = null) => {
+            if (!varName) {
+                dispatch({ type: 'RESET', value: '' });
+            } else {
+                dispatch({ type: actionMapper[varName], value });
+            }
+        }
     };
 };
