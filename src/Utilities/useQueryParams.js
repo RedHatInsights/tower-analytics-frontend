@@ -7,118 +7,110 @@ import moment from 'moment';
 import { formatDate } from '../Utilities/helpers';
 
 export const useQueryParams = initial => {
-    const paramsReducer = (state, action) => {
-        switch (action.type) {
+    const paramsReducer = (state, { type, value }) => {
+        switch (type) {
             case 'SET_STARTDATE':
-                return { ...state, startDate: action.value };
+                return { ...state, startDate: value };
             case 'SET_ENDDATE':
-                return { ...state, endDate: action.value };
+                return { ...state, endDate: value };
             case 'SET_ID':
-                if (!parseInt(action.value)) {
+                if (!parseInt(value)) {
                     const { id: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, id: parseInt(action.value) };
-            case 'SET_SORT_BY':
-                if (action.value === 'count:asc' || action.value === 'count:desc') {
-                    return { ...state, sortBy: action.value };
-                } else {
-                    const { sortBy: ignored, ...rest } = state;
-                    return rest;
-                }
-
+                return { ...state, id: parseInt(value) };
             case 'SET_LIMIT':
-                if (!parseInt(action.value)) {
+                if (!parseInt(value)) {
                     const { limit: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, limit: parseInt(action.value) };
+                return { ...state, limit: parseInt(value) };
             case 'SET_OFFSET':
-                return { ...state, offset: action.value };
+                return { ...state, offset: value };
             case 'SET_SEVERITY':
-                if (action.value.length <= 0) {
+                if (value.length <= 0) {
                     const { severity: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, severity: action.value };
+                return { ...state, severity: value };
             case 'SET_ATTRIBUTES':
-                return { ...state, attributes: [ ...action.value ]};
+                return { ...state, attributes: [ ...value ]};
             case 'SET_JOB_TYPE':
-                if (action.value.length <= 0) {
+                if (value.length <= 0) {
                     const { jobType: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, jobType: [ ...action.value ]};
+                return { ...state, jobType: [ ...value ]};
 
             case 'SET_STATUS':
-                if (action.value.length <= 0) {
+                if (value.length <= 0) {
                     const { status: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, status: [ ...action.value ]};
+                return { ...state, status: [ ...value ]};
             case 'SET_ORG':
-                if (action.value.length <= 0) {
+                if (value.length <= 0) {
                     const { orgId: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, orgId: [ ...action.value ]};
+                return { ...state, orgId: [ ...value ]};
             case 'SET_CLUSTER':
-                if (action.value.length <= 0) {
+                if (value.length <= 0) {
                     const { clusterId: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, clusterId: [ ...action.value ]};
+                return { ...state, clusterId: [ ...value ]};
             case 'SET_TEMPLATE':
-                if (action.value.length <= 0) {
+                if (value.length <= 0) {
                     const { templateId: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, templateId: [ ...action.value ]};
+                return { ...state, templateId: [ ...value ]};
             case 'SET_SORTBY':
-                if (action.value === null) {
+                if (value === null) {
                     const { sortBy: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, sortBy: action.value };
+                return { ...state, sortBy: value };
             case 'SET_ROOT_WORKFLOWS_AND_JOBS':
-                return { ...state, onlyRootWorkflowsAndStandaloneJobs: action.value };
+                return { ...state, onlyRootWorkflowsAndStandaloneJobs: value };
             case 'SET_QUICK_DATE_RANGE':
-                if (action.value === null) {
+                if (value === null) {
                     const { quickDateRange: ignored, ...rest } = state;
                     return rest;
                 } else {
                     let newState = { ...state };
-                    if (action.value !== 'custom') {
+                    if (value !== 'custom') {
                         newState = { ...newState, startDate: null, endDate: null };
                     }
 
-                    newState = { ...newState, quickDateRange: action.value };
+                    newState = { ...newState, quickDateRange: value };
                     return newState;
                 }
 
             case 'SET_START_DATE':
-                if (action.value === null) {
+                if (value === null) {
                     const { startDate: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, startDate: formatDate(action.value) };
+                return { ...state, startDate: formatDate(value) };
             case 'SET_END_DATE':
-                if (action.value === null) {
+                if (value === null) {
                     const { endDate: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, endDate: formatDate(action.value) };
+                return { ...state, endDate: formatDate(value) };
             case 'RESET':
                 return { ...initial };
             default:
@@ -159,6 +151,17 @@ export const useQueryParams = initial => {
         queryParams,
         urlMappedQueryParams: urlMappedQueryParams(),
         dispatch,
+        setLimit: value => dispatch({ type: 'SET_LIMIT', value }),
+        setOffset: value => dispatch({ type: 'SET_OFFSET', value }),
+        setSeverity: value => dispatch({ type: 'SET_SEVERITY', value }),
+        setFromToolbar: (varName, value = null) => {
+            if (!varName) {
+                dispatch({ type: 'RESET' });
+            } else {
+                dispatch({ type: actionMapper[varName], value });
+            }
+        },
+        /* v0 api usage after this line */
         setEndDate: () => {
             const endDate = moment().format('YYYY-MM-DD');
             dispatch({ type: 'SET_ENDDATE', endDate });
@@ -190,17 +193,6 @@ export const useQueryParams = initial => {
 
             dispatch({ type: 'SET_STARTDATE', value: startDate });
         },
-        setStartDateAsString: value => dispatch({ type: 'SET_STARTDATE', value }),
-        setSortBy: value => dispatch({ type: 'SET_SORT_BY', value }),
-        setLimit: value => dispatch({ type: 'SET_LIMIT', value }),
-        setOffset: value => dispatch({ type: 'SET_OFFSET', value }),
-        setSeverity: value => dispatch({ type: 'SET_SEVERITY', value }),
-        setFromToolbar: (varName, value = null) => {
-            if (!varName) {
-                dispatch({ type: 'RESET', value: '' });
-            } else {
-                dispatch({ type: actionMapper[varName], value });
-            }
-        }
+        setStartDateAsString: value => dispatch({ type: 'SET_STARTDATE', value })
     };
 };
