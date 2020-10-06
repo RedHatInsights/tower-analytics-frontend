@@ -14,7 +14,7 @@ import {
     ToolbarToggleGroup,
     ToolbarItem,
     ToolbarGroup as PFToolbarGroup,
-    Select,
+    Select as PFSelect,
     SelectOption,
     Switch as PFSwitch,
     Tooltip,
@@ -45,6 +45,13 @@ const ToolbarContent = styled(PFToolbarContent)`
 const Switch = styled(PFSwitch)`
     &&& {
         margin: 0 15px;
+    }
+`;
+
+const Select = styled(PFSelect)`
+    .pf-c-select__menu {
+        max-height: 500px;
+        overflow: auto;
     }
 `;
 
@@ -319,10 +326,6 @@ const FilterableToolbar = ({
                         selections={ passedFilters.org }
                         isExpanded={ orgIsExpanded }
                         placeholderText="Filter by organization"
-                        style={ {
-                            maxHeight: 500,
-                            overflow: 'auto'
-                        } }
                     >
                         { organizationIdMenuItems }
                     </Select>
@@ -346,10 +349,6 @@ const FilterableToolbar = ({
                         selections={ passedFilters.cluster }
                         isExpanded={ clusterIsExpanded }
                         placeholderText="Filter by cluster"
-                        style={ {
-                            maxHeight: 500,
-                            overflow: 'auto'
-                        } }
                     >
                         { clusterIdMenuItems }
                     </Select>
@@ -381,7 +380,7 @@ const FilterableToolbar = ({
                     chips={ handleDateChips(passedFilters.sortby, sortables) }
                     deleteChip={ onDelete }
                 >
-                    <Select
+                    <PFSelect
                         isOpen={ sortByIsExpanded }
                         aria-label="Sort by"
                         variant={ 'single' }
@@ -396,7 +395,7 @@ const FilterableToolbar = ({
                         placeholderText="Sort by attribute"
                     >
                         { sortByMenuItems }
-                    </Select>
+                    </PFSelect>
                 </ToolbarFilter>
             </React.Fragment>
         );
