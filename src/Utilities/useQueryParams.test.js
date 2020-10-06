@@ -16,7 +16,7 @@ const testHook = (callback) => {
     mount(<TestHook callback={ callback } />);
 };
 
-const initialValues = { foo: '1', bar: 2, sort_by: 'count:asc' };
+const initialValues = { foo: '1', bar: 2, sortBy: 'count:asc' };
 
 let page;
 
@@ -24,6 +24,10 @@ beforeEach(() => {
     testHook(() => {
         page = useQueryParams(initialValues);
     });
+});
+
+afterEach(() => {
+    page = null;
 });
 
 describe('Utilities/useQueryParams', () => {
@@ -51,7 +55,7 @@ describe('Utilities/useQueryParams', () => {
         act(() => {
             page.setSortBy('count:desc');
         });
-        expect(page.queryParams).toEqual({ foo: '1', bar: 2, sort_by: 'count:desc' });
+        expect(page.queryParams).toEqual({ foo: '1', bar: 2, sortBy: 'count:desc' });
     });
 
     it('setId, setLimit, setSortBy correctly handles null, undefined and NaN values', () => {
