@@ -4,11 +4,8 @@ import styled from 'styled-components';
 import {
     Toolbar,
     ToolbarContent as PFToolbarContent,
-    ToolbarFilter,
     ToolbarToggleGroup,
     ToolbarGroup as PFToolbarGroup,
-    Select as PFSelect,
-    SelectOption,
     Switch as PFSwitch,
     Tooltip,
     TooltipPosition
@@ -20,11 +17,8 @@ import {
 
 import CategoryDropdown from './CategoryDropdown';
 import CustomDateSelector from './CustomDateSelector';
-import {
-    handleCheckboxChips,
-    handleSingleChips
-} from './helpers';
 import { optionsForCategories } from './constants';
+import ToolbarFilterItem from './ToolbarFilterItem';
 
 const ToolbarGroup = styled(PFToolbarGroup)`
   button {
@@ -58,125 +52,18 @@ const FilterableToolbar = ({
     filters,
     setFilters
 }) => {
-    const [ expandedItems, setExpandedItems ] = useState({});
     const [ currentCategory, setCurrentCategory ] = useState(
         Object.keys(categories)[0]
     );
-
-    const onDelete = (name, val) => {
-        if (!name) {
-            setFilters(null);
-            return;
-        }
-
-        const optionsFindByName = value =>
-            Object.keys(optionsForCategories).find(
-                el => optionsForCategories[el].name === value
-            );
-
-        const categoryKey = optionsFindByName(name);
-        const single = optionsForCategories[categoryKey].single;
-
-        if (single) {
-            setFilters(categoryKey, null);
-        } else {
-            const filteredArr = filters[categoryKey].filter(value =>
-                value !== categories[categoryKey].find((
-                    { value }) => value === val).key
-            );
-            setFilters(categoryKey, filteredArr);
-        }
-    };
 
     const onInputChange = (type, value) => {
         setFilters(type, value);
     };
 
-    const buildFilterDropdown = () => {
-        const onToggle = type => {
-            setExpandedItems({
-                ...expandedItems,
-                [type]: !expandedItems[type]
-            });
-        };
-
-        const onSelectCheckbox = (type, event, selection) => {
-            setFilters(type, event.target.checked
-                ? [ ...filters[type], selection ]
-                : filters[type].filter(value => value !== selection)
-            );
-        };
-
-        const onSelectSingle = (type, event, selection) => {
-            setFilters(type, selection);
-            onToggle(type);
-        };
-
-        const toolbarFilterRender = categoryKey  => {
-            const options = optionsForCategories[categoryKey];
-
-            const handleChips = () => {
-                if (options.single) {
-                    return handleSingleChips(
-                        filters[categoryKey],
-                        categories[categoryKey]
-                    );
-                } else {
-                    return handleCheckboxChips(
-                        filters[categoryKey],
-                        categories[categoryKey]);
-                }
-            };
-
-            const onSelect = (event, selection) => {
-                if (options.single) {
-                    onSelectSingle(categoryKey, event, selection);
-                } else {
-                    onSelectCheckbox(categoryKey, event, selection);
-                }
-            };
-
-            return (
-                <ToolbarFilter
-                    key = { categoryKey }
-                    showToolbarItem={ currentCategory === categoryKey }
-                    chips={ handleChips() }
-                    categoryName={ options.name }
-                    deleteChip={ onDelete }
-                >
-                    <Select
-                        variant={ options.single ? 'single' : 'checkbox' }
-                        aria-label={ categoryKey }
-                        onToggle={ () => onToggle(categoryKey) }
-                        onSelect={ onSelect }
-                        selections={ filters[categoryKey] }
-                        isOpen={ !!expandedItems[categoryKey] }
-                        placeholderText={ options.placeholder }
-                    >
-                        {
-                            categories[categoryKey] &&
-                            categories[categoryKey].map(({ key, value }) => (
-                                <SelectOption key={ key } value={ key }>
-                                    { value }
-                                </SelectOption>
-                            ))
-                        }
-                    </Select>
-                </ToolbarFilter>
-            );
-        };
-
-        return (
-            <React.Fragment>
-                { Object.keys(categories).map(key => toolbarFilterRender(key)) }
-            </React.Fragment>
-        );
-    };
-
     return (
         <Toolbar
             id="filterable-toolbar-with-chip-groups"
-            clearAllFilters={ onDelete }
+            clearAllFilters={ () => { setFilters(null, null); } }
             collapseListedFiltersBreakpoint="xl"
         >
             <ToolbarContent>
@@ -192,7 +79,16 @@ const FilterableToolbar = ({
                                 }))
                             }
                         />
-                        { buildFilterDropdown() }
+                        { Object.keys(categories).map(key =>
+                            <ToolbarFilterItem
+                                key={ key }
+                                categoryKey={ key }
+                                filter={ filters[key] }
+                                values={ categories[key] }
+                                visible={ currentCategory === key }
+                                setFilter={ value => setFilters(key, value) }
+                            />
+                        ) }
                         { (currentCategory === 'quickDateRange' && filters.quickDateRange === 'custom') && (
                             <CustomDateSelector
                                 startDate={ filters.startDate }
