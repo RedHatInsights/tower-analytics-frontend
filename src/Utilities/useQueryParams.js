@@ -9,6 +9,7 @@ import { formatDate } from '../Utilities/helpers';
 export const useQueryParams = initial => {
     const paramsReducer = (state, { type, value }) => {
         switch (type) {
+            /* v0 api reducers */
             case 'SET_STARTDATE':
                 return { ...state, startDate: value };
             case 'SET_ENDDATE':
@@ -21,46 +22,43 @@ export const useQueryParams = initial => {
 
                 return { ...state, id: parseInt(value) };
             case 'SET_LIMIT':
-                if (!parseInt(value)) {
+                if (!parseInt(value.limit)) {
                     const { limit: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, limit: parseInt(value) };
+                return { ...state, limit: parseInt(value.limit) };
+            /* v1 api reducers */
             case 'SET_OFFSET':
-                return { ...state, offset: value };
             case 'SET_SEVERITY':
-                return { ...state, severity: value };
             case 'SET_ATTRIBUTES':
-                return { ...state, attributes: [ ...value ]};
             case 'SET_JOB_TYPE':
-                return { ...state, jobType: [ ...value ]};
             case 'SET_STATUS':
-                return { ...state, status: [ ...value ]};
             case 'SET_ORG':
-                return { ...state, orgId: [ ...value ]};
             case 'SET_CLUSTER':
-                return { ...state, clusterId: [ ...value ]};
             case 'SET_TEMPLATE':
-                return { ...state, templateId: [ ...value ]};
             case 'SET_SORTBY':
-                return { ...state, sortBy: value };
             case 'SET_ROOT_WORKFLOWS_AND_JOBS':
-                return { ...state, onlyRootWorkflowsAndStandaloneJobs: value };
+                return { ...state, ...value };
             case 'SET_QUICK_DATE_RANGE': {
                 let newState = { ...state };
                 if (value !== 'custom') {
                     newState = { ...newState, startDate: null, endDate: null };
                 }
 
-                newState = { ...newState, quickDateRange: value };
+                newState = { ...newState, ...value };
                 return newState;
             }
 
             case 'SET_START_DATE':
-                return { ...state, startDate: formatDate(value) };
-            case 'SET_END_DATE':
-                return { ...state, endDate: formatDate(value) };
+            case 'SET_END_DATE': {
+                let newValues = {};
+                Object.entries(value).forEach(([ key, value ]) => {
+                    newValues[key] = formatDate(value);
+                });
+                return { ...state, ...newValues };
+            }
+
             case 'RESET_FILTER':
                 return { ...state,
                     status: [],
@@ -121,14 +119,14 @@ export const useQueryParams = initial => {
         queryParams,
         urlMappedQueryParams: urlMappedQueryParams(),
         dispatch,
-        setLimit: value => dispatch({ type: 'SET_LIMIT', value }),
-        setOffset: value => dispatch({ type: 'SET_OFFSET', value }),
-        setSeverity: value => dispatch({ type: 'SET_SEVERITY', value }),
+        setLimit: limit => dispatch({ type: 'SET_LIMIT', value: { limit }}),
+        setOffset: offset => dispatch({ type: 'SET_OFFSET', value: { offset }}),
+        setSeverity: severity => dispatch({ type: 'SET_SEVERITY', value: { severity }}),
         setFromToolbar: (varName, value = null) => {
             if (!varName) {
                 dispatch({ type: 'RESET_FILTER' });
             } else {
-                dispatch({ type: actionMapper[varName], value });
+                dispatch({ type: actionMapper[varName], value: { [varName]: value }});
             }
         },
         /* v0 api usage after this line */
