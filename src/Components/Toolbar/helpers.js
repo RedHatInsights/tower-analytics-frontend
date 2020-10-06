@@ -22,11 +22,11 @@ export const handleCheckboxChips = (item, comparator) => {
 /**
  * Convert a list of objects to a list of the last value if defined
  */
-export const handleSingleChips = (date, comparator) => {
-    if (date && typeof date === 'string' && comparator) {
+export const handleSingleChips = (item, comparator) => {
+    if (item && typeof item === 'string' && comparator) {
         let val;
         comparator.forEach(i => {
-            if (i.key === date) {
+            if (i.key === item) {
                 val = i.value;
             }
         });

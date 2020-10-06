@@ -97,37 +97,12 @@ const JobExplorer = props => {
         urlMappedQueryParams,
         setLimit,
         setOffset,
-        setJobType,
-        setOrg,
-        setStatus,
-        setCluster,
-        setTemplate,
-        setSortBy2,
-        setQuickDateRange,
-        setRootWorkflowsAndJobs,
-        setStart_Date,
-        setEnd_Date
+        setFromToolbar
     } = useQueryParams(combined);
     const { queryParams: optionsQueryParams } = useQueryParams(
         initialOptionsParams
     );
 
-    const [ filters, setFilters ] = useState({
-        status: queryParams.status
-            ? queryParams.status
-            : [ 'successful', 'failed' ],
-        job: queryParams.jobType
-            ? queryParams.jobType
-            : [ 'job', 'workflowjob' ],
-        organization: queryParams.orgId ? queryParams.orgId : [],
-        cluster: queryParams.clusterId ? queryParams.clusterId : [],
-        template: queryParams.templateId ? queryParams.templateId : [],
-        sortBy: queryParams.sortBy ? queryParams.sort_by : null,
-        startDate: queryParams.startDate ? queryParams.startDate : null,
-        endDate: queryParams.endDate ? queryParams.endDate : null,
-        date: queryParams.quickDateRange ? queryParams.quickDateRange : 'last_30_days',
-        showRootWorkflows: queryParams.onlyRootWorkflowsAndStandaloneJobs === 'true' ? true : false
-    });
     const updateURL = () => {
         const { jobExplorer } = Paths;
         const { strings, stringify } = formatQueryStrings(urlMappedQueryParams);
@@ -169,7 +144,7 @@ const JobExplorer = props => {
                     setQuickDateRanges(quick_date_range);
                 })
             .catch(e => setApiError(e.error))
-            .finally(() => setIsLoading(false));;
+            .finally(() => setIsLoading(false));
         }
 
         initializeWithPreflight();
@@ -192,25 +167,6 @@ const JobExplorer = props => {
         update();
         updateURL();
     }, [ queryParams ]);
-
-    useEffect(() => {
-        setJobType(filters.job);
-        setStatus(filters.status);
-        setOrg(filters.organization);
-        setCluster(filters.cluster);
-        setTemplate(filters.template);
-        setSortBy2(filters.sortBy);
-        setRootWorkflowsAndJobs(filters.showRootWorkflows);
-        setQuickDateRange(filters.date);
-
-        if (filters.date !== 'custom') {
-            setStart_Date(null);
-            setEnd_Date(null);
-        } else {
-            setStart_Date(filters.startDate);
-            setEnd_Date(filters.endDate);
-        }
-    }, [ filters ]);
 
     const returnOffsetVal = page => {
         let offsetVal = (page - 1) * queryParams.limit;
@@ -261,16 +217,16 @@ const JobExplorer = props => {
                   <CardBody>
                       <FilterableToolbar
                           categories={ {
-                              organization: orgIds,
-                              cluster: clusterIds,
                               status: statuses,
-                              job: jobTypes,
-                              template: templateIds,
-                              sortBy,
-                              date: quickDateRanges
+                              quickDateRange: quickDateRanges,
+                              jobType: jobTypes,
+                              orgId: orgIds,
+                              clusterId: clusterIds,
+                              templateId: templateIds,
+                              sortBy
                           } }
-                          filters={ filters }
-                          setFilters={ setFilters }
+                          filters={ queryParams }
+                          setFilters={ setFromToolbar }
                       />
                       <CompactPagination
                           itemCount={ meta.count ? meta.count : 0 }
