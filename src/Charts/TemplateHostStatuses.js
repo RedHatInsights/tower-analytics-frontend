@@ -3,6 +3,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { useRef } from 'react';
+import useResizeObserver from 'use-resize-observer';
 //import Dimensions from 'react-dimensions'
 
 import { Chart, ChartBar, ChartAxis, ChartStack, ChartThemeColor, ChartTooltip } from '@patternfly/react-charts';
@@ -35,6 +36,28 @@ const useResize = (myRef) => {
   return { width, height }
 }
 */
+
+const colorSwitcher = (bit) => {
+    let color = 'black';
+    switch(bit.name) {
+        case 'ok':
+            color = 'green';
+            break;
+        case 'skipped':
+            color = 'blue';
+            break
+        case 'changed':
+            color = 'orange';
+            break;
+        case 'failed':
+            color = 'red';
+            break;
+        case 'unreachable':
+            color = 'darkred';
+            break;
+    }
+    return color;
+}
 
 const getWidth = (id) => {
     let width;
@@ -78,18 +101,20 @@ const getHeight = (id) => {
 const TemplateHostStatuses = (props) =>{
 
   const ref = useRef(null);
-  const [ xWidth, setXwidth ] = useState(1000);
-  const [ yHeight, setYheight ] = useState(90);
+  //const [ xWidth, setXwidth ] = useState(1000);
+  //const [ yHeight, setYheight ] = useState(90);
+  const { width = 100, height } = useResizeObserver({ ref });
 
   const parentid = props.parentid;
   console.log('parentid', parentid);
   //const width = getWidth(parentid);
   const twidth = getWidth(parentid);
   console.log('twidth', twidth);
-  const width = 1600;
+  //const width = 1600;
 
   //const width = 900;
-  const height = 90;
+  const divHeight = 90;
+  //const height = 90;
   const hostCount = 10;
   const taskCount = 15;
 
@@ -100,28 +125,6 @@ const TemplateHostStatuses = (props) =>{
     {'name': 'failed', x: '', y: 10, y0: null, label: 'Failed'},
     {'name': 'unreachable', x: '', y: 5, y0: null, label: 'Unreachable'},
   ];
-
-  const colorSwitcher = (bit) => {
-    let color = 'black';
-    switch(bit.name) {
-      case 'ok':
-        color = 'green';
-        break;
-      case 'skipped':
-        color = 'blue';
-        break
-      case 'changed':
-        color = 'orange';
-        break;
-      case 'failed':
-        color = 'red';
-        break;
-      case 'unreachable':
-        color = 'darkred';
-        break;
-    }
-    return color;
-  }
 
   let legendData = [];
   let ytotal = 0;
@@ -137,6 +140,7 @@ const TemplateHostStatuses = (props) =>{
   })
 
 
+  /*
   useEffect(() => {
       console.log('###########################################');
       console.log('width', ref.current ? ref.current.offsetWidth : 0);
@@ -144,6 +148,7 @@ const TemplateHostStatuses = (props) =>{
       setXwidth(ref.current.offsetWidth);
       setYheight(ref.current.offsetHeight);
   }, [ref.current]);
+  */
 
   //let theme = { ...ChartThemeColor.purple };
   //console.log('theme', theme);
@@ -156,16 +161,17 @@ const TemplateHostStatuses = (props) =>{
   //      width={ width }
   //      height={ height }
   //      domainPadding={{ x: [0, 0], y: [0,0] }}
+
   return (
     <div style={{ marginTop: '0px', marginLeft: '0px'}}>
     {/*<div style={{ height: `${height}px`, width: `${width}px`, background: 'white', border: '2px solid red' }}> */}
-    <div ref={ ref } style={{ height: `${height}px`, width: '100%', background: 'white', border: '2px solid red' }}>
+    <div ref={ ref } style={{ height: `${divHeight}px`, width: '100%', background: 'white', border: '2px solid red' }}>
       <Chart
         ariaDesc="job status summary"
         ariaTitle="Job Statuses"
         padding={{ left: 10, right: 10, top: 0, bottom: 0 }}
-        height={ yHeight }
-        width={ xWidth }
+        height={ divHeight }
+        width={ width }
       >
 
         <ChartLegend
@@ -173,7 +179,7 @@ const TemplateHostStatuses = (props) =>{
           titleOrientation='left'
           style={{ title: {fontSize: 14, fontWeight: 'normal' } }}
           padding={ 100 }
-          y={ yHeight - 70 }
+          y={ divHeight - 70 }
           x={ 10 }
           gutter={ 0 }
           data={ [] }
@@ -182,8 +188,8 @@ const TemplateHostStatuses = (props) =>{
         <ChartLegend
           title={ `Tasks ${taskCount}` }
           gutter={ 0 }
-          x={ xWidth - 200 }
-          y={ yHeight - 70 }
+          x={ width - 200 }
+          y={ divHeight - 70 }
           titleOrientation='right'
           padding={{ left: 100, right: 100}}
           data={ [] }
@@ -192,8 +198,8 @@ const TemplateHostStatuses = (props) =>{
         <ChartLegend
           title={ `Hosts ${hostCount}` }
           gutter={ 0 }
-          x={ xWidth - 120 }
-          y={ yHeight - 70 }
+          x={ width - 120 }
+          y={ divHeight - 70 }
           titleOrientation='right'
           data={[]}
         />
@@ -203,8 +209,8 @@ const TemplateHostStatuses = (props) =>{
           gutter={ 20 }
           data={ legendData }
           titleOrientation='right'
-          y={ yHeight - 40 }
-          x={ xWidth - 585 }
+          y={ divHeight - 40 }
+          x={ width - 585 }
         />
 
         {/* horizontal axis */}

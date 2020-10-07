@@ -19,7 +19,8 @@
     "react-router-dom": "^4.2.2",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
-    "redux-promise-middleware": "^5.1.1"
+    "redux-promise-middleware": "^5.1.1",
+    "use-resize-observer": "^6.1.0"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
