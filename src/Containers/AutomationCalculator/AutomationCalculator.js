@@ -155,10 +155,10 @@ const title = (
 );
 
 /* helper variables for further date ranges */
-const pastYear = moment.utc().subtract(1, 'year');
+const pastYear = moment().subtract(1, 'year');
 const pastYTD = moment().startOf('year');
 const pastQuarter = moment().startOf('quarter');
-const pastMonth = moment.utc().subtract(1, 'month');
+const pastMonth = moment().subtract(1, 'month');
 
 /* these are the buckets of time the user's are able to select ... */
 const timeFrameOptions = [
@@ -172,7 +172,7 @@ const timeFrameOptions = [
 /* set the default bucket to 365 days */
 const initialQueryParams = {
     startDate: pastYear.format('YYYY-MM-DD'),
-    endDate: moment.utc().format('YYYY-MM-DD')
+    endDate: moment().format('YYYY-MM-DD')
 };
 
 // create our array to feed to D3

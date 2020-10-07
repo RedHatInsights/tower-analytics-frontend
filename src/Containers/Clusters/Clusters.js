@@ -87,11 +87,10 @@ function formatClusterName(data) {
 }
 
 const initialQueryParams = {
-    startDate: moment
-    .utc()
+    startDate: moment()
     .subtract(1, 'month')
     .format('YYYY-MM-DD'),
-    endDate: moment.utc().format('YYYY-MM-DD')
+    endDate: moment().format('YYYY-MM-DD')
 };
 
 const Clusters = ({ history }) => {

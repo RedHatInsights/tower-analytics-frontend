@@ -90,8 +90,8 @@ const sortOptions = [
 ];
 
 const initialQueryParams = {
-    startDate: moment.utc().subtract(1, 'month').format('YYYY-MM-DD'),
-    endDate: moment.utc().format('YYYY-MM-DD'),
+    startDate: moment().subtract(1, 'month').format('YYYY-MM-DD'),
+    endDate: moment().format('YYYY-MM-DD'),
     sort_by: 'count:desc',
     limit: 5
 };
