@@ -72,8 +72,8 @@ const ToolbarFilterItem = ({
                 placeholderText={ options.placeholder }
             >
                 {
-                    values && values.map(({ key, value }) => (
-                        <SelectOption key={ key } value={ key }>
+                    values && values.map(({ key, value, description }) => (
+                        <SelectOption key={ key } value={ key } description={ description }>
                             { value }
                         </SelectOption>
                     ))
