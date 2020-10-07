@@ -5,15 +5,15 @@ export function trimStr(str) {
 }
 
 export function formatDateTime(dateTime) {
-    return moment.utc(new Date(dateTime).toISOString()).format('M/D/YYYY h:mm:ssa');
+    return moment(new Date(dateTime).toISOString()).format('M/D/YYYY h:mm:ssa');
 }
 
 export function formatDate(date) {
-    return moment.utc(date).format('YYYY-MM-DD');
+    return moment(date).format('YYYY-MM-DD');
 }
 
 export function formatSeconds(seconds) {
-    return moment.utc().startOf('day')
+    return moment.startOf('day')
     .seconds(seconds)
     .format('H:mm:ss');
 }
