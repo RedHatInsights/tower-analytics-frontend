@@ -10,9 +10,9 @@ import {
 } from '@patternfly/react-icons';
 
 const CustomDateSelector = ({
-    onInputChange,
-    startDate,
-    endDate
+    onInputChange = () => {},
+    startDate = '',
+    endDate = ''
 }) => {
     return (
         <>
@@ -25,7 +25,7 @@ const CustomDateSelector = ({
                   id="startDate"
                   type="date"
                   aria-label="Start Date"
-                  value={ startDate || '' }
+                  value={ startDate }
                   onChange={ e => onInputChange('startDate', e) }
               />
           </InputGroup>
@@ -38,7 +38,7 @@ const CustomDateSelector = ({
                   id="endDate"
                   type="date"
                   aria-label="End Date"
-                  value={ endDate || '' }
+                  value={ endDate }
                   onChange={ e => onInputChange('endDate', e) }
               />
           </InputGroup>
