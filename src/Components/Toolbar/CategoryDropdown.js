@@ -3,8 +3,10 @@ import PropTypes from 'prop-types';
 import {
     ToolbarItem,
     Select,
-    SelectOption
+    SelectOption,
+    Button
 } from '@patternfly/react-core';
+import { FilterIcon } from '@patternfly/react-icons';
 
 const CategoryDropdown = ({
     selected,
@@ -15,6 +17,9 @@ const CategoryDropdown = ({
 
     return (
         <ToolbarItem>
+            <Button variant="control">
+                <FilterIcon />
+            </Button>
             <Select
                 isOpen={ isExpanded }
                 variant={ 'single' }

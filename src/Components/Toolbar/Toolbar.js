@@ -6,14 +6,9 @@ import {
     ToolbarContent as PFToolbarContent,
     ToolbarToggleGroup,
     ToolbarGroup as PFToolbarGroup,
-    Switch as PFSwitch,
-    Tooltip,
-    TooltipPosition
+    Button
 } from '@patternfly/react-core';
-import {
-    FilterIcon,
-    QuestionCircleIcon
-} from '@patternfly/react-icons';
+import { FilterIcon, SortAmountDownIcon } from '@patternfly/react-icons';
 
 import CategoryDropdown from './CategoryDropdown';
 import CustomDateSelector from './CustomDateSelector';
@@ -34,19 +29,6 @@ const ToolbarContent = styled(PFToolbarContent)`
   }
 `;
 
-const Switch = styled(PFSwitch)`
-    &&& {
-        margin: 0 15px;
-    }
-`;
-
-const Select = styled(PFSelect)`
-    .pf-c-select__menu {
-        max-height: 500px;
-        overflow: auto;
-    }
-`;
-
 const FilterableToolbar = ({
     categories,
     filters,
@@ -55,6 +37,8 @@ const FilterableToolbar = ({
     const [ currentCategory, setCurrentCategory ] = useState(
         Object.keys(categories)[0]
     );
+
+    const { quickDateRange, sortBy, ...filterCategories } = categories;
 
     const onInputChange = (type, value) => {
         setFilters(type, value);
@@ -73,13 +57,13 @@ const FilterableToolbar = ({
                             selected={ currentCategory }
                             setSelected={ setCurrentCategory }
                             categories={
-                                Object.keys(categories).map(el => ({
+                                Object.keys(filterCategories).map(el => ({
                                     key: el,
                                     name: optionsForCategories[el].name
                                 }))
                             }
                         />
-                        { Object.keys(categories).map(key =>
+                        { Object.keys(filterCategories).map(key =>
                             <ToolbarFilterItem
                                 key={ key }
                                 categoryKey={ key }
@@ -97,31 +81,63 @@ const FilterableToolbar = ({
                             />
                         ) }
                     </ToolbarGroup>
+                    <ToolbarGroup variant="filter-group">
+                        <ToolbarFilterItem
+                            key='quickDateRange'
+                            categoryKey='quickDateRange'
+                            filter={ filters.quickDateRange }
+                            values={ quickDateRange }
+                            visible={ true }
+                            setFilter={ value => setFilters('quickDateRange', value) }
+                        />
+                        { filters.quickDateRange === 'custom' && (
+                            <CustomDateSelector
+                                startDate={ filters.startDate }
+                                endDate={ filters.endDate }
+                                onInputChange={ onInputChange }
+                            />
+                        ) }
+                    </ToolbarGroup>
+                    <ToolbarGroup variant="filter-group">
+                        <ToolbarFilterItem
+                            key='sortBy'
+                            categoryKey='sortBy'
+                            filter={ filters.sortBy }
+                            values={ sortBy }
+                            visible={ true }
+                            setFilter={ value => setFilters('sortBy', value) }
+                        />
+                        <Button variant="control">
+                            <SortAmountDownIcon />
+                        </Button>
+                    </ToolbarGroup>
                 </ToolbarToggleGroup>
-                <div>
-                    <Switch
-                        id="showRootWorkflowJobs"
-                        label="Ignore nested workflows and jobs"
-                        labelOff="Ignore nested workflows and jobs"
-                        isChecked={ filters.onlyRootWorkflowsAndStandaloneJobs }
-                        onChange={ val => {
-                            setFilters('onlyRootWorkflowsAndStandaloneJobs', val);
-                        } }
-                    />
-                    <Tooltip
-                        position={ TooltipPosition.top }
-                        content={
-                            <div>
-                                { ' ' }
-                                If enabled, nested workflows and jobs will not be included in
-                                the overall totals. Enable this option to filter out duplicate
-                                entries.
-                            </div>
-                        }
-                    >
-                        <QuestionCircleIcon />
-                    </Tooltip>
-                </div>
+                {
+                    // <div>
+                    //     <Switch
+                    //         id="showRootWorkflowJobs"
+                    //         label="Ignore nested workflows and jobs"
+                    //         labelOff="Ignore nested workflows and jobs"
+                    //         isChecked={ filters.onlyRootWorkflowsAndStandaloneJobs }
+                    //         onChange={ val => {
+                    //             setFilters('onlyRootWorkflowsAndStandaloneJobs', val);
+                    //         } }
+                    //     />
+                    //     <Tooltip
+                    //         position={ TooltipPosition.top }
+                    //         content={
+                    //             <div>
+                    //                 { ' ' }
+                    //                 If enabled, nested workflows and jobs will not be included in
+                    //                 the overall totals. Enable this option to filter out duplicate
+                    //                 entries.
+                    //             </div>
+                    //         }
+                    //     >
+                    //         <QuestionCircleIcon />
+                    //     </Tooltip>
+                    // </div>
+                }
             </ToolbarContent>
         </Toolbar>
     );
