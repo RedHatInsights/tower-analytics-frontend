@@ -44,6 +44,63 @@ const FilterableToolbar = ({
         setFilters(type, value);
     };
 
+    const FilterCategoriesGroup = () => (
+        <ToolbarGroup variant="filter-group">
+            <CategoryDropdown
+                selected={ currentCategory }
+                setSelected={ setCurrentCategory }
+                categories={
+                    Object.keys(filterCategories).map(el => ({
+                        key: el,
+                        name: optionsForCategories[el].name
+                    }))
+                }
+            />
+            { Object.keys(filterCategories).map(key =>
+                <ToolbarFilterItem
+                    key={ key }
+                    categoryKey={ key }
+                    filter={ filters[key] }
+                    values={ categories[key] }
+                    visible={ currentCategory === key }
+                    setFilter={ value => setFilters(key, value) }
+                />
+            ) }
+        </ToolbarGroup>
+    );
+
+    const QuickDateGroup = () => (
+        <ToolbarGroup variant="filter-group">
+            <ToolbarFilterItem
+                categoryKey='quickDateRange'
+                filter={ filters.quickDateRange }
+                values={ quickDateRange }
+                setFilter={ value => setFilters('quickDateRange', value) }
+            />
+            { filters.quickDateRange === 'custom' && (
+                <CustomDateSelector
+                    startDate={ filters.startDate }
+                    endDate={ filters.endDate }
+                    onInputChange={ onInputChange }
+                />
+            ) }
+        </ToolbarGroup>
+    );
+
+    const SortByGroup = () => (
+        <ToolbarGroup variant="filter-group">
+            <ToolbarFilterItem
+                categoryKey='sortBy'
+                filter={ filters.sortBy }
+                values={ sortBy }
+                setFilter={ value => setFilters('sortBy', value) }
+            />
+            <Button variant="control">
+                <SortAmountDownIcon />
+            </Button>
+        </ToolbarGroup>
+    );
+
     return (
         <Toolbar
             id="filterable-toolbar-with-chip-groups"
@@ -52,92 +109,10 @@ const FilterableToolbar = ({
         >
             <ToolbarContent>
                 <ToolbarToggleGroup toggleIcon={ <FilterIcon /> } breakpoint="xl">
-                    <ToolbarGroup variant="filter-group">
-                        <CategoryDropdown
-                            selected={ currentCategory }
-                            setSelected={ setCurrentCategory }
-                            categories={
-                                Object.keys(filterCategories).map(el => ({
-                                    key: el,
-                                    name: optionsForCategories[el].name
-                                }))
-                            }
-                        />
-                        { Object.keys(filterCategories).map(key =>
-                            <ToolbarFilterItem
-                                key={ key }
-                                categoryKey={ key }
-                                filter={ filters[key] }
-                                values={ categories[key] }
-                                visible={ currentCategory === key }
-                                setFilter={ value => setFilters(key, value) }
-                            />
-                        ) }
-                        { (currentCategory === 'quickDateRange' && filters.quickDateRange === 'custom') && (
-                            <CustomDateSelector
-                                startDate={ filters.startDate }
-                                endDate={ filters.endDate }
-                                onInputChange={ onInputChange }
-                            />
-                        ) }
-                    </ToolbarGroup>
-                    <ToolbarGroup variant="filter-group">
-                        <ToolbarFilterItem
-                            key='quickDateRange'
-                            categoryKey='quickDateRange'
-                            filter={ filters.quickDateRange }
-                            values={ quickDateRange }
-                            visible={ true }
-                            setFilter={ value => setFilters('quickDateRange', value) }
-                        />
-                        { filters.quickDateRange === 'custom' && (
-                            <CustomDateSelector
-                                startDate={ filters.startDate }
-                                endDate={ filters.endDate }
-                                onInputChange={ onInputChange }
-                            />
-                        ) }
-                    </ToolbarGroup>
-                    <ToolbarGroup variant="filter-group">
-                        <ToolbarFilterItem
-                            key='sortBy'
-                            categoryKey='sortBy'
-                            filter={ filters.sortBy }
-                            values={ sortBy }
-                            visible={ true }
-                            setFilter={ value => setFilters('sortBy', value) }
-                        />
-                        <Button variant="control">
-                            <SortAmountDownIcon />
-                        </Button>
-                    </ToolbarGroup>
+                    { Object.keys(filterCategories).length > 0 && <FilterCategoriesGroup /> }
+                    { quickDateRange && <QuickDateGroup /> }
+                    { sortBy && <SortByGroup /> }
                 </ToolbarToggleGroup>
-                {
-                    // <div>
-                    //     <Switch
-                    //         id="showRootWorkflowJobs"
-                    //         label="Ignore nested workflows and jobs"
-                    //         labelOff="Ignore nested workflows and jobs"
-                    //         isChecked={ filters.onlyRootWorkflowsAndStandaloneJobs }
-                    //         onChange={ val => {
-                    //             setFilters('onlyRootWorkflowsAndStandaloneJobs', val);
-                    //         } }
-                    //     />
-                    //     <Tooltip
-                    //         position={ TooltipPosition.top }
-                    //         content={
-                    //             <div>
-                    //                 { ' ' }
-                    //                 If enabled, nested workflows and jobs will not be included in
-                    //                 the overall totals. Enable this option to filter out duplicate
-                    //                 entries.
-                    //             </div>
-                    //         }
-                    //     >
-                    //         <QuestionCircleIcon />
-                    //     </Tooltip>
-                    // </div>
-                }
             </ToolbarContent>
         </Toolbar>
     );
