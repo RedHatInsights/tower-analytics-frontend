@@ -45,6 +45,7 @@ const ToolbarFilterItem = ({
     const onSelect = (event, selection) => {
         if (options.single) {
             setFilter(selection);
+            setExpanded(false);
         } else {
             setFilter(event.target.checked
                 ? [ ...filter, selection ]
