@@ -15,7 +15,7 @@ const ToolbarFilterItem = ({
     categoryKey,
     filter = null,
     values = [],
-    visible = false,
+    visible = true,
     setFilter
 }) => {
     const [ expanded, setExpanded ] = useState(false);
