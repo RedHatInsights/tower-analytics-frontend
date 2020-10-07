@@ -4,38 +4,13 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { useRef } from 'react';
 import useResizeObserver from 'use-resize-observer';
-//import Dimensions from 'react-dimensions'
 
 import { Chart, ChartBar, ChartAxis, ChartStack, ChartThemeColor, ChartTooltip } from '@patternfly/react-charts';
-
 import { ChartThemeDefinition } from '@patternfly/react-charts';
-
 import { ChartLegend } from '@patternfly/react-charts';
 import { ChartGroup } from '@patternfly/react-charts';
 
 import * as d3 from 'd3';
-
-/*
-const useResize = (myRef) => {
-  const [width, setWidth] = useState(0)
-  const [height, setHeight] = useState(0)
-
-  useEffect(() => {
-    const handleResize = () => {
-      setWidth(myRef.current.offsetWidth)
-      setHeight(myRef.current.offsetHeight)
-    }
-
-    window.addEventListener('resize', handleResize)
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-    }
-  }, [myRef])
-
-  return { width, height }
-}
-*/
 
 const colorSwitcher = (bit) => {
     let color = 'black';
@@ -59,65 +34,18 @@ const colorSwitcher = (bit) => {
     return color;
 }
 
-const getWidth = (id) => {
-    let width;
-    console.log('select', d3.select('#' + id));
-    console.log('select style', d3.select('#' + id).style);
-    console.log('select style.width', d3.select('#' + id).style.width);
-    //console.log('select style()', d3.select('#' + id).style());
-    //console.log('select style width', d3.select('#' + id).style('width'));
-    console.log('select node', d3.select('#' + id).node());
-    let thisNode = d3.select('#' + id).node();
-    console.log('thisNode', thisNode);
-
-
-    /*
-    let xWidth = null;
-    let count = 0;
-    while (xWidth === null) {
-        console.log('count', count);
-        thisNode = d3.select(thisNode.parent).node();
-        //console.log(count, thisNode.style.width);
-        console.log(count, thisNode);
-        count = count + 1;
-        if ( count > 100 ) {
-            xWidth = 0; 
-        }
-    }
-    */
-
-    //width = parseInt(d3.select('#' + id).style('width'))
-    //return width;
-
-    return 1000;
-};
-
-const getHeight = (id) => {
-    let height;
-    height = parseInt(d3.select('#' + id).style('height'))
-    return height;
-};
-
 const TemplateHostStatuses = (props) =>{
 
+  // set a ref on the containing div to track for resizes ...
   const ref = useRef(null);
-  //const [ xWidth, setXwidth ] = useState(1000);
-  //const [ yHeight, setYheight ] = useState(90);
   const { width = 100, height } = useResizeObserver({ ref });
 
-  const parentid = props.parentid;
-  console.log('parentid', parentid);
-  //const width = getWidth(parentid);
-  const twidth = getWidth(parentid);
-  console.log('twidth', twidth);
-  //const width = 1600;
-
-  //const width = 900;
+  // we want a static height ...
   const divHeight = 90;
-  //const height = 90;
+
+  // TODO: what is the shape of the api data? ...
   const hostCount = 10;
   const taskCount = 15;
-
   let testdata = [
     {'name': 'ok', x: '', y: 62, y0: null, label: 'Ok'},
     {'name': 'skipped', x: '', y: 15, y0: null, label: 'Skipped'},
@@ -126,6 +54,7 @@ const TemplateHostStatuses = (props) =>{
     {'name': 'unreachable', x: '', y: 5, y0: null, label: 'Unreachable'},
   ];
 
+  // set the fill color and "y" axis offset for each subbar ...
   let legendData = [];
   let ytotal = 0;
   testdata.forEach((x,idx) => {
@@ -139,32 +68,8 @@ const TemplateHostStatuses = (props) =>{
     })
   })
 
-
-  /*
-  useEffect(() => {
-      console.log('###########################################');
-      console.log('width', ref.current ? ref.current.offsetWidth : 0);
-      console.log('###########################################');
-      setXwidth(ref.current.offsetWidth);
-      setYheight(ref.current.offsetHeight);
-  }, [ref.current]);
-  */
-
-  //let theme = { ...ChartThemeColor.purple };
-  //console.log('theme', theme);
-  //let theme = ['blue', 'red', 'yellow', 'pink'];
-
-  //      padding={{ top: 0, bottom: 0 }}
-  //      padding={{ left: 0, right: 0 }}
-  //      legendPosition="bottom"
-    //
-  //      width={ width }
-  //      height={ height }
-  //      domainPadding={{ x: [0, 0], y: [0,0] }}
-
   return (
     <div style={{ marginTop: '0px', marginLeft: '0px'}}>
-    {/*<div style={{ height: `${height}px`, width: `${width}px`, background: 'white', border: '2px solid red' }}> */}
     <div ref={ ref } style={{ height: `${divHeight}px`, width: '100%', background: 'white', border: '2px solid red' }}>
       <Chart
         ariaDesc="job status summary"
