@@ -114,7 +114,7 @@ class LineChart extends Component {
             colors
         });
         const { data: unformattedData, value } = this.props;
-        const parseTime = d3.utcParse('%Y-%m-%d');
+        const parseTime = d3.timeParse('%Y-%m-%d');
 
         const data = unformattedData.reduce((formatted, { created, successful, failed }) => {
             let DATE = parseTime(created) || new Date();
