@@ -30,7 +30,7 @@ import {
     TextInput,
     Title,
     Tooltip,
-    TooltipPosition
+    Popover
 } from '@patternfly/react-core';
 
 import {
@@ -602,11 +602,10 @@ const AutomationCalculator = ({ history }) => {
                             x { data.run_count } runs, { data.host_count } hosts
                                           </TemplateDetailSubTitle>
                                           <IconGroup>
-                                              <Tooltip
-                                                  position={ TooltipPosition.top }
-                                                  entryDelay={ 50 }
-                                                  exitDelay={ 50 }
-                                                  content={
+                                              <Popover
+                                                  aria-label="template detail popover"
+                                                  position="left"
+                                                  bodyContent={
                                                       <TooltipWrapper>
                                                           <p>
                                                               <b>Total elapsed sum</b>:{ ' ' }
@@ -647,7 +646,7 @@ const AutomationCalculator = ({ history }) => {
                                                   }
                                               >
                                                   <InfoCircleIcon />
-                                              </Tooltip>
+                                              </Popover>
                                           </IconGroup>
                                       </TemplateDetail>
                                       <p style={ { color: '#486B00' } }>
