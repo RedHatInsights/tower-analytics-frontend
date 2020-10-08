@@ -463,7 +463,7 @@ const AutomationCalculator = ({ history }) => {
                           </CardBody>
                       </Card>
                   </Main>
-                  <Main style={ { maxHeight: 0 } }>
+                  <Main style={ { maxHeight: '0' } }>
                       <Card>
                           <CardTitle>Automation formula</CardTitle>
                           <CardBody>
@@ -501,19 +501,19 @@ const AutomationCalculator = ({ history }) => {
                           <CardBody>
                               <Title
                                   headingLevel="h3"
-                                  style={ { color: 'var(--pf-global--success-color--200)', fontSize: '3em' } }
+                                  style={ { color: 'var(--pf-global--success-color--200)', fontSize: '2.5em' } }
                               >
                                   { totalSavings }
                               </Title>
                           </CardBody>
                       </Card>
                   </Main>
-                  <Main style={ { paddingBottom: '0', paddingLeft: '0', maxHeight: 0 } }>
+                  <Main style={ { paddingBottom: '0', paddingLeft: '0', maxHeight: '0' } }>
                       <Card style={ { overflow: 'auto', flex: '1 1 0' } }>
                           <CardTitle style={ { paddingBottom: '10px' } }>
                     Calculate your automation
                           </CardTitle>
-                          <CardBody style={ { maxHeight: 560 } }>
+                          <CardBody style={ { maxHeight: '547px' } }>
                               <InputAndText>
 
                                   <p>Manual cost of automation</p>
@@ -523,7 +523,7 @@ const AutomationCalculator = ({ history }) => {
                         (e.g. average salary of mid-level Software Engineer)
 
                                   </em>
-                                  <InputGroup style={ { width: '50%' } }>
+                                  <InputGroup style={ { width: '50%', marginTop: '10px' } }>
                                       <InputGroupText>
                                           <DollarSignIcon />
                                       </InputGroupText>
