@@ -17,7 +17,7 @@ const CategoryDropdown = ({
 
     return (
         <ToolbarItem>
-            <Button variant="control">
+            <Button onClick={ () => setIsExpanded(true) } variant="control">
                 <FilterIcon />
             </Button>
             <Select

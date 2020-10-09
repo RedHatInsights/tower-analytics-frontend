@@ -227,22 +227,25 @@ const JobExplorer = props => {
                           } }
                           filters={ queryParams }
                           setFilters={ setFromToolbar }
-                      />
-                      <CompactPagination
-                          itemCount={ meta.count ? meta.count : 0 }
-                          widgetId="pagination-options-menu-top"
-                          perPageOptions={ perPageOptions }
-                          perPage={ queryParams.limit }
-                          page={ currPage }
-                          variant={ PaginationVariant.bottom }
-                          dropDirection={ 'up' }
-                          onPerPageSelect={ (_event, perPage, page) => {
-                              handlePerPageSelect(perPage, page);
-                          } }
-                          onSetPage={ (_event, pageNumber) => {
-                              handleSetPage(pageNumber);
-                          } }
-                          isCompact
+                          pagination={
+                              <CompactPagination
+                                  itemCount={ meta.count ? meta.count : 0 }
+                                  widgetId="pagination-options-menu-top"
+                                  perPageOptions={ perPageOptions }
+                                  perPage={ queryParams.limit }
+                                  page={ currPage }
+                                  variant={ PaginationVariant.bottom }
+                                  dropDirection={ 'up' }
+                                  onPerPageSelect={ (_event, perPage, page) => {
+                                      handlePerPageSelect(perPage, page);
+                                  } }
+                                  onSetPage={ (_event, pageNumber) => {
+                                      handleSetPage(pageNumber);
+                                  } }
+                                  isCompact
+                              />
+                          }
+                          hasSettings
                       />
                       { apiError && <ApiErrorState message={ apiError } /> }
                       { !apiError && isLoading && <LoadingState /> }
@@ -283,4 +286,3 @@ JobExplorer.propTypes = {
 };
 
 export default JobExplorer;
-

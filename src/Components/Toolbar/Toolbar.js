@@ -6,9 +6,19 @@ import {
     ToolbarContent as PFToolbarContent,
     ToolbarToggleGroup,
     ToolbarGroup as PFToolbarGroup,
-    Button
+    Button,
+    ToolbarItem,
+    Tooltip,
+    Switch
 } from '@patternfly/react-core';
-import { FilterIcon, SortAmountDownIcon } from '@patternfly/react-icons';
+import { Card, CardTitle, CardBody, CardActions, CardHeader } from '@patternfly/react-core';
+import {
+    FilterIcon,
+    SortAmountDownIcon,
+    CogIcon,
+    QuestionCircleIcon,
+    TimesIcon
+} from '@patternfly/react-icons';
 
 import CategoryDropdown from './CategoryDropdown';
 import CustomDateSelector from './CustomDateSelector';
@@ -32,11 +42,14 @@ const ToolbarContent = styled(PFToolbarContent)`
 const FilterableToolbar = ({
     categories,
     filters,
-    setFilters
+    setFilters,
+    pagination,
+    hasSettings = false
 }) => {
     const [ currentCategory, setCurrentCategory ] = useState(
         Object.keys(categories)[0]
     );
+    const [ settingsExpanded, setSettingsExpanded ] = useState(false);
 
     const { quickDateRange, sortBy, ...filterCategories } = categories;
 
@@ -101,27 +114,89 @@ const FilterableToolbar = ({
         </ToolbarGroup>
     );
 
+    /* TODO: For future work: make sattings more modular for different pages */
+    const Settings = () => (
+        <Card isFlat style={ { backgroundColor: '#EEEEEE' } }>
+            <CardHeader>
+                <CardActions>
+                    <Button variant='plain'>
+                        <TimesIcon />
+                    </Button>
+                </CardActions>
+                <CardTitle>Settings</CardTitle>
+            </CardHeader>
+            <CardBody>
+                <Switch
+                    id="showRootWorkflowJobs"
+                    label="Ignore nested workflows and jobs"
+                    labelOff="Ignore nested workflows and jobs"
+                    isChecked={ filters.onlyRootWorkflowsAndStandaloneJobs }
+                    onChange={ val => {
+                        setFilters('onlyRootWorkflowsAndStandaloneJobs', val);
+                    } }
+                />
+                <Tooltip
+                    position={ 'top' }
+                    content={
+                        <div>
+                            { ' ' }
+                              If enabled, nested workflows and jobs will not be included in
+                              the overall totals. Enable this option to filter out duplicate
+                              entries.
+                        </div>
+                    }
+                >
+                    <QuestionCircleIcon />
+                </Tooltip>
+            </CardBody>
+        </Card>
+    );
+
     return (
-        <Toolbar
-            id="filterable-toolbar-with-chip-groups"
-            clearAllFilters={ () => { setFilters(null, null); } }
-            collapseListedFiltersBreakpoint="xl"
-        >
-            <ToolbarContent>
-                <ToolbarToggleGroup toggleIcon={ <FilterIcon /> } breakpoint="xl">
-                    { Object.keys(filterCategories).length > 0 && <FilterCategoriesGroup /> }
-                    { quickDateRange && <QuickDateGroup /> }
-                    { sortBy && <SortByGroup /> }
-                </ToolbarToggleGroup>
-            </ToolbarContent>
-        </Toolbar>
+        <>
+            <Toolbar
+                id="filterable-toolbar-with-chip-groups"
+                clearAllFilters={ () => { setFilters(null, null); } }
+                collapseListedFiltersBreakpoint="xl"
+            >
+                <ToolbarContent>
+                    <ToolbarToggleGroup toggleIcon={ <FilterIcon /> } breakpoint="xl">
+                        { Object.keys(filterCategories).length > 0 && <FilterCategoriesGroup /> }
+                        { quickDateRange && <QuickDateGroup /> }
+                        { sortBy && <SortByGroup /> }
+                        {
+                            hasSettings &&
+                            <ToolbarItem>
+                                <Button
+                                    variant="plain"
+                                    onClick={ () => setSettingsExpanded(!settingsExpanded) }
+                                    aria-label="settings"
+                                    isActive={ settingsExpanded }
+                                >
+                                    <CogIcon />
+                                </Button>
+                            </ToolbarItem>
+                        }
+                    </ToolbarToggleGroup>
+                    {
+                        pagination &&
+                        <ToolbarItem varian="pagination">
+                            { pagination }
+                        </ToolbarItem>
+                    }
+                </ToolbarContent>
+                { settingsExpanded && <Settings /> }
+            </Toolbar>
+        </>
     );
 };
 
 FilterableToolbar.propTypes = {
     categories: PropTypes.object,
     filters: PropTypes.object,
-    setFilters: PropTypes.func
+    setFilters: PropTypes.func,
+    pagination: PropTypes.object,
+    hasSettings: PropTypes.bool
 };
 
 export default FilterableToolbar;
