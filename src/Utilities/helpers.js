@@ -13,7 +13,7 @@ export function formatDate(date) {
 }
 
 export function formatSeconds(seconds) {
-    return moment.startOf('day')
+    return moment().startOf('day')
     .seconds(seconds)
     .format('H:mm:ss');
 }
