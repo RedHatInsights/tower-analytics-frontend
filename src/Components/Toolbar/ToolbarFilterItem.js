@@ -22,7 +22,7 @@ const ToolbarFilterItem = ({
     const options = optionsForCategories[categoryKey];
 
     const onDelete = (name, valueToDelete) => {
-        const single = optionsForCategories[categoryKey].single;
+        const single = optionsForCategories[categoryKey].isSingle;
 
         if (single) {
             setFilter(null);
@@ -34,7 +34,7 @@ const ToolbarFilterItem = ({
     };
 
     const handleChips = () => {
-        if (options.single) {
+        if (options.isSingle) {
             return handleSingleChips(filter, values
             );
         } else {
@@ -43,7 +43,7 @@ const ToolbarFilterItem = ({
     };
 
     const onSelect = (event, selection) => {
-        if (options.single) {
+        if (options.isSingle) {
             setFilter(selection);
             setExpanded(false);
         } else {
@@ -63,7 +63,7 @@ const ToolbarFilterItem = ({
             deleteChip={ onDelete }
         >
             <Select
-                variant={ options.single ? 'single' : 'checkbox' }
+                variant={ options.isSingle ? 'single' : 'checkbox' }
                 aria-label={ categoryKey }
                 onToggle={ () => setExpanded(!expanded) }
                 onSelect={ onSelect }
