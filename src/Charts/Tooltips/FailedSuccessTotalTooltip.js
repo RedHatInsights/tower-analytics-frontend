@@ -29,16 +29,16 @@ const Tooltip = ({ lineNames, colors, svg }) => {
     .append('circle')
     .attr('cx', 26)
     .attr('cy', 0)
-    .attr('r', 7)
+    .attr('r', 8)
     .attr('stroke', 'white')
-    .attr('fill', colors(lineNames[0]));
+    .attr('fill', 'white');
     const circleRed = toolTipBase
     .append('circle')
     .attr('cx', 26)
     .attr('cy', 26)
-    .attr('r', 7)
+    .attr('r', 8)
     .attr('stroke', 'white')
-    .attr('fill', colors(lineNames[1]));
+    .attr('fill', 'white');
     const successText = toolTipBase
     .append('text')
     .attr('x', 43)
@@ -53,14 +53,20 @@ const Tooltip = ({ lineNames, colors, svg }) => {
     .attr('font-size', 12)
     .attr('fill', 'white')
     .text('Failed');
-    const icon = toolTipBase
+    const successIcon = toolTipBase
     .append('text')
-    .attr('fill', 'white')
-    .attr('stroke', 'white')
-    .attr('x', 24)
-    .attr('y', 30)
-    .attr('font-size', 12)
-    .text('!');
+    .attr('class', 'fas fa-sm')
+    .attr('fill', colors(lineNames[0]))
+    .attr('x', 19)
+    .attr('y', 5)
+    .text('\uf058');
+    const failIcon = toolTipBase
+    .append('text')
+    .attr('class', 'fas fa-sm')
+    .attr('fill', colors(lineNames[1]))
+    .attr('x', 19)
+    .attr('y', 31)
+    .text('\uf06a');
     const jobs = toolTipBase
     .append('text')
     .attr('fill', 'white')
@@ -160,7 +166,8 @@ const Tooltip = ({ lineNames, colors, svg }) => {
             boundingBox.attr('x', -adjustedWidth - 20);
             circleGreen.attr('cx', -adjustedWidth);
             circleRed.attr('cx', -adjustedWidth);
-            icon.attr('x', -adjustedWidth - 2);
+            failIcon.attr('x', -adjustedWidth - 7);
+            successIcon.attr('x', -adjustedWidth - 7);
             successText.attr('x', -adjustedWidth + 17);
             failText.attr('x', -adjustedWidth + 17);
             successful.attr('x', -successTextWidth - 20 - 12);
@@ -173,7 +180,8 @@ const Tooltip = ({ lineNames, colors, svg }) => {
             boundingBox.attr('x', 10);
             circleGreen.attr('cx', 26);
             circleRed.attr('cx', 26);
-            icon.attr('x', 24);
+            failIcon.attr('x', 19);
+            successIcon.attr('x', 19);
             successText.attr('x', 43);
             failText.attr('x', 43);
             successful.attr('x', (adjustedWidth - successTextWidth));

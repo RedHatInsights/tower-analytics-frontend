@@ -101,7 +101,7 @@ const Legend = ({
                             <Title>{ name }</Title>
                         </Wrapper>
                         { count && (
-                            <SubTitle>{ count }</SubTitle>
+                            <SubTitle>{ count }%</SubTitle>
                         ) }
                         { selected && (
                             <Switch

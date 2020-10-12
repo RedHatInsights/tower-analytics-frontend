@@ -72,7 +72,7 @@ const ScalableBarChart = ({
     .selectAll('text')
     .style('text-anchor', 'start')
     .attr('dx', '0.75em')
-    .attr('dy', -x.bandwidth() / 1.45 - 5)
+    .attr('dy', -x.bandwidth() / 1.45 - 8)
     .attr('transform', 'rotate(-90)');
 
     svg.selectAll('.x-axis line').attr('stroke', 'transparent');
