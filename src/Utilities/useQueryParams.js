@@ -132,7 +132,7 @@ export const useQueryParams = initial => {
         /* v0 api usage after this line */
         setEndDate: () => {
             const endDate = moment().format('YYYY-MM-DD');
-            dispatch({ type: 'SET_ENDDATE', endDate });
+            dispatch({ type: 'SET_ENDDATE', value: endDate });
         },
         setId: value => dispatch({ type: 'SET_ID', value }),
         setStartDate: days => {

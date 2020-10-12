@@ -31,11 +31,21 @@ describe('Components/Toolbar/FilterableToolbar', () => {
                 } }
                 filters={ { status: null, quickDateRange: null } }
             />);
-        const buttons = wrapper.find({ className: 'pf-c-select__toggle' });
-        expect(buttons.length).toBe(2);
-        const buttonTexts = buttons.map((b) => {
+        const selectBoxes = wrapper.find({ className: 'pf-c-select__toggle' });
+
+        // Categories, filter, date, sort
+        expect(selectBoxes.length).toBe(4);
+        const selectBoxTexts = selectBoxes.map((b) => {
             return b.text().trim();
         });
-        expect(buttonTexts).toEqual(expect.arrayContaining([ 'Status' ]));
+
+        // Initialized with the placeholders since we passed an empty array to them.
+        expect(selectBoxTexts).toStrictEqual(
+            [
+                'Status',
+                'Filter by job status',
+                'Filter by date',
+                'Sort by attribute'
+            ]);
     });
 });
