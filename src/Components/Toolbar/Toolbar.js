@@ -180,7 +180,7 @@ const FilterableToolbar = ({
                     </ToolbarToggleGroup>
                     {
                         pagination &&
-                        <ToolbarItem varian="pagination" visiblity={ { default: 'hidden', lg: 'visible' } }>
+                        <ToolbarItem varian="pagination" visibility={ { default: 'hidden', lg: 'visible' } }>
                             { pagination }
                         </ToolbarItem>
                     }
