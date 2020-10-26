@@ -123,34 +123,30 @@ export const useQueryParams = initial => {
         queryParams,
         dispatch,
         setEndDate: () => {
-            const endDate = moment.utc().format('YYYY-MM-DD');
+            const endDate = moment().format('YYYY-MM-DD');
             dispatch({ type: 'SET_ENDDATE', endDate });
         },
         setId: id => dispatch({ type: 'SET_ID', id }),
         setStartDate: days => {
             let startDate;
             if (days === 7) {
-                startDate = moment
-                .utc()
+                startDate = moment()
                 .subtract(1, 'week')
                 .format('YYYY-MM-DD');
             }
 
             if (days === 14) {
-                startDate = moment
-                .utc()
+                startDate = moment()
                 .subtract(2, 'weeks')
                 .format('YYYY-MM-DD');
             }
 
             if (days === 31) {
-                startDate = moment
-                .utc()
+                startDate = moment()
                 .subtract(1, 'month')
                 .format('YYYY-MM-DD');
             } else {
-                startDate = moment
-                .utc()
+                startDate = moment()
                 .subtract(days, 'days')
                 .format('YYYY-MM-DD');
             }
