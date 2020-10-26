@@ -27,13 +27,13 @@ const testResponse = [
         successful_run_count: 1,
         elapsed_sum: 1,
         failed_elapsed_sum: 0,
-        successful_elapsed_sum: 1,
+        elapsed: 1,
         host_count_avg: 1,
         failed_host_count_avg: 1,
-        successful_host_run_count_avg: 1,
+        hostCount_avg: 1,
         host_count: 1,
         failed_host_count: 1,
-        successful_host_run_count: 1,
+        hostCount: 1,
         template_automation_percentage: 1,
         orgs: [
             {
@@ -61,11 +61,11 @@ const expectedObj = {
     clusters: expect.any(Array),
     run_count: expect.any(Number),
     host_count: expect.any(Number),
-    successful_host_run_count: expect.any(Number),
+    hostCount: expect.any(Number),
     delta: expect.any(Number),
     elapsed_sum: expect.any(Number),
     failed_elapsed_sum: expect.any(Number),
-    successful_elapsed_sum: expect.any(Number),
+    elapsed: expect.any(Number),
     template_automation_percentage: expect.any(Number)
 };
 */
@@ -119,14 +119,14 @@ describe('AutomationCalculator Formulas', () => {
     it('computeTotalSavings makes the correct total with manual cost set to 0', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, defaultCostAutomation, 0);
-        //const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost;
+        //const expected = formattedData[0].calculations.manual.cost - formattedData[0].calculations.automated.cost;
         expect(total).toEqual(0);
 
     });
     it('computeTotalSavings makes the correct total with manual cost set to 10', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         const total = computeTotalSavings(formattedData, defaultCostAutomation, 10);
-        const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost;
+        const expected = formattedData[0].calculations.manual.cost - formattedData[0].calculations.automated.cost;
         expect(total).toEqual(expected);
 
     });
@@ -145,7 +145,7 @@ describe('AutomationCalculator Formulas', () => {
     it('computeTotalSavings sets correct delta calculation for formattedData', () => {
         const formattedData = formatData(testResponse, { defaultAvgRunVal: 3600 });
         //const total = computeTotalSavings(formattedData, defaultCostAutomation, 10);
-        const expected = formattedData[0].calculations[0].cost - formattedData[0].calculations[1].cost;
+        const expected = formattedData[0].calculations.manual.cost - formattedData[0].calculations.automated.cost;
         expect(formattedData[0].delta).toEqual(expected);
 
     });
@@ -162,19 +162,19 @@ describe('AutomationCalculator Functions()', () => {
                 name: testResponse[0].name,
                 id: testResponse[0].template_id,
                 run_count: testResponse[0].successful_run_count,
-                host_count: Math.ceil(testResponse[0].successful_host_run_count_avg) || 0,
-                successful_host_run_count: testResponse[0].successful_host_run_count,
+                host_count: Math.ceil(testResponse[0].hostCount_avg) || 0,
+                hostCount: testResponse[0].hostCount,
                 delta: 0,
                 isActive: true,
                 calculations: [
                     {
                         type: 'Manual',
-                        avg_run: testDefaults.defaultAvgRunVal,
+                        avgRun: testDefaults.defaultAvgRunVal,
                         cost: 0
                     },
                     {
                         type: 'Automated',
-                        avg_run: testResponse[0].successful_elapsed_sum || 0,
+                        avgRun: testResponse[0].elapsed || 0,
                         cost: 0
                     }
                 ],
@@ -182,7 +182,7 @@ describe('AutomationCalculator Functions()', () => {
                 clusters: testResponse[0].clusters,
                 elapsed_sum: testResponse[0].elapsed_sum,
                 failed_elapsed_sum: testResponse[0].failed_elapsed_sum,
-                successful_elapsed_sum: testResponse[0].successful_elapsed_sum,
+                elapsed: testResponse[0].elapsed,
                 template_automation_percentage: testResponse[0].template_automation_percentage
             }
 
@@ -196,32 +196,32 @@ describe('AutomationCalculator Functions()', () => {
         const testData = [
             {
                 id: 1,
-                successful_host_run_count: 2,
+                hostCount: 2,
                 calculations: [
                     {
                         type: 'Manual',
-                        avg_run: 0,
+                        avgRun: 0,
                         total: 0
                     },
                     {
                         type: 'Automated',
-                        avg_run: 1,
+                        avgRun: 1,
                         total: 1
                     }
                 ]
             },
             {
                 id: 2,
-                successful_host_run_count: 3,
+                hostCount: 3,
                 calculations: [
                     {
                         type: 'Manual',
-                        avg_run: 1,
+                        avgRun: 1,
                         total: 1
                     },
                     {
                         type: 'Automated',
-                        avg_run: 3,
+                        avgRun: 3,
                         total: 3
                     }
                 ]
@@ -230,32 +230,32 @@ describe('AutomationCalculator Functions()', () => {
         const expected = [
             {
                 id: 1,
-                successful_host_run_count: 2,
+                hostCount: 2,
                 calculations: [
                     {
                         type: 'Manual',
-                        avg_run: testSeconds,
-                        total: testSeconds * testData[0].successful_host_run_count
+                        avgRun: testSeconds,
+                        total: testSeconds * testData[0].hostCount
                     },
                     {
                         type: 'Automated',
-                        avg_run: 1,
+                        avgRun: 1,
                         total: 1
                     }
                 ]
             },
             {
                 id: 2,
-                successful_host_run_count: 3,
+                hostCount: 3,
                 calculations: [
                     {
                         type: 'Manual',
-                        avg_run: 1,
+                        avgRun: 1,
                         total: 1
                     },
                     {
                         type: 'Automated',
-                        avg_run: 3,
+                        avgRun: 3,
                         total: 3
                     }
                 ]

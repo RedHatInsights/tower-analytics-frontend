@@ -14,7 +14,6 @@ const pieChart2Endpoint = `/api/tower-analytics/${apiVersion}/job_events_by_org_
 const preflightEndpoint = `/api/tower-analytics/${apiVersion}/authorized/`;
 const templateJobsEndpoint = `/api/tower-analytics/${apiVersion}/template_jobs/`;
 const templatesEndPoint = `/api/tower-analytics/${apiVersion}/templates/`;
-const roiEndpoint = `/api/tower-analytics/${apiVersion}/roi_templates/`;
 const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
 const jobExplorerOptionsEndpoint =
   '/api/tower-analytics/v1/job_explorer_options/';
@@ -139,7 +138,15 @@ export const readJobEventsByOrg = ({ params = {}}) => {
 
 export const readROI = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
-    let url = new URL(roiEndpoint, formattedUrl);
+    let url = new URL(jobExplorerEndpoint, formattedUrl);
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url).then(handleResponse);
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+            ...params,
+            group_by: 'template',
+            group_by_time: false,
+            granularity: 'monthly'
+        })
+    }).then(handleResponse);
 };

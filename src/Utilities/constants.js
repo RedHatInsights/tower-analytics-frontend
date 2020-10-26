@@ -25,3 +25,21 @@ export const jobExplorer = {
         limit: 5
     }
 };
+
+export const roi = {
+    defaultParams: {
+        status: [ 'successful' ],
+        quickDateRange: 'last_30_days',
+        jobType: [ 'job' ],
+        sortBy: 'host_count:desc',
+        onlyRootWorkflowsAndStandaloneJobs: true,
+        limit: 5,
+        attributes: [
+            'elapsed',
+            'host_count',
+            'host_task_count',
+            'total_org_count',
+            'total_cluster_count'
+        ]
+    }
+};

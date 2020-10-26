@@ -97,8 +97,8 @@ class Tooltip {
         } else {
             savings = this.formatDollars(d.delta);
             name = d.name;
-            manualCost = this.formatDollars(d.calculations[0].cost);
-            automationCost = this.formatDollars(d.calculations[1].cost);
+            manualCost = this.formatDollars(d.calculations.manual.cost);
+            automationCost = this.formatDollars(d.calculations.automated.cost);
         }
 
         const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
@@ -190,13 +190,7 @@ class TopTemplatesSavings extends Component {
         const color = d3.scaleOrdinal([ '#0066CC' ]); //blue
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
-        let { data: unfiltered, selected } = this.props;
-        const data = unfiltered.filter(({ id }) => !selected.includes(id));
-        data.forEach(datum => {
-            datum.calculations.forEach(row => {
-                row.name = datum.name;
-            });
-        });
+        const { data } = this.props;
         let width;
         // adjust chart width to support larger datasets
         if (data.length >= 15) {
@@ -329,7 +323,6 @@ class TopTemplatesSavings extends Component {
 TopTemplatesSavings.propTypes = {
     id: PropTypes.string,
     data: PropTypes.array,
-    selected: PropTypes.array,
     margin: PropTypes.object,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func
