@@ -27,6 +27,9 @@ const NotificationDrawerListItem = styled(PFNotificationDrawerListItem)`
   border-bottom::nth-child(odd): 1px solid var(--pf-global--BorderColor--light-100
     );
   box-shadow: none;
+  &:focus {
+    outline: none;
+  }
 `;
 
 const NotificationDrawerList = styled(PFNotificationDrawerList)`
