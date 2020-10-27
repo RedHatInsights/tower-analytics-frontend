@@ -114,7 +114,7 @@ const FilterableToolbar = ({
         </ToolbarGroup>
     );
 
-    /* TODO: For future work: make sattings more modular for different pages */
+    /* TODO: For future work: make settings more modular for different pages */
     const Settings = () => (
         <Card isFlat style={ { backgroundColor: '#EEEEEE' } }>
             <CardHeader>
@@ -161,6 +161,9 @@ const FilterableToolbar = ({
             >
                 <ToolbarContent>
                     <ToolbarToggleGroup toggleIcon={ <FilterIcon /> } breakpoint="xl">
+                        <Button variant="control">
+                            <FilterIcon />
+                        </Button>
                         { Object.keys(filterCategories).length > 0 && <FilterCategoriesGroup /> }
                         { quickDateRange && <QuickDateGroup /> }
                         { sortBy && <SortByGroup /> }
