@@ -15,7 +15,8 @@ const ToolbarFilterItem = ({
     categoryKey,
     filter = null,
     values = [],
-    visible = true,
+    isVisible = true,
+    hasChips = true,
     setFilter
 }) => {
     const [ expanded, setExpanded ] = useState(false);
@@ -35,8 +36,7 @@ const ToolbarFilterItem = ({
 
     const handleChips = () => {
         if (options.isSingle) {
-            return handleSingleChips(filter, values
-            );
+            return handleSingleChips(filter, values);
         } else {
             return handleCheckboxChips(filter, values);
         }
@@ -57,10 +57,10 @@ const ToolbarFilterItem = ({
     return (
         <ToolbarFilter
             key = { categoryKey }
-            showToolbarItem={ visible }
-            chips={ handleChips() }
+            showToolbarItem={ isVisible }
+            chips={ hasChips ? handleChips() : [] }
             categoryName={ options.name }
-            deleteChip={ onDelete }
+            deleteChip={ hasChips ? onDelete : null }
         >
             <Select
                 variant={ options.isSingle ? 'single' : 'checkbox' }
@@ -87,7 +87,8 @@ ToolbarFilterItem.propTypes = {
     categoryKey: PropTypes.string.isRequired,
     filter: PropTypes.any,
     values: PropTypes.array,
-    visible: PropTypes.bool,
+    isVisible: PropTypes.bool,
+    hasChips: PropTypes.bool,
     setFilter: PropTypes.func.isRequired
 };
 

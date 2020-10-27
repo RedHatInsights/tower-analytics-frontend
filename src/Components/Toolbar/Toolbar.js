@@ -75,7 +75,7 @@ const FilterableToolbar = ({
                     categoryKey={ key }
                     filter={ filters[key] }
                     values={ categories[key] }
-                    visible={ currentCategory === key }
+                    isVisible={ currentCategory === key }
                     setFilter={ value => setFilters(key, value) }
                 />
             ) }
@@ -89,6 +89,7 @@ const FilterableToolbar = ({
                 filter={ filters.quickDateRange }
                 values={ quickDateRange }
                 setFilter={ value => setFilters('quickDateRange', value) }
+                hasChips={ false }
             />
             { filters.quickDateRange === 'custom' && (
                 <CustomDateSelector
@@ -107,6 +108,7 @@ const FilterableToolbar = ({
                 filter={ filters.sortBy }
                 values={ sortBy }
                 setFilter={ value => setFilters('sortBy', value) }
+                hasChips={ false }
             />
             <Button variant="control">
                 <SortAmountDownIcon />
