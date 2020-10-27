@@ -15,7 +15,7 @@ const AutomationFormula = () => (
                 <p>
                     <b>Manual cost for template x</b> =
                     <em>
-                    (time for a manual run on one host * (sum of all hosts across all job runs) ) * cost per hour
+                    (time for a manual run on one host in hours * (sum of all hosts across all job runs) ) * cost per hour
                     </em>
                 </p>
                 <p>
