@@ -2,12 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
     InputGroup,
-    InputGroupText,
     TextInput
 } from '@patternfly/react-core';
-import {
-    CalendarAltIcon
-} from '@patternfly/react-icons';
 
 const CustomDateSelector = ({
     onInputChange = () => {},
@@ -17,9 +13,6 @@ const CustomDateSelector = ({
     return (
         <>
           <InputGroup>
-              <InputGroupText component="label" htmlFor="startDate">
-                  <CalendarAltIcon />
-              </InputGroupText>
               <TextInput
                   name="startDate"
                   id="startDate"
@@ -30,9 +23,6 @@ const CustomDateSelector = ({
               />
           </InputGroup>
           <InputGroup>
-              <InputGroupText component="label" htmlFor="endDate">
-                  <CalendarAltIcon />
-              </InputGroupText>
               <TextInput
                   name="endDate"
                   id="endDate"
