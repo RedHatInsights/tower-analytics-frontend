@@ -43,7 +43,7 @@ export const useQueryParams = initial => {
             case 'SET_QUICK_DATE_RANGE': {
                 let newState = { ...state };
                 if (value !== 'custom') {
-                    newState = { ...newState, startDate: null, endDate: null };
+                    newState = { ...newState, startDate: '', endDate: '' };
                 }
 
                 newState = { ...newState, ...value };
@@ -62,14 +62,14 @@ export const useQueryParams = initial => {
             case 'RESET_FILTER':
                 return { ...state,
                     status: [],
-                    quickDateRange: null,
+                    quickDateRange: '',
                     jobType: [],
                     orgId: [],
                     clusterId: [],
                     templateId: [],
-                    sortBy: null,
-                    startDate: null,
-                    endDate: null,
+                    sortBy: '',
+                    startDate: '',
+                    endDate: '',
                     onlyRootWorkflowsAndStandaloneJobs: false
                 };
             default:
