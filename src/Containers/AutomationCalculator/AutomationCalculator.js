@@ -63,18 +63,19 @@ const WrapperRight = styled.div`
 
 // TODO Mutates data!!!
 const computeTotalSavings = (filteredData, costAutomation, costManual) => {
-    let data = [ ...filteredData ];
+    const costAutomationNum = parseFloat(costAutomation);
+    const costManualNum = parseFloat(costManual);
     let total = 0;
     let costAutomationPerHour;
     let costManualPerHour;
 
-    data.forEach((datum) => {
+    filteredData.forEach((datum) => {
         costAutomationPerHour =
-            convertSecondsToHours(datum.elapsed) * costAutomation;
+            convertSecondsToHours(datum.elapsed) * costAutomationNum;
         costManualPerHour =
             convertSecondsToHours(datum.calculations.manual.avgRun) *
             datum.hostCount *
-            costManual;
+            costManualNum;
         total += calculateDelta(costAutomationPerHour, costManualPerHour);
         datum.delta = calculateDelta(costAutomationPerHour, costManualPerHour);
         datum.calculations.manual.cost = costManualPerHour;
@@ -88,8 +89,8 @@ const AutomationCalculator = ({ history }) => {
     const toJobExplorer = useRedirect(history, 'jobExplorer');
     const [ isLoading, setIsLoading ] = useState(true);
     const [ quickDateRanges, setQuickDateRanges ] = useState([]);
-    const [ costManual, setCostManual ] = useState(50);
-    const [ costAutomation, setCostAutomation ] = useState(20);
+    const [ costManual, setCostManual ] = useState('50');
+    const [ costAutomation, setCostAutomation ] = useState('20');
     const [ totalSavings, setTotalSavings ] = useState(0);
     const [ unfilteredData, setUnfilteredData ] = useState([]);
     const [ preflightError, setPreFlightError ] = useState(null);

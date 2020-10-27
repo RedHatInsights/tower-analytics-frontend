@@ -16,14 +16,19 @@ const InputAndText = styled.div`
   flex: 1;
 `;
 
+const validFloat = value => {
+    const floatValue = parseFloat(value);
+    return floatValue && floatValue >= 0 ? value : '';
+};
+
 const CalculationCost = ({
-    costManual = 0,
+    costManual = '0',
     setCostManual = () => {},
-    costAutomation = 0,
+    costAutomation = '0',
     setCostAutomation = () => {}
 }) => (
     <Card>
-        <CardTitle style={ { paddingBottom: '10px' } }>
+        <CardTitle>
                 Calculate your automation
         </CardTitle>
         <CardBody>
@@ -39,11 +44,9 @@ const CalculationCost = ({
                     <TextInput
                         id="manual-cost"
                         type="number"
-                        step="any"
-                        min="0"
                         aria-label="manual-cost"
                         value={ costManual }
-                        onChange={ (e) => setCostManual(parseFloat(e)) }
+                        onChange={ (e) => setCostManual(validFloat(e)) }
                     />
                     <InputGroupText>/hr</InputGroupText>
                 </InputGroup>
@@ -57,11 +60,9 @@ const CalculationCost = ({
                     <TextInput
                         id="automation-cost"
                         type="number"
-                        step="any"
-                        min="0"
                         aria-label="automation-cost"
                         value={ costAutomation }
-                        onChange={ (e) => setCostAutomation(parseFloat(e)) }
+                        onChange={ (e) => setCostAutomation(validFloat(e)) }
                     />
                     <InputGroupText>/hr</InputGroupText>
                 </InputGroup>
@@ -71,9 +72,9 @@ const CalculationCost = ({
 );
 
 CalculationCost.propTypes = {
-    costManual: PropTypes.number,
+    costManual: PropTypes.string,
     setCostManual: PropTypes.func,
-    costAutomation: PropTypes.number,
+    costAutomation: PropTypes.string,
     setCostAutomation: PropTypes.func
 };
 
