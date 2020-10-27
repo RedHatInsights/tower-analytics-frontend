@@ -31,4 +31,4 @@ jobs:
         run: |
           pwd
           ls -al
-        working-directory: $GITHUB_WORKSPACE/aa-hacking
+        working-directory: aa-hacking
