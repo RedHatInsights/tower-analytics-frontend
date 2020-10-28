@@ -45,11 +45,11 @@ export const capitalize = (s) => {
 };
 
 export function calculateDelta(a, b) {
-    if (!parseInt(b)) {
+    if (!parseInt(a) && !parseFloat(a)) {
         return 0;
     }
 
-    if (!parseInt(a)) {
+    if (!parseInt(b) && !parseFloat(b)) {
         return 0;
     }
 
