@@ -49,6 +49,10 @@ export function calculateDelta(a, b) {
         return 0;
     }
 
+    if (!parseInt(a)) {
+        return 0;
+    }
+
     return b - a;
 }
 
@@ -61,10 +65,18 @@ export function convertMinsToMs(mins) {
 }
 
 export function convertMsToMins(ms) {
+    if (!parseInt(ms)) {
+        return 0;
+    }
+
     return ms / 60000;
 }
 
 export function convertSecondsToMins(seconds) {
+    if (!parseInt(seconds)) {
+        return 0;
+    }
+
     return seconds / 60;
 }
 
@@ -77,6 +89,10 @@ export function convertMinsToSeconds(mins) {
 }
 
 export function convertSecondsToHours(seconds) {
+    if (!parseInt(seconds)) {
+        return 0;
+    }
+
     return seconds / 3600;
 }
 
