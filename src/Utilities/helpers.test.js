@@ -1,4 +1,5 @@
 /* eslint quotes: 0 */
+import { isNumeric } from './helpers.js';
 import { trimStr } from './helpers.js';
 import { formatDate } from './helpers.js';
 import { formatSeconds } from './helpers.js';
@@ -13,6 +14,33 @@ import { convertMinsToSeconds } from './helpers.js';
 import { convertSecondsToHours } from './helpers.js';
 import { convertWithCommas } from './helpers.js';
 import { formatJobType } from './helpers.js';
+
+describe('Utilities/helpers/isNumeric', () => {
+    it('validates 0', () => {
+        expect(isNumeric(0)).toBe(true);
+    });
+    it('validates stringy 0', () => {
+        expect(isNumeric('0')).toBe(true);
+    });
+    it('validates float 0.0', () => {
+        expect(isNumeric(0.0)).toBe(true);
+    });
+    it('validates float 0.01', () => {
+        expect(isNumeric(0.0)).toBe(true);
+    });
+    it('validates float -0.01', () => {
+        expect(isNumeric(0.0)).toBe(true);
+    });
+    it('invalidates "a"', () => {
+        expect(isNumeric('a')).toBe(false);
+    });
+    it('invalidates null', () => {
+        expect(isNumeric(null)).toBe(false);
+    });
+    it('invalidates undefined', () => {
+        expect(isNumeric(undefined)).toBe(false);
+    });
+});
 
 describe('Utilities/helpers/trimStr', () => {
     it('removes outter double quotes', () => {
