@@ -40,6 +40,9 @@ describe('Utilities/helpers/isNumeric', () => {
     it('invalidates undefined', () => {
         expect(isNumeric(undefined)).toBe(false);
     });
+    it('invalidates empty string', () => {
+        expect(isNumeric('')).toBe(false);
+    });
 });
 
 describe('Utilities/helpers/trimStr', () => {
