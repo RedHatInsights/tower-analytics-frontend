@@ -26,10 +26,10 @@ describe('Utilities/helpers/isNumeric', () => {
         expect(isNumeric(0.0)).toBe(true);
     });
     it('validates float 0.01', () => {
-        expect(isNumeric(0.0)).toBe(true);
+        expect(isNumeric(0.01)).toBe(true);
     });
     it('validates float -0.01', () => {
-        expect(isNumeric(0.0)).toBe(true);
+        expect(isNumeric(-0.01)).toBe(true);
     });
     it('invalidates "a"', () => {
         expect(isNumeric('a')).toBe(false);
