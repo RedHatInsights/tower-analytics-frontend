@@ -1,5 +1,24 @@
 import moment from 'moment';
 
+/*
+ * isNumeric - return true if input is a real number
+ */
+export function isNumeric(val) {
+    if (val === 0 || val === '0') {
+        return true;
+    }
+
+    if (parseInt(val)) {
+        return true;
+    }
+
+    if (parseFloat(val)) {
+        return true;
+    }
+
+    return false;
+}
+
 export function trimStr(str) {
     return str.toString().replace(/['"]+/g, '');
 }
@@ -45,7 +64,12 @@ export const capitalize = (s) => {
 };
 
 export function calculateDelta(a, b) {
-    if (!parseInt(b)) {
+    if (!isNumeric(a) || !isNumeric(b)) {
+        return 0;
+    }
+
+    // never return less than zero ...
+    if ((b - a) < 0) {
         return 0;
     }
 
@@ -61,10 +85,18 @@ export function convertMinsToMs(mins) {
 }
 
 export function convertMsToMins(ms) {
+    if (!parseInt(ms)) {
+        return 0;
+    }
+
     return ms / 60000;
 }
 
 export function convertSecondsToMins(seconds) {
+    if (!parseInt(seconds)) {
+        return 0;
+    }
+
     return seconds / 60;
 }
 
@@ -77,6 +109,10 @@ export function convertMinsToSeconds(mins) {
 }
 
 export function convertSecondsToHours(seconds) {
+    if (!parseInt(seconds)) {
+        return 0;
+    }
+
     return seconds / 3600;
 }
 
