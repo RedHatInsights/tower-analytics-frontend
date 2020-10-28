@@ -132,8 +132,14 @@ describe('Utilities/helpers/calculateDelta', () => {
     it('subtracts two positive ints', () => {
         expect(calculateDelta(1, 2)).toBe(1);
     });
-    it('subtracts two negative ints', () => {
-        expect(calculateDelta(-1, -2)).toBe(-1);
+    it('subtracts two negative ints and round up to 0', () => {
+        expect(calculateDelta(-1, -2)).toBe(0);
+    });
+    it('subtracts from zero and round up to zero', () => {
+        expect(calculateDelta(1, 0)).toBe(0);
+    });
+    it('returns zero for a float result less than zero', () => {
+        expect(calculateDelta(3.0, 1.0)).toBe(0);
     });
     it('returns zero if the second val is not an int', () => {
         expect(calculateDelta(1, 'a')).toBe(0);

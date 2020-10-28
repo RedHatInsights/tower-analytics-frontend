@@ -1,5 +1,25 @@
 import moment from 'moment';
 
+/*
+ * isNumeric - return true if input is a real number
+ */
+export function isNumeric(val) {
+    if ( val === 0 || val === '0' ) { 
+        return true;
+    }
+
+    if (parseInt(val)) {
+        return true;
+    }
+
+    if (parseFloat(val)) {
+        return true;
+    }
+
+
+    return false;
+}
+
 export function trimStr(str) {
     return str.toString().replace(/['"]+/g, '');
 }
@@ -45,13 +65,14 @@ export const capitalize = (s) => {
 };
 
 export function calculateDelta(a, b) {
-    if (!parseInt(a) && !parseFloat(a)) {
+    if (!isNumeric(a) || !isNumeric(b)) {
         return 0;
     }
 
-    if (!parseInt(b) && !parseFloat(b)) {
+    // never return less than zero ...
+    if ((b - a) < 0) {
         return 0;
-    }
+    } 
 
     return b - a;
 }
