@@ -4,7 +4,7 @@ import moment from 'moment';
  * isNumeric - return true if input is a real number
  */
 export function isNumeric(val) {
-    if ( val === 0 || val === '0' ) { 
+    if (val === 0 || val === '0') {
         return true;
     }
 
@@ -15,7 +15,6 @@ export function isNumeric(val) {
     if (parseFloat(val)) {
         return true;
     }
-
 
     return false;
 }
@@ -72,7 +71,7 @@ export function calculateDelta(a, b) {
     // never return less than zero ...
     if ((b - a) < 0) {
         return 0;
-    } 
+    }
 
     return b - a;
 }
