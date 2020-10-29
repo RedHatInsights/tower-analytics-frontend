@@ -33,20 +33,20 @@ class Tooltip {
         .attr('height', 110)
         .attr('width', this.boxWidth)
         .attr('fill', '#393f44');
-        this.circleGreen = this.toolTipBase
+        this.circleSuccess = this.toolTipBase
         .append('circle')
         .attr('cx', 26)
         .attr('cy', 0)
-        .attr('r', 7)
+        .attr('r', 8)
         .attr('stroke', 'white')
-        .attr('fill', this.colors(1));
-        this.circleRed = this.toolTipBase
+        .attr('fill', 'white');
+        this.circleFail = this.toolTipBase
         .append('circle')
         .attr('cx', 26)
         .attr('cy', 26)
-        .attr('r', 7)
+        .attr('r', 8)
         .attr('stroke', 'white')
-        .attr('fill', this.colors(0));
+        .attr('fill', 'white');
         this.successText = this.toolTipBase
         .append('text')
         .attr('x', 43)
@@ -61,14 +61,20 @@ class Tooltip {
         .attr('font-size', 12)
         .attr('fill', 'white')
         .text('Failed');
-        this.icon = this.toolTipBase
+        this.successIcon = this.toolTipBase
         .append('text')
-        .attr('fill', 'white')
-        .attr('stroke', 'white')
-        .attr('x', 24)
-        .attr('y', 30)
-        .attr('font-size', 12)
-        .text('!');
+        .attr('class', 'fas fa-sm')
+        .attr('fill', this.colors(1))
+        .attr('x', 19)
+        .attr('y', 5)
+        .text('\uf058');
+        this.failedIcon = this.toolTipBase
+        .append('text')
+        .attr('class', 'fas fa-sm')
+        .attr('fill', this.colors(0))
+        .attr('x', 20)
+        .attr('y', 31)
+        .text('\uf06a');
         this.jobs = this.toolTipBase
         .append('text')
         .attr('fill', 'white')
@@ -174,9 +180,10 @@ class Tooltip {
         if (flipped) {
             this.toolTipPoint.attr('transform', 'translate(-20, 0) rotate(45)');
             this.boundingBox.attr('x', -adjustedWidth - 20);
-            this.circleGreen.attr('cx', -adjustedWidth);
-            this.circleRed.attr('cx', -adjustedWidth);
-            this.icon.attr('x', -adjustedWidth - 2);
+            this.circleSuccess.attr('cx', -adjustedWidth);
+            this.circleFail.attr('cx', -adjustedWidth);
+            this.failedIcon.attr('x', -adjustedWidth - 7);
+            this.successIcon.attr('x', -adjustedWidth - 7);
             this.successText.attr('x', -adjustedWidth + 17);
             this.failText.attr('x', -adjustedWidth + 17);
             this.successful.attr('x', -this.successTextWidth - 20 - 12);
@@ -187,9 +194,10 @@ class Tooltip {
         } else {
             this.toolTipPoint.attr('transform', 'translate(10, 0) rotate(45)');
             this.boundingBox.attr('x', 10);
-            this.circleGreen.attr('cx', 26);
-            this.circleRed.attr('cx', 26);
-            this.icon.attr('x', 24);
+            this.circleSuccess.attr('cx', 26);
+            this.circleFail.attr('cx', 26);
+            this.failedIcon.attr('x', 19);
+            this.successIcon.attr('x', 19);
             this.successText.attr('x', 43);
             this.failText.attr('x', 43);
             this.successful.attr('x', (adjustedWidth - this.successTextWidth));
