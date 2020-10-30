@@ -33,7 +33,7 @@ function getAbsoluteUrl() {
 function handleResponse(response) {
     return response.json().then(json => {
         if (response.ok) {
-            return json;
+            return keysToCamel(json);
         }
 
         if (response.status === 404 || response.status === 401) {
