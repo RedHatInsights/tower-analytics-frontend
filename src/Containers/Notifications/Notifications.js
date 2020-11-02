@@ -290,13 +290,13 @@ const Notifications = () => {
                       { !isLoading && notificationsData.length <= 0 && <NoData /> }
                       { !isLoading && notificationsData.length > 0 && (
                   <>
-                  <NotificationDrawer>
-                      <NotificationsList
-                          filterBy={ queryParams.severity || '' }
-                          options={ notificationOptions }
-                          notifications={ notificationsData }
-                      />
-                  </NotificationDrawer>
+                    <NotificationDrawer>
+                        <NotificationsList
+                            filterBy={ queryParams.severity || '' }
+                            options={ notificationOptions }
+                            notifications={ notificationsData }
+                        />
+                    </NotificationDrawer>
                     <Pagination
                         itemCount={ meta.count ? meta.count : 0 }
                         widgetId="pagination-options-menu-bottom"
