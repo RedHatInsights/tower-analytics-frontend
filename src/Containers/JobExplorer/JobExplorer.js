@@ -341,7 +341,7 @@ const JobExplorer = props => {
       Automation Analytics
             <span style={ { fontSize: '16px' } }>
                 { ' ' }
-                <span style={ { margin: '0 10px' } }>|</span> Jobs explorer
+                <span style={ { margin: '0 10px' } }>|</span> Job explorer
             </span>
         </span>
     );
@@ -445,4 +445,3 @@ JobExplorer.propTypes = {
 };
 
 export default JobExplorer;
-
