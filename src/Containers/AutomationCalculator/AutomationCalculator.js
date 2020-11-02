@@ -29,7 +29,8 @@ import { roi as roiConst } from '../../Utilities/constants';
 import useRedirect from '../../Utilities/useRedirect';
 import {
     calculateDelta,
-    convertSecondsToHours
+    convertSecondsToHours,
+    keysToCamel
 } from '../../Utilities/helpers';
 
 // Chart
@@ -88,11 +89,11 @@ const computeTotalSavings = (filteredData, costAutomation, costManual) => {
 const AutomationCalculator = ({ history }) => {
     const toJobExplorer = useRedirect(history, 'jobExplorer');
     const [ isLoading, setIsLoading ] = useState(true);
-    const [ quickDateRanges, setQuickDateRanges ] = useState([]);
     const [ costManual, setCostManual ] = useState('50');
     const [ costAutomation, setCostAutomation ] = useState('20');
     const [ totalSavings, setTotalSavings ] = useState(0);
     const [ unfilteredData, setUnfilteredData ] = useState([]);
+    const [ quickDateRange, setQuickDateRange ] = useState([]);
     const [ preflightError, setPreFlightError ] = useState(null);
     const {
         urlMappedQueryParams,
@@ -136,17 +137,20 @@ const AutomationCalculator = ({ history }) => {
             ])
             .then(([
                 { items },
-                { quick_date_range }
+                explorerOptions
             ]) => {
+                const { quickDateRange } = keysToCamel(explorerOptions);
+                items = keysToCamel(items);
+
                 setUnfilteredData(mapApi(items));
-                setQuickDateRanges(quick_date_range);
+                setQuickDateRange(quickDateRange);
             })
             .finally(() => { setIsLoading(false); });
         });
     }, [ queryParams ]);
 
     /**
-     * Function to redirect to the job expoler page
+     * Function to redirect to the job explorer page
      * with the same filters as is used here.
      */
     const redirectToJobExplorer = templateId => {
@@ -179,7 +183,7 @@ const AutomationCalculator = ({ history }) => {
                             <CardBody>
                                 <FilterableToolbar
                                     categories={ {
-                                        quickDateRange: quickDateRanges
+                                        quickDateRange
                                     } }
                                     filters={ queryParams }
                                     setFilters={ setFromToolbar }

@@ -4,11 +4,11 @@ import { CardTitle } from '@patternfly/react-core';
 /* eslint-disable camelcase */
 export const mapApi = (data) => data.map(({
     elapsed,
-    host_count,
-    host_task_count,
+    hostCount,
+    hostTaskCount,
     // total_count,
-    total_org_count,
-    total_cluster_count,
+    totalOrgCount,
+    totalClusterCount,
     id,
     name
 }) => ({
@@ -27,12 +27,12 @@ export const mapApi = (data) => data.map(({
             cost: 0
         }
     },
-    hostCount: host_count,
+    hostCount,
     elapsed,
     // TopTemplates Tooltip
-    hostTaskCount: host_task_count,
-    totalOrgCount: total_org_count,
-    totalClusterCount: total_cluster_count,
+    hostTaskCount,
+    totalOrgCount,
+    totalClusterCount,
     delta: 0
 }));
 
