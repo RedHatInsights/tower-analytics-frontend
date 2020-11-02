@@ -21,7 +21,7 @@ import {
 import {
     Button,
     Card,
-    CardBody,
+    CardBody as PFCardBody,
     CardTitle as PFCardTitle,
     FormSelect,
     FormSelectOption,
@@ -145,6 +145,10 @@ const WrapperRight = styled.div`
 const CardTitle = styled(PFCardTitle)`
   border-bottom: 1px solid #d7d7d7;
   margin-bottom: 10px;
+`;
+
+const CardBody = styled(PFCardBody)`
+  overflow: auto;
 `;
 
 const title = (
@@ -446,7 +450,7 @@ const AutomationCalculator = ({ history }) => {
                   <Main style={ { paddingBottom: '0' } }>
                       <Card>
                           <CardTitle>Automation savings</CardTitle>
-                          <CardBody>
+                          <PFCardBody>
                               { isLoading && !preflightError && <LoadingState /> }
                               { !isLoading && formattedData.length <= 0 && <NoData /> }
                               { formattedData.length > 0 && !isLoading && (
@@ -460,11 +464,11 @@ const AutomationCalculator = ({ history }) => {
                         <p style={ { textAlign: 'center' } }>Templates</p>
                       </>
                               ) }
-                          </CardBody>
+                          </PFCardBody>
                       </Card>
                   </Main>
-                  <Main style={ { maxHeight: '0' } }>
-                      <Card>
+                  <Main style={ { height: 0 } }>
+                      <Card style={ { height: '100%' } }>
                           <CardTitle>Automation formula</CardTitle>
                           <CardBody>
                               <p>
@@ -498,24 +502,30 @@ const AutomationCalculator = ({ history }) => {
                           <PFCardTitle style={ { paddingBottom: '0', borderTop: '3px solid #2B9AF3' } }>
                     Total savings
                           </PFCardTitle>
-                          <CardBody>
+                          <PFCardBody>
                               <Title
                                   headingLevel="h3"
                                   style={ { color: 'var(--pf-global--success-color--200)', fontSize: '2.5em' } }
                               >
                                   { totalSavings }
                               </Title>
-                          </CardBody>
+                          </PFCardBody>
                       </Card>
                   </Main>
-                  <Main style={ { paddingBottom: '0', paddingLeft: '0', maxHeight: '0' } }>
-                      <Card style={ { overflow: 'auto', flex: '1 1 0' } }>
+                  <Main
+                      style={ {
+                          paddingLeft: '0',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          flex: '1 1 0'
+                      } }
+                  >
+                      <Card style={ { height: '100%' } }>
                           <CardTitle style={ { paddingBottom: '10px' } }>
                     Calculate your automation
                           </CardTitle>
-                          <CardBody style={ { maxHeight: '547px' } }>
+                          <CardBody style={ { flex: '1 1 0' } }>
                               <InputAndText>
-
                                   <p>Manual cost of automation</p>
                                   <em
                                       style={ { color: 'var(--pf-global--Color--dark-200)' } }
