@@ -145,13 +145,9 @@ const WrapperRight = styled.div`
 `;
 
 const title = (
-    <span style={ { fontWeight: 400 } }>
-    Automation Analytics
-        <span style={ { fontSize: '16px', fontWeight: 400 } }>
-            { ' ' }
-            <span style={ { margin: '0 10px' } }>|</span> Automation calculator
-        </span>
-    </span>
+    <Title headingLevel="h1">
+        Automation Calculator
+    </Title>
 );
 
 /* helper variables for further date ranges */

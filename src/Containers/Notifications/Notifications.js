@@ -22,7 +22,8 @@ import {
     FormSelectOption,
     Badge,
     Pagination,
-    PaginationVariant
+    PaginationVariant,
+    Title
 } from '@patternfly/react-core';
 
 import NotificationsList from '../../Components/NotificationsList';
@@ -69,13 +70,9 @@ const DropdownGroup = styled.div`
 `;
 
 const title = (
-    <span style={ { fontWeight: 400 } }>
-    Automation Analytics
-        <span style={ { fontSize: '16px', fontWeight: 400 } }>
-            { ' ' }
-            <span style={ { margin: '0 10px' } }>|</span> Notifications
-        </span>
-    </span>
+    <Title headingLevel="h1">
+        Notifications
+    </Title>
 );
 
 const notificationOptions = [

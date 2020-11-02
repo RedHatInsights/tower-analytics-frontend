@@ -29,7 +29,8 @@ import {
     CardBody,
     CardHeader as PFCardHeader,
     Pagination as PFPagination,
-    PaginationVariant
+    PaginationVariant,
+    Title
 } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
@@ -337,13 +338,9 @@ const JobExplorer = props => {
     };
 
     const title = (
-        <span>
-      Automation Analytics
-            <span style={ { fontSize: '16px' } }>
-                { ' ' }
-                <span style={ { margin: '0 10px' } }>|</span> Jobs explorer
-            </span>
-        </span>
+        <Title headingLevel="h1">
+          Job Explorer
+        </Title>
     );
 
     const handleSetPage = page => {
