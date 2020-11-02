@@ -9,7 +9,6 @@ import { Paths } from '../paths';
 import { formatQueryStrings } from '../Utilities/formatQueryStrings';
 
 import {
-    Badge,
     Button,
     DataList,
     DataListItem as PFDataListItem,
@@ -204,7 +203,7 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
                       </a>
                   </DataListCell>
                   <DataCellEnd>
-                      <Badge isRead>{ count }</Badge>
+                      { count }
                   </DataCellEnd>
               </DataListItem>
           )) }
