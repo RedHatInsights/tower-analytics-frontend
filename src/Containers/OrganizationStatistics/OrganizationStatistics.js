@@ -22,7 +22,8 @@ import {
     CardBody,
     CardTitle as PFCardTitle,
     FormSelect,
-    FormSelectOption
+    FormSelectOption,
+    Title
 } from '@patternfly/react-core';
 
 import { FilterIcon } from '@patternfly/react-icons';
@@ -66,13 +67,9 @@ const TopCard = styled(Card)`
 `;
 
 const title = (
-    <span style={ { fontWeight: 400 } }>
-    Automation Analytics
-        <span style={ { fontSize: '16px', fontWeight: 400 } }>
-            { ' ' }
-            <span style={ { margin: '0 10px' } }>|</span> Organization Statistics
-        </span>
-    </span>
+    <Title headingLevel="h1">
+        Organization Statistics
+    </Title>
 );
 
 const timeFrameOptions = [
