@@ -6,7 +6,6 @@ import LoadingState from '../Components/LoadingState';
 import NoData from '../Components/NoData';
 
 import {
-    Badge,
     DataList,
     DataListItem as PFDataListItem,
     DataListCell as PFDataListCell
@@ -63,7 +62,6 @@ const ModulesList = ({ modules, isLoading }) => (
             >
                 <PFDataListCell>
                     <NoData />
-
                 </PFDataListCell>
             </PFDataListItem>
         ) }
@@ -73,7 +71,7 @@ const ModulesList = ({ modules, isLoading }) => (
                     <span>{ trimStr(module) }</span>
                 </DataListCell>
                 <DataCellEnd>
-                    <Badge isRead>{ count }</Badge>
+                    { count }
                 </DataCellEnd>
             </DataListItem>
         )) }
