@@ -104,75 +104,59 @@ QuestionIconTooltip.propTypes = {
 };
 
 const TopTemplates = ({
-    unfilteredData = [],
-    setUnfilteredData = () => {},
+    data = [],
+    setDataRunTime = () => {},
     redirectToJobExplorer = () => {}
-}) => {
-    const setManualCost = (seconds, templateId) => {
-        setUnfilteredData(
-            unfilteredData.map(el =>
-                el.id === templateId // If we modified this one replace element
-                    ? { ...el, calculations:
-                        { ...el.calculations, manual:
-                            { ...el.calculations.manual, avgRun: seconds }
-                        }
-                    }
-                    : el // If it's another element just return it as it is.
-            )
-        );
-    };
-
-    return (
-        <Card style={ { overflow: 'auto', flex: '1 1 0' } }>
-            <CardBody>
-                <p>Enter the time it takes to run the following templates manually.</p>
-                { unfilteredData.map((data) => (
-                    <div key={ data.id }>
-                        <Tooltip content={ 'Click for the list of jobs' } >
-                            <Button
-                                style={ { padding: '15px 0 10px' } }
-                                component="a"
-                                onClick={ () => redirectToJobExplorer(data.id) }
-                                variant="link"
-                            >
-                                { data.name }
-                            </Button>
-                        </Tooltip>
-                        <TemplateDetail>
-                            <InputAndText key={ data.id }>
-                                <InputGroup>
-                                    <TextInput
-                                        id={ data.id }
-                                        type="number"
-                                        aria-label="time run manually"
-                                        value={ convertSecondsToMins(data.calculations.manual.avgRun) }
-                                        onChange={ minutes =>
-                                            setManualCost(convertMinsToSeconds(minutes), data.id)
-                                        }
-                                    />
-                                    <InputGroupText>min</InputGroupText>
-                                </InputGroup>
-                            </InputAndText>
-                            <TemplateDetailSubTitle>
+}) => (
+    <Card style={ { overflow: 'auto', flex: '1 1 0' } }>
+        <CardBody>
+            <p>Enter the time it takes to run the following templates manually.</p>
+            { data.map((data) => (
+                <div key={ data.id }>
+                    <Tooltip content={ 'Click for the list of jobs' } >
+                        <Button
+                            style={ { padding: '15px 0 10px' } }
+                            component="a"
+                            onClick={ () => redirectToJobExplorer(data.id) }
+                            variant="link"
+                        >
+                            { data.name }
+                        </Button>
+                    </Tooltip>
+                    <TemplateDetail>
+                        <InputAndText key={ data.id }>
+                            <InputGroup>
+                                <TextInput
+                                    id={ data.id }
+                                    type="number"
+                                    aria-label="time run manually"
+                                    value={ convertSecondsToMins(data.avgRunTime) }
+                                    onChange={ minutes =>
+                                        setDataRunTime(convertMinsToSeconds(minutes), data.id)
+                                    }
+                                />
+                                <InputGroupText>min</InputGroupText>
+                            </InputGroup>
+                        </InputAndText>
+                        <TemplateDetailSubTitle>
                                     x { data.hostTaskCount } runs, { data.hostCount } hosts
-                            </TemplateDetailSubTitle>
-                            <IconGroup>
-                                <QuestionIconTooltip data={ data }/>
-                            </IconGroup>
-                        </TemplateDetail>
-                        <p style={ { color: '#486B00' } }>
-                                ${ data.delta.toFixed(2) }
-                        </p>
-                    </div>
-                )) }
-            </CardBody>
-        </Card>
-    );
-};
+                        </TemplateDetailSubTitle>
+                        <IconGroup>
+                            <QuestionIconTooltip data={ data }/>
+                        </IconGroup>
+                    </TemplateDetail>
+                    <p style={ { color: '#486B00' } }>
+                            ${ data.delta.toFixed(2) }
+                    </p>
+                </div>
+            )) }
+        </CardBody>
+    </Card>
+);
 
 TopTemplates.propTypes = {
-    unfilteredData: PropTypes.array,
-    setUnfilteredData: PropTypes.func,
+    data: PropTypes.array,
+    setDataRunTime: PropTypes.func,
     redirectToJobExplorer: PropTypes.func,
     deselectedIds: PropTypes.array,
     setDeselectedIds: PropTypes.func

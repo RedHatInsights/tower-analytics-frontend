@@ -1,12 +1,10 @@
 import styled from 'styled-components';
 import { CardTitle } from '@patternfly/react-core';
 
-/* eslint-disable camelcase */
 export const mapApi = (data) => data.map(({
     elapsed,
     hostCount,
     hostTaskCount,
-    // total_count,
     totalOrgCount,
     totalClusterCount,
     id,
@@ -15,25 +13,18 @@ export const mapApi = (data) => data.map(({
     name,
     id,
     // For chart
-    calculations: {
-        manual: {
-            name,
-            avgRun: 3600, // 1 hr in seconds
-            cost: 0
-        },
-        automated: {
-            name,
-            avgRun: elapsed || 0,
-            cost: 0
-        }
-    },
     hostCount,
     elapsed,
     // TopTemplates Tooltip
     hostTaskCount,
     totalOrgCount,
     totalClusterCount,
-    delta: 0
+    // Chart + TopTemplates
+    // For calculations
+    delta: 0,
+    avgRunTime: elapsed || 3600,
+    manualCost: 0,
+    automatedCost: 0
 }));
 
 export const BorderedCardTitle = styled(CardTitle)`

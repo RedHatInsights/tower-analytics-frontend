@@ -97,8 +97,8 @@ class Tooltip {
         } else {
             savings = this.formatDollars(d.delta);
             name = d.name;
-            manualCost = this.formatDollars(d.calculations.manual.cost);
-            automationCost = this.formatDollars(d.calculations.automated.cost);
+            manualCost = this.formatDollars(d.manualCost);
+            automationCost = this.formatDollars(d.automatedCost);
         }
 
         const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
@@ -187,7 +187,7 @@ class TopTemplatesSavings extends Component {
 
     draw() {
         // Use PF chart color
-        const color = d3.scaleOrdinal([ '#0066CC' ]); //blue
+        const color = '#0066CC'; //blue
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
         const { data } = this.props;
@@ -286,15 +286,15 @@ class TopTemplatesSavings extends Component {
         .attr('x', d => x(d.name))
         .attr('width', x.bandwidth())
         .attr('y', d => y(d.delta))
-        .style('fill', d => color(d.type))
+        .style('fill', () => color)
         .attr('height', d => height - y(d.delta))
         .on('mouseover', function(d) {
-            d3.select(this).style('fill', d3.rgb(color(d.type)).darker(1));
+            d3.select(this).style('fill', d3.rgb(color).darker(1));
             tooltip.handleMouseOver(d);
         })
         .on('mousemove', tooltip.handleMouseOver)
-        .on('mouseout', function(d) {
-            d3.select(this).style('fill', color(d.type));
+        .on('mouseout', function() {
+            d3.select(this).style('fill', color);
             tooltip.handleMouseOut();
         });
     }

@@ -63,29 +63,15 @@ const WrapperRight = styled.div`
   flex-direction: column;
 `;
 
-// TODO Mutates data!!!
-const computeTotalSavings = (filteredData, costAutomation, costManual) => {
-    const costAutomationNum = parseFloat(costAutomation);
-    const costManualNum = parseFloat(costManual);
-    let total = 0;
-    let costAutomationPerHour;
-    let costManualPerHour;
+const updateDeltaCost = (data, costAutomation, costManual) => data.map(el => {
+    const manualCost = convertSecondsToHours(el.avgRunTime) * el.hostCount * parseFloat(costManual);
+    const automatedCost = convertSecondsToHours(el.elapsed) * parseFloat(costAutomation);
+    const delta = calculateDelta(automatedCost, manualCost);
 
-    filteredData.forEach((datum) => {
-        costAutomationPerHour =
-            convertSecondsToHours(datum.elapsed) * costAutomationNum;
-        costManualPerHour =
-            convertSecondsToHours(datum.calculations.manual.avgRun) *
-            datum.hostCount *
-            costManualNum;
-        total += calculateDelta(costAutomationPerHour, costManualPerHour);
-        datum.delta = calculateDelta(costAutomationPerHour, costManualPerHour);
-        datum.calculations.manual.cost = costManualPerHour;
-        datum.calculations.automated.cost = costAutomationPerHour;
-    });
+    return { ...el, delta, manualCost, automatedCost };
+});
 
-    return total;
-};
+const computeTotalSavings = data => data.reduce((sum, curr) => sum + curr.delta, 0);
 
 const AutomationCalculator = ({ history }) => {
     const toJobExplorer = useRedirect(history, 'jobExplorer');
@@ -94,7 +80,6 @@ const AutomationCalculator = ({ history }) => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ costManual, setCostManual ] = useState('50');
     const [ costAutomation, setCostAutomation ] = useState('20');
-    const [ totalSavings, setTotalSavings ] = useState(0);
     const [ unfilteredData, setUnfilteredData ] = useState([]);
     const [ quickDateRange, setQuickDateRange ] = useState([]);
     const {
@@ -102,6 +87,25 @@ const AutomationCalculator = ({ history }) => {
         queryParams,
         setFromToolbar
     } = useQueryParams(roiConst.defaultParams);
+
+    /**
+     * Modifies one elements avgRunTime in the unfilteredData
+     * and updates all calculated fields.
+     * Used in top templates.
+     */
+    const setDataRunTime = (seconds, id) => {
+        const updatedData = unfilteredData.map(el => {
+            if (el.id === id) {
+                el.avgRunTime = seconds;
+                const updatedDelta = updateDeltaCost([ el ], costAutomation, costManual)[0];
+                return updatedDelta;
+            } else {
+                return el;
+            }
+        });
+
+        setUnfilteredData(updatedData);
+    };
 
     /**
      * Check for preflight error after mounted.
@@ -117,13 +121,13 @@ const AutomationCalculator = ({ history }) => {
     }, []);
 
     /**
-     * Recalculates the total saving after the cost or the data is changed.
+     * Recalculates the delta and costs in the data after the cost or is changed.
      */
     useEffect(() => {
-        setTotalSavings(
-            computeTotalSavings(unfilteredData, costAutomation, costManual)
+        setUnfilteredData(
+            updateDeltaCost(unfilteredData, costAutomation, costManual)
         );
-    }, [ unfilteredData, costAutomation, costManual ]);
+    }, [ costAutomation, costManual ]);
 
     /**
      * Get data from API depending on the queryParam.
@@ -143,7 +147,9 @@ const AutomationCalculator = ({ history }) => {
                 const { quickDateRange } = keysToCamel(explorerOptions);
                 items = keysToCamel(items);
 
-                setUnfilteredData(mapApi(items));
+                setUnfilteredData(
+                    updateDeltaCost(mapApi(items), costAutomation, costManual)
+                );
                 setQuickDateRange(quickDateRange);
             })
             .catch(e => {
@@ -224,7 +230,7 @@ const AutomationCalculator = ({ history }) => {
                         </WrapperLeft>
                         <WrapperRight>
                             <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
-                                <TotalSavings totalSavings={ totalSavings } />
+                                <TotalSavings totalSavings={ computeTotalSavings(unfilteredData) } />
                             </Main>
                             <Main style={ { display: 'flex', flexDirection: 'column', flex: '1 1 0', paddingLeft: '0' } }>
                                 <CalculationCost
@@ -235,7 +241,8 @@ const AutomationCalculator = ({ history }) => {
                                 />
                                 <TopTemplates
                                     redirectToJobExplorer={ redirectToJobExplorer }
-                                    unfilteredData={ unfilteredData }
+                                    data={ unfilteredData }
+                                    setDataRunTime={ setDataRunTime }
                                     setUnfilteredData={ setUnfilteredData }
                                 />
                             </Main>
