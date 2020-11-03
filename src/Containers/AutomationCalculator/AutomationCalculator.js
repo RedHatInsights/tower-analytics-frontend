@@ -212,18 +212,15 @@ const AutomationCalculator = ({ history }) => {
                                     </CardBody>
                                 </Card>
                             </Main>
-                            <AutomationFormula />
+                            <Main>
+                                <AutomationFormula />
+                            </Main>
                         </WrapperLeft>
                         <WrapperRight>
-                            <TotalSavings totalSavings={ totalSavings } />
-                            <Main
-                                style={ {
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    flex: '1 1 0',
-                                    paddingLeft: '0'
-                                } }
-                            >
+                            <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
+                                <TotalSavings totalSavings={ totalSavings } />
+                            </Main>
+                            <Main style={ { display: 'flex', flexDirection: 'column', flex: '1 1 0', paddingLeft: '0' } }>
                                 <CalculationCost
                                     costManual={ costManual }
                                     setCostManual={ setCostManual }
