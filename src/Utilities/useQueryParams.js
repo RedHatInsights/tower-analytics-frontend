@@ -7,111 +7,71 @@ import moment from 'moment';
 import { formatDate } from '../Utilities/helpers';
 
 export const useQueryParams = initial => {
-    const paramsReducer = (state, action) => {
-        switch (action.type) {
+    const paramsReducer = (state, { type, value }) => {
+        switch (type) {
+            /* v0 api reducers */
             case 'SET_STARTDATE':
-                return { ...state, startDate: action.startDate };
+                return { ...state, startDate: value };
             case 'SET_ENDDATE':
-                return { ...state, endDate: action.endDate };
+                return { ...state, endDate: value };
             case 'SET_ID':
-                if (!parseInt(action.id)) {
+                if (!parseInt(value)) {
                     const { id: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, id: parseInt(action.id) };
-            case 'SET_SORT_BY':
-                if (action.sort === 'count:asc' || action.sort === 'count:desc') {
-                    return { ...state, sort_by: action.sort };
-                } else {
-                    const { sort_by: ignored, ...rest } = state;
-                    return rest;
-                }
-
+                return { ...state, id: parseInt(value) };
             case 'SET_LIMIT':
-                if (!parseInt(action.limit)) {
+                if (!parseInt(value.limit)) {
                     const { limit: ignored, ...rest } = state;
                     return rest;
                 }
 
-                return { ...state, limit: parseInt(action.limit) };
+                return { ...state, limit: parseInt(value.limit) };
+            /* v1 api reducers */
             case 'SET_OFFSET':
-                return { ...state, offset: action.offset };
             case 'SET_SEVERITY':
-                if (action.severity.length <= 0) {
-                    const { severity: ignored, ...rest } = state;
-                    return rest;
-                }
-
-                return { ...state, severity: action.severity };
             case 'SET_ATTRIBUTES':
-                return { ...state, attributes: [ ...action.attributes ]};
             case 'SET_JOB_TYPE':
-                if (action.jobType.length <= 0) {
-                    const { job_type: ignored, ...rest } = state;
-                    return rest;
-                }
-
-                return { ...state, job_type: [ ...action.jobType ]};
-
             case 'SET_STATUS':
-                if (action.status.length <= 0) {
-                    const { status: ignored, ...rest } = state;
-                    return rest;
-                }
-
-                return { ...state, status: [ ...action.status ]};
             case 'SET_ORG':
-                if (action.org.length <= 0) {
-                    const { org_id: ignored, ...rest } = state;
-                    return rest;
-                }
-
-                return { ...state, org_id: [ ...action.org ]};
             case 'SET_CLUSTER':
-                if (action.cluster.length <= 0) {
-                    const { cluster_id: ignored, ...rest } = state;
-                    return rest;
-                }
-
-                return { ...state, cluster_id: [ ...action.cluster ]};
             case 'SET_TEMPLATE':
-                if (action.template.length <= 0) {
-                    const { template_id: ignored, ...rest } = state;
-                    return rest;
-                }
-
-                return { ...state, template_id: [ ...action.template ]};
             case 'SET_SORTBY':
-                if (action.sortBy === null) {
-                    const { sort_by: ignored, ...rest } = state;
-                    return rest;
-                }
-
-                return { ...state, sort_by: action.sortBy };
             case 'SET_ROOT_WORKFLOWS_AND_JOBS':
-                return { ...state, only_root_workflows_and_standalone_jobs: action.bool };
-            case 'SET_QUICK_DATE_RANGE':
-                if (action.quickDate === null) {
-                    const { quick_date_range: ignored, ...rest } = state;
-                    return rest;
+                return { ...state, ...value };
+            case 'SET_QUICK_DATE_RANGE': {
+                let newState = { ...state };
+                if (value !== 'custom') {
+                    newState = { ...newState, startDate: '', endDate: '' };
                 }
 
-                return { ...state, quick_date_range: action.quickDate };
+                newState = { ...newState, ...value };
+                return newState;
+            }
+
             case 'SET_START_DATE':
-                if (action.date === null) {
-                    const { start_date: ignored, ...rest } = state;
-                    return rest;
-                }
+            case 'SET_END_DATE': {
+                let newValues = {};
+                Object.entries(value).forEach(([ key, value ]) => {
+                    newValues[key] = formatDate(value);
+                });
+                return { ...state, ...newValues };
+            }
 
-                return { ...state, start_date: formatDate(action.date) };
-            case 'SET_END_DATE':
-                if (action.date === null) {
-                    const { end_date: ignored, ...rest } = state;
-                    return rest;
-                }
-
-                return { ...state, end_date: formatDate(action.date) };
+            case 'RESET_FILTER':
+                return { ...state,
+                    status: [],
+                    quickDateRange: '',
+                    jobType: [],
+                    orgId: [],
+                    clusterId: [],
+                    templateId: [],
+                    sortBy: '',
+                    startDate: '',
+                    endDate: '',
+                    onlyRootWorkflowsAndStandaloneJobs: false
+                };
             default:
                 throw new Error();
         }
@@ -119,14 +79,62 @@ export const useQueryParams = initial => {
 
     const [ queryParams, dispatch ] = useReducer(paramsReducer, { ...initial });
 
+    /**
+     * Converts queryParams object keys to snake case, which is accepted by the API
+     */
+    const urlMappedQueryParams = () => {
+        const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
+        let urlFormatted = {};
+
+        Object.keys(queryParams).forEach((key) => {
+            // Filter out null and empty array elements
+            if (queryParams[key]) {
+                if (Array.isArray(queryParams[key])) {
+                    if (queryParams[key].length < 1) {
+                        return;
+                    }
+                }
+
+                urlFormatted[camelToSnakeCase(key)] = queryParams[key];
+            }
+        });
+
+        return urlFormatted;
+    };
+
+    const actionMapper = {
+        status: 'SET_STATUS',
+        quickDateRange: 'SET_QUICK_DATE_RANGE',
+        jobType: 'SET_JOB_TYPE',
+        orgId: 'SET_ORG',
+        clusterId: 'SET_CLUSTER',
+        templateId: 'SET_TEMPLATE',
+        sortBy: 'SET_SORTBY',
+        startDate: 'SET_START_DATE',
+        endDate: 'SET_END_DATE',
+        onlyRootWorkflowsAndStandaloneJobs: 'SET_ROOT_WORKFLOWS_AND_JOBS'
+    };
+
     return {
         queryParams,
+        urlMappedQueryParams: urlMappedQueryParams(),
         dispatch,
+        setLimit: limit => dispatch({ type: 'SET_LIMIT', value: { limit }}),
+        setOffset: offset => dispatch({ type: 'SET_OFFSET', value: { offset }}),
+        setSeverity: severity => dispatch({ type: 'SET_SEVERITY', value: { severity }}),
+        setFromToolbar: (varName, value = null) => {
+            if (!varName) {
+                dispatch({ type: 'RESET_FILTER' });
+            } else {
+                dispatch({ type: actionMapper[varName], value: { [varName]: value }});
+            }
+        },
+        /* v0 api usage after this line */
         setEndDate: () => {
             const endDate = moment().format('YYYY-MM-DD');
-            dispatch({ type: 'SET_ENDDATE', endDate });
+            dispatch({ type: 'SET_ENDDATE', value: endDate });
         },
-        setId: id => dispatch({ type: 'SET_ID', id }),
+        setId: value => dispatch({ type: 'SET_ID', value }),
         setStartDate: days => {
             let startDate;
             if (days === 7) {
@@ -151,23 +159,8 @@ export const useQueryParams = initial => {
                 .format('YYYY-MM-DD');
             }
 
-            dispatch({ type: 'SET_STARTDATE', startDate });
+            dispatch({ type: 'SET_STARTDATE', value: startDate });
         },
-        setStartDateAsString: startDate => dispatch({ type: 'SET_STARTDATE', startDate }),
-        setSortBy: sort => dispatch({ type: 'SET_SORT_BY', sort }),
-        setLimit: limit => dispatch({ type: 'SET_LIMIT', limit }),
-        setOffset: offset => dispatch({ type: 'SET_OFFSET', offset }),
-        setSeverity: severity => dispatch({ type: 'SET_SEVERITY', severity }),
-        setAttributes: attributes => dispatch({ type: 'SET_ATTRIBUTES', attributes }),
-        setJobType: jobType => dispatch({ type: 'SET_JOB_TYPE', jobType }),
-        setStatus: status => dispatch({ type: 'SET_STATUS', status }),
-        setOrg: org => dispatch({ type: 'SET_ORG', org }),
-        setCluster: cluster => dispatch({ type: 'SET_CLUSTER', cluster }),
-        setTemplate: template => dispatch({ type: 'SET_TEMPLATE', template }),
-        setSortBy2: sortBy => dispatch({ type: 'SET_SORTBY', sortBy }),
-        setRootWorkflowsAndJobs: bool => dispatch({ type: 'SET_ROOT_WORKFLOWS_AND_JOBS', bool }),
-        setQuickDateRange: quickDate => dispatch({ type: 'SET_QUICK_DATE_RANGE', quickDate }),
-        setStart_Date: date => dispatch({ type: 'SET_START_DATE', date }),
-        setEnd_Date: date => dispatch({ type: 'SET_END_DATE', date })
+        setStartDateAsString: value => dispatch({ type: 'SET_STARTDATE', value })
     };
 };

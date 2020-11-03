@@ -16,7 +16,7 @@ const testHook = (callback) => {
     mount(<TestHook callback={ callback } />);
 };
 
-const initialValues = { foo: '1', bar: 2, sort_by: 'count:asc' };
+const initialValues = { foo: '1', bar: 2, sortBy: 'count:asc' };
 
 let page;
 
@@ -26,16 +26,19 @@ beforeEach(() => {
     });
 });
 
+afterEach(() => {
+    page = null;
+});
+
 describe('Utilities/useQueryParams', () => {
     it('returns expected initial values as queryParams ', () => {
         expect(page.queryParams).toEqual(initialValues);
     });
 
-    it('returns setId, setStartDate, setEndDate, setSortBy, and setLimit as methods', () => {
+    it('returns setId, setStartDate, setEndDate, and setLimit as methods', () => {
         expect(page.setId).toBeInstanceOf(Function);
         expect(page.setStartDate).toBeInstanceOf(Function);
         expect(page.setEndDate).toBeInstanceOf(Function);
-        expect(page.setSortBy).toBeInstanceOf(Function);
         expect(page.setLimit).toBeInstanceOf(Function);
     });
 
@@ -47,20 +50,12 @@ describe('Utilities/useQueryParams', () => {
         expect(page.queryParams).toEqual({ ...initialValues, id: 1, limit: 2 });
     });
 
-    it('invoked methods correctly update existing values in queryParams object', () => {
-        act(() => {
-            page.setSortBy('count:desc');
-        });
-        expect(page.queryParams).toEqual({ foo: '1', bar: 2, sort_by: 'count:desc' });
-    });
-
-    it('setId, setLimit, setSortBy correctly handles null, undefined and NaN values', () => {
+    it('setId, setLimit correctly handles null, undefined and NaN values', () => {
         act(() => {
             page.setId(null);
             page.setLimit(undefined);
-            page.setSortBy(NaN);
         });
-        expect(page.queryParams).toEqual({ foo: '1', bar: 2 });
+        expect(page.queryParams).toEqual({ foo: '1', bar: 2, sortBy: 'count:asc' });
     });
 
     it('setEndDate returns current day in `YYYY-MM-DD` string format', () => {
@@ -87,12 +82,6 @@ describe('Utilities/useQueryParams', () => {
             page.setStartDate(days);
         });
         expect(page.queryParams).toEqual({ ...initialValues, startDate: expected });
-    });
-    it('setSortBy returns nothing when specifying a non-column type', () => {
-        act(() => {
-            page.setSortBy('foo');
-        });
-        expect(page.queryParams).toEqual({ foo: '1', bar: 2 });
     });
     it('setLimit returns expected value', () => {
         act(() => {
