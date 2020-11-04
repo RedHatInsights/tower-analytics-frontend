@@ -22,8 +22,7 @@ import {
     FormSelectOption,
     Badge,
     Pagination,
-    PaginationVariant,
-    Title
+    PaginationVariant
 } from '@patternfly/react-core';
 
 import NotificationsList from '../../Components/NotificationsList';
@@ -68,12 +67,6 @@ const DropdownGroup = styled.div`
     }
   }
 `;
-
-const title = (
-    <Title headingLevel="h1">
-        Notifications
-    </Title>
-);
 
 const notificationOptions = [
     {
@@ -219,7 +212,7 @@ const Notifications = () => {
     return (
         <React.Fragment>
             <PageHeader>
-                <PageHeaderTitle title={ title } />
+                <PageHeaderTitle title={ 'Notifications' } />
             </PageHeader>
             { preflightError && (
                 <Main>

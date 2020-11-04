@@ -144,12 +144,6 @@ const WrapperRight = styled.div`
   flex-direction: column;
 `;
 
-const title = (
-    <Title headingLevel="h1">
-        Automation Calculator
-    </Title>
-);
-
 /* helper variables for further date ranges */
 const pastYear = moment().subtract(1, 'year');
 const pastYTD = moment().startOf('year');
@@ -393,7 +387,7 @@ const AutomationCalculator = ({ history }) => {
     return (
     <>
       <PageHeader style={ { flex: '0' } }>
-          <PageHeaderTitle title={ title } />
+          <PageHeaderTitle title={ 'Automation Calculator' } />
       </PageHeader>
       { preflightError && (
           <Main>
