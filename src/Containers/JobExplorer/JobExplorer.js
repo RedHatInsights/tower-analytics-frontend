@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import { formatQueryStrings } from '../../Utilities/formatQueryStrings';
+import { keysToCamel } from '../../Utilities/helpers';
 
 import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
@@ -71,7 +72,10 @@ const initialOptionsParams = {
     attributes: jobExplorer.attributes
 };
 
-const JobExplorer = props => {
+const JobExplorer = ({
+    location: { search },
+    history
+}) => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ apiError, setApiError ] = useState(null);
     const [ jobExplorerData, setJobExplorerData ] = useState([]);
@@ -87,10 +91,9 @@ const JobExplorer = props => {
     const [ quickDateRanges, setQuickDateRanges ] = useState([]);
 
     const { parse } = formatQueryStrings({});
-    const {
-        location: { search }
-    } = props;
-    let initialSearchParams = parse(search, { arrayFormat: 'bracket' });
+    let initialSearchParams = keysToCamel(
+        parse(search, { arrayFormat: 'bracket' })
+    );
     let combined = { ...initialQueryParams, ...initialSearchParams };
     const {
         queryParams,
@@ -107,7 +110,7 @@ const JobExplorer = props => {
         const { jobExplorer } = Paths;
         const { strings, stringify } = formatQueryStrings(urlMappedQueryParams);
         const search = stringify(strings);
-        props.history.push({
+        history.push({
             pathname: jobExplorer,
             search
         });

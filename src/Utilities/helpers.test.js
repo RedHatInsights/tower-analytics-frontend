@@ -14,6 +14,8 @@ import { convertMinsToSeconds } from './helpers.js';
 import { convertSecondsToHours } from './helpers.js';
 import { convertWithCommas } from './helpers.js';
 import { formatJobType } from './helpers.js';
+import { toCamelCase } from './helpers.js';
+import { keysToCamel } from './helpers.js';
 
 describe('Utilities/helpers/isNumeric', () => {
     it('validates 0', () => {
@@ -315,5 +317,29 @@ describe('Utilities/helpers/formatJobType', () => {
     });
     it('returns "Workflow job" for !"job"', () => {
         expect(formatJobType("foo")).toBe('Workflow job');
+    });
+});
+
+describe('Utilities/helpers/toCamelCase', () => {
+    it('returns snake_case string as camelCase', () => {
+        expect(toCamelCase("snake_cased_string")).toBe('snakeCasedString');
+    });
+});
+
+describe('Utilities/helpers/keysToCamel', () => {
+    it('returns snake_case keys as camelCased keys in an object', () => {
+        /* eslint-disable */
+        const initial = {
+            snake_cased: { second_case: []},
+            snake_cased_two: [],
+            snake_case_three: 1
+        };
+        /* eslint-enable */
+        const expected = {
+            snakeCased: { secondCase: []},
+            snakeCasedTwo: [],
+            snakeCaseThree: 1
+        };
+        expect(keysToCamel(initial)).toStrictEqual(expected);
     });
 });
