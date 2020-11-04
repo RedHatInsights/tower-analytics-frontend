@@ -3,11 +3,8 @@ import { stringify } from 'query-string';
 const apiVersion = 'v0';
 const barChartEndpoint = `/api/tower-analytics/${apiVersion}/chart30/`;
 const clustersEndpoint = `/api/tower-analytics/${apiVersion}/clusters/`;
-const groupedBarChartEndpoint = `/api/tower-analytics/${apiVersion}/jobs_by_date_and_org_30/`;
 const modulesEndpoint = `/api/tower-analytics/${apiVersion}/modules/`;
 const notificationsEndPoint = `/api/tower-analytics/${apiVersion}/notifications/`;
-const pieChart1Endpoint = `/api/tower-analytics/${apiVersion}/job_runs_by_org_30/`;
-const pieChart2Endpoint = `/api/tower-analytics/${apiVersion}/job_events_by_org_30/`;
 const preflightEndpoint = `/api/tower-analytics/${apiVersion}/authorized/`;
 const templateJobsEndpoint = `/api/tower-analytics/${apiVersion}/template_jobs/`;
 const templatesEndPoint = `/api/tower-analytics/${apiVersion}/templates/`;
@@ -68,9 +65,49 @@ export const readChart30 = ({ params = {}}) => {
 
 export const readJobsByDateAndOrg = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
-    let url = new URL(groupedBarChartEndpoint, formattedUrl);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url).then(handleResponse);
+    let url = new URL(jobExplorerEndpoint, formattedUrl);
+    const { sort_by: ignored, ...rest } = params;
+    Object.keys(rest).forEach(key => url.searchParams.append(key, rest[key]));
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+            ...rest,
+            group_by_time: true,
+            group_by: 'org',
+            sort_by: `id:desc`
+        })
+    }).then(handleResponse);
+};
+
+export const readJobRunsByOrg = ({ params = {}}) => {
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(jobExplorerEndpoint, formattedUrl);
+    const { sort_by, ...rest } = params;
+    Object.keys(rest).forEach(key => url.searchParams.append(key, rest[key]));
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+            ...rest,
+            group_by: 'org',
+            include_others: true,
+            sort_by: `total_count:${sort_by}`
+        })
+    }).then(handleResponse);
+};
+
+export const readJobEventsByOrg = ({ params = {}}) => {
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(jobExplorerEndpoint, formattedUrl);
+    const { sort_by, ...rest } = params;
+    Object.keys(rest).forEach(key => url.searchParams.append(key, rest[key]));
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({
+            ...rest,
+            group_by: 'org',
+            include_others: true,
+            sort_by: `host_task_count:${sort_by}` })
+    }).then(handleResponse);
 };
 
 export const readModules = ({ params = {}}) => {
@@ -118,20 +155,6 @@ export const readJobExplorer = ({ params = {}}) => {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);
-};
-
-export const readJobRunsByOrg = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(pieChart1Endpoint, formattedUrl);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url).then(handleResponse);
-};
-
-export const readJobEventsByOrg = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(pieChart2Endpoint, formattedUrl);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url).then(handleResponse);
 };
 
 export const readROI = ({ params = {}}) => {

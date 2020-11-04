@@ -73,15 +73,15 @@ const timeFrameOptions = [
 
 const sortOptions = [
     { value: 'please choose', label: 'Order By', disabled: true },
-    { value: 'count:desc', label: 'Top 5 Orgs', disabled: false },
-    { value: 'count:asc', label: 'Bottom 5 Orgs', disabled: false },
+    { value: 'desc', label: 'Top 5 Orgs', disabled: false },
+    { value: 'asc', label: 'Bottom 5 Orgs', disabled: false },
     { value: 'all', label: 'All Orgs', disabled: false }
 ];
 
 const initialQueryParams = {
     startDate: moment().subtract(1, 'month').format('YYYY-MM-DD'),
     endDate: moment().format('YYYY-MM-DD'),
-    sort_by: 'count:desc',
+    sortBy: 'desc',
     limit: 5
 };
 
@@ -89,25 +89,24 @@ const OrganizationStatistics = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ pieChart1Data, setPieChart1Data ] = useState([]);
     const [ pieChart2Data, setPieChart2Data ] = useState([]);
-    const [ groupedBarChartData, setGroupedBarChartData ] = useState([]);
+    const [ orgsChartData, setorgsChartData ] = useState([]);
     const [ timeframe, setTimeframe ] = useState(31);
-    const [ sortOrder, setSortOrder ] = useState('count:desc');
-    const [ firstRender, setFirstRender ] = useState(true);
     const [ isLoading, setIsLoading ] = useState(true);
     const {
         queryParams,
         setEndDate,
         setStartDate,
-        setSortBy,
-        setLimit
+        setFromToolbar,
+        setLimit,
+        urlMappedQueryParams
     } = useQueryParams(initialQueryParams);
 
     const setLimitValue = (val) => {
         let limit;
-        if (val === 'count:asc' || val === 'count:desc') {
+        if (val === 'asc' || val === 'desc') {
             limit = 5;
         } else {
-            limit = 200;
+            limit = 25;
         }
 
         return setLimit(limit);
@@ -115,66 +114,53 @@ const OrganizationStatistics = () => {
 
     useEffect(() => {
         insights.chrome.appNavClick({ id: 'organization-statistics', secondaryNav: true });
+        window.insights.chrome.auth.getUser().then(() =>
+            preflightRequest().catch((error) => {
+                setPreFlightError({ preflightError: error });
+            })
+        );
     }, []);
 
+    const orgsChartMapper = data => data.map(el => ({
+        date: new Date(el.date),
+        items: el.items.map(k => ({
+            id: k.id,
+            date: new Date(el.date),
+            value: k.total_count,
+            name: k.name || 'No organization'
+        }))
+    }));
+
+    const pieChartMapper = data => data.map(el => ({
+        id: el.id,
+        count: el.host_count,
+        name: el.name || 'No organization'
+    }));
+
     useEffect(() => {
-        let ignore = false;
-        const fetchEndpoints = () => {
-            return Promise.all(
-                [
-                    readJobsByDateAndOrg({ params: queryParams }),
-                    readJobRunsByOrg({ params: queryParams }),
-                    readJobEventsByOrg({ params: queryParams })
-                ].map((p) => p.catch(() => []))
-            );
-        };
+        let didCancel = false;
+        setIsLoading(true);
+        window.insights.chrome.auth.getUser().then(() => Promise.all(
+            [
+                readJobsByDateAndOrg({ params: urlMappedQueryParams }),
+                readJobRunsByOrg({ params: urlMappedQueryParams }),
+                readJobEventsByOrg({ params: urlMappedQueryParams })
+            ].map((p) => p.catch(() => []))
+        ).then(
+            ([
+                { dates: orgsChartData = []},
+                { items: pieChart1Data = []},
+                { items: pieChart2Data = []}
+            ]) => {
+                if (didCancel) { return; }
 
-        const update = async () => {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            fetchEndpoints().then(
-                ([
-                    { dates: groupedBarChartData = []},
-                    { usages: pieChart1Data = []},
-                    { usages: pieChart2Data = []}
-                ]) => {
-                    setGroupedBarChartData(groupedBarChartData);
-                    setPieChart1Data(pieChart1Data);
-                    setPieChart2Data(pieChart2Data);
-                    setIsLoading(false);
-                }
-            );
-        };
+                setorgsChartData(orgsChartMapper(orgsChartData));
+                setPieChart1Data(pieChartMapper(pieChart1Data));
+                setPieChart2Data(pieChartMapper(pieChart2Data));
+            }
+        ).finally(() => setIsLoading(false)));
 
-        async function initializeWithPreflight() {
-            setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
-            await preflightRequest().catch((error) => {
-                setPreFlightError({ preflightError: error });
-            });
-            fetchEndpoints().then(
-                ([
-                    { dates: groupedBarChartData = []},
-                    { usages: pieChart1Data = []},
-                    { usages: pieChart2Data = []}
-                ]) => {
-                    if (!ignore) {
-                        setGroupedBarChartData(groupedBarChartData);
-                        setPieChart1Data(pieChart1Data);
-                        setPieChart2Data(pieChart2Data);
-                        setFirstRender(false);
-                        setIsLoading(false);
-                    }
-                }
-            );
-        }
-
-        if (firstRender) {
-            initializeWithPreflight();
-            return () => (ignore = true);
-        } else {
-            update();
-        }
+        return () => didCancel = true;
     }, [ queryParams ]);
 
     return (
@@ -194,15 +180,14 @@ const OrganizationStatistics = () => {
                   <CardTitle style={ { paddingBottom: '0', paddingTop: '0' } }>
                       <h2>
                           <FilterIcon style={ { marginRight: '10px' } } />
-                  Filter
+                          Filter
                       </h2>
                       <div style={ { display: 'flex', justifyContent: 'flex-end' } }>
                           <FormSelect
                               name="sortOrder"
-                              value={ sortOrder }
+                              value={ queryParams.sortBy }
                               onChange={ (value) => {
-                                  setSortOrder(value);
-                                  setSortBy(value);
+                                  setFromToolbar('sortBy', value);
                                   setLimitValue(value);
                               } }
                               aria-label="Select Cluster"
@@ -248,12 +233,12 @@ const OrganizationStatistics = () => {
                   </CardTitle>
                   <CardBody>
                       { isLoading && <LoadingState /> }
-                      { !isLoading && groupedBarChartData.length <= 0 && <NoData /> }
-                      { !isLoading && groupedBarChartData.length > 0 && (
+                      { !isLoading && orgsChartData.length <= 0 && <NoData /> }
+                      { !isLoading && orgsChartData.length > 0 && (
                           <GroupedBarChart
                               margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
                               id="d3-grouped-bar-chart-root"
-                              data={ groupedBarChartData }
+                              data={ orgsChartData }
                               timeFrame={ timeframe }
                           />
                       ) }
