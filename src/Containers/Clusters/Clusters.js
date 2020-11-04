@@ -25,8 +25,7 @@ import {
     CardBody,
     CardTitle as PFCardTitle,
     FormSelect,
-    FormSelectOption,
-    Title
+    FormSelectOption
 } from '@patternfly/react-core';
 
 import { FilterIcon } from '@patternfly/react-icons';
@@ -51,11 +50,6 @@ const CardTitle = styled(PFCardTitle)`
     }
   }
 `;
-const title = (
-    <Title headingLevel="h1">
-        Clusters
-    </Title>
-);
 
 const timeFrameOptions = [
     { value: 'please choose', label: 'Select date range', disabled: true },
@@ -143,7 +137,7 @@ const Clusters = ({ history }) => {
     return (
         <React.Fragment>
             <PageHeader>
-                <PageHeaderTitle title={ title } />
+                <PageHeaderTitle title={ 'Clusters' } />
             </PageHeader>
             { preflightError && (
                 <Main>

@@ -22,8 +22,7 @@ import {
     CardBody,
     CardTitle as PFCardTitle,
     FormSelect,
-    FormSelectOption,
-    Title
+    FormSelectOption
 } from '@patternfly/react-core';
 
 import { FilterIcon } from '@patternfly/react-icons';
@@ -65,12 +64,6 @@ const CardContainer = styled.div`
 const TopCard = styled(Card)`
   min-height: 500px;
 `;
-
-const title = (
-    <Title headingLevel="h1">
-        Organization Statistics
-    </Title>
-);
 
 const timeFrameOptions = [
     { value: 'please choose', label: 'Select Date Range', disabled: true },
@@ -184,7 +177,7 @@ const OrganizationStatistics = () => {
     return (
         <React.Fragment>
             <PageHeader>
-                <PageHeaderTitle title={ title } />
+                <PageHeaderTitle title={ 'Organization Statistics' } />
             </PageHeader>
             { preflightError && (
                 <Main>

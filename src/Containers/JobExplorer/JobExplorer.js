@@ -29,8 +29,7 @@ import {
     CardBody,
     CardHeader as PFCardHeader,
     Pagination as PFPagination,
-    PaginationVariant,
-    Title
+    PaginationVariant
 } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
@@ -174,12 +173,6 @@ const JobExplorer = props => {
         return offsetVal;
     };
 
-    const title = (
-        <Title headingLevel="h1">
-          Job Explorer
-        </Title>
-    );
-
     const handleSetPage = page => {
         const nextOffset = returnOffsetVal(page);
         setOffset(nextOffset);
@@ -196,7 +189,7 @@ const JobExplorer = props => {
     return (
         <React.Fragment>
             <PageHeader>
-                <PageHeaderTitle title={ title } />
+                <PageHeaderTitle title={ 'Job Explorer' } />
             </PageHeader>
 
             { preflightError && (
