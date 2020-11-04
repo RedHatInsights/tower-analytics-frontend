@@ -50,3 +50,17 @@ export const roi = {
         granularity: 'monthly'
     }
 };
+
+export const organizationStatistics = {
+    defaultParams: {
+        status: [],
+        orgId: [],
+        quickDateRange: 'last_30_days',
+        sortBy: 'desc',
+        limit: 5
+    },
+    sortBy: [
+        { key: 'desc', value: 'Top 5 Orgs' },
+        { key: 'asc', value: 'Bottom 5 Orgs' }
+    ]
+};
