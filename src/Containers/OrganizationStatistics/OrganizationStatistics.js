@@ -6,6 +6,8 @@ import { useQueryParams } from '../../Utilities/useQueryParams';
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
 import EmptyState from '../../Components/EmptyState';
+import ApiErrorState from '../../Components/ApiErrorState';
+
 import {
     preflightRequest,
     readJobsByDateAndOrg,
@@ -69,6 +71,7 @@ const OrganizationStatistics = () => {
     const [ orgsChartData, setorgsChartData ] = useState([]);
     const [ quickDateRange, setQuickDateRange ] = useState([]);
     const [ isLoading, setIsLoading ] = useState(true);
+    const [ apiError, setApiError ] = useState(null);
     const {
         queryParams,
         setFromToolbar,
@@ -110,21 +113,21 @@ const OrganizationStatistics = () => {
                 readJobRunsByOrg({ params: urlMappedQueryParams }),
                 readJobEventsByOrg({ params: urlMappedQueryParams })
             ].map((p) => p.catch(() => []))
-        ).then(
-            ([
-                options,
-                { dates: orgsChartData = []},
-                { items: pieChart1Data = []},
-                { items: pieChart2Data = []}
-            ]) => {
-                if (didCancel) { return; }
+        ).then(([
+            options,
+            { dates: orgsChartData = []},
+            { items: pieChart1Data = []},
+            { items: pieChart2Data = []}
+        ]) => {
+            if (didCancel) { return; }
 
-                setQuickDateRange(options.quick_date_range);
-                setorgsChartData(orgsChartMapper(orgsChartData));
-                setPieChart1Data(pieChartMapper(pieChart1Data));
-                setPieChart2Data(pieChartMapper(pieChart2Data));
-            }
-        ).finally(() => setIsLoading(false)));
+            setQuickDateRange(options.quick_date_range);
+            setorgsChartData(orgsChartMapper(orgsChartData));
+            setPieChart1Data(pieChartMapper(pieChart1Data));
+            setPieChart2Data(pieChartMapper(pieChart2Data));
+        })
+        .catch(e => setApiError(e.error))
+        .finally(() => setIsLoading(false)));
 
         return () => didCancel = true;
     }, [ queryParams ]);
@@ -161,9 +164,10 @@ const OrganizationStatistics = () => {
                       <h2>Organization Status</h2>
                   </CardTitle>
                   <CardBody>
-                      { isLoading && <LoadingState /> }
-                      { !isLoading && orgsChartData.length <= 0 && <NoData /> }
-                      { !isLoading && orgsChartData.length > 0 && (
+                      { apiError && <ApiErrorState message={ apiError } /> }
+                      { !apiError && isLoading && <LoadingState /> }
+                      { !apiError && !isLoading && orgsChartData.length <= 0 && <NoData /> }
+                      { !apiError && !isLoading && orgsChartData.length > 0 && (
                           <GroupedBarChart
                               margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
                               id="d3-grouped-bar-chart-root"
@@ -181,9 +185,10 @@ const OrganizationStatistics = () => {
                                   Job Runs by Organization
                               </h2>
                           </CardTitle>
-                          { isLoading && <LoadingState /> }
-                          { !isLoading && pieChart1Data.length <= 0 && <NoData /> }
-                          { !isLoading && pieChart1Data.length > 0 && (
+                          { apiError && <ApiErrorState message={ apiError } /> }
+                          { !apiError && isLoading && <LoadingState /> }
+                          { !apiError && !isLoading && pieChart1Data.length <= 0 && <NoData /> }
+                          { !apiError && !isLoading && pieChart1Data.length > 0 && (
                               <PieChart
                                   margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
                                   id="d3-donut-1-chart-root"
@@ -200,9 +205,10 @@ const OrganizationStatistics = () => {
                                   Usage by Organization (Tasks)
                               </h2>
                           </CardTitle>
-                          { isLoading && <LoadingState /> }
-                          { !isLoading && pieChart2Data.length <= 0 && <NoData /> }
-                          { !isLoading && pieChart2Data.length > 0 && (
+                          { apiError && <ApiErrorState message={ apiError } /> }
+                          { !apiError && isLoading && <LoadingState /> }
+                          { !apiError && !isLoading && pieChart2Data.length <= 0 && <NoData /> }
+                          { !apiError && !isLoading && pieChart2Data.length > 0 && (
                               <PieChart
                                   margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
                                   id="d3-donut-2-chart-root"
