@@ -8,7 +8,7 @@ import initializeChart from './BaseChart';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
 import Tooltip from '../Utilities/Tooltip';
-import { formatQueryStrings } from '../Utilities/formatQueryStrings';
+import { stringify } from 'query-string';
 import { Paths } from '../paths';
 import { formatDate } from '../Utilities/helpers';
 
@@ -34,8 +34,7 @@ class BarChart extends Component {
             quick_date_range: 'custom',
             status: [ 'failed', 'successful' ]
         };
-        const { strings, stringify } = formatQueryStrings(initialQueryParams);
-        const search = stringify(strings);
+        const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
         this.props.history.push({
             pathname: jobExplorer,
             search

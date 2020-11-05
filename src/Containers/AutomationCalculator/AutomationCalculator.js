@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
+import { stringify } from 'query-string';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
@@ -10,7 +11,6 @@ import NoData from '../../Components/NoData';
 import EmptyState from '../../Components/EmptyState';
 import { preflightRequest, readROI } from '../../Api';
 import { Paths } from '../../paths';
-import { formatQueryStrings } from '../../Utilities/formatQueryStrings';
 
 import {
     Main,
@@ -376,8 +376,7 @@ const AutomationCalculator = ({ history }) => {
             quick_date_range: 'last_30_days'
         };
 
-        const { strings, stringify } = formatQueryStrings(initialQueryParams);
-        const search = stringify(strings);
+        const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
         history.push({
             pathname: jobExplorer,
             search

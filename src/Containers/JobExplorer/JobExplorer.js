@@ -1,9 +1,9 @@
 /*eslint camelcase: ["error", {allow: ["setStart_Date","setEnd_Date","cluster_id","org_id","job_type","template_id","quick_date_range","sort_by"]}]*/
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { parse, stringify } from 'query-string';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import { formatQueryStrings } from '../../Utilities/formatQueryStrings';
 import { keysToCamel } from '../../Utilities/helpers';
 
 import styled from 'styled-components';
@@ -90,7 +90,6 @@ const JobExplorer = ({
     const [ jobTypes, setJobTypes ] = useState([]);
     const [ quickDateRanges, setQuickDateRanges ] = useState([]);
 
-    const { parse } = formatQueryStrings({});
     let initialSearchParams = keysToCamel(
         parse(search, { arrayFormat: 'bracket' })
     );
@@ -108,8 +107,7 @@ const JobExplorer = ({
 
     const updateURL = () => {
         const { jobExplorer } = Paths;
-        const { strings, stringify } = formatQueryStrings(urlMappedQueryParams);
-        const search = stringify(strings);
+        const search = stringify(urlMappedQueryParams, { arrayFormat: 'bracket' });
         history.push({
             pathname: jobExplorer,
             search
