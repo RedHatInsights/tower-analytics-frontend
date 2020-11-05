@@ -4,8 +4,7 @@
 /*eslint max-len: ["error", { "ignoreTemplateLiterals": true }]*/
 /*eslint max-len: ["error", { "ignoreStrings": true }]*/
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
-
-import { formatQueryStrings } from './Utilities/formatQueryStrings';
+import { stringify } from 'query-string';
 
 const apiVersion = 'v0';
 const barChartEndpoint = `/api/tower-analytics/${apiVersion}/chart30/`;
@@ -117,8 +116,7 @@ export const readJobExplorer = ({ params = {}}) => {
         offset,
         sort_by
     };
-    const { strings, stringify } = formatQueryStrings(paginationParams);
-    const qs = stringify(strings);
+    const qs = stringify(paginationParams);
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(jobExplorerEndpoint, formattedUrl);
     url.search = qs;
