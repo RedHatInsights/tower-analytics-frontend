@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { mount } from 'enzyme';
 import NotificationsList from './NotificationsList/';
 
@@ -68,7 +67,6 @@ describe('Components/NotificationsList', () => {
             />
         );
         const notificationTemplate = wrapper.find('AllNotificationTemplate');
-        console.log(wrapper.debug());
         const alertItem = notificationTemplate.find(notificationDrawerListItem);
         expect(alertItem.length).toEqual(notifications.length);
     });
