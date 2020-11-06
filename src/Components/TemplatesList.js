@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import LoadingState from '../Components/LoadingState';
 import NoData from '../Components/NoData';
 import { Paths } from '../paths';
-import { formatQueryStrings } from '../Utilities/formatQueryStrings';
+import { stringify } from 'query-string';
 
 import {
     Button,
@@ -143,8 +143,7 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
             cluster_id: clusterId
         };
 
-        const { strings, stringify } = formatQueryStrings(initialQueryParams);
-        const search = stringify(strings);
+        const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
         history.push({
             pathname: jobExplorer,
             search

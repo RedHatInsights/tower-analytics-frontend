@@ -10,7 +10,7 @@ import * as d3 from 'd3';
 import Legend from '../Utilities/Legend';
 import { Paths } from '../paths';
 import { formatDate } from '../Utilities/helpers';
-import { formatQueryStrings } from '../Utilities/formatQueryStrings';
+import { stringify } from 'query-string';
 import { pfmulti } from '../Utilities/colors';
 import styled from 'styled-components';
 
@@ -216,8 +216,8 @@ class GroupedBarChart extends Component {
             quick_date_range: 'custom',
             org_id
         };
-        const { strings, stringify } = formatQueryStrings(initialQueryParams);
-        const search = stringify(strings);
+
+        const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
         this.props.history.push({
             pathname: jobExplorer,
             search
