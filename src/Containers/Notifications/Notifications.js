@@ -20,9 +20,9 @@ import {
     CardTitle as PFCardTitle,
     FormSelect,
     FormSelectOption,
-    Badge,
     Pagination,
-    PaginationVariant
+    PaginationVariant,
+    NotificationDrawer
 } from '@patternfly/react-core';
 
 import NotificationsList from '../../Components/NotificationsList';
@@ -33,15 +33,6 @@ const CardTitle = styled(PFCardTitle)`
 
   @media screen and (max-width: 1035px) {
     display: block;
-  }
-`;
-
-const TitleWithBadge = styled.div`
-  display: flex;
-  align-items: center;
-
-  h2 {
-    margin-right: 10px;
   }
 `;
 
@@ -224,12 +215,6 @@ const Notifications = () => {
           <Main>
               <Card>
                   <CardTitle>
-                      <TitleWithBadge>
-                          <h2>
-                              <strong>Notifications</strong>
-                          </h2>
-                          <Badge isRead>{ meta.count ? meta.count : 0 }</Badge>
-                      </TitleWithBadge>
                       <DropdownGroup>
                           <FormSelect
                               name="selectedCluster"
@@ -273,17 +258,35 @@ const Notifications = () => {
                               ) }
                           </FormSelect>
                       </DropdownGroup>
+                      <Pagination
+                          isCompact
+                          itemCount={ meta.count ? meta.count : 0 }
+                          widgetId="pagination-options-menu-bottom"
+                          perPageOptions={ perPageOptions }
+                          perPage={ queryParams.limit }
+                          page={ currPage }
+                          dropDirection={ 'up' }
+                          onPerPageSelect={ (_event, perPage, page) => {
+                              handlePerPageSelect(perPage, page);
+                          } }
+                          onSetPage={ (_event, pageNumber) => {
+                              handleSetPage(pageNumber);
+                          } }
+                          style={ { marginTop: '20px' } }
+                      />
                   </CardTitle>
                   <CardBody>
                       { isLoading && <LoadingState /> }
                       { !isLoading && notificationsData.length <= 0 && <NoData /> }
                       { !isLoading && notificationsData.length > 0 && (
                   <>
-                    <NotificationsList
-                        filterBy={ queryParams.severity || '' }
-                        options={ notificationOptions }
-                        notifications={ notificationsData }
-                    />
+                    <NotificationDrawer>
+                        <NotificationsList
+                            filterBy={ queryParams.severity || '' }
+                            options={ notificationOptions }
+                            notifications={ notificationsData }
+                        />
+                    </NotificationDrawer>
                     <Pagination
                         itemCount={ meta.count ? meta.count : 0 }
                         widgetId="pagination-options-menu-bottom"
