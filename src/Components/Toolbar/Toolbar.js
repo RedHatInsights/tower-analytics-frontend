@@ -121,7 +121,10 @@ const FilterableToolbar = ({
         <Card isFlat style={ { backgroundColor: '#EEEEEE' } }>
             <CardHeader>
                 <CardActions>
-                    <Button variant='plain'>
+                    <Button
+                        variant='plain'
+                        onClick={ () => setSettingsExpanded(!settingsExpanded) }
+                    >
                         <TimesIcon />
                     </Button>
                 </CardActions>
