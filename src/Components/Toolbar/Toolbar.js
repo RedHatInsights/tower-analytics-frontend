@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import {
     Toolbar,
-    ToolbarContent as PFToolbarContent,
-    ToolbarToggleGroup,
-    ToolbarGroup as PFToolbarGroup,
+    ToolbarContent,
+    ToolbarGroup,
     Button,
     ToolbarItem,
     Tooltip,
@@ -24,20 +22,6 @@ import CategoryDropdown from './CategoryDropdown';
 import CustomDateSelector from './CustomDateSelector';
 import { optionsForCategories } from './constants';
 import ToolbarFilterItem from './ToolbarFilterItem';
-
-const ToolbarGroup = styled(PFToolbarGroup)`
-  button {
-    .pf-c-select__toggle-wrapper {
-      flex-wrap: nowrap;
-    }
-  }
-`;
-
-const ToolbarContent = styled(PFToolbarContent)`
-  .pf-c-toolbar__content-section {
-    justify-content: space-between;
-  }
-`;
 
 const FilterableToolbar = ({
     categories,
@@ -165,27 +149,25 @@ const FilterableToolbar = ({
                 collapseListedFiltersBreakpoint="xl"
             >
                 <ToolbarContent>
-                    <ToolbarToggleGroup toggleIcon={ <FilterIcon /> } breakpoint="xl">
-                        <Button variant="control">
-                            <FilterIcon />
-                        </Button>
-                        { Object.keys(filterCategories).length > 0 && <FilterCategoriesGroup /> }
-                        { quickDateRange && <QuickDateGroup /> }
-                        { sortBy && <SortByGroup /> }
-                        {
-                            hasSettings &&
-                            <ToolbarItem>
-                                <Button
-                                    variant="plain"
-                                    onClick={ () => setSettingsExpanded(!settingsExpanded) }
-                                    aria-label="settings"
-                                    isActive={ settingsExpanded }
-                                >
-                                    <CogIcon />
-                                </Button>
-                            </ToolbarItem>
-                        }
-                    </ToolbarToggleGroup>
+                    <Button variant="control">
+                        <FilterIcon />
+                    </Button>
+                    { Object.keys(filterCategories).length > 0 && <FilterCategoriesGroup /> }
+                    { quickDateRange && <QuickDateGroup /> }
+                    { sortBy && <SortByGroup /> }
+                    {
+                        hasSettings &&
+                        <ToolbarItem>
+                            <Button
+                                variant="plain"
+                                onClick={ () => setSettingsExpanded(!settingsExpanded) }
+                                aria-label="settings"
+                                isActive={ settingsExpanded }
+                            >
+                                <CogIcon />
+                            </Button>
+                        </ToolbarItem>
+                    }
                     {
                         pagination &&
                         <ToolbarItem varian="pagination" visibility={ { default: 'hidden', lg: 'visible' } }>
