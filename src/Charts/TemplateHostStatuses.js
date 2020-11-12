@@ -36,6 +36,10 @@ const colorSwitcher = (bit) => {
 
 const TemplateHostStatuses = (props) =>{
 
+  const { template_id, data } = props;
+  console.log('incoming id', template_id);
+  console.log('incoming data', data);
+
   // set a ref on the containing div to track for resizes ...
   const ref = useRef(null);
   const { width = 100, height } = useResizeObserver({ ref });
@@ -44,14 +48,21 @@ const TemplateHostStatuses = (props) =>{
   const divHeight = 90;
 
   // TODO: what is the shape of the api data? ...
-  const hostCount = 10;
-  const taskCount = 15;
+  const hostCount = data.host_count;
+  const taskCount = data.total_count;
+
+  const ok_pos = Math.floor((data.ok_host_count / data.host_count) * 100);
+  const changed_pos = Math.floor((data.changed_host_count / data.host_count) * 100);
+  const skipped_pos = Math.floor((data.skipped_host_count / data.host_count) * 100);
+  const failed_pos = Math.floor((data.failed_host_count / data.host_count) * 100);
+  const unreachable_pos = Math.floor((data.unreachable_host_count / data.host_count) * 100);
+
   let testdata = [
-    {'name': 'ok', x: '', y: 62, y0: null, label: 'Ok'},
-    {'name': 'skipped', x: '', y: 15, y0: null, label: 'Skipped'},
-    {'name': 'changed', x: '', y: 8, y0: null, label: 'Changed'},
-    {'name': 'failed', x: '', y: 10, y0: null, label: 'Failed'},
-    {'name': 'unreachable', x: '', y: 5, y0: null, label: 'Unreachable'},
+    {'name': 'ok', x: '', y: ok_pos, y0: null, label: 'Ok'},
+    {'name': 'skipped', x: '', y: skipped_pos, y0: null, label: 'Skipped'},
+    {'name': 'changed', x: '', y: changed_pos, y0: null, label: 'Changed'},
+    {'name': 'failed', x: '', y: failed_pos, y0: null, label: 'Failed'},
+    {'name': 'unreachable', x: '', y: unreachable_pos, y0: null, label: 'Unreachable'},
   ];
 
   // set the fill color and "y" axis offset for each subbar ...

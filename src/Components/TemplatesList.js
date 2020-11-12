@@ -1,3 +1,6 @@
+/*eslint-disable */
+/*eslint camelcase: ["error", {allow: ["template_id", "job_type", "cluster_id", "start_date", "end_date", "quick_date_range"]}]*/
+
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { formatDateTime, formatSeconds, formatPercentage } from '../Utilities/helpers';
@@ -6,6 +9,9 @@ import LoadingState from '../Components/LoadingState';
 import NoData from '../Components/NoData';
 import { Paths } from '../paths';
 import { stringify } from 'query-string';
+
+import { readTemplateHostsStats } from '../Api';
+import TemplateHostStatuses from '../Charts/TemplateHostStatuses';
 
 import {
     Button,
@@ -109,6 +115,7 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ selectedId, setSelectedId ] = useState(null);
     const [ selectedTemplate, setSelectedTemplate ] = useState([]);
+    const [ selectedData, setSelectedData ] = useState({});
     const [ relatedJobs, setRelatedJobs ] = useState([]);
 
     useEffect(() => {
@@ -122,6 +129,11 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
                 setSelectedTemplate(data);
                 setRelatedJobs(data.related_jobs);
             });
+            readTemplateHostsStats(selectedId).then(hdata => {
+                console.log('fetched data', hdata.items[0]);
+                setSelectedData(hdata.items[0]);
+            });
+            console.log(selectedData);
         };
 
         if (selectedId) {
@@ -232,6 +244,7 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
                   </Button>
               ] }
           >
+              <TemplateHostStatuses template_id={ selectedId } data={ selectedData }/>
               <DataList aria-label="Selected Template Details">
                   <PFDataListItemNoBorder
                       aria-labelledby="Selected Template Statistics"

@@ -54,6 +54,51 @@ export const readTemplateJobs = (id, { params = {}}) => {
     return fetch(url).then(handleResponse);
 };
 
+export const readTemplateHostsStats = (id) => {
+    if (!id) {
+        return;
+    }
+
+    const params = {
+        template_id: [ id ],
+        attributes: [
+            'host_count',
+            'ok_host_count',
+            'failed_host_count',
+            'unreachable_host_count',
+            'changed_host_count',
+            'skipped_host_count',
+            'elapsed',
+            'job_type',
+            'most_failed_tasks',
+            'successful_count',
+            'failed_count',
+            'total_count',
+            'average_elapsed_per_host',
+            'host_task_count'
+        ],
+        group_by: 'template',
+        job_type: [ 'job' ]
+    };
+
+    /*
+    const paginationParams = {
+        limit,
+        offset,
+        sort_by
+    };
+    */
+    //const qs = stringify(paginationParams);
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(jobExplorerEndpoint, formattedUrl);
+    //url.search = qs;
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(params)
+    }).then(handleResponse);
+
+};
+
 export const preflightRequest = () => {
     return fetch(preflightEndpoint).then(handleResponse);
 };
