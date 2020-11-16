@@ -6,12 +6,15 @@ const mockStore = configureStore();
 const store = mockStore({});
 
 export const history = {
-    push: jest.fn()
+    push: jest.fn(),
+    replace: jest.fn()
 };
 
-export const search = '';
+const defaultParams = {
+    search: ''
+};
 
-export const mountPage = Component => mount(
+export const mountPage = (Component, { search } = defaultParams) => mount(
     <Provider store={ store } >
         <Component history={ history } location={ { search } }/>
     </Provider>

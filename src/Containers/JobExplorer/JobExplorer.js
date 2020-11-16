@@ -100,7 +100,7 @@ const JobExplorer = ({
                 readJobExplorer({ params: urlMappedQueryParams }),
                 readJobExplorerOptions({ params: urlMappedQueryParams })
             ]).then(([
-                { items: jobExplorerData = [], meta },
+                { items: jobExplorerData = [], meta = {}},
                 options
             ]) => {
                 setJobExplorerData(jobExplorerData);
@@ -155,7 +155,7 @@ const JobExplorer = ({
                                 setFilters={ setFromToolbar }
                                 pagination={
                                     <Pagination
-                                        itemCount={ meta.count ? meta.count : 0 }
+                                        itemCount={ meta && meta.count ? meta.count : 0 }
                                         widgetId="pagination-options-menu-top"
                                         perPageOptions={ perPageOptions }
                                         perPage={ queryParams.limit }
@@ -176,27 +176,23 @@ const JobExplorer = ({
                             { apiError && <ApiErrorState message={ apiError } /> }
                             { !apiError && isLoading && <LoadingState /> }
                             { !apiError && !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
-                            { !apiError && !isLoading && jobExplorerData.length > 0 && (
-                              <>
-                                <JobExplorerList jobs={ jobExplorerData } />
-                                <Pagination
-                                    itemCount={ meta.count ? meta.count : 0 }
-                                    widgetId="pagination-options-menu-bottom"
-                                    perPageOptions={ perPageOptions }
-                                    perPage={ queryParams.limit }
-                                    page={ currPage }
-                                    variant={ PaginationVariant.bottom }
-                                    dropDirection={ 'up' }
-                                    onPerPageSelect={ (_event, perPage, page) => {
-                                        handlePerPageSelect(perPage, page);
-                                    } }
-                                    onSetPage={ (_event, pageNumber) => {
-                                        handleSetPage(pageNumber);
-                                    } }
-                                    style={ { marginTop: '20px' } }
-                                />
-                              </>
-                            ) }
+                            { !apiError && !isLoading && jobExplorerData.length > 0 && (<JobExplorerList jobs={ jobExplorerData } />) }
+                            <Pagination
+                                itemCount={ meta && meta.count ? meta.count : 0 }
+                                widgetId="pagination-options-menu-bottom"
+                                perPageOptions={ perPageOptions }
+                                perPage={ queryParams.limit }
+                                page={ currPage }
+                                variant={ PaginationVariant.bottom }
+                                dropDirection={ 'up' }
+                                onPerPageSelect={ (_event, perPage, page) => {
+                                    handlePerPageSelect(perPage, page);
+                                } }
+                                onSetPage={ (_event, pageNumber) => {
+                                    handleSetPage(pageNumber);
+                                } }
+                                style={ { marginTop: '20px' } }
+                            />
                         </CardBody>
                     </Card>
                 </Main>
