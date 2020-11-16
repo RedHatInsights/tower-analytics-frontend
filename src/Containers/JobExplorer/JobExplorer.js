@@ -108,16 +108,14 @@ const JobExplorer = ({
     const updateURL = () => {
         const { jobExplorer } = Paths;
         const search = stringify(urlMappedQueryParams, { arrayFormat: 'bracket' });
-        history.push({
+        history.replace({
             pathname: jobExplorer,
             search
         });
     };
 
     useEffect(() => {
-        // Click on the nav -> this causes the page rerender if already not clicked
         insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
-        updateURL();
 
         async function initializeWithPreflight() {
             setIsLoading(true);
