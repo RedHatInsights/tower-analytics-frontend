@@ -1,6 +1,6 @@
 /*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 import { mount } from 'enzyme';
-import { useQueryParams } from './useQueryParams/';
+import { useQueryParams } from './useQueryParams';
 import { act } from 'react-dom/test-utils';
 
 /* See https://github.com/testing-library/react-testing-library/pull/274
