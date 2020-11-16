@@ -7,7 +7,6 @@ import { useQueryParams } from '../../Utilities/useQueryParams';
 import { keysToCamel } from '../../Utilities/helpers';
 import { Paths } from '../../paths';
 
-import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
@@ -28,32 +27,12 @@ import {
 import {
     Card,
     CardBody,
-    CardHeader as PFCardHeader,
-    Pagination as PFPagination,
+    Pagination,
     PaginationVariant
 } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
 import FilterableToolbar from '../../Components/Toolbar/';
-
-const CardHeader = styled(PFCardHeader)`
-  display: flex;
-  justify-content: space-between;
-
-  @media screen and (max-width: 1035px) {
-    display: block;
-  }
-`;
-
-const CompactPagination = styled(PFPagination)`
-  display: flex;
-  align-items: flex-start;
-  margin: 0;
-`;
-
-const Pagination = styled(PFPagination)`
-  margin-top: 20px;
-`;
 
 const perPageOptions = [
     { title: '5', value: 5 },
@@ -169,15 +148,13 @@ const JobExplorer = ({
             { !preflightError && (
                 <Main>
                     <Card>
-                        <CardHeader>
-                        </CardHeader>
                         <CardBody>
                             <FilterableToolbar
                                 categories={ explorerOptions }
                                 filters={ queryParams }
                                 setFilters={ setFromToolbar }
                                 pagination={
-                                    <CompactPagination
+                                    <Pagination
                                         itemCount={ meta.count ? meta.count : 0 }
                                         widgetId="pagination-options-menu-top"
                                         perPageOptions={ perPageOptions }
