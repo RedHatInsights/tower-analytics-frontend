@@ -65,16 +65,6 @@ const TopCard = styled(Card)`
   min-height: 500px;
 `;
 
-const title = (
-    <span style={ { fontWeight: 400 } }>
-    Automation Analytics
-        <span style={ { fontSize: '16px', fontWeight: 400 } }>
-            { ' ' }
-            <span style={ { margin: '0 10px' } }>|</span> Organization Statistics
-        </span>
-    </span>
-);
-
 const timeFrameOptions = [
     { value: 'please choose', label: 'Select Date Range', disabled: true },
     { value: 7, label: 'Past Week', disabled: false },
@@ -90,8 +80,8 @@ const sortOptions = [
 ];
 
 const initialQueryParams = {
-    startDate: moment.utc().subtract(1, 'month').format('YYYY-MM-DD'),
-    endDate: moment.utc().format('YYYY-MM-DD'),
+    startDate: moment().subtract(1, 'month').format('YYYY-MM-DD'),
+    endDate: moment().format('YYYY-MM-DD'),
     sort_by: 'count:desc',
     limit: 5
 };
@@ -123,6 +113,10 @@ const OrganizationStatistics = () => {
 
         return setLimit(limit);
     };
+
+    useEffect(() => {
+        insights.chrome.appNavClick({ id: 'organization-statistics', secondaryNav: true });
+    }, []);
 
     useEffect(() => {
         let ignore = false;
@@ -187,7 +181,7 @@ const OrganizationStatistics = () => {
     return (
         <React.Fragment>
             <PageHeader>
-                <PageHeaderTitle title={ title } />
+                <PageHeaderTitle title={ 'Organization Statistics' } />
             </PageHeader>
             { preflightError && (
                 <Main>

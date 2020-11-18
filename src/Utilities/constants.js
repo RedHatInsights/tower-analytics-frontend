@@ -1,5 +1,4 @@
 /* eslint-disable camelcase */
-
 export const jobExplorer = {
     attributes: [
         'id',
@@ -15,20 +14,15 @@ export const jobExplorer = {
     ],
     defaultParams: {
         status: [ 'successful', 'failed' ],
-        job_type: [ 'workflowjob', 'job' ],
-        quick_date_range: 'last_30_days',
-        limit: 5,
-        only_root_workflows_and_standalone_jobs: false,
-        sort_by: 'created:desc'
+        quickDateRange: 'last_30_days',
+        jobType: [ 'workflowjob', 'job' ],
+        orgId: [],
+        clusterId: [],
+        templateId: [],
+        sortBy: 'created:desc',
+        startDate: '',
+        endDate: '',
+        onlyRootWorkflowsAndStandaloneJobs: false,
+        limit: 5
     }
 };
-
-export const toolbarCategories = [
-    { name: 'Status', id: 1 },
-    { name: 'Date', id: 2 },
-    { name: 'Job', id: 3 },
-    { name: 'Organization', id: 4 },
-    { name: 'Cluster', id: 5 },
-    { name: 'Template', id: 6 },
-    { name: 'Sort by', id: 7 }
-];

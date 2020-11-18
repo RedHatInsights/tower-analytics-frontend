@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
+import { stringify } from 'query-string';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
@@ -10,7 +11,6 @@ import NoData from '../../Components/NoData';
 import EmptyState from '../../Components/EmptyState';
 import { preflightRequest, readROI } from '../../Api';
 import { Paths } from '../../paths';
-import { formatQueryStrings } from '../../Utilities/formatQueryStrings';
 
 import {
     Main,
@@ -162,10 +162,10 @@ const title = (
 );
 
 /* helper variables for further date ranges */
-const pastYear = moment.utc().subtract(1, 'year');
+const pastYear = moment().subtract(1, 'year');
 const pastYTD = moment().startOf('year');
 const pastQuarter = moment().startOf('quarter');
-const pastMonth = moment.utc().subtract(1, 'month');
+const pastMonth = moment().subtract(1, 'month');
 
 /* these are the buckets of time the user's are able to select ... */
 const timeFrameOptions = [
@@ -179,7 +179,7 @@ const timeFrameOptions = [
 /* set the default bucket to 365 days */
 const initialQueryParams = {
     startDate: pastYear.format('YYYY-MM-DD'),
-    endDate: moment.utc().format('YYYY-MM-DD')
+    endDate: moment().format('YYYY-MM-DD')
 };
 
 // create our array to feed to D3
@@ -318,7 +318,6 @@ export const setTemplatesIsActive = (templatesList, selectedIds) => {
 };
 
 const AutomationCalculator = ({ history }) => {
-
     const [ isLoading, setIsLoading ] = useState(true);
     const [ costManual, setCostManual ] = useState(defaultCostManual);
     const [ costAutomation, setCostAutomation ] = useState(defaultCostAutomation);
@@ -339,6 +338,10 @@ const AutomationCalculator = ({ history }) => {
         setStartDateAsString(value);
         setRoiTimeFrame(value);
     };
+
+    useEffect(() => {
+        insights.chrome.appNavClick({ id: 'automation-calculator', secondaryNav: true });
+    }, []);
 
     useEffect(() => {
         const total = computeTotalSavings(formattedData, costAutomation, costManual);
@@ -393,8 +396,7 @@ const AutomationCalculator = ({ history }) => {
             quick_date_range: 'last_30_days'
         };
 
-        const { strings, stringify } = formatQueryStrings(initialQueryParams);
-        const search = stringify(strings);
+        const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
         history.push({
             pathname: jobExplorer,
             search
@@ -404,7 +406,7 @@ const AutomationCalculator = ({ history }) => {
     return (
     <>
       <PageHeader style={ { flex: '0' } }>
-          <PageHeaderTitle title={ title } />
+          <PageHeaderTitle title={ 'Automation Calculator' } />
       </PageHeader>
       { preflightError && (
           <Main>

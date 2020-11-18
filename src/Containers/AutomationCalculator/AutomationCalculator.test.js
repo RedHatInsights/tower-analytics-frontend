@@ -20,17 +20,6 @@ import Adapter from 'enzyme-adapter-react-16';
 import Enzyme from 'enzyme';
 Enzyme.configure({ adapter: new Adapter() });
 
-// the insights object
-const mockInsights = {
-    chrome: {
-        auth: {
-            getUser: () => {
-                return 'bob';
-            }
-        }
-    }
-};
-
 const testResponse = [
     {
         template_id: 1,
@@ -316,7 +305,6 @@ describe('AutomationCalculator()', () => {
         await act(async () => {
             const mockStore = configureStore();
             const store = mockStore({});
-            global.insights = mockInsights;
             wrapper = mount(<Provider store={ store } ><AutomationCalculator /></Provider>);
         });
 

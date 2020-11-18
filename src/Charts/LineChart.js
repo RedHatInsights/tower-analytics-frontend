@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import Tooltip from '../Utilities/Tooltip';
 import { Paths } from '../paths';
 import { formatDate } from '../Utilities/helpers';
-import { formatQueryStrings } from '../Utilities/formatQueryStrings';
+import { stringify } from 'query-string';
 import * as d3 from 'd3';
 
 class LineChart extends Component {
@@ -36,8 +36,8 @@ class LineChart extends Component {
             status: [ 'failed', 'successful' ],
             cluster_id: clusterId
         };
-        const { strings, stringify } = formatQueryStrings(initialQueryParams);
-        const search = stringify(strings);
+
+        const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
         this.props.history.push({
             pathname: jobExplorer,
             search

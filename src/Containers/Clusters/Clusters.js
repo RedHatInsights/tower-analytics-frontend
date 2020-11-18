@@ -50,15 +50,6 @@ const CardTitle = styled(PFCardTitle)`
     }
   }
 `;
-const title = (
-    <span style={ { fontWeight: 400 } }>
-    Automation Analytics
-        <span style={ { fontSize: '16px', fontWeight: 400 } }>
-            { ' ' }
-            <span style={ { margin: '0 10px' } }>|</span> Clusters
-        </span>
-    </span>
-);
 
 const timeFrameOptions = [
     { value: 'please choose', label: 'Select date range', disabled: true },
@@ -87,11 +78,10 @@ function formatClusterName(data) {
 }
 
 const initialQueryParams = {
-    startDate: moment
-    .utc()
+    startDate: moment()
     .subtract(1, 'month')
     .format('YYYY-MM-DD'),
-    endDate: moment.utc().format('YYYY-MM-DD')
+    endDate: moment().format('YYYY-MM-DD')
 };
 
 const Clusters = ({ history }) => {
@@ -109,6 +99,8 @@ const Clusters = ({ history }) => {
     );
 
     useEffect(() => {
+        insights.chrome.appNavClick({ id: 'clusters', secondaryNav: true });
+
         setIsLoading(true);
         window.insights.chrome.auth.getUser().then(() =>
             preflightRequest().then(() =>
@@ -147,7 +139,7 @@ const Clusters = ({ history }) => {
     return (
         <React.Fragment>
             <PageHeader>
-                <PageHeaderTitle title={ title } />
+                <PageHeaderTitle title={ 'Clusters' } />
             </PageHeader>
             { preflightError && (
                 <Main>
