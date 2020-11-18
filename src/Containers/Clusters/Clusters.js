@@ -99,6 +99,8 @@ const Clusters = ({ history }) => {
     );
 
     useEffect(() => {
+        insights.chrome.appNavClick({ id: 'clusters', secondaryNav: true });
+
         setIsLoading(true);
         window.insights.chrome.auth.getUser().then(() =>
             preflightRequest().then(() =>

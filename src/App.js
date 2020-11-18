@@ -11,7 +11,11 @@ const App = (props) => {
     useEffect(() => {
         insights.chrome.init();
         insights.chrome.identifyApp('automation-analytics');
-        const appNav = insights.chrome.on('APP_NAVIGATION', event => props.history.push(`/${event.navId}`));
+        const appNav = insights.chrome.on('APP_NAVIGATION', event => {
+            if (event.domEvent) {
+                props.history.push(`/${event.navId}`);
+            }
+        });
 
         return () => {
             appNav();

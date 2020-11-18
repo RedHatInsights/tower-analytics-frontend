@@ -301,7 +301,6 @@ export const setTemplatesIsActive = (templatesList, selectedIds) => {
 };
 
 const AutomationCalculator = ({ history }) => {
-
     const [ isLoading, setIsLoading ] = useState(true);
     const [ costManual, setCostManual ] = useState(defaultCostManual);
     const [ costAutomation, setCostAutomation ] = useState(defaultCostAutomation);
@@ -322,6 +321,10 @@ const AutomationCalculator = ({ history }) => {
         setStartDateAsString(value);
         setRoiTimeFrame(value);
     };
+
+    useEffect(() => {
+        insights.chrome.appNavClick({ id: 'automation-calculator', secondaryNav: true });
+    }, []);
 
     useEffect(() => {
         const total = computeTotalSavings(formattedData, costAutomation, costManual);
