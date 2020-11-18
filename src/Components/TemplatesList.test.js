@@ -1,7 +1,7 @@
 /*eslint-disable camelcase*/
 import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
-import TemplatesList from './TemplatesList/';
+import TemplatesList from './TemplatesList';
 
 import * as apiModule from '../Api';
 

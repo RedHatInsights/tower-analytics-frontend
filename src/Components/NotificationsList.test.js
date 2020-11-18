@@ -1,5 +1,5 @@
 import { mount } from 'enzyme';
-import NotificationsList from './NotificationsList/';
+import NotificationsList from './NotificationsList';
 
 describe('Components/NotificationsList', () => {
     /*eslint camelcase: ["error", {properties: "never"}]*/
