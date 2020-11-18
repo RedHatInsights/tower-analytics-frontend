@@ -21,8 +21,8 @@ import {
 import {
     Button,
     Card,
-    CardBody,
-    CardTitle,
+    CardBody as PFCardBody,
+    CardTitle as PFCardTitle,
     FormSelect,
     FormSelectOption,
     InputGroup,
@@ -30,15 +30,13 @@ import {
     TextInput,
     Title,
     Tooltip,
-    TooltipPosition
+    Popover
 } from '@patternfly/react-core';
 
 import {
     DollarSignIcon,
     FilterIcon,
-    InfoCircleIcon,
-    ToggleOnIcon,
-    ToggleOffIcon
+    InfoCircleIcon
 } from '@patternfly/react-icons';
 
 import TopTemplatesSavings from '../../Charts/ROITopTemplates';
@@ -52,7 +50,7 @@ import {
     formatPercentage
 } from '../../Utilities/helpers';
 
-const FilterCardTitle = styled(CardTitle)`
+const FilterCardTitle = styled(PFCardTitle)`
   border-bottom: 2px solid #ebebeb;
   display: flex;
   justify-content: space-between;
@@ -142,6 +140,15 @@ const WrapperRight = styled.div`
   flex: 2;
   display: flex;
   flex-direction: column;
+`;
+
+const CardTitle = styled(PFCardTitle)`
+  border-bottom: 1px solid #d7d7d7;
+  margin-bottom: 10px;
+`;
+
+const CardBody = styled(PFCardBody)`
+  overflow: auto;
 `;
 
 /* helper variables for further date ranges */
@@ -308,7 +315,7 @@ const AutomationCalculator = ({ history }) => {
     const [ unfilteredData, setUnfilteredData ] = useState([]);
     const [ formattedData, setFormattedData ] = useState([]);
     const [ templatesList, setTemplatesList ] = useState([]);
-    const [ selectedIds, setSelectedIds ] = useState([]);
+    const [ selectedIds ] = useState([]);
     const [ preflightError, setPreFlightError ] = useState(null);
 
     // default to the past year (n - 365 days)
@@ -435,7 +442,7 @@ const AutomationCalculator = ({ history }) => {
                   <Main style={ { paddingBottom: '0' } }>
                       <Card>
                           <CardTitle>Automation savings</CardTitle>
-                          <CardBody>
+                          <PFCardBody>
                               { isLoading && !preflightError && <LoadingState /> }
                               { !isLoading && formattedData.length <= 0 && <NoData /> }
                               { formattedData.length > 0 && !isLoading && (
@@ -449,10 +456,10 @@ const AutomationCalculator = ({ history }) => {
                         <p style={ { textAlign: 'center' } }>Templates</p>
                       </>
                               ) }
-                          </CardBody>
+                          </PFCardBody>
                       </Card>
                   </Main>
-                  <Main>
+                  <Main style={ { height: 0 } }>
                       <Card style={ { height: '100%' } }>
                           <CardTitle>Automation formula</CardTitle>
                           <CardBody>
@@ -484,36 +491,41 @@ const AutomationCalculator = ({ history }) => {
               <WrapperRight>
                   <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
                       <Card>
-                          <CardTitle style={ { paddingBottom: '0' } }>
+                          <PFCardTitle style={ { paddingBottom: '0', borderTop: '3px solid #2B9AF3' } }>
                     Total savings
-                          </CardTitle>
-                          <CardBody>
+                          </PFCardTitle>
+                          <PFCardBody>
                               <Title
                                   headingLevel="h3"
-                                  size="3xl"
-                                  style={ { color: 'var(--pf-global--success-color--200)' } }
+                                  style={ { color: 'var(--pf-global--success-color--200)', fontSize: '2.5em' } }
                               >
                                   { totalSavings }
                               </Title>
-                          </CardBody>
+                          </PFCardBody>
                       </Card>
                   </Main>
-                  <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
-                      <Card>
+                  <Main
+                      style={ {
+                          paddingLeft: '0',
+                          display: 'flex',
+                          flexDirection: 'column',
+                          flex: '1 1 0'
+                      } }
+                  >
+                      <Card style={ { height: '100%' } }>
                           <CardTitle style={ { paddingBottom: '10px' } }>
                     Calculate your automation
                           </CardTitle>
-                          <CardBody>
+                          <CardBody style={ { flex: '1 1 0' } }>
                               <InputAndText>
-
                                   <p>Manual cost of automation</p>
                                   <em
                                       style={ { color: 'var(--pf-global--Color--dark-200)' } }
                                   >
-                        (e.g. average salary of mid-level SE)
+                        (e.g. average salary of mid-level Software Engineer)
 
                                   </em>
-                                  <InputGroup style={ { width: '50%' } }>
+                                  <InputGroup style={ { width: '50%', marginTop: '10px' } }>
                                       <InputGroupText>
                                           <DollarSignIcon />
                                       </InputGroupText>
@@ -547,23 +559,8 @@ const AutomationCalculator = ({ history }) => {
                                       <InputGroupText>/hr</InputGroupText>
                                   </InputGroup>
                               </InputAndText>
-                          </CardBody>
-                      </Card>
-                  </Main>
-                  <Main
-                      style={ {
-                          display: 'flex',
-                          flexDirection: 'column',
-                          flex: '1 1 0',
-                          paddingLeft: '0'
-                      } }
-                  >
-                      <Card style={ { overflow: 'auto', flex: '1 1 0' } }>
-                          <CardTitle>Top templates</CardTitle>
-                          <CardBody>
-                              <p>
-                      Enter the time it takes to manually perform the tasks that
-                      the following templates automate.
+                              <p style={ { marginTop: 15 } }>
+                      Enter the time it takes to run the following templates manually.
                               </p>
                               { templatesList.map((data) => (
                                   <div key={ data.id }>
@@ -605,11 +602,10 @@ const AutomationCalculator = ({ history }) => {
                             x { data.run_count } runs, { data.host_count } hosts
                                           </TemplateDetailSubTitle>
                                           <IconGroup>
-                                              <Tooltip
-                                                  position={ TooltipPosition.top }
-                                                  entryDelay={ 50 }
-                                                  exitDelay={ 50 }
-                                                  content={
+                                              <Popover
+                                                  aria-label="template detail popover"
+                                                  position="left"
+                                                  bodyContent={
                                                       <TooltipWrapper>
                                                           <p>
                                                               <b>Total elapsed sum</b>:{ ' ' }
@@ -650,29 +646,7 @@ const AutomationCalculator = ({ history }) => {
                                                   }
                                               >
                                                   <InfoCircleIcon />
-                                              </Tooltip>
-                                              { data.isActive === true && (
-                                                  <ToggleOnIcon
-                                                      onClick={ () => {
-                                                          const selected = handleToggle(
-                                                              data.id,
-                                                              selectedIds
-                                                          );
-                                                          setSelectedIds(selected);
-                                                      } }
-                                                  />
-                                              ) }
-                                              { data.isActive === false && (
-                                                  <ToggleOffIcon
-                                                      onClick={ () => {
-                                                          const selected = handleToggle(
-                                                              data.id,
-                                                              selectedIds
-                                                          );
-                                                          setSelectedIds(selected);
-                                                      } }
-                                                  />
-                                              ) }
+                                              </Popover>
                                           </IconGroup>
                                       </TemplateDetail>
                                       <p style={ { color: '#486B00' } }>
