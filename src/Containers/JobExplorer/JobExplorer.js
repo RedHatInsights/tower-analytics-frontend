@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { parse, stringify } from 'query-string';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import { keysToCamel } from '../../Utilities/helpers';
-import { Paths } from '../../paths';
 
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
@@ -46,10 +44,7 @@ const initialQueryParams = {
     attributes: jobExplorer.attributes
 };
 
-const JobExplorer = ({
-    location: { search },
-    history
-}) => {
+const JobExplorer = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ apiError, setApiError ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(true);
@@ -57,27 +52,13 @@ const JobExplorer = ({
     const [ meta, setMeta ] = useState({});
     const [ currPage, setCurrPage ] = useState(1);
     const [ explorerOptions, setExplorerOptions ] = useState({});
-
-    let initialSearchParams = keysToCamel(
-        parse(search, { arrayFormat: 'bracket' })
-    );
-    let combined = { ...initialQueryParams, ...initialSearchParams };
     const {
         queryParams,
         urlMappedQueryParams,
         setLimit,
         setOffset,
         setFromToolbar
-    } = useQueryParams(combined);
-
-    const updateURL = () => {
-        const { jobExplorer } = Paths;
-        const search = stringify(urlMappedQueryParams, { arrayFormat: 'bracket' });
-        history.replace({
-            pathname: jobExplorer,
-            search
-        });
-    };
+    } = useQueryParams(initialQueryParams);
 
     useEffect(() => {
         insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
@@ -111,7 +92,6 @@ const JobExplorer = ({
             })
             .catch(e => setApiError(e.error))
             .finally(() => {
-                updateURL();
                 setIsLoading(false);
             });
         });

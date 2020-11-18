@@ -1,12 +1,16 @@
-/*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 /*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
-
-import { useReducer } from 'react';
+import { useReducer, useEffect, useState } from 'react';
 import moment from 'moment';
+import { useLocation, useHistory } from 'react-router-dom';
+import { parse, stringify } from 'query-string';
 
 import { formatDate } from '../Utilities/helpers';
+import { keysToCamel } from './helpers';
 
-export const useQueryParams = initial => {
+export const useQueryParams = (initial) => {
+    const location = useLocation();
+    const history = useHistory();
+
     const paramsReducer = (state, { type, value }) => {
         switch (type) {
             /* v0 api reducers */
@@ -72,12 +76,15 @@ export const useQueryParams = initial => {
                     endDate: '',
                     onlyRootWorkflowsAndStandaloneJobs: false
                 };
+            case 'SET_FILTER':
+                return { ...state, ...value };
             default:
                 throw new Error();
         }
     };
 
-    const [ queryParams, dispatch ] = useReducer(paramsReducer, { ...initial });
+    const [ queryParams, dispatch ] = useReducer(paramsReducer, initial);
+    const [ initialized, setInitialized ] = useState(false);
 
     /**
      * Converts queryParams object keys to snake case, which is accepted by the API
@@ -101,6 +108,60 @@ export const useQueryParams = initial => {
 
         return urlFormatted;
     };
+
+    const stringQuery = () => stringify(
+        urlMappedQueryParams(),
+        { arrayFormat: 'bracket' }
+    );
+
+    const parsedSearch = () => keysToCamel(
+        parse(location.search, { arrayFormat: 'bracket' })
+    );
+
+    // Slice one from location since it has '?' prepended
+    const locationAndQueryIsSame = () => stringQuery() === location.search.slice(1);
+
+    const isEmptyObject = obj => Object.keys(obj).length === 0 && obj.constructor === Object;
+
+    useEffect(() => {
+        // No initial search --> user clicked menu item
+        // We need to REPLACE the empty search history with default values.
+        if (isEmptyObject(parsedSearch())) {
+            const search = stringQuery();
+            history.replace({
+                pathname: location.pathname,
+                search
+            });
+        }
+        // There is initial search in the location
+        // update the query params from it.
+        else {
+            dispatch({ type: 'SET_FILTER', value: parsedSearch() });
+        }
+
+        setInitialized(true);
+    }, []);
+
+    useEffect(() => {
+        // Controll if it is the same to avoid loop with immutable objects
+        if (!initialized || locationAndQueryIsSame()) {
+            return;
+        }
+
+        history.push({
+            pathname: location.pathname,
+            search: stringQuery()
+        });
+    }, [ queryParams ]);
+
+    useEffect(() => {
+        // Controll if it is the same to avoid loop with immutable objects
+        if (!initialized || locationAndQueryIsSame()) {
+            return;
+        }
+
+        dispatch({ type: 'SET_FILTER', value: parsedSearch() });
+    }, [ location.search ]);
 
     const actionMapper = {
         status: 'SET_STATUS',
