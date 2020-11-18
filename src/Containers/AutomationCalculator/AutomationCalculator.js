@@ -151,16 +151,6 @@ const CardBody = styled(PFCardBody)`
   overflow: auto;
 `;
 
-const title = (
-    <span style={ { fontWeight: 400 } }>
-    Automation Analytics
-        <span style={ { fontSize: '16px', fontWeight: 400 } }>
-            { ' ' }
-            <span style={ { margin: '0 10px' } }>|</span> Automation calculator
-        </span>
-    </span>
-);
-
 /* helper variables for further date ranges */
 const pastYear = moment().subtract(1, 'year');
 const pastYTD = moment().startOf('year');
