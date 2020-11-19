@@ -159,8 +159,7 @@ const JobExplorer = ({
                                         perPageOptions={ perPageOptions }
                                         perPage={ queryParams.limit }
                                         page={ currPage }
-                                        variant={ PaginationVariant.bottom }
-                                        dropDirection={ 'up' }
+                                        variant={ PaginationVariant.top }
                                         onPerPageSelect={ (_event, perPage, page) => {
                                             handlePerPageSelect(perPage, page);
                                         } }
@@ -183,7 +182,6 @@ const JobExplorer = ({
                                 perPage={ queryParams.limit }
                                 page={ currPage }
                                 variant={ PaginationVariant.bottom }
-                                dropDirection={ 'up' }
                                 onPerPageSelect={ (_event, perPage, page) => {
                                     handlePerPageSelect(perPage, page);
                                 } }
