@@ -200,21 +200,19 @@ class GroupedBarChart extends Component {
     }
 
     redirectToJobExplorer({ date, id }) {
-        let org_id;
         if (id === -1) {
             // disable clicking on "others" block
             return;
         }
 
-        org_id = id;
         const { jobExplorer } = Paths;
         const formattedDate = formatDate(date);
         const initialQueryParams = {
-            start_date: formattedDate,
-            end_date: formattedDate,
-            status: [ 'successful', 'failed', 'new', 'pending', 'waiting', 'error', 'canceled', 'running' ],
             quick_date_range: 'custom',
-            org_id
+            startDate: formattedDate,
+            endDate: formattedDate,
+            status: [ 'successful', 'failed', 'new', 'pending', 'waiting', 'error', 'canceled', 'running' ],
+            orgId: [ id ]
         };
 
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
