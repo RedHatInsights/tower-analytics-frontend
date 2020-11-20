@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
+import { keysToCamel } from '../../Utilities/helpers';
 
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
@@ -69,7 +70,7 @@ const OrganizationStatistics = () => {
     const [ pieChart1Data, setPieChart1Data ] = useState([]);
     const [ pieChart2Data, setPieChart2Data ] = useState([]);
     const [ orgsChartData, setorgsChartData ] = useState([]);
-    const [ quickDateRange, setQuickDateRange ] = useState([]);
+    const [ options, setOptions ] = useState({});
     const [ isLoading, setIsLoading ] = useState(true);
     const [ apiError, setApiError ] = useState(null);
     const {
@@ -112,7 +113,7 @@ const OrganizationStatistics = () => {
                 readJobsByDateAndOrg({ params: urlMappedQueryParams }),
                 readJobRunsByOrg({ params: urlMappedQueryParams }),
                 readJobEventsByOrg({ params: urlMappedQueryParams })
-            ].map((p) => p.catch(() => []))
+            ]
         ).then(([
             options,
             { dates: orgsChartData = []},
@@ -121,7 +122,10 @@ const OrganizationStatistics = () => {
         ]) => {
             if (didCancel) { return; }
 
-            setQuickDateRange(options.quick_date_range);
+            /* eslint-disable-next-line */
+            const { sortBy, groupBy, attributes, ...rest } = keysToCamel(options);
+
+            setOptions({ ...rest, sortBy: constants.sortBy });
             setorgsChartData(orgsChartMapper(orgsChartData));
             setPieChart1Data(pieChartMapper(pieChart1Data));
             setPieChart2Data(pieChartMapper(pieChart2Data));
@@ -148,10 +152,7 @@ const OrganizationStatistics = () => {
               <Card>
                   <CardBody>
                       <FilterableToolbar
-                          categories={ {
-                              quickDateRange,
-                              sortBy: constants.sortBy
-                          } }
+                          categories={ options }
                           filters={ queryParams }
                           setFilters={ setFromToolbar }
                       />

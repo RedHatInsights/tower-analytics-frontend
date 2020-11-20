@@ -57,7 +57,12 @@ export const organizationStatistics = {
         orgId: [],
         quickDateRange: 'last_30_days',
         sortBy: 'desc',
-        limit: 5
+        limit: 5,
+        jobType: [ 'workflowjob', 'job' ],
+        clusterId: [],
+        templateId: [],
+        startDate: '',
+        endDate: ''
     },
     sortBy: [
         { key: 'desc', value: 'Top 5 Orgs' },
