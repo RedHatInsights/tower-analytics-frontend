@@ -133,6 +133,7 @@ const AutomationCalculator = ({ history }) => {
      * Get data from API depending on the queryParam.
      */
     useEffect(() => {
+        let didCancel = false;
         setIsLoading(true);
         window.insights.chrome.auth.getUser()
         .then(() => {
@@ -144,6 +145,8 @@ const AutomationCalculator = ({ history }) => {
                 { items },
                 explorerOptions
             ]) => {
+                if (didCancel) { return; }
+
                 const { quickDateRange } = keysToCamel(explorerOptions);
                 items = keysToCamel(items);
 
@@ -158,6 +161,8 @@ const AutomationCalculator = ({ history }) => {
             })
             .finally(() => { setIsLoading(false); });
         });
+
+        return () => didCancel = true;
     }, [ queryParams ]);
 
     /**
