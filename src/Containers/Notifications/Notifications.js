@@ -261,20 +261,19 @@ const Notifications = () => {
                           </FormSelect>
                       </DropdownGroup>
                       <Pagination
-                          isCompact
-                          itemCount={ meta.count ? meta.count : 0 }
-                          widgetId="pagination-options-menu-bottom"
+                          itemCount={ meta && meta.count ? meta.count : 0 }
+                          widgetId="pagination-options-menu-top"
                           perPageOptions={ perPageOptions }
                           perPage={ queryParams.limit }
                           page={ currPage }
-                          dropDirection={ 'up' }
+                          variant={ PaginationVariant.top }
                           onPerPageSelect={ (_event, perPage, page) => {
                               handlePerPageSelect(perPage, page);
                           } }
                           onSetPage={ (_event, pageNumber) => {
                               handleSetPage(pageNumber);
                           } }
-                          style={ { marginTop: '20px' } }
+                          isCompact
                       />
                   </CardTitle>
                   <CardBody>
@@ -290,13 +289,12 @@ const Notifications = () => {
                         />
                     </NotificationDrawer>
                     <Pagination
-                        itemCount={ meta.count ? meta.count : 0 }
+                        itemCount={ meta && meta.count ? meta.count : 0 }
                         widgetId="pagination-options-menu-bottom"
                         perPageOptions={ perPageOptions }
                         perPage={ queryParams.limit }
                         page={ currPage }
                         variant={ PaginationVariant.bottom }
-                        dropDirection={ 'up' }
                         onPerPageSelect={ (_event, perPage, page) => {
                             handlePerPageSelect(perPage, page);
                         } }
