@@ -65,7 +65,7 @@ const TopCard = styled(Card)`
   min-height: 500px;
 `;
 
-const OrganizationStatistics = () => {
+const OrganizationStatistics = ({ history }) => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ pieChart1Data, setPieChart1Data ] = useState([]);
     const [ pieChart2Data, setPieChart2Data ] = useState([]);
@@ -173,6 +173,7 @@ const OrganizationStatistics = () => {
                               margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
                               id="d3-grouped-bar-chart-root"
                               data={ orgsChartData }
+                              history={ history }
                               timeFrame={ orgsChartData.length }
                           />
                       ) }
