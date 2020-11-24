@@ -280,31 +280,29 @@ const Notifications = () => {
                       { isLoading && <LoadingState /> }
                       { !isLoading && notificationsData.length <= 0 && <NoData /> }
                       { !isLoading && notificationsData.length > 0 && (
-                  <>
-                    <NotificationDrawer>
-                        <NotificationsList
-                            filterBy={ queryParams.severity || '' }
-                            options={ notificationOptions }
-                            notifications={ notificationsData }
-                        />
-                    </NotificationDrawer>
-                    <Pagination
-                        itemCount={ meta && meta.count ? meta.count : 0 }
-                        widgetId="pagination-options-menu-bottom"
-                        perPageOptions={ perPageOptions }
-                        perPage={ queryParams.limit }
-                        page={ currPage }
-                        variant={ PaginationVariant.bottom }
-                        onPerPageSelect={ (_event, perPage, page) => {
-                            handlePerPageSelect(perPage, page);
-                        } }
-                        onSetPage={ (_event, pageNumber) => {
-                            handleSetPage(pageNumber);
-                        } }
-                        style={ { marginTop: '20px' } }
-                    />
-                  </>
+                          <NotificationDrawer>
+                              <NotificationsList
+                                  filterBy={ queryParams.severity || '' }
+                                  options={ notificationOptions }
+                                  notifications={ notificationsData }
+                              />
+                          </NotificationDrawer>
                       ) }
+                      <Pagination
+                          itemCount={ meta && meta.count ? meta.count : 0 }
+                          widgetId="pagination-options-menu-bottom"
+                          perPageOptions={ perPageOptions }
+                          perPage={ queryParams.limit }
+                          page={ currPage }
+                          variant={ PaginationVariant.bottom }
+                          onPerPageSelect={ (_event, perPage, page) => {
+                              handlePerPageSelect(perPage, page);
+                          } }
+                          onSetPage={ (_event, pageNumber) => {
+                              handleSetPage(pageNumber);
+                          } }
+                          style={ { marginTop: '20px' } }
+                      />
                   </CardBody>
               </Card>
           </Main>
