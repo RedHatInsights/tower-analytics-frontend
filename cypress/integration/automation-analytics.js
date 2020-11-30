@@ -1,6 +1,47 @@
+/*
+ * Automation Analytics Smoketest.
+ *
+ * local usage: npm run integration
+ * CI usage: npm run integration_headless
+ *
+ * Specify the baseurl and credentials before starting:
+ *  export export CYPRESS_CLOUD_BASE_URL="https://cloud.redhat.com"
+ *  export CYPRESS_CLOUD_USERNAME="<your-username>"
+ *  export CYPRESS_CLOUD_PASSWORD="<your-password>"
+ *
+ */
+
+
 const baseUrl = 'https://prod.foo.redhat.com:8443';
+const username = "bob";
+const password = "redhat1234";
 const appid = '#automation-analytics-application';
 
+
+function getBaseUrl() {
+    let newUrl = Cypress.env('CLOUD_BASE_URL')
+    if ( newUrl === null  || newUrl == undefined) {
+        newUrl = baseUrl;
+    }
+    cy.log("NEWURL: " + newUrl);
+    return newUrl;
+}
+
+function getUsername() {
+    let newUsername = Cypress.env('CLOUD_USERNAME')
+    if ( newUsername === null ) {
+        newUsername = username;
+    }
+    return newUsername;
+}
+
+function getPassword() {
+    let newPassword = Cypress.env('CLOUD_PASSWORD')
+    if ( newPassword == null ) {
+        newPassword = password;
+    }
+    return newPassword;
+}
 
 function hasInnerHrefs() {
     let hasHrefs = true;
@@ -48,13 +89,14 @@ async function fuzzClustersPage() {
 beforeEach(() => {
     // open the cloud landing page ...
     cy.viewport(1600, 2000);
-    cy.visit(baseUrl);
+    //let url = getBaseUrl();
+    cy.visit(getBaseUrl());
 
     // sso login ...
     cy.get('[data-ouia-component-id="1"]').click();
     cy.wait(1000);
-    cy.get('#username').type('bob');
-    cy.get('#password').type('redhat1234');
+    cy.get('#username').type(getUsername());
+    cy.get('#password').type(getPassword());
     cy.get('#kc-login').click();
     cy.wait(1000);
 })
@@ -90,7 +132,7 @@ describe('automation analytics smoketests', () => {
     */
 
     it('can open all the AA navigation items', () => {
-        cy.visit(baseUrl);
+        cy.visit(getBaseUrl());
         const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
         aalink.click();
         cy.wait(1000);
@@ -102,7 +144,7 @@ describe('automation analytics smoketests', () => {
             navurls.push(href[0].pathname);
             console.log(navurls);
 
-            cy.visit(baseUrl + href[0].pathname);
+            cy.visit(getBaseUrl() + href[0].pathname);
             cy.wait(1000);
             const screenshotFilename = hid.toString() + '.png';
             cy.screenshot(screenshotFilename);
