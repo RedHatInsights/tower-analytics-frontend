@@ -29,7 +29,7 @@ function getBaseUrl() {
 
 function getUsername() {
     let newUsername = Cypress.env('CLOUD_USERNAME')
-    if ( newUsername === null ) {
+    if ( newUsername === null  || newUsername === undefined ) {
         newUsername = username;
     }
     return newUsername;
@@ -37,7 +37,7 @@ function getUsername() {
 
 function getPassword() {
     let newPassword = Cypress.env('CLOUD_PASSWORD')
-    if ( newPassword == null ) {
+    if ( newPassword == null || newPassword === undefined ) {
         newPassword = password;
     }
     return newPassword;
