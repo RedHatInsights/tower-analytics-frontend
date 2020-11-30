@@ -1,7 +1,7 @@
 const baseUrl = 'https://prod.foo.redhat.com:8443';
 const username = "bob";
 const password = "redhat1234";
-const appid = '#automation-analytics-application';
+export const appid = '#automation-analytics-application';
 export const waitDuration = 1000;
 
 

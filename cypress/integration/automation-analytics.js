@@ -13,6 +13,7 @@
 
 
 import {
+    appid,
     clearFeatureDialogs,
     getBaseUrl,
     getUsername,
@@ -22,32 +23,17 @@ import {
     waitDuration
 } from './common';
 
-
 async function fuzzClustersPage() {
 
-    await cy.get(appid)
-        .find('a')
-        .first()
-        .click({waitForAnimations: true})
-        .wait(waitDuration)
-        .then(() => {
-            cy.screenshot('top-template-modal-first.png', {capture: 'fullPage'});
-            cy.get('button[aria-label="Close"]')
-                .click()
-                .wait(waitDuration);
-        })
-
-    await cy.get(appid)
-        .find('a')
-        .last()
-        .click({waitForAnimations: true})
-        .wait(waitDuration)
-        .then(() => {
-            cy.screenshot('top-template-modal-last.png', {capture: 'fullPage'});
-            cy.get('button[aria-label="Close"]')
-                .click()
-                .wait(waitDuration);
-        })
+    // open each top template modal and save a screenshot ...
+    for ( let i=0; i <= 4; i++ ) {
+        cy.get(appid).find("a").eq(i).click({waitForAnimations: true}).then(() => {
+            cy.wait(waitDuration);
+            cy.screenshot('top-template-modal-' + i + '.png', {capture: 'fullPage'});
+            cy.get('button[aria-label="Close"]').click().wait(waitDuration);
+            cy.wait(waitDuration);
+        });
+    }
 
 }
 
@@ -67,7 +53,7 @@ beforeEach(() => {
 
 describe('automation analytics smoketests', () => {
 
-    it('has all the AA navigation items', () => {
+    xit('has all the AA navigation items', () => {
         cy.visit(getBaseUrl());
         const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
         aalink.click();
@@ -79,7 +65,7 @@ describe('automation analytics smoketests', () => {
         navlis.should('have.length', 5)
     })
 
-    it('can open each page without breaking the UI', () => {
+    xit('can open each page without breaking the UI', () => {
         cy.visit(getBaseUrl());
         const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
         aalink.click();
