@@ -29,9 +29,9 @@ class BarChart extends Component {
         const { jobExplorer } = Paths;
         const formattedDate = formatDate(date);
         const initialQueryParams = {
-            start_date: formattedDate,
-            end_date: formattedDate,
-            quick_date_range: 'custom',
+            startDate: formattedDate,
+            endDate: formattedDate,
+            quickDateRange: 'custom',
             status: [ 'failed', 'successful' ]
         };
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });

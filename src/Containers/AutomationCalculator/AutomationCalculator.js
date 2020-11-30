@@ -380,10 +380,10 @@ const AutomationCalculator = ({ history }) => {
     const redirectToJobExplorer = (templateId) => {
         const { jobExplorer } = Paths;
         const initialQueryParams = {
-            template_id: templateId,
+            templateId: [ templateId ],
             status: [ 'successful' ],
-            job_type: [ 'job' ],
-            quick_date_range: 'last_30_days'
+            jobType: [ 'job' ],
+            quickDateRange: 'last_30_days'
         };
 
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
