@@ -261,13 +261,40 @@ const Notifications = () => {
                           </FormSelect>
                       </DropdownGroup>
                       <Pagination
+                          itemCount={ meta && meta.count ? meta.count : 0 }
+                          widgetId="pagination-options-menu-top"
+                          perPageOptions={ perPageOptions }
+                          perPage={ queryParams.limit }
+                          page={ currPage }
+                          variant={ PaginationVariant.top }
+                          onPerPageSelect={ (_event, perPage, page) => {
+                              handlePerPageSelect(perPage, page);
+                          } }
+                          onSetPage={ (_event, pageNumber) => {
+                              handleSetPage(pageNumber);
+                          } }
                           isCompact
-                          itemCount={ meta.count ? meta.count : 0 }
+                      />
+                  </CardTitle>
+                  <CardBody>
+                      { isLoading && <LoadingState /> }
+                      { !isLoading && notificationsData.length <= 0 && <NoData /> }
+                      { !isLoading && notificationsData.length > 0 && (
+                          <NotificationDrawer>
+                              <NotificationsList
+                                  filterBy={ queryParams.severity || '' }
+                                  options={ notificationOptions }
+                                  notifications={ notificationsData }
+                              />
+                          </NotificationDrawer>
+                      ) }
+                      <Pagination
+                          itemCount={ meta && meta.count ? meta.count : 0 }
                           widgetId="pagination-options-menu-bottom"
                           perPageOptions={ perPageOptions }
                           perPage={ queryParams.limit }
                           page={ currPage }
-                          dropDirection={ 'up' }
+                          variant={ PaginationVariant.bottom }
                           onPerPageSelect={ (_event, perPage, page) => {
                               handlePerPageSelect(perPage, page);
                           } }
@@ -276,37 +303,6 @@ const Notifications = () => {
                           } }
                           style={ { marginTop: '20px' } }
                       />
-                  </CardTitle>
-                  <CardBody>
-                      { isLoading && <LoadingState /> }
-                      { !isLoading && notificationsData.length <= 0 && <NoData /> }
-                      { !isLoading && notificationsData.length > 0 && (
-                  <>
-                    <NotificationDrawer>
-                        <NotificationsList
-                            filterBy={ queryParams.severity || '' }
-                            options={ notificationOptions }
-                            notifications={ notificationsData }
-                        />
-                    </NotificationDrawer>
-                    <Pagination
-                        itemCount={ meta.count ? meta.count : 0 }
-                        widgetId="pagination-options-menu-bottom"
-                        perPageOptions={ perPageOptions }
-                        perPage={ queryParams.limit }
-                        page={ currPage }
-                        variant={ PaginationVariant.bottom }
-                        dropDirection={ 'up' }
-                        onPerPageSelect={ (_event, perPage, page) => {
-                            handlePerPageSelect(perPage, page);
-                        } }
-                        onSetPage={ (_event, pageNumber) => {
-                            handleSetPage(pageNumber);
-                        } }
-                        style={ { marginTop: '20px' } }
-                    />
-                  </>
-                      ) }
                   </CardBody>
               </Card>
           </Main>
