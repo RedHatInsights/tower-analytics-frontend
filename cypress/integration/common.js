@@ -2,6 +2,7 @@ const baseUrl = 'https://prod.foo.redhat.com:8443';
 const username = "bob";
 const password = "redhat1234";
 const appid = '#automation-analytics-application';
+export const waitDuration = 1000;
 
 
 export function getBaseUrl() {
@@ -44,3 +45,17 @@ export function hasInnerButtons() {
     return false;
 }
 
+/* 
+ * If the page has a pendo alert about
+ * new feature tours, click the ignore
+ * button to close the alert.
+ */
+export function clearFeatureDialogs() {
+    cy.get('button').each((button) => {
+        let buttonText = button.text();
+        if ( buttonText === "Show me later" ) {
+            button.click();
+            cy.wait(waitDuration);
+        }
+    });
+}

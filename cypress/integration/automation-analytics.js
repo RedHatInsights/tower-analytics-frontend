@@ -13,11 +13,13 @@
 
 
 import {
+    clearFeatureDialogs,
     getBaseUrl,
     getUsername,
     getPassword,
     hasInnerHrefs,
-    hasInnerButtons
+    hasInnerButtons,
+    waitDuration
 } from './common';
 
 
@@ -27,24 +29,24 @@ async function fuzzClustersPage() {
         .find('a')
         .first()
         .click({waitForAnimations: true})
-        .wait(1000)
+        .wait(waitDuration)
         .then(() => {
             cy.screenshot('top-template-modal-first.png', {capture: 'fullPage'});
             cy.get('button[aria-label="Close"]')
                 .click()
-                .wait(1000);
+                .wait(waitDuration);
         })
 
     await cy.get(appid)
         .find('a')
         .last()
         .click({waitForAnimations: true})
-        .wait(1000)
+        .wait(waitDuration)
         .then(() => {
             cy.screenshot('top-template-modal-last.png', {capture: 'fullPage'});
             cy.get('button[aria-label="Close"]')
                 .click()
-                .wait(1000);
+                .wait(waitDuration);
         })
 
 }
@@ -56,64 +58,72 @@ beforeEach(() => {
 
     // sso login ...
     cy.get('[data-ouia-component-id="1"]').click();
-    cy.wait(1000);
+    cy.wait(waitDuration);
     cy.get('#username').type(getUsername());
     cy.get('#password').type(getPassword());
     cy.get('#kc-login').click();
-    cy.wait(1000);
+    cy.wait(waitDuration);
 })
 
 describe('automation analytics smoketests', () => {
-
-    /*
-    xit('can open the crhc landing page', () => {
-        cy.visit(baseUrl);
-        cy.wait(1000);
-    })
-
-    xit('can find and click on the automation-analytics link from the landing page', () => {
-        cy.visit(baseUrl);
-        const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
-        aalink.click();
-        cy.wait(1000);
-    })
-    */
 
     it('has all the AA navigation items', () => {
         cy.visit(getBaseUrl());
         const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
         aalink.click();
-        cy.wait(1000);
+        cy.wait(waitDuration);
 
-        // pf-c-nav__list
-        // li ouiaid=automation-analytics
         const navbar = cy.get('li[ouiaid="automation-analytics"]');
         const navlis = navbar.find('li');
         console.log(navlis);
         navlis.should('have.length', 5)
     })
 
-    it('can open all the AA navigation items', () => {
+    it('can open each page without breaking the UI', () => {
         cy.visit(getBaseUrl());
         const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
         aalink.click();
-        cy.wait(1000);
+        cy.wait(waitDuration);
 
         let navurls = [];
 
-        cy.get('li[ouiaid="automation-analytics"] > section > ul > li > a').first().each((href, hid) => {
-            console.log('href', hid, href[0].pathname);
+        cy.get('li[ouiaid="automation-analytics"] > section > ul > li > a').each((href, hid) => {
+            cy.log('href', hid, href[0].pathname);
             navurls.push(href[0].pathname);
             console.log(navurls);
 
             cy.visit(getBaseUrl() + href[0].pathname);
-            cy.wait(1000);
+            cy.wait(waitDuration);
+            clearFeatureDialogs();
+
             const screenshotFilename = hid.toString() + '.png';
             cy.screenshot(screenshotFilename);
 
-            if ( href[0].pathname === '/ansible/automation-analytics/clusters' ) { 
-                fuzzClustersPage();
-            }
+        });
+
+    })
+
+    it('can interact with the clusters page without breaking the UI', () => {
+        cy.visit(getBaseUrl());
+        const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
+        aalink.click();
+        cy.wait(waitDuration);
+
+        let navurls = [];
+
+        cy.get('li[ouiaid="automation-analytics"] > section > ul > li > a').first().each((href, hid) => {
+            cy.log('href', hid, href[0].pathname);
+            navurls.push(href[0].pathname);
+            console.log(navurls);
+
+            cy.visit(getBaseUrl() + href[0].pathname);
+            cy.wait(waitDuration);
+            clearFeatureDialogs();
+
+            const screenshotFilename = hid.toString() + '.png';
+            cy.screenshot(screenshotFilename);
+
+            fuzzClustersPage();
 
         });
 
