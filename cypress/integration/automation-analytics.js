@@ -30,9 +30,27 @@ async function fuzzClustersPage() {
         cy.get(appid).find("a").eq(i).click({waitForAnimations: true}).then(() => {
             cy.wait(waitDuration);
             cy.screenshot('top-template-modal-' + i + '.png', {capture: 'fullPage'});
-            cy.get('button[aria-label="Close"]').click().wait(waitDuration);
+            cy.get('button[aria-label="Close"]').click({waitForAnimations: true}).wait(waitDuration);
             cy.wait(waitDuration);
         });
+    }
+
+    // navigate to the job explorer page for each bar in the chart ...
+    for ( let i=0; i <= 4; i++ ) {
+
+        // pick a random bar to click on ...
+        let barid = Math.floor(Math.random() * 10);
+        cy.log(barid);
+
+        // click it and wait for the jobexplorer page to load ...
+        cy.get(appid).find("rect").eq(barid).click({waitForAnimations: true});
+        cy.wait(waitDuration * 2);
+        cy.screenshot('clusters-bar-' + barid + '-jobexplorer-details.png', {capture: 'fullPage'});
+
+        // go back to the clusters page ...
+        const aalink = cy.get('a[href="' + getBaseUrl() + '/ansible/automation-analytics/clusters"]').first();
+        aalink.click();
+        cy.wait(waitDuration);
     }
 
 }
