@@ -12,154 +12,123 @@
  */
 
 
-const baseUrl = 'https://prod.foo.redhat.com:8443';
-const username = "bob";
-const password = "redhat1234";
-const appid = '#automation-analytics-application';
-
-
-function getBaseUrl() {
-    let newUrl = Cypress.env('CLOUD_BASE_URL')
-    if ( newUrl === null  || newUrl == undefined) {
-        newUrl = baseUrl;
-    }
-    cy.log("NEWURL: " + newUrl);
-    return newUrl;
-}
-
-function getUsername() {
-    let newUsername = Cypress.env('CLOUD_USERNAME')
-    if ( newUsername === null  || newUsername === undefined ) {
-        newUsername = username;
-    }
-    return newUsername;
-}
-
-function getPassword() {
-    let newPassword = Cypress.env('CLOUD_PASSWORD')
-    if ( newPassword == null || newPassword === undefined ) {
-        newPassword = password;
-    }
-    return newPassword;
-}
-
-function hasInnerHrefs() {
-    let hasHrefs = true;
-    cy.get('#automation-analytics-application')
-        .find('a', {timeout: 100})
-        .catch((err) => {
-            hasHrefs = false;
-        });
-
-    return hasHrefs;
-}
-
-function hasInnerButtons() {
-    return false;
-}
+import {
+    appid,
+    clearFeatureDialogs,
+    getBaseUrl,
+    getUsername,
+    getPassword,
+    hasInnerHrefs,
+    hasInnerButtons,
+    waitDuration
+} from './common';
 
 async function fuzzClustersPage() {
 
-    await cy.get(appid)
-        .find('a')
-        .first()
-        .click({waitForAnimations: true})
-        .wait(1000)
-        .then(() => {
-            cy.screenshot('top-template-modal-first.png', {capture: 'fullPage'});
-            cy.get('button[aria-label="Close"]')
-                .click()
-                .wait(1000);
-        })
+    // open each top template modal and save a screenshot ...
+    for ( let i=0; i <= 4; i++ ) {
+        cy.get(appid).find("a").eq(i).click({waitForAnimations: true}).then(() => {
+            cy.wait(waitDuration);
+            cy.screenshot('top-template-modal-' + i + '.png', {capture: 'fullPage'});
+            cy.get('button[aria-label="Close"]').click({waitForAnimations: true}).wait(waitDuration);
+            cy.wait(waitDuration);
+        });
+    }
 
-    await cy.get(appid)
-        .find('a')
-        .last()
-        .click({waitForAnimations: true})
-        .wait(1000)
-        .then(() => {
-            cy.screenshot('top-template-modal-last.png', {capture: 'fullPage'});
-            cy.get('button[aria-label="Close"]')
-                .click()
-                .wait(1000);
-        })
+    // navigate to the job explorer page for each bar in the chart ...
+    for ( let i=0; i <= 4; i++ ) {
+
+        // pick a random bar to click on ...
+        let barid = Math.floor(Math.random() * 10);
+        cy.log(barid);
+
+        // click it and wait for the jobexplorer page to load ...
+        cy.get(appid).find("rect").eq(barid).click({waitForAnimations: true});
+        cy.wait(waitDuration * 2);
+        cy.screenshot('clusters-bar-' + barid + '-jobexplorer-details.png', {capture: 'fullPage'});
+
+        // go back to the clusters page ...
+        const aalink = cy.get('a[href="' + getBaseUrl() + '/ansible/automation-analytics/clusters"]').first();
+        aalink.click();
+        cy.wait(waitDuration);
+    }
 
 }
 
 beforeEach(() => {
     // open the cloud landing page ...
     cy.viewport(1600, 2000);
-    //let url = getBaseUrl();
     cy.visit(getBaseUrl());
 
     // sso login ...
     cy.get('[data-ouia-component-id="1"]').click();
-    cy.wait(1000);
+    cy.wait(waitDuration);
     cy.get('#username').type(getUsername());
     cy.get('#password').type(getPassword());
     cy.get('#kc-login').click();
-    cy.wait(1000);
+    cy.wait(waitDuration);
 })
 
 describe('automation analytics smoketests', () => {
 
-    /*
-    xit('can open the crhc landing page', () => {
-        cy.visit(baseUrl);
-        cy.wait(1000);
-    })
-
-    xit('can find and click on the automation-analytics link from the landing page', () => {
-        cy.visit(baseUrl);
-        const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
-        aalink.click();
-        cy.wait(1000);
-    })
-
     xit('has all the AA navigation items', () => {
-        cy.visit(baseUrl);
+        cy.visit(getBaseUrl());
         const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
         aalink.click();
-        cy.wait(1000);
+        cy.wait(waitDuration);
 
-        // pf-c-nav__list
-        // li ouiaid=automation-analytics
         const navbar = cy.get('li[ouiaid="automation-analytics"]');
         const navlis = navbar.find('li');
         console.log(navlis);
         navlis.should('have.length', 5)
     })
-    */
 
-    it('can open all the AA navigation items', () => {
+    xit('can open each page without breaking the UI', () => {
         cy.visit(getBaseUrl());
         const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
         aalink.click();
-        cy.wait(1000);
+        cy.wait(waitDuration);
 
         let navurls = [];
 
-        cy.get('li[ouiaid="automation-analytics"] > section > ul > li > a').first().each((href, hid) => {
-            console.log('href', hid, href[0].pathname);
+        cy.get('li[ouiaid="automation-analytics"] > section > ul > li > a').each((href, hid) => {
+            cy.log('href', hid, href[0].pathname);
             navurls.push(href[0].pathname);
             console.log(navurls);
 
             cy.visit(getBaseUrl() + href[0].pathname);
-            cy.wait(1000);
+            cy.wait(waitDuration);
+            clearFeatureDialogs();
+
             const screenshotFilename = hid.toString() + '.png';
             cy.screenshot(screenshotFilename);
 
-            /*
-            if ( hasInnerHrefs() ) {
-                console.log('HREFS!');
-            }
-            */
+        });
 
-            if ( href[0].pathname === '/ansible/automation-analytics/clusters' ) { 
-                fuzzClustersPage();
-            }
+    })
 
-            //throw 'first page visited ...';
+    it('can interact with the clusters page without breaking the UI', () => {
+        cy.visit(getBaseUrl());
+        const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
+        aalink.click();
+        cy.wait(waitDuration);
+
+        let navurls = [];
+
+        cy.get('li[ouiaid="automation-analytics"] > section > ul > li > a').first().each((href, hid) => {
+            cy.log('href', hid, href[0].pathname);
+            navurls.push(href[0].pathname);
+            console.log(navurls);
+
+            cy.visit(getBaseUrl() + href[0].pathname);
+            cy.wait(waitDuration);
+            clearFeatureDialogs();
+
+            const screenshotFilename = hid.toString() + '.png';
+            cy.screenshot(screenshotFilename);
+
+            fuzzClustersPage();
+
         });
 
     })
