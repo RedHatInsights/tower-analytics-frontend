@@ -12,51 +12,14 @@
  */
 
 
-const baseUrl = 'https://prod.foo.redhat.com:8443';
-const username = "bob";
-const password = "redhat1234";
-const appid = '#automation-analytics-application';
+import {
+    getBaseUrl,
+    getUsername,
+    getPassword,
+    hasInnerHrefs,
+    hasInnerButtons
+} from './common';
 
-
-function getBaseUrl() {
-    let newUrl = Cypress.env('CLOUD_BASE_URL')
-    if ( newUrl === null  || newUrl == undefined) {
-        newUrl = baseUrl;
-    }
-    cy.log("NEWURL: " + newUrl);
-    return newUrl;
-}
-
-function getUsername() {
-    let newUsername = Cypress.env('CLOUD_USERNAME')
-    if ( newUsername === null  || newUsername === undefined ) {
-        newUsername = username;
-    }
-    return newUsername;
-}
-
-function getPassword() {
-    let newPassword = Cypress.env('CLOUD_PASSWORD')
-    if ( newPassword == null || newPassword === undefined ) {
-        newPassword = password;
-    }
-    return newPassword;
-}
-
-function hasInnerHrefs() {
-    let hasHrefs = true;
-    cy.get('#automation-analytics-application')
-        .find('a', {timeout: 100})
-        .catch((err) => {
-            hasHrefs = false;
-        });
-
-    return hasHrefs;
-}
-
-function hasInnerButtons() {
-    return false;
-}
 
 async function fuzzClustersPage() {
 
@@ -89,7 +52,6 @@ async function fuzzClustersPage() {
 beforeEach(() => {
     // open the cloud landing page ...
     cy.viewport(1600, 2000);
-    //let url = getBaseUrl();
     cy.visit(getBaseUrl());
 
     // sso login ...
@@ -115,9 +77,10 @@ describe('automation analytics smoketests', () => {
         aalink.click();
         cy.wait(1000);
     })
+    */
 
-    xit('has all the AA navigation items', () => {
-        cy.visit(baseUrl);
+    it('has all the AA navigation items', () => {
+        cy.visit(getBaseUrl());
         const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
         aalink.click();
         cy.wait(1000);
@@ -129,7 +92,6 @@ describe('automation analytics smoketests', () => {
         console.log(navlis);
         navlis.should('have.length', 5)
     })
-    */
 
     it('can open all the AA navigation items', () => {
         cy.visit(getBaseUrl());
@@ -149,17 +111,10 @@ describe('automation analytics smoketests', () => {
             const screenshotFilename = hid.toString() + '.png';
             cy.screenshot(screenshotFilename);
 
-            /*
-            if ( hasInnerHrefs() ) {
-                console.log('HREFS!');
-            }
-            */
-
             if ( href[0].pathname === '/ansible/automation-analytics/clusters' ) { 
                 fuzzClustersPage();
             }
 
-            //throw 'first page visited ...';
         });
 
     })
