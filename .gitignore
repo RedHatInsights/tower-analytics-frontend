@@ -20,3 +20,6 @@ yarn-error.log*
 coverage
 
 sitemap.xml
+
+cypress/screenshots
+cypress/videos
