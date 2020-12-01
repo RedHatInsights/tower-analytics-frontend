@@ -122,8 +122,6 @@ describe('automation analytics smoketests', () => {
         aalink.click();
         cy.wait(waitDuration);
 
-        let navurls = [];
-
         cy.get('li[ouiaid="automation-analytics"] > section > ul > li > a').each((href, hid) => {
             cy.log('href', hid, href[0].pathname);
             navurls.push(href[0].pathname);
@@ -145,8 +143,6 @@ describe('automation analytics smoketests', () => {
         const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
         aalink.click();
         cy.wait(waitDuration);
-
-        let navurls = [];
 
         cy.get('li[ouiaid="automation-analytics"] > section > ul > li > a').first().each((href, hid) => {
             cy.log('href', hid, href[0].pathname);
@@ -171,8 +167,6 @@ describe('automation analytics smoketests', () => {
         const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
         aalink.click();
         cy.wait(waitDuration);
-
-        let navurls = [];
 
         cy.get('li[ouiaid="automation-analytics"] > section > ul > li > a').eq(3).each((href, hid) => {
             cy.log('href', hid, href[0].pathname);
