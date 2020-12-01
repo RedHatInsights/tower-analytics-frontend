@@ -55,6 +55,39 @@ async function fuzzClustersPage() {
 
 }
 
+
+async function fuzzNotificationsPage() {
+
+    // select 3 random clusters to view notitications for ...
+    let randomIDS = [];
+    for (let i=0; i<4; i++) {
+        let thisID = Math.floor(Math.random() * 10);
+        randomIDS.push(thisID);
+    }
+    cy.get(appid).find('select[name="selectedCluster"]').eq(0).then(($select) => {
+        $select.find('option').each((ix, opt) => {
+            if (ix !== 0 && randomIDS.includes(ix)) {
+                cy.log(ix, opt);
+                console.log(ix, opt, typeof opt, opt.innerHTML);
+                cy.wait(waitDuration);
+                cy.get(appid).find('select[name="selectedCluster"]').eq(0).select(opt.innerHTML).wait(waitDuration);
+            }
+        })
+    })
+
+    // go back to all clusters ...
+    cy.get(appid).find('select[name="selectedCluster"]').eq(0).select("All Clusters").wait(waitDuration);
+
+    // try all message type filters ...
+    let levels = ["View Critical", "View Warning", "View Notice", "View All"];
+    levels.forEach((level) => {
+        cy.get(appid).find('select[name="selectedNotification"]').eq(0).select(level).wait(waitDuration);
+        cy.wait(waitDuration);
+    })
+
+}
+
+
 beforeEach(() => {
     // open the cloud landing page ...
     cy.viewport(1600, 2000);
@@ -107,7 +140,7 @@ describe('automation analytics smoketests', () => {
 
     })
 
-    it('can interact with the clusters page without breaking the UI', () => {
+    xit('can interact with the clusters page without breaking the UI', () => {
         cy.visit(getBaseUrl());
         const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
         aalink.click();
@@ -128,6 +161,32 @@ describe('automation analytics smoketests', () => {
             cy.screenshot(screenshotFilename);
 
             fuzzClustersPage();
+
+        });
+
+    })
+
+    it('can interact with the notifications page without breaking the UI', () => {
+        cy.visit(getBaseUrl());
+        const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
+        aalink.click();
+        cy.wait(waitDuration);
+
+        let navurls = [];
+
+        cy.get('li[ouiaid="automation-analytics"] > section > ul > li > a').eq(3).each((href, hid) => {
+            cy.log('href', hid, href[0].pathname);
+            navurls.push(href[0].pathname);
+            console.log(navurls);
+
+            cy.visit(getBaseUrl() + href[0].pathname);
+            cy.wait(waitDuration);
+            clearFeatureDialogs();
+
+            const screenshotFilename = 'notifications.png';
+            cy.screenshot(screenshotFilename);
+
+            fuzzNotificationsPage();
 
         });
 
