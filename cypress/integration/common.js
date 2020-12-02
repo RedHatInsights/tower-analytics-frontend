@@ -59,3 +59,14 @@ export function clearFeatureDialogs() {
         }
     });
 }
+
+export function getUniqueRandomNumbers(upperBound, total) {
+    let randomIDS = [];
+    while (randomIDS.length < total) {
+        let thisID = Math.floor(Math.random() * upperBound);
+        if (!randomIDS.includes(thisID)) {
+            randomIDS.push(thisID);
+        }
+    }
+    return randomIDS
+}
