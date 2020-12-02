@@ -117,19 +117,13 @@ async function fuzzOrgStatsPage() {
 async function fuzzNotificationsPage() {
 
     // select 3 random clusters to view notitications for ...
-    let randomIDS = [];
-    for (let i=0; i<4; i++) {
-        let thisID = Math.floor(Math.random() * 10);
-        randomIDS.push(thisID);
-    }
-    cy.get(appid).find('select[name="selectedCluster"]').eq(0).then(($select) => {
-        $select.find('option').each((ix, opt) => {
-            if (ix !== 0 && randomIDS.includes(ix)) {
-                cy.log(ix, opt);
-                console.log(ix, opt, typeof opt, opt.innerHTML);
-                cy.wait(waitDuration);
+    let selectedIDs = getUniqueRandomNumbers(10, 3, [0]);
+    cy.log('SELECTEDIDS', selectedIDs);
+    selectedIDs.forEach((xid) => {
+        cy.get(appid).find('select[name="selectedCluster"]').eq(0).then(($select) => {
+            $select.find('option').eq(xid).each((ix, opt) => {
                 cy.get(appid).find('select[name="selectedCluster"]').eq(0).select(opt.innerHTML).wait(waitDuration);
-            }
+            })
         })
     })
 
