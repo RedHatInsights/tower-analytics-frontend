@@ -27,13 +27,13 @@ jobs:
         with:
           path: aa-hacking/srv/tower-analytics-frontend
 
-      - name: make the venv
-        run: |
-          pip3 install --user virtualenv
-          python3 -m virtualenv --python=$(which python3) venv
-          source venv/bin/activate
-          pip install -r requirements.txt
-        working-directory: aa-hacking
+      #- name: make the venv
+      #  run: |
+      #    pip3 install --user virtualenv
+      #    python3 -m virtualenv --python=$(which python3) venv
+      #    source venv/bin/activate
+      #    pip install -r requirements.txt
+      #  working-directory: aa-hacking
 
       - name: make the stack
         run: |
@@ -45,7 +45,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: screens
-          path: ./aa-hacking/srv/integration_tests/cypress/screenshots
+          path: ./aa-hacking/srv/tower-analytics-frontend/cypress/screenshots
           retention-days: 5
         if: always()
 
@@ -53,6 +53,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: video
-          path: ./aa-hacking/srv/integration_tests/cypress/videos
+          path: ./aa-hacking/srv/tower-analytics-frontend/cypress/videos
           retention-days: 5
         if: always()
