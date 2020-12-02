@@ -36,9 +36,7 @@ jobs:
       #  working-directory: aa-hacking
 
       - name: make the stack
-        run: |
-          source venv/bin/activate
-          make stack_ci_cypress_debug
+        run: make stack_ci_cypress_debug
         working-directory: aa-hacking
 
       - name: save the screenshots 
