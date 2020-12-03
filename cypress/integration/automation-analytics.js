@@ -139,6 +139,30 @@ async function fuzzNotificationsPage() {
 
 }
 
+async function fuzzCalculatorPage() {
+
+    // try all time groupings ...
+    let timeGroups = ["Past month", "Past quarter", "Past year to date", "Past year"];
+    timeGroups.forEach((tg) => {
+        cy.get(appid).find('select[name="roiTimeFrame"]').eq(0).select(tg).wait(waitDuration);
+        cy.wait(waitDuration);
+    })
+
+    // hover over the first 3 bars to check for tooltips ...
+    for (let i=0; i<3; i++) {
+        cy.get(appid).find('g > rect').eq(i).trigger('mouseover', {force: true});
+        cy.wait(waitDuration);
+    }
+
+    // increment the manual and automated costs ...
+    cy.get(appid).find('#manual-cost').type("100");
+    cy.get(appid).find('#automation-cost').type("0");
+    cy.wait(waitDuration);
+
+    // template toggles have no unique IDs or elements yet that allow easy automated testing ...
+
+}
+
 
 beforeEach(() => {
     // open the cloud landing page ...
@@ -201,11 +225,7 @@ describe('automation analytics smoketests', () => {
             cy.wait(waitDuration);
             clearFeatureDialogs();
 
-            const screenshotFilename = hid.toString() + '.png';
-            cy.screenshot(screenshotFilename);
-
             fuzzClustersPage();
-
         });
 
     })
@@ -224,7 +244,6 @@ describe('automation analytics smoketests', () => {
             clearFeatureDialogs();
 
             fuzzOrgStatsPage();
-
         });
 
     })
@@ -242,11 +261,28 @@ describe('automation analytics smoketests', () => {
             cy.wait(waitDuration);
             clearFeatureDialogs();
 
+            fuzzNotificationsPage();
+        });
+
+    })
+
+    it('can interact with the automation calculator page without breaking the UI', () => {
+        cy.visit(getBaseUrl());
+        const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
+        aalink.click();
+        cy.wait(waitDuration);
+
+        cy.get('li[ouiaid="automation-analytics"] > section > ul > li > a').eq(4).each((href, hid) => {
+            cy.log('href', hid, href[0].pathname);
+
+            cy.visit(getBaseUrl() + href[0].pathname);
+            cy.wait(waitDuration);
+            clearFeatureDialogs();
+
             const screenshotFilename = 'notifications.png';
             cy.screenshot(screenshotFilename);
 
-            fuzzNotificationsPage();
-
+            fuzzCalculatorPage();
         });
 
     })
