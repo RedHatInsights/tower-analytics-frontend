@@ -5,7 +5,7 @@
  * CI usage: npm run integration_headless
  *
  * Specify the baseurl and credentials before starting:
- *  export export CYPRESS_CLOUD_BASE_URL="https://cloud.redhat.com"
+ *  export CYPRESS_CLOUD_BASE_URL="https://cloud.redhat.com"
  *  export CYPRESS_CLOUD_USERNAME="<your-username>"
  *  export CYPRESS_CLOUD_PASSWORD="<your-password>"
  *
