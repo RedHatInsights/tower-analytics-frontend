@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { parse, stringify } from 'query-string';
+import { useSelector } from 'react-redux';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import { keysToCamel } from '../../Utilities/helpers';
@@ -11,7 +12,6 @@ import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
 import ApiErrorState from '../../Components/ApiErrorState';
 import {
-    preflightRequest,
     readJobExplorer,
     readJobExplorerOptions
 } from '../../Api';
@@ -50,7 +50,7 @@ const JobExplorer = ({
     location: { search },
     history
 }) => {
-    const [ preflightError, setPreFlightError ] = useState(null);
+    const auth = useSelector(state => state.auth);
     const [ apiError, setApiError ] = useState(null);
     const [ isLoading, setIsLoading ] = useState(true);
     const [ jobExplorerData, setJobExplorerData ] = useState([]);
@@ -81,39 +81,29 @@ const JobExplorer = ({
 
     useEffect(() => {
         insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
-
-        window.insights.chrome.auth.getUser()
-        .then(() =>
-            preflightRequest()
-            .catch((error) => { setPreFlightError({ preflightError: error }); })
-            // Loading is set false when the data also loaded
-        );
     }, []);
 
     useEffect(() => {
         setApiError(null);
         setIsLoading(true);
-        window.insights.chrome.auth.getUser()
-        .then(() => {
-            Promise.all([
-                readJobExplorer({ params: urlMappedQueryParams }),
-                readJobExplorerOptions({ params: urlMappedQueryParams })
-            ]).then(([
-                { items: jobExplorerData = [], meta = {}},
-                options
-            ]) => {
-                setJobExplorerData(jobExplorerData);
-                setMeta(meta);
+        Promise.all([
+            readJobExplorer({ params: urlMappedQueryParams }),
+            readJobExplorerOptions({ params: urlMappedQueryParams })
+        ]).then(([
+            { items: jobExplorerData = [], meta = {}},
+            options
+        ]) => {
+            setJobExplorerData(jobExplorerData);
+            setMeta(meta);
 
-                /* eslint-disable-next-line */
-                const { attributes, groupBy, ...rest } = keysToCamel(options);
-                setExplorerOptions(rest);
-            })
-            .catch(e => setApiError(e.error))
-            .finally(() => {
-                updateURL();
-                setIsLoading(false);
-            });
+            /* eslint-disable-next-line */
+            const { attributes, groupBy, ...rest } = keysToCamel(options);
+            setExplorerOptions(rest);
+        })
+        .catch(e => setApiError(e.error))
+        .finally(() => {
+            updateURL();
+            setIsLoading(false);
         });
     }, [ queryParams ]);
 
@@ -138,13 +128,13 @@ const JobExplorer = ({
                 <PageHeaderTitle title={ 'Job Explorer' } />
             </PageHeader>
 
-            { preflightError && (
+            { auth.error !== '' && (
                 <Main>
-                    <EmptyState { ...preflightError } />
+                    <EmptyState preflightError={ auth.error } />
                 </Main>
             ) }
 
-            { !preflightError && (
+            { auth.authorized && (
                 <Main>
                     <Card>
                         <CardBody>

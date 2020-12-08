@@ -1,12 +1,15 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { Routes } from './Routes';
 import './App.scss';
 import packageJson from '../package.json';
 
+import { auth } from './redux/actions/';
+
 const App = (props) => {
+    const dispatch = useDispatch();
 
     useEffect(() => {
         insights.chrome.init();
@@ -16,6 +19,8 @@ const App = (props) => {
                 props.history.push(`/${event.navId}`);
             }
         });
+
+        dispatch(auth.fetchUser());
 
         return () => {
             appNav();
