@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/RedHatInsights/tower-analytics-frontend.svg?branch=master)](https://travis-ci.org/RedHatInsights/tower-analytics-frontend)
+[![Build Status](https://travis-ci.org/RedHatInsights/tower-analytics-frontend.svg?branch=devel)](https://travis-ci.org/RedHatInsights/tower-analytics-frontend)
 
 # Automation Analytics Front End
 
@@ -29,14 +29,14 @@ Automation Analytics provides data analytics for Ansible Tower that provides vis
 
 ### How it works
 
-- any push to the `{REPO}` `master` branch will deploy to a `{REPO}-build` `ci-beta` branch
+- any push to the `{REPO}` `devel` branch will deploy to a `{REPO}-build` `ci-beta` branch
 - any push to the `{REPO}` `ci-stable` branch will deploy to a `{REPO}-build` `ci-stable` branch
 - any push to the `{REPO}` `qa-beta` branch will deploy to a `{REPO}-build` `qa-beta` branch
 - any push to the `{REPO}` `qa-stable` branch will deploy to a `{REPO}-build` `qa-stable` branch
 - any push to the `{REPO}` `prod-beta` branch will deploy to a `{REPO}-build` `prod-beta` branch
 - any push to the `{REPO}` `prod-stable` branch will deploy to a `{REPO}-build` `prod-stable` branch
-- Pull requests (based on master) will not be pushed to `{REPO}-build` `master` branch
-  - If the PR is accepted and merged, master will be rebuilt and will deploy to `{REPO}-build` `ci-beta` branch
+- Pull requests (based on devel) will not be pushed to `{REPO}-build` `devel` branch
+  - If the PR is accepted and merged, devel will be rebuilt and will deploy to `{REPO}-build` `ci-beta` branch
 
 ## Running locally
 Have [insights-proxy](https://github.com/RedHatInsights/insights-proxy) installed under PROXY_PATH
