@@ -36,7 +36,7 @@ rules:
     - 2
     - after: true
   comma-style: 2
-  camelcase: 2
+  camelcase: off
   curly:
     - error
     - all
