@@ -30,12 +30,13 @@ const FilterableToolbar = ({
     pagination,
     hasSettings = false
 }) => {
-    const [ currentCategory, setCurrentCategory ] = useState(
-        Object.keys(categories)[0]
-    );
     const [ settingsExpanded, setSettingsExpanded ] = useState(false);
 
     const { quickDateRange, sortBy, ...filterCategories } = categories;
+
+    const [ currentCategory, setCurrentCategory ] = useState(
+        Object.keys(filterCategories)[0]
+    );
 
     const onInputChange = (type, value) => {
         setFilters(type, value);
