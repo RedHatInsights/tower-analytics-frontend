@@ -7,7 +7,6 @@ import {
 } from '../tests/helpers';
 import fetchMock from 'fetch-mock-jest';
 import JobExplorer from './JobExplorer';
-import { keysToCamel } from '../../Utilities/helpers';
 fetchMock.config.overwriteRoutes = true;
 
 const jobExplorerUrl = 'path:/api/tower-analytics/v1/job_explorer/';
@@ -66,7 +65,7 @@ const defaultQueryParams = {
     limit: 5
 };
 
-const lastCallBody = (url) => keysToCamel(JSON.parse(fetchMock.lastCall(url)[1].body));
+const lastCallBody = (url) => JSON.parse(fetchMock.lastCall(url)[1].body);
 
 const getPagination = wrapper => wrapper.find('.pf-c-options-menu');
 

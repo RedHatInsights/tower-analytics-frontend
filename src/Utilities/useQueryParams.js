@@ -76,29 +76,6 @@ export const useQueryParams = initial => {
 
     const [ queryParams, dispatch ] = useReducer(paramsReducer, { ...initial });
 
-    /**
-     * Converts queryParams object keys to snake case, which is accepted by the API
-     */
-    const urlMappedQueryParams = () => {
-        const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-        let urlFormatted = {};
-
-        Object.keys(queryParams).forEach((key) => {
-            // Filter out null and empty array elements
-            if (queryParams[key]) {
-                if (Array.isArray(queryParams[key])) {
-                    if (queryParams[key].length < 1) {
-                        return;
-                    }
-                }
-
-                urlFormatted[camelToSnakeCase(key)] = queryParams[key];
-            }
-        });
-
-        return urlFormatted;
-    };
-
     const actionMapper = {
         status: 'SET_STATUS',
         quickDateRange: 'SET_QUICK_DATE_RANGE',
@@ -114,7 +91,6 @@ export const useQueryParams = initial => {
 
     return {
         queryParams,
-        urlMappedQueryParams: urlMappedQueryParams(),
         dispatch,
         setLimit: limit => dispatch({ type: 'SET_LIMIT', value: { limit }}),
         setOffset: offset => dispatch({ type: 'SET_OFFSET', value: { offset }}),
