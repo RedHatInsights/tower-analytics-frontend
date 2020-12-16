@@ -1,5 +1,3 @@
-/*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
-
 import { act } from 'react-dom/test-utils';
 import { when } from 'jest-when';
 import {

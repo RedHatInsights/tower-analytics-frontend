@@ -1,9 +1,6 @@
-/* eslint-disable camelcase */
-/* eslint-disable max-len */
-/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
+/*eslint-disable max-len */
 /*eslint max-len: ["error", { "ignoreTemplateLiterals": true }]*/
 /*eslint max-len: ["error", { "ignoreStrings": true }]*/
-/*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 import { stringify } from 'query-string';
 
 const apiVersion = 'v0';

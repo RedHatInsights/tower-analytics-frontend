@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 export const jobExplorer = {
     attributes: [
         'id',

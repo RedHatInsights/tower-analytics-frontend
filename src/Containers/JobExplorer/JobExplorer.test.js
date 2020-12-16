@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { act } from 'react-dom/test-utils';
 import { stringify } from 'query-string';
 import {
