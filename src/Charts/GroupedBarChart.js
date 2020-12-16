@@ -208,10 +208,10 @@ class GroupedBarChart extends Component {
         const formattedDate = formatDate(date);
         const initialQueryParams = {
             quick_date_range: 'custom',
-            startDate: formattedDate,
-            endDate: formattedDate,
+            start_date: formattedDate,
+            end_date: formattedDate,
             status: [ 'successful', 'failed', 'new', 'pending', 'waiting', 'error', 'canceled', 'running' ],
-            orgId: [ id ]
+            org_id: [ id ]
         };
 
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
