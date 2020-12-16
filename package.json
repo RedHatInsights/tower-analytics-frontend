@@ -8,7 +8,7 @@
     "@patternfly/react-charts": "^6.9.8",
     "@patternfly/react-core": "4.63.3",
     "@patternfly/react-table": "4.5.7",
-    "@redhat-cloud-services/frontend-components": "2.1.0",
+    "@redhat-cloud-services/frontend-components": "2.5.2",
     "@redhat-cloud-services/frontend-components-utilities": "2.0.4",
     "babel-plugin-transform-imports": "^2.0.0",
     "classnames": "^2.2.5",
