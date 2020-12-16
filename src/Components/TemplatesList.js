@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { formatDateTime, formatSeconds, formatPercentage } from '../Utilities/helpers';
 import styled from 'styled-components';
-import LoadingState from '../Components/LoadingState';
 import NoData from '../Components/NoData';
 import { Paths } from '../paths';
 import { stringify } from 'query-string';
@@ -18,6 +17,8 @@ import {
 } from '@patternfly/react-core';
 
 import { CircleIcon } from '@patternfly/react-icons';
+
+import { Spinner } from '@redhat-cloud-services/frontend-components';
 
 import { readTemplateJobs } from '../Api';
 
@@ -174,7 +175,7 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
 
               >
                   <PFDataListCell>
-                      <LoadingState />
+                      <Spinner centered />
                   </PFDataListCell>
               </PFDataListItem>
           ) }
@@ -281,7 +282,7 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
                       <PFDataListCell key="start time heading">Start Time</PFDataListCell>
                       <PFDataListCell key="total time heading">Total Time</PFDataListCell>
                   </DataListItemCompact>
-                  { relatedJobs.length <= 0 && <LoadingState /> }
+                  { relatedJobs.length <= 0 && <Spinner centered /> }
                   { relatedJobs.length > 0 &&
               relatedJobs.map((job, index) => (
                   <DataListItem

@@ -15,7 +15,8 @@ import {
 
 import { ExternalLinkAltIcon as PFExternalLinkIcon } from '@patternfly/react-icons';
 
-import LoadingState from '../Components/LoadingState';
+import { Spinner } from '@redhat-cloud-services/frontend-components';
+
 import { formatDateTime, formatJobType } from '../Utilities/helpers';
 import JobStatus from './JobStatus';
 
@@ -200,7 +201,7 @@ const JobExplorerList = ({ jobs }) => {
 
     return (
         <>
-            {jobs.length <= 0 && <LoadingState />}
+            {jobs.length <= 0 && <Spinner centered />}
             <DataList isCompact>
                 { windowWidth >= mobileBreakpoint && buildHeader(headerLabels) }
                 <AllJobsTemplate jobs={ jobs } windowWidth={ windowWidth }/>

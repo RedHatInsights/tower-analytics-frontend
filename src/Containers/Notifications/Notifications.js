@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
 import styled from 'styled-components';
-import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoData from '../../Components/NoData';
 import { preflightRequest, readClusters, readNotifications } from '../../Api';
@@ -11,7 +10,8 @@ import { preflightRequest, readClusters, readNotifications } from '../../Api';
 import {
     Main,
     PageHeader,
-    PageHeaderTitle
+    PageHeaderTitle,
+    Spinner
 } from '@redhat-cloud-services/frontend-components';
 
 import {
@@ -277,7 +277,7 @@ const Notifications = () => {
                       />
                   </CardTitle>
                   <CardBody>
-                      { isLoading && <LoadingState /> }
+                      { isLoading && <Spinner centered /> }
                       { !isLoading && notificationsData.length <= 0 && <NoData /> }
                       { !isLoading && notificationsData.length > 0 && (
                           <NotificationDrawer>

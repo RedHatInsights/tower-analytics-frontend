@@ -5,7 +5,6 @@ import moment from 'moment';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
-import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
 import EmptyState from '../../Components/EmptyState';
 import {
@@ -15,7 +14,12 @@ import {
     readJobEventsByOrg
 } from '../../Api';
 
-import { Main, PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components';
+import {
+    Main,
+    PageHeader,
+    PageHeaderTitle,
+    Spinner
+} from '@redhat-cloud-services/frontend-components';
 
 import {
     Card,
@@ -248,7 +252,7 @@ const OrganizationStatistics = () => {
                       <h2>Organization Status</h2>
                   </CardTitle>
                   <CardBody>
-                      { isLoading && <LoadingState /> }
+                      { isLoading && <Spinner centered /> }
                       { !isLoading && groupedBarChartData.length <= 0 && <NoData /> }
                       { !isLoading && groupedBarChartData.length > 0 && (
                           <GroupedBarChart
@@ -268,7 +272,7 @@ const OrganizationStatistics = () => {
                       Job Runs by Organization
                               </h2>
                           </CardTitle>
-                          { isLoading && <LoadingState /> }
+                          { isLoading && <Spinner centered /> }
                           { !isLoading && pieChart1Data.length <= 0 && <NoData /> }
                           { !isLoading && pieChart1Data.length > 0 && (
                               <PieChart
@@ -287,7 +291,7 @@ const OrganizationStatistics = () => {
                       Usage by Organization (Tasks)
                               </h2>
                           </CardTitle>
-                          { isLoading && <LoadingState /> }
+                          { isLoading && <Spinner centered /> }
                           { !isLoading && pieChart2Data.length <= 0 && <NoData /> }
                           { !isLoading && pieChart2Data.length > 0 && (
                               <PieChart

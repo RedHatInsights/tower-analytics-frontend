@@ -6,7 +6,6 @@ import { stringify } from 'query-string';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
-import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
 import EmptyState from '../../Components/EmptyState';
 import { preflightRequest, readROI } from '../../Api';
@@ -15,7 +14,8 @@ import { Paths } from '../../paths';
 import {
     Main,
     PageHeader,
-    PageHeaderTitle
+    PageHeaderTitle,
+    Spinner
 } from '@redhat-cloud-services/frontend-components';
 
 import {
@@ -443,7 +443,7 @@ const AutomationCalculator = ({ history }) => {
                       <Card>
                           <CardTitle>Automation savings</CardTitle>
                           <PFCardBody>
-                              { isLoading && !preflightError && <LoadingState /> }
+                              { isLoading && !preflightError && <Spinner centered /> }
                               { !isLoading && formattedData.length <= 0 && <NoData /> }
                               { formattedData.length > 0 && !isLoading && (
                       <>

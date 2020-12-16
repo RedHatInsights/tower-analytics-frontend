@@ -4,7 +4,6 @@ import moment from 'moment';
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
 import styled from 'styled-components';
-import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import {
     preflightRequest,
@@ -17,7 +16,8 @@ import {
 import {
     Main,
     PageHeader,
-    PageHeaderTitle
+    PageHeaderTitle,
+    Spinner
 } from '@redhat-cloud-services/frontend-components';
 
 import {
@@ -205,7 +205,7 @@ const Clusters = ({ history }) => {
                       <h2>Job status</h2>
                   </PFCardTitle>
                   <CardBody>
-                      { isLoading && !preflightError && <LoadingState /> }
+                      { isLoading && !preflightError && <Spinner centered /> }
                       { selectedCluster === 'all' &&
                   barChartData.length > 0 &&
                   !isLoading && (

@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { trimStr } from '../Utilities/helpers';
 import styled from 'styled-components';
-import LoadingState from '../Components/LoadingState';
 import NoData from '../Components/NoData';
 
 import {
@@ -10,6 +9,8 @@ import {
     DataListItem as PFDataListItem,
     DataListCell as PFDataListCell
 } from '@patternfly/react-core';
+
+import { Spinner } from '@redhat-cloud-services/frontend-components';
 
 const DataListCell = styled(PFDataListCell)`
     --pf-c-data-list__cell-cell--MarginRight: 0;
@@ -50,7 +51,7 @@ const ModulesList = ({ modules, isLoading }) => (
                 style={ { border: 'none' } }
             >
                 <PFDataListCell>
-                    <LoadingState />
+                    <Spinner centered />
                 </PFDataListCell>
             </PFDataListItem>
         ) }

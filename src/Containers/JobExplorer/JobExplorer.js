@@ -6,7 +6,6 @@ import { useQueryParams } from '../../Utilities/useQueryParams';
 import { keysToCamel } from '../../Utilities/helpers';
 import { Paths } from '../../paths';
 
-import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
 import ApiErrorState from '../../Components/ApiErrorState';
@@ -20,7 +19,8 @@ import { jobExplorer } from '../../Utilities/constants';
 import {
     Main,
     PageHeader,
-    PageHeaderTitle
+    PageHeaderTitle,
+    Spinner
 } from '@redhat-cloud-services/frontend-components';
 
 import {
@@ -172,7 +172,7 @@ const JobExplorer = ({
                                 hasSettings
                             />
                             { apiError && <ApiErrorState message={ apiError } /> }
-                            { !apiError && isLoading && <LoadingState /> }
+                            { !apiError && isLoading && <Spinner centered /> }
                             { !apiError && !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
                             { !apiError && !isLoading && jobExplorerData.length > 0 && (<JobExplorerList jobs={ jobExplorerData } />) }
                             <Pagination

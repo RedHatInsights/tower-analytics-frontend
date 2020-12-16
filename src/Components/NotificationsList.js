@@ -11,7 +11,8 @@ import {
 } from '@patternfly/react-core';
 
 import { ExternalLinkAltIcon as PFExternalLinkAltIcon } from '@patternfly/react-icons';
-import LoadingState from '../Components/LoadingState';
+import { Spinner } from '@redhat-cloud-services/frontend-components';
+
 import { capitalize } from '../Utilities/helpers';
 import { stringify } from 'query-string';
 
@@ -226,7 +227,7 @@ const WarningNotificationTemplate = ({ notifications }) =>
 const NotificationsList = ({ filterBy, notifications }) => (
   <>
     <NotificationDrawerList>
-        { notifications.length <= 0 && <LoadingState /> }
+        { notifications.length <= 0 && <Spinner centered /> }
         { filterBy === '' && (
             <AllNotificationTemplate notifications={ notifications } />
         ) }
