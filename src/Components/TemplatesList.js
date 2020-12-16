@@ -133,13 +133,13 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
     const redirectToJobExplorer = () => {
         const { jobExplorer } = Paths;
         const initialQueryParams = {
-            templateId: [ selectedId ],
+            template_id: [ selectedId ],
             status: [ 'successful', 'failed', 'new', 'pending', 'waiting', 'error', 'canceled', 'running' ],
-            jobType: [ 'job' ],
-            startDate: queryParams.startDate,
-            endDate: queryParams.endDate,
-            quickDateRange: 'custom',
-            clusterId: [ clusterId ]
+            job_type: [ 'job' ],
+            start_date: queryParams.startDate,
+            end_date: queryParams.endDate,
+            quick_date_range: 'custom',
+            cluster_id: [ clusterId ]
         };
 
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
