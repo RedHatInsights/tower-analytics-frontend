@@ -150,7 +150,7 @@ describe('Containers/JobExplorer', () => {
         expect(JSON.parse(body)).toEqual(queryParams);
     });
 
-    it('should render the right amouth of data rows', async () => {
+    it('should render the right amount of data rows', async () => {
         fetchMock.post({ url: jobExplorerUrl }, { ...dummyData(5) });
         await act(async () => {
             wrapper = mountPage(JobExplorer);
