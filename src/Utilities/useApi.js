@@ -30,7 +30,7 @@ const dataFetchReducer = (state, action) => {
 };
 
 const useApi = (initialData, postprocess = d => d) => {
-    const [ url, setUrl ] = useState(null);
+    const [ request, setRequest ] = useState(null);
 
     const [ state, dispatch ] = useReducer(dataFetchReducer, {
         isLoading: false,
@@ -41,7 +41,7 @@ const useApi = (initialData, postprocess = d => d) => {
 
     useEffect(() => {
         // Prevent fetching nothing
-        if (!url) {
+        if (!request) {
             return;
         }
 
@@ -50,7 +50,7 @@ const useApi = (initialData, postprocess = d => d) => {
         dispatch({ type: 'FETCH_INIT' });
 
         // Fetching
-        window.insights.chrome.auth.getUser().then(() => url.then(data => {
+        window.insights.chrome.auth.getUser().then(() => request.then(data => {
             if (!didCancel) {
                 dispatch({
                     type: 'FETCH_SUCCESS',
@@ -64,9 +64,9 @@ const useApi = (initialData, postprocess = d => d) => {
         }));
 
         return () => { didCancel = true; };
-    }, [ url ]);
+    }, [ request ]);
 
-    return [ state, setUrl ];
+    return [ state, setRequest ];
 };
 
 export default useApi;
