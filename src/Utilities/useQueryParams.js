@@ -40,7 +40,7 @@ export const useQueryParams = initial => {
             case 'SET_QUICK_DATE_RANGE': {
                 let newState = { ...state };
                 if (value !== 'custom') {
-                    newState = { ...newState, startDate: '', endDate: '' };
+                    newState = { ...newState, start_date: '', end_date: '' };
                 }
 
                 newState = { ...newState, ...value };
@@ -59,15 +59,15 @@ export const useQueryParams = initial => {
             case 'RESET_FILTER':
                 return { ...state,
                     status: [],
-                    quickDateRange: '',
-                    jobType: [],
-                    orgId: [],
-                    clusterId: [],
-                    templateId: [],
-                    sortBy: '',
-                    startDate: '',
-                    endDate: '',
-                    onlyRootWorkflowsAndStandaloneJobs: false
+                    quick_date_range: '',
+                    job_type: [],
+                    org_id: [],
+                    cluster_id: [],
+                    template_id: [],
+                    sort_by: '',
+                    start_date: '',
+                    end_date: '',
+                    only_root_workflow_and_standalone_jobs: false
                 };
             default:
                 throw new Error();
@@ -78,15 +78,15 @@ export const useQueryParams = initial => {
 
     const actionMapper = {
         status: 'SET_STATUS',
-        quickDateRange: 'SET_QUICK_DATE_RANGE',
-        jobType: 'SET_JOB_TYPE',
-        orgId: 'SET_ORG',
-        clusterId: 'SET_CLUSTER',
-        templateId: 'SET_TEMPLATE',
-        sortBy: 'SET_SORTBY',
-        startDate: 'SET_START_DATE',
-        endDate: 'SET_END_DATE',
-        onlyRootWorkflowsAndStandaloneJobs: 'SET_ROOT_WORKFLOWS_AND_JOBS'
+        quick_date_range: 'SET_QUICK_DATE_RANGE',
+        job_type: 'SET_JOB_TYPE',
+        org_id: 'SET_ORG',
+        cluster_id: 'SET_CLUSTER',
+        template_id: 'SET_TEMPLATE',
+        sort_by: 'SET_SORTBY',
+        start_date: 'SET_START_DATE',
+        end_date: 'SET_END_DATE',
+        only_root_workflow_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS'
     };
 
     return {
