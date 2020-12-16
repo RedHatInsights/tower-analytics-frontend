@@ -13,15 +13,15 @@ export const jobExplorer = {
     ],
     defaultParams: {
         status: [ 'successful', 'failed' ],
-        quickDateRange: 'last_30_days',
-        jobType: [ 'workflowjob', 'job' ],
-        orgId: [],
-        clusterId: [],
-        templateId: [],
-        sortBy: 'created:desc',
-        startDate: '',
-        endDate: '',
-        onlyRootWorkflowsAndStandaloneJobs: false,
+        quick_date_range: 'last_30_days',
+        job_type: [ 'workflowjob', 'job' ],
+        org_id: [],
+        cluster_id: [],
+        template_id: [],
+        sort_by: 'created:desc',
+        start_date: '',
+        end_date: '',
+        only_root_workflows_and_standalone_jobs: false,
         limit: 5
     }
 };
