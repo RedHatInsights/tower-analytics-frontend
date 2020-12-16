@@ -4,32 +4,32 @@ export const optionsForCategories = {
         name: 'Status',
         placeholder: 'Filter by job status'
     },
-    quickDateRange: {
+    quick_date_range: {
         isSingle: true,
         name: 'Date',
         placeholder: 'Filter by date'
     },
-    jobType: {
+    job_type: {
         isSingle: false,
         name: 'Job',
         placeholder: 'Filter by job type'
     },
-    orgId: {
+    org_id: {
         isSingle: false,
         name: 'Organization',
         placeholder: 'Filter by organization'
     },
-    clusterId: {
+    cluster_id: {
         isSingle: false,
         name: 'Cluster',
         placeholder: 'Filter by cluster'
     },
-    templateId: {
+    template_id: {
         isSingle: false,
         name: 'Template',
         placeholder: 'Filter by template'
     },
-    sortBy: {
+    sort_by: {
         isSingle: true,
         name: 'Sort by',
         placeholder: 'Sort by attribute'
