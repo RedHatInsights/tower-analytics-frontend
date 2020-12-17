@@ -19,8 +19,8 @@ export const jobExplorer = {
         cluster_id: [],
         template_id: [],
         sort_by: 'created:desc',
-        start_date: '',
-        end_date: '',
+        start_date: null,
+        end_date: null,
         only_root_workflows_and_standalone_jobs: false,
         limit: 5
     }

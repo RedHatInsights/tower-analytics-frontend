@@ -93,7 +93,7 @@ const JobExplorer = ({
         .then(() => {
             Promise.all([
                 readJobExplorer({ params: queryParams }),
-                readJobExplorerOptions({ params: queryParams })
+                readJobExplorerOptions({ params: { }})
             ]).then(([
                 { items: jobExplorerData = [], meta = {}},
                 options
