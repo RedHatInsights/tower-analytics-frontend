@@ -1,6 +1,7 @@
 import { mount } from 'enzyme';
 import { useQueryParams } from './useQueryParams';
 import { act } from 'react-dom/test-utils';
+import moment from 'moment';
 
 /* See https://github.com/testing-library/react-testing-library/pull/274
 for more details regarding the need to create a test component to call
@@ -58,7 +59,7 @@ describe('Utilities/useQueryParams', () => {
     });
 
     it('setEndDate returns current day in `YYYY-MM-DD` string format', () => {
-        const currentDate = new Date().toJSON().slice(0, 10).replace(/-/g, '-');
+        const currentDate = moment(new Date().toISOString()).format('YYYY-MM-DD');
         act(() => {
             page.setEndDate();
         });
@@ -66,7 +67,7 @@ describe('Utilities/useQueryParams', () => {
     });
 
     it('setStartDate returns current day if passed a null value', () => {
-        const currentDate = new Date().toJSON().slice(0, 10).replace(/-/g, '-');
+        const currentDate = moment(new Date().toISOString()).format('YYYY-MM-DD');
         act(() => {
             page.setStartDate(null);
         });
@@ -76,7 +77,7 @@ describe('Utilities/useQueryParams', () => {
     it('setStartDate returns expected day when invoked', () => {
         const days = 8;
         const date = new Date(new Date().setDate(new Date().getDate() - days));
-        const expected = date.toJSON().slice(0, 10).replace(/-/g, '-');
+        const expected = moment(date.toISOString()).format('YYYY-MM-DD');
         act(() => {
             page.setStartDate(days);
         });
