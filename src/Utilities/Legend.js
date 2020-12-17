@@ -35,7 +35,7 @@ const Color = styled.div.attrs(props => ({
 `;
 
 const Title = styled.span`
-  font-size: 12px;
+  font-size: 15px;
   display: inline-block;
   white-space: nowrap;
   overflow: hidden;
@@ -78,7 +78,7 @@ class Legend extends Component {
                                 <Title>{ name }</Title>
                             </Wrapper>
                             { count && (
-                                <SubTitle>{ count }%</SubTitle>
+                                <SubTitle>{ count }</SubTitle>
                             ) }
                             { selected && (
                                 <Switch
