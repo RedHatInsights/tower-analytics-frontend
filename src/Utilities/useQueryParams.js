@@ -1,6 +1,3 @@
-/*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
-/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
-
 import { useReducer } from 'react';
 import moment from 'moment';
 

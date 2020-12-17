@@ -1,4 +1,3 @@
-/*eslint camelcase: ["error", {properties: "never"}]*/
 import React, { Component } from 'react';
 import {
     withRouter

@@ -1,4 +1,3 @@
-/*eslint-disable camelcase*/
 import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 import TemplatesList from './TemplatesList';

@@ -105,7 +105,6 @@ const JobExplorer = ({
                 setJobExplorerData(jobExplorerData);
                 setMeta(meta);
 
-                /* eslint-disable-next-line */
                 const { attributes, groupBy, ...rest } = keysToCamel(options);
                 setExplorerOptions(rest);
             })

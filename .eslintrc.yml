@@ -81,7 +81,9 @@ rules:
     - error
     - functions: false
   no-undef: 2
-  no-unused-vars: 2
+  no-unused-vars:
+    - error
+    - ignoreRestSiblings: true
   no-var: 2
   no-with: 2
   object-shorthand: 2

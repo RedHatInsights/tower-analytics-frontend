@@ -2,7 +2,6 @@ import { mount } from 'enzyme';
 import NotificationsList from './NotificationsList';
 
 describe('Components/NotificationsList', () => {
-    /*eslint camelcase: ["error", {properties: "never"}]*/
     const notificationDrawerListItem = '.pf-c-notification-drawer__list-item';
     const notifications = [
         {

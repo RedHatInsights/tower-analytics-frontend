@@ -1,4 +1,3 @@
-/*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
 import { mount } from 'enzyme';
 import { useQueryParams } from './useQueryParams';
 import { act } from 'react-dom/test-utils';
