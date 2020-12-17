@@ -35,7 +35,7 @@ const FilterableToolbar = ({
     );
     const [ settingsExpanded, setSettingsExpanded ] = useState(false);
 
-    const { quickDateRange, sortBy, ...filterCategories } = categories;
+    const { quick_date_range, sort_by, ...filterCategories } = categories;
 
     const onInputChange = (type, value) => {
         setFilters(type, value);
@@ -69,16 +69,16 @@ const FilterableToolbar = ({
     const QuickDateGroup = () => (
         <ToolbarGroup variant="filter-group">
             <ToolbarFilterItem
-                categoryKey='quickDateRange'
-                filter={ filters.quickDateRange }
-                values={ quickDateRange }
-                setFilter={ value => setFilters('quickDateRange', value) }
+                categoryKey='quick_date_range'
+                filter={ filters.quick_date_range }
+                values={ quick_date_range }
+                setFilter={ value => setFilters('quick_date_range', value) }
                 hasChips={ false }
             />
-            { filters.quickDateRange === 'custom' && (
+            { filters.quick_date_range === 'custom' && (
                 <CustomDateSelector
-                    startDate={ filters.startDate }
-                    endDate={ filters.endDate }
+                    startDate={ filters.start_date }
+                    endDate={ filters.end_date }
                     onInputChange={ onInputChange }
                 />
             ) }
@@ -88,10 +88,10 @@ const FilterableToolbar = ({
     const SortByGroup = () => (
         <ToolbarGroup variant="filter-group">
             <ToolbarFilterItem
-                categoryKey='sortBy'
-                filter={ filters.sortBy }
-                values={ sortBy }
-                setFilter={ value => setFilters('sortBy', value) }
+                categoryKey='sort_by'
+                filter={ filters.sort_by }
+                values={ sort_by }
+                setFilter={ value => setFilters('sort_by', value) }
                 hasChips={ false }
             />
             <Button variant="control">
@@ -119,9 +119,9 @@ const FilterableToolbar = ({
                     id="showRootWorkflowJobs"
                     label="Ignore nested workflows and jobs"
                     labelOff="Ignore nested workflows and jobs"
-                    isChecked={ filters.onlyRootWorkflowsAndStandaloneJobs }
+                    isChecked={ filters.only_root_workflows_and_standalone_jobs }
                     onChange={ val => {
-                        setFilters('onlyRootWorkflowsAndStandaloneJobs', val);
+                        setFilters('only_root_workflows_and_standalone_jobs', val);
                     } }
                 />
                 <Tooltip
@@ -153,8 +153,8 @@ const FilterableToolbar = ({
                         <FilterIcon />
                     </Button>
                     { Object.keys(filterCategories).length > 0 && <FilterCategoriesGroup /> }
-                    { quickDateRange && <QuickDateGroup /> }
-                    { sortBy && <SortByGroup /> }
+                    { quick_date_range && <QuickDateGroup /> }
+                    { sort_by && <SortByGroup /> }
                     {
                         hasSettings &&
                         <ToolbarItem>
