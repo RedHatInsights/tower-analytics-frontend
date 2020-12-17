@@ -127,7 +127,7 @@ describe('Containers/JobExplorer', () => {
             wrapper = mountPage(JobExplorer);
         });
         wrapper.update();
-        const [_, { body }] = inspectCall(jobExplorerUrl, 'POST');
+        const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
         expect(JSON.parse(body)).toEqual(defaultQueryParams);
     });
 
@@ -145,7 +145,7 @@ describe('Containers/JobExplorer', () => {
             wrapper = mountPage(JobExplorer, { search });
         });
         wrapper.update();
-        const [_, { body }] = inspectCall(jobExplorerUrl, 'POST');
+        const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
 
         expect(JSON.parse(body)).toEqual(queryParams);
     });
@@ -196,7 +196,7 @@ describe('Containers/JobExplorer', () => {
         });
         wrapper.update();
 
-        const [_, { body }] = inspectCall(jobExplorerUrl, 'POST');
+        const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
 
         expect(JSON.parse(body)).toEqual({
             ...defaultQueryParams,
@@ -224,7 +224,7 @@ describe('Containers/JobExplorer', () => {
         });
         wrapper.update();
 
-        const [_, { body }] = inspectCall(jobExplorerUrl, 'POST');
+        const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
 
         expect(JSON.parse(body)).toEqual({
             ...defaultQueryParams,
@@ -252,7 +252,7 @@ describe('Containers/JobExplorer', () => {
             expect.stringContaining('6 - 10 of 100')
         );
 
-        const [_, { body }] = inspectCall(jobExplorerUrl, 'POST');
+        const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
 
         expect(JSON.parse(body)).toEqual({
             ...defaultQueryParams,
@@ -279,7 +279,7 @@ describe('Containers/JobExplorer', () => {
             expect.stringContaining('96 - 100 of 100')
         );
 
-        const [_, { body }] = inspectCall(jobExplorerUrl, 'POST');
+        const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
 
         expect(JSON.parse(body)).toEqual({
             ...defaultQueryParams,
