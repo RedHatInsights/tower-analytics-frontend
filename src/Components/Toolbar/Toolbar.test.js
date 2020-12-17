@@ -6,14 +6,14 @@ describe('Components/Toolbar/FilterableToolbar', () => {
             <FilterableToolbar
                 categories={ {
                     status: [],
-                    quickDateRange: [],
-                    jobType: [],
-                    orgId: [],
-                    clusterId: [],
-                    templateId: [],
-                    sortBy: []
+                    quick_date_range: [],
+                    job_type: [],
+                    org_id: [],
+                    cluster_id: [],
+                    template_id: [],
+                    sort_by: []
                 } }
-                filters={ { status: null, quickDateRange: null } }
+                filters={ { status: null, quick_date_range: null } }
             />);
         expect(wrapper).toBeTruthy();
     });
@@ -22,14 +22,14 @@ describe('Components/Toolbar/FilterableToolbar', () => {
             <FilterableToolbar
                 categories={ {
                     status: [],
-                    quickDateRange: [],
-                    jobType: [],
-                    orgId: [],
-                    clusterId: [],
-                    templateId: [],
-                    sortBy: []
+                    job_type: [],
+                    org_id: [],
+                    cluster_id: [],
+                    template_id: [],
+                    quick_date_range: [],
+                    sort_by: []
                 } }
-                filters={ { status: null, quickDateRange: null } }
+                filters={ { status: null, quick_date_range: null } }
             />);
         const selectBoxes = wrapper.find({ className: 'pf-c-select__toggle' });
 
