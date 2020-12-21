@@ -1,51 +1,86 @@
 import FilterableToolbar from './Toolbar';
 
+const mockCategories = {
+    status: [],
+    job_type: [],
+    org_id: [],
+    cluster_id: [],
+    template_id: [],
+    quick_date_range: [],
+    sort_by: []
+};
+
+const mockFilters = { status: null, quick_date_range: null };
+
 describe('Components/Toolbar/FilterableToolbar', () => {
-    it('should shallow mount', () => {
-        let wrapper = shallow(
-            <FilterableToolbar
-                categories={ {
-                    status: [],
-                    quick_date_range: [],
-                    job_type: [],
-                    org_id: [],
-                    cluster_id: [],
-                    template_id: [],
-                    sort_by: []
-                } }
-                filters={ { status: null, quick_date_range: null } }
-            />);
-        expect(wrapper).toBeTruthy();
-    });
-    it('should have 2 button at initialization', () => {
-        let wrapper = mount(
-            <FilterableToolbar
-                categories={ {
-                    status: [],
-                    job_type: [],
-                    org_id: [],
-                    cluster_id: [],
-                    template_id: [],
-                    quick_date_range: [],
-                    sort_by: []
-                } }
-                filters={ { status: null, quick_date_range: null } }
-            />);
-        const selectBoxes = wrapper.find({ className: 'pf-c-select__toggle' });
-
-        // Categories, filter, date, sort
-        expect(selectBoxes.length).toBe(4);
-        const selectBoxTexts = selectBoxes.map((b) => {
-            return b.text().trim();
+    describe('General Toolbar', () => {
+        it('should render without issuess', () => {
+            let wrapper = shallow(
+                <FilterableToolbar
+                    categories={ mockCategories }
+                    filters={ mockFilters }
+                />);
+            expect(wrapper).toBeTruthy();
         });
+        it('should render 3 sections: Filters, Date Range, Sort', () => {
+            let wrapper = shallow(
+                <FilterableToolbar
+                    categories={ mockCategories }
+                    filters={ mockFilters }
+                />);
+            const filters = wrapper.find('FilterCategoriesGroup');
+            const date = wrapper.find('QuickDateGroup');
+            const sort = wrapper.find('SortByGroup');
+            expect(filters.length).toBe(1);
+            expect(date.length).toBe(1);
+            expect(sort.length).toBe(1);
+        });
+        it('should render settings if `hasSettings` prop is passed', () => {
+            let wrapper = shallow(
+                <FilterableToolbar
+                    categories={ mockCategories }
+                    filters={ mockFilters }
+                    hasSettings
+                />);
+            const settings = wrapper.find('Button[aria-label="settings"]');
+            expect(settings.length).toBe(1);
+        });
+        it('should render pagination if `pagination` prop is passed', () => {
+            const mockPagination = (<span></span>);
+            let wrapper = shallow(
+                <FilterableToolbar
+                    categories={ mockCategories }
+                    filters={ mockFilters }
+                    pagination={ mockPagination }
+                />);
+            const pagination = wrapper.find('ToolbarItem').find('span');
+            expect(pagination.length).toBe(1);
+        });
+    });
+    describe('Category filters', () => {
+        it('should render the correct number of categories you pass it', () => {
+            const mockCategories = {
+                status: [],
+                job_type: []
+            };
 
-        // Initialized with the placeholders since we passed an empty array to them.
-        expect(selectBoxTexts).toStrictEqual(
-            [
-                'Status',
-                'Filter by job status',
-                'Filter by date',
-                'Sort by attribute'
-            ]);
+            let wrapper = mount(
+                <FilterableToolbar
+                    categories={ mockCategories }
+                    filters={ mockFilters }
+                />);
+            const filterItem = wrapper.find('ToolbarFilterItem');
+            expect(filterItem.length).toEqual(Object.keys(mockCategories).length);
+        });
+        it('should filter out quick_date_range and sort_by params', () => {
+            let wrapper = mount(
+                <FilterableToolbar
+                    categories={ mockCategories }
+                    filters={ mockFilters }
+                />);
+            const filterItem = wrapper.find('FilterCategoriesGroup').find('ToolbarFilterItem');
+            const { sort_by, quick_date_range, ...rest } = mockCategories;
+            expect(filterItem.length).toEqual(Object.keys(rest).length);
+        });
     });
 });
