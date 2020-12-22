@@ -27,7 +27,7 @@ const FilterableToolbar = ({
     categories,
     filters,
     setFilters,
-    pagination,
+    pagination = null,
     hasSettings = false
 }) => {
     const [ currentCategory, setCurrentCategory ] = useState(
