@@ -40,7 +40,7 @@ export const useQueryParams = initial => {
             case 'SET_QUICK_DATE_RANGE': {
                 let newState = { ...state };
                 if (value !== 'custom') {
-                    newState = { ...newState, start_date: '', end_date: '' };
+                    newState = { ...newState, start_date: null, end_date: null };
                 }
 
                 newState = { ...newState, ...value };
