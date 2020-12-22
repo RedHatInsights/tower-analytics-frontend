@@ -36,7 +36,6 @@ const FilterableToolbar = ({
     const [ settingsExpanded, setSettingsExpanded ] = useState(false);
 
     const { quick_date_range, sort_by, ...filterCategories } = categories;
-
     const onInputChange = (type, value) => {
         setFilters(type, value);
     };
@@ -77,8 +76,8 @@ const FilterableToolbar = ({
             />
             { filters.quick_date_range === 'custom' && (
                 <CustomDateSelector
-                    startDate={ filters.start_date }
-                    endDate={ filters.end_date }
+                    startDate={ filters.start_date ? filters.start_date : '' }
+                    endDate={ filters.end_date ? filters.end_date : '' }
                     onInputChange={ onInputChange }
                 />
             ) }
