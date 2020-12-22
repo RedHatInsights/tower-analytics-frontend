@@ -67,7 +67,7 @@ export const useQueryParams = initial => {
                     sort_by: '',
                     start_date: '',
                     end_date: '',
-                    only_root_workflow_and_standalone_jobs: false
+                    only_root_workflows_and_standalone_jobs: false
                 };
             default:
                 throw new Error();
@@ -86,7 +86,7 @@ export const useQueryParams = initial => {
         sort_by: 'SET_SORTBY',
         start_date: 'SET_START_DATE',
         end_date: 'SET_END_DATE',
-        only_root_workflow_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS'
+        only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS'
     };
 
     return {
