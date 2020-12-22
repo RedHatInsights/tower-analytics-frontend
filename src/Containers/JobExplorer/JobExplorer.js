@@ -57,7 +57,7 @@ const JobExplorer = ({
     const [ currPage, setCurrPage ] = useState(1);
     const [ explorerOptions, setExplorerOptions ] = useState({});
 
-    let initialSearchParams = parse(search, { arrayFormat: 'bracket' });
+    let initialSearchParams = parse(search, { arrayFormat: 'bracket', parseBooleans: true });
     let combined = { ...initialQueryParams, ...initialSearchParams };
     const {
         queryParams,
