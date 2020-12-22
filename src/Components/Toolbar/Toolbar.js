@@ -182,9 +182,9 @@ const FilterableToolbar = ({
 };
 
 FilterableToolbar.propTypes = {
-    categories: PropTypes.object,
-    filters: PropTypes.object,
-    setFilters: PropTypes.func,
+    categories: PropTypes.object.isRequired,
+    filters: PropTypes.object.isRequired,
+    setFilters: PropTypes.func.isRequired,
     pagination: PropTypes.object,
     hasSettings: PropTypes.bool
 };
