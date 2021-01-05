@@ -1,36 +1,14 @@
-
-import { mount, shallow } from 'enzyme';
 import App from './App.js';
 import { Router } from 'react-router-dom';
-
-import configureStore from 'redux-mock-store';
-import { Provider } from 'react-redux';
-
+import { mountPage } from './Containers/tests/helpers';
 import packageJson from '../package.json';
 
 describe('App', () => {
-    it('App loads', () => {
+    it('should have function', () => {
         expect(App).toBeTruthy();
     });
-    it('should render successfully', () => {
-        shallow(<App />);
-    });
+
     it('should return a div with a version attribute', () => {
-
-        // the insights object
-        const mockInsights = {
-            chrome: {
-                on() {},
-                init() {},
-                identifyApp() {},
-                auth: {
-                    getUser: () => {
-                        return 'bob';
-                    }
-                }
-            }
-        };
-
         const history = {
             listen() {
                 return { unlisten() {} };
@@ -46,16 +24,13 @@ describe('App', () => {
             }
         };
 
-        const mockStore = configureStore();
-        const store = mockStore({});
-        global.insights = mockInsights;
-        let wrapper = mount(
-            <Provider store={ store } >
-                <Router history={ history }>
-                    <App />
-                </Router>
-            </Provider>
+        const Component = () => (
+            <Router history={ history }>
+                <App />
+            </Router>
         );
+
+        const wrapper = mountPage(Component);
 
         let componentVersion = wrapper.find('#automation-analytics-application').props().version;
         expect(componentVersion).toBe(packageJson.version);
