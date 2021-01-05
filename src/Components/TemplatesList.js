@@ -165,8 +165,7 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams, 
             'successful_count',
             'failed_count',
             'total_count',
-            'most_failed_tasks',
-            'most_failed_steps'
+            jobType === 'job' ? 'most_failed_tasks' : 'most_failed_steps'
         ],
         status: qp.status,
         quickDateRange: qp.quick_date_range ? qp.quick_date_range : 'last_30_days',
