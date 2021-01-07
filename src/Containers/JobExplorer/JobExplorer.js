@@ -89,6 +89,7 @@ const JobExplorer = ({
     useEffect(() => {
         setApiError(null);
         setIsLoading(true);
+        let didCancel = false;
         window.insights.chrome.auth.getUser()
         .then(() => {
             Promise.all([
@@ -98,6 +99,8 @@ const JobExplorer = ({
                 { items: jobExplorerData = [], meta = {}},
                 options
             ]) => {
+                if (didCancel) { return; }
+
                 setJobExplorerData(jobExplorerData);
                 setMeta(meta);
 
@@ -110,6 +113,7 @@ const JobExplorer = ({
                 setIsLoading(false);
             });
         });
+        return () => didCancel = true;
     }, [ queryParams ]);
 
     const returnOffsetVal = page => (page - 1) * queryParams.limit;
