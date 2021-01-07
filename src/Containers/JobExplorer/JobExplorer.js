@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { parse, stringify } from 'query-string';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import { keysToCamel } from '../../Utilities/helpers';
 import { Paths } from '../../paths';
 
 import LoadingState from '../../Components/LoadingState';
@@ -58,13 +57,10 @@ const JobExplorer = ({
     const [ currPage, setCurrPage ] = useState(1);
     const [ explorerOptions, setExplorerOptions ] = useState({});
 
-    let initialSearchParams = keysToCamel(
-        parse(search, { arrayFormat: 'bracket' })
-    );
+    let initialSearchParams = parse(search, { arrayFormat: 'bracket', parseBooleans: true });
     let combined = { ...initialQueryParams, ...initialSearchParams };
     const {
         queryParams,
-        urlMappedQueryParams,
         setLimit,
         setOffset,
         setFromToolbar
@@ -72,7 +68,7 @@ const JobExplorer = ({
 
     const updateURL = () => {
         const { jobExplorer } = Paths;
-        const search = stringify(urlMappedQueryParams, { arrayFormat: 'bracket' });
+        const search = stringify(queryParams, { arrayFormat: 'bracket' });
         history.replace({
             pathname: jobExplorer,
             search
@@ -93,19 +89,22 @@ const JobExplorer = ({
     useEffect(() => {
         setApiError(null);
         setIsLoading(true);
+        let didCancel = false;
         window.insights.chrome.auth.getUser()
         .then(() => {
             Promise.all([
-                readJobExplorer({ params: urlMappedQueryParams }),
-                readJobExplorerOptions({ params: urlMappedQueryParams })
+                readJobExplorer({ params: queryParams }),
+                readJobExplorerOptions({ params: queryParams })
             ]).then(([
                 { items: jobExplorerData = [], meta = {}},
                 options
             ]) => {
+                if (didCancel) { return; }
+
                 setJobExplorerData(jobExplorerData);
                 setMeta(meta);
 
-                const { attributes, groupBy, ...rest } = keysToCamel(options);
+                const { attributes, group_by, ...rest } = options;
                 setExplorerOptions(rest);
             })
             .catch(e => setApiError(e.error))
@@ -114,6 +113,7 @@ const JobExplorer = ({
                 setIsLoading(false);
             });
         });
+        return () => didCancel = true;
     }, [ queryParams ]);
 
     const returnOffsetVal = page => (page - 1) * queryParams.limit;
