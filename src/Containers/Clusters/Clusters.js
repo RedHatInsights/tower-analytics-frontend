@@ -35,24 +35,24 @@ import ApiErrorState from '../../Components/ApiErrorState';
 import { clusters } from '../../Utilities/constants';
 
 const initialTopTemplateParams = {
-    groupBy: 'template',
+    group_by: 'template',
     limit: 10,
-    jobType: [ 'job' ],
-    groupByTime: false,
+    job_type: [ 'job' ],
+    group_by_time: false,
     status: [ 'successful', 'failed' ]
 };
 
 const initialTopWorkflowParams = {
-    groupBy: 'template',
+    group_by: 'template',
     limit: 10,
-    jobType: [ 'workflowjob' ],
-    groupByTime: false,
+    job_type: [ 'workflowjob' ],
+    group_by_time: false,
     status: [ 'successful', 'failed' ]
 };
 
 const initialModuleParams = {
-    groupBy: 'module',
-    sortBy: 'host_task_count:desc',
+    group_by: 'module',
+    sort_by: 'host_task_count:desc',
     limit: 10
 };
 
@@ -74,7 +74,6 @@ const Clusters = ({ history }) => {
     const [ quickDateRanges, setQuickDateRanges ] = useState([]);
     const {
         queryParams,
-        urlMappedQueryParams,
         setFromToolbar
     } = useQueryParams({ ...clusters.defaultParams });
 
@@ -86,29 +85,29 @@ const Clusters = ({ history }) => {
         initialOptionsParams
     );
 
-    const { clusterId, orgId, templateId, quickDateRange } = queryParams;
+    const { cluster_id, org_id, template_id, quick_date_range } = queryParams;
 
     const topTemplatesParams = {
-        clusterId,
-        orgId,
-        templateId,
-        quickDateRange,
+        cluster_id,
+        org_id,
+        template_id,
+        quick_date_range,
         ...initialTopTemplateParams
     };
 
     const topWorkflowParams = {
-        clusterId,
-        orgId,
-        templateId,
-        quickDateRange,
+        cluster_id,
+        org_id,
+        template_id,
+        quick_date_range,
         ...initialTopWorkflowParams
     };
 
     const topModuleParams = {
-        clusterId,
-        orgId,
-        templateId,
-        quickDateRange,
+        cluster_id,
+        org_id,
+        template_id,
+        quick_date_range,
         ...initialModuleParams
     };
 
@@ -152,25 +151,25 @@ const Clusters = ({ history }) => {
 
         const fetchEndpoints = async () => {
             await window.insights.chrome.auth.getUser();
-            readJobExplorer({ params: urlMappedQueryParams(queryParams) })
+            readJobExplorer({ params: queryParams })
             .then(({ items: chartData }) => {
-                queryParams.clusterId.length > 0 ? setLineChartData(chartData) : setBarChartData(chartData);
+                queryParams.cluster_id.length > 0 ? setLineChartData(chartData) : setBarChartData(chartData);
             })
             .catch(e => setApiError(e.error));
 
-            readJobExplorer({ params: urlMappedQueryParams(topTemplatesParams) })
+            readJobExplorer({ params: topTemplatesParams })
             .then(({ items: templatesData }) => {
                 setTemplatesData(templatesData);
             })
             .catch(e => setApiError(e.error));
 
-            readJobExplorer({ params: urlMappedQueryParams(topWorkflowParams) })
+            readJobExplorer({ params: topWorkflowParams })
             .then(({ items: workflowData }) => {
                 setWorkflowsData(workflowData);
             })
             .catch(e => setApiError(e.error));
 
-            readEventExplorer({ params: urlMappedQueryParams(topModuleParams) }).then(({ items: modulesData }) => {
+            readEventExplorer({ params: topModuleParams }).then(({ items: modulesData }) => {
                 setModulesData(modulesData);
             })
             .catch(e => setApiError(e.error));
@@ -194,12 +193,12 @@ const Clusters = ({ history }) => {
                 <PageHeaderTitle title={ 'Clusters' } />
                 <FilterableToolbar
                     categories={ {
-                        jobType: jobTypes,
-                        orgId: orgIds,
-                        clusterId: clusterIds,
-                        templateId: templateIds,
-                        quickDateRange: quickDateRanges,
-                        sortBy
+                        job_type: jobTypes,
+                        org_id: orgIds,
+                        cluster_id: clusterIds,
+                        template_id: templateIds,
+                        quick_date_range: quickDateRanges,
+                        sort_by: sortBy
                     } }
                     filters={ queryParams }
                     setFilters={ setFromToolbar }
@@ -224,25 +223,25 @@ const Clusters = ({ history }) => {
                   </PFCardTitle>
                   <CardBody>
                       { isLoading && !preflightError && <LoadingState /> }
-                      { queryParams.clusterId.length <= 0 &&
+                      { queryParams.cluster_id.length <= 0 &&
                                     !isLoading && !apiError && (
                           <BarChart
                               margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                               id="d3-bar-chart-root"
                               data={ barChartData }
-                              templateId={ queryParams.templateId }
-                              orgId={ queryParams.orgId }
+                              templateId={ queryParams.template_id }
+                              orgId={ queryParams.org_id }
                           />
                       ) }
-                      { queryParams.clusterId.length > 0  &&
+                      { queryParams.cluster_id.length > 0  &&
                                     !isLoading && !apiError && (
                           <LineChart
                               margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                               id="d3-line-chart-root"
                               data={ lineChartData }
-                              clusterId={ queryParams.clusterId }
-                              templateId={ queryParams.templateId }
-                              orgId={ queryParams.orgId }
+                              clusterId={ queryParams.cluster_id }
+                              templateId={ queryParams.template_id }
+                              orgId={ queryParams.org_id }
                           />
                       ) }
                   </CardBody>
@@ -254,7 +253,7 @@ const Clusters = ({ history }) => {
                   <TemplatesList
                       history={ history }
                       queryParams={ queryParams }
-                      qp={ urlMappedQueryParams(queryParams) }
+                      qp={ queryParams }
                       clusterId={ queryParams.cluster_id }
                       templates={ workflowData }
                       isLoading={ isLoading }
@@ -264,7 +263,7 @@ const Clusters = ({ history }) => {
                   <TemplatesList
                       history={ history }
                       queryParams={ queryParams }
-                      qp={ urlMappedQueryParams(queryParams) }
+                      qp={ queryParams }
                       clusterId={ queryParams.cluster_id }
                       templates={ templatesData }
                       isLoading={ isLoading }

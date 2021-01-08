@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { formatDateTime, formatSeconds } from '../Utilities/helpers';
-import { useQueryParams } from '../Utilities/useQueryParams';
 import styled from 'styled-components';
 import LoadingState from '../Components/LoadingState';
 import NoData from '../Components/NoData';
@@ -131,13 +130,9 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams, 
     const [ relatedJobs, setRelatedJobs ] = useState([]);
     const [ stats, setStats ] = useState([]);
 
-    const {
-        urlMappedQueryParams
-    } = useQueryParams({});
-
     const relatedTemplateJobsParams = {
         ...qp,
-        templateId: [ selectedId ],
+        template_id: [ selectedId ],
         attributes: [
             'id',
             'status',
@@ -149,16 +144,16 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams, 
             'cluster_name',
             'org_name'
         ],
-        groupByTime: false,
+        group_by_time: false,
         limit: 5,
-        sortBy: 'created:asc',
-        quickDateRange: qp.quick_date_range ? qp.quick_date_range : 'last_30_days',
-        jobType: [ jobType ]
+        sort_by: 'created:asc',
+        quick_date_range: qp.quick_date_range ? qp.quick_date_range : 'last_30_days',
+        job_type: [ jobType ]
     };
 
     const agreggateTemplateParams = {
-        groupBy: 'template',
-        templateId: [ selectedId ],
+        group_by: 'template',
+        template_id: [ selectedId ],
         attributes: [
             'elapsed',
             'job_type',
@@ -168,8 +163,8 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams, 
             jobType === 'job' ? 'most_failed_tasks' : 'most_failed_steps'
         ],
         status: qp.status,
-        quickDateRange: qp.quick_date_range ? qp.quick_date_range : 'last_30_days',
-        jobType: [ jobType ]
+        quick_date_range: qp.quick_date_range ? qp.quick_date_range : 'last_30_days',
+        job_type: [ jobType ]
     };
 
     useEffect(() => {
@@ -177,13 +172,13 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams, 
 
         const update = async () => {
             await window.insights.chrome.auth.getUser();
-            readJobExplorer({ params: urlMappedQueryParams(agreggateTemplateParams) }).then(({ items: stats }) => {
+            readJobExplorer({ params: agreggateTemplateParams }).then(({ items: stats }) => {
                 if (!ignore) {
                     setStats(stats[0]);
                 }
             });
             // template jobs list
-            readJobExplorer({ params: urlMappedQueryParams(relatedTemplateJobsParams) }).then(({ items: relatedJobs }) => {
+            readJobExplorer({ params: relatedTemplateJobsParams }).then(({ items: relatedJobs }) => {
                 if (!ignore) {
                     setRelatedJobs(relatedJobs);
                 }
@@ -203,8 +198,8 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams, 
             template_id: [ selectedId ],
             status: [ 'successful', 'failed', 'new', 'pending', 'waiting', 'error', 'canceled', 'running' ],
             job_type: [ 'job' ],
-            start_date: queryParams.startDate,
-            end_date: queryParams.endDate,
+            start_date: queryParams.start_date,
+            end_date: queryParams.end_date,
             quick_date_range: 'custom',
             cluster_id: [ clusterId ]
         };
