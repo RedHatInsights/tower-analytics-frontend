@@ -1,6 +1,3 @@
-/* eslint-disable max-len */
-/*eslint camelcase: ["error", {allow: ["setStart_Date","setEnd_Date","cluster_id","org_id","job_type","template_id","quick_date_range","sort_by", "start_date", "end_date", "group_by_time", "group_by"]}]*/
-
 import React, { useState, useEffect } from 'react';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';

@@ -1,4 +1,3 @@
-/*eslint camelcase: ["error", {allow: ["host_task_count"]}]*/
 import React from 'react';
 import PropTypes from 'prop-types';
 import { trimStr } from '../Utilities/helpers';
