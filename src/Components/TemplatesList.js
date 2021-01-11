@@ -123,7 +123,7 @@ const formatTopFailedStep = data => {
 const formatSuccessRate = (successCount, totalCount) => Math.ceil(successCount / totalCount * 100) + '%';
 const formatAvgRun = (elapsed, totalCount) => new Date(Math.ceil(elapsed / totalCount) * 1000).toISOString().substr(11, 8);
 const formatTotalTime = elapsed => new Date(elapsed * 1000).toISOString().substr(11, 8);
-const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams, qp, title, jobType }) => {
+const TemplatesList = ({ history, templates, isLoading, qp, title, jobType }) => {
     const [ isModalOpen, setIsModalOpen ] = useState(false);
     const [ selectedId, setSelectedId ] = useState(null);
     const [ selectedTemplate, setSelectedTemplate ] = useState([]);
@@ -198,10 +198,7 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams, 
             template_id: [ selectedId ],
             status: [ 'successful', 'failed', 'new', 'pending', 'waiting', 'error', 'canceled', 'running' ],
             job_type: [ 'job' ],
-            start_date: queryParams.start_date,
-            end_date: queryParams.end_date,
-            quick_date_range: 'custom',
-            cluster_id: [ clusterId ]
+            quick_date_range: 'last_30_days'
         };
 
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });

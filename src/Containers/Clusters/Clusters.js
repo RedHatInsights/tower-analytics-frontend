@@ -252,9 +252,7 @@ const Clusters = ({ history }) => {
               >
                   <TemplatesList
                       history={ history }
-                      queryParams={ queryParams }
                       qp={ queryParams }
-                      clusterId={ queryParams.cluster_id }
                       templates={ workflowData }
                       isLoading={ isLoading }
                       title={ 'Top workflows' }
@@ -262,9 +260,7 @@ const Clusters = ({ history }) => {
                   />
                   <TemplatesList
                       history={ history }
-                      queryParams={ queryParams }
                       qp={ queryParams }
-                      clusterId={ queryParams.cluster_id }
                       templates={ templatesData }
                       isLoading={ isLoading }
                       title={ 'Top templates' }
