@@ -19,13 +19,13 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: clone the aa-hacking repo
-        run: git clone https://github.com/jctanner/aa-hacking $GITHUB_WORKSPACE/aa-hacking
+      - name: clone the pipeline repo
+        run: git clone https://github.com/RedHatInsights/analytics-pipeline $GITHUB_WORKSPACE/analytics-pipeline
       
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
         with:
-          path: aa-hacking/srv/tower-analytics-frontend
+          path: analytics-pipeline/srv/tower-analytics-frontend
 
       #- name: make the venv
       #  run: |
@@ -37,13 +37,13 @@ jobs:
 
       - name: make the stack
         run: make stack_ci_cypress_debug
-        working-directory: aa-hacking
+        working-directory: analytics-pipeline
 
       - name: save the screenshots 
         uses: actions/upload-artifact@v2
         with:
           name: screens
-          path: ./aa-hacking/srv/tower-analytics-frontend/cypress/screenshots
+          path: ./analytics-pipeline/srv/tower-analytics-frontend/cypress/screenshots
           retention-days: 5
         if: always()
 
@@ -51,6 +51,6 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: video
-          path: ./aa-hacking/srv/tower-analytics-frontend/cypress/videos
+          path: ./analytics-pipeline/srv/tower-analytics-frontend/cypress/videos
           retention-days: 5
         if: always()
