@@ -168,7 +168,7 @@ describe('Containers/OrganizationStatistics', () => {
         });
         wrapper.update();
 
-        const { sort_by, ...rest } = lastCallBody(jobExplorerUrl);
+        const { sort_by, attributes, granularity, ...rest } = lastCallBody(jobExplorerUrl);
 
         expect(sort_by.split(':')[1]).toBe('desc');
         expect(rest).toEqual(defaultQueryParams);

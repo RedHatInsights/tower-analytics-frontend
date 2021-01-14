@@ -68,7 +68,7 @@ const OrganizationStatistics = ({ history }) => {
     const [ preflightError, setPreFlightError ] = useState(null);
     const [ pieChart1Data, setPieChart1Data ] = useState([]);
     const [ pieChart2Data, setPieChart2Data ] = useState([]);
-    const [ orgsChartData, setorgsChartData ] = useState([]);
+    const [ orgsChartData, setOrgsChartData ] = useState([]);
     const [ options, setOptions ] = useState({});
     const [ isLoading, setIsLoading ] = useState(true);
     const [ apiError, setApiError ] = useState(null);
@@ -96,9 +96,9 @@ const OrganizationStatistics = ({ history }) => {
         }))
     }));
 
-    const pieChartMapper = data => data.map(el => ({
+    const pieChartMapper = (data, attrName) => data.map(el => ({
         id: el.id,
-        count: el.host_count,
+        count: el[attrName],
         name: el.name || 'No organization'
     }));
 
@@ -123,9 +123,9 @@ const OrganizationStatistics = ({ history }) => {
             const { meta, inventory_id, ...rest } = options;
 
             setOptions({ ...rest, sort_by: meta.sort_by });
-            setorgsChartData(orgsChartMapper(orgsChartData));
-            setPieChart1Data(pieChartMapper(pieChart1Data));
-            setPieChart2Data(pieChartMapper(pieChart2Data));
+            setOrgsChartData(orgsChartMapper(orgsChartData));
+            setPieChart1Data(pieChartMapper(pieChart1Data, 'host_count'));
+            setPieChart2Data(pieChartMapper(pieChart2Data, 'host_task_count'));
         })
         .catch(e => setApiError(e.error))
         .finally(() => setIsLoading(false)));

@@ -100,6 +100,7 @@ export const readJobRunsByOrg = ({ params = {}}) => {
             ...rest,
             group_by: 'org',
             include_others: true,
+            attributes: [ 'host_count' ],
             sort_by: `total_count:${sort_by}`
         })
     }).then(handleResponse);
@@ -116,7 +117,10 @@ export const readJobEventsByOrg = ({ params = {}}) => {
             ...rest,
             group_by: 'org',
             include_others: true,
-            sort_by: `host_task_count:${sort_by}` })
+            granularity: 'daily',
+            attributes: [ 'host_task_count' ],
+            sort_by: `host_task_count:${sort_by}`
+        })
     }).then(handleResponse);
 };
 
