@@ -12,6 +12,7 @@ const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
 const jobExplorerOptionsEndpoint = '/api/tower-analytics/v1/job_explorer_options/';
 const ROIEndpoint = '/api/tower-analytics/v1/roi_templates/';
 const ROITemplatesOptionsEndpoint = '/api/tower-analytics/v1/roi_templates_options/';
+const orgOptionsEndpoint = `/api/tower-analytics/v1/dashboard_organization_statistics_options/`;
 
 function getAbsoluteUrl() {
     const url = window.location.href;
@@ -76,6 +77,15 @@ export const readJobsByDateAndOrg = ({ params = {}}) => {
             group_by: 'org',
             sort_by: `id:desc`
         })
+    }).then(handleResponse);
+};
+
+export const readOrgOptions = ({ params = {}}) => {
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(orgOptionsEndpoint, formattedUrl);
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(params)
     }).then(handleResponse);
 };
 

@@ -63,9 +63,5 @@ export const organizationStatistics = {
         template_id: [],
         start_date: null,
         end_date: null
-    },
-    sort_by: [
-        { key: 'desc', value: 'Top 5 Orgs' },
-        { key: 'asc', value: 'Bottom 5 Orgs' }
-    ]
+    }
 };

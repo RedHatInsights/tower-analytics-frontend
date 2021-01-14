@@ -13,7 +13,7 @@ import {
     readJobsByDateAndOrg,
     readJobRunsByOrg,
     readJobEventsByOrg,
-    readJobExplorerOptions
+    readOrgOptions
 } from '../../Api';
 
 import { Main, PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components';
@@ -107,7 +107,7 @@ const OrganizationStatistics = ({ history }) => {
         setIsLoading(true);
         window.insights.chrome.auth.getUser().then(() => Promise.all(
             [
-                readJobExplorerOptions({ params: queryParams }),
+                readOrgOptions({ params: queryParams }),
                 readJobsByDateAndOrg({ params: queryParams }),
                 readJobRunsByOrg({ params: queryParams }),
                 readJobEventsByOrg({ params: queryParams })
@@ -120,9 +120,9 @@ const OrganizationStatistics = ({ history }) => {
         ]) => {
             if (didCancel) { return; }
 
-            const { sort_by, group_by, attributes, ...rest } = options;
+            const { meta, inventory_id, ...rest } = options;
 
-            setOptions({ ...rest, sort_by: constants.sort_by });
+            setOptions({ ...rest, sort_by: meta.sort_by });
             setorgsChartData(orgsChartMapper(orgsChartData));
             setPieChart1Data(pieChartMapper(pieChart1Data));
             setPieChart2Data(pieChartMapper(pieChart2Data));

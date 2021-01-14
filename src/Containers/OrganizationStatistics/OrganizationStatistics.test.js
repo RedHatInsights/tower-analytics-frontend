@@ -34,7 +34,7 @@ const dummyPieData = (size) => ({
     }))
 });
 
-const jobExplorerOptionsUrl = 'path:/api/tower-analytics/v1/job_explorer_options/';
+const jobExplorerOptionsUrl = 'path:/api/tower-analytics/v1/dashboard_organization_statistics_options/';
 const jobExplorerOptions = {
     quick_date_range: [
         { key: 'last_30_days', value: 'Last 30 days' },
@@ -113,10 +113,10 @@ describe('Containers/OrganizationStatistics', () => {
         wrapper.update();
 
         expect(wrapper.text()).not.toEqual(
-            expect.stringContaining('No Data')
+            expect.stringContaining('*No Data*')
         );
         expect(wrapper.text()).not.toEqual(
-            expect.stringContaining('Loading')
+            expect.stringContaining('*Loading*')
         );
     });
 
