@@ -7,7 +7,6 @@ import Legend from '../Utilities/Legend';
 import { Paths } from '../paths';
 import { formatDate } from '../Utilities/helpers';
 import { stringify } from 'query-string';
-import { pfmulti } from '../Utilities/colors';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -16,8 +15,6 @@ const Wrapper = styled.div`
   flex-wrap: nowrap;
   flex-shrink: 0;
 `;
-
-const color = d3.scaleOrdinal(pfmulti);
 
 class Tooltip {
     constructor(props) {
@@ -240,14 +237,11 @@ class GroupedBarChart extends Component {
         }
 
         // create our colors array to send to the Legend component
-        const colors = this.orgsList.reduce((colors, org) => {
-            colors.push({
-                name: org.name,
-                value: color(org.name),
-                id: org.id
-            });
-            return colors;
-        }, []);
+        const colors = this.orgsList.map(org => ({
+            name: org.name,
+            value: this.props.colorFunc(org.name),
+            id: org.id
+        }));
         this.setState({ colors });
         this.draw();
     }
@@ -372,6 +366,7 @@ class GroupedBarChart extends Component {
         });
         bars.exit().remove();
 
+        const color = this.props.colorFunc;
         const subEnter = bars
         .enter()
         .append('rect')
@@ -441,7 +436,8 @@ GroupedBarChart.propTypes = {
     getHeight: PropTypes.func,
     getWidth: PropTypes.func,
     timeFrame: PropTypes.number,
-    history: PropTypes.object
+    history: PropTypes.object,
+    colorFunc: PropTypes.func
 };
 
 export default initializeChart(GroupedBarChart);

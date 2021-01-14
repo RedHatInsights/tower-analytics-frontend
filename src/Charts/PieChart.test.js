@@ -1,6 +1,9 @@
-/* eslint-disable */ 
-import { mount, shallow } from 'enzyme';
+/* eslint-disable */
+import { pfmulti } from '../Utilities/colors';
+import { scaleOrdinal } from 'd3';
 import PieChart from './PieChart.js';
+
+const colorFunc = scaleOrdinal(pfmulti);
 
 // for simulatting hover events
 const mouseover = new MouseEvent('mouseover', {
@@ -72,7 +75,8 @@ describe('Charts/PieChart/Tooltip', () => {
                 top: 0
             },
             getWidth: () => 700,
-            getHeight: () => 450
+            getHeight: () => 450,
+            colorFunc
         };
 
         // each piechart has a different data shape ...

@@ -29,6 +29,10 @@ import PieChart from '../../Charts/PieChart';
 import FilterableToolbar from '../../Components/Toolbar/';
 import { organizationStatistics as constants } from '../../Utilities/constants';
 
+// For chart colors
+import { pfmulti } from '../../Utilities/colors';
+import { scaleOrdinal } from 'd3';
+
 const CardTitle = styled(PFCardTitle)`
   border-bottom: 2px solid #ebebeb;
   display: flex;
@@ -63,6 +67,8 @@ const CardContainer = styled.div`
 const TopCard = styled(Card)`
   min-height: 500px;
 `;
+
+const colorFunc = scaleOrdinal(pfmulti);
 
 const OrganizationStatistics = ({ history }) => {
     const [ preflightError, setPreFlightError ] = useState(null);
@@ -172,6 +178,7 @@ const OrganizationStatistics = ({ history }) => {
                                         data={ orgsChartData }
                                         history={ history }
                                         timeFrame={ orgsChartData.length }
+                                        colorFunc={ colorFunc }
                                     />
                                 ) }
                             </CardBody>
@@ -193,6 +200,7 @@ const OrganizationStatistics = ({ history }) => {
                                             id="d3-donut-1-chart-root"
                                             data={ pieChart1Data }
                                             timeFrame={ pieChart1Data.length }
+                                            colorFunc={ colorFunc }
                                         />
                                     ) }
                                 </CardBody>
@@ -213,6 +221,7 @@ const OrganizationStatistics = ({ history }) => {
                                             id="d3-donut-2-chart-root"
                                             data={ pieChart2Data }
                                             timeFrame={ pieChart2Data.length }
+                                            colorFunc={ colorFunc }
                                         />
                                     ) }
                                 </CardBody>
