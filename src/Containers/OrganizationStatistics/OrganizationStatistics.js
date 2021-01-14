@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import { keysToCamel } from '../../Utilities/helpers';
 
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
@@ -75,8 +74,7 @@ const OrganizationStatistics = ({ history }) => {
     const [ apiError, setApiError ] = useState(null);
     const {
         queryParams,
-        setFromToolbar,
-        urlMappedQueryParams
+        setFromToolbar
     } = useQueryParams(constants.defaultParams);
 
     useEffect(() => {
@@ -109,10 +107,10 @@ const OrganizationStatistics = ({ history }) => {
         setIsLoading(true);
         window.insights.chrome.auth.getUser().then(() => Promise.all(
             [
-                readJobExplorerOptions({ params: urlMappedQueryParams }),
-                readJobsByDateAndOrg({ params: urlMappedQueryParams }),
-                readJobRunsByOrg({ params: urlMappedQueryParams }),
-                readJobEventsByOrg({ params: urlMappedQueryParams })
+                readJobExplorerOptions({ params: queryParams }),
+                readJobsByDateAndOrg({ params: queryParams }),
+                readJobRunsByOrg({ params: queryParams }),
+                readJobEventsByOrg({ params: queryParams })
             ]
         ).then(([
             options,
@@ -122,10 +120,9 @@ const OrganizationStatistics = ({ history }) => {
         ]) => {
             if (didCancel) { return; }
 
-            /* eslint-disable-next-line */
-            const { sortBy, groupBy, attributes, ...rest } = keysToCamel(options);
+            const { sort_by, group_by, attributes, ...rest } = options;
 
-            setOptions({ ...rest, sortBy: constants.sortBy });
+            setOptions({ ...rest, sort_by: constants.sort_by });
             setorgsChartData(orgsChartMapper(orgsChartData));
             setPieChart1Data(pieChartMapper(pieChart1Data));
             setPieChart2Data(pieChartMapper(pieChart2Data));
@@ -147,82 +144,82 @@ const OrganizationStatistics = ({ history }) => {
                 </Main>
             ) }
             { !preflightError && (
-        <>
-          <Main style={ { paddingBottom: '0' } }>
-              <Card>
-                  <CardBody>
-                      <FilterableToolbar
-                          categories={ options }
-                          filters={ queryParams }
-                          setFilters={ setFromToolbar }
-                      />
-                  </CardBody>
-              </Card>
-          </Main>
-          <Main>
-              <TopCard>
-                  <CardTitle>
-                      <h2>Organization Status</h2>
-                  </CardTitle>
-                  <CardBody>
-                      { apiError && <ApiErrorState message={ apiError } /> }
-                      { !apiError && isLoading && <LoadingState /> }
-                      { !apiError && !isLoading && orgsChartData.length <= 0 && <NoData /> }
-                      { !apiError && !isLoading && orgsChartData.length > 0 && (
-                          <GroupedBarChart
-                              margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
-                              id="d3-grouped-bar-chart-root"
-                              data={ orgsChartData }
-                              history={ history }
-                              timeFrame={ orgsChartData.length }
-                          />
-                      ) }
-                  </CardBody>
-              </TopCard>
-              <CardContainer>
-                  <Card>
-                      <CardBody style={ { padding: 0 } }>
-                          <CardTitle style={ { padding: 0 } }>
-                              <h2 style={ { marginLeft: '20px' } }>
-                                  Job Runs by Organization
-                              </h2>
-                          </CardTitle>
-                          { apiError && <ApiErrorState message={ apiError } /> }
-                          { !apiError && isLoading && <LoadingState /> }
-                          { !apiError && !isLoading && pieChart1Data.length <= 0 && <NoData /> }
-                          { !apiError && !isLoading && pieChart1Data.length > 0 && (
-                              <PieChart
-                                  margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
-                                  id="d3-donut-1-chart-root"
-                                  data={ pieChart1Data }
-                                  timeFrame={ pieChart1Data.length }
-                              />
-                          ) }
-                      </CardBody>
-                  </Card>
-                  <Card>
-                      <CardBody style={ { padding: 0 } }>
-                          <CardTitle style={ { padding: 0 } }>
-                              <h2 style={ { marginLeft: '20px' } }>
-                                  Usage by Organization (Tasks)
-                              </h2>
-                          </CardTitle>
-                          { apiError && <ApiErrorState message={ apiError } /> }
-                          { !apiError && isLoading && <LoadingState /> }
-                          { !apiError && !isLoading && pieChart2Data.length <= 0 && <NoData /> }
-                          { !apiError && !isLoading && pieChart2Data.length > 0 && (
-                              <PieChart
-                                  margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
-                                  id="d3-donut-2-chart-root"
-                                  data={ pieChart2Data }
-                                  timeFrame={ pieChart2Data.length }
-                              />
-                          ) }
-                      </CardBody>
-                  </Card>
-              </CardContainer>
-          </Main>
-        </>
+                <React.Fragment>
+                    <Main style={ { paddingBottom: '0' } }>
+                        <Card>
+                            <CardBody>
+                                <FilterableToolbar
+                                    categories={ options }
+                                    filters={ queryParams }
+                                    setFilters={ setFromToolbar }
+                                />
+                            </CardBody>
+                        </Card>
+                    </Main>
+                    <Main>
+                        <TopCard>
+                            <CardTitle>
+                                <h2>Organization Status</h2>
+                            </CardTitle>
+                            <CardBody>
+                                { apiError && <ApiErrorState message={ apiError } /> }
+                                { !apiError && isLoading && <LoadingState /> }
+                                { !apiError && !isLoading && orgsChartData.length <= 0 && <NoData /> }
+                                { !apiError && !isLoading && orgsChartData.length > 0 && (
+                                    <GroupedBarChart
+                                        margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
+                                        id="d3-grouped-bar-chart-root"
+                                        data={ orgsChartData }
+                                        history={ history }
+                                        timeFrame={ orgsChartData.length }
+                                    />
+                                ) }
+                            </CardBody>
+                        </TopCard>
+                        <CardContainer>
+                            <Card>
+                                <CardBody style={ { padding: 0 } }>
+                                    <CardTitle style={ { padding: 0 } }>
+                                        <h2 style={ { marginLeft: '20px' } }>
+                                      Job Runs by Organization
+                                        </h2>
+                                    </CardTitle>
+                                    { apiError && <ApiErrorState message={ apiError } /> }
+                                    { !apiError && isLoading && <LoadingState /> }
+                                    { !apiError && !isLoading && pieChart1Data.length <= 0 && <NoData /> }
+                                    { !apiError && !isLoading && pieChart1Data.length > 0 && (
+                                        <PieChart
+                                            margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
+                                            id="d3-donut-1-chart-root"
+                                            data={ pieChart1Data }
+                                            timeFrame={ pieChart1Data.length }
+                                        />
+                                    ) }
+                                </CardBody>
+                            </Card>
+                            <Card>
+                                <CardBody style={ { padding: 0 } }>
+                                    <CardTitle style={ { padding: 0 } }>
+                                        <h2 style={ { marginLeft: '20px' } }>
+                                      Usage by Organization (Tasks)
+                                        </h2>
+                                    </CardTitle>
+                                    { apiError && <ApiErrorState message={ apiError } /> }
+                                    { !apiError && isLoading && <LoadingState /> }
+                                    { !apiError && !isLoading && pieChart2Data.length <= 0 && <NoData /> }
+                                    { !apiError && !isLoading && pieChart2Data.length > 0 && (
+                                        <PieChart
+                                            margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
+                                            id="d3-donut-2-chart-root"
+                                            data={ pieChart2Data }
+                                            timeFrame={ pieChart2Data.length }
+                                        />
+                                    ) }
+                                </CardBody>
+                            </Card>
+                        </CardContainer>
+                    </Main>
+                </React.Fragment>
             ) }
         </React.Fragment>
     );

@@ -54,17 +54,17 @@ export const roi = {
 export const organizationStatistics = {
     defaultParams: {
         status: [],
-        orgId: [],
-        quickDateRange: 'last_30_days',
-        sortBy: 'desc',
+        org_id: [],
+        quick_date_range: 'last_30_days',
+        sort_by: 'desc',
         limit: 5,
-        jobType: [ 'workflowjob', 'job' ],
-        clusterId: [],
-        templateId: [],
-        startDate: '',
-        endDate: ''
+        job_type: [ 'workflowjob', 'job' ],
+        cluster_id: [],
+        template_id: [],
+        start_date: null,
+        end_date: null
     },
-    sortBy: [
+    sort_by: [
         { key: 'desc', value: 'Top 5 Orgs' },
         { key: 'asc', value: 'Bottom 5 Orgs' }
     ]

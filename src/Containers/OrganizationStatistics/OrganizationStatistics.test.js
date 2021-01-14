@@ -7,7 +7,6 @@ import {
 } from '../tests/helpers';
 import fetchMock from 'fetch-mock-jest';
 import OrganizationStatistics from './OrganizationStatistics';
-import { keysToCamel } from '../../Utilities/helpers';
 
 const chartRoots = [
     'd3-grouped-bar-chart-root',
@@ -48,14 +47,20 @@ const jobExplorerOptions = {
 };
 
 const defaultQueryParams = {
-    groupBy: 'org',
-    includeOthers: true,
-    quickDateRange: 'last_30_days',
+    group_by: 'org',
+    include_others: true,
+    quick_date_range: 'last_30_days',
     limit: 5,
-    jobType: [ 'workflowjob', 'job' ]
+    job_type: [ 'workflowjob', 'job' ],
+    cluster_id: [],
+    start_date: null,
+    end_date: null,
+    org_id: [],
+    status: [],
+    template_id: []
 };
 
-const lastCallBody = (url) => keysToCamel(JSON.parse(fetchMock.lastCall(url)[1].body));
+const lastCallBody = (url) => JSON.parse(fetchMock.lastCall(url)[1].body);
 
 describe('Containers/OrganizationStatistics', () => {
     let wrapper;
@@ -163,9 +168,9 @@ describe('Containers/OrganizationStatistics', () => {
         });
         wrapper.update();
 
-        const { sortBy, ...rest } = lastCallBody(jobExplorerUrl);
+        const { sort_by, ...rest } = lastCallBody(jobExplorerUrl);
 
-        expect(sortBy.split(':')[1]).toBe('desc');
+        expect(sort_by.split(':')[1]).toBe('desc');
         expect(rest).toEqual(defaultQueryParams);
     });
 
