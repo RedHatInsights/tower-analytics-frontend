@@ -31,8 +31,15 @@ const FilterableToolbar = ({
     hasSettings = false
 }) => {
     const [ settingsExpanded, setSettingsExpanded ] = useState(false);
+    const { quick_date_range, sort_by, ...restCategories } = categories;
 
-    const { quick_date_range, sort_by, ...filterCategories } = categories;
+    // Filter out elements which are not in the option object.
+    const filterCategories = Object.keys(restCategories)
+    .filter(key => Object.keys(optionsForCategories).includes(key))
+    .reduce((obj, key) => {
+        obj[key] = restCategories[key];
+        return obj;
+    }, {});
 
     const [ currentCategory, setCurrentCategory ] = useState(
         Object.keys(filterCategories)[0]

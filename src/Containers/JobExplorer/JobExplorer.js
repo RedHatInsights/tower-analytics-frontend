@@ -104,8 +104,7 @@ const JobExplorer = ({
                 setJobExplorerData(jobExplorerData);
                 setMeta(meta);
 
-                const { attributes, group_by, ...rest } = options;
-                setExplorerOptions(rest);
+                setExplorerOptions(options);
             })
             .catch(e => setApiError(e.error))
             .finally(() => {
