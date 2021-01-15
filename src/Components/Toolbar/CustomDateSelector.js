@@ -19,7 +19,7 @@ const CustomDateSelector = ({
                   type="date"
                   aria-label="Start Date"
                   value={ startDate }
-                  onChange={ e => onInputChange('startDate', e) }
+                  onChange={ e => onInputChange('start_date', e) }
               />
           </InputGroup>
           <InputGroup>
@@ -29,7 +29,7 @@ const CustomDateSelector = ({
                   type="date"
                   aria-label="End Date"
                   value={ endDate }
-                  onChange={ e => onInputChange('endDate', e) }
+                  onChange={ e => onInputChange('end_date', e) }
               />
           </InputGroup>
         </>

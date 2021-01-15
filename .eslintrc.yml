@@ -36,7 +36,7 @@ rules:
     - 2
     - after: true
   comma-style: 2
-  camelcase: 2
+  camelcase: off
   curly:
     - error
     - all
@@ -81,7 +81,10 @@ rules:
     - error
     - functions: false
   no-undef: 2
-  no-unused-vars: 2
+  no-unused-vars:
+    - error
+    - varsIgnorePattern: ^_
+      ignoreRestSiblings: true
   no-var: 2
   no-with: 2
   object-shorthand: 2

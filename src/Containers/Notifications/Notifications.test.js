@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { act } from 'react-dom/test-utils';
 import { parse } from 'query-string';
 import {
@@ -8,7 +7,6 @@ import {
 } from '../tests/helpers';
 import fetchMock from 'fetch-mock-jest';
 import Notifications from './Notifications.js';
-import { keysToCamel } from '../../Utilities/helpers';
 
 const notificationsUrl = 'path:/api/tower-analytics/v0/notifications/';
 const notificationsDummyData = (size = 5, count = 0) => ({
@@ -53,7 +51,7 @@ const clusterDummyData = (size = 20) => ({
 //     limit: 5
 // };
 
-const lastCallBody = (url) => keysToCamel(parse(fetchMock.lastCall(url)[0].split('?')[1]));
+const lastCallBody = (url) => parse(fetchMock.lastCall(url)[0].split('?')[1]);
 
 const getPagination = wrapper => wrapper.find('.pf-c-options-menu');
 

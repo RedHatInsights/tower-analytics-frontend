@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { act } from 'react-dom/test-utils';
 import { stringify } from 'query-string';
 import {
@@ -8,7 +7,8 @@ import {
 } from '../tests/helpers';
 import fetchMock from 'fetch-mock-jest';
 import JobExplorer from './JobExplorer';
-import { keysToCamel } from '../../Utilities/helpers';
+import { jobExplorer as constants } from '../../Utilities/constants';
+
 fetchMock.config.overwriteRoutes = true;
 
 const jobExplorerUrl = 'path:/api/tower-analytics/v1/job_explorer/';
@@ -48,30 +48,15 @@ const jobExplorerOptions = {
 };
 
 const defaultQueryParams = {
-    attributes: [
-        'id',
-        'status',
-        'job_type',
-        'started',
-        'finished',
-        'elapsed',
-        'created',
-        'cluster_name',
-        'org_name',
-        'most_failed_tasks'
-    ],
-    status: [ 'successful', 'failed' ],
-    quickDateRange: 'last_30_days',
-    jobType: [ 'workflowjob', 'job' ],
-    sortBy: 'created:desc',
-    limit: 5
+    ...constants.defaultParams,
+    attributes: constants.attributes
 };
-
-const lastCallBody = (url) => keysToCamel(JSON.parse(fetchMock.lastCall(url)[1].body));
 
 const getPagination = wrapper => wrapper.find('.pf-c-options-menu');
 
 const getPaginationNav = wrapper => wrapper.find('.pf-c-pagination__nav');
+
+const inspectCall = (url, method) => fetchMock.lastCall(url, method);
 
 describe('Containers/JobExplorer', () => {
     let wrapper;
@@ -142,29 +127,30 @@ describe('Containers/JobExplorer', () => {
             wrapper = mountPage(JobExplorer);
         });
         wrapper.update();
-
-        expect(lastCallBody(jobExplorerUrl)).toEqual(defaultQueryParams);
+        const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
+        expect(JSON.parse(body)).toEqual(defaultQueryParams);
     });
 
     it('should send the custom query params', async () => {
         const queryParams = {
             ...defaultQueryParams,
-            templateId: [ '1', '2' ]
+            template_id: [ '1', '2' ]
         };
 
         const search = stringify({
-            templateId: [ '1', '2' ]
+            template_id: [ '1', '2' ]
         }, { arrayFormat: 'bracket' });
 
         await act(async () => {
             wrapper = mountPage(JobExplorer, { search });
         });
         wrapper.update();
+        const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
 
-        expect(lastCallBody(jobExplorerUrl)).toEqual(queryParams);
+        expect(JSON.parse(body)).toEqual(queryParams);
     });
 
-    it('should render the right amouth of data rows', async () => {
+    it('should render the right amount of data rows', async () => {
         fetchMock.post({ url: jobExplorerUrl }, { ...dummyData(5) });
         await act(async () => {
             wrapper = mountPage(JobExplorer);
@@ -210,9 +196,12 @@ describe('Containers/JobExplorer', () => {
         });
         wrapper.update();
 
-        expect(lastCallBody(jobExplorerUrl)).toEqual({
+        const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
+
+        expect(JSON.parse(body)).toEqual({
             ...defaultQueryParams,
-            limit: 15
+            limit: 15,
+            offset: 0
         });
     });
 
@@ -235,9 +224,12 @@ describe('Containers/JobExplorer', () => {
         });
         wrapper.update();
 
-        expect(lastCallBody(jobExplorerUrl)).toEqual({
+        const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
+
+        expect(JSON.parse(body)).toEqual({
             ...defaultQueryParams,
-            limit: 20
+            limit: 20,
+            offset: 0
         });
     });
 
@@ -259,7 +251,10 @@ describe('Containers/JobExplorer', () => {
         expect(getPagination(wrapper).at(0).text()).toEqual(
             expect.stringContaining('6 - 10 of 100')
         );
-        expect(lastCallBody(jobExplorerUrl)).toEqual({
+
+        const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
+
+        expect(JSON.parse(body)).toEqual({
             ...defaultQueryParams,
             offset: 5
         });
@@ -283,7 +278,10 @@ describe('Containers/JobExplorer', () => {
         expect(getPagination(wrapper).at(0).text()).toEqual(
             expect.stringContaining('96 - 100 of 100')
         );
-        expect(lastCallBody(jobExplorerUrl)).toEqual({
+
+        const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
+
+        expect(JSON.parse(body)).toEqual({
             ...defaultQueryParams,
             offset: 95
         });

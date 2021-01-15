@@ -173,6 +173,14 @@ beforeEach(() => {
     cy.get('[data-ouia-component-id="1"]').click();
     cy.wait(waitDuration);
     cy.get('#username').type(getUsername());
+    cy.wait(waitDuration);
+
+    cy.get('body').then($body => {
+        if ($body.find("#login-show-step2").length > 0) {
+            cy.get('#login-show-step2').click()
+        }
+    });
+
     cy.get('#password').type(getPassword());
     cy.get('#kc-login').click();
     cy.wait(waitDuration);

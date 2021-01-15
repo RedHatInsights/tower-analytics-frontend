@@ -1,4 +1,3 @@
-/*eslint camelcase: ["error", {properties: "never"}]*/
 import React, { Component } from 'react';
 import {
     withRouter
@@ -29,9 +28,9 @@ class BarChart extends Component {
         const { jobExplorer } = Paths;
         const formattedDate = formatDate(date);
         const initialQueryParams = {
-            startDate: formattedDate,
-            endDate: formattedDate,
-            quickDateRange: 'custom',
+            start_date: formattedDate,
+            end_date: formattedDate,
+            quick_date_range: 'custom',
             status: [ 'failed', 'successful' ]
         };
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });

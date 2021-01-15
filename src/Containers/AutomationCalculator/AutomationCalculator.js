@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
 import styled from 'styled-components';
@@ -380,10 +379,10 @@ const AutomationCalculator = ({ history }) => {
     const redirectToJobExplorer = (templateId) => {
         const { jobExplorer } = Paths;
         const initialQueryParams = {
-            templateId: [ templateId ],
+            template_id: [ templateId ],
             status: [ 'successful' ],
-            jobType: [ 'job' ],
-            quickDateRange: 'last_30_days'
+            job_type: [ 'job' ],
+            quick_date_range: 'last_30_days'
         };
 
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });

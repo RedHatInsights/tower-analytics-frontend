@@ -1,6 +1,3 @@
-/*eslint camelcase: ["error", {properties: "never", ignoreDestructuring: true}]*/
-/*eslint no-unused-vars: ["error", { "varsIgnorePattern": "[iI]gnored" }]*/
-
 import { useReducer } from 'react';
 import moment from 'moment';
 
@@ -43,7 +40,7 @@ export const useQueryParams = initial => {
             case 'SET_QUICK_DATE_RANGE': {
                 let newState = { ...state };
                 if (value !== 'custom') {
-                    newState = { ...newState, startDate: '', endDate: '' };
+                    newState = { ...newState, start_date: null, end_date: null };
                 }
 
                 newState = { ...newState, ...value };
@@ -62,15 +59,15 @@ export const useQueryParams = initial => {
             case 'RESET_FILTER':
                 return { ...state,
                     status: [],
-                    quickDateRange: '',
-                    jobType: [],
-                    orgId: [],
-                    clusterId: [],
-                    templateId: [],
-                    sortBy: '',
-                    startDate: '',
-                    endDate: '',
-                    onlyRootWorkflowsAndStandaloneJobs: false
+                    quick_date_range: '',
+                    job_type: [],
+                    org_id: [],
+                    cluster_id: [],
+                    template_id: [],
+                    sort_by: '',
+                    start_date: '',
+                    end_date: '',
+                    only_root_workflows_and_standalone_jobs: false
                 };
             default:
                 throw new Error();
@@ -79,45 +76,21 @@ export const useQueryParams = initial => {
 
     const [ queryParams, dispatch ] = useReducer(paramsReducer, { ...initial });
 
-    /**
-     * Converts queryParams object keys to snake case, which is accepted by the API
-     */
-    const urlMappedQueryParams = () => {
-        const camelToSnakeCase = str => str.replace(/[A-Z]/g, letter => `_${letter.toLowerCase()}`);
-        let urlFormatted = {};
-
-        Object.keys(queryParams).forEach((key) => {
-            // Filter out null and empty array elements
-            if (queryParams[key]) {
-                if (Array.isArray(queryParams[key])) {
-                    if (queryParams[key].length < 1) {
-                        return;
-                    }
-                }
-
-                urlFormatted[camelToSnakeCase(key)] = queryParams[key];
-            }
-        });
-
-        return urlFormatted;
-    };
-
     const actionMapper = {
         status: 'SET_STATUS',
-        quickDateRange: 'SET_QUICK_DATE_RANGE',
-        jobType: 'SET_JOB_TYPE',
-        orgId: 'SET_ORG',
-        clusterId: 'SET_CLUSTER',
-        templateId: 'SET_TEMPLATE',
-        sortBy: 'SET_SORTBY',
-        startDate: 'SET_START_DATE',
-        endDate: 'SET_END_DATE',
-        onlyRootWorkflowsAndStandaloneJobs: 'SET_ROOT_WORKFLOWS_AND_JOBS'
+        quick_date_range: 'SET_QUICK_DATE_RANGE',
+        job_type: 'SET_JOB_TYPE',
+        org_id: 'SET_ORG',
+        cluster_id: 'SET_CLUSTER',
+        template_id: 'SET_TEMPLATE',
+        sort_by: 'SET_SORTBY',
+        start_date: 'SET_START_DATE',
+        end_date: 'SET_END_DATE',
+        only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS'
     };
 
     return {
         queryParams,
-        urlMappedQueryParams: urlMappedQueryParams(),
         dispatch,
         setLimit: limit => dispatch({ type: 'SET_LIMIT', value: { limit }}),
         setOffset: offset => dispatch({ type: 'SET_OFFSET', value: { offset }}),
