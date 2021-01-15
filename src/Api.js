@@ -73,6 +73,7 @@ export const readJobsByDateAndOrg = ({ params = {}}) => {
         method: 'POST',
         body: JSON.stringify({
             ...rest,
+            attributes: [ 'total_count' ],
             group_by_time: true,
             group_by: 'org',
             sort_by: `id:desc`
