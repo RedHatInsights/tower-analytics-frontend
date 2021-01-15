@@ -198,7 +198,11 @@ class PieChart extends Component {
                 value: this.props.colorFunc(name),
                 count: Math.round(org.count)
             };
-        });
+        }).sort((a, b) =>
+            (a.count > b.count) ? 1 : (
+                (b.count > a.count) ? -1 : 0
+            )
+        );
         this.setState({ colors });
         this.draw();
     }
@@ -219,8 +223,7 @@ class PieChart extends Component {
         svg.append('g').attr('class', 'labels');
         svg.append('g').attr('class', 'lines');
         const radius = Math.min(width, height) / 2;
-        let { data: unfilteredData } = this.props;
-        const data = unfilteredData.filter(datum => datum.id !== -1);
+        const { data } = this.props;
         const total = getTotal(data);
         data.forEach(function(d) {
             d.count = +d.count;
