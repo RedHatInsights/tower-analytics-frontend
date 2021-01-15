@@ -30,12 +30,20 @@ const FilterableToolbar = ({
     pagination,
     hasSettings = false
 }) => {
+    const [ settingsExpanded, setSettingsExpanded ] = useState(false);
+    const { quickDateRange, sortBy, ...restCategories } = categories;
+
+    // Filter out elements which are not in the option object.
+    const filterCategories = Object.keys(restCategories)
+    .filter(key => Object.keys(optionsForCategories).includes(key))
+    .reduce((obj, key) => {
+        obj[key] = restCategories[key];
+        return obj;
+    }, {});
+
     const [ currentCategory, setCurrentCategory ] = useState(
         Object.keys(categories)[0]
     );
-    const [ settingsExpanded, setSettingsExpanded ] = useState(false);
-
-    const { quickDateRange, sortBy, ...filterCategories } = categories;
 
     const onInputChange = (type, value) => {
         setFilters(type, value);

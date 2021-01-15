@@ -104,10 +104,7 @@ const JobExplorer = ({
             ]) => {
                 setJobExplorerData(jobExplorerData);
                 setMeta(meta);
-
-                /* eslint-disable-next-line */
-                const { attributes, groupBy, ...rest } = keysToCamel(options);
-                setExplorerOptions(rest);
+                setExplorerOptions(keysToCamel(options));
             })
             .catch(e => setApiError(e.error))
             .finally(() => {
