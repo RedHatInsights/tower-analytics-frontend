@@ -237,11 +237,14 @@ class GroupedBarChart extends Component {
         }
 
         // create our colors array to send to the Legend component
-        const colors = this.orgsList.map(org => ({
-            name: org.name,
-            value: this.props.colorFunc(org.name),
-            id: org.id
-        }));
+        const colors = this.orgsList.map(org => {
+            const name = org.id === -1 ? 'Others' : org.name;
+            return {
+                name,
+                value: this.props.colorFunc(name),
+                id: org.id
+            };
+        });
         this.setState({ colors });
         this.draw();
     }

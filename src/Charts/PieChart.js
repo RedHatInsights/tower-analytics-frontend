@@ -191,11 +191,14 @@ class PieChart extends Component {
     init() {
         const { data } = this.props;
         // create our colors array to send to the Legend component
-        const colors = data.map(org => ({
-            name: org.name,
-            value: this.props.colorFunc(org.name),
-            count: Math.round(org.count)
-        }));
+        const colors = data.map(org => {
+            const name = org.id === -1 ? 'Others' : org.name;
+            return {
+                name,
+                value: this.props.colorFunc(name),
+                count: Math.round(org.count)
+            };
+        });
         this.setState({ colors });
         this.draw();
     }
