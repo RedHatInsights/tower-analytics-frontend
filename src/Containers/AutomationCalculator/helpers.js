@@ -3,22 +3,22 @@ import { CardTitle } from '@patternfly/react-core';
 
 export const mapApi = (data) => data.map(({
     elapsed,
-    hostCount,
-    hostTaskCount,
-    totalOrgCount,
-    totalClusterCount,
+    host_count,
+    host_task_count,
+    total_org_count,
+    total_cluster_count,
     id,
     name
 }) => ({
     name,
     id,
     // For chart
-    hostCount,
+    hostCount: host_count,
     elapsed,
     // TopTemplates Tooltip
-    hostTaskCount,
-    totalOrgCount,
-    totalClusterCount,
+    hostTaskCount: host_task_count,
+    totalOrgCount: total_org_count,
+    totalClusterCount: total_cluster_count,
     // Chart + TopTemplates
     // For calculations
     delta: 0,

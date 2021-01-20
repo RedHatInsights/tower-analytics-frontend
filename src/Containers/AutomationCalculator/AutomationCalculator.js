@@ -30,8 +30,7 @@ import { roi as roiConst } from '../../Utilities/constants';
 import useRedirect from '../../Utilities/useRedirect';
 import {
     calculateDelta,
-    convertSecondsToHours,
-    keysToCamel
+    convertSecondsToHours
 } from '../../Utilities/helpers';
 
 // Chart
@@ -83,7 +82,6 @@ const AutomationCalculator = ({ history }) => {
     const [ unfilteredData, setUnfilteredData ] = useState([]);
     const [ quickDateRange, setQuickDateRange ] = useState([]);
     const {
-        urlMappedQueryParams,
         queryParams,
         setFromToolbar
     } = useQueryParams(roiConst.defaultParams);
@@ -138,8 +136,8 @@ const AutomationCalculator = ({ history }) => {
         window.insights.chrome.auth.getUser()
         .then(() => {
             Promise.all([
-                readROI({ params: urlMappedQueryParams }),
-                readJobExplorerOptions({ params: urlMappedQueryParams })
+                readROI({ params: queryParams }),
+                readJobExplorerOptions({ params: queryParams })
             ])
             .then(([
                 { items },
@@ -147,13 +145,12 @@ const AutomationCalculator = ({ history }) => {
             ]) => {
                 if (didCancel) { return; }
 
-                const { quickDateRange } = keysToCamel(explorerOptions);
-                items = keysToCamel(items);
+                const { quick_date_range } = explorerOptions;
 
                 setUnfilteredData(
                     updateDeltaCost(mapApi(items), costAutomation, costManual)
                 );
-                setQuickDateRange(quickDateRange);
+                setQuickDateRange(quick_date_range);
             })
             .catch(e => {
                 setUnfilteredData([]);

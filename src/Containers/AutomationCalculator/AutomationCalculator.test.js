@@ -12,28 +12,28 @@ const dummyRoiData = {
             id: 1,
             name: 'a',
             elapsed: 3600,
-            hostTaskCount: 10,
-            totalOrgCount: 2,
-            hostCount: 10,
-            totalClusterCount: 20
+            host_task_count: 10,
+            total_org_count: 2,
+            host_count: 10,
+            total_cluster_count: 20
         },
         {
             id: 2,
             name: 'b',
             elapsed: 3600,
-            hostTaskCount: 10,
-            totalOrgCount: 2,
-            hostCount: 10,
-            totalClusterCount: 20
+            host_task_count: 10,
+            total_org_count: 2,
+            host_count: 10,
+            total_cluster_count: 20
         },
         {
             id: 3,
             name: 'c',
             elapsed: 0,
-            hostTaskCount: 10,
-            totalOrgCount: 2,
-            hostCount: 10,
-            totalClusterCount: 20
+            host_task_count: 10,
+            total_org_count: 2,
+            host_count: 10,
+            total_cluster_count: 20
         }
     ]
 };
@@ -139,7 +139,7 @@ describe('Containers/AutomationCalculator', () => {
         wrapper.find('a').at(0).simulate('click');
         expect(history.push).toHaveBeenCalledWith({
             pathname: '/job-explorer',
-            search: expect.stringContaining('templateId=1')
+            search: expect.stringContaining('template_id=1')
         });
     });
 
