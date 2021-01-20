@@ -29,17 +29,25 @@ export const jobExplorer = {
 export const roi = {
     defaultParams: {
         status: [ 'successful' ],
-        quickDateRange: 'last_30_days',
-        jobType: [ 'job' ],
-        sortBy: 'host_count:desc',
-        onlyRootWorkflowsAndStandaloneJobs: true,
+        org_id: [],
+        cluster_id: [],
+        template_id: [],
+        quick_date_range: 'roi_last_month',
+        job_type: [ 'job' ],
+        sort_by: 'host_count:desc',
+        start_date: null,
+        end_date: null,
         limit: 5,
+        only_root_workflows_and_standalone_jobs: true,
         attributes: [
             'elapsed',
             'host_count',
             'host_task_count',
             'total_org_count',
             'total_cluster_count'
-        ]
+        ],
+        group_by: 'template',
+        group_by_time: false,
+        granularity: 'monthly'
     }
 };

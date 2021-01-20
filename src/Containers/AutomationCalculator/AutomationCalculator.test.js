@@ -5,7 +5,7 @@ import AutomationCalculator from './AutomationCalculator';
 import TotalSavings from './TotalSavings';
 fetchMock.config.overwriteRoutes = true;
 
-const jobExplorerUrl = 'path:/api/tower-analytics/v1/job_explorer/';
+const jobExplorerUrl = 'path:/api/tower-analytics/v1/roi_templates/';
 const dummyRoiData = {
     items: [
         {
@@ -38,7 +38,7 @@ const dummyRoiData = {
     ]
 };
 const defaultTotalSaving = '1,460.00';
-const jobExplorerOptionsUrl = 'path:/api/tower-analytics/v1/job_explorer_options/';
+const jobExplorerOptionsUrl = 'path:/api/tower-analytics/v1/roi_templates_options/';
 const jobExplorerOptions = {
     quick_date_range: [
         { key: 'last_30_days', value: 'Last 30 days' },

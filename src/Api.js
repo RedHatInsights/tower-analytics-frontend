@@ -1,6 +1,3 @@
-/*eslint-disable max-len */
-/*eslint max-len: ["error", { "ignoreTemplateLiterals": true }]*/
-/*eslint max-len: ["error", { "ignoreStrings": true }]*/
 import { stringify } from 'query-string';
 
 const apiVersion = 'v0';
@@ -15,8 +12,9 @@ const preflightEndpoint = `/api/tower-analytics/${apiVersion}/authorized/`;
 const templateJobsEndpoint = `/api/tower-analytics/${apiVersion}/template_jobs/`;
 const templatesEndPoint = `/api/tower-analytics/${apiVersion}/templates/`;
 const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
-const jobExplorerOptionsEndpoint =
-  '/api/tower-analytics/v1/job_explorer_options/';
+const jobExplorerOptionsEndpoint = '/api/tower-analytics/v1/job_explorer_options/';
+const ROIEndpoint = '/api/tower-analytics/v1/roi_templates/';
+const ROITemplatesOptionsEndpoint = '/api/tower-analytics/v1/roi_templates_options/';
 
 function getAbsoluteUrl() {
     const url = window.location.href;
@@ -138,15 +136,19 @@ export const readJobEventsByOrg = ({ params = {}}) => {
 
 export const readROI = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
-    let url = new URL(jobExplorerEndpoint, formattedUrl);
+    let url = new URL(ROIEndpoint, formattedUrl);
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     return fetch(url, {
         method: 'POST',
-        body: JSON.stringify({
-            ...params,
-            group_by: 'template',
-            group_by_time: false,
-            granularity: 'monthly'
-        })
+        body: JSON.stringify(params)
+    }).then(handleResponse);
+};
+
+export const readROIOptions = ({ params = {}}) => {
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(ROITemplatesOptionsEndpoint, formattedUrl);
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(params)
     }).then(handleResponse);
 };

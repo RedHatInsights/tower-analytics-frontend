@@ -21,7 +21,7 @@ import FilterableToolbar from '../../Components/Toolbar/';
 import {
     preflightRequest,
     readROI,
-    readJobExplorerOptions
+    readROIOptions
 } from '../../Api';
 
 // Imports from utilities
@@ -80,7 +80,7 @@ const AutomationCalculator = ({ history }) => {
     const [ costManual, setCostManual ] = useState('50');
     const [ costAutomation, setCostAutomation ] = useState('20');
     const [ unfilteredData, setUnfilteredData ] = useState([]);
-    const [ quickDateRange, setQuickDateRange ] = useState([]);
+    const [ options, setOptions ] = useState({});
     const {
         queryParams,
         setFromToolbar
@@ -137,7 +137,7 @@ const AutomationCalculator = ({ history }) => {
         .then(() => {
             Promise.all([
                 readROI({ params: queryParams }),
-                readJobExplorerOptions({ params: queryParams })
+                readROIOptions({ params: queryParams })
             ])
             .then(([
                 { items },
@@ -145,12 +145,10 @@ const AutomationCalculator = ({ history }) => {
             ]) => {
                 if (didCancel) { return; }
 
-                const { quick_date_range } = explorerOptions;
-
                 setUnfilteredData(
                     updateDeltaCost(mapApi(items), costAutomation, costManual)
                 );
-                setQuickDateRange(quick_date_range);
+                setOptions(explorerOptions);
             })
             .catch(e => {
                 setUnfilteredData([]);
@@ -191,9 +189,7 @@ const AutomationCalculator = ({ history }) => {
                         <Card>
                             <CardBody>
                                 <FilterableToolbar
-                                    categories={ {
-                                        quickDateRange
-                                    } }
+                                    categories={ options }
                                     filters={ queryParams }
                                     setFilters={ setFromToolbar }
                                 />
