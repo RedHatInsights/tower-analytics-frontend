@@ -69,12 +69,12 @@ export const organizationStatistics = {
 export const clusters = {
     defaultParams: {
         status: [ 'successful', 'failed' ],
-        quickDateRange: 'last_30_days',
-        jobType: [ 'workflowjob', 'job' ],
+        quick_date_range: 'last_30_days',
+        job_type: [ 'workflowjob', 'job' ],
         group_by_time: true,
-        orgId: [],
-        clusterId: [],
-        templateId: [],
-        onlyRootWorkflowsAndStandaloneJobs: false
+        org_id: [],
+        cluster_id: [],
+        template_id: [],
+        only_root_workflows_and_standalone_jobs: false
     }
 };
