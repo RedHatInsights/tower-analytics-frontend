@@ -17,7 +17,7 @@ class Tooltip {
     draw() {
         this.width = 125;
         this.toolTipBase = d3.select(this.svg + '> svg').append('g');
-        this.toolTipBase.attr('id', 'svg-chart-Tooltip.base-' + this.svg.slice(1));
+        this.toolTipBase.attr('id', 'svg-chart-Tooltip-base-' + this.svg.slice(1));
         this.toolTipBase.attr('overflow', 'visible');
         this.toolTipBase.style('opacity', 0);
         this.toolTipBase.style('pointer-events', 'none');
