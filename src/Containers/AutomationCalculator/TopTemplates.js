@@ -108,7 +108,7 @@ const TopTemplates = ({
     setDataRunTime = () => {},
     redirectToJobExplorer = () => {}
 }) => (
-    <Card style={ { overflow: 'auto', flex: '1 1 0' } }>
+    <Card style={ { overflow: 'auto', flex: '1 1 0' } } className="top-templates">
         <CardBody>
             <p>Enter the time it takes to run the following templates manually.</p>
             { data.map((data) => (
