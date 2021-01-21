@@ -165,10 +165,10 @@ const AutomationCalculator = ({ history }) => {
      * with the same filters as is used here.
      */
     const redirectToJobExplorer = templateId => {
-        const { attributes: ignored, ...rest } = queryParams;
+        const { quick_date_range } = queryParams;
         const initialQueryParams = {
-            ...rest,
-            template_id: templateId
+            quick_date_range,
+            template_id: [ templateId ]
         };
         toJobExplorer(initialQueryParams);
     };
