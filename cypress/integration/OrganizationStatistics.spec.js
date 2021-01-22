@@ -1,4 +1,8 @@
-/* global cy, Cypress */
+/* global cy, Cypress, before */
+import {
+    orgsUrl
+} from './constants';
+
 const appid = Cypress.env('appid');
 const waitDuration = 1000;
 
@@ -73,30 +77,19 @@ async function fuzzOrgStatsPage() {
 
 }
 
-beforeEach(() => {
-    // open the cloud landing page ...
-    cy.viewport(1600, 2000);
-    cy.getBaseUrl().then(url => cy.visit(url));
-
-    // sso login ...
-    cy.get('[data-ouia-component-id="1"]').click();
-    cy.getUsername().then(uname => cy.get('#username').type(`${uname}{enter}`));
-    cy.getPassword().then(password => cy.get('#password').type(`${password}{enter}`));
-});
-
 describe('Organization statistics page smoketests', () => {
+    before(() => {
+        // open the cloud landing page ...
+        cy.visit('/');
+
+        // sso login ...
+        cy.get('[data-ouia-component-id="1"]').click();
+        cy.getUsername().then(uname => cy.get('#username').type(`${uname}{enter}`));
+        cy.getPassword().then(password => cy.get('#password').type(`${password}{enter}`));
+        cy.visit(orgsUrl);
+    });
+
     it('can interact with the org stats page without breaking the UI', () => {
-        cy.getBaseUrl().then(url => cy.visit(url));
-        const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
-        aalink.click();
-
-        cy.get('li[ouiaid="automation-analytics"] > section > ul > li > a').eq(1).each((href, hid) => {
-            cy.log('href', hid, href[0].pathname);
-
-            cy.getBaseUrl().then(url => cy.visit(url + href[0].pathname));
-            cy.clearFeatureDialogs();
-
-            fuzzOrgStatsPage();
-        });
+        fuzzOrgStatsPage();
     });
 });

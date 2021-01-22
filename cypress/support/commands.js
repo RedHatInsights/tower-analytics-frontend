@@ -26,15 +26,15 @@
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('getBaseUrl', () =>
-    Cypress.env('CLOUD_BASE_URL')
+    Cypress.env('baseUrl')
 );
 
 Cypress.Commands.add('getUsername', () =>
-    Cypress.env('CLOUD_USERNAME')
+    Cypress.env('USERNAME')
 );
 
 Cypress.Commands.add('getPassword', () =>
-    Cypress.env('CLOUD_PASSWORD')
+    Cypress.env('PASSWORD')
 );
 
 /*

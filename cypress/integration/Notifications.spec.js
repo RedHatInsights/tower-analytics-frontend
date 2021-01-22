@@ -1,4 +1,8 @@
-/* global cy, Cypress */
+/* global cy, Cypress, before */
+import {
+    notificationsUrl
+} from './constants';
+
 const appid = Cypress.env('appid');
 const waitDuration = 1000;
 
@@ -39,33 +43,19 @@ async function fuzzNotificationsPage() {
 
 }
 
-beforeEach(() => {
-    // open the cloud landing page ...
-    cy.viewport(1600, 2000);
-    cy.getBaseUrl().then(url => cy.visit(url));
-
-    // sso login ...
-    cy.get('[data-ouia-component-id="1"]').click();
-    cy.getUsername().then(uname => cy.get('#username').type(`${uname}{enter}`));
-    cy.getPassword().then(password => cy.get('#password').type(`${password}{enter}`));
-});
-
 describe('Notification page smoketests', () => {
+    before(() => {
+        // open the cloud landing page ...
+        cy.visit('/');
+
+        // sso login ...
+        cy.get('[data-ouia-component-id="1"]').click();
+        cy.getUsername().then(uname => cy.get('#username').type(`${uname}{enter}`));
+        cy.getPassword().then(password => cy.get('#password').type(`${password}{enter}`));
+        cy.visit(notificationsUrl);
+    });
+
     it('can interact with the notifications page without breaking the UI', () => {
-        cy.getBaseUrl().then(url => cy.visit(url));
-        const aalink = cy.get('a[href="/ansible/automation-analytics"]').first();
-        aalink.click();
-        cy.wait(waitDuration);
-
-        cy.get('li[ouiaid="automation-analytics"] > section > ul > li > a').eq(3).each((href, hid) => {
-            cy.log('href', hid, href[0].pathname);
-
-            cy.getBaseUrl().then(url => cy.visit(url + href[0].pathname));
-            cy.wait(waitDuration);
-            cy.clearFeatureDialogs();
-
-            fuzzNotificationsPage();
-        });
-
+        fuzzNotificationsPage();
     });
 });
