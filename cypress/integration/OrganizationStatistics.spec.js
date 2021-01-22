@@ -4,7 +4,6 @@ import {
 } from './constants';
 
 const appid = Cypress.env('appid');
-const waitDuration = 1000;
 
 const getUniqueRandomNumbers = (upperBound, total, excluded) => {
     let randomIDS = [];
@@ -28,13 +27,11 @@ async function fuzzOrgStatsPage() {
 
         // click on the rectangle ...
         cy.get(appid).find('rect').eq(xid).click({ force: true });
-        cy.wait(waitDuration);
 
         // go back to the stats page ...
         cy.getBaseUrl().then(url => {
             const statslink = cy.get('a[href="' + url + '/ansible/automation-analytics/organization-statistics"]');
             statslink.click();
-            cy.wait(waitDuration);
         });
     });
 
@@ -43,36 +40,29 @@ async function fuzzOrgStatsPage() {
         //toggle.click().wait(waitDuration);
         //toggle.click().wait(waitDuration);
         cy.get(appid).find('span[class="pf-c-switch__toggle"]').eq(ix).click();
-        cy.wait(waitDuration);
         cy.get(appid).find('span[class="pf-c-switch__toggle"]').eq(ix).click();
-        cy.wait(waitDuration);
-
     });
 
     // flip through each org grouping ...
     let orgGroups = [ 'All Orgs', 'Bottom 5 Orgs', 'Top 5 Orgs' ];
     orgGroups.forEach((group) => {
-        cy.get(appid).find('select[name="sortOrder"]').eq(0).select(group).wait(waitDuration);
-        cy.wait(waitDuration);
+        cy.get(appid).find('select[name="sortOrder"]').eq(0).select(group);
     });
 
     // flip through each time grouping ...
     let timeGroups = [ 'Past Week', 'Past 2 Weeks', 'Past Month' ];
     timeGroups.forEach((group) => {
-        cy.get(appid).find('select[name="timeframe"]').eq(0).select(group).wait(waitDuration);
-        cy.wait(waitDuration);
+        cy.get(appid).find('select[name="timeframe"]').eq(0).select(group);
     });
 
     // hover over each donut1 pie slice ...
     cy.get(appid).find('#d3-donut-1-chart-root > svg > g > path').each((slice, ix) => {
         cy.get(appid).find('#d3-donut-1-chart-root > svg > g > path').eq(ix).trigger('mouseover', { force: true });
-        cy.wait(waitDuration);
     });
 
     // hover over each donut2 pie slice ...
     cy.get(appid).find('#d3-donut-2-chart-root > svg > g > path').each((slice, ix) => {
         cy.get(appid).find('#d3-donut-2-chart-root > svg > g > path').eq(ix).trigger('mouseover', { force: true });
-        cy.wait(waitDuration);
     });
 
 }

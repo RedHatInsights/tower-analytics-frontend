@@ -4,7 +4,6 @@ import {
 } from './constants';
 
 const appid = Cypress.env('appid');
-const waitDuration = 1000;
 
 const getUniqueRandomNumbers = (upperBound, total, excluded) => {
     let randomIDS = [];
@@ -26,19 +25,18 @@ async function fuzzNotificationsPage() {
     selectedIDs.forEach((xid) => {
         cy.get(appid).find('select[name="selectedCluster"]').eq(0).then(($select) => {
             $select.find('option').eq(xid).each((ix, opt) => {
-                cy.get(appid).find('select[name="selectedCluster"]').eq(0).select(opt.innerHTML).wait(waitDuration);
+                cy.get(appid).find('select[name="selectedCluster"]').eq(0).select(opt.innerHTML);
             });
         });
     });
 
     // go back to all clusters ...
-    cy.get(appid).find('select[name="selectedCluster"]').eq(0).select('All Clusters').wait(waitDuration);
+    cy.get(appid).find('select[name="selectedCluster"]').eq(0).select('All Clusters');
 
     // try all message type filters ...
     let levels = [ 'View Critical', 'View Warning', 'View Notice', 'View All' ];
     levels.forEach((level) => {
-        cy.get(appid).find('select[name="selectedNotification"]').eq(0).select(level).wait(waitDuration);
-        cy.wait(waitDuration);
+        cy.get(appid).find('select[name="selectedNotification"]').eq(0).select(level);
     });
 
 }

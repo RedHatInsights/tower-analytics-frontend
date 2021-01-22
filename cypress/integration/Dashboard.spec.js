@@ -4,17 +4,14 @@ import {
 } from './constants';
 
 const appid = Cypress.env('appid');
-const waitDuration = 1000;
 
 async function fuzzClustersPage() {
 
     // open each top template modal and save a screenshot ...
     for (let i = 0; i <= 4; i++) {
         cy.get(appid).find('a').eq(i).click({ waitForAnimations: true }).then(() => {
-            cy.wait(waitDuration);
             cy.screenshot('top-template-modal-' + i + '.png', { capture: 'fullPage' });
-            cy.get('button[aria-label="Close"]').click({ waitForAnimations: true }).wait(waitDuration);
-            cy.wait(waitDuration);
+            cy.get('button[aria-label="Close"]').click({ waitForAnimations: true });
         });
     }
 
@@ -27,7 +24,6 @@ async function fuzzClustersPage() {
 
         // click it and wait for the jobexplorer page to load ...
         cy.get(appid).find('rect').eq(barid).click({ waitForAnimations: true });
-        cy.wait(waitDuration * 2);
         cy.screenshot('clusters-bar-' + barid + '-jobexplorer-details.png', { capture: 'fullPage' });
 
         // go back to the clusters page ...
