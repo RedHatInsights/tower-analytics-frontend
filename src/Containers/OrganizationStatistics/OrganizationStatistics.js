@@ -98,14 +98,14 @@ const OrganizationStatistics = ({ history }) => {
             id,
             date: new Date(date),
             value: total_count,
-            name: name || 'No organization'
+            name: id === -1 ? 'Others' : (name || 'No organization')
         }))
     }));
 
     const pieChartMapper = (data, attrName) => data.map(({ id, [attrName]: count, name }) => ({
         id,
         count,
-        name: name || 'No organization'
+        name: id === -1 ? 'Others' : (name || 'No organization')
     }));
 
     useEffect(() => {
