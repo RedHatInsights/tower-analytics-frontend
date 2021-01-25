@@ -84,12 +84,25 @@ const OrganizationStatistics = ({ history }) => {
     } = useQueryParams(constants.defaultParams);
 
     useEffect(() => {
+        let didCancel = false;
+
         insights.chrome.appNavClick({ id: 'organization-statistics', secondaryNav: true });
-        window.insights.chrome.auth.getUser().then(() =>
-            preflightRequest().catch((error) => {
+        window.insights.chrome.auth.getUser().then(() => {
+            preflightRequest().then(() => {
+                readOrgOptions({ params: queryParams }).then(options => {
+                    if (didCancel) { return; }
+
+                    const { meta, inventory_id, ...rest } = options;
+                    setOptions({ ...rest, sort_by: meta.sort_by });
+                }).catch(() => {});
+            }).catch((error) => {
+                if (didCancel) { return; }
+
                 setPreFlightError({ preflightError: error });
-            })
-        );
+            });
+        });
+
+        return () => didCancel = true;
     }, []);
 
     const orgsChartMapper = data => data.map(({ date, items }) => ({
@@ -113,22 +126,17 @@ const OrganizationStatistics = ({ history }) => {
         setIsLoading(true);
         window.insights.chrome.auth.getUser().then(() => Promise.all(
             [
-                readOrgOptions({ params: queryParams }),
                 readJobsByDateAndOrg({ params: queryParams }),
                 readJobRunsByOrg({ params: queryParams }),
                 readJobEventsByOrg({ params: queryParams })
             ]
         ).then(([
-            options,
             { dates: orgsChartData = []},
             { items: pieChart1Data = []},
             { items: pieChart2Data = []}
         ]) => {
             if (didCancel) { return; }
 
-            const { meta, inventory_id, ...rest } = options;
-
-            setOptions({ ...rest, sort_by: meta.sort_by });
             setOrgsChartData(orgsChartMapper(orgsChartData));
             setPieChart1Data(pieChartMapper(pieChart1Data, 'host_count'));
             setPieChart2Data(pieChartMapper(pieChart2Data, 'host_task_count'));
