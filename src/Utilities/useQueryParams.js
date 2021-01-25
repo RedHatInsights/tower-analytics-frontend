@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useReducer } from 'react';
 import moment from 'moment';
 
@@ -27,7 +28,12 @@ export const useQueryParams = initial => {
                 return { ...state, limit: parseInt(value.limit) };
             /* v1 api reducers */
             case 'SET_OFFSET':
-            case 'SET_SEVERITY':
+            case 'SET_SEVERITY': {
+                const { severity: ignored, ...rest } = state;
+                if (value.severity === '') { return rest; }
+            }
+
+            // eslint-disable-next-line no-fallthrough
             case 'SET_ATTRIBUTES':
             case 'SET_JOB_TYPE':
             case 'SET_STATUS':
@@ -94,7 +100,9 @@ export const useQueryParams = initial => {
         dispatch,
         setLimit: limit => dispatch({ type: 'SET_LIMIT', value: { limit }}),
         setOffset: offset => dispatch({ type: 'SET_OFFSET', value: { offset }}),
-        setSeverity: severity => dispatch({ type: 'SET_SEVERITY', value: { severity }}),
+        setSeverity: (severity) => {
+            dispatch({ type: 'SET_SEVERITY', value: { severity }});
+        },
         setFromToolbar: (varName, value = null) => {
             if (!varName) {
                 dispatch({ type: 'RESET_FILTER' });
