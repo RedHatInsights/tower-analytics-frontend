@@ -30,7 +30,7 @@ describe('Utilities/useRedirect', () => {
         });
         expect(history.push).toHaveBeenCalledWith({
             pathname: '/job-explorer',
-            search: 'quickDateOption=a&status=a&status=b'
+            search: 'quickDateOption=a&status[]=a&status[]=b'
         });
     });
 });
