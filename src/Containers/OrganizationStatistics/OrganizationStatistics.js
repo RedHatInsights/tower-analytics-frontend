@@ -92,20 +92,20 @@ const OrganizationStatistics = ({ history }) => {
         );
     }, []);
 
-    const orgsChartMapper = data => data.map(el => ({
-        date: new Date(el.date),
-        items: el.items.map(k => ({
-            id: k.id,
-            date: new Date(el.date),
-            value: k.total_count,
-            name: k.name || 'No organization'
+    const orgsChartMapper = data => data.map(({ date, items }) => ({
+        date: new Date(date),
+        items: items.map(({ id, total_count, name }) => ({
+            id,
+            date: new Date(date),
+            value: total_count,
+            name: name || 'No organization'
         }))
     }));
 
-    const pieChartMapper = (data, attrName) => data.map(el => ({
-        id: el.id,
-        count: el[attrName],
-        name: el.name || 'No organization'
+    const pieChartMapper = (data, attrName) => data.map(({ id, [attrName]: count, name }) => ({
+        id,
+        count,
+        name: name || 'No organization'
     }));
 
     useEffect(() => {
