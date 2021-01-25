@@ -28,12 +28,13 @@ export const useQueryParams = initial => {
                 return { ...state, limit: parseInt(value.limit) };
             /* v1 api reducers */
             case 'SET_OFFSET':
-            case 'SET_SEVERITY': {
-                const { severity: ignored, ...rest } = state;
-                if (value.severity === '') { return rest; }
-            }
+            case 'SET_SEVERITY':
+                if (value.severity === '') {
+                    const { severity: ignored, ...rest } = state;
+                    return rest;
+                }
 
-            // eslint-disable-next-line no-fallthrough
+                return { ...state, ...value };
             case 'SET_ATTRIBUTES':
             case 'SET_JOB_TYPE':
             case 'SET_STATUS':
