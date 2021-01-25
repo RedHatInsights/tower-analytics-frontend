@@ -64,66 +64,79 @@ export const readChart30 = ({ params = {}}) => {
     return fetch(url).then(handleResponse);
 };
 
-export const readJobsByDateAndOrg = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(jobExplorerEndpoint, formattedUrl);
-    const { sort_by: ignored, ...rest } = params;
-    Object.keys(rest).forEach(key => url.searchParams.append(key, rest[key]));
-    return fetch(url, {
-        method: 'POST',
-        body: JSON.stringify({
-            ...rest,
-            attributes: [ 'total_count' ],
-            group_by_time: true,
-            group_by: 'org',
-            sort_by: `id:desc`
-        })
-    }).then(handleResponse);
-};
-
+/* Section: Orgs page */
 export const readOrgOptions = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(orgOptionsEndpoint, formattedUrl);
+    let url = new URL(orgOptionsEndpoint, getAbsoluteUrl());
     return fetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);
 };
 
-export const readJobRunsByOrg = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(jobExplorerEndpoint, formattedUrl);
-    const { sort_by, ...rest } = params;
-    Object.keys(rest).forEach(key => url.searchParams.append(key, rest[key]));
+export const readJobsByDateAndOrg = ({ params = {}}) => {
+    const rParams = {
+        ...params,
+        attributes: [ 'total_count' ],
+        group_by_time: true,
+        group_by: 'org',
+        sort_by: `total_count:${params.sort_by}`
+    };
+
+    let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
+    url.search = stringify({
+        limit: rParams.limit,
+        sort_by: rParams.sort_by
+    });
+
     return fetch(url, {
         method: 'POST',
-        body: JSON.stringify({
-            ...rest,
-            group_by: 'org',
-            include_others: true,
-            attributes: [ 'host_count' ],
-            sort_by: `total_count:${sort_by}`
-        })
+        body: JSON.stringify(rParams)
+    }).then(handleResponse);
+};
+
+export const readJobRunsByOrg = ({ params = {}}) => {
+    const rParams = {
+        ...params,
+        group_by: 'org',
+        include_others: true,
+        attributes: [ 'host_count' ],
+        sort_by: `total_count:${params.sort_by}`
+    };
+
+    let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
+    url.search = stringify({
+        limit: rParams.limit,
+        sort_by: rParams.sort_by
+    });
+
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(rParams)
     }).then(handleResponse);
 };
 
 export const readJobEventsByOrg = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(jobExplorerEndpoint, formattedUrl);
-    const { sort_by, ...rest } = params;
-    Object.keys(rest).forEach(key => url.searchParams.append(key, rest[key]));
+    const rParams = {
+        ...params,
+        group_by: 'org',
+        include_others: true,
+        granularity: 'daily',
+        attributes: [ 'host_task_count' ],
+        sort_by: `host_task_count:${params.sort_by}`
+    };
+
+    let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
+    url.search = stringify({
+        limit: rParams.limit,
+        sort_by: rParams.sort_by
+    });
+
     return fetch(url, {
         method: 'POST',
-        body: JSON.stringify({
-            ...rest,
-            group_by: 'org',
-            include_others: true,
-            granularity: 'daily',
-            attributes: [ 'host_task_count' ],
-            sort_by: `host_task_count:${sort_by}`
-        })
+        body: JSON.stringify(rParams)
     }).then(handleResponse);
 };
+/* End of section: Orgs page */
 
 export const readModules = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
