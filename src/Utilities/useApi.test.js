@@ -71,7 +71,10 @@ describe('Utilities/useApi', () => {
 
         expect(data).toEqual({
             data: {},
-            error: 'Error',
+            error: {
+                error: 'Error',
+                status: 401
+            },
             isLoading: false,
             isSuccess: false
         });

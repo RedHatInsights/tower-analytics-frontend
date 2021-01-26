@@ -59,7 +59,7 @@ const useApi = (initialData, postprocess = d => d) => {
             }
         }).catch(e => {
             if (!didCancel) {
-                dispatch({ type: 'FETCH_FAILURE', payload: e.error });
+                dispatch({ type: 'FETCH_FAILURE', payload: e });
             }
         }));
 

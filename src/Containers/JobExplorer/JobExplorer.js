@@ -154,7 +154,7 @@ const JobExplorer = ({
                                 }
                                 hasSettings
                             />
-                            { error && <ApiErrorState message={ error } /> }
+                            { error && <ApiErrorState message={ error.error } /> }
                             { isLoading && <LoadingState /> }
                             { isSuccess && data.length <= 0 && <NoResults /> }
                             { isSuccess && data.length > 0 && <JobExplorerList jobs={ data } /> }
