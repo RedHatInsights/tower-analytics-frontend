@@ -2,10 +2,12 @@
     "chromeWebSecurity": false,
     "waitForAnimations": true,
     "videoCompression": 0,
+    "viewportHeight": 2000,
+    "viewportWidth": 1600,
+    "baseUrl": "https://prod.foo.redhat.com:8443",
     "env": {
         "appid":"#automation-analytics-application",
-        "CLOUD_BASE_URL": "https://prod.foo.redhat.com:8443",
-        "CLOUD_USERNAME": "bob",
-        "CLOUD_PASSWORD": "redhat1234"
+        "USERNAME": "bob",
+        "PASSWORD": "redhat1234"
     }
 }
