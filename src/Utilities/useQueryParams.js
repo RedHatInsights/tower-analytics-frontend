@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useReducer } from 'react';
 import moment from 'moment';
 
@@ -101,9 +100,7 @@ export const useQueryParams = initial => {
         dispatch,
         setLimit: limit => dispatch({ type: 'SET_LIMIT', value: { limit }}),
         setOffset: offset => dispatch({ type: 'SET_OFFSET', value: { offset }}),
-        setSeverity: (severity) => {
-            dispatch({ type: 'SET_SEVERITY', value: { severity }});
-        },
+        setSeverity: severity => dispatch({ type: 'SET_SEVERITY', value: { severity }}),
         setFromToolbar: (varName, value = null) => {
             if (!varName) {
                 dispatch({ type: 'RESET_FILTER' });
