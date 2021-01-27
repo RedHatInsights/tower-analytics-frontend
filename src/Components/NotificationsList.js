@@ -49,7 +49,7 @@ const stringifyDate = (date) => {
 
     if (day.isSame(now, 'day')) {
         if (day.valueOf() > oneHour) {
-            return  `${now.diff(day, 'hours')} hour(s) ago.`;
+            return  `${day.diff(now, 'hours') } hour(s) ago.`;
         }
 
         return `${now.diff(day, 'minutes')} minute(s) ago.`;
