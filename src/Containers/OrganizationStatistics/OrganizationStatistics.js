@@ -106,10 +106,10 @@ const OrganizationStatistics = ({ history }) => {
     }, []);
 
     const orgsChartMapper = data => data.map(({ date, items }) => ({
-        date: new Date(date),
+        date,
         items: items.map(({ id, total_count, name }) => ({
             id,
-            date: new Date(date),
+            date,
             value: total_count,
             name: id === -1 ? 'Others' : (name || 'No organization')
         }))

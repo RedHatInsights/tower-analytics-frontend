@@ -5,7 +5,6 @@ import initializeChart from './BaseChart';
 import * as d3 from 'd3';
 import Legend from '../Utilities/Legend';
 import { Paths } from '../paths';
-import { formatDate } from '../Utilities/helpers';
 import { stringify } from 'query-string';
 import styled from 'styled-components';
 
@@ -15,6 +14,11 @@ const Wrapper = styled.div`
   flex-wrap: nowrap;
   flex-shrink: 0;
 `;
+
+const formatDate = (date) => {
+    const pieces = date.split('-');
+    return `${pieces[1]}/${pieces[2]}`;
+};
 
 class Tooltip {
     constructor(props) {
@@ -110,7 +114,7 @@ class Tooltip {
           }
       }
 
-      const formatTooltipDate = d3.timeFormat('%m/%d');
+      const formatTooltipDate = formatDate;
       const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
       const chartWidth = d3
       .select(this.svg + '> svg')
@@ -269,18 +273,18 @@ class GroupedBarChart extends Component {
         const x1 = d3.scaleBand();
         const y = d3.scaleLinear().range([ height, 0 ]);
         // format our X Axis ticks
-        let ticks;
         const maxTicks = Math.round(data.length / (timeFrame / 2));
-        ticks = data.map(d => d.date);
+        let ticks = data.map(d => d.date);
         if (timeFrame === 31) {
             ticks = data.map((d, i) =>
-                i % maxTicks === 0 ? d.date : undefined).filter(item => item);
+                i % maxTicks === 0 ? d.date : undefined
+            ).filter(item => item);
         }
 
         const xAxis = d3
         .axisBottom(x0)
         .tickValues(ticks)
-        .tickFormat(d3.timeFormat('%-m/%-d'));
+        .tickFormat(formatDate);
 
         const yAxis = d3
         .axisLeft(y)
