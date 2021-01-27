@@ -113,7 +113,7 @@ const TopTemplates = ({
             <p>Enter the time it takes to run the following templates manually.</p>
             { data.map((data) => (
                 <div key={ data.id }>
-                    <Tooltip content={ 'Click for the list of jobs' } >
+                    <Tooltip content={ 'List of jobs for this template for past 30 days' } >
                         <Button
                             style={ { padding: '15px 0 10px' } }
                             component="a"
