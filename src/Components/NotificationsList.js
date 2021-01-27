@@ -13,7 +13,6 @@ import {
 import { ExternalLinkAltIcon as PFExternalLinkAltIcon } from '@patternfly/react-icons';
 import LoadingState from '../Components/LoadingState';
 import { capitalize } from '../Utilities/helpers';
-import { stringify } from 'query-string';
 
 const ExternalLinkAltIcon = styled(PFExternalLinkAltIcon)`
   margin-left: 7px;
@@ -40,19 +39,20 @@ const NotificationDrawerList = styled(PFNotificationDrawerList)`
 `;
 
 const stringifyDate = (date) => {
+    const day = moment(date);
     const oneHour = 60 * 60 * 1000;
     const now = moment().utc();
 
-    if (now.isAfter(moment(date))) {
-        return `${now.diff(moment(date), 'days')} day(s) ago.`;
+    if (now.isAfter(day)) {
+        return `${now.diff(day, 'days')} day(s) ago.`;
     }
 
-    if (moment(date).isSame(now, 'day')) {
-        if (moment(date).valueOf() > oneHour) {
-            return  `${now.diff(moment(date), 'hours')} hour(s) ago.`;
+    if (day.isSame(now, 'day')) {
+        if (day.valueOf() > oneHour) {
+            return  `${now.diff(day, 'hours')} hour(s) ago.`;
         }
 
-        return `${now.diff(moment(date), 'minutes')} minute(s) ago.`;
+        return `${now.diff(day, 'minutes')} minute(s) ago.`;
     }
 };
 
@@ -161,7 +161,7 @@ const ErrorNotificationTemplate = ({ notifications }) =>
                 }
             >
             </NotificationDrawerListItemHeader>
-            <NotificationDrawerListItemBody timestamp={ stringify(date) }>
+            <NotificationDrawerListItemBody timestamp={ stringifyDate(date) }>
                 { message }{ ' ' }
             </NotificationDrawerListItemBody>
         </NotificationDrawerListItem>
@@ -189,7 +189,7 @@ const NoticeNotificationTemplate = ({ notifications }) =>
                 }
             >
             </NotificationDrawerListItemHeader>
-            <NotificationDrawerListItemBody>
+            <NotificationDrawerListItemBody  timestamp={ stringifyDate(date) }>
                 { message }{ ' ' }
             </NotificationDrawerListItemBody>
         </NotificationDrawerListItem>
@@ -217,7 +217,7 @@ const WarningNotificationTemplate = ({ notifications }) =>
                 }
             >
             </NotificationDrawerListItemHeader>
-            <NotificationDrawerListItemBody>
+            <NotificationDrawerListItemBody  timestamp={ stringifyDate(date) }>
                 { message }{ ' ' }
             </NotificationDrawerListItemBody>
         </NotificationDrawerListItem>
