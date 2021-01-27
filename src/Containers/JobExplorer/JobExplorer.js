@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { parse, stringify } from 'query-string';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
+import useApi from '../../Utilities/useApi';
 import { Paths } from '../../paths';
 
 import LoadingState from '../../Components/LoadingState';
@@ -45,17 +46,24 @@ const initialQueryParams = {
     attributes: jobExplorer.attributes
 };
 
+const optionsMapper = options => {
+    const { groupBy, attributes, ...rest } = options;
+    return rest;
+};
+
 const JobExplorer = ({
     location: { search },
     history
 }) => {
     const [ preflightError, setPreFlightError ] = useState(null);
-    const [ apiError, setApiError ] = useState(null);
-    const [ isLoading, setIsLoading ] = useState(true);
-    const [ jobExplorerData, setJobExplorerData ] = useState([]);
-    const [ meta, setMeta ] = useState({});
+    const [{
+        isLoading,
+        isSuccess,
+        error,
+        data: { meta = {}, items: data = []}
+    }, setData ] = useApi({ meta: {}, items: []});
     const [ currPage, setCurrPage ] = useState(1);
-    const [ explorerOptions, setExplorerOptions ] = useState({});
+    const [ options, setOptions ] = useApi({}, optionsMapper);
 
     let initialSearchParams = parse(search, { arrayFormat: 'bracket', parseBooleans: true });
     let combined = { ...initialQueryParams, ...initialSearchParams };
@@ -87,32 +95,9 @@ const JobExplorer = ({
     }, []);
 
     useEffect(() => {
-        setApiError(null);
-        setIsLoading(true);
-        let didCancel = false;
-        window.insights.chrome.auth.getUser()
-        .then(() => {
-            Promise.all([
-                readJobExplorer({ params: queryParams }),
-                readJobExplorerOptions({ params: queryParams })
-            ]).then(([
-                { items: jobExplorerData = [], meta = {}},
-                options
-            ]) => {
-                if (didCancel) { return; }
-
-                setJobExplorerData(jobExplorerData);
-                setMeta(meta);
-
-                setExplorerOptions(options);
-            })
-            .catch(e => setApiError(e.error))
-            .finally(() => {
-                updateURL();
-                setIsLoading(false);
-            });
-        });
-        return () => didCancel = true;
+        setData(readJobExplorer({ params: queryParams }),);
+        setOptions(readJobExplorerOptions({ params: queryParams }));
+        updateURL();
     }, [ queryParams ]);
 
     const returnOffsetVal = page => (page - 1) * queryParams.limit;
@@ -131,7 +116,7 @@ const JobExplorer = ({
     };
 
     return (
-        <>
+        <React.Fragment>
             <PageHeader>
                 <PageHeaderTitle title={ 'Job Explorer' } />
             </PageHeader>
@@ -147,7 +132,7 @@ const JobExplorer = ({
                     <Card>
                         <CardBody>
                             <FilterableToolbar
-                                categories={ explorerOptions }
+                                categories={ options.data }
                                 filters={ queryParams }
                                 setFilters={ setFromToolbar }
                                 pagination={
@@ -169,10 +154,10 @@ const JobExplorer = ({
                                 }
                                 hasSettings
                             />
-                            { apiError && <ApiErrorState message={ apiError } /> }
-                            { !apiError && isLoading && <LoadingState /> }
-                            { !apiError && !isLoading && jobExplorerData.length <= 0 && <NoResults /> }
-                            { !apiError && !isLoading && jobExplorerData.length > 0 && (<JobExplorerList jobs={ jobExplorerData } />) }
+                            { error && <ApiErrorState message={ error.error } /> }
+                            { isLoading && <LoadingState /> }
+                            { isSuccess && data.length <= 0 && <NoResults /> }
+                            { isSuccess && data.length > 0 && <JobExplorerList jobs={ data } /> }
                             <Pagination
                                 itemCount={ meta && meta.count ? meta.count : 0 }
                                 widgetId="pagination-options-menu-bottom"
@@ -192,7 +177,7 @@ const JobExplorer = ({
                     </Card>
                 </Main>
             ) }
-        </>
+        </React.Fragment>
     );
 };
 
