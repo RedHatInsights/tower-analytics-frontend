@@ -130,43 +130,27 @@ const Clusters = ({ history }) => {
     };
 
     useEffect(() => {
-        let ignore = false;
-
         async function initializeWithPreflight() {
             await window.insights.chrome.auth.getUser();
             await preflightRequest().catch(error => {
                 setPreFlightError({ preflightError: error });
             });
-            if (!ignore) {
-                setOptions(readClustersOptions({ params: optionsQueryParams }));
-            }
+            setOptions(readClustersOptions({ params: optionsQueryParams }));
         }
 
         initializeWithPreflight();
-
-        return () => (ignore = true);
     }, []);
 
     // Get and update the data
     useEffect(() => {
-        let ignore = false;
-
-        const fetchEndpoints = async () => {
-            await window.insights.chrome.auth.getUser();
+        const fetchEndpoints = () => {
             setData(readJobExplorer({ params: queryParams }));
             setTemplates(readJobExplorer({ params: topTemplatesParams }));
             setWorkflows(readJobExplorer({ params: topWorkflowParams }));
             setModules(readEventExplorer({ params: topModuleParams }));
         };
 
-        const update = async () => {
-            if (!ignore) {
-                await fetchEndpoints();
-            }
-        };
-
-        update();
-        return () => (ignore = true);
+        fetchEndpoints();
     }, [ queryParams ]);
 
     return (
