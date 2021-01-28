@@ -12,6 +12,7 @@ import {
 } from '../../Api';
 
 import { jobExplorer } from '../../Utilities/constants';
+import useApi from '../../Utilities/useApi';
 
 import {
     Main,
@@ -58,24 +59,28 @@ const initialModuleParams = {
 
 const Clusters = ({ history }) => {
     const [ preflightError, setPreFlightError ] = useState(null);
-    const [ apiError, setApiError ] = useState(null);
-    const [ barChartData, setBarChartData ] = useState([]);
-    const [ lineChartData, setLineChartData ] = useState([]);
-    const [ templatesData, setTemplatesData ] = useState([]);
-    const [ workflowData, setWorkflowsData ] = useState([]);
-    const [ modulesData, setModulesData ] = useState([]);
-    const [ isLoading, setIsLoading ] = useState(true);
 
-    const [ orgIds, setOrgIds ] = useState([]);
-    const [ clusterIds, setClusterIds ] = useState([]);
-    const [ templateIds, setTemplateIds ] = useState([]);
-    const [ sortBy, setSortBy ] = useState(null);
-    const [ jobTypes, setJobTypes ] = useState([]);
-    const [ quickDateRanges, setQuickDateRanges ] = useState([]);
+    const optionsMapper = options => {
+        const { groupBy, attributes, ...rest } = options;
+        return rest;
+    };
+
     const {
         queryParams,
         setFromToolbar
     } = useQueryParams({ ...clusters.defaultParams });
+
+    const [{
+        isLoading,
+        isSuccess,
+        error,
+        data: { items: chartData = []}
+    }, setData ] = useApi({ items: []});
+
+    const [{ data: { items: templates = []}}, setTemplates ] = useApi({ items: []});
+    const [{ data: { items: workflows = []}}, setWorkflows ] = useApi({ items: []});
+    const [{ data: { items: modules = []}}, setModules ] = useApi({ items: []});
+    const [{ data: options = []}, setOptions ] = useApi({}, optionsMapper);
 
     const initialOptionsParams = {
         attributes: jobExplorer.attributes
@@ -85,13 +90,22 @@ const Clusters = ({ history }) => {
         initialOptionsParams
     );
 
-    const { cluster_id, org_id, template_id, quick_date_range } = queryParams;
+    const {
+        cluster_id,
+        org_id,
+        template_id,
+        quick_date_range,
+        start_date,
+        end_date
+    } = queryParams;
 
     const topTemplatesParams = {
         cluster_id,
         org_id,
         template_id,
         quick_date_range,
+        start_date,
+        end_date,
         ...initialTopTemplateParams
     };
 
@@ -100,6 +114,8 @@ const Clusters = ({ history }) => {
         org_id,
         template_id,
         quick_date_range,
+        start_date,
+        end_date,
         ...initialTopWorkflowParams
     };
 
@@ -108,6 +124,8 @@ const Clusters = ({ history }) => {
         org_id,
         template_id,
         quick_date_range,
+        start_date,
+        end_date,
         ...initialModuleParams
     };
 
@@ -119,25 +137,9 @@ const Clusters = ({ history }) => {
             await preflightRequest().catch(error => {
                 setPreFlightError({ preflightError: error });
             });
-            readClustersOptions({ params: optionsQueryParams }).then(
-                ({
-                    cluster_id,
-                    org_id,
-                    job_type,
-                    template_id,
-                    quick_date_range,
-                    sort_by
-                }) => {
-                    if (!ignore) {
-                        setClusterIds(cluster_id);
-                        setOrgIds(org_id);
-                        setTemplateIds(template_id);
-                        setSortBy(sort_by);
-                        setJobTypes(job_type);
-                        setQuickDateRanges(quick_date_range);
-                    }
-                })
-            .catch(e => setApiError(e.error));
+            if (!ignore) {
+                setOptions(readClustersOptions({ params: optionsQueryParams }));
+            }
         }
 
         initializeWithPreflight();
@@ -151,35 +153,15 @@ const Clusters = ({ history }) => {
 
         const fetchEndpoints = async () => {
             await window.insights.chrome.auth.getUser();
-            readJobExplorer({ params: queryParams })
-            .then(({ items: chartData }) => {
-                queryParams.cluster_id.length > 0 ? setLineChartData(chartData) : setBarChartData(chartData);
-            })
-            .catch(e => setApiError(e.error));
-
-            readJobExplorer({ params: topTemplatesParams })
-            .then(({ items: templatesData }) => {
-                setTemplatesData(templatesData);
-            })
-            .catch(e => setApiError(e.error));
-
-            readJobExplorer({ params: topWorkflowParams })
-            .then(({ items: workflowData }) => {
-                setWorkflowsData(workflowData);
-            })
-            .catch(e => setApiError(e.error));
-
-            readEventExplorer({ params: topModuleParams }).then(({ items: modulesData }) => {
-                setModulesData(modulesData);
-            })
-            .catch(e => setApiError(e.error));
+            setData(readJobExplorer({ params: queryParams }));
+            setTemplates(readJobExplorer({ params: topTemplatesParams }));
+            setWorkflows(readJobExplorer({ params: topWorkflowParams }));
+            setModules(readEventExplorer({ params: topModuleParams }));
         };
 
         const update = async () => {
             if (!ignore) {
-                setIsLoading(true);
                 await fetchEndpoints();
-                setIsLoading(false);
             }
         };
 
@@ -192,14 +174,7 @@ const Clusters = ({ history }) => {
             <PageHeader>
                 <PageHeaderTitle title={ 'Clusters' } />
                 <FilterableToolbar
-                    categories={ {
-                        job_type: jobTypes,
-                        org_id: orgIds,
-                        cluster_id: clusterIds,
-                        template_id: templateIds,
-                        quick_date_range: quickDateRanges,
-                        sort_by: sortBy
-                    } }
+                    categories={ options }
                     filters={ queryParams }
                     setFilters={ setFromToolbar }
                 />
@@ -209,12 +184,12 @@ const Clusters = ({ history }) => {
                     <EmptyState { ...preflightError } />
                 </Main>
             ) }
-            { apiError && (
+            { error && (
                 <Main>
-                    <ApiErrorState message={ apiError } />
+                    <ApiErrorState message={ error.error } />
                 </Main>
             ) }
-            { !preflightError && !apiError && (
+            { !preflightError && !error && (
         <>
           <Main>
               <Card>
@@ -222,23 +197,23 @@ const Clusters = ({ history }) => {
                       <h2>Job status</h2>
                   </PFCardTitle>
                   <CardBody>
-                      { isLoading && !preflightError && <LoadingState /> }
+                      { isLoading && <LoadingState /> }
                       { queryParams.cluster_id.length <= 0 &&
-                                    !isLoading && !apiError && (
+                                    isSuccess && (
                           <BarChart
                               margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                               id="d3-bar-chart-root"
-                              data={ barChartData }
+                              data={ chartData }
                               templateId={ queryParams.template_id }
                               orgId={ queryParams.org_id }
                           />
                       ) }
                       { queryParams.cluster_id.length > 0  &&
-                                    !isLoading && !apiError && (
+                                    isSuccess && (
                           <LineChart
                               margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
                               id="d3-line-chart-root"
-                              data={ lineChartData }
+                              data={ chartData }
                               clusterId={ queryParams.cluster_id }
                               templateId={ queryParams.template_id }
                               orgId={ queryParams.org_id }
@@ -253,7 +228,7 @@ const Clusters = ({ history }) => {
                   <TemplatesList
                       history={ history }
                       qp={ queryParams }
-                      templates={ workflowData }
+                      templates={ workflows }
                       isLoading={ isLoading }
                       title={ 'Top workflows' }
                       jobType={ 'workflowjob' }
@@ -261,13 +236,13 @@ const Clusters = ({ history }) => {
                   <TemplatesList
                       history={ history }
                       qp={ queryParams }
-                      templates={ templatesData }
+                      templates={ templates }
                       isLoading={ isLoading }
                       title={ 'Top templates' }
                       jobType={ 'job' }
                   />
                   <ModulesList
-                      modules={ modulesData }
+                      modules={ modules }
                       isLoading={ isLoading }
                   />
               </div>
