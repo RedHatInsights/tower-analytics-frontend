@@ -33,8 +33,8 @@ class BarChart extends Component {
             end_date: formattedDate,
             quick_date_range: 'custom',
             status: [ 'failed', 'successful' ],
-            templateId,
-            orgId
+            template_id: templateId,
+            org_id: orgId
         };
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
         this.props.history.push({

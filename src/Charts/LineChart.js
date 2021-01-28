@@ -31,9 +31,9 @@ class LineChart extends Component {
             end_date: formattedDate,
             quick_date_range: 'custom',
             status: [ 'failed', 'successful' ],
-            clusterId,
-            orgId,
-            templateId
+            cluster_id: clusterId,
+            org_id: orgId,
+            template_id: templateId
         };
 
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
