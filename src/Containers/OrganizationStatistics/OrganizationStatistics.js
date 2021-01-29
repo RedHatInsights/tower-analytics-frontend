@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
+import useApi from '../../Utilities/useApi';
 
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
@@ -70,81 +72,46 @@ const TopCard = styled(Card)`
 
 const colorFunc = scaleOrdinal(pfmulti);
 
-const OrganizationStatistics = ({ history }) => {
-    const [ preflightError, setPreFlightError ] = useState(null);
-    const [ pieChart1Data, setPieChart1Data ] = useState([]);
-    const [ pieChart2Data, setPieChart2Data ] = useState([]);
-    const [ orgsChartData, setOrgsChartData ] = useState([]);
-    const [ options, setOptions ] = useState({});
-    const [ isLoading, setIsLoading ] = useState(true);
-    const [ apiError, setApiError ] = useState(null);
-    const {
-        queryParams,
-        setFromToolbar
-    } = useQueryParams(constants.defaultParams);
+const optionsMapper = options => {
+    const { meta, inventory_id, ...rest } = options;
+    return { ...rest, sort_by: meta.sort_by };
+};
 
-    useEffect(() => {
-        let didCancel = false;
-
-        insights.chrome.appNavClick({ id: 'organization-statistics', secondaryNav: true });
-        window.insights.chrome.auth.getUser().then(() => {
-            preflightRequest().then(() => {
-                readOrgOptions({ params: queryParams }).then(options => {
-                    if (didCancel) { return; }
-
-                    const { meta, inventory_id, ...rest } = options;
-                    setOptions({ ...rest, sort_by: meta.sort_by });
-                }).catch(() => {});
-            }).catch((error) => {
-                if (didCancel) { return; }
-
-                setPreFlightError({ preflightError: error });
-            });
-        });
-
-        return () => didCancel = true;
-    }, []);
-
-    const orgsChartMapper = data => data.map(({ date, items }) => ({
+const orgsChartMapper = ({ dates: data = []}) => data.map(({ date, items }) => ({
+    date,
+    items: items.map(({ id, total_count, name }) => ({
+        id,
         date,
-        items: items.map(({ id, total_count, name }) => ({
-            id,
-            date,
-            value: total_count,
-            name: id === -1 ? 'Others' : (name || 'No organization')
-        }))
-    }));
+        value: total_count,
+        name: id === -1 ? 'Others' : (name || 'No organization')
+    }))
+}));
 
-    const pieChartMapper = (data, attrName) => data.map(({ id, [attrName]: count, name }) => ({
+const pieChartMapper = attrName => ({ items = []}) =>
+    items.map(({ id, [attrName]: count, name }) => ({
         id,
         count,
         name: id === -1 ? 'Others' : (name || 'No organization')
     }));
 
+const OrganizationStatistics = ({ history }) => {
+    const [ preflight, setPreflight ] = useApi(null);
+    const [ orgs, setOrgs ] = useApi([], orgsChartMapper);
+    const [ jobs, setJobs ] = useApi([], pieChartMapper('host_count'));
+    const [ tasks, setTasks ] = useApi([], pieChartMapper('host_task_count'));
+    const [ options, setOptions ] = useApi({}, optionsMapper);
+    const { queryParams, setFromToolbar } = useQueryParams(constants.defaultParams);
+
     useEffect(() => {
-        let didCancel = false;
-        setIsLoading(true);
-        window.insights.chrome.auth.getUser().then(() => Promise.all(
-            [
-                readJobsByDateAndOrg({ params: queryParams }),
-                readJobRunsByOrg({ params: queryParams }),
-                readJobEventsByOrg({ params: queryParams })
-            ]
-        ).then(([
-            { dates: orgsChartData = []},
-            { items: pieChart1Data = []},
-            { items: pieChart2Data = []}
-        ]) => {
-            if (didCancel) { return; }
+        insights.chrome.appNavClick({ id: 'organization-statistics', secondaryNav: true });
+        setPreflight(preflightRequest());
+        setOptions(readOrgOptions({ params: queryParams }));
+    }, []);
 
-            setOrgsChartData(orgsChartMapper(orgsChartData));
-            setPieChart1Data(pieChartMapper(pieChart1Data, 'host_count'));
-            setPieChart2Data(pieChartMapper(pieChart2Data, 'host_task_count'));
-        })
-        .catch(e => setApiError(e.error))
-        .finally(() => setIsLoading(false)));
-
-        return () => didCancel = true;
+    useEffect(() => {
+        setOrgs(readJobsByDateAndOrg({ params: queryParams }));
+        setJobs(readJobRunsByOrg({ params: queryParams }));
+        setTasks(readJobEventsByOrg({ params: queryParams }));
     }, [ queryParams ]);
 
     return (
@@ -152,18 +119,20 @@ const OrganizationStatistics = ({ history }) => {
             <PageHeader>
                 <PageHeaderTitle title={ 'Organization Statistics' } />
             </PageHeader>
-            { preflightError && (
+            { preflight.error && (
                 <Main>
-                    <EmptyState { ...preflightError } />
+                    <EmptyState
+                        preflightError={ preflight.error }
+                    />
                 </Main>
             ) }
-            { !preflightError && (
+            { preflight.isSuccess && (
                 <React.Fragment>
                     <Main style={ { paddingBottom: '0' } }>
                         <Card>
                             <CardBody>
                                 <FilterableToolbar
-                                    categories={ options }
+                                    categories={ options.data }
                                     filters={ queryParams }
                                     setFilters={ setFromToolbar }
                                 />
@@ -176,16 +145,16 @@ const OrganizationStatistics = ({ history }) => {
                                 <h2>Organization Status</h2>
                             </CardTitle>
                             <CardBody>
-                                { apiError && <ApiErrorState message={ apiError } /> }
-                                { !apiError && isLoading && <LoadingState /> }
-                                { !apiError && !isLoading && orgsChartData.length <= 0 && <NoData /> }
-                                { !apiError && !isLoading && orgsChartData.length > 0 && (
+                                { orgs.isLoading && <LoadingState /> }
+                                { orgs.error && <ApiErrorState message={ orgs.error.error } /> }
+                                { orgs.isSuccess && orgs.data.length <= 0 && <NoData /> }
+                                { orgs.isSuccess && orgs.data.length > 0 && (
                                     <GroupedBarChart
                                         margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
                                         id="d3-grouped-bar-chart-root"
-                                        data={ orgsChartData }
+                                        data={ orgs.data }
                                         history={ history }
-                                        timeFrame={ orgsChartData.length }
+                                        timeFrame={ orgs.data .length }
                                         colorFunc={ colorFunc }
                                     />
                                 ) }
@@ -199,15 +168,15 @@ const OrganizationStatistics = ({ history }) => {
                                       Job Runs by Organization
                                         </h2>
                                     </CardTitle>
-                                    { apiError && <ApiErrorState message={ apiError } /> }
-                                    { !apiError && isLoading && <LoadingState /> }
-                                    { !apiError && !isLoading && pieChart1Data.length <= 0 && <NoData /> }
-                                    { !apiError && !isLoading && pieChart1Data.length > 0 && (
+                                    { jobs.isLoading && <LoadingState /> }
+                                    { jobs.error && <ApiErrorState message={ jobs.error.error } /> }
+                                    { jobs.isSuccess && jobs.data.length <= 0 && <NoData /> }
+                                    { jobs.isSuccess && jobs.data.length > 0 && (
                                         <PieChart
                                             margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
                                             id="d3-donut-1-chart-root"
-                                            data={ pieChart1Data }
-                                            timeFrame={ pieChart1Data.length }
+                                            data={ jobs.data }
+                                            timeFrame={ jobs.data.length }
                                             colorFunc={ colorFunc }
                                         />
                                     ) }
@@ -220,15 +189,15 @@ const OrganizationStatistics = ({ history }) => {
                                       Usage by Organization (Tasks)
                                         </h2>
                                     </CardTitle>
-                                    { apiError && <ApiErrorState message={ apiError } /> }
-                                    { !apiError && isLoading && <LoadingState /> }
-                                    { !apiError && !isLoading && pieChart2Data.length <= 0 && <NoData /> }
-                                    { !apiError && !isLoading && pieChart2Data.length > 0 && (
+                                    { tasks.isLoading && <LoadingState /> }
+                                    { tasks.error && <ApiErrorState message={ tasks.error.error } /> }
+                                    { tasks.isSuccess && tasks.data.length <= 0 && <NoData /> }
+                                    { tasks.isSuccess && tasks.data.length > 0 && (
                                         <PieChart
                                             margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
                                             id="d3-donut-2-chart-root"
-                                            data={ pieChart2Data }
-                                            timeFrame={ pieChart2Data.length }
+                                            data={ tasks.data }
+                                            timeFrame={ tasks.data.length }
                                             colorFunc={ colorFunc }
                                         />
                                     ) }
@@ -240,6 +209,10 @@ const OrganizationStatistics = ({ history }) => {
             ) }
         </React.Fragment>
     );
+};
+
+OrganizationStatistics.propTypes = {
+    history: PropTypes.object
 };
 
 export default OrganizationStatistics;
