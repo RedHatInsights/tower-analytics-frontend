@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {
     Main,
@@ -26,6 +27,7 @@ import {
 
 // Imports from utilities
 import { useQueryParams } from '../../Utilities/useQueryParams';
+import useApi from '../../Utilities/useApi';
 import { roi as roiConst } from '../../Utilities/constants';
 import useRedirect from '../../Utilities/useRedirect';
 import {
@@ -74,13 +76,14 @@ const computeTotalSavings = data => data.reduce((sum, curr) => sum + curr.delta,
 
 const AutomationCalculator = ({ history }) => {
     const toJobExplorer = useRedirect(history, 'jobExplorer');
-    const [ isLoading, setIsLoading ] = useState(true);
-    const [ apiError, setApiError ] = useState(null);
-    const [ preflightError, setPreFlightError ] = useState(null);
     const [ costManual, setCostManual ] = useState('50');
     const [ costAutomation, setCostAutomation ] = useState('20');
     const [ unfilteredData, setUnfilteredData ] = useState([]);
-    const [ options, setOptions ] = useState({});
+
+    const [ preflight, setPreflight ] = useApi(null);
+    const [ options, setOptions ] = useApi({});
+    const [ api, setApi ] = useApi([], mapApi);
+
     const {
         queryParams,
         setFromToolbar
@@ -105,21 +108,13 @@ const AutomationCalculator = ({ history }) => {
         setUnfilteredData(updatedData);
     };
 
-    /**
-     * Check for preflight error after mounted.
-     */
     useEffect(() => {
-        setIsLoading(true);
-        window.insights.chrome.auth.getUser()
-        .then(() =>
-            preflightRequest()
-            .catch((error) => { setPreFlightError({ preflightError: error }); })
-            // Loading is set false when the data also loaded
-        );
+        setPreflight(preflightRequest());
+        setOptions(readROIOptions({ params: queryParams }));
     }, []);
 
     /**
-     * Recalculates the delta and costs in the data after the cost or is changed.
+     * Recalculates the delta and costs in the data after the cost is changed.
      */
     useEffect(() => {
         setUnfilteredData(
@@ -128,36 +123,20 @@ const AutomationCalculator = ({ history }) => {
     }, [ costAutomation, costManual ]);
 
     /**
+     * After getting new data from the API re initialize the data with delta cost.
+     * Note: this cannot be merged with the near same cost* useEffect
+     */
+    useEffect(() => {
+        setUnfilteredData(
+            updateDeltaCost(api.data, costAutomation, costManual)
+        );
+    }, [ api.data ]);
+
+    /**
      * Get data from API depending on the queryParam.
      */
     useEffect(() => {
-        let didCancel = false;
-        setIsLoading(true);
-        window.insights.chrome.auth.getUser()
-        .then(() => {
-            Promise.all([
-                readROI({ params: queryParams }),
-                readROIOptions({ params: queryParams })
-            ])
-            .then(([
-                { items },
-                explorerOptions
-            ]) => {
-                if (didCancel) { return; }
-
-                setUnfilteredData(
-                    updateDeltaCost(mapApi(items), costAutomation, costManual)
-                );
-                setOptions(explorerOptions);
-            })
-            .catch(e => {
-                setUnfilteredData([]);
-                setApiError(e.error);
-            })
-            .finally(() => { setIsLoading(false); });
-        });
-
-        return () => didCancel = true;
+        setApi(readROI({ params: queryParams }));
     }, [ queryParams ]);
 
     /**
@@ -177,18 +156,20 @@ const AutomationCalculator = ({ history }) => {
             <PageHeader style={ { flex: '0' } }>
                 <PageHeaderTitle title={ 'Automation Calculator' } />
             </PageHeader>
-            { preflightError && (
+            { preflight.error && (
                 <Main>
-                    <EmptyState { ...preflightError } />
+                    <EmptyState
+                        preflightError={ preflight.error }
+                    />
                 </Main>
             ) }
-            { !preflightError && (
+            { preflight.isSuccess && (
                 <React.Fragment>
                     <Main style={ { paddingBottom: '0' } }>
                         <Card>
                             <CardBody>
                                 <FilterableToolbar
-                                    categories={ options }
+                                    categories={ options.data }
                                     filters={ queryParams }
                                     setFilters={ setFromToolbar }
                                 />
@@ -201,10 +182,10 @@ const AutomationCalculator = ({ history }) => {
                                 <Card>
                                     <BorderedCardTitle>Automation savings</BorderedCardTitle>
                                     <CardBody>
-                                        { apiError && <ApiErrorState message={ apiError } /> }
-                                        { !apiError && isLoading && <LoadingState /> }
-                                        { !apiError && !isLoading && unfilteredData.length <= 0 && <NoData /> }
-                                        { !apiError && !isLoading && unfilteredData.length > 0 && (
+                                        { api.isLoading && <LoadingState /> }
+                                        { api.error && <ApiErrorState message={ api.error.error } /> }
+                                        { api.isSuccess && unfilteredData.length <= 0 && <NoData /> }
+                                        { api.isSuccess && unfilteredData.length > 0 && (
                                             <React.Fragment>
                                                 <TopTemplatesSavings
                                                     margin={ { top: 20, right: 20, bottom: 20, left: 70 } }
@@ -245,6 +226,10 @@ const AutomationCalculator = ({ history }) => {
             ) }
         </React.Fragment>
     );
+};
+
+AutomationCalculator.propTypes = {
+    history: PropTypes.object
 };
 
 export default AutomationCalculator;

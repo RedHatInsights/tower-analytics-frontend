@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import { CardTitle } from '@patternfly/react-core';
 
-export const mapApi = (data) => data.map(({
+export const mapApi = ({ items = []}) => items.map(({
     elapsed,
     host_count,
     host_task_count,
