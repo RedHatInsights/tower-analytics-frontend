@@ -86,11 +86,11 @@ export const QuestionIconTooltip = ({ data }) => (
                 </p>
                 <p>
                     <b>Number of associated organizations</b>:{ ' ' }
-                    { data.totalOrgCount }
+                    { data.total_org_count }
                 </p>
                 <p>
                     <b>Number of associated clusters</b>:{ ' ' }
-                    { data.totalClusterCount }
+                    { data.total_cluster_count }
                 </p>
             </TooltipWrapper>
         }
@@ -139,14 +139,14 @@ const TopTemplates = ({
                             </InputGroup>
                         </InputAndText>
                         <TemplateDetailSubTitle>
-                                    x { data.hostTaskCount } runs, { data.hostCount } hosts
+                                    x { data.host_task_count } runs, { data.host_count } hosts
                         </TemplateDetailSubTitle>
                         <IconGroup>
                             <QuestionIconTooltip data={ data }/>
                         </IconGroup>
                     </TemplateDetail>
                     <p style={ { color: '#486B00' } }>
-                            ${ data.delta.toFixed(2) }
+                        ${ data.delta.toFixed(2) }
                     </p>
                 </div>
             )) }

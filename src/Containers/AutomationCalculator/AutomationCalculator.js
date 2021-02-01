@@ -39,7 +39,7 @@ import {
 import TopTemplatesSavings from '../../Charts/ROITopTemplates';
 
 // Local imports
-import { mapApi, BorderedCardTitle } from './helpers';
+import { BorderedCardTitle } from './helpers';
 import TotalSavings from './TotalSavings';
 import CalculationCost from './CalculationCost';
 import AutomationFormula from './AutomationFormula';
@@ -64,8 +64,16 @@ const WrapperRight = styled.div`
   flex-direction: column;
 `;
 
+const mapApi = ({ items = []}) => items.map(el => ({
+    ...el,
+    delta: 0,
+    avgRunTime: 3600,
+    manualCost: 0,
+    automatedCost: 0
+}));
+
 const updateDeltaCost = (data, costAutomation, costManual) => data.map(el => {
-    const manualCost = convertSecondsToHours(el.avgRunTime) * el.hostCount * parseFloat(costManual);
+    const manualCost = convertSecondsToHours(el.avgRunTime) * el.host_count * parseFloat(costManual);
     const automatedCost = convertSecondsToHours(el.elapsed) * parseFloat(costAutomation);
     const delta = calculateDelta(automatedCost, manualCost);
 
