@@ -24,6 +24,11 @@ const dataFetchReducer = (state, action) => {
                 isSuccess: false,
                 error: action.payload
             };
+        case 'UPDATE_DATA':
+            return {
+                ...state,
+                data: action.payload
+            };
         default:
             throw new Error();
     }
@@ -66,7 +71,11 @@ const useApi = (initialData, postprocess = d => d) => {
         return () => { didCancel = true; };
     }, [ request ]);
 
-    return [ state, setRequest ];
+    const setData = data => {
+        dispatch({ type: 'UPDATE_DATA', payload: data });
+    };
+
+    return [ state, setRequest, setData ];
 };
 
 export default useApi;

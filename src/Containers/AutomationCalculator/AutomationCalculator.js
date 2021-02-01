@@ -86,11 +86,13 @@ const AutomationCalculator = ({ history }) => {
     const toJobExplorer = useRedirect(history, 'jobExplorer');
     const [ costManual, setCostManual ] = useState('50');
     const [ costAutomation, setCostAutomation ] = useState('20');
-    const [ unfilteredData, setUnfilteredData ] = useState([]);
 
     const [ preflight, setPreflight ] = useApi(null);
     const [ options, setOptions ] = useApi({});
-    const [ api, setApi ] = useApi([], mapApi);
+    const [ api, fetchApi, setDataInApi ] = useApi(
+        [],
+        (data) => updateDeltaCost(mapApi(data), costAutomation, costManual)
+    );
 
     const {
         queryParams,
@@ -103,7 +105,7 @@ const AutomationCalculator = ({ history }) => {
      * Used in top templates.
      */
     const setDataRunTime = (seconds, id) => {
-        const updatedData = unfilteredData.map(el => {
+        const updatedData = api.data.map(el => {
             if (el.id === id) {
                 el.avgRunTime = seconds;
                 const updatedDelta = updateDeltaCost([ el ], costAutomation, costManual)[0];
@@ -113,7 +115,7 @@ const AutomationCalculator = ({ history }) => {
             }
         });
 
-        setUnfilteredData(updatedData);
+        setDataInApi(updatedData);
     };
 
     useEffect(() => {
@@ -125,26 +127,16 @@ const AutomationCalculator = ({ history }) => {
      * Recalculates the delta and costs in the data after the cost is changed.
      */
     useEffect(() => {
-        setUnfilteredData(
-            updateDeltaCost(unfilteredData, costAutomation, costManual)
-        );
-    }, [ costAutomation, costManual ]);
-
-    /**
-     * After getting new data from the API re initialize the data with delta cost.
-     * Note: this cannot be merged with the near same cost* useEffect
-     */
-    useEffect(() => {
-        setUnfilteredData(
+        setDataInApi(
             updateDeltaCost(api.data, costAutomation, costManual)
         );
-    }, [ api.data ]);
+    }, [ costAutomation, costManual ]);
 
     /**
      * Get data from API depending on the queryParam.
      */
     useEffect(() => {
-        setApi(readROI({ params: queryParams }));
+        fetchApi(readROI({ params: queryParams }));
     }, [ queryParams ]);
 
     /**
@@ -158,6 +150,56 @@ const AutomationCalculator = ({ history }) => {
         };
         toJobExplorer(initialQueryParams);
     };
+
+    const renderLeft = () => (
+        <WrapperLeft>
+            <Main style={ { paddingBottom: '0' } }>
+                <Card>
+                    <BorderedCardTitle>Automation savings</BorderedCardTitle>
+                    <CardBody>
+                        { api.isLoading && <LoadingState /> }
+                        { api.error && <ApiErrorState message={ api.error.error } /> }
+                        { api.isSuccess && api.data.length <= 0 && <NoData /> }
+                        { api.isSuccess && api.data.length > 0 && (
+                            <React.Fragment>
+                                <TopTemplatesSavings
+                                    margin={ { top: 20, right: 20, bottom: 20, left: 70 } }
+                                    id="d3-roi-chart-root"
+                                    data={ api.data }
+                                />
+                                <p style={ { textAlign: 'center' } }>Templates</p>
+                            </React.Fragment>
+                        ) }
+                    </CardBody>
+                </Card>
+            </Main>
+            <Main>
+                <AutomationFormula />
+            </Main>
+        </WrapperLeft>
+    );
+
+    const renderRight = () => (
+        <WrapperRight>
+            <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
+                <TotalSavings totalSavings={ computeTotalSavings(api.data) } />
+            </Main>
+            <Main style={ { display: 'flex', flexDirection: 'column', flex: '1 1 0', paddingLeft: '0' } }>
+                <CalculationCost
+                    costManual={ costManual }
+                    setCostManual={ setCostManual }
+                    costAutomation={ costAutomation }
+                    setCostAutomation={ setCostAutomation }
+                />
+                <TopTemplates
+                    redirectToJobExplorer={ redirectToJobExplorer }
+                    data={ api.data }
+                    setDataRunTime={ setDataRunTime }
+                    setUnfilteredData={ api.data }
+                />
+            </Main>
+        </WrapperRight>
+    );
 
     return (
         <React.Fragment>
@@ -185,50 +227,8 @@ const AutomationCalculator = ({ history }) => {
                         </Card>
                     </Main>
                     <Wrapper className="automation-wrapper">
-                        <WrapperLeft>
-                            <Main style={ { paddingBottom: '0' } }>
-                                <Card>
-                                    <BorderedCardTitle>Automation savings</BorderedCardTitle>
-                                    <CardBody>
-                                        { api.isLoading && <LoadingState /> }
-                                        { api.error && <ApiErrorState message={ api.error.error } /> }
-                                        { api.isSuccess && unfilteredData.length <= 0 && <NoData /> }
-                                        { api.isSuccess && unfilteredData.length > 0 && (
-                                            <React.Fragment>
-                                                <TopTemplatesSavings
-                                                    margin={ { top: 20, right: 20, bottom: 20, left: 70 } }
-                                                    id="d3-roi-chart-root"
-                                                    data={ unfilteredData }
-                                                />
-                                                <p style={ { textAlign: 'center' } }>Templates</p>
-                                            </React.Fragment>
-                                        ) }
-                                    </CardBody>
-                                </Card>
-                            </Main>
-                            <Main>
-                                <AutomationFormula />
-                            </Main>
-                        </WrapperLeft>
-                        <WrapperRight>
-                            <Main style={ { paddingBottom: '0', paddingLeft: '0' } }>
-                                <TotalSavings totalSavings={ computeTotalSavings(unfilteredData) } />
-                            </Main>
-                            <Main style={ { display: 'flex', flexDirection: 'column', flex: '1 1 0', paddingLeft: '0' } }>
-                                <CalculationCost
-                                    costManual={ costManual }
-                                    setCostManual={ setCostManual }
-                                    costAutomation={ costAutomation }
-                                    setCostAutomation={ setCostAutomation }
-                                />
-                                <TopTemplates
-                                    redirectToJobExplorer={ redirectToJobExplorer }
-                                    data={ unfilteredData }
-                                    setDataRunTime={ setDataRunTime }
-                                    setUnfilteredData={ setUnfilteredData }
-                                />
-                            </Main>
-                        </WrapperRight>
+                        { renderLeft() }
+                        { renderRight() }
                     </Wrapper>
                 </React.Fragment>
             ) }
