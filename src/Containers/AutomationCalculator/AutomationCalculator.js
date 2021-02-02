@@ -73,8 +73,8 @@ const mapApi = ({ items = []}) => items.map(el => ({
 }));
 
 const updateDeltaCost = (data, costAutomation, costManual) => data.map(el => {
-    const manualCost = convertSecondsToHours(el.avgRunTime) * el.host_count * parseFloat(costManual);
-    const automatedCost = convertSecondsToHours(el.elapsed) * parseFloat(costAutomation);
+    const manualCost = convertSecondsToHours(el.avgRunTime) * el.successful_hosts_total * parseFloat(costManual);
+    const automatedCost = convertSecondsToHours(el.successful_elapsed_total) * parseFloat(costAutomation);
     const delta = calculateDelta(automatedCost, manualCost);
 
     return { ...el, delta, manualCost, automatedCost };

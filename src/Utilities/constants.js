@@ -40,9 +40,8 @@ export const roi = {
         limit: 25,
         only_root_workflows_and_standalone_jobs: true,
         attributes: [
-            'elapsed',
-            'host_count',
-            'host_task_count',
+            'successful_hosts_total',
+            'successful_elapsed_total',
             'total_org_count',
             'total_cluster_count'
         ],

@@ -82,7 +82,7 @@ export const QuestionIconTooltip = ({ data }) => (
             <TooltipWrapper>
                 <p>
                     <b>Success elapsed sum</b>:{ ' ' }
-                    { data.elapsed.toFixed(2) }s
+                    { data.successful_elapsed_total.toFixed(2) }
                 </p>
                 <p>
                     <b>Number of associated organizations</b>:{ ' ' }
@@ -139,7 +139,7 @@ const TopTemplates = ({
                             </InputGroup>
                         </InputAndText>
                         <TemplateDetailSubTitle>
-                                    x { data.host_task_count } runs, { data.host_count } hosts
+                                    x { data.successful_hosts_total } host runs
                         </TemplateDetailSubTitle>
                         <IconGroup>
                             <QuestionIconTooltip data={ data }/>
