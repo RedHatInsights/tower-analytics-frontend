@@ -27,7 +27,6 @@ export const useQueryParams = initial => {
                 return { ...state, limit: parseInt(value.limit) };
             /* v1 api reducers */
             case 'SET_OFFSET':
-            case 'SET_SEVERITY':
             case 'SET_ATTRIBUTES':
             case 'SET_JOB_TYPE':
             case 'SET_STATUS':
@@ -47,6 +46,13 @@ export const useQueryParams = initial => {
                 return newState;
             }
 
+            case 'SET_SEVERITY':
+                if (value.severity === '') {
+                    const { severity: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, ...value };
             case 'SET_START_DATE':
             case 'SET_END_DATE': {
                 let newValues = {};
