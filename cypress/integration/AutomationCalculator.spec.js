@@ -1,8 +1,13 @@
 /* global cy, before */
 import {
     appid,
-    calculatorUrl
+    calculatorUrl,
+    jobExplorerUrl
 } from './constants';
+
+beforeEach(() => {
+    cy.viewport(1600, 2000);
+});
 
 describe('Automation Caluclator page smoketests', () => {
     before(() => {
@@ -29,6 +34,14 @@ describe('Automation Caluclator page smoketests', () => {
     it('can hover over the first 3 bars to show tooltip', () => {
         for (let i = 0; i < 3; i++) {
             cy.get(appid).find('g > rect').eq(i).trigger('mouseover', { force: true });
+            cy.get('#svg-chart-Tooltip-base-d3-roi-chart-root').should('have.css', 'opacity', '1');
         }
+    });
+
+    it('can click on the template name', () => {
+        cy.get('.top-templates').find('a').eq(0).click();
+        cy.location().should((location) => {
+            expect(location.pathname).to.include(jobExplorerUrl);
+        });
     });
 });
