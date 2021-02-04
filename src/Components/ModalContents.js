@@ -124,7 +124,6 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType, handleClo
     const [{
         data: { items: relatedJobs = []}
     }, setRelatedJobs ] = useApi({ items: []});
-
     const [{
         data: { items: [ stats = 0 ] }
     }, setStats ] = useApi({ items: []});
