@@ -4,35 +4,35 @@ const dummyData = [
     {
         id: 1,
         name: 'a',
-        hostTaskCount: 10,
-        hostCount: 10,
+        host_cluster_count: 10,
+        successful_hosts_total: 10,
         avgRunTime: 3600,
         delta: 50,
-        elapsed: 50,
-        totalOrgCount: 2,
-        totalClusterCount: 20
+        successful_elapsed_total: 50,
+        total_org_count: 2,
+        total_cluster_count: 20
     },
     {
         id: 2,
         name: 'b',
-        hostTaskCount: 10,
-        hostCount: 10,
+        host_cluster_count: 10,
+        successful_hosts_total: 10,
         avgRunTime: 3600,
         delta: 50,
-        elapsed: 50,
-        totalOrgCount: 2,
-        totalClusterCount: 20
+        successful_elapsed_total: 50,
+        total_org_count: 2,
+        total_cluster_count: 20
     },
     {
         id: 3,
         name: 'c',
-        hostTaskCount: 10,
-        hostCount: 10,
+        host_cluster_count: 10,
+        successful_hosts_total: 10,
         avgRunTime: 1980, // Whole minutes
         delta: 50,
-        elapsed: 50,
-        totalOrgCount: 2,
-        totalClusterCount: 20
+        successful_elapsed_total: 50,
+        total_org_count: 2,
+        total_cluster_count: 20
     }
 ];
 

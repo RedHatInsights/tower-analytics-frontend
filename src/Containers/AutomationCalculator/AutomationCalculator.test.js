@@ -11,28 +11,28 @@ const dummyRoiData = {
         {
             id: 1,
             name: 'a',
-            elapsed: 3600,
-            host_task_count: 10,
+            successful_elapsed_total: 3600,
+            host_cluster_count: 10,
             total_org_count: 2,
-            host_count: 10,
+            successful_hosts_total: 10,
             total_cluster_count: 20
         },
         {
             id: 2,
             name: 'b',
-            elapsed: 3600,
-            host_task_count: 10,
+            successful_elapsed_total: 3600,
+            host_cluster_count: 10,
             total_org_count: 2,
-            host_count: 10,
+            successful_hosts_total: 10,
             total_cluster_count: 20
         },
         {
             id: 3,
             name: 'c',
-            elapsed: 0,
-            host_task_count: 10,
+            successful_elapsed_total: 0,
+            host_cluster_count: 10,
             total_org_count: 2,
-            host_count: 10,
+            successful_hosts_total: 10,
             total_cluster_count: 20
         }
     ]
