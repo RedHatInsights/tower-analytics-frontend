@@ -1,16 +1,10 @@
 /*eslint-disable */
-
 import React from 'react';
-import { useState, useEffect } from 'react';
 import { useRef } from 'react';
 import useResizeObserver from 'use-resize-observer';
 
-import { Chart, ChartBar, ChartAxis, ChartStack, ChartThemeColor, ChartTooltip } from '@patternfly/react-charts';
-import { ChartThemeDefinition } from '@patternfly/react-charts';
+import { Chart, ChartBar, ChartAxis, ChartStack, ChartTooltip } from '@patternfly/react-charts';
 import { ChartLegend } from '@patternfly/react-charts';
-import { ChartGroup } from '@patternfly/react-charts';
-
-import * as d3 from 'd3';
 
 const colorSwitcher = (bit) => {
     let color = 'black';
@@ -36,13 +30,11 @@ const colorSwitcher = (bit) => {
 
 const TemplateHostStatuses = (props) =>{
 
-  const { template_id, data } = props;
-  console.log('incoming id', template_id);
-  console.log('incoming data', data);
+  const { data } = props;
 
   // set a ref on the containing div to track for resizes ...
   const ref = useRef(null);
-  const { width = 100, height } = useResizeObserver({ ref });
+  const { width = 100 } = useResizeObserver({ ref });
 
   // we want a static height ...
   const divHeight = 90;
@@ -57,7 +49,7 @@ const TemplateHostStatuses = (props) =>{
   const failed_pos = Math.floor((data.failed_host_count / data.host_count) * 100);
   const unreachable_pos = Math.floor((data.unreachable_host_count / data.host_count) * 100);
 
-  let testdata = [
+  let chartData = [
     {'name': 'ok', x: '', y: ok_pos, y0: null, label: 'Ok'},
     {'name': 'skipped', x: '', y: skipped_pos, y0: null, label: 'Skipped'},
     {'name': 'changed', x: '', y: changed_pos, y0: null, label: 'Changed'},
@@ -68,11 +60,11 @@ const TemplateHostStatuses = (props) =>{
   // set the fill color and "y" axis offset for each subbar ...
   let legendData = [];
   let ytotal = 0;
-  testdata.forEach((x,idx) => {
-    testdata[idx]['y0'] = ytotal;
+  chartData.forEach((x,idx) => {
+    chartData[idx]['y0'] = ytotal;
     ytotal = ytotal + x.y + .2;
     legendData.push({
-        name: `${x.label} ${x.y}%` ,
+        name: `${x.label} ${x.y}%`,
         symbol: {
             fill: colorSwitcher(x)
         }
@@ -81,7 +73,7 @@ const TemplateHostStatuses = (props) =>{
 
   return (
     <div style={{ marginTop: '0px', marginLeft: '0px'}}>
-    <div ref={ ref } style={{ height: `${divHeight}px`, width: '100%', background: 'white', border: '2px solid red' }}>
+    <div ref={ ref } style={{ height: `${divHeight}px`, width: '100%', background: 'white'}}>
       <Chart
         ariaDesc="job status summary"
         ariaTitle="Job Statuses"
@@ -93,7 +85,7 @@ const TemplateHostStatuses = (props) =>{
         <ChartLegend
           title='Host Status'
           titleOrientation='left'
-          style={{ title: {fontSize: 14, fontWeight: 'normal' } }}
+          style={{ title: {fontSize: 14, fontWeight: 900 } }}
           padding={ 100 }
           y={ divHeight - 70 }
           x={ 10 }
@@ -101,8 +93,9 @@ const TemplateHostStatuses = (props) =>{
           data={ [] }
         />
 
+        {/* Task Count */}
         <ChartLegend
-          title={ `Tasks ${taskCount}` }
+          title='Tasks'
           gutter={ 0 }
           x={ width - 200 }
           y={ divHeight - 70 }
@@ -112,13 +105,35 @@ const TemplateHostStatuses = (props) =>{
         />
 
         <ChartLegend
-          title={ `Hosts ${hostCount}` }
+          title={ `${taskCount}` }
+          style={{title: {fontWeight: 900}}}
+          gutter={ 0 }
+          x={ width - 147 }
+          y={ divHeight - 70 }
+          titleOrientation='right'
+          padding={{ left: 100, right: 100}}
+          data={ [] }
+        />
+        
+        {/* Host count */}
+        <ChartLegend
+          title='Hosts'
           gutter={ 0 }
           x={ width - 120 }
           y={ divHeight - 70 }
           titleOrientation='right'
           data={[]}
         />
+
+        <ChartLegend
+          title={ `${hostCount}` }
+          style={{title: {fontWeight: 900}}}
+          gutter={ 0 }
+          x={ width - 75 }
+          y={ divHeight - 70 }
+          titleOrientation='right'
+          data={[]}
+        />  
 
         {/* status colors */}
         <ChartLegend
@@ -127,6 +142,11 @@ const TemplateHostStatuses = (props) =>{
           titleOrientation='right'
           y={ divHeight - 40 }
           x={ width - 585 }
+          style={{
+            data: {
+              fontSize: 35,
+            }
+          }}
         />
 
         {/* horizontal axis */}
@@ -160,7 +180,7 @@ const TemplateHostStatuses = (props) =>{
 
         {/* bars */}
         <ChartStack horizontal domainPadding={{x: [0, 0], y: [0, 0]}}>
-          { testdata.map((bit,idx) => {
+          { chartData.map((bit,idx) => {
             bit['fill'] = colorSwitcher(bit);
             return (
               <ChartBar
@@ -170,7 +190,7 @@ const TemplateHostStatuses = (props) =>{
                 domainPadding={{ x: [0, 0], y: [0,0] }}
                 style={{
                   data : {
-                    fill: colorSwitcher(bit)
+                    fill: colorSwitcher(bit),
                   }
                 }}
                 data={[ bit ]}

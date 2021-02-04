@@ -1,4 +1,3 @@
-/*eslint-disable */
 /*eslint camelcase: ["error", {allow: ["template_id", "job_type", "cluster_id", "start_date", "end_date", "quick_date_range"]}]*/
 
 import React, { useState, useEffect } from 'react';
@@ -130,10 +129,8 @@ const TemplatesList = ({ history, clusterId, templates, isLoading, queryParams }
                 setRelatedJobs(data.related_jobs);
             });
             readTemplateHostsStats(selectedId).then(hdata => {
-                console.log('fetched data', hdata.items[0]);
                 setSelectedData(hdata.items[0]);
             });
-            console.log(selectedData);
         };
 
         if (selectedId) {
