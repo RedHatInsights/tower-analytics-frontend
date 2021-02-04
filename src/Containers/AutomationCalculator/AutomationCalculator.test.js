@@ -1,5 +1,5 @@
 import { act } from 'react-dom/test-utils';
-import { history, mountPage, preflight200, preflight400 } from '../tests/helpers';
+import { history, mountPage, preflight200, preflight400 } from '../../Utilities/tests/helpers';
 import fetchMock from 'fetch-mock-jest';
 import AutomationCalculator from './AutomationCalculator';
 import TotalSavings from './TotalSavings';

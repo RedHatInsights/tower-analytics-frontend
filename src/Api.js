@@ -223,14 +223,7 @@ export const readClustersBarChart = ({ params = {}}) => {
     }).then(handleResponse);
 };
 
-export const readJobRunsByOrg = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(pieChart1Endpoint, formattedUrl);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url).then(handleResponse);
-};
-
-export const readROI = ({ params = {} }) => {
+export const readROI = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(ROIEndpoint, formattedUrl);
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));

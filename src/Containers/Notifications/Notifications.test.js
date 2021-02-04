@@ -4,7 +4,7 @@ import {
     mountPage,
     preflight200,
     preflight400
-} from '../tests/helpers';
+} from '../../Utilities/tests/helpers';
 import fetchMock from 'fetch-mock-jest';
 import Notifications from './Notifications.js';
 

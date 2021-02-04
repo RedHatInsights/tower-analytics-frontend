@@ -28,12 +28,12 @@ export const jobExplorer = {
 
 export const roi = {
     defaultParams: {
-        status: ['successful'],
+        status: [ 'successful' ],
         org_id: [],
         cluster_id: [],
         template_id: [],
         quick_date_range: 'roi_last_year',
-        job_type: ['job'],
+        job_type: [ 'job' ],
         sort_by: 'template_productivity_score:desc',
         start_date: null,
         end_date: null,
@@ -58,7 +58,7 @@ export const organizationStatistics = {
         quick_date_range: 'last_30_days',
         sort_by: 'desc',
         limit: 5,
-        job_type: ['workflowjob', 'job'],
+        job_type: [ 'workflowjob', 'job' ],
         cluster_id: [],
         template_id: [],
         start_date: null,
