@@ -57,7 +57,7 @@ const initialModuleParams = {
     limit: 10
 };
 
-const Clusters = ({ history }) => {
+const Clusters = () => {
     const [ preflightError, setPreFlightError ] = useState(null);
 
     const optionsMapper = options => {
@@ -210,7 +210,6 @@ const Clusters = ({ history }) => {
                   style={ { display: 'flex', marginTop: '20px' } }
               >
                   <TemplatesList
-                      history={ history }
                       qp={ queryParams }
                       templates={ workflows }
                       isLoading={ isLoading }
@@ -218,7 +217,6 @@ const Clusters = ({ history }) => {
                       jobType={ 'workflowjob' }
                   />
                   <TemplatesList
-                      history={ history }
                       qp={ queryParams }
                       templates={ templates }
                       isLoading={ isLoading }
