@@ -1,16 +1,11 @@
 import PropTypes from 'prop-types';
 import React, { Component } from 'react';
-import {
-    withRouter
-} from 'react-router-dom';
 
 import initializeChart from './BaseChart';
 import * as d3 from 'd3';
 import Legend from '../Utilities/Legend';
 import { Paths } from '../paths';
-import { formatDate } from '../Utilities/helpers';
 import { stringify } from 'query-string';
-import { pfmulti } from '../Utilities/colors';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
@@ -20,7 +15,10 @@ const Wrapper = styled.div`
   flex-shrink: 0;
 `;
 
-const color = d3.scaleOrdinal(pfmulti);
+const formatDate = (date) => {
+    const pieces = date.split('-');
+    return `${pieces[1]}/${pieces[2]}`;
+};
 
 class Tooltip {
     constructor(props) {
@@ -109,14 +107,14 @@ class Tooltip {
       } else {
           const maxLength = 16;
           date = d.date;
-          orgName = d.org_name;
+          orgName = d.name;
           jobs = d.value;
-          if (d.org_name.length > maxLength) {
-              orgName = d.org_name.slice(0, maxLength).concat('...');
+          if (d.name.length > maxLength) {
+              orgName = d.name.slice(0, maxLength).concat('...');
           }
       }
 
-      const formatTooltipDate = d3.timeFormat('%m/%d');
+      const formatTooltipDate = formatDate;
       const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
       const chartWidth = d3
       .select(this.svg + '> svg')
@@ -179,7 +177,7 @@ class GroupedBarChart extends Component {
         this.draw = this.draw.bind(this);
         this.resize = this.resize.bind(this);
         this.redirectToJobExplorer = this.redirectToJobExplorer.bind(this);
-        this.orgsList = props.data[0].orgs;
+        this.orgsList = props.data[0].items;
         this.selection = [];
         this.state = {
             colors: [],
@@ -243,14 +241,14 @@ class GroupedBarChart extends Component {
         }
 
         // create our colors array to send to the Legend component
-        const colors = this.orgsList.reduce((colors, org) => {
-            colors.push({
-                name: org.org_name,
-                value: color(org.org_name),
+        const colors = this.orgsList.map(org => {
+            const name = org.id === -1 ? 'Others' : org.name;
+            return {
+                name,
+                value: this.props.colorFunc(name),
                 id: org.id
-            });
-            return colors;
-        }, []);
+            };
+        });
         this.setState({ colors });
         this.draw();
     }
@@ -260,13 +258,8 @@ class GroupedBarChart extends Component {
         d3.selectAll('#' + this.props.id + ' > *').remove();
         let { data: unformattedData, timeFrame } = this.props;
         const selected = this.selection;
-        const parseTime = d3.timeParse('%Y-%m-%d');
-        const data = unformattedData.reduce((formatted, { date, orgs: orgsList }) => {
-            date = parseTime(date);
-            const selectedOrgs = orgsList.filter(({ id }) => selected.includes(id));
-            selectedOrgs.map(org => {
-                org.date = date;
-            });
+        const data = unformattedData.reduce((formatted, { date, items }) => {
+            const selectedOrgs = items.filter(({ id }) => selected.includes(id));
             return formatted.concat({ date, selectedOrgs });
         }, []);
         const width = this.props.getWidth();
@@ -280,18 +273,18 @@ class GroupedBarChart extends Component {
         const x1 = d3.scaleBand();
         const y = d3.scaleLinear().range([ height, 0 ]);
         // format our X Axis ticks
-        let ticks;
         const maxTicks = Math.round(data.length / (timeFrame / 2));
-        ticks = data.map(d => d.date);
+        let ticks = data.map(d => d.date);
         if (timeFrame === 31) {
             ticks = data.map((d, i) =>
-                i % maxTicks === 0 ? d.date : undefined).filter(item => item);
+                i % maxTicks === 0 ? d.date : undefined
+            ).filter(item => item);
         }
 
         const xAxis = d3
         .axisBottom(x0)
         .tickValues(ticks)
-        .tickFormat(d3.timeFormat('%-m/%-d'));
+        .tickFormat(formatDate);
 
         const yAxis = d3
         .axisLeft(y)
@@ -314,7 +307,7 @@ class GroupedBarChart extends Component {
         );
 
         const dates = data.map(d => d.date);
-        const selectedOrgNames = data[0].selectedOrgs.map(d => d.org_name);
+        const selectedOrgNames = data[0].selectedOrgs.map(d => d.name);
         const tooltip = new Tooltip({
             svg: '#' + this.props.id
         });
@@ -380,15 +373,16 @@ class GroupedBarChart extends Component {
         });
         bars.exit().remove();
 
+        const color = this.props.colorFunc;
         const subEnter = bars
         .enter()
         .append('rect')
         .attr('width', x1.bandwidth())
         .attr('x', function(d) {
-            return x1(d.org_name);
+            return x1(d.name);
         }) // unsorted
         .style('fill', function(d) {
-            return color(d.org_name);
+            return color(d.name);
         })
         .attr('y', function(d) {
             return y(d.value);
@@ -397,12 +391,12 @@ class GroupedBarChart extends Component {
             return height - y(d.value);
         })
         .on('mouseover', function(d) {
-            d3.select(this).style('fill', d3.rgb(color(d.org_name)).darker(1));
+            d3.select(this).style('fill', d3.rgb(color(d.name)).darker(1));
             tooltip.handleMouseOver();
         })
         .on('mousemove', tooltip.handleMouseOver)
         .on('mouseout', function(d) {
-            d3.select(this).style('fill', color(d.org_name));
+            d3.select(this).style('fill', color(d.name));
             tooltip.handleMouseOut();
         })
         .on('click', this.redirectToJobExplorer);
@@ -449,7 +443,8 @@ GroupedBarChart.propTypes = {
     getHeight: PropTypes.func,
     getWidth: PropTypes.func,
     timeFrame: PropTypes.number,
-    history: PropTypes.object
+    history: PropTypes.object,
+    colorFunc: PropTypes.func
 };
 
-export default initializeChart(withRouter(GroupedBarChart));
+export default initializeChart(GroupedBarChart);

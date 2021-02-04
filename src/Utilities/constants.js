@@ -50,3 +50,18 @@ export const roi = {
         granularity: 'monthly'
     }
 };
+
+export const organizationStatistics = {
+    defaultParams: {
+        status: [],
+        org_id: [],
+        quick_date_range: 'last_30_days',
+        sort_by: 'desc',
+        limit: 5,
+        job_type: [ 'workflowjob', 'job' ],
+        cluster_id: [],
+        template_id: [],
+        start_date: null,
+        end_date: null
+    }
+};

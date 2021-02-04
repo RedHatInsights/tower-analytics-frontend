@@ -3,11 +3,8 @@ import { stringify } from 'query-string';
 const apiVersion = 'v0';
 const barChartEndpoint = `/api/tower-analytics/${apiVersion}/chart30/`;
 const clustersEndpoint = `/api/tower-analytics/${apiVersion}/clusters/`;
-const groupedBarChartEndpoint = `/api/tower-analytics/${apiVersion}/jobs_by_date_and_org_30/`;
 const modulesEndpoint = `/api/tower-analytics/${apiVersion}/modules/`;
 const notificationsEndPoint = `/api/tower-analytics/${apiVersion}/notifications/`;
-const pieChart1Endpoint = `/api/tower-analytics/${apiVersion}/job_runs_by_org_30/`;
-const pieChart2Endpoint = `/api/tower-analytics/${apiVersion}/job_events_by_org_30/`;
 const preflightEndpoint = `/api/tower-analytics/${apiVersion}/authorized/`;
 const templateJobsEndpoint = `/api/tower-analytics/${apiVersion}/template_jobs/`;
 const templatesEndPoint = `/api/tower-analytics/${apiVersion}/templates/`;
@@ -15,6 +12,7 @@ const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
 const jobExplorerOptionsEndpoint = '/api/tower-analytics/v1/job_explorer_options/';
 const ROIEndpoint = '/api/tower-analytics/v1/roi_templates/';
 const ROITemplatesOptionsEndpoint = '/api/tower-analytics/v1/roi_templates_options/';
+const orgOptionsEndpoint = `/api/tower-analytics/v1/dashboard_organization_statistics_options/`;
 
 function getAbsoluteUrl() {
     const url = window.location.href;
@@ -66,12 +64,79 @@ export const readChart30 = ({ params = {}}) => {
     return fetch(url).then(handleResponse);
 };
 
-export const readJobsByDateAndOrg = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(groupedBarChartEndpoint, formattedUrl);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url).then(handleResponse);
+/* Section: Orgs page */
+export const readOrgOptions = ({ params = {}}) => {
+    let url = new URL(orgOptionsEndpoint, getAbsoluteUrl());
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(params)
+    }).then(handleResponse);
 };
+
+export const readJobsByDateAndOrg = ({ params = {}}) => {
+    const rParams = {
+        ...params,
+        attributes: [ 'total_count' ],
+        group_by_time: true,
+        group_by: 'org',
+        sort_by: `total_count:${params.sort_by}`
+    };
+
+    let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
+    url.search = stringify({
+        limit: rParams.limit,
+        sort_by: rParams.sort_by
+    });
+
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(rParams)
+    }).then(handleResponse);
+};
+
+export const readJobRunsByOrg = ({ params = {}}) => {
+    const rParams = {
+        ...params,
+        group_by: 'org',
+        include_others: true,
+        attributes: [ 'host_count' ],
+        sort_by: `total_count:${params.sort_by}`
+    };
+
+    let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
+    url.search = stringify({
+        limit: rParams.limit,
+        sort_by: rParams.sort_by
+    });
+
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(rParams)
+    }).then(handleResponse);
+};
+
+export const readJobEventsByOrg = ({ params = {}}) => {
+    const rParams = {
+        ...params,
+        group_by: 'org',
+        include_others: true,
+        granularity: 'daily',
+        attributes: [ 'host_task_count' ],
+        sort_by: `host_task_count:${params.sort_by}`
+    };
+
+    let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
+    url.search = stringify({
+        limit: rParams.limit,
+        sort_by: rParams.sort_by
+    });
+
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(rParams)
+    }).then(handleResponse);
+};
+/* End of section: Orgs page */
 
 export const readModules = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
@@ -118,20 +183,6 @@ export const readJobExplorer = ({ params = {}}) => {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);
-};
-
-export const readJobRunsByOrg = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(pieChart1Endpoint, formattedUrl);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url).then(handleResponse);
-};
-
-export const readJobEventsByOrg = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(pieChart2Endpoint, formattedUrl);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url).then(handleResponse);
 };
 
 export const readROI = ({ params = {}}) => {
