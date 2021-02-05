@@ -7,12 +7,7 @@ import moment from 'moment';
 /* global cy, Cypress */
 const appid = Cypress.env('appid');
 
-const filterCategorySelector = '#pf-select-toggle-id-55';
-const dateSelector = '#pf-select-toggle-id-59';
-const orgSelector = '#pf-select-toggle-id-62';
-const clusterSelector = '#pf-select-toggle-id-69';
-const templateSelector = '#pf-select-toggle-id-76';
-const jobTypeSelector = '#pf-select-toggle-id-58';
+const toolBarCatSelector = 'div[id="filterable-toolbar-with-chip-groups"] > .pf-c-toolbar__content > .pf-c-toolbar__content-section > div[class="pf-c-toolbar__group pf-m-filter-group"]';
 
 /*
     lifted from https://github.com/cypress-io/cypress/issues/1366#issuecomment-437878862; setting the value of a React controlled datetime input component via Cypress requires setting it on the prototype level of the native input HTML element itself
@@ -67,6 +62,7 @@ describe('Dashboard page smoketests', () => {
     it('can interact with the clusters page without breaking the UI', () => {
         fuzzClustersPage();
     });
+
     it('Page contains chart, and 3 card elements', () => {
         cy.get('#d3-bar-chart-root').should((chartElem) => {
             expect(chartElem).to.have.length(1);
@@ -82,35 +78,8 @@ describe('Dashboard page smoketests', () => {
         });
     });
 
-    it('Can toggle different filters via the toolbar', () => {
-        // toggling Orgs filter category updates available options
-        cy.get(filterCategorySelector).click();
-        cy.get('button[class="pf-c-select__menu-item"]').contains('Organization').click();
-        cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by organization').should(secondaryDropdown => {
-            expect(secondaryDropdown).to.have.length(1);
-        });
-        // toggling Clusters filter category updates available options
-        cy.get(orgSelector).click();
-        cy.get('button[class="pf-c-select__menu-item"]').contains('Cluster').click();
-        cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by cluster').should(secondaryDropdown => {
-            expect(secondaryDropdown).to.have.length(1);
-        });
-        // toggling Template filter category updates available options
-        cy.get(clusterSelector).click();
-        cy.get('button[class="pf-c-select__menu-item"]').contains('Template').click();
-        cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by template').should(secondaryDropdown => {
-            expect(secondaryDropdown).to.have.length(1);
-        });
-        // toggling Job filter category updates available options
-        cy.get(templateSelector).click();
-        cy.get('button[class="pf-c-select__menu-item"]').contains('Job').click();
-        cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by job').should(secondaryDropdown => {
-            expect(secondaryDropdown).to.have.length(1);
-        });
-    });
-
     it('Can filter by organization', () => {
-        cy.get(filterCategorySelector).click();
+        cy.get(toolBarCatSelector).first().contains('Filter by').click();
         cy.get('button[class="pf-c-select__menu-item"]').contains('Organization').click();
         cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by organization').parent().parent().click();
         cy.get('div[class="pf-c-select__menu"]').find('span').contains('No organization').siblings('input').click();
@@ -119,7 +88,7 @@ describe('Dashboard page smoketests', () => {
     });
 
     it('Can filter by a preset date range', () => {
-        cy.get(dateSelector).click();
+        cy.get('div[data-cy="quick_date_range"]').click();
         cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
         const screenshotFilename = 'clusters_filter_by_quickDateRange.png';
         cy.screenshot(screenshotFilename);
@@ -129,15 +98,16 @@ describe('Dashboard page smoketests', () => {
         const today = moment(new Date().toISOString()).format('YYYY-MM-DD');
         const oneWeekAgo = moment(new Date().toISOString()).subtract(1, 'week').format('YYYY-MM-DD');
 
-        cy.get(dateSelector).click();
+        cy.get('div[data-cy="quick_date_range"]').click();
         cy.get('.pf-c-select__menu-item').contains('Custom').click();
         cy.get('#startDate').then(input => setDate(input[0], oneWeekAgo));
         cy.get('#endDate').then(input => setDate(input[0], today));
         const screenshotFilename = 'clusters_filter_by_customDateRange';
         cy.screenshot(screenshotFilename);
     });
+
     it('Can filter by cluster', () => {
-        cy.get(filterCategorySelector).click();
+        cy.get(toolBarCatSelector).first().contains('Organization').click();
         cy.get('button[class="pf-c-select__menu-item"]').contains('Cluster').click();
         cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by cluster').parent().parent().click();
         cy.get('div[class="pf-c-select__menu"]').find('span').first().siblings('input').click();
@@ -147,14 +117,18 @@ describe('Dashboard page smoketests', () => {
         const screenshotFilename = 'clusters_filter_by_cluster.png';
         cy.screenshot(screenshotFilename);
     });
+
     it('Can filter by job type', () => {
-        cy.get(jobTypeSelector).parent().parent().click();
+        cy.get(toolBarCatSelector).first().contains('Cluster').click();
+        cy.get('button[class="pf-c-select__menu-item"]').contains('Job').click();
+        cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by job type').parent().parent().click();
         cy.get('div[class="pf-c-select__menu"]').find('span').contains('Workflow job').siblings('input').click();
         const screenshotFilename = 'clusters_filter_by_jobType.png';
         cy.screenshot(screenshotFilename);
     });
+
     it('Can filter by template', () => {
-        cy.get(filterCategorySelector).click();
+        cy.get(toolBarCatSelector).first().contains('Job').click();
         cy.get('button[class="pf-c-select__menu-item"]').contains('Template').click();
         cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by template').parent().parent().click();
         cy.get('div[class="pf-c-select__menu"]').find('span').first().siblings('input').click();
