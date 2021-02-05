@@ -63,17 +63,9 @@ export const useQueryParams = initial => {
             }
 
             case 'RESET_FILTER':
-                return { ...state,
-                    status: [],
-                    quick_date_range: '',
-                    job_type: [],
-                    org_id: [],
-                    cluster_id: [],
-                    template_id: [],
-                    sort_by: '',
-                    start_date: '',
-                    end_date: '',
-                    only_root_workflows_and_standalone_jobs: false
+                return {
+                    ...state,
+                    ...initial
                 };
             default:
                 throw new Error();
