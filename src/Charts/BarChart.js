@@ -27,11 +27,14 @@ class BarChart extends Component {
     redirectToJobExplorer({ data: { DATE: date }}) {
         const { jobExplorer } = Paths;
         const formattedDate = formatDate(date);
+        const { orgId, templateId } = this.props;
         const initialQueryParams = {
             start_date: formattedDate,
             end_date: formattedDate,
             quick_date_range: 'custom',
-            status: [ 'failed', 'successful' ]
+            status: [ 'failed', 'successful' ],
+            template_id: templateId,
+            org_id: orgId
         };
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
         this.props.history.push({
@@ -57,12 +60,12 @@ class BarChart extends Component {
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
         const parseTime = d3.timeParse('%Y-%m-%d');
-        let { data: unformattedData, value } = this.props;
-        const data = unformattedData.reduce((formatted, { created, successful, failed }) => {
-            let DATE = parseTime(created) || new Date();
-            let RAN = +successful || 0;
-            let FAIL = +failed || 0;
-            let TOTAL = +successful + failed || 0;
+        let { data: unformattedData } = this.props;
+        const data = unformattedData.reduce((formatted, { created_date, successful_count, failed_count }) => {
+            let DATE = parseTime(created_date) || new Date();
+            let RAN = +successful_count || 0;
+            let FAIL = +failed_count || 0;
+            let TOTAL = +successful_count + failed_count || 0;
             return formatted.concat({ DATE, RAN, FAIL, TOTAL });
         }, []);
         const width = this.props.getWidth();
@@ -130,9 +133,9 @@ class BarChart extends Component {
         .text('Jobs across all clusters');
         // Add the X Axis
         let ticks;
-        const maxTicks = Math.round(data.length / (value / 2));
+        const maxTicks = Math.round(data.length / (data.length / 2));
         ticks = data.map(d => d.DATE);
-        if (value === 31) {
+        if (data.length > 14) {
             ticks = data.map((d, i) =>
                 i % maxTicks === 0 ? d.DATE : undefined).filter(item => item);
         }
@@ -202,7 +205,7 @@ class BarChart extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (prevProps.value !== this.props.value) {
+        if (prevProps.data !== this.props.data) {
             this.init();
         }
     }
@@ -220,8 +223,9 @@ class BarChart extends Component {
 
 BarChart.propTypes = {
     id: PropTypes.string,
+    templateId: PropTypes.array,
+    orgId: PropTypes.array,
     data: PropTypes.array,
-    value: PropTypes.number,
     margin: PropTypes.object,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func,

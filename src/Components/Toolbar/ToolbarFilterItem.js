@@ -56,6 +56,7 @@ const ToolbarFilterItem = ({
 
     return (
         <ToolbarFilter
+            data-cy = { categoryKey }
             key = { categoryKey }
             showToolbarItem={ isVisible }
             chips={ hasChips ? handleChips() : [] }
