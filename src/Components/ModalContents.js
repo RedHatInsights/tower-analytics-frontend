@@ -296,7 +296,6 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType, handleClo
                                 </DataListItem>
                             )) }
             </DataList>
-            { /* <ModalContents selectedId={ selectedId } qp={ qp } jobType={ jobType } /> */ }
         </Modal>
     );
 };
