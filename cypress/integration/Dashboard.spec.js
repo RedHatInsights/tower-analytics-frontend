@@ -34,8 +34,7 @@ async function fuzzClustersPage() {
     for (let i = 0; i <= 4; i++) {
 
         // pick a random bar to click on ...
-        let barid = Math.floor(Math.random() * 10);
-        cy.log(barid);
+        const barid = parseInt(Math.floor(Math.random() * 10));
 
         // click it and wait for the jobexplorer page to load ...
         cy.get(appid).find('rect').eq(barid).click({ waitForAnimations: true });
