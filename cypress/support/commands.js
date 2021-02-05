@@ -50,3 +50,23 @@ Cypress.Commands.add('clearFeatureDialogs', () => {
         }
     });
 });
+
+Cypress.Commands.add('loginFlow', () => {
+    cy.intercept(
+        'https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token'
+    ).as('token');
+
+    cy.visit('/');
+    cy.get('[data-ouia-component-id="1"]').click();
+
+    cy.getUsername().then(uname => cy.get('#username').type(`${uname}{enter}`));
+    // Inportant!
+    cy.intercept('POST', 'https://sso.redhat.com/auth/realms/redhat-external/rhdtools/loginExists', {
+        statusCode: 200
+    });
+
+    cy.getPassword().then(password =>
+        cy.get('#password').type(`${password}{enter}`, { log: false }));
+
+    cy.wait('@token');
+});

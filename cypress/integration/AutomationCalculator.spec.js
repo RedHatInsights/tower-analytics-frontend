@@ -5,19 +5,9 @@ import {
     jobExplorerUrl
 } from './constants';
 
-beforeEach(() => {
-    cy.viewport(1600, 2000);
-});
-
 describe('Automation Caluclator page smoketests', () => {
     before(() => {
-        // open the cloud landing page ...
-        cy.visit('/');
-
-        // sso login ...
-        cy.get('[data-ouia-component-id="1"]').click();
-        cy.getUsername().then(uname => cy.get('#username').type(`${uname}{enter}`));
-        cy.getPassword().then(password => cy.get('#password').type(`${password}{enter}`));
+        cy.loginFlow();
         cy.visit(calculatorUrl);
     });
 
