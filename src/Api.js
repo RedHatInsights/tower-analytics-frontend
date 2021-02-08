@@ -51,7 +51,7 @@ export const readOrgOptions = ({ params = {}}) => {
 };
 
 export const readJobsByDateAndOrg = ({ params = {}}) => {
-    const rParams = {
+    const combined = {
         ...params,
         attributes: [ 'total_count' ],
         group_by_time: true,
@@ -61,18 +61,18 @@ export const readJobsByDateAndOrg = ({ params = {}}) => {
 
     let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
     url.search = stringify({
-        limit: rParams.limit,
-        sort_by: rParams.sort_by
+        limit: combined.limit,
+        sort_by: combined.sort_by
     });
 
     return fetch(url, {
         method: 'POST',
-        body: JSON.stringify(rParams)
+        body: JSON.stringify(combined)
     }).then(handleResponse);
 };
 
 export const readJobRunsByOrg = ({ params = {}}) => {
-    const rParams = {
+    const combined = {
         ...params,
         group_by: 'org',
         include_others: true,
@@ -82,18 +82,18 @@ export const readJobRunsByOrg = ({ params = {}}) => {
 
     let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
     url.search = stringify({
-        limit: rParams.limit,
-        sort_by: rParams.sort_by
+        limit: combined.limit,
+        sort_by: combined.sort_by
     });
 
     return fetch(url, {
         method: 'POST',
-        body: JSON.stringify(rParams)
+        body: JSON.stringify(combined)
     }).then(handleResponse);
 };
 
 export const readJobEventsByOrg = ({ params = {}}) => {
-    const rParams = {
+    const combined = {
         ...params,
         group_by: 'org',
         include_others: true,
@@ -104,13 +104,13 @@ export const readJobEventsByOrg = ({ params = {}}) => {
 
     let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
     url.search = stringify({
-        limit: rParams.limit,
-        sort_by: rParams.sort_by
+        limit: combined.limit,
+        sort_by: combined.sort_by
     });
 
     return fetch(url, {
         method: 'POST',
-        body: JSON.stringify(rParams)
+        body: JSON.stringify(combined)
     }).then(handleResponse);
 };
 /* End of section: Orgs page */
