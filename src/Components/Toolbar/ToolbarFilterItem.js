@@ -86,15 +86,33 @@ const ToolbarFilterItem = ({
             deleteChip={hasChips ? onDelete : null}
         >
             <Select
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+                variant={options.isSingle ? 'single' : 'checkbox'}
+                aria-label={categoryKey}
+                onToggle={() => setExpanded(!expanded)}
+                onSelect={onSelect}
+                selections={filter}
+                isOpen={expanded}
+                placeholderText={options.placeholder}
+=======
+>>>>>>> Put maxHeight on select menu to prevent dropdown from going off-page whenlong list of options loads.
                 variant={ options.isSingle ? 'single' : 'checkbox' }
                 aria-label={ categoryKey }
                 onToggle={ () => setExpanded(!expanded) }
                 onSelect={ onSelect }
                 selections={ filter }
                 isOpen={ expanded }
+<<<<<<< HEAD
                 onFilter={ onFilter }
                 hasInlineFilter
                 placeholderText={ options.placeholder }
+=======
+                placeholderText={ options.placeholder }
+                maxHeight={ '1000%' }
+>>>>>>> Put maxHeight on select menu to prevent dropdown from going off-page whenlong list of options loads.
+>>>>>>> Put maxHeight on select menu to prevent dropdown from going off-page whenlong list of options loads.
             >
                 { renderValues(values) }
             </Select>
