@@ -1,4 +1,4 @@
-/* global cy, before */
+/* global cy */
 import {
     appid,
     calculatorUrl,
@@ -6,7 +6,7 @@ import {
 } from './constants';
 
 describe('Automation Caluclator page smoketests', () => {
-    before(() => {
+    beforeEach(() => {
         cy.loginFlow();
         cy.visit(calculatorUrl);
     });

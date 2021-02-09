@@ -1,4 +1,4 @@
-/* global cy, Cypress, before */
+/* global cy, Cypress */
 import {
     orgsUrl
 } from './constants';
@@ -68,7 +68,7 @@ async function fuzzOrgStatsPage() {
 }
 
 describe('Organization statistics page smoketests', () => {
-    before(() => {
+    beforeEach(() => {
         cy.loginFlow();
         cy.visit(orgsUrl);
     });

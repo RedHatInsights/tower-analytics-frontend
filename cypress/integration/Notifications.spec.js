@@ -1,4 +1,4 @@
-/* global cy, Cypress, before */
+/* global cy, Cypress */
 import {
     notificationsUrl
 } from './constants';
@@ -42,7 +42,7 @@ async function fuzzNotificationsPage() {
 }
 
 describe('Notification page smoketests', () => {
-    before(() => {
+    beforeEach(() => {
         cy.loginFlow();
         cy.visit(notificationsUrl);
     });

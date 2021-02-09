@@ -1,4 +1,4 @@
-/* global cy, Cypress, before */
+/* global cy, Cypress */
 import {
     dashboardUrl
 } from './constants';
@@ -10,7 +10,9 @@ const appid = Cypress.env('appid');
 const toolBarCatSelector = 'div[id="filterable-toolbar-with-chip-groups"] > .pf-c-toolbar__content > .pf-c-toolbar__content-section > div[class="pf-c-toolbar__group pf-m-filter-group"]';
 
 /*
-    lifted from https://github.com/cypress-io/cypress/issues/1366#issuecomment-437878862; setting the value of a React controlled datetime input component via Cypress requires setting it on the prototype level of the native input HTML element itself
+    lifted from https://github.com/cypress-io/cypress/issues/1366#issuecomment-437878862;
+    setting the value of a React controlled datetime input component via Cypress
+    requires setting it on the prototype level of the native input HTML element itself
 */
 const setDate = (input, value) => {
     const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
@@ -47,7 +49,7 @@ async function fuzzClustersPage() {
 }
 
 describe('Dashboard page smoketests', () => {
-    before(() => {
+    beforeEach(() => {
         cy.loginFlow();
         cy.visit(dashboardUrl);
     });
@@ -100,7 +102,7 @@ describe('Dashboard page smoketests', () => {
     });
 
     it('Can filter by cluster', () => {
-        cy.get(toolBarCatSelector).first().contains('Organization').click();
+        cy.get(toolBarCatSelector).first().click();
         cy.get('button[class="pf-c-select__menu-item"]').contains('Cluster').click();
         cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by cluster').parent().parent().click();
         cy.get('div[class="pf-c-select__menu"]').find('span').first().siblings('input').click();
@@ -112,7 +114,7 @@ describe('Dashboard page smoketests', () => {
     });
 
     it('Can filter by job type', () => {
-        cy.get(toolBarCatSelector).first().contains('Cluster').click();
+        cy.get(toolBarCatSelector).first().click();
         cy.get('button[class="pf-c-select__menu-item"]').contains('Job').click();
         cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by job type').parent().parent().click();
         cy.get('div[class="pf-c-select__menu"]').find('span').contains('Workflow job').siblings('input').click();
@@ -121,7 +123,7 @@ describe('Dashboard page smoketests', () => {
     });
 
     it('Can filter by template', () => {
-        cy.get(toolBarCatSelector).first().contains('Job').click();
+        cy.get(toolBarCatSelector).first().click();
         cy.get('button[class="pf-c-select__menu-item"]').contains('Template').click();
         cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by template').parent().parent().click();
         cy.get('div[class="pf-c-select__menu"]').find('span').first().siblings('input').click();
