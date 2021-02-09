@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import initializeChart from './BaseChart';
 import * as d3 from 'd3';
@@ -169,36 +169,22 @@ class Tooltip {
   };
 }
 
-class GroupedBarChart extends Component {
-    constructor(props) {
-        super(props);
-        this.init = this.init.bind(this);
-        this.handleToggle = this.handleToggle.bind(this);
-        this.draw = this.draw.bind(this);
-        this.resize = this.resize.bind(this);
-        this.redirectToJobExplorer = this.redirectToJobExplorer.bind(this);
-        this.orgsList = props.data[0].items;
-        this.selection = [];
-        this.state = {
-            colors: [],
-            selected: [],
-            formattedData: [],
-            timeout: null
+const GroupedBarChart = (props) => {
+    const orgsList = props.data[0].items;
+    const colors = orgsList.map(org => {
+        const name = org.id === -1 ? 'Others' : org.name;
+        return {
+            name,
+            value: props.colorFunc(name),
+            id: org.id
         };
-    }
+    });
+    const [ selectedIds, setSelectedIds ] = useState(
+        orgsList.map(({ id }) => id).slice(0, 8)
+    );
+    let timeout = null;
 
-    // Methods
-    resize() {
-        const { timeout } = this.state;
-        clearTimeout(timeout);
-        this.setState({
-            timeout: setTimeout(() => {
-                this.init();
-            }, 500)
-        });
-    }
-
-    redirectToJobExplorer({ date, id }) {
+    const redirectToJobExplorer = ({ date, id }) => {
         if (id === -1) {
             // disable clicking on "others" block
             return;
@@ -224,57 +210,30 @@ class GroupedBarChart extends Component {
         };
 
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
-        this.props.history.push({
+        props.history.push({
             pathname: jobExplorer,
             search
         });
     }
 
-    handleToggle(selectedId) {
-        if (this.selection.indexOf(selectedId) === -1) {
-            this.selection = [ ...this.selection, selectedId ];
-        } else if (this.selection.includes(selectedId)) {
-            this.selection = [ ...this.selection ].filter(s => s !== selectedId);
+    const handleToggle = id => {
+        if (selectedIds.includes(id)) {
+            setSelectedIds(selectedIds.filter(el => el !== id));
+        } else {
+            setSelectedIds([ ...selectedIds, id ]);
         }
+    };
 
-        this.setState({ selected: this.selection });
-        this.draw();
-    }
-
-    init() {
-    // create the first 8 selected data points
-        if (this.selection.length === 0) {
-            this.orgsList.forEach((org, index) => {
-                if (index <= 7) {
-                    this.handleToggle(org.id);
-                }
-            });
-        }
-
-        // create our colors array to send to the Legend component
-        const colors = this.orgsList.map(org => {
-            const name = org.id === -1 ? 'Others' : org.name;
-            return {
-                name,
-                value: this.props.colorFunc(name),
-                id: org.id
-            };
-        });
-        this.setState({ colors });
-        this.draw();
-    }
-
-    draw() {
-    // Clear our chart container element first
-        d3.selectAll('#' + this.props.id + ' > *').remove();
-        let { data: unformattedData, timeFrame } = this.props;
-        const selected = this.selection;
+    const draw = () => {
+        // Clear our chart container element first
+        d3.selectAll('#' + props.id + ' > *').remove();
+        let { data: unformattedData, timeFrame } = props;
         const data = unformattedData.reduce((formatted, { date, items }) => {
-            const selectedOrgs = items.filter(({ id }) => selected.includes(id));
+            const selectedOrgs = items.filter(({ id }) => selectedIds.includes(id));
             return formatted.concat({ date, selectedOrgs });
         }, []);
-        const width = this.props.getWidth();
-        const height = this.props.getHeight();
+        const width = props.getWidth();
+        const height = props.getHeight();
         // x scale of entire chart
         const x0 = d3
         .scaleBand()
@@ -303,24 +262,24 @@ class GroupedBarChart extends Component {
         .tickSize(-width, 0, 0);
 
         const svg = d3
-        .select('#' + this.props.id)
+        .select('#' + props.id)
         .append('svg')
-        .attr('width', width + this.props.margin.left + this.props.margin.right)
-        .attr('height', height + this.props.margin.bottom + this.props.margin.top)
+        .attr('width', width + props.margin.left + props.margin.right)
+        .attr('height', height + props.margin.bottom + props.margin.top)
         .append('g')
         .attr(
             'transform',
             'translate(' +
-          this.props.margin.left +
+          props.margin.left +
           ',' +
-          this.props.margin.top +
+          props.margin.top +
           ')'
         );
 
         const dates = data.map(d => d.date);
         const selectedOrgNames = data[0].selectedOrgs.map(d => d.name);
         const tooltip = new Tooltip({
-            svg: '#' + this.props.id
+            svg: '#' + props.id
         });
         x0.domain(dates);
         x1.domain(selectedOrgNames).range([ 0, x0.bandwidth() ]); // unsorted
@@ -346,7 +305,7 @@ class GroupedBarChart extends Component {
         svg
         .append('text')
         .attr('transform', 'rotate(-90)')
-        .attr('y', 0 - this.props.margin.left)
+        .attr('y', 0 - props.margin.left)
         .attr('x', 0 - height / 2)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
@@ -364,11 +323,7 @@ class GroupedBarChart extends Component {
         .append('text')
         .attr(
             'transform',
-            'translate(' +
-          width / 2 +
-          ' ,' +
-          (height + this.props.margin.top + 25) +
-          ')'
+            'translate(' + width / 2 + ' ,' + (height + props.margin.top + 25) + ')'
         )
         .style('text-anchor', 'middle')
         .text('Date');
@@ -388,7 +343,7 @@ class GroupedBarChart extends Component {
         });
         bars.exit().remove();
 
-        const color = this.props.colorFunc;
+        const color = props.colorFunc;
         const subEnter = bars
         .enter()
         .append('rect')
@@ -414,40 +369,46 @@ class GroupedBarChart extends Component {
             d3.select(this).style('fill', color(d.name));
             tooltip.handleMouseOut();
         })
-        .on('click', this.redirectToJobExplorer);
+        .on('click', redirectToJobExplorer);
         bars = bars.merge(subEnter);
     }
 
-    componentDidMount() {
-        this.init();
-        // Call the resize function whenever a resize event occurs
-        window.addEventListener('resize', this.resize);
-    }
+    const init = () => {
+        draw();
+    };
 
-    componentWillUnmount() {
-        const { timeout } = this.state;
+    const resize = () => {
         clearTimeout(timeout);
-        window.removeEventListener('resize', this.resize);
-    }
+        timeout = setTimeout(() => { draw(); }, 500);
+    };
 
-    render() {
-        const { colors, selected } = this.state;
-        return (
-            <Wrapper>
-                <div id={this.props.id} />
-                {colors.length > 0 && (
-                    <Legend
-                        id="d3-grouped-bar-legend"
-                        data={colors}
-                        selected={selected}
-                        onToggle={this.handleToggle}
-                        height="350px"
-                    />
-                )}
-            </Wrapper>
-        );
-    }
-}
+    useEffect(() => {
+        init();
+        window.addEventListener('resize', resize);
+
+        return () => {
+            clearTimeout(timeout);
+            window.removeEventListener('resize', resize);
+        };
+    }, []);
+
+    useEffect(() => { draw(); }, [ props.data, selectedIds ]);
+
+    return (
+        <Wrapper>
+            <div id={ props.id } />
+            { colors.length > 0 && (
+                <Legend
+                    id="d3-grouped-bar-legend"
+                    data={ colors }
+                    selected={ selectedIds }
+                    onToggle={ handleToggle }
+                    height="350px"
+                />
+            ) }
+        </Wrapper>
+    );
+};
 
 GroupedBarChart.propTypes = {
     id: PropTypes.string,
