@@ -174,62 +174,62 @@ const Clusters = () => {
                 </Main>
             ) }
             { !preflightError && !error && (
-        <>
-          <Main>
-              <Card>
-                  <PFCardTitle>
-                      <h2>Job status</h2>
-                  </PFCardTitle>
-                  <CardBody>
-                      { isLoading && <LoadingState /> }
-                      { queryParams.cluster_id.length <= 0 &&
+                <>
+                    <Main>
+                        <Card>
+                            <PFCardTitle>
+                                <h2>Job status</h2>
+                            </PFCardTitle>
+                            <CardBody>
+                                { isLoading && <LoadingState /> }
+                                { queryParams.cluster_id.length <= 0 &&
                                     isSuccess && (
-                          <BarChart
-                              margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
-                              id="d3-bar-chart-root"
-                              data={ chartData }
-                              templateId={ queryParams.template_id }
-                              orgId={ queryParams.org_id }
-                          />
-                      ) }
-                      { queryParams.cluster_id.length > 0  &&
+                                    <BarChart
+                                        margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
+                                        id="d3-bar-chart-root"
+                                        data={ chartData }
+                                        templateId={ queryParams.template_id }
+                                        orgId={ queryParams.org_id }
+                                    />
+                                ) }
+                                { queryParams.cluster_id.length > 0  &&
                                     isSuccess && (
-                          <LineChart
-                              margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
-                              id="d3-line-chart-root"
-                              data={ chartData }
-                              clusterId={ queryParams.cluster_id }
-                              templateId={ queryParams.template_id }
-                              orgId={ queryParams.org_id }
-                          />
-                      ) }
-                  </CardBody>
-              </Card>
-              <div
-                  className="dataCard"
-                  style={ { display: 'flex', marginTop: '20px' } }
-              >
-                  <TemplatesList
-                      qp={ queryParams }
-                      templates={ workflows }
-                      isLoading={ isLoading }
-                      title={ 'Top workflows' }
-                      jobType={ 'workflowjob' }
-                  />
-                  <TemplatesList
-                      qp={ queryParams }
-                      templates={ templates }
-                      isLoading={ isLoading }
-                      title={ 'Top templates' }
-                      jobType={ 'job' }
-                  />
-                  <ModulesList
-                      modules={ modules }
-                      isLoading={ isLoading }
-                  />
-              </div>
-          </Main>
-        </>
+                                    <LineChart
+                                        margin={ { top: 20, right: 20, bottom: 50, left: 70 } }
+                                        id="d3-line-chart-root"
+                                        data={ chartData }
+                                        clusterId={ queryParams.cluster_id }
+                                        templateId={ queryParams.template_id }
+                                        orgId={ queryParams.org_id }
+                                    />
+                                ) }
+                            </CardBody>
+                        </Card>
+                        <div
+                            className="dataCard"
+                            style={ { display: 'flex', marginTop: '20px' } }
+                        >
+                            <TemplatesList
+                                qp={ queryParams }
+                                templates={ workflows }
+                                isLoading={ isLoading }
+                                title={ 'Top workflows' }
+                                jobType={ 'workflowjob' }
+                            />
+                            <TemplatesList
+                                qp={ queryParams }
+                                templates={ templates }
+                                isLoading={ isLoading }
+                                title={ 'Top templates' }
+                                jobType={ 'job' }
+                            />
+                            <ModulesList
+                                modules={ modules }
+                                isLoading={ isLoading }
+                            />
+                        </div>
+                    </Main>
+                </>
             ) }
         </React.Fragment>
     );

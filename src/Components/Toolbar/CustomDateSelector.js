@@ -12,26 +12,26 @@ const CustomDateSelector = ({
 }) => {
     return (
         <>
-          <InputGroup>
-              <TextInput
-                  name="startDate"
-                  id="startDate"
-                  type="date"
-                  aria-label="Start Date"
-                  value={ startDate }
-                  onChange={ e => onInputChange('start_date', e) }
-              />
-          </InputGroup>
-          <InputGroup>
-              <TextInput
-                  name="endDate"
-                  id="endDate"
-                  type="date"
-                  aria-label="End Date"
-                  value={ endDate }
-                  onChange={ e => onInputChange('end_date', e) }
-              />
-          </InputGroup>
+            <InputGroup>
+                <TextInput
+                    name="startDate"
+                    id="startDate"
+                    type="date"
+                    aria-label="Start Date"
+                    value={ startDate }
+                    onChange={ e => onInputChange('start_date', e) }
+                />
+            </InputGroup>
+            <InputGroup>
+                <TextInput
+                    name="endDate"
+                    id="endDate"
+                    type="date"
+                    aria-label="End Date"
+                    value={ endDate }
+                    onChange={ e => onInputChange('end_date', e) }
+                />
+            </InputGroup>
         </>
     );
 };

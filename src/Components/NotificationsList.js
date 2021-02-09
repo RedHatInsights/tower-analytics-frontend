@@ -68,14 +68,14 @@ const AllNotificationTemplate = ({ notifications }) =>
                         <NotificationDrawerListItemHeader
                             variant="info"
                             title={
-                            <>
-                              { url ? (
-                                  <a target="_blank" rel="noopener noreferrer" href={ url }>
-                                      { capitalize(label) }
-                                      <ExternalLinkAltIcon />
-                                  </a>
-                              ) : capitalize(label) }
-                            </>
+                                <>
+                                    { url ? (
+                                        <a target="_blank" rel="noopener noreferrer" href={ url }>
+                                            { capitalize(label) }
+                                            <ExternalLinkAltIcon />
+                                        </a>
+                                    ) : capitalize(label) }
+                                </>
                             }
                         />
                         <NotificationDrawerListItemBody>
@@ -94,14 +94,14 @@ const AllNotificationTemplate = ({ notifications }) =>
                         <NotificationDrawerListItemHeader
                             variant="danger"
                             title={
-                            <>
-                              { url ? (
-                                  <a target="_blank" rel="noopener noreferrer" href={ url }>
-                                      { capitalize(label) }
-                                      <ExternalLinkAltIcon />
-                                  </a>
-                              ) : capitalize(label) }
-                            </>
+                                <>
+                                    { url ? (
+                                        <a target="_blank" rel="noopener noreferrer" href={ url }>
+                                            { capitalize(label) }
+                                            <ExternalLinkAltIcon />
+                                        </a>
+                                    ) : capitalize(label) }
+                                </>
                             }
                         />
                         <NotificationDrawerListItemBody timestamp={ stringifyDate(date) }>
@@ -120,14 +120,14 @@ const AllNotificationTemplate = ({ notifications }) =>
                         <NotificationDrawerListItemHeader
                             variant="warning"
                             title={
-                            <>
-                              { url ? (
-                                  <a target="_blank" rel="noopener noreferrer" href={ url }>
-                                      { capitalize(label) }
-                                      <ExternalLinkAltIcon />
-                                  </a>
-                              ) : capitalize(label) }
-                            </>
+                                <>
+                                    { url ? (
+                                        <a target="_blank" rel="noopener noreferrer" href={ url }>
+                                            { capitalize(label) }
+                                            <ExternalLinkAltIcon />
+                                        </a>
+                                    ) : capitalize(label) }
+                                </>
                             }
                         />
                         <NotificationDrawerListItemBody timestamp={ stringifyDate(date) }>
@@ -150,14 +150,14 @@ const ErrorNotificationTemplate = ({ notifications }) =>
             <NotificationDrawerListItemHeader
                 variant="danger"
                 title={
-                <>
-                  { url ? (
-                      <a target="_blank" rel="noopener noreferrer" href={ url }>
-                          { capitalize(label) }
-                          <ExternalLinkAltIcon />
-                      </a>
-                  ) : capitalize(label) }
-                </>
+                    <>
+                        { url ? (
+                            <a target="_blank" rel="noopener noreferrer" href={ url }>
+                                { capitalize(label) }
+                                <ExternalLinkAltIcon />
+                            </a>
+                        ) : capitalize(label) }
+                    </>
                 }
             >
             </NotificationDrawerListItemHeader>
@@ -178,14 +178,14 @@ const NoticeNotificationTemplate = ({ notifications }) =>
             <NotificationDrawerListItemHeader
                 variant="info"
                 title={
-                <>
-                  { url ? (
-                      <a target="_blank" rel="noopener noreferrer" href={ url }>
-                          { capitalize(label) }
-                          <ExternalLinkAltIcon />
-                      </a>
-                  ) : capitalize(label) }
-                </>
+                    <>
+                        { url ? (
+                            <a target="_blank" rel="noopener noreferrer" href={ url }>
+                                { capitalize(label) }
+                                <ExternalLinkAltIcon />
+                            </a>
+                        ) : capitalize(label) }
+                    </>
                 }
             >
             </NotificationDrawerListItemHeader>
@@ -206,14 +206,14 @@ const WarningNotificationTemplate = ({ notifications }) =>
             <NotificationDrawerListItemHeader
                 variant="warning"
                 title={
-                <>
-                  { url ? (
-                      <a target="_blank" rel="noopener noreferrer" href={ url }>
-                          { capitalize(label) }
-                          <ExternalLinkAltIcon />
-                      </a>
-                  ) : capitalize(label) }
-                </>
+                    <>
+                        { url ? (
+                            <a target="_blank" rel="noopener noreferrer" href={ url }>
+                                { capitalize(label) }
+                                <ExternalLinkAltIcon />
+                            </a>
+                        ) : capitalize(label) }
+                    </>
                 }
             >
             </NotificationDrawerListItemHeader>
@@ -224,23 +224,23 @@ const WarningNotificationTemplate = ({ notifications }) =>
     ));
 
 const NotificationsList = ({ filterBy, notifications }) => (
-  <>
-    <NotificationDrawerList>
-        { notifications.length <= 0 && <LoadingState /> }
-        { filterBy === '' && (
-            <AllNotificationTemplate notifications={ notifications } />
-        ) }
-        { filterBy === 'notice' && (
-            <NoticeNotificationTemplate notifications={ notifications } />
-        ) }
-        { filterBy === 'error' && (
-            <ErrorNotificationTemplate notifications={ notifications } />
-        ) }
-        { filterBy === 'warning' && (
-            <WarningNotificationTemplate notifications={ notifications } />
-        ) }
-    </NotificationDrawerList>
-  </>
+    <>
+        <NotificationDrawerList>
+            { notifications.length <= 0 && <LoadingState /> }
+            { filterBy === '' && (
+                <AllNotificationTemplate notifications={ notifications } />
+            ) }
+            { filterBy === 'notice' && (
+                <NoticeNotificationTemplate notifications={ notifications } />
+            ) }
+            { filterBy === 'error' && (
+                <ErrorNotificationTemplate notifications={ notifications } />
+            ) }
+            { filterBy === 'warning' && (
+                <WarningNotificationTemplate notifications={ notifications } />
+            ) }
+        </NotificationDrawerList>
+    </>
 );
 
 AllNotificationTemplate.propTypes = {

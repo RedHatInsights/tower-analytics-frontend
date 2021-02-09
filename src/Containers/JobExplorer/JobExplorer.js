@@ -95,7 +95,7 @@ const JobExplorer = ({
     }, []);
 
     useEffect(() => {
-        setData(readJobExplorer({ params: queryParams }),);
+        setData(readJobExplorer({ params: queryParams }));
         setOptions(readJobExplorerOptions({ params: queryParams }));
         updateURL();
     }, [ queryParams ]);
