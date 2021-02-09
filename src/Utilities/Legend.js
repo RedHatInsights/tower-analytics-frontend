@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
+import React from 'react';
 import { Switch as PFSwitch } from '@patternfly/react-core';
 
 import styled from 'styled-components';
@@ -56,47 +56,40 @@ const Switch = styled(PFSwitch)`
   }
 `;
 
-class Legend extends Component {
-    constructor(props) {
-        super(props);
-        this.handleChange = this.handleChange.bind(this);
-    }
-    handleChange(
-        _isChecked,
-        {
-            target: { value }
-        }
-    ) {
-        const { onToggle } = this.props;
-        const selectedId = parseFloat(value);
-        onToggle(selectedId);
-    }
-    render() {
-        const { data, selected, height } = this.props;
-        return (
-            <Container height={height}>
-                {data.map(({ name, value, id, count }, index) => (
-                    <LegendDetail key={index}>
+const Legend = ({
+    data,
+    selected,
+    height,
+    onToggle
+}) => {
+    const handleChange = (_isChecked, { target: { value }}) => { onToggle(parseFloat(value)); };
+
+    return (
+        <Container height={ height }>
+            { data.map(
+                ({ name, value, id, count }, index) => (
+                    <LegendDetail key={ index }>
                         <Wrapper>
-                            <Color color={value} />
-                            <Title>{name}</Title>
+                            <Color color={ value } />
+                            <Title>{ name }</Title>
                         </Wrapper>
-                        {count && <SubTitle>{count}</SubTitle>}
-                        {selected && (
+                        { count && (
+                            <SubTitle>{ count }</SubTitle>
+                        ) }
+                        { selected && (
                             <Switch
-                                isChecked={selected.some(selection => selection === id)}
-                                onChange={this.handleChange}
-                                aria-label={name}
-                                value={id}
-                                id={`${name}-${id}`}
+                                isChecked={ selected.some(selection => selection === id) }
+                                onChange={ handleChange }
+                                aria-label={ name }
+                                value={ id }
+                                id={ `${name}-${id}` }
                             />
-                        )}
+                        ) }
                     </LegendDetail>
-                ))}
-            </Container>
-        );
-    }
-}
+                )) }
+        </Container>
+    );
+};
 
 Legend.propTypes = {
     data: PropTypes.array,
