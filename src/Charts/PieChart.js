@@ -171,8 +171,27 @@ const PieChart = ({
     getWidth,
     getHeight
 }) => {
-    const [ colors, setColors ] = useState([]);
+    const colors = data.map(org => {
+        const name = org.id === -1 ? 'Others' : org.name;
+        return {
+            id: org.id,
+            name,
+            value: color(name),
+            count: Math.round(org.count)
+        };
+    }).sort((a, b) => (a.count > b.count) ? 1 : ((b.count > a.count) ? -1 : 0));
+    const [ selectedIds, setSelectedIds ] = useState(
+        data.map(({ id }) => id).slice(0, 8)
+    );
     let timeout = null;
+
+    const handleToggle = id => {
+        if (selectedIds.includes(id)) {
+            setSelectedIds(selectedIds.filter(el => el !== id));
+        } else {
+            setSelectedIds([ ...selectedIds, id ]);
+        }
+    };
 
     const draw = () => {
         d3.selectAll('#' + id + ' > *').remove();
@@ -189,8 +208,9 @@ const PieChart = ({
         svg.append('g').attr('class', 'labels');
         svg.append('g').attr('class', 'lines');
         const radius = Math.min(width, height) / 2;
-        const total = getTotal(data);
-        data.forEach(function(d) {
+        const filteredData = data.filter(({ id }) => selectedIds.includes(id));
+        const total = getTotal(filteredData);
+        filteredData.forEach(function(d) {
             d.count = +d.count;
             d.percent = +Math.round((d.count / total) * 100);
         });
@@ -217,7 +237,7 @@ const PieChart = ({
 
         svg
         .selectAll('path')
-        .data(pie(data))
+        .data(pie(filteredData))
         .enter()
         .append('path')
         .attr('d', arc)
@@ -240,25 +260,12 @@ const PieChart = ({
     };
 
     const init = () => {
-        const colors = data.map(org => {
-            const name = org.id === -1 ? 'Others' : org.name;
-            return {
-                name,
-                value: color(name),
-                count: Math.round(org.count)
-            };
-        }).sort((a, b) =>
-            (a.count > b.count) ? 1 : (
-                (b.count > a.count) ? -1 : 0
-            )
-        );
-        setColors(colors);
         draw();
     };
 
     const resize = () => {
         clearTimeout(timeout);
-        timeout = setTimeout(() => { init(); }, 500);
+        timeout = setTimeout(() => { draw(); }, 500);
     };
 
     useEffect(() => {
@@ -271,7 +278,7 @@ const PieChart = ({
         };
     }, []);
 
-    useEffect(() => { init(); }, [ data ]);
+    useEffect(() => { draw(); }, [ data, selectedIds ]);
 
     return (
         <Wrapper>
@@ -280,8 +287,8 @@ const PieChart = ({
                 <Legend
                     id="d3-grouped-bar-legend"
                     data={ colors }
-                    selected={ null }
-                    onToggle={ null }
+                    selected={ selectedIds }
+                    onToggle={ handleToggle }
                     height="300px"
                 />
             ) }
@@ -291,7 +298,6 @@ const PieChart = ({
 
 PieChart.propTypes = {
     id: PropTypes.string,
-    isAccessible: PropTypes.bool,
     data: PropTypes.array,
     margin: PropTypes.object,
     getHeight: PropTypes.func,
