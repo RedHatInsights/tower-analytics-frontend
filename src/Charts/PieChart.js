@@ -163,35 +163,39 @@ class Tooltip {
   };
 }
 
-const PieChart = (props) => {
+const PieChart = ({
+    data,
+    id,
+    colorFunc: color,
+    margin,
+    getWidth,
+    getHeight
+}) => {
     const [ colors, setColors ] = useState([]);
     let timeout = null;
 
     const draw = () => {
-        const color = props.colorFunc;
-
-        d3.selectAll('#' + props.id + ' > *').remove();
-        const width = props.getWidth();
-        const height = props.getHeight();
+        d3.selectAll('#' + id + ' > *').remove();
+        const width = getWidth();
+        const height = getHeight();
         const svg = d3
-        .select('#' + props.id)
+        .select('#' + id)
         .append('svg')
-        .attr('width', width + props.margin.left + props.margin.right)
-        .attr('height', height + props.margin.bottom)
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.bottom)
         .append('g');
 
         svg.append('g').attr('class', 'slices');
         svg.append('g').attr('class', 'labels');
         svg.append('g').attr('class', 'lines');
         const radius = Math.min(width, height) / 2;
-        const { data } = props;
         const total = getTotal(data);
         data.forEach(function(d) {
             d.count = +d.count;
             d.percent = +Math.round((d.count / total) * 100);
         });
         const donutTooltip = new Tooltip({
-            svg: '#' + props.id
+            svg: '#' + id
         });
         const pie = d3
         .pie()
@@ -205,9 +209,9 @@ const PieChart = (props) => {
         svg.attr(
             'transform',
             'translate(' +
-        (width + props.margin.left + props.margin.right) / 2 +
+        (width + margin.left + margin.right) / 2 +
         ',' +
-        (height + props.margin.top + props.margin.bottom) / 2 +
+        (height + margin.top + margin.bottom) / 2 +
         ')'
         );
 
@@ -236,13 +240,11 @@ const PieChart = (props) => {
     };
 
     const init = () => {
-        const { data } = props;
-        // create our colors array to send to the Legend component
         const colors = data.map(org => {
             const name = org.id === -1 ? 'Others' : org.name;
             return {
                 name,
-                value: props.colorFunc(name),
+                value: color(name),
                 count: Math.round(org.count)
             };
         }).sort((a, b) =>
@@ -269,11 +271,11 @@ const PieChart = (props) => {
         };
     }, []);
 
-    useEffect(() => { init(); }, [ props.data ]);
+    useEffect(() => { init(); }, [ data ]);
 
     return (
         <Wrapper>
-            <div id={ props.id } />
+            <div id={ id } />
             { colors.length > 0 && (
                 <Legend
                     id="d3-grouped-bar-legend"
