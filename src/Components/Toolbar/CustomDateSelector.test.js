@@ -3,18 +3,16 @@ import { act } from 'react-dom/test-utils';
 
 describe('Components/Toolbar/CustomDateSelector', () => {
     it('should render without any data', () => {
-        let wrapper = mount(
-            <CustomDateSelector/>
-        );
+        let wrapper = mount(<CustomDateSelector />);
         expect(wrapper).toBeTruthy();
     });
 
     it('should render with two inputs', () => {
         let wrapper = mount(
             <CustomDateSelector
-                startDate={ '20/02/2020' }
-                endDate={ '20/02/2021' }
-                onInputChange={ () => {} }
+                startDate={'20/02/2020'}
+                endDate={'20/02/2021'}
+                onInputChange={() => {}}
             />
         );
         const buttons = wrapper.find({ className: 'pf-c-form-control' });
@@ -26,9 +24,9 @@ describe('Components/Toolbar/CustomDateSelector', () => {
 
         let wrapper = mount(
             <CustomDateSelector
-                startDate={ '20/02/2020' }
-                endDate={ '20/02/2021' }
-                onInputChange={ callback }
+                startDate={'20/02/2020'}
+                endDate={'20/02/2021'}
+                onInputChange={callback}
             />
         );
         const i = wrapper.find('input');

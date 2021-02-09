@@ -10,13 +10,14 @@ import { SearchIcon } from '@patternfly/react-icons';
 
 const NoResults = () => {
     return (
-        <EmptyState variant={ EmptyStateVariant.full }>
-            <EmptyStateIcon icon={ SearchIcon } />
+        <EmptyState variant={EmptyStateVariant.full}>
+            <EmptyStateIcon icon={SearchIcon} />
             <Title size="lg" headingLevel="h4">
-                No results found
+        No results found
             </Title>
             <EmptyStateBody>
-                No results match the filter criteria. Remove all filters or clear all filters to show results.
+        No results match the filter criteria. Remove all filters or clear all
+        filters to show results.
             </EmptyStateBody>
         </EmptyState>
     );

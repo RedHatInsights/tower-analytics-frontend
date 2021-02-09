@@ -16,18 +16,14 @@ describe('Components/Toolbar/FilterableToolbar', () => {
     describe('General Toolbar', () => {
         it('should render without issuess', () => {
             let wrapper = shallow(
-                <FilterableToolbar
-                    categories={ mockCategories }
-                    filters={ mockFilters }
-                />);
+                <FilterableToolbar categories={mockCategories} filters={mockFilters} />
+            );
             expect(wrapper).toBeTruthy();
         });
         it('should render 3 sections: Filters, Date Range, Sort', () => {
             let wrapper = shallow(
-                <FilterableToolbar
-                    categories={ mockCategories }
-                    filters={ mockFilters }
-                />);
+                <FilterableToolbar categories={mockCategories} filters={mockFilters} />
+            );
             const filters = wrapper.find('FilterCategoriesGroup');
             const date = wrapper.find('QuickDateGroup');
             const sort = wrapper.find('SortByGroup');
@@ -38,21 +34,23 @@ describe('Components/Toolbar/FilterableToolbar', () => {
         it('should render settings if `hasSettings` prop is passed', () => {
             let wrapper = shallow(
                 <FilterableToolbar
-                    categories={ mockCategories }
-                    filters={ mockFilters }
+                    categories={mockCategories}
+                    filters={mockFilters}
                     hasSettings
-                />);
+                />
+            );
             const settings = wrapper.find('Button[aria-label="settings"]');
             expect(settings.length).toBe(1);
         });
         it('should render pagination if `pagination` prop is passed', () => {
-            const mockPagination = (<span></span>);
+            const mockPagination = <span />;
             let wrapper = shallow(
                 <FilterableToolbar
-                    categories={ mockCategories }
-                    filters={ mockFilters }
-                    pagination={ mockPagination }
-                />);
+                    categories={mockCategories}
+                    filters={mockFilters}
+                    pagination={mockPagination}
+                />
+            );
             const pagination = wrapper.find('ToolbarItem').find('span');
             expect(pagination.length).toBe(1);
         });
@@ -65,20 +63,18 @@ describe('Components/Toolbar/FilterableToolbar', () => {
             };
 
             let wrapper = mount(
-                <FilterableToolbar
-                    categories={ mockCategories }
-                    filters={ mockFilters }
-                />);
+                <FilterableToolbar categories={mockCategories} filters={mockFilters} />
+            );
             const filterItem = wrapper.find('ToolbarFilterItem');
             expect(filterItem.length).toEqual(Object.keys(mockCategories).length);
         });
         it('should filter out quick_date_range and sort_by params', () => {
             let wrapper = mount(
-                <FilterableToolbar
-                    categories={ mockCategories }
-                    filters={ mockFilters }
-                />);
-            const filterItem = wrapper.find('FilterCategoriesGroup').find('ToolbarFilterItem');
+                <FilterableToolbar categories={mockCategories} filters={mockFilters} />
+            );
+            const filterItem = wrapper
+            .find('FilterCategoriesGroup')
+            .find('ToolbarFilterItem');
             const { sort_by, quick_date_range, ...rest } = mockCategories;
             expect(filterItem.length).toEqual(Object.keys(rest).length);
         });

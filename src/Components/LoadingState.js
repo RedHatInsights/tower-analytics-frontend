@@ -9,14 +9,12 @@ import {
 import { CubesIcon } from '@patternfly/react-icons';
 
 const DefaultLoadingState = () => (
-    <EmptyState variant={ EmptyStateVariant.full }>
-        <EmptyStateIcon icon={ CubesIcon } />
+    <EmptyState variant={EmptyStateVariant.full}>
+        <EmptyStateIcon icon={CubesIcon} />
         <Title headingLevel="h5" size="lg">
-            Loading...
+      Loading...
         </Title>
-        <EmptyStateBody>
-            Please wait.
-        </EmptyStateBody>
+        <EmptyStateBody>Please wait.</EmptyStateBody>
     </EmptyState>
 );
 

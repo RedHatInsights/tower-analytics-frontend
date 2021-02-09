@@ -25,14 +25,16 @@ describe('App', () => {
         };
 
         const Component = () => (
-            <Router history={ history }>
+            <Router history={history}>
                 <App />
             </Router>
         );
 
         const wrapper = mountPage(Component);
 
-        let componentVersion = wrapper.find('#automation-analytics-application').props().version;
+        let componentVersion = wrapper
+        .find('#automation-analytics-application')
+        .props().version;
         expect(componentVersion).toBe(packageJson.version);
     });
 });

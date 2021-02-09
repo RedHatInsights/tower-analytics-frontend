@@ -10,21 +10,14 @@ const categories = [
 
 describe('Components/Toolbar/CategoryDropdown', () => {
     it('should render withouth any data', () => {
-        let wrapper = mount(
-            <CategoryDropdown
-                selected={ null }
-            />
-        );
+        let wrapper = mount(<CategoryDropdown selected={null} />);
         expect(wrapper).toBeTruthy();
     });
 
     it('should render with default value', () => {
         let curr = 'cat2';
         let wrapper = mount(
-            <CategoryDropdown
-                selected={ curr }
-                categories={ categories }
-            />
+            <CategoryDropdown selected={curr} categories={categories} />
         );
         expect(wrapper.find('.pf-c-select__toggle').text()).toBe('Cat2');
     });
@@ -34,9 +27,9 @@ describe('Components/Toolbar/CategoryDropdown', () => {
         const fn = jest.fn();
         let wrapper = mount(
             <CategoryDropdown
-                selected={ curr }
-                setSelected={ fn }
-                categories={ categories }
+                selected={curr}
+                setSelected={fn}
+                categories={categories}
             />
         );
         wrapper.find('.pf-c-select__toggle').simulate('click');
@@ -49,9 +42,9 @@ describe('Components/Toolbar/CategoryDropdown', () => {
         const fn = jest.fn();
         let wrapper = mount(
             <CategoryDropdown
-                selected={ curr }
-                setSelected={ fn }
-                categories={ categories }
+                selected={curr}
+                setSelected={fn}
+                categories={categories}
             />
         );
 

@@ -1,4 +1,3 @@
-
 import Tooltip from './Tooltip.js';
 
 Tooltip.prototype.draw = jest.fn();

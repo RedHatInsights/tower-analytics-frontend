@@ -6,8 +6,7 @@ import { Routes } from './Routes';
 import './App.scss';
 import packageJson from '../package.json';
 
-const App = (props) => {
-
+const App = props => {
     useEffect(() => {
         insights.chrome.init();
         insights.chrome.identifyApp('automation-analytics');
@@ -23,8 +22,8 @@ const App = (props) => {
     }, []);
 
     return (
-        <div id="automation-analytics-application" version={ packageJson.version }>
-            <Routes childProps={ props } />
+        <div id="automation-analytics-application" version={packageJson.version}>
+            <Routes childProps={props} />
         </div>
     );
 };
@@ -38,4 +37,4 @@ App.propTypes = {
  * connect: https://github.com/reactjs/react-redux/blob/master/docs/api.md
  *          https://reactjs.org/docs/higher-order-components.html
  */
-export default withRouter (connect()(App));
+export default withRouter(connect()(App));

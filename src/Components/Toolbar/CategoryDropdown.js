@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-    ToolbarItem,
-    Select,
-    SelectOption
-} from '@patternfly/react-core';
+import { ToolbarItem, Select, SelectOption } from '@patternfly/react-core';
 
 const CategoryDropdown = ({
     selected,
@@ -16,24 +12,22 @@ const CategoryDropdown = ({
     return (
         <ToolbarItem>
             <Select
-                isOpen={ isExpanded }
-                variant={ 'single' }
-                aria-label={ 'Categories' }
-                onToggle={ () => setIsExpanded(!isExpanded) }
-                onSelect={ (_event, selection) => {
+                isOpen={isExpanded}
+                variant={'single'}
+                aria-label={'Categories'}
+                onToggle={() => setIsExpanded(!isExpanded)}
+                onSelect={(_event, selection) => {
                     setSelected(selection);
                     setIsExpanded(false);
-                } }
-                selections={ selected }
-                placeholderText={ 'Filter by' }
+                }}
+                selections={selected}
+                placeholderText={'Filter by'}
             >
-                {
-                    categories.map(({ key, name }) => (
-                        <SelectOption key={ key } value={ key }>
-                            { name }
-                        </SelectOption>
-                    ))
-                }
+                {categories.map(({ key, name }) => (
+                    <SelectOption key={key} value={key}>
+                        {name}
+                    </SelectOption>
+                ))}
             </Select>
         </ToolbarItem>
     );

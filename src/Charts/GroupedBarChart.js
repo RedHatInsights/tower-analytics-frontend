@@ -15,7 +15,7 @@ const Wrapper = styled.div`
   flex-shrink: 0;
 `;
 
-const formatDate = (date) => {
+const formatDate = date => {
     const pieces = date.split('-');
     return `${pieces[1]}/${pieces[2]}`;
 };
@@ -128,7 +128,7 @@ class Tooltip {
       this.jobs.text('' + jobs + ' Jobs');
       this.jobsWidth = this.jobs.node().getComputedTextLength();
 
-      const maxTextPerc = this.jobsWidth / this.boxWidth * 100;
+      const maxTextPerc = (this.jobsWidth / this.boxWidth) * 100;
       const threshold = 45;
       const overage = maxTextPerc / threshold;
       let adjustedWidth;
@@ -192,7 +192,9 @@ class GroupedBarChart extends Component {
         const { timeout } = this.state;
         clearTimeout(timeout);
         this.setState({
-            timeout: setTimeout(() => { this.init(); }, 500)
+            timeout: setTimeout(() => {
+                this.init();
+            }, 500)
         });
     }
 
@@ -208,7 +210,16 @@ class GroupedBarChart extends Component {
             quick_date_range: 'custom',
             start_date: formattedDate,
             end_date: formattedDate,
-            status: [ 'successful', 'failed', 'new', 'pending', 'waiting', 'error', 'canceled', 'running' ],
+            status: [
+                'successful',
+                'failed',
+                'new',
+                'pending',
+                'waiting',
+                'error',
+                'canceled',
+                'running'
+            ],
             org_id: [ id ]
         };
 
@@ -217,7 +228,7 @@ class GroupedBarChart extends Component {
             pathname: jobExplorer,
             search
         });
-    };
+    }
 
     handleToggle(selectedId) {
         if (this.selection.indexOf(selectedId) === -1) {
@@ -231,7 +242,7 @@ class GroupedBarChart extends Component {
     }
 
     init() {
-        // create the first 8 selected data points
+    // create the first 8 selected data points
         if (this.selection.length === 0) {
             this.orgsList.forEach((org, index) => {
                 if (index <= 7) {
@@ -254,7 +265,7 @@ class GroupedBarChart extends Component {
     }
 
     draw() {
-        // Clear our chart container element first
+    // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
         let { data: unformattedData, timeFrame } = this.props;
         const selected = this.selection;
@@ -276,9 +287,9 @@ class GroupedBarChart extends Component {
         const maxTicks = Math.round(data.length / (timeFrame / 2));
         let ticks = data.map(d => d.date);
         if (timeFrame === 31) {
-            ticks = data.map((d, i) =>
-                i % maxTicks === 0 ? d.date : undefined
-            ).filter(item => item);
+            ticks = data
+            .map((d, i) => (i % maxTicks === 0 ? d.date : undefined))
+            .filter(item => item);
         }
 
         const xAxis = d3
@@ -353,7 +364,11 @@ class GroupedBarChart extends Component {
         .append('text')
         .attr(
             'transform',
-            'translate(' + width / 2 + ' ,' + (height + this.props.margin.top + 25) + ')'
+            'translate(' +
+          width / 2 +
+          ' ,' +
+          (height + this.props.margin.top + 25) +
+          ')'
         )
         .style('text-anchor', 'middle')
         .text('Date');
@@ -401,7 +416,7 @@ class GroupedBarChart extends Component {
         })
         .on('click', this.redirectToJobExplorer);
         bars = bars.merge(subEnter);
-    };
+    }
 
     componentDidMount() {
         this.init();
@@ -419,16 +434,16 @@ class GroupedBarChart extends Component {
         const { colors, selected } = this.state;
         return (
             <Wrapper>
-                <div id={ this.props.id } />
-                { colors.length > 0 && (
+                <div id={this.props.id} />
+                {colors.length > 0 && (
                     <Legend
                         id="d3-grouped-bar-legend"
-                        data={ colors }
-                        selected={ selected }
-                        onToggle={ this.handleToggle }
+                        data={colors}
+                        selected={selected}
+                        onToggle={this.handleToggle}
                         height="350px"
                     />
-                ) }
+                )}
             </Wrapper>
         );
     }

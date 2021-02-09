@@ -7,7 +7,7 @@ describe('Containers/AutomationCalculator/TotalSavings', () => {
     });
     it('Should display the correct value from float number', () => {
         const expected = '1,215,001.20';
-        const wrapper = mount(<TotalSavings totalSavings={ 1215001.20 } />);
+        const wrapper = mount(<TotalSavings totalSavings={1215001.2} />);
         expect(wrapper.text()).toEqual(expect.stringContaining(expected));
     });
 });

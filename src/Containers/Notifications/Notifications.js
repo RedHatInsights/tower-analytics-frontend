@@ -133,13 +133,11 @@ const Notifications = () => {
         const update = async () => {
             setIsLoading(true);
             await window.insights.chrome.auth.getUser();
-            getData().then(
-                ({ notifications: notificationsData = [], meta }) => {
-                    setNotificationsData(notificationsData);
-                    setMeta(meta);
-                    setIsLoading(false);
-                }
-            );
+            getData().then(({ notifications: notificationsData = [], meta }) => {
+                setNotificationsData(notificationsData);
+                setMeta(meta);
+                setIsLoading(false);
+            });
         };
 
         update();
@@ -205,14 +203,14 @@ const Notifications = () => {
     return (
         <React.Fragment>
             <PageHeader>
-                <PageHeaderTitle title={ 'Notifications' } />
+                <PageHeaderTitle title={'Notifications'} />
             </PageHeader>
-            { preflightError && (
+            {preflightError && (
                 <Main>
-                    <EmptyState { ...preflightError } />
+                    <EmptyState {...preflightError} />
                 </Main>
-            ) }
-            { !preflightError && (
+            )}
+            {!preflightError && (
                 <>
                     <Main>
                         <Card>
@@ -220,94 +218,94 @@ const Notifications = () => {
                                 <DropdownGroup>
                                     <FormSelect
                                         name="selectedCluster"
-                                        value={ selectedCluster }
-                                        onChange={ value => {
+                                        value={selectedCluster}
+                                        onChange={value => {
                                             setSelectedCluster(value);
                                             setId(value);
                                             setOffset(0);
                                             setCurrPage(1);
-                                        } }
+                                        }}
                                         aria-label="Select Cluster"
                                     >
-                                        { clusterOptions.map(({ value, label, disabled }, index) => (
+                                        {clusterOptions.map(({ value, label, disabled }, index) => (
                                             <FormSelectOption
-                                                isDisabled={ disabled }
-                                                key={ index }
-                                                value={ value }
-                                                label={ label }
+                                                isDisabled={disabled}
+                                                key={index}
+                                                value={value}
+                                                label={label}
                                             />
-                                        )) }
+                                        ))}
                                     </FormSelect>
                                     <FormSelect
                                         name="selectedNotification"
-                                        value={ queryParams.severity || '' }
-                                        onChange={ value => {
+                                        value={queryParams.severity || ''}
+                                        onChange={value => {
                                             setSeverity(value);
                                             setOffset(0);
                                             setCurrPage(1);
-                                        } }
+                                        }}
                                         aria-label="Select Notification Type"
                                     >
-                                        { notificationOptions.map(
+                                        {notificationOptions.map(
                                             ({ disabled, value, label }, index) => (
                                                 <FormSelectOption
-                                                    isDisabled={ disabled }
-                                                    key={ index }
-                                                    value={ value }
-                                                    label={ label }
+                                                    isDisabled={disabled}
+                                                    key={index}
+                                                    value={value}
+                                                    label={label}
                                                 />
                                             )
-                                        ) }
+                                        )}
                                     </FormSelect>
                                 </DropdownGroup>
                                 <Pagination
-                                    itemCount={ meta && meta.count ? meta.count : 0 }
+                                    itemCount={meta && meta.count ? meta.count : 0}
                                     widgetId="pagination-options-menu-top"
-                                    perPageOptions={ perPageOptions }
-                                    perPage={ queryParams.limit }
-                                    page={ currPage }
-                                    variant={ PaginationVariant.top }
-                                    onPerPageSelect={ (_event, perPage, page) => {
+                                    perPageOptions={perPageOptions}
+                                    perPage={queryParams.limit}
+                                    page={currPage}
+                                    variant={PaginationVariant.top}
+                                    onPerPageSelect={(_event, perPage, page) => {
                                         handlePerPageSelect(perPage, page);
-                                    } }
-                                    onSetPage={ (_event, pageNumber) => {
+                                    }}
+                                    onSetPage={(_event, pageNumber) => {
                                         handleSetPage(pageNumber);
-                                    } }
+                                    }}
                                     isCompact
                                 />
                             </CardTitle>
                             <CardBody>
-                                { isLoading && <LoadingState /> }
-                                { !isLoading && notificationsData.length <= 0 && <NoData /> }
-                                { !isLoading && notificationsData.length > 0 && (
+                                {isLoading && <LoadingState />}
+                                {!isLoading && notificationsData.length <= 0 && <NoData />}
+                                {!isLoading && notificationsData.length > 0 && (
                                     <NotificationDrawer>
                                         <NotificationsList
-                                            filterBy={ queryParams.severity || '' }
-                                            options={ notificationOptions }
-                                            notifications={ notificationsData }
+                                            filterBy={queryParams.severity || ''}
+                                            options={notificationOptions}
+                                            notifications={notificationsData}
                                         />
                                     </NotificationDrawer>
-                                ) }
+                                )}
                                 <Pagination
-                                    itemCount={ meta && meta.count ? meta.count : 0 }
+                                    itemCount={meta && meta.count ? meta.count : 0}
                                     widgetId="pagination-options-menu-bottom"
-                                    perPageOptions={ perPageOptions }
-                                    perPage={ queryParams.limit }
-                                    page={ currPage }
-                                    variant={ PaginationVariant.bottom }
-                                    onPerPageSelect={ (_event, perPage, page) => {
+                                    perPageOptions={perPageOptions}
+                                    perPage={queryParams.limit}
+                                    page={currPage}
+                                    variant={PaginationVariant.bottom}
+                                    onPerPageSelect={(_event, perPage, page) => {
                                         handlePerPageSelect(perPage, page);
-                                    } }
-                                    onSetPage={ (_event, pageNumber) => {
+                                    }}
+                                    onSetPage={(_event, pageNumber) => {
                                         handleSetPage(pageNumber);
-                                    } }
-                                    style={ { marginTop: '20px' } }
+                                    }}
+                                    style={{ marginTop: '20px' }}
                                 />
                             </CardBody>
                         </Card>
                     </Main>
                 </>
-            ) }
+            )}
         </React.Fragment>
     );
 };

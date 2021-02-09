@@ -22,10 +22,10 @@ class Tooltip {
     }
 
     draw(d) {
-        // chart1 has success rate data and chart2 does not ...
-        this.showSuccess = (d && d.data && 'success_rate' in d.data) ? true : false;
-        const boundingHeight = (this.showSuccess) ? 70 : 52;
-        const boundingWidth = (this.showSuccess) ? 120 : 108;
+    // chart1 has success rate data and chart2 does not ...
+        this.showSuccess = d && d.data && 'success_rate' in d.data ? true : false;
+        const boundingHeight = this.showSuccess ? 70 : 52;
+        const boundingWidth = this.showSuccess ? 120 : 108;
 
         this.toolTipBase = d3.select(this.svg + '> svg').append('g');
         this.toolTipBase.attr('id', 'svg-chart-Tooltip.base-' + this.svg.slice(1));
@@ -179,7 +179,9 @@ class PieChart extends Component {
         const { timeout } = this.state;
         clearTimeout(timeout);
         this.setState({
-            timeout: setTimeout(() => { this.init(); }, 500)
+            timeout: setTimeout(() => {
+                this.init();
+            }, 500)
         });
     }
     sortDescending(data) {
@@ -191,18 +193,16 @@ class PieChart extends Component {
     init() {
         const { data } = this.props;
         // create our colors array to send to the Legend component
-        const colors = data.map(org => {
+        const colors = data
+        .map(org => {
             const name = org.id === -1 ? 'Others' : org.name;
             return {
                 name,
                 value: this.props.colorFunc(name),
                 count: Math.round(org.count)
             };
-        }).sort((a, b) =>
-            (a.count > b.count) ? 1 : (
-                (b.count > a.count) ? -1 : 0
-            )
-        );
+        })
+        .sort((a, b) => (a.count > b.count ? 1 : b.count > a.count ? -1 : 0));
         this.setState({ colors });
         this.draw();
     }
@@ -295,16 +295,16 @@ class PieChart extends Component {
         const { colors } = this.state;
         return (
             <Wrapper>
-                <div id={ this.props.id } />
-                { colors.length > 0 && (
+                <div id={this.props.id} />
+                {colors.length > 0 && (
                     <Legend
                         id="d3-grouped-bar-legend"
-                        data={ colors }
-                        selected={ null }
-                        onToggle={ null }
+                        data={colors}
+                        selected={null}
+                        onToggle={null}
                         height="300px"
                     />
-                ) }
+                )}
             </Wrapper>
         );
     }

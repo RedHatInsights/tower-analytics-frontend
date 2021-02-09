@@ -11,13 +11,12 @@ describe('Components/JobStatus', () => {
     });
 
     it('should render successful', () => {
-        wrapper = shallow(<ApiErrorState message={ msg } />);
+        wrapper = shallow(<ApiErrorState message={msg} />);
         expect(wrapper.length).toBe(1);
     });
 
     it('should contain the correct string', () => {
-        wrapper = shallow(<ApiErrorState message={ msg } />);
+        wrapper = shallow(<ApiErrorState message={msg} />);
         expect(wrapper.html()).toMatch(new RegExp(msg));
     });
-
 });

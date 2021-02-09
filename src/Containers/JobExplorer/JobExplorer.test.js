@@ -35,7 +35,8 @@ const dummyData = (size, count = 0) => ({
     meta: { count: count === 0 ? size : count }
 });
 
-const jobExplorerOptionsUrl = 'path:/api/tower-analytics/v1/job_explorer_options/';
+const jobExplorerOptionsUrl =
+  'path:/api/tower-analytics/v1/job_explorer_options/';
 const jobExplorerOptions = {
     quick_date_range: [
         { key: 'last_30_days', value: 'Last 30 days' },
@@ -88,9 +89,7 @@ describe('Containers/JobExplorer', () => {
         });
         wrapper.update();
 
-        expect(wrapper.text()).toEqual(
-            expect.stringContaining('Not authorized')
-        );
+        expect(wrapper.text()).toEqual(expect.stringContaining('Not authorized'));
     });
 
     it('should render api error', async () => {
@@ -104,9 +103,7 @@ describe('Containers/JobExplorer', () => {
         });
         wrapper.update();
 
-        expect(wrapper.text()).toEqual(
-            expect.stringContaining('General Error')
-        );
+        expect(wrapper.text()).toEqual(expect.stringContaining('General Error'));
     });
 
     it('should render with empty response', async () => {
@@ -117,9 +114,7 @@ describe('Containers/JobExplorer', () => {
         });
         wrapper.update();
 
-        expect(wrapper.text()).toEqual(
-            expect.stringContaining('No results found')
-        );
+        expect(wrapper.text()).toEqual(expect.stringContaining('No results found'));
     });
 
     it('should send the default queryParams', async () => {
@@ -137,9 +132,12 @@ describe('Containers/JobExplorer', () => {
             template_id: [ '1', '2' ]
         };
 
-        const search = stringify({
-            template_id: [ '1', '2' ]
-        }, { arrayFormat: 'bracket' });
+        const search = stringify(
+            {
+                template_id: [ '1', '2' ]
+            },
+            { arrayFormat: 'bracket' }
+        );
 
         await act(async () => {
             wrapper = mountPage(JobExplorer, { search });
@@ -172,9 +170,11 @@ describe('Containers/JobExplorer', () => {
         // Be sure there are two paginations on the page
         expect(getPagination(wrapper)).toHaveLength(2);
 
-        expect(getPagination(wrapper).at(0).text()).toEqual(
-            expect.stringContaining('1 - 5 of 100')
-        );
+        expect(
+            getPagination(wrapper)
+            .at(0)
+            .text()
+        ).toEqual(expect.stringContaining('1 - 5 of 100'));
     });
 
     it('should change limit of displayed items (top)', async () => {
@@ -185,14 +185,20 @@ describe('Containers/JobExplorer', () => {
 
         // Bring up the select box
         act(() => {
-            getPagination(wrapper).find('button').at(0).simulate('click');
+            getPagination(wrapper)
+            .find('button')
+            .at(0)
+            .simulate('click');
         });
         wrapper.update();
 
         // Select the 15 items per page option.
         await act(async () => {
-            getPagination(wrapper).find('ul')
-            .find('button').at(2).simulate('click');
+            getPagination(wrapper)
+            .find('ul')
+            .find('button')
+            .at(2)
+            .simulate('click');
         });
         wrapper.update();
 
@@ -213,14 +219,20 @@ describe('Containers/JobExplorer', () => {
 
         // Bring up the select box
         act(() => {
-            getPagination(wrapper).find('button').at(1).simulate('click');
+            getPagination(wrapper)
+            .find('button')
+            .at(1)
+            .simulate('click');
         });
         wrapper.update();
 
         // Select the 20 items per page option.
         await act(async () => {
-            getPagination(wrapper).find('ul')
-            .find('button').at(3).simulate('click');
+            getPagination(wrapper)
+            .find('ul')
+            .find('button')
+            .at(3)
+            .simulate('click');
         });
         wrapper.update();
 
@@ -244,13 +256,19 @@ describe('Containers/JobExplorer', () => {
         // Click on the next page button
         await act(async () => {
             // Upper navigation click
-            getPaginationNav(wrapper).at(0).find('button').at(1).simulate('click');
+            getPaginationNav(wrapper)
+            .at(0)
+            .find('button')
+            .at(1)
+            .simulate('click');
         });
         wrapper.update();
 
-        expect(getPagination(wrapper).at(0).text()).toEqual(
-            expect.stringContaining('6 - 10 of 100')
-        );
+        expect(
+            getPagination(wrapper)
+            .at(0)
+            .text()
+        ).toEqual(expect.stringContaining('6 - 10 of 100'));
 
         const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
 
@@ -271,13 +289,19 @@ describe('Containers/JobExplorer', () => {
         // Click on the next page button
         await act(async () => {
             // Bottom navigation click last page
-            getPaginationNav(wrapper).at(1).find('button').at(3).simulate('click');
+            getPaginationNav(wrapper)
+            .at(1)
+            .find('button')
+            .at(3)
+            .simulate('click');
         });
         wrapper.update();
 
-        expect(getPagination(wrapper).at(0).text()).toEqual(
-            expect.stringContaining('96 - 100 of 100')
-        );
+        expect(
+            getPagination(wrapper)
+            .at(0)
+            .text()
+        ).toEqual(expect.stringContaining('96 - 100 of 100'));
 
         const [ _, { body }] = inspectCall(jobExplorerUrl, 'POST');
 
@@ -286,5 +310,4 @@ describe('Containers/JobExplorer', () => {
             offset: 95
         });
     });
-
 });

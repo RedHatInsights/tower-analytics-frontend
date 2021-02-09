@@ -15,7 +15,7 @@ const error = {
     response: { throws: { status: 401, error: 'Error' }, status: 401 }
 };
 
-const fetchHandle = (url) => {
+const fetchHandle = url => {
     return fetch(url).then(response => response.json());
 };
 

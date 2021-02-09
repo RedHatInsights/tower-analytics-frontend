@@ -18,7 +18,11 @@ import {
     readOrgOptions
 } from '../../Api';
 
-import { Main, PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components';
+import {
+    Main,
+    PageHeader,
+    PageHeaderTitle
+} from '@redhat-cloud-services/frontend-components';
 
 import {
     Card,
@@ -77,21 +81,22 @@ const optionsMapper = options => {
     return { ...rest, sort_by: meta.sort_by };
 };
 
-const orgsChartMapper = ({ dates: data = []}) => data.map(({ date, items }) => ({
-    date,
-    items: items.map(({ id, total_count, name }) => ({
-        id,
+const orgsChartMapper = ({ dates: data = []}) =>
+    data.map(({ date, items }) => ({
         date,
-        value: total_count,
-        name: id === -1 ? 'Others' : (name || 'No organization')
-    }))
-}));
+        items: items.map(({ id, total_count, name }) => ({
+            id,
+            date,
+            value: total_count,
+            name: id === -1 ? 'Others' : name || 'No organization'
+        }))
+    }));
 
 const pieChartMapper = attrName => ({ items = []}) =>
     items.map(({ id, [attrName]: count, name }) => ({
         id,
         count,
-        name: id === -1 ? 'Others' : (name || 'No organization')
+        name: id === -1 ? 'Others' : name || 'No organization'
     }));
 
 const OrganizationStatistics = ({ history }) => {
@@ -100,10 +105,15 @@ const OrganizationStatistics = ({ history }) => {
     const [ jobs, setJobs ] = useApi([], pieChartMapper('host_count'));
     const [ tasks, setTasks ] = useApi([], pieChartMapper('host_task_count'));
     const [ options, setOptions ] = useApi({}, optionsMapper);
-    const { queryParams, setFromToolbar } = useQueryParams(constants.defaultParams);
+    const { queryParams, setFromToolbar } = useQueryParams(
+        constants.defaultParams
+    );
 
     useEffect(() => {
-        insights.chrome.appNavClick({ id: 'organization-statistics', secondaryNav: true });
+        insights.chrome.appNavClick({
+            id: 'organization-statistics',
+            secondaryNav: true
+        });
         setPreflight(preflightRequest());
         setOptions(readOrgOptions({ params: queryParams }));
     }, []);
@@ -117,24 +127,22 @@ const OrganizationStatistics = ({ history }) => {
     return (
         <React.Fragment>
             <PageHeader>
-                <PageHeaderTitle title={ 'Organization Statistics' } />
+                <PageHeaderTitle title={'Organization Statistics'} />
             </PageHeader>
-            { preflight.error && (
+            {preflight.error && (
                 <Main>
-                    <EmptyState
-                        preflightError={ preflight.error }
-                    />
+                    <EmptyState preflightError={preflight.error} />
                 </Main>
-            ) }
-            { preflight.isSuccess && (
+            )}
+            {preflight.isSuccess && (
                 <React.Fragment>
-                    <Main style={ { paddingBottom: '0' } }>
+                    <Main style={{ paddingBottom: '0' }}>
                         <Card>
                             <CardBody>
                                 <FilterableToolbar
-                                    categories={ options.data }
-                                    filters={ queryParams }
-                                    setFilters={ setFromToolbar }
+                                    categories={options.data}
+                                    filters={queryParams}
+                                    setFilters={setFromToolbar}
                                 />
                             </CardBody>
                         </Card>
@@ -145,68 +153,68 @@ const OrganizationStatistics = ({ history }) => {
                                 <h2>Organization Status</h2>
                             </CardTitle>
                             <CardBody>
-                                { orgs.isLoading && <LoadingState /> }
-                                { orgs.error && <ApiErrorState message={ orgs.error.error } /> }
-                                { orgs.isSuccess && orgs.data.length <= 0 && <NoData /> }
-                                { orgs.isSuccess && orgs.data.length > 0 && (
+                                {orgs.isLoading && <LoadingState />}
+                                {orgs.error && <ApiErrorState message={orgs.error.error} />}
+                                {orgs.isSuccess && orgs.data.length <= 0 && <NoData />}
+                                {orgs.isSuccess && orgs.data.length > 0 && (
                                     <GroupedBarChart
-                                        margin={ { top: 20, right: 20, bottom: 50, left: 50 } }
+                                        margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
                                         id="d3-grouped-bar-chart-root"
-                                        data={ orgs.data }
-                                        history={ history }
-                                        timeFrame={ orgs.data .length }
-                                        colorFunc={ colorFunc }
+                                        data={orgs.data}
+                                        history={history}
+                                        timeFrame={orgs.data.length}
+                                        colorFunc={colorFunc}
                                     />
-                                ) }
+                                )}
                             </CardBody>
                         </TopCard>
                         <CardContainer>
                             <Card>
-                                <CardBody style={ { padding: 0 } }>
-                                    <CardTitle style={ { padding: 0 } }>
-                                        <h2 style={ { marginLeft: '20px' } }>
-                                      Job Runs by Organization
+                                <CardBody style={{ padding: 0 }}>
+                                    <CardTitle style={{ padding: 0 }}>
+                                        <h2 style={{ marginLeft: '20px' }}>
+                      Job Runs by Organization
                                         </h2>
                                     </CardTitle>
-                                    { jobs.isLoading && <LoadingState /> }
-                                    { jobs.error && <ApiErrorState message={ jobs.error.error } /> }
-                                    { jobs.isSuccess && jobs.data.length <= 0 && <NoData /> }
-                                    { jobs.isSuccess && jobs.data.length > 0 && (
+                                    {jobs.isLoading && <LoadingState />}
+                                    {jobs.error && <ApiErrorState message={jobs.error.error} />}
+                                    {jobs.isSuccess && jobs.data.length <= 0 && <NoData />}
+                                    {jobs.isSuccess && jobs.data.length > 0 && (
                                         <PieChart
-                                            margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
+                                            margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                                             id="d3-donut-1-chart-root"
-                                            data={ jobs.data }
-                                            timeFrame={ jobs.data.length }
-                                            colorFunc={ colorFunc }
+                                            data={jobs.data}
+                                            timeFrame={jobs.data.length}
+                                            colorFunc={colorFunc}
                                         />
-                                    ) }
+                                    )}
                                 </CardBody>
                             </Card>
                             <Card>
-                                <CardBody style={ { padding: 0 } }>
-                                    <CardTitle style={ { padding: 0 } }>
-                                        <h2 style={ { marginLeft: '20px' } }>
-                                      Usage by Organization (Tasks)
+                                <CardBody style={{ padding: 0 }}>
+                                    <CardTitle style={{ padding: 0 }}>
+                                        <h2 style={{ marginLeft: '20px' }}>
+                      Usage by Organization (Tasks)
                                         </h2>
                                     </CardTitle>
-                                    { tasks.isLoading && <LoadingState /> }
-                                    { tasks.error && <ApiErrorState message={ tasks.error.error } /> }
-                                    { tasks.isSuccess && tasks.data.length <= 0 && <NoData /> }
-                                    { tasks.isSuccess && tasks.data.length > 0 && (
+                                    {tasks.isLoading && <LoadingState />}
+                                    {tasks.error && <ApiErrorState message={tasks.error.error} />}
+                                    {tasks.isSuccess && tasks.data.length <= 0 && <NoData />}
+                                    {tasks.isSuccess && tasks.data.length > 0 && (
                                         <PieChart
-                                            margin={ { top: 20, right: 20, bottom: 0, left: 20 } }
+                                            margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                                             id="d3-donut-2-chart-root"
-                                            data={ tasks.data }
-                                            timeFrame={ tasks.data.length }
-                                            colorFunc={ colorFunc }
+                                            data={tasks.data}
+                                            timeFrame={tasks.data.length}
+                                            colorFunc={colorFunc}
                                         />
-                                    ) }
+                                    )}
                                 </CardBody>
                             </Card>
                         </CardContainer>
                     </Main>
                 </React.Fragment>
-            ) }
+            )}
         </React.Fragment>
     );
 };

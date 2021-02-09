@@ -51,7 +51,7 @@ const clusterDummyData = (size = 20) => ({
 //     limit: 5
 // };
 
-const lastCallBody = (url) => parse(fetchMock.lastCall(url)[0].split('?')[1]);
+const lastCallBody = url => parse(fetchMock.lastCall(url)[0].split('?')[1]);
 
 const getPagination = wrapper => wrapper.find('.pf-c-options-menu');
 
@@ -87,9 +87,7 @@ describe('Containers/Notifications', () => {
         });
         wrapper.update();
 
-        expect(wrapper.text()).toEqual(
-            expect.stringContaining('Not authorized')
-        );
+        expect(wrapper.text()).toEqual(expect.stringContaining('Not authorized'));
     });
 
     xit('should render api error', async () => {
@@ -104,9 +102,7 @@ describe('Containers/Notifications', () => {
         });
         wrapper.update();
 
-        expect(wrapper.text()).toEqual(
-            expect.stringContaining('General Error')
-        );
+        expect(wrapper.text()).toEqual(expect.stringContaining('General Error'));
     });
 
     it('should render with empty response', async () => {
@@ -117,9 +113,7 @@ describe('Containers/Notifications', () => {
         });
         wrapper.update();
 
-        expect(wrapper.text()).toEqual(
-            expect.stringContaining('No Data')
-        );
+        expect(wrapper.text()).toEqual(expect.stringContaining('No Data'));
     });
 
     it('should render the right amouth of data rows', async () => {
@@ -129,14 +123,19 @@ describe('Containers/Notifications', () => {
         wrapper.update();
 
         // The fetchMock returns 5 notifications
-        expect(wrapper.find('.pf-c-notification-drawer__list-item')).toHaveLength(5);
+        expect(wrapper.find('.pf-c-notification-drawer__list-item')).toHaveLength(
+            5
+        );
     });
 
     it('should display the correct page number', async () => {
-        fetchMock.get({
-            url: notificationsUrl,
-            overwriteRoutes: true
-        }, { ...notificationsDummyData(5, 100) });
+        fetchMock.get(
+            {
+                url: notificationsUrl,
+                overwriteRoutes: true
+            },
+            { ...notificationsDummyData(5, 100) }
+        );
 
         await act(async () => {
             wrapper = mountPage(Notifications);
@@ -146,9 +145,11 @@ describe('Containers/Notifications', () => {
         // Be sure there are two paginations on the page
         expect(getPagination(wrapper)).toHaveLength(2);
 
-        expect(getPagination(wrapper).at(0).text()).toEqual(
-            expect.stringContaining('1 - 5 of 100')
-        );
+        expect(
+            getPagination(wrapper)
+            .at(0)
+            .text()
+        ).toEqual(expect.stringContaining('1 - 5 of 100'));
     });
 
     it('should change limit of displayed items (top)', async () => {
@@ -159,14 +160,20 @@ describe('Containers/Notifications', () => {
 
         // Bring up the select box
         act(() => {
-            getPagination(wrapper).find('button').at(0).simulate('click');
+            getPagination(wrapper)
+            .find('button')
+            .at(0)
+            .simulate('click');
         });
         wrapper.update();
 
         // Select the 20 items per page option.
         await act(async () => {
-            getPagination(wrapper).find('ul')
-            .find('button').at(2).simulate('click');
+            getPagination(wrapper)
+            .find('ul')
+            .find('button')
+            .at(2)
+            .simulate('click');
         });
         wrapper.update();
 
@@ -184,14 +191,20 @@ describe('Containers/Notifications', () => {
 
         // Bring up the select box
         act(() => {
-            getPagination(wrapper).find('button').at(1).simulate('click');
+            getPagination(wrapper)
+            .find('button')
+            .at(1)
+            .simulate('click');
         });
         wrapper.update();
 
         // Select the 50 items per page option.
         await act(async () => {
-            getPagination(wrapper).find('ul')
-            .find('button').at(3).simulate('click');
+            getPagination(wrapper)
+            .find('ul')
+            .find('button')
+            .at(3)
+            .simulate('click');
         });
         wrapper.update();
 
@@ -202,10 +215,13 @@ describe('Containers/Notifications', () => {
     });
 
     it('should send offset to API when jumping to next page', async () => {
-        fetchMock.get({
-            url: notificationsUrl,
-            overwriteRoutes: true
-        }, { ...notificationsDummyData(5, 100) });
+        fetchMock.get(
+            {
+                url: notificationsUrl,
+                overwriteRoutes: true
+            },
+            { ...notificationsDummyData(5, 100) }
+        );
 
         await act(async () => {
             wrapper = mountPage(Notifications);
@@ -215,13 +231,19 @@ describe('Containers/Notifications', () => {
         // Click on the next page button
         await act(async () => {
             // Upper navigation click
-            getPaginationNav(wrapper).at(0).find('button').at(1).simulate('click');
+            getPaginationNav(wrapper)
+            .at(0)
+            .find('button')
+            .at(1)
+            .simulate('click');
         });
         wrapper.update();
 
-        expect(getPagination(wrapper).at(0).text()).toEqual(
-            expect.stringContaining('6 - 10 of 100')
-        );
+        expect(
+            getPagination(wrapper)
+            .at(0)
+            .text()
+        ).toEqual(expect.stringContaining('6 - 10 of 100'));
         expect(lastCallBody(notificationsUrl)).toEqual({
             limit: '5',
             offset: '5'
@@ -229,10 +251,13 @@ describe('Containers/Notifications', () => {
     });
 
     it('should send offset to API when jumping to last the page', async () => {
-        fetchMock.get({
-            url: notificationsUrl,
-            overwriteRoutes: true
-        }, { ...notificationsDummyData(5, 100) });
+        fetchMock.get(
+            {
+                url: notificationsUrl,
+                overwriteRoutes: true
+            },
+            { ...notificationsDummyData(5, 100) }
+        );
 
         await act(async () => {
             wrapper = mountPage(Notifications);
@@ -242,17 +267,22 @@ describe('Containers/Notifications', () => {
         // Click on the next page button
         await act(async () => {
             // Bottom navigation click last page
-            getPaginationNav(wrapper).at(1).find('button').at(3).simulate('click');
+            getPaginationNav(wrapper)
+            .at(1)
+            .find('button')
+            .at(3)
+            .simulate('click');
         });
         wrapper.update();
 
-        expect(getPagination(wrapper).at(0).text()).toEqual(
-            expect.stringContaining('96 - 100 of 100')
-        );
+        expect(
+            getPagination(wrapper)
+            .at(0)
+            .text()
+        ).toEqual(expect.stringContaining('96 - 100 of 100'));
         expect(lastCallBody(notificationsUrl)).toEqual({
             limit: '5',
             offset: '95'
         });
     });
-
 });

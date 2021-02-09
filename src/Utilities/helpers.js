@@ -32,7 +32,8 @@ export function formatDate(date) {
 }
 
 export function formatSeconds(seconds) {
-    return moment().startOf('day')
+    return moment()
+    .startOf('day')
     .seconds(seconds)
     .format('H:mm:ss');
 }
@@ -57,8 +58,10 @@ export function formatPercentage(val) {
     return `${val}%`;
 }
 
-export const capitalize = (s) => {
-    if (typeof s !== 'string') {return '';}
+export const capitalize = s => {
+    if (typeof s !== 'string') {
+        return '';
+    }
 
     return s.charAt(0).toUpperCase() + s.slice(1);
 };
@@ -69,7 +72,7 @@ export function calculateDelta(a, b) {
     }
 
     // never return less than zero ...
-    if ((b - a) < 0) {
+    if (b - a < 0) {
         return 0;
     }
 
@@ -117,16 +120,19 @@ export function convertSecondsToHours(seconds) {
 }
 
 export function convertWithCommas(arr, key) {
-    const split = arr.reduce((strs, datum) => { strs.push(datum[key]); return strs; }, []);
+    const split = arr.reduce((strs, datum) => {
+        strs.push(datum[key]);
+        return strs;
+    }, []);
     return split.join(', ');
 }
 
 export function formatJobType(type) {
-    return (type === 'job' ? 'Playbook run' : 'Workflow job');
+    return type === 'job' ? 'Playbook run' : 'Workflow job';
 }
 
 export function formatJobStatus(status) {
-    return (status === 'successful' ? 'Success' : 'Failed');
+    return status === 'successful' ? 'Success' : 'Failed';
 }
 
 export function formatJobDetailsURL(baseURL, jobId) {

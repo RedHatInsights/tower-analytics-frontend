@@ -44,8 +44,8 @@ const Title = styled.span`
 `;
 
 const SubTitle = styled.span`
-    font-size: 15px;
-    margin-left: 20px;
+  font-size: 15px;
+  margin-left: 20px;
 `;
 
 const Switch = styled(PFSwitch)`
@@ -61,36 +61,38 @@ class Legend extends Component {
         super(props);
         this.handleChange = this.handleChange.bind(this);
     }
-    handleChange(_isChecked, { target: { value }}) {
+    handleChange(
+        _isChecked,
+        {
+            target: { value }
+        }
+    ) {
         const { onToggle } = this.props;
         const selectedId = parseFloat(value);
         onToggle(selectedId);
-    };
+    }
     render() {
         const { data, selected, height } = this.props;
         return (
-            <Container height={ height }>
-                { data.map(
-                    ({ name, value, id, count }, index) => (
-                        <LegendDetail key={ index }>
-                            <Wrapper>
-                                <Color color={ value } />
-                                <Title>{ name }</Title>
-                            </Wrapper>
-                            { count && (
-                                <SubTitle>{ count }</SubTitle>
-                            ) }
-                            { selected && (
-                                <Switch
-                                    isChecked={ selected.some(selection => selection === id) }
-                                    onChange={ this.handleChange }
-                                    aria-label={ name }
-                                    value={ id }
-                                    id={ `${name}-${id}` }
-                                />
-                            ) }
-                        </LegendDetail>
-                    )) }
+            <Container height={height}>
+                {data.map(({ name, value, id, count }, index) => (
+                    <LegendDetail key={index}>
+                        <Wrapper>
+                            <Color color={value} />
+                            <Title>{name}</Title>
+                        </Wrapper>
+                        {count && <SubTitle>{count}</SubTitle>}
+                        {selected && (
+                            <Switch
+                                isChecked={selected.some(selection => selection === id)}
+                                onChange={this.handleChange}
+                                aria-label={name}
+                                value={id}
+                                id={`${name}-${id}`}
+                            />
+                        )}
+                    </LegendDetail>
+                ))}
             </Container>
         );
     }

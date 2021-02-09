@@ -10,9 +10,11 @@ class Tooltip {
     }
 
     formatDollars(amount) {
-        return parseFloat(amount).toFixed(2).toString()
+        return parseFloat(amount)
+        .toFixed(2)
+        .toString()
         .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-    };
+    }
 
     draw() {
         this.width = 125;
@@ -72,91 +74,99 @@ class Tooltip {
         .text('Automation cost $0');
     }
 
-    handleMouseOver = d => {
-        let name;
-        let savings;
-        let manualCost;
-        let automationCost;
-        const scrollLeftOffset = d3.select('#d3-roi-chart-root').node().scrollLeft;
-        const x =
-            d3.event.pageX -
-            d3
-            .select(this.svg)
-            .node()
-            .getBoundingClientRect().x +
-            10 + scrollLeftOffset;
-        const y =
-            d3.event.pageY -
-            d3
-            .select(this.svg)
-            .node()
-            .getBoundingClientRect().y -
-            30;
-        if (!d) {
-            return;
-        } else {
-            savings = this.formatDollars(d.delta);
-            name = d.name;
-            manualCost = this.formatDollars(d.manualCost);
-            automationCost = this.formatDollars(d.automatedCost);
-        }
+  handleMouseOver = d => {
+      let name;
+      let savings;
+      let manualCost;
+      let automationCost;
+      const scrollLeftOffset = d3.select('#d3-roi-chart-root').node().scrollLeft;
+      const x =
+      d3.event.pageX -
+      d3
+      .select(this.svg)
+      .node()
+      .getBoundingClientRect().x +
+      10 +
+      scrollLeftOffset;
+      const y =
+      d3.event.pageY -
+      d3
+      .select(this.svg)
+      .node()
+      .getBoundingClientRect().y -
+      30;
+      if (!d) {
+          return;
+      } else {
+          savings = this.formatDollars(d.delta);
+          name = d.name;
+          manualCost = this.formatDollars(d.manualCost);
+          automationCost = this.formatDollars(d.automatedCost);
+      }
 
-        const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
-        const chartWidth = d3
-        .select(this.svg + '> svg')
-        .node()
-        .getBoundingClientRect().width;
-        const overflow = 100 - (toolTipWidth / chartWidth) * 100;
-        const flipped = overflow < (x / chartWidth) * 100;
-        this.name.text('' + name);
-        this.savings.text('Total savings $' + savings);
-        this.manualCost.text('Manual Cost $' + manualCost);
-        this.automationCost.text('Automation Cost $' + automationCost);
-        this.nameWidth = this.name.node().getComputedTextLength();
-        this.savingsWidth = this.savings.node().getComputedTextLength();
-        this.manualCostWidth = this.manualCost.node().getComputedTextLength();
-        this.automationCostWidth = this.automationCost.node().getComputedTextLength();
-        this.widestTextElem = d3.max([ this.nameWidth, this.savingsWidth, this.automationCostWidth, this.manualCostWidth ]);
+      const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
+      const chartWidth = d3
+      .select(this.svg + '> svg')
+      .node()
+      .getBoundingClientRect().width;
+      const overflow = 100 - (toolTipWidth / chartWidth) * 100;
+      const flipped = overflow < (x / chartWidth) * 100;
+      this.name.text('' + name);
+      this.savings.text('Total savings $' + savings);
+      this.manualCost.text('Manual Cost $' + manualCost);
+      this.automationCost.text('Automation Cost $' + automationCost);
+      this.nameWidth = this.name.node().getComputedTextLength();
+      this.savingsWidth = this.savings.node().getComputedTextLength();
+      this.manualCostWidth = this.manualCost.node().getComputedTextLength();
+      this.automationCostWidth = this.automationCost
+      .node()
+      .getComputedTextLength();
+      this.widestTextElem = d3.max([
+          this.nameWidth,
+          this.savingsWidth,
+          this.automationCostWidth,
+          this.manualCostWidth
+      ]);
 
-        const maxTextPerc = this.widestTextElem / this.boxWidth * 100;
-        const threshold = 85;
-        const overage = maxTextPerc / threshold;
-        let adjustedWidth;
-        if (maxTextPerc > threshold) {
-            adjustedWidth = this.boxWidth * overage;
-        } else {
-            adjustedWidth = this.boxWidth;
-        }
+      const maxTextPerc = (this.widestTextElem / this.boxWidth) * 100;
+      const threshold = 85;
+      const overage = maxTextPerc / threshold;
+      let adjustedWidth;
+      if (maxTextPerc > threshold) {
+          adjustedWidth = this.boxWidth * overage;
+      } else {
+          adjustedWidth = this.boxWidth;
+      }
 
-        this.boundingBox.attr('width', adjustedWidth);
-        this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
-        if (flipped) {
-            this.toolTipPoint.attr('transform', 'translate(-20, 15) rotate(45)');
-            this.boundingBox.attr('x', -adjustedWidth - 20);
-            this.name.attr('x', -(toolTipWidth - 7));
-            this.savings.attr('x', -(toolTipWidth - 7));
-            this.manualCost.attr('x', -(toolTipWidth - 7));
-            this.automationCost.attr('x', -(toolTipWidth - 7));
-        } else {
-            this.toolTipPoint.attr('transform', 'translate(10, 15) rotate(45)');
-            this.boundingBox.attr('x', 10);
-            this.name.attr('x', 20);
-            this.savings.attr('x', 20);
-            this.manualCost.attr('x', 20);
-            this.automationCost.attr('x', 20);
-        }
+      this.boundingBox.attr('width', adjustedWidth);
+      this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
+      if (flipped) {
+          this.toolTipPoint.attr('transform', 'translate(-20, 15) rotate(45)');
+          this.boundingBox.attr('x', -adjustedWidth - 20);
+          this.name.attr('x', -(toolTipWidth - 7));
+          this.savings.attr('x', -(toolTipWidth - 7));
+          this.manualCost.attr('x', -(toolTipWidth - 7));
+          this.automationCost.attr('x', -(toolTipWidth - 7));
+      } else {
+          this.toolTipPoint.attr('transform', 'translate(10, 15) rotate(45)');
+          this.boundingBox.attr('x', 10);
+          this.name.attr('x', 20);
+          this.savings.attr('x', 20);
+          this.manualCost.attr('x', 20);
+          this.automationCost.attr('x', 20);
+      }
 
-        this.toolTipBase.style('opacity', 1);
-        this.toolTipBase.interrupt();
-    };
+      this.toolTipBase.style('opacity', 1);
+      this.toolTipBase.interrupt();
+  };
 
-    handleMouseOut = () => {
-        this.toolTipBase
-        .transition()
-        .delay(15)
-        .style('opacity', 0)
-        .style('pointer-events', 'none');
-    };
+  handleMouseOut = () => {
+      this.toolTipBase
+      .transition()
+      .delay(15)
+      .style('opacity', 0)
+      .style('pointer-events', 'none');
+  };
 }
 
 class TopTemplatesSavings extends Component {
@@ -186,7 +196,7 @@ class TopTemplatesSavings extends Component {
     }
 
     draw() {
-        // Use PF chart color
+    // Use PF chart color
         const color = '#0066CC'; //blue
         // Clear our chart container element first
         d3.selectAll('#' + this.props.id + ' > *').remove();
@@ -195,7 +205,10 @@ class TopTemplatesSavings extends Component {
         // adjust chart width to support larger datasets
         if (data.length >= 15) {
             const containerWidth = d3.select('.automation-wrapper').node();
-            width = containerWidth.getBoundingClientRect().width - this.props.margin.left - this.props.margin.right;
+            width =
+        containerWidth.getBoundingClientRect().width -
+        this.props.margin.left -
+        this.props.margin.right;
         } else {
             width = this.props.getWidth();
         }
@@ -238,10 +251,7 @@ class TopTemplatesSavings extends Component {
             svg: '#' + this.props.id
         });
         x.domain(taskNames);
-        y.domain([
-            0,
-            d3.max(data, d => d.delta * 1.15) || 8
-        ]);
+        y.domain([ 0, d3.max(data, d => d.delta * 1.15) || 8 ]);
 
         // add y axis
         svg
@@ -280,9 +290,11 @@ class TopTemplatesSavings extends Component {
 
         svg.selectAll('.x-axis line').attr('stroke', 'transparent');
 
-        svg.selectAll('.bar')
+        svg
+        .selectAll('.bar')
         .data(data)
-        .enter().append('rect')
+        .enter()
+        .append('rect')
         .attr('x', d => x(d.name))
         .attr('width', x.bandwidth())
         .attr('y', d => y(d.delta))
@@ -316,7 +328,7 @@ class TopTemplatesSavings extends Component {
     }
 
     render() {
-        return <div id={ this.props.id } />;
+        return <div id={this.props.id} />;
     }
 }
 

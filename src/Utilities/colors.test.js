@@ -1,4 +1,3 @@
-
 import { pfmulti } from './colors.js';
 
 describe('Utilities/colors', () => {

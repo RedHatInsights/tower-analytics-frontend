@@ -8,10 +8,10 @@ import {
 import { CubesIcon } from '@patternfly/react-icons';
 
 const NoData = () => (
-    <EmptyState variant={ EmptyStateVariant.full }>
-        <EmptyStateIcon icon={ CubesIcon } />
+    <EmptyState variant={EmptyStateVariant.full}>
+        <EmptyStateIcon icon={CubesIcon} />
         <Title headingLevel="h5" size="lg">
-            No Data
+      No Data
         </Title>
     </EmptyState>
 );

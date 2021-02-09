@@ -1,5 +1,4 @@
-
-import { init, getStore, register }  from './index.js';
+import { init, getStore, register } from './index.js';
 
 describe('store', () => {
     it('store loads', () => {
