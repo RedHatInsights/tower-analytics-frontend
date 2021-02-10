@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
     ToolbarFilter,
     Select,
-    SelectOption
+    SelectOption as PFSelectOption
 } from '@patternfly/react-core';
 
 import {
@@ -11,11 +11,19 @@ import {
     handleSingleChips
 } from './helpers';
 import { optionsForCategories } from './constants';
+import styled from 'styled-components';
+
+const SelectOption = styled(PFSelectOption)`
+    display: block;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+`;
 
 const renderValues = values =>
     values && values.map(({ key, value, description }) => (
         <SelectOption key={ key } value={ key } description={ description }>
-            { value }
+            <span style={{ marginLeft: 5 }}>{ value } </span>
         </SelectOption>
     ));
 
@@ -63,19 +71,6 @@ const ToolbarFilterItem = ({
         }
     };
 
-    const onFilter = event => {
-        const textInput = event.target.value;
-        if (textInput === '') {
-            return renderValues(values);
-        } else {
-            return renderValues(
-                values.filter(({ value }) =>
-                    value.toLowerCase().includes(textInput.toLowerCase())
-                )
-            );
-        }
-    };
-
     return (
         <ToolbarFilter
             data-cy={categoryKey}
@@ -86,9 +81,6 @@ const ToolbarFilterItem = ({
             deleteChip={hasChips ? onDelete : null}
         >
             <Select
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
                 variant={options.isSingle ? 'single' : 'checkbox'}
                 aria-label={categoryKey}
                 onToggle={() => setExpanded(!expanded)}
@@ -96,23 +88,7 @@ const ToolbarFilterItem = ({
                 selections={filter}
                 isOpen={expanded}
                 placeholderText={options.placeholder}
-=======
->>>>>>> Put maxHeight on select menu to prevent dropdown from going off-page whenlong list of options loads.
-                variant={ options.isSingle ? 'single' : 'checkbox' }
-                aria-label={ categoryKey }
-                onToggle={ () => setExpanded(!expanded) }
-                onSelect={ onSelect }
-                selections={ filter }
-                isOpen={ expanded }
-<<<<<<< HEAD
-                onFilter={ onFilter }
-                hasInlineFilter
-                placeholderText={ options.placeholder }
-=======
-                placeholderText={ options.placeholder }
                 maxHeight={ '1000%' }
->>>>>>> Put maxHeight on select menu to prevent dropdown from going off-page whenlong list of options loads.
->>>>>>> Put maxHeight on select menu to prevent dropdown from going off-page whenlong list of options loads.
             >
                 { renderValues(values) }
             </Select>
