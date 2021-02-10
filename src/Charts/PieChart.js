@@ -1,5 +1,5 @@
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import React, { Component } from 'react';
 import * as d3 from 'd3';
 import initializeChart from './BaseChart';
 import { getTotal } from '../Utilities/helpers';
@@ -163,74 +163,60 @@ class Tooltip {
   };
 }
 
-class PieChart extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            colors: [],
-            timeout: null
+const PieChart = ({
+    data,
+    id,
+    colorFunc: color,
+    margin,
+    getWidth,
+    getHeight
+}) => {
+    const colors = data.map(org => {
+        const name = org.id === -1 ? 'Others' : org.name;
+        return {
+            id: org.id,
+            name,
+            value: color(name),
+            count: Math.round(org.count)
         };
-        this.draw = this.draw.bind(this);
-        this.init = this.init.bind(this);
-        this.resize = this.resize.bind(this);
-    }
-    // Methods
-    resize() {
-        const { timeout } = this.state;
-        clearTimeout(timeout);
-        this.setState({
-            timeout: setTimeout(() => {
-                this.init();
-            }, 500)
-        });
-    }
-    sortDescending(data) {
-    // descending
-        data.sort((a, b) =>
-            d3.descending(parseFloat(a.count), parseFloat(b.count))
-        );
-    }
-    init() {
-        const { data } = this.props;
-        // create our colors array to send to the Legend component
-        const colors = data
-        .map(org => {
-            const name = org.id === -1 ? 'Others' : org.name;
-            return {
-                name,
-                value: this.props.colorFunc(name),
-                count: Math.round(org.count)
-            };
-        })
-        .sort((a, b) => (a.count > b.count ? 1 : b.count > a.count ? -1 : 0));
-        this.setState({ colors });
-        this.draw();
-    }
-    draw() {
-        const color = this.props.colorFunc;
+    }).sort((a, b) => (a.count > b.count) ? 1 : ((b.count > a.count) ? -1 : 0));
 
-        d3.selectAll('#' + this.props.id + ' > *').remove();
-        const width = this.props.getWidth();
-        const height = this.props.getHeight();
+    const [ selectedIds, setSelectedIds ] = useState(
+        data.map(({ id }) => id).slice(0, 8));
+
+    let timeout = null;
+
+    const handleToggle = id => {
+        if (selectedIds.includes(id)) {
+            setSelectedIds(selectedIds.filter(el => el !== id));
+        } else {
+            setSelectedIds([ ...selectedIds, id ]);
+        }
+    };
+
+    const draw = () => {
+        d3.selectAll('#' + id + ' > *').remove();
+        const width = getWidth();
+        const height = getHeight();
         const svg = d3
-        .select('#' + this.props.id)
+        .select('#' + id)
         .append('svg')
-        .attr('width', width + this.props.margin.left + this.props.margin.right)
-        .attr('height', height + this.props.margin.bottom)
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.bottom)
         .append('g');
 
         svg.append('g').attr('class', 'slices');
         svg.append('g').attr('class', 'labels');
         svg.append('g').attr('class', 'lines');
         const radius = Math.min(width, height) / 2;
-        const { data } = this.props;
-        const total = getTotal(data);
-        data.forEach(function(d) {
+        const filteredData = data.filter(({ id }) => selectedIds.includes(id));
+        const total = getTotal(filteredData);
+        filteredData.forEach(function(d) {
             d.count = +d.count;
             d.percent = +Math.round((d.count / total) * 100);
         });
         const donutTooltip = new Tooltip({
-            svg: '#' + this.props.id
+            svg: '#' + id
         });
         const pie = d3
         .pie()
@@ -244,15 +230,15 @@ class PieChart extends Component {
         svg.attr(
             'transform',
             'translate(' +
-        (width + this.props.margin.left + this.props.margin.right) / 2 +
+        (width + margin.left + margin.right) / 2 +
         ',' +
-        (height + this.props.margin.top + this.props.margin.bottom) / 2 +
+        (height + margin.top + margin.bottom) / 2 +
         ')'
         );
 
         svg
         .selectAll('path')
-        .data(pie(data))
+        .data(pie(filteredData))
         .enter()
         .append('path')
         .attr('d', arc)
@@ -272,47 +258,47 @@ class PieChart extends Component {
 
         svg.append('g').classed('labels', true);
         svg.append('g').classed('lines', true);
-    }
+    };
 
-    componentDidMount() {
-        this.init();
-        // Call the resize function whenever a resize event occurs
-        window.addEventListener('resize', this.resize);
-    }
+    const init = () => {
+        draw();
+    };
 
-    componentWillUnmount() {
-        const { timeout } = this.state;
+    const resize = () => {
         clearTimeout(timeout);
-        window.removeEventListener('resize', this.resize);
-    }
-    componentDidUpdate(prevProps) {
-        if (prevProps.data !== this.props.data) {
-            this.init();
-        }
-    }
+        timeout = setTimeout(() => { draw(); }, 500);
+    };
 
-    render() {
-        const { colors } = this.state;
-        return (
-            <Wrapper>
-                <div id={this.props.id} />
-                {colors.length > 0 && (
-                    <Legend
-                        id="d3-grouped-bar-legend"
-                        data={colors}
-                        selected={null}
-                        onToggle={null}
-                        height="300px"
-                    />
-                )}
-            </Wrapper>
-        );
-    }
-}
+    useEffect(() => {
+        init();
+        window.addEventListener('resize', resize);
+
+        return () => {
+            clearTimeout(timeout);
+            window.removeEventListener('resize', this.resize);
+        };
+    }, []);
+
+    useEffect(() => { draw(); }, [ data, selectedIds ]);
+
+    return (
+        <Wrapper>
+            <div id={ id } />
+            { colors.length > 0 && (
+                <Legend
+                    id={ `${id}-legend` }
+                    data={ colors }
+                    selected={ selectedIds }
+                    onToggle={ handleToggle }
+                    height="300px"
+                />
+            ) }
+        </Wrapper>
+    );
+};
 
 PieChart.propTypes = {
     id: PropTypes.string,
-    isAccessible: PropTypes.bool,
     data: PropTypes.array,
     margin: PropTypes.object,
     getHeight: PropTypes.func,
