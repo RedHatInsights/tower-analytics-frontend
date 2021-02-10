@@ -214,7 +214,7 @@ const GroupedBarChart = (props) => {
             pathname: jobExplorer,
             search
         });
-    }
+    };
 
     const handleToggle = id => {
         if (selectedIds.includes(id)) {
@@ -371,7 +371,7 @@ const GroupedBarChart = (props) => {
         })
         .on('click', redirectToJobExplorer);
         bars = bars.merge(subEnter);
-    }
+    };
 
     const init = () => {
         draw();
