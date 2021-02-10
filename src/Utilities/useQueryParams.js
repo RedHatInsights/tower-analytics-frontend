@@ -25,6 +25,14 @@ export const useQueryParams = initial => {
                 }
 
                 return { ...state, limit: parseInt(value.limit) };
+            case 'SET_SEVERITY':
+                if (value.severity === '') {
+                    const { severity: ignored, ...rest } = state;
+                    return rest;
+                }
+
+                return { ...state, ...value };
+
             /* v1 api reducers */
             case 'SET_OFFSET':
             case 'SET_ATTRIBUTES':
@@ -46,13 +54,6 @@ export const useQueryParams = initial => {
                 return newState;
             }
 
-            case 'SET_SEVERITY':
-                if (value.severity === '') {
-                    const { severity: ignored, ...rest } = state;
-                    return rest;
-                }
-
-                return { ...state, ...value };
             case 'SET_START_DATE':
             case 'SET_END_DATE': {
                 let newValues = {};
@@ -92,7 +93,6 @@ export const useQueryParams = initial => {
         dispatch,
         setLimit: limit => dispatch({ type: 'SET_LIMIT', value: { limit }}),
         setOffset: offset => dispatch({ type: 'SET_OFFSET', value: { offset }}),
-        setSeverity: severity => dispatch({ type: 'SET_SEVERITY', value: { severity }}),
         setFromToolbar: (varName, value = null) => {
             if (!varName) {
                 dispatch({ type: 'RESET_FILTER' });
@@ -101,6 +101,7 @@ export const useQueryParams = initial => {
             }
         },
         /* v0 api usage after this line */
+        setSeverity: severity => dispatch({ type: 'SET_SEVERITY', value: { severity }}),
         setEndDate: () => {
             const endDate = moment().format('YYYY-MM-DD');
             dispatch({ type: 'SET_ENDDATE', value: endDate });

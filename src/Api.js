@@ -1,13 +1,9 @@
 import { stringify } from 'query-string';
 
-const apiVersion = 'v0';
-const barChartEndpoint = `/api/tower-analytics/${apiVersion}/chart30/`;
-const clustersEndpoint = `/api/tower-analytics/${apiVersion}/clusters/`;
-const modulesEndpoint = `/api/tower-analytics/${apiVersion}/modules/`;
-const notificationsEndPoint = `/api/tower-analytics/${apiVersion}/notifications/`;
-const preflightEndpoint = `/api/tower-analytics/${apiVersion}/authorized/`;
-const templateJobsEndpoint = `/api/tower-analytics/${apiVersion}/template_jobs/`;
-const templatesEndPoint = `/api/tower-analytics/${apiVersion}/templates/`;
+const clustersEndpoint = `/api/tower-analytics/v0/clusters/`;
+const notificationsEndPoint = `/api/tower-analytics/v0/notifications/`;
+const preflightEndpoint = `/api/tower-analytics/v0/authorized/`;
+
 const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
 const jobExplorerOptionsEndpoint = '/api/tower-analytics/v1/job_explorer_options/';
 const ROIEndpoint = '/api/tower-analytics/v1/roi_templates/';
@@ -41,30 +37,8 @@ function handleResponse(response) {
     });
 }
 
-export const readTemplateJobs = (id, { params = {}}) => {
-    if (!id) {
-        return;
-    }
-
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(templateJobsEndpoint + id + '/', formattedUrl);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url).then(handleResponse);
-};
-
 export const preflightRequest = () => {
     return fetch(preflightEndpoint).then(handleResponse);
-};
-
-export const readClusters = () => {
-    return fetch(clustersEndpoint).then(handleResponse);
-};
-
-export const readChart30 = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(barChartEndpoint, formattedUrl);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url).then(handleResponse);
 };
 
 /* Section: Orgs page */
@@ -77,7 +51,7 @@ export const readOrgOptions = ({ params = {}}) => {
 };
 
 export const readJobsByDateAndOrg = ({ params = {}}) => {
-    const rParams = {
+    const combined = {
         ...params,
         attributes: [ 'total_count' ],
         group_by_time: true,
@@ -87,18 +61,18 @@ export const readJobsByDateAndOrg = ({ params = {}}) => {
 
     let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
     url.search = stringify({
-        limit: rParams.limit,
-        sort_by: rParams.sort_by
+        limit: combined.limit,
+        sort_by: combined.sort_by
     });
 
     return fetch(url, {
         method: 'POST',
-        body: JSON.stringify(rParams)
+        body: JSON.stringify(combined)
     }).then(handleResponse);
 };
 
 export const readJobRunsByOrg = ({ params = {}}) => {
-    const rParams = {
+    const combined = {
         ...params,
         group_by: 'org',
         include_others: true,
@@ -108,18 +82,18 @@ export const readJobRunsByOrg = ({ params = {}}) => {
 
     let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
     url.search = stringify({
-        limit: rParams.limit,
-        sort_by: rParams.sort_by
+        limit: combined.limit,
+        sort_by: combined.sort_by
     });
 
     return fetch(url, {
         method: 'POST',
-        body: JSON.stringify(rParams)
+        body: JSON.stringify(combined)
     }).then(handleResponse);
 };
 
 export const readJobEventsByOrg = ({ params = {}}) => {
-    const rParams = {
+    const combined = {
         ...params,
         group_by: 'org',
         include_others: true,
@@ -130,29 +104,20 @@ export const readJobEventsByOrg = ({ params = {}}) => {
 
     let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
     url.search = stringify({
-        limit: rParams.limit,
-        sort_by: rParams.sort_by
+        limit: combined.limit,
+        sort_by: combined.sort_by
     });
 
     return fetch(url, {
         method: 'POST',
-        body: JSON.stringify(rParams)
+        body: JSON.stringify(combined)
     }).then(handleResponse);
 };
 /* End of section: Orgs page */
 
-export const readModules = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(modulesEndpoint, formattedUrl);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url).then(handleResponse);
-};
-
-export const readTemplates = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(templatesEndPoint, formattedUrl);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url).then(handleResponse);
+// used in Notifications.js
+export const readClusters = () => {
+    return fetch(clustersEndpoint).then(handleResponse);
 };
 
 export const readNotifications = ({ params = {}}) => {
