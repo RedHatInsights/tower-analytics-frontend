@@ -115,3 +115,6 @@ rules:
   yoda:
     - error
     - never
+  no-redeclare:
+    - error
+    - builtinGlobals: false
