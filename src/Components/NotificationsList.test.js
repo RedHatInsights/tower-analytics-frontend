@@ -49,20 +49,20 @@ describe('Components/NotificationsList', () => {
     it('Should render successfully', () => {
         mount(
             <NotificationsList
-                notifications={ notifications }
-                options={ options }
-                filterBy={ filterBy }
-                onNotificationChange={ onNotificationChange }
+                notifications={notifications}
+                options={options}
+                filterBy={filterBy}
+                onNotificationChange={onNotificationChange}
             />
         );
     });
     it('Should render all notifications by default', () => {
         const wrapper = mount(
             <NotificationsList
-                notifications={ notifications }
-                options={ options }
-                filterBy={ filterBy }
-                onNotificationChange={ onNotificationChange }
+                notifications={notifications}
+                options={options}
+                filterBy={filterBy}
+                onNotificationChange={onNotificationChange}
             />
         );
         const notificationTemplate = wrapper.find('AllNotificationTemplate');
@@ -73,10 +73,10 @@ describe('Components/NotificationsList', () => {
         const filterBy = 'error';
         const wrapper = mount(
             <NotificationsList
-                notifications={ notifications }
-                options={ options }
-                filterBy={ filterBy }
-                onNotificationChange={ onNotificationChange }
+                notifications={notifications}
+                options={options}
+                filterBy={filterBy}
+                onNotificationChange={onNotificationChange}
             />
         );
         const notificationTemplate = wrapper.find('ErrorNotificationTemplate');
@@ -90,10 +90,10 @@ describe('Components/NotificationsList', () => {
         const filterBy = 'warning';
         const wrapper = mount(
             <NotificationsList
-                notifications={ notifications }
-                options={ options }
-                filterBy={ filterBy }
-                onNotificationChange={ onNotificationChange }
+                notifications={notifications}
+                options={options}
+                filterBy={filterBy}
+                onNotificationChange={onNotificationChange}
             />
         );
         const notificationTemplate = wrapper.find('WarningNotificationTemplate');
@@ -107,10 +107,10 @@ describe('Components/NotificationsList', () => {
         const filterBy = 'notice';
         const wrapper = mount(
             <NotificationsList
-                notifications={ notifications }
-                options={ options }
-                filterBy={ filterBy }
-                onNotificationChange={ onNotificationChange }
+                notifications={notifications}
+                options={options}
+                filterBy={filterBy}
+                onNotificationChange={onNotificationChange}
             />
         );
         const notificationTemplate = wrapper.find('NoticeNotificationTemplate');

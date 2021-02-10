@@ -33,7 +33,7 @@ export const useQueryParams = initial => {
 
                 return { ...state, ...value };
 
-            /* v1 api reducers */
+                /* v1 api reducers */
             case 'SET_OFFSET':
             case 'SET_ATTRIBUTES':
             case 'SET_JOB_TYPE':
@@ -101,7 +101,8 @@ export const useQueryParams = initial => {
             }
         },
         /* v0 api usage after this line */
-        setSeverity: severity => dispatch({ type: 'SET_SEVERITY', value: { severity }}),
+        setSeverity: severity =>
+            dispatch({ type: 'SET_SEVERITY', value: { severity }}),
         setEndDate: () => {
             const endDate = moment().format('YYYY-MM-DD');
             dispatch({ type: 'SET_ENDDATE', value: endDate });

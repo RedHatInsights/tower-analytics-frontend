@@ -1,5 +1,10 @@
 import { act } from 'react-dom/test-utils';
-import { history, mountPage, preflight200, preflight400 } from '../../Utilities/tests/helpers';
+import {
+    history,
+    mountPage,
+    preflight200,
+    preflight400
+} from '../../Utilities/tests/helpers';
 import fetchMock from 'fetch-mock-jest';
 import AutomationCalculator from './AutomationCalculator';
 import TotalSavings from './TotalSavings';
@@ -38,7 +43,8 @@ const dummyRoiData = {
     ]
 };
 const defaultTotalSaving = '1,460.00';
-const jobExplorerOptionsUrl = 'path:/api/tower-analytics/v1/roi_templates_options/';
+const jobExplorerOptionsUrl =
+  'path:/api/tower-analytics/v1/roi_templates_options/';
 const jobExplorerOptions = {
     quick_date_range: [
         { key: 'last_30_days', value: 'Last 30 days' },
@@ -92,9 +98,7 @@ describe('Containers/AutomationCalculator', () => {
         });
         wrapper.update();
 
-        expect(wrapper.text()).toEqual(
-            expect.stringContaining('Not authorized')
-        );
+        expect(wrapper.text()).toEqual(expect.stringContaining('Not authorized'));
     });
 
     it('should render api error', async () => {
@@ -108,9 +112,7 @@ describe('Containers/AutomationCalculator', () => {
         });
         wrapper.update();
 
-        expect(wrapper.text()).toEqual(
-            expect.stringContaining('General Error')
-        );
+        expect(wrapper.text()).toEqual(expect.stringContaining('General Error'));
         // No data displayed
         expect(wrapper.find('a')).toHaveLength(0);
     });
@@ -123,9 +125,7 @@ describe('Containers/AutomationCalculator', () => {
         });
         wrapper.update();
 
-        expect(wrapper.text()).toEqual(
-            expect.stringContaining('No Data')
-        );
+        expect(wrapper.text()).toEqual(expect.stringContaining('No Data'));
         // No data displayed
         expect(wrapper.find('a')).toHaveLength(0);
     });
@@ -136,7 +136,10 @@ describe('Containers/AutomationCalculator', () => {
         });
         wrapper.update();
 
-        wrapper.find('a').at(0).simulate('click');
+        wrapper
+        .find('a')
+        .at(0)
+        .simulate('click');
         expect(history.push).toHaveBeenCalledWith({
             pathname: '/job-explorer',
             search: expect.stringContaining('template_id[]=1')
@@ -163,7 +166,7 @@ describe('Containers/AutomationCalculator', () => {
         const c = inputManCost(wrapper);
         act(() => {
             c.instance().value = '100'; // more expensive
-            c.simulate('change',  { target: { value: '' }});
+            c.simulate('change', { target: { value: '' }});
         });
         wrapper.update();
 
@@ -181,7 +184,7 @@ describe('Containers/AutomationCalculator', () => {
         const c = inputAutCost(wrapper);
         act(() => {
             c.instance().value = '10'; // cheaper
-            c.simulate('change',  { target: { value: '' }});
+            c.simulate('change', { target: { value: '' }});
         });
         wrapper.update();
 
@@ -199,7 +202,7 @@ describe('Containers/AutomationCalculator', () => {
         const inputs = inputsRuntime(wrapper);
         act(() => {
             inputs.at(0).instance().value = '30';
-            inputs.at(0).simulate('change',  { target: { value: '' }});
+            inputs.at(0).simulate('change', { target: { value: '' }});
         });
         wrapper.update();
 

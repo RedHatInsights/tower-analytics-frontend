@@ -1,4 +1,3 @@
-
 import { shallow } from 'enzyme';
 import BarChart from './BarChart.js';
 

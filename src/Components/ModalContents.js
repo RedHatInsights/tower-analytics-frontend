@@ -7,9 +7,7 @@ import { Paths } from '../paths';
 import { stringify } from 'query-string';
 import useApi from '../Utilities/useApi';
 import { formatDateTime, formatSeconds } from '../Utilities/helpers';
-import {
-    readJobExplorer
-} from '../Api';
+import { readJobExplorer } from '../Api';
 
 import {
     Button,
@@ -26,7 +24,7 @@ const success = (
     <CircleIcon
         size="sm"
         key="5"
-        style={ { color: 'rgb(110, 198, 100)', marginRight: '5px' } }
+        style={{ color: 'rgb(110, 198, 100)', marginRight: '5px' }}
     />
 );
 const fail = (
@@ -34,7 +32,7 @@ const fail = (
         <CircleIcon
             size="sm"
             key="5"
-            style={ { color: 'rgb(163, 0, 0)', marginRight: '5px' } }
+            style={{ color: 'rgb(163, 0, 0)', marginRight: '5px' }}
         />
         <span id="fail-icon">!</span>
     </>
@@ -58,8 +56,8 @@ const DataCellEnd = styled(DataListCell)`
   align-items: center;
 `;
 const PFDataListItemNoBorder = styled(PFDataListItem)`
-    border-bottom: none;
-    margin-bottom: -20px;
+  border-bottom: none;
+  margin-bottom: -20px;
 `;
 const DataListItemCompact = styled(DataListItem)`
   padding: 0;
@@ -73,21 +71,21 @@ const DataListItemCompact = styled(DataListItem)`
 `;
 
 const DataListCellCompact = styled(DataListCell)`
-    padding: 7px;
+  padding: 7px;
 `;
 
 const DataListFocus = styled.div`
-    display: grid;
-    grid-template-columns: repeat(3, auto);
-    grid-gap: 10px;
-    padding: var(--pf-global--spacer--lg);
-    background: #ebebeb;
-    border: 1px solid #ccc;
-    border-top: none;
-    margin-bottom: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  grid-gap: 10px;
+  padding: var(--pf-global--spacer--lg);
+  background: #ebebeb;
+  border: 1px solid #ccc;
+  border-top: none;
+  margin-bottom: 20px;
 `;
 const DataCellEndCompact = styled(DataCellEnd)`
-    padding: 7px !important;
+  padding: 7px !important;
 `;
 
 const formatTopFailedTask = data => {
@@ -96,7 +94,9 @@ const formatTopFailedTask = data => {
     }
 
     if (data && data[0]) {
-        const percentage = Math.ceil(data[0].failed_count / data[0].total_failed_count * 100);
+        const percentage = Math.ceil(
+            (data[0].failed_count / data[0].total_failed_count) * 100
+        );
         return `${data[0].task_name} ${percentage}%`;
     }
 
@@ -109,24 +109,44 @@ const formatTopFailedStep = data => {
     }
 
     if (data && data[0]) {
-        const percentage = Math.ceil(data[0].failed_count / data[0].total_failed_count * 100);
+        const percentage = Math.ceil(
+            (data[0].failed_count / data[0].total_failed_count) * 100
+        );
         return `${data[0].template_name} ${percentage}%`;
     }
 
     return `Unavailable`;
 };
 
-const formatSuccessRate = (successCount, totalCount) => Math.ceil(successCount / totalCount * 100) + '%';
-const formatAvgRun = (elapsed, totalCount) => new Date(Math.ceil(elapsed / totalCount) * 1000).toISOString().substr(11, 8);
-const formatTotalTime = elapsed => new Date(elapsed * 1000).toISOString().substr(11, 8);
+const formatSuccessRate = (successCount, totalCount) =>
+    Math.ceil((successCount / totalCount) * 100) + '%';
+const formatAvgRun = (elapsed, totalCount) =>
+    new Date(Math.ceil(elapsed / totalCount) * 1000).toISOString().substr(11, 8);
+const formatTotalTime = elapsed =>
+    new Date(elapsed * 1000).toISOString().substr(11, 8);
 
-const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType, handleCloseBtn }) => {
-    const [{
-        data: { items: relatedJobs = []}
-    }, setRelatedJobs ] = useApi({ items: []});
-    const [{
-        data: { items: [ stats = 0 ] }
-    }, setStats ] = useApi({ items: []});
+const ModalContents = ({
+    selectedId,
+    isOpen,
+    handleModal,
+    qp,
+    jobType,
+    handleCloseBtn
+}) => {
+    const [
+        {
+            data: { items: relatedJobs = []}
+        },
+        setRelatedJobs
+    ] = useApi({ items: []});
+    const [
+        {
+            data: {
+                items: [ stats = 0 ]
+            }
+        },
+        setStats
+    ] = useApi({ items: []});
 
     let history = useHistory();
 
@@ -134,7 +154,16 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType, handleClo
         const { jobExplorer } = Paths;
         const initialQueryParams = {
             template_id: [ selectedId ],
-            status: [ 'successful', 'failed', 'new', 'pending', 'waiting', 'error', 'canceled', 'running' ],
+            status: [
+                'successful',
+                'failed',
+                'new',
+                'pending',
+                'waiting',
+                'error',
+                'canceled',
+                'running'
+            ],
             job_type: [ 'job' ],
             quick_date_range: 'last_30_days'
         };
@@ -163,7 +192,9 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType, handleClo
         group_by_time: false,
         limit: 5,
         sort_by: 'created:asc',
-        quick_date_range: qp.quick_date_range ? qp.quick_date_range : 'last_30_days',
+        quick_date_range: qp.quick_date_range
+            ? qp.quick_date_range
+            : 'last_30_days',
         job_type: [ jobType ]
     };
 
@@ -179,7 +210,9 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType, handleClo
             jobType === 'job' ? 'most_failed_tasks' : 'most_failed_steps'
         ],
         status: qp.status,
-        quick_date_range: qp.quick_date_range ? qp.quick_date_range : 'last_30_days',
+        quick_date_range: qp.quick_date_range
+            ? qp.quick_date_range
+            : 'last_30_days',
         job_type: [ jobType ]
     };
 
@@ -193,76 +226,79 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType, handleClo
     return (
         <Modal
             aria-label="modal"
-            width={ '80%' }
-            title={ stats.name ? stats.name : 'no-template-name' }
-            isOpen={ isOpen }
-            onClose={ () => {
+            width={'80%'}
+            title={stats.name ? stats.name : 'no-template-name'}
+            isOpen={isOpen}
+            onClose={() => {
                 handleModal(false);
                 handleCloseBtn(null);
-            } }
-            actions={ [
+            }}
+            actions={[
                 <Button
                     key="cancel"
                     variant="secondary"
-                    onClick={ () => {
+                    onClick={() => {
                         handleModal(false);
                         handleCloseBtn(null);
-                    } }
+                    }}
                 >
-                    Close
+          Close
                 </Button>
-            ] }
+            ]}
         >
             <DataList aria-label="Selected Template Details">
-                <PFDataListItemNoBorder
-                    aria-labelledby="Selected Template Statistics"
-                >
+                <PFDataListItemNoBorder aria-labelledby="Selected Template Statistics">
                     <DataListFocus>
                         <div aria-labelledby="job runs">
-                            <b style={ { marginRight: '10px' } }>Number of runs</b>
-                            { stats.total_count ?
-                                stats.total_count : 'Unavailable' }
+                            <b style={{ marginRight: '10px' }}>Number of runs</b>
+                            {stats.total_count ? stats.total_count : 'Unavailable'}
                         </div>
                         <div aria-labelledby="total time">
-                            <b style={ { marginRight: '10px' } }>Total time</b>
-                            { stats.elapsed ?
-                                formatTotalTime(stats.elapsed) : 'Unavailable' }
+                            <b style={{ marginRight: '10px' }}>Total time</b>
+                            {stats.elapsed ? formatTotalTime(stats.elapsed) : 'Unavailable'}
                         </div>
                         <div aria-labelledby="Avg Time">
-                            <b style={ { marginRight: '10px' } }>Avg time</b>
-                            { stats.elapsed ?
-                                formatAvgRun(stats.elapsed, stats.total_count) : 'Unavailable' }
+                            <b style={{ marginRight: '10px' }}>Avg time</b>
+                            {stats.elapsed
+                                ? formatAvgRun(stats.elapsed, stats.total_count)
+                                : 'Unavailable'}
                         </div>
                         <div aria-labelledby="success rate">
-                            <b style={ { marginRight: '10px' } }>Success rate</b>
-                            { !isNaN(stats.successful_count) ?
-                                formatSuccessRate(stats.successful_count, stats.total_count) : 'Unavailable' }
+                            <b style={{ marginRight: '10px' }}>Success rate</b>
+                            {!isNaN(stats.successful_count)
+                                ? formatSuccessRate(stats.successful_count, stats.total_count)
+                                : 'Unavailable'}
                         </div>
-                        { stats.most_failed_tasks && (
+                        {stats.most_failed_tasks && (
                             <div aria-labelledby="most failed task">
-                                <b style={ { marginRight: '10px' } }>Most failed task</b>
-                                { stats.most_failed_tasks ?
-                                    formatTopFailedTask(stats.most_failed_tasks) : 'Unavailable' }
+                                <b style={{ marginRight: '10px' }}>Most failed task</b>
+                                {stats.most_failed_tasks
+                                    ? formatTopFailedTask(stats.most_failed_tasks)
+                                    : 'Unavailable'}
                             </div>
-
-                        ) }
-                        { stats.most_failed_steps && (
-
+                        )}
+                        {stats.most_failed_steps && (
                             <div aria-labelledby="most failed step">
-                                <b style={ { marginRight: '10px' } }>Most failed step</b>
-                                { stats.most_failed_steps ?
-                                    formatTopFailedStep(stats.most_failed_steps) : 'Unavailable' }
+                                <b style={{ marginRight: '10px' }}>Most failed step</b>
+                                {stats.most_failed_steps
+                                    ? formatTopFailedStep(stats.most_failed_steps)
+                                    : 'Unavailable'}
                             </div>
-                        ) }
+                        )}
                     </DataListFocus>
                 </PFDataListItemNoBorder>
                 <DataListItemCompact>
                     <DataListCellCompact key="last5jobs">
                         <Label variant="outline">Last 5 jobs</Label>
-                    </DataListCellCompact>,
+                    </DataListCellCompact>
+          ,
                     <DataCellEndCompact>
-                        <Button component="a" onClick={ redirectToJobExplorer } variant="link">
-                                    View all jobs
+                        <Button
+                            component="a"
+                            onClick={redirectToJobExplorer}
+                            variant="link"
+                        >
+              View all jobs
                         </Button>
                     </DataCellEndCompact>
                 </DataListItemCompact>
@@ -272,29 +308,29 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType, handleClo
                     <PFDataListCell key="start time heading">Start Time</PFDataListCell>
                     <PFDataListCell key="total time heading">Total Time</PFDataListCell>
                 </DataListItemCompact>
-                { relatedJobs.length <= 0 && <LoadingState /> }
-                { relatedJobs.length > 0 &&
-                            relatedJobs.map((job, index) => (
-                                <DataListItem
-                                    style={ { padding: '10px 0' } }
-                                    key={ `job-details-${index}` }
-                                    aria-labelledby="job details"
-                                >
-                                    <PFDataListCell key="job name">
-                                        { job.status === 'successful' ? success : fail }{ ' ' }
-                                        { job.id.id } - { job.id.template_name }
-                                    </PFDataListCell>
-                                    <PFDataListCell key="job cluster">
-                                        { job.cluster_name }
-                                    </PFDataListCell>
-                                    <PFDataListCell key="start time">
-                                        { formatDateTime(job.started) }
-                                    </PFDataListCell>
-                                    <PFDataListCell key="total time">
-                                        { formatSeconds(job.elapsed) }
-                                    </PFDataListCell>
-                                </DataListItem>
-                            )) }
+                {relatedJobs.length <= 0 && <LoadingState />}
+                {relatedJobs.length > 0 &&
+          relatedJobs.map((job, index) => (
+              <DataListItem
+                  style={{ padding: '10px 0' }}
+                  key={`job-details-${index}`}
+                  aria-labelledby="job details"
+              >
+                  <PFDataListCell key="job name">
+                      {job.status === 'successful' ? success : fail} {job.id.id} -{' '}
+                      {job.id.template_name}
+                  </PFDataListCell>
+                  <PFDataListCell key="job cluster">
+                      {job.cluster_name}
+                  </PFDataListCell>
+                  <PFDataListCell key="start time">
+                      {formatDateTime(job.started)}
+                  </PFDataListCell>
+                  <PFDataListCell key="total time">
+                      {formatSeconds(job.elapsed)}
+                  </PFDataListCell>
+              </DataListItem>
+          ))}
             </DataList>
         </Modal>
     );

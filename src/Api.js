@@ -5,12 +5,14 @@ const notificationsEndPoint = `/api/tower-analytics/v0/notifications/`;
 const preflightEndpoint = `/api/tower-analytics/v0/authorized/`;
 
 const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
-const jobExplorerOptionsEndpoint = '/api/tower-analytics/v1/job_explorer_options/';
+const jobExplorerOptionsEndpoint =
+  '/api/tower-analytics/v1/job_explorer_options/';
 const ROIEndpoint = '/api/tower-analytics/v1/roi_templates/';
-const ROITemplatesOptionsEndpoint = '/api/tower-analytics/v1/roi_templates_options/';
+const ROITemplatesOptionsEndpoint =
+  '/api/tower-analytics/v1/roi_templates_options/';
 const orgOptionsEndpoint = `/api/tower-analytics/v1/dashboard_organization_statistics_options/`;
 const clustersOptionsEndpoint =
-'/api/tower-analytics/v1/dashboard_clusters_options/';
+  '/api/tower-analytics/v1/dashboard_clusters_options/';
 const eventExplorerEndpoint = '/api/tower-analytics/v1/event_explorer/';
 
 function getAbsoluteUrl() {

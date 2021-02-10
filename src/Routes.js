@@ -20,35 +20,35 @@ import { Paths } from './paths';
  *
  */
 const Clusters = asyncComponent(() =>
-    import(
-        /* webpackChunkName: "automation_analytics" */
-        './Containers/Clusters/Clusters'
-    ),
+  import(
+      /* webpackChunkName: "automation_analytics" */
+      './Containers/Clusters/Clusters'
+  )
 );
 const OrganizationStatistics = asyncComponent(() =>
-    import(
-        /* webpackChunkName: "automation_analytics" */
-        './Containers/OrganizationStatistics/OrganizationStatistics'
-    ),
+  import(
+      /* webpackChunkName: "automation_analytics" */
+      './Containers/OrganizationStatistics/OrganizationStatistics'
+  )
 );
 const Notifications = asyncComponent(() =>
-    import(
-        /* webpackChunkName: "automation_analytics" */
-        './Containers/Notifications/Notifications'
-    ),
+  import(
+      /* webpackChunkName: "automation_analytics" */
+      './Containers/Notifications/Notifications'
+  )
 );
 const AutomationCalculator = asyncComponent(() =>
-    import(
-        /* webpackChunkName: "automation_analytics" */
-        './Containers/AutomationCalculator/AutomationCalculator'
-    ),
+  import(
+      /* webpackChunkName: "automation_analytics" */
+      './Containers/AutomationCalculator/AutomationCalculator'
+  )
 );
 
 const JobExplorer = asyncComponent(() =>
-    import(
-        /* webpackChunkName: "automation_analytics" */
-        './Containers/JobExplorer/JobExplorer'
-    ),
+  import(
+      /* webpackChunkName: "automation_analytics" */
+      './Containers/JobExplorer/JobExplorer'
+  )
 );
 
 const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {
@@ -57,7 +57,7 @@ const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {
     root.classList.add(`page__${rootClass}`, 'pf-c-page__main');
     root.setAttribute('role', 'main');
 
-    return (<Route { ...rest } component={ Component } />);
+    return <Route {...rest} component={Component} />;
 };
 
 InsightsRoute.propTypes = {
@@ -73,17 +73,41 @@ InsightsRoute.propTypes = {
  *      path - https://prod.foo.redhat.com:1337/insights/advisor/rules
  *      component - component to be rendered when a route has been chosen.
  */
-export const Routes = (props) => {
+export const Routes = props => {
     const path = props.childProps.location.pathname;
     return (
         <Switch>
-            <InsightsRoute path={ Paths.clusters } component={ Clusters } rootClass="clusters"/>
-            <InsightsRoute path={ Paths.organizationStatistics } component={ OrganizationStatistics } rootClass="organizationStatistics"/>
-            <InsightsRoute path={ Paths.notifications } component={ Notifications } rootClass="notifications"/>
-            <InsightsRoute path={ Paths.automationCalculator } component={ AutomationCalculator } rootClass="automationCalculator"/>
-            <InsightsRoute path={ Paths.jobExplorer } component={ JobExplorer } rootClass="jobExplorer"/>
-            { /* Finally, catch all unmatched routes and redirect to Clusters page */ }
-            <Route render={ () => some(Paths, p => p === path) ? null : (<Redirect to={ Paths.clusters } />) } />
+            <InsightsRoute
+                path={Paths.clusters}
+                component={Clusters}
+                rootClass="clusters"
+            />
+            <InsightsRoute
+                path={Paths.organizationStatistics}
+                component={OrganizationStatistics}
+                rootClass="organizationStatistics"
+            />
+            <InsightsRoute
+                path={Paths.notifications}
+                component={Notifications}
+                rootClass="notifications"
+            />
+            <InsightsRoute
+                path={Paths.automationCalculator}
+                component={AutomationCalculator}
+                rootClass="automationCalculator"
+            />
+            <InsightsRoute
+                path={Paths.jobExplorer}
+                component={JobExplorer}
+                rootClass="jobExplorer"
+            />
+            {/* Finally, catch all unmatched routes and redirect to Clusters page */}
+            <Route
+                render={() =>
+                    some(Paths, p => p === path) ? null : <Redirect to={Paths.clusters} />
+                }
+            />
         </Switch>
     );
 };

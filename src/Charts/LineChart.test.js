@@ -1,4 +1,3 @@
-
 import { shallow } from 'enzyme';
 import LineChart from './LineChart.js';
 

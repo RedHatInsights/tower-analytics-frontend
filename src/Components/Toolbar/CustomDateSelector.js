@@ -1,9 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-    InputGroup,
-    TextInput
-} from '@patternfly/react-core';
+import { InputGroup, TextInput } from '@patternfly/react-core';
 
 const CustomDateSelector = ({
     onInputChange = () => {},
@@ -12,26 +9,26 @@ const CustomDateSelector = ({
 }) => {
     return (
         <>
-          <InputGroup>
-              <TextInput
-                  name="startDate"
-                  id="startDate"
-                  type="date"
-                  aria-label="Start Date"
-                  value={ startDate }
-                  onChange={ e => onInputChange('start_date', e) }
-              />
-          </InputGroup>
-          <InputGroup>
-              <TextInput
-                  name="endDate"
-                  id="endDate"
-                  type="date"
-                  aria-label="End Date"
-                  value={ endDate }
-                  onChange={ e => onInputChange('end_date', e) }
-              />
-          </InputGroup>
+            <InputGroup>
+                <TextInput
+                    name="startDate"
+                    id="startDate"
+                    type="date"
+                    aria-label="Start Date"
+                    value={startDate}
+                    onChange={e => onInputChange('start_date', e)}
+                />
+            </InputGroup>
+            <InputGroup>
+                <TextInput
+                    name="endDate"
+                    id="endDate"
+                    type="date"
+                    aria-label="End Date"
+                    value={endDate}
+                    onChange={e => onInputChange('end_date', e)}
+                />
+            </InputGroup>
         </>
     );
 };

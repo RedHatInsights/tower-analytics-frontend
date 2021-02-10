@@ -10,7 +10,7 @@ import {
 } from '@patternfly/react-icons';
 
 const JobStatus = ({ status }) => {
-    const capitalized = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+    const capitalized = str => str.charAt(0).toUpperCase() + str.slice(1);
 
     const getColor = () => {
         switch (status) {
@@ -24,8 +24,9 @@ const JobStatus = ({ status }) => {
                 return 'blue';
             case 'canceled':
                 return 'orange';
-            // case new, waiting
-            default: return 'grey';
+                // case new, waiting
+            default:
+                return 'grey';
         }
     };
 
@@ -40,22 +41,29 @@ const JobStatus = ({ status }) => {
                 return <SyncAltIcon />;
             case 'canceled':
                 return <ExclamationTriangleIcon />;
-            // case new, waiting, pending
-            default: return <ClockIcon />;
+                // case new, waiting, pending
+            default:
+                return <ClockIcon />;
         }
     };
 
     return (
-        <Label variant="outline" color={ getColor() } icon={ getIcon() }>{ capitalized(status) }</Label>
+        <Label variant="outline" color={getColor()} icon={getIcon()}>
+            {capitalized(status)}
+        </Label>
     );
 };
 
 JobStatus.propTypes = {
     status: PropTypes.oneOf([
         'successful',
-        'failed', 'error',
+        'failed',
+        'error',
         'running',
-        'new', 'waiting', 'pending', 'canceled'
+        'new',
+        'waiting',
+        'pending',
+        'canceled'
     ])
 };
 

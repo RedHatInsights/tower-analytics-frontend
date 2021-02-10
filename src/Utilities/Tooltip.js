@@ -114,110 +114,110 @@ class Tooltip {
         .text('Click for details');
     }
 
-    handleMouseOver = (d) => {
-        let success = 0;
-        let fail = 0;
-        let total = 0;
-        const x =
-            d3.event.pageX -
-            d3
-            .select(this.svg)
-            .node()
-            .getBoundingClientRect().x +
-            10;
-        const y =
-            d3.event.pageY -
-            d3
-            .select(this.svg)
-            .node()
-            .getBoundingClientRect().y -
-            10;
-        const formatTooltipDate = d3.timeFormat('%m/%d');
-        if (!d) {
-            return;
-        }
+  handleMouseOver = d => {
+      let success = 0;
+      let fail = 0;
+      let total = 0;
+      const x =
+      d3.event.pageX -
+      d3
+      .select(this.svg)
+      .node()
+      .getBoundingClientRect().x +
+      10;
+      const y =
+      d3.event.pageY -
+      d3
+      .select(this.svg)
+      .node()
+      .getBoundingClientRect().y -
+      10;
+      const formatTooltipDate = d3.timeFormat('%m/%d');
+      if (!d) {
+          return;
+      }
 
-        const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
-        const chartWidth = d3
-        .select(this.svg + '> svg')
-        .node()
-        .getBoundingClientRect().width;
-        const overflow = 100 - (toolTipWidth / chartWidth) * 100;
-        const flipped = overflow < (x / chartWidth) * 100;
-        if (d) {
-            success = d.RAN || 0;
-            fail = d.FAIL || 0;
-            total = d.TOTAL || 0;
-            this.date.text(formatTooltipDate(d.DATE || null));
-        }
+      const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
+      const chartWidth = d3
+      .select(this.svg + '> svg')
+      .node()
+      .getBoundingClientRect().width;
+      const overflow = 100 - (toolTipWidth / chartWidth) * 100;
+      const flipped = overflow < (x / chartWidth) * 100;
+      if (d) {
+          success = d.RAN || 0;
+          fail = d.FAIL || 0;
+          total = d.TOTAL || 0;
+          this.date.text(formatTooltipDate(d.DATE || null));
+      }
 
-        if (d && d.data) {
-            success = d.data.RAN || 0;
-            fail = d.data.FAIL || 0;
-            total = d.data.TOTAL || 0;
-            this.date.text(formatTooltipDate(d.data.DATE || null));
-        }
+      if (d && d.data) {
+          success = d.data.RAN || 0;
+          fail = d.data.FAIL || 0;
+          total = d.data.TOTAL || 0;
+          this.date.text(formatTooltipDate(d.data.DATE || null));
+      }
 
-        this.jobs.text('' + total + ' jobs');
-        this.jobsWidth = this.jobs.node().getComputedTextLength();
-        this.failed.text('' + fail);
-        this.successful.text('' + success);
-        this.successTextWidth = this.successful.node().getComputedTextLength();
-        this.failTextWidth = this.failed.node().getComputedTextLength();
+      this.jobs.text('' + total + ' jobs');
+      this.jobsWidth = this.jobs.node().getComputedTextLength();
+      this.failed.text('' + fail);
+      this.successful.text('' + success);
+      this.successTextWidth = this.successful.node().getComputedTextLength();
+      this.failTextWidth = this.failed.node().getComputedTextLength();
 
-        const maxTextPerc = this.jobsWidth / this.boxWidth * 100;
-        const threshold = 40;
-        const overage = maxTextPerc / threshold;
-        let adjustedWidth;
-        if (maxTextPerc > threshold) {
-            adjustedWidth = this.boxWidth * overage;
-        } else {
-            adjustedWidth = this.boxWidth;
-        }
+      const maxTextPerc = (this.jobsWidth / this.boxWidth) * 100;
+      const threshold = 40;
+      const overage = maxTextPerc / threshold;
+      let adjustedWidth;
+      if (maxTextPerc > threshold) {
+          adjustedWidth = this.boxWidth * overage;
+      } else {
+          adjustedWidth = this.boxWidth;
+      }
 
-        this.boundingBox.attr('width', adjustedWidth);
-        this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
-        if (flipped) {
-            this.toolTipPoint.attr('transform', 'translate(-20, 0) rotate(45)');
-            this.boundingBox.attr('x', -adjustedWidth - 20);
-            this.circleSuccess.attr('cx', -adjustedWidth);
-            this.circleFail.attr('cx', -adjustedWidth);
-            this.failedIcon.attr('x', -adjustedWidth - 7);
-            this.successIcon.attr('x', -adjustedWidth - 7);
-            this.successText.attr('x', -adjustedWidth + 17);
-            this.failText.attr('x', -adjustedWidth + 17);
-            this.successful.attr('x', -this.successTextWidth - 20 - 12);
-            this.failed.attr('x', -this.failTextWidth - 20 - 12);
-            this.date.attr('x', -adjustedWidth - 5);
-            this.jobs.attr('x', -this.jobsWidth / 2 - 7);
-            this.clickMore.attr('x', -adjustedWidth);
-        } else {
-            this.toolTipPoint.attr('transform', 'translate(10, 0) rotate(45)');
-            this.boundingBox.attr('x', 10);
-            this.circleSuccess.attr('cx', 26);
-            this.circleFail.attr('cx', 26);
-            this.failedIcon.attr('x', 19);
-            this.successIcon.attr('x', 19);
-            this.successText.attr('x', 43);
-            this.failText.attr('x', 43);
-            this.successful.attr('x', (adjustedWidth - this.successTextWidth));
-            this.failed.attr('x', (adjustedWidth - this.failTextWidth));
-            this.date.attr('x', 20);
-            this.jobs.attr('x', (adjustedWidth));
-            this.clickMore.attr('x', 20);
-        }
+      this.boundingBox.attr('width', adjustedWidth);
+      this.toolTipBase.attr('transform', 'translate(' + x + ',' + y + ')');
+      if (flipped) {
+          this.toolTipPoint.attr('transform', 'translate(-20, 0) rotate(45)');
+          this.boundingBox.attr('x', -adjustedWidth - 20);
+          this.circleSuccess.attr('cx', -adjustedWidth);
+          this.circleFail.attr('cx', -adjustedWidth);
+          this.failedIcon.attr('x', -adjustedWidth - 7);
+          this.successIcon.attr('x', -adjustedWidth - 7);
+          this.successText.attr('x', -adjustedWidth + 17);
+          this.failText.attr('x', -adjustedWidth + 17);
+          this.successful.attr('x', -this.successTextWidth - 20 - 12);
+          this.failed.attr('x', -this.failTextWidth - 20 - 12);
+          this.date.attr('x', -adjustedWidth - 5);
+          this.jobs.attr('x', -this.jobsWidth / 2 - 7);
+          this.clickMore.attr('x', -adjustedWidth);
+      } else {
+          this.toolTipPoint.attr('transform', 'translate(10, 0) rotate(45)');
+          this.boundingBox.attr('x', 10);
+          this.circleSuccess.attr('cx', 26);
+          this.circleFail.attr('cx', 26);
+          this.failedIcon.attr('x', 19);
+          this.successIcon.attr('x', 19);
+          this.successText.attr('x', 43);
+          this.failText.attr('x', 43);
+          this.successful.attr('x', adjustedWidth - this.successTextWidth);
+          this.failed.attr('x', adjustedWidth - this.failTextWidth);
+          this.date.attr('x', 20);
+          this.jobs.attr('x', adjustedWidth);
+          this.clickMore.attr('x', 20);
+      }
 
-        this.toolTipBase.style('opacity', 1);
-        this.toolTipBase.interrupt();
-    }
+      this.toolTipBase.style('opacity', 1);
+      this.toolTipBase.interrupt();
+  };
 
-    handleMouseOut = () => {
-        this.toolTipBase
-        .transition()
-        .delay(15)
-        .style('opacity', 0)
-        .style('pointer-events', 'none');
-    }
+  handleMouseOut = () => {
+      this.toolTipBase
+      .transition()
+      .delay(15)
+      .style('opacity', 0)
+      .style('pointer-events', 'none');
+  };
 }
 
 export default Tooltip;

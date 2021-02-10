@@ -36,71 +36,72 @@ const TemplatesList = ({ templates, isLoading, qp, title, jobType }) => {
     const [ isModalOpen, setIsModalOpen ] = useState(false);
 
     return (
-    <>
-      <DataList aria-label="Top Templates" style={ {
-          maxHeight: '400px',
-          overflow: 'auto',
-          height: '400px',
-          background: 'white'
-      } }>
-          <DataListItem aria-labelledby="top-templates-header">
-              <DataListCell>
-                  <h3>{ title }</h3>
-              </DataListCell>
-              <DataCellEnd>
-                  <h3>Usage</h3>
-              </DataCellEnd>
-          </DataListItem>
-          { isLoading && (
-              <PFDataListItem
-                  aria-labelledby="templates-loading"
-                  key={ isLoading }
-                  style={ { border: 'none' } }
-
-              >
-                  <PFDataListCell>
-                      <LoadingState />
-                  </PFDataListCell>
-              </PFDataListItem>
-          ) }
-          { !isLoading && templates.length <= 0 && (
-              <PFDataListItem
-                  aria-labelledby="templates-no-data"
-                  key={ isLoading }
-                  style={ { border: 'none' } }
-              >
-                  <PFDataListCell>
-                      <NoData />
-                  </PFDataListCell>
-              </PFDataListItem>
-          ) }
-          { !isLoading && templates.map(({ name, total_count, id }, index) => (
-              <DataListItem aria-labelledby="top-templates-detail" key={ index }>
+        <>
+            <DataList
+                aria-label="Top Templates"
+                style={{
+                    maxHeight: '400px',
+                    overflow: 'auto',
+                    height: '400px',
+                    background: 'white'
+                }}
+            >
+                <DataListItem aria-labelledby="top-templates-header">
+                    <DataListCell>
+                        <h3>{title}</h3>
+                    </DataListCell>
+                    <DataCellEnd>
+                        <h3>Usage</h3>
+                    </DataCellEnd>
+                </DataListItem>
+                {isLoading && (
+                    <PFDataListItem
+                        aria-labelledby="templates-loading"
+                        key={isLoading}
+                        style={{ border: 'none' }}
+                    >
+                        <PFDataListCell>
+                            <LoadingState />
+                        </PFDataListCell>
+                    </PFDataListItem>
+                )}
+                {!isLoading && templates.length <= 0 && (
+                    <PFDataListItem
+                        aria-labelledby="templates-no-data"
+                        key={isLoading}
+                        style={{ border: 'none' }}
+                    >
+                        <PFDataListCell>
+                            <NoData />
+                        </PFDataListCell>
+                    </PFDataListItem>
+                )}
+                {!isLoading &&
+          templates.map(({ name, total_count, id }, index) => (
+              <DataListItem aria-labelledby="top-templates-detail" key={index}>
                   <DataListCell>
                       <a
-                          onClick={ () => {
+                          onClick={() => {
                               setIsModalOpen(true);
                               setSelectedId(id);
-                          } }
+                          }}
                       >
-                          { name }
+                          {name}
                       </a>
                   </DataListCell>
-                  <DataCellEnd>
-                      { total_count }
-                  </DataCellEnd>
+                  <DataCellEnd>{total_count}</DataCellEnd>
               </DataListItem>
-          )) }
-      </DataList>
-        <ModalContents
-            isOpen={ isModalOpen }
-            handleModal={ setIsModalOpen }
-            selectedId={ selectedId }
-            qp={ qp }
-            jobType={ jobType }
-            handleCloseBtn={ setSelectedId }
-        />
-    </>
+          ))}
+            </DataList>
+            <ModalContents
+                isOpen={isModalOpen}
+                handleModal={setIsModalOpen}
+                selectedId={selectedId}
+                qp={qp}
+                jobType={jobType}
+                handleCloseBtn={setSelectedId}
+            />
+        </>
     );
 };
 

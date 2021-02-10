@@ -53,14 +53,6 @@ rules:
       MemberExpression: 0
       ImportDeclaration: 1
       ObjectExpression: 1
-  react/jsx-curly-spacing:
-    - error
-    - always
-    - children: true
-    - allowMultiline: false
-    - spacing:
-      - objectLiterals:
-        - never
   key-spacing: 2
   keyword-spacing: 2
   linebreak-style:
@@ -123,3 +115,6 @@ rules:
   yoda:
     - error
     - never
+  no-redeclare:
+    - error
+    - builtinGlobals: false

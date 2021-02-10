@@ -41,7 +41,8 @@ const mockRelatedJobs = {
                 id: 1800,
                 template_id: 2,
                 template_name: 'template_name_0',
-                tower_link: 'https://ec2-52-90-106-01.compute-1.amazonaws.com/#/jobs/playbook/1800'
+                tower_link:
+          'https://ec2-52-90-106-01.compute-1.amazonaws.com/#/jobs/playbook/1800'
             },
             job_type: 'job',
             org_name: 'organization_0',
@@ -55,17 +56,23 @@ describe('Components/ModalContents', () => {
     let wrapper;
 
     beforeEach(() => {
-        fetchMock.post({
-            url: jobExplorerUrl,
-            repeat: 1
-        }, { ...mockStats });
-        fetchMock.post({
-            url: jobExplorerUrl,
-            body: { limit: 5, sort_by: 'created:asc' },
-            matchPartialBody: true,
-            overwriteRoutes: false,
-            repeat: 1
-        }, { ...mockRelatedJobs });
+        fetchMock.post(
+            {
+                url: jobExplorerUrl,
+                repeat: 1
+            },
+            { ...mockStats }
+        );
+        fetchMock.post(
+            {
+                url: jobExplorerUrl,
+                body: { limit: 5, sort_by: 'created:asc' },
+                matchPartialBody: true,
+                overwriteRoutes: false,
+                repeat: 1
+            },
+            { ...mockRelatedJobs }
+        );
     });
 
     afterEach(() => {
@@ -77,13 +84,14 @@ describe('Components/ModalContents', () => {
         await act(async () => {
             wrapper = mount(
                 <ModalContents
-                    isOpen={ true }
-                    handleModal={ () => {} }
-                    selectedId={ 1 }
-                    qp={ mockQueryParams }
-                    jobType={ 'Foo' }
-                    handleCloseBtn={ () => { } }
-                />);
+                    isOpen={true}
+                    handleModal={() => {}}
+                    selectedId={1}
+                    qp={mockQueryParams}
+                    jobType={'Foo'}
+                    handleCloseBtn={() => {}}
+                />
+            );
         });
 
         wrapper.update();
@@ -93,13 +101,14 @@ describe('Components/ModalContents', () => {
         await act(async () => {
             wrapper = mount(
                 <ModalContents
-                    isOpen={ true }
-                    handleModal={ () => {} }
-                    selectedId={ 1 }
-                    qp={ mockQueryParams }
-                    jobType={ 'Foo' }
-                    handleCloseBtn={ () => { } }
-                />);
+                    isOpen={true}
+                    handleModal={() => {}}
+                    selectedId={1}
+                    qp={mockQueryParams}
+                    jobType={'Foo'}
+                    handleCloseBtn={() => {}}
+                />
+            );
         });
 
         wrapper.update();
@@ -111,38 +120,48 @@ describe('Components/ModalContents', () => {
         await act(async () => {
             wrapper = mount(
                 <ModalContents
-                    isOpen={ true }
-                    handleModal={ () => {} }
-                    selectedId={ 1 }
-                    qp={ mockQueryParams }
-                    jobType={ 'Foo' }
-                    handleCloseBtn={ () => { } }
-                />);
+                    isOpen={true}
+                    handleModal={() => {}}
+                    selectedId={1}
+                    qp={mockQueryParams}
+                    jobType={'Foo'}
+                    handleCloseBtn={() => {}}
+                />
+            );
         });
 
         wrapper.update();
-        const statsBox = wrapper.find('DataListItem[aria-labelledby="Selected Template Statistics"]');
+        const statsBox = wrapper.find(
+            'DataListItem[aria-labelledby="Selected Template Statistics"]'
+        );
         const jobRuns = statsBox.find('div[aria-labelledby="job runs"]');
         expect(jobRuns.text()).toMatch(String(mockStats.items[0].total_count));
     });
     it('should display the the correct success rate', async () => {
-        const calculateSuccessRate = (successCount, totalCount) => Math.ceil(successCount / totalCount * 100) + '%';
+        const calculateSuccessRate = (successCount, totalCount) =>
+            Math.ceil((successCount / totalCount) * 100) + '%';
         await act(async () => {
             wrapper = mount(
                 <ModalContents
-                    isOpen={ true }
-                    handleModal={ () => {} }
-                    selectedId={ 1 }
-                    qp={ mockQueryParams }
-                    jobType={ 'Foo' }
-                    handleCloseBtn={ () => { } }
-                />);
+                    isOpen={true}
+                    handleModal={() => {}}
+                    selectedId={1}
+                    qp={mockQueryParams}
+                    jobType={'Foo'}
+                    handleCloseBtn={() => {}}
+                />
+            );
         });
 
         wrapper.update();
-        const statsBox = wrapper.find('DataListItem[aria-labelledby="Selected Template Statistics"]');
+        const statsBox = wrapper.find(
+            'DataListItem[aria-labelledby="Selected Template Statistics"]'
+        );
         const successRate = statsBox.find('div[aria-labelledby="success rate"]');
-        const expected = calculateSuccessRate(mockStats.items[0].successful_count, mockStats.items[0].total_count);
+        const expected = calculateSuccessRate(
+            mockStats.items[0].successful_count,
+            mockStats.items[0].total_count
+        );
         expect(successRate.text()).toMatch(expected);
     });
 });

@@ -1,4 +1,3 @@
-
 import { shallow } from 'enzyme';
 import ROITopTemplates from './ROITopTemplates.js';
 

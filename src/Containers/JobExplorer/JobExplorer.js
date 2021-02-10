@@ -51,28 +51,28 @@ const optionsMapper = options => {
     return rest;
 };
 
-const JobExplorer = ({
-    location: { search },
-    history
-}) => {
+const JobExplorer = ({ location: { search }, history }) => {
     const [ preflightError, setPreFlightError ] = useState(null);
-    const [{
-        isLoading,
-        isSuccess,
-        error,
-        data: { meta = {}, items: data = []}
-    }, setData ] = useApi({ meta: {}, items: []});
+    const [
+        {
+            isLoading,
+            isSuccess,
+            error,
+            data: { meta = {}, items: data = []}
+        },
+        setData
+    ] = useApi({ meta: {}, items: []});
     const [ currPage, setCurrPage ] = useState(1);
     const [ options, setOptions ] = useApi({}, optionsMapper);
 
-    let initialSearchParams = parse(search, { arrayFormat: 'bracket', parseBooleans: true });
+    let initialSearchParams = parse(search, {
+        arrayFormat: 'bracket',
+        parseBooleans: true
+    });
     let combined = { ...initialQueryParams, ...initialSearchParams };
-    const {
-        queryParams,
-        setLimit,
-        setOffset,
-        setFromToolbar
-    } = useQueryParams(combined);
+    const { queryParams, setLimit, setOffset, setFromToolbar } = useQueryParams(
+        combined
+    );
 
     const updateURL = () => {
         const { jobExplorer } = Paths;
@@ -86,16 +86,17 @@ const JobExplorer = ({
     useEffect(() => {
         insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
 
-        window.insights.chrome.auth.getUser()
-        .then(() =>
-            preflightRequest()
-            .catch((error) => { setPreFlightError({ preflightError: error }); })
+        window.insights.chrome.auth.getUser().then(
+            () =>
+                preflightRequest().catch(error => {
+                    setPreFlightError({ preflightError: error });
+                })
             // Loading is set false when the data also loaded
         );
     }, []);
 
     useEffect(() => {
-        setData(readJobExplorer({ params: queryParams }),);
+        setData(readJobExplorer({ params: queryParams }));
         setOptions(readJobExplorerOptions({ params: queryParams }));
         updateURL();
     }, [ queryParams ]);
@@ -118,65 +119,65 @@ const JobExplorer = ({
     return (
         <React.Fragment>
             <PageHeader>
-                <PageHeaderTitle title={ 'Job Explorer' } />
+                <PageHeaderTitle title={'Job Explorer'} />
             </PageHeader>
 
-            { preflightError && (
+            {preflightError && (
                 <Main>
-                    <EmptyState { ...preflightError } />
+                    <EmptyState {...preflightError} />
                 </Main>
-            ) }
+            )}
 
-            { !preflightError && (
+            {!preflightError && (
                 <Main>
                     <Card>
                         <CardBody>
                             <FilterableToolbar
-                                categories={ options.data }
-                                filters={ queryParams }
-                                setFilters={ setFromToolbar }
+                                categories={options.data}
+                                filters={queryParams}
+                                setFilters={setFromToolbar}
                                 pagination={
                                     <Pagination
-                                        itemCount={ meta && meta.count ? meta.count : 0 }
+                                        itemCount={meta && meta.count ? meta.count : 0}
                                         widgetId="pagination-options-menu-top"
-                                        perPageOptions={ perPageOptions }
-                                        perPage={ queryParams.limit }
-                                        page={ currPage }
-                                        variant={ PaginationVariant.top }
-                                        onPerPageSelect={ (_event, perPage, page) => {
+                                        perPageOptions={perPageOptions}
+                                        perPage={queryParams.limit}
+                                        page={currPage}
+                                        variant={PaginationVariant.top}
+                                        onPerPageSelect={(_event, perPage, page) => {
                                             handlePerPageSelect(perPage, page);
-                                        } }
-                                        onSetPage={ (_event, pageNumber) => {
+                                        }}
+                                        onSetPage={(_event, pageNumber) => {
                                             handleSetPage(pageNumber);
-                                        } }
+                                        }}
                                         isCompact
                                     />
                                 }
                                 hasSettings
                             />
-                            { error && <ApiErrorState message={ error.error } /> }
-                            { isLoading && <LoadingState /> }
-                            { isSuccess && data.length <= 0 && <NoResults /> }
-                            { isSuccess && data.length > 0 && <JobExplorerList jobs={ data } /> }
+                            {error && <ApiErrorState message={error.error} />}
+                            {isLoading && <LoadingState />}
+                            {isSuccess && data.length <= 0 && <NoResults />}
+                            {isSuccess && data.length > 0 && <JobExplorerList jobs={data} />}
                             <Pagination
-                                itemCount={ meta && meta.count ? meta.count : 0 }
+                                itemCount={meta && meta.count ? meta.count : 0}
                                 widgetId="pagination-options-menu-bottom"
-                                perPageOptions={ perPageOptions }
-                                perPage={ queryParams.limit }
-                                page={ currPage }
-                                variant={ PaginationVariant.bottom }
-                                onPerPageSelect={ (_event, perPage, page) => {
+                                perPageOptions={perPageOptions}
+                                perPage={queryParams.limit}
+                                page={currPage}
+                                variant={PaginationVariant.bottom}
+                                onPerPageSelect={(_event, perPage, page) => {
                                     handlePerPageSelect(perPage, page);
-                                } }
-                                onSetPage={ (_event, pageNumber) => {
+                                }}
+                                onSetPage={(_event, pageNumber) => {
                                     handleSetPage(pageNumber);
-                                } }
-                                style={ { marginTop: '20px' } }
+                                }}
+                                style={{ marginTop: '20px' }}
                             />
                         </CardBody>
                     </Card>
                 </Main>
-            ) }
+            )}
         </React.Fragment>
     );
 };

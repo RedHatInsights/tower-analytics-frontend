@@ -12,37 +12,46 @@ import {
 import { WrenchIcon } from '@patternfly/react-icons';
 
 const DefaultEmptyState = ({ preflightError: error }) => (
-    <EmptyState variant={ EmptyStateVariant.full }>
-        <EmptyStateIcon icon={ WrenchIcon } />
-        { error.status === 404 && (
+    <EmptyState variant={EmptyStateVariant.full}>
+        <EmptyStateIcon icon={WrenchIcon} />
+        {error.status === 404 && (
             <>
                 <Title headingLevel="h5" size="lg">
-                    No data found
+          No data found
                 </Title>
                 <EmptyStateBody>
-                    Please visit <a href='https://docs.ansible.com/ansible-tower/latest/html/administration/usability_data_collection.html#automation-analytics' target='_blank' rel='noopener noreferrer'>here</a> to learn how to enable Automation Analytics.
+          Please visit{' '}
+                    <a
+                        href="https://docs.ansible.com/ansible-tower/latest/html/administration/usability_data_collection.html#automation-analytics"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+            here
+                    </a>{' '}
+          to learn how to enable Automation Analytics.
                 </EmptyStateBody>
             </>
-        ) }
-        { error.status === 401 && (
+        )}
+        {error.status === 401 && (
             <>
                 <Title headingLevel="h5" size="lg">
-                    Not authorized
+          Not authorized
                 </Title>
                 <EmptyStateBody>
-                    You do not have the correct permissions to view this page.
+          You do not have the correct permissions to view this page.
                 </EmptyStateBody>
             </>
-        ) }
-        { !error.status && (
+        )}
+        {!error.status && (
             <>
                 <Title headingLevel="h5" size="lg">
-                    Something went wrong, please try reloading the page
+          Something went wrong, please try reloading the page
                 </Title>
-                <Button variant="primary" onClick={ () => window.location.reload() }>Reload</Button>
+                <Button variant="primary" onClick={() => window.location.reload()}>
+          Reload
+                </Button>
             </>
-        ) }
-
+        )}
     </EmptyState>
 );
 

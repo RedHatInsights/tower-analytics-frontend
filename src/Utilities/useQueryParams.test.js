@@ -12,8 +12,8 @@ const TestHook = ({ callback }) => {
     return null;
 };
 
-const testHook = (callback) => {
-    mount(<TestHook callback={ callback } />);
+const testHook = callback => {
+    mount(<TestHook callback={callback} />);
 };
 
 const initialValues = { foo: '1', bar: 2, sortBy: 'count:asc' };
@@ -63,7 +63,10 @@ describe('Utilities/useQueryParams', () => {
         act(() => {
             page.setEndDate();
         });
-        expect(page.queryParams).toEqual({ ...initialValues, endDate: currentDate });
+        expect(page.queryParams).toEqual({
+            ...initialValues,
+            endDate: currentDate
+        });
     });
 
     it('setStartDate returns current day if passed a null value', () => {
@@ -71,7 +74,10 @@ describe('Utilities/useQueryParams', () => {
         act(() => {
             page.setStartDate(null);
         });
-        expect(page.queryParams).toEqual({ ...initialValues, startDate: currentDate });
+        expect(page.queryParams).toEqual({
+            ...initialValues,
+            startDate: currentDate
+        });
     });
 
     it('setStartDate returns expected day when invoked', () => {

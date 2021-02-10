@@ -1,4 +1,3 @@
-
 import asyncComponent from './asyncComponent.js';
 
 describe('Utilities/asyncComponent', () => {

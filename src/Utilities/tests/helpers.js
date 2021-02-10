@@ -14,11 +14,12 @@ const defaultParams = {
     search: ''
 };
 
-export const mountPage = (Component, { search } = defaultParams) => mount(
-    <Provider store={ store } >
-        <Component history={ history } location={ { search } }/>
-    </Provider>
-);
+export const mountPage = (Component, { search } = defaultParams) =>
+    mount(
+        <Provider store={store}>
+            <Component history={history} location={{ search }} />
+        </Provider>
+    );
 
 export const preflight200 = {
     url: '/api/tower-analytics/v0/authorized/',

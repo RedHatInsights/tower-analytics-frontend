@@ -1,14 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-    ToolbarFilter,
-    Select,
-    SelectOption
-} from '@patternfly/react-core';
-import {
-    handleCheckboxChips,
-    handleSingleChips
-} from './helpers';
+import { ToolbarFilter, Select, SelectOption } from '@patternfly/react-core';
+import { handleCheckboxChips, handleSingleChips } from './helpers';
 import { optionsForCategories } from './constants';
 
 const ToolbarFilterItem = ({
@@ -28,7 +21,8 @@ const ToolbarFilterItem = ({
         if (single) {
             setFilter(null);
         } else {
-            const keyToDelete = values.find(({ value }) => value === valueToDelete).key;
+            const keyToDelete = values.find(({ value }) => value === valueToDelete)
+            .key;
             const filteredArr = filter.filter(value => value !== keyToDelete);
             setFilter(filteredArr);
         }
@@ -47,38 +41,38 @@ const ToolbarFilterItem = ({
             setFilter(selection);
             setExpanded(false);
         } else {
-            setFilter(event.target.checked
-                ? [ ...filter, selection ]
-                : filter.filter(value => value !== selection)
+            setFilter(
+                event.target.checked
+                    ? [ ...filter, selection ]
+                    : filter.filter(value => value !== selection)
             );
         }
     };
 
     return (
         <ToolbarFilter
-            data-cy = { categoryKey }
-            key = { categoryKey }
-            showToolbarItem={ isVisible }
-            chips={ hasChips ? handleChips() : [] }
-            categoryName={ options.name }
-            deleteChip={ hasChips ? onDelete : null }
+            data-cy={categoryKey}
+            key={categoryKey}
+            showToolbarItem={isVisible}
+            chips={hasChips ? handleChips() : []}
+            categoryName={options.name}
+            deleteChip={hasChips ? onDelete : null}
         >
             <Select
-                variant={ options.isSingle ? 'single' : 'checkbox' }
-                aria-label={ categoryKey }
-                onToggle={ () => setExpanded(!expanded) }
-                onSelect={ onSelect }
-                selections={ filter }
-                isOpen={ expanded }
-                placeholderText={ options.placeholder }
+                variant={options.isSingle ? 'single' : 'checkbox'}
+                aria-label={categoryKey}
+                onToggle={() => setExpanded(!expanded)}
+                onSelect={onSelect}
+                selections={filter}
+                isOpen={expanded}
+                placeholderText={options.placeholder}
             >
-                {
-                    values && values.map(({ key, value, description }) => (
-                        <SelectOption key={ key } value={ key } description={ description }>
-                            { value }
-                        </SelectOption>
-                    ))
-                }
+                {values &&
+          values.map(({ key, value, description }) => (
+              <SelectOption key={key} value={key} description={description}>
+                  {value}
+              </SelectOption>
+          ))}
             </Select>
         </ToolbarFilter>
     );

@@ -12,9 +12,7 @@ import {
     Tooltip,
     Popover
 } from '@patternfly/react-core';
-import {
-    InfoCircleIcon
-} from '@patternfly/react-icons';
+import { InfoCircleIcon } from '@patternfly/react-icons';
 
 import {
     convertSecondsToMins,
@@ -81,16 +79,13 @@ export const QuestionIconTooltip = ({ data }) => (
         bodyContent={
             <TooltipWrapper>
                 <p>
-                    <b>Success elapsed sum</b>:{ ' ' }
-                    { data.successful_elapsed_total.toFixed(2) }
+                    <b>Success elapsed sum</b>: {data.successful_elapsed_total.toFixed(2)}
                 </p>
                 <p>
-                    <b>Number of associated organizations</b>:{ ' ' }
-                    { data.total_org_count }
+                    <b>Number of associated organizations</b>: {data.total_org_count}
                 </p>
                 <p>
-                    <b>Number of associated clusters</b>:{ ' ' }
-                    { data.total_cluster_count }
+                    <b>Number of associated clusters</b>: {data.total_cluster_count}
                 </p>
             </TooltipWrapper>
         }
@@ -108,30 +103,30 @@ const TopTemplates = ({
     setDataRunTime = () => {},
     redirectToJobExplorer = () => {}
 }) => (
-    <Card style={ { overflow: 'auto', flex: '1 1 0' } } className="top-templates">
+    <Card style={{ overflow: 'auto', flex: '1 1 0' }} className="top-templates">
         <CardBody>
             <p>Enter the time it takes to run the following templates manually.</p>
-            { data.map((data) => (
-                <div key={ data.id }>
-                    <Tooltip content={ 'List of jobs for this template for past 30 days' } >
+            {data.map(data => (
+                <div key={data.id}>
+                    <Tooltip content={'List of jobs for this template for past 30 days'}>
                         <Button
-                            style={ { padding: '15px 0 10px' } }
+                            style={{ padding: '15px 0 10px' }}
                             component="a"
-                            onClick={ () => redirectToJobExplorer(data.id) }
+                            onClick={() => redirectToJobExplorer(data.id)}
                             variant="link"
                         >
-                            { data.name }
+                            {data.name}
                         </Button>
                     </Tooltip>
                     <TemplateDetail>
-                        <InputAndText key={ data.id }>
+                        <InputAndText key={data.id}>
                             <InputGroup>
                                 <TextInput
-                                    id={ data.id }
+                                    id={data.id}
                                     type="number"
                                     aria-label="time run manually"
-                                    value={ convertSecondsToMins(data.avgRunTime) }
-                                    onChange={ minutes =>
+                                    value={convertSecondsToMins(data.avgRunTime)}
+                                    onChange={minutes =>
                                         setDataRunTime(convertMinsToSeconds(minutes), data.id)
                                     }
                                 />
@@ -139,17 +134,15 @@ const TopTemplates = ({
                             </InputGroup>
                         </InputAndText>
                         <TemplateDetailSubTitle>
-                                    x { data.successful_hosts_total } host runs
+              x {data.successful_hosts_total} host runs
                         </TemplateDetailSubTitle>
                         <IconGroup>
-                            <QuestionIconTooltip data={ data }/>
+                            <QuestionIconTooltip data={data} />
                         </IconGroup>
                     </TemplateDetail>
-                    <p style={ { color: '#486B00' } }>
-                        ${ data.delta.toFixed(2) }
-                    </p>
+                    <p style={{ color: '#486B00' }}>${data.delta.toFixed(2)}</p>
                 </div>
-            )) }
+            ))}
         </CardBody>
     </Card>
 );

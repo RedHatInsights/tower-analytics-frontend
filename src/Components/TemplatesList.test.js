@@ -13,6 +13,11 @@ const mockQueryParams = {
 
 describe('Components/TemplatesList', () => {
     it('should render successfully', () => {
-        mount(<TemplatesList templates={ [{ name: 'Foo', type: 'Bar' }] } qp={ mockQueryParams } />);
+        mount(
+            <TemplatesList
+                templates={[{ name: 'Foo', type: 'Bar' }]}
+                qp={mockQueryParams}
+            />
+        );
     });
 });

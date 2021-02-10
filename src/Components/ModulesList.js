@@ -12,7 +12,7 @@ import {
 } from '@patternfly/react-core';
 
 const DataListCell = styled(PFDataListCell)`
-    --pf-c-data-list__cell-cell--MarginRight: 0;
+  --pf-c-data-list__cell-cell--MarginRight: 0;
 `;
 
 const DataListItem = styled(PFDataListItem)`
@@ -29,12 +29,15 @@ const DataCellEnd = styled(DataListCell)`
 `;
 
 const ModulesList = ({ modules, isLoading }) => (
-    <DataList aria-label="Top Modules" style={ {
-        maxHeight: '400px',
-        overflow: 'auto',
-        height: '400px',
-        background: 'white'
-    } }>
+    <DataList
+        aria-label="Top Modules"
+        style={{
+            maxHeight: '400px',
+            overflow: 'auto',
+            height: '400px',
+            background: 'white'
+        }}
+    >
         <DataListItem aria-labelledby="top-modules-header">
             <DataListCell>
                 <h3>Top modules</h3>
@@ -43,38 +46,39 @@ const ModulesList = ({ modules, isLoading }) => (
                 <h3>Usage</h3>
             </DataCellEnd>
         </DataListItem>
-        { isLoading && (
+        {isLoading && (
             <PFDataListItem
                 aria-labelledby="modules-loading"
-                key={ isLoading }
-                style={ { border: 'none' } }
+                key={isLoading}
+                style={{ border: 'none' }}
             >
                 <PFDataListCell>
                     <LoadingState />
                 </PFDataListCell>
             </PFDataListItem>
-        ) }
-        { !isLoading && modules.length <= 0 && (
+        )}
+        {!isLoading && modules.length <= 0 && (
             <PFDataListItem
                 aria-labelledby="modules-no-data"
-                key={ isLoading }
-                style={ { border: 'none' } }
+                key={isLoading}
+                style={{ border: 'none' }}
             >
                 <PFDataListCell>
                     <NoData />
                 </PFDataListCell>
             </PFDataListItem>
-        ) }
-        { !isLoading && modules.filter(module => module.name !== null).map(({ name, host_task_count }, index) => (
-            <DataListItem aria-labelledby="top-modules-detail" key={ index }>
-                <DataListCell>
-                    <span>{ trimStr(name) }</span>
-                </DataListCell>
-                <DataCellEnd>
-                    { host_task_count }
-                </DataCellEnd>
-            </DataListItem>
-        )) }
+        )}
+        {!isLoading &&
+      modules
+      .filter(module => module.name !== null)
+      .map(({ name, host_task_count }, index) => (
+          <DataListItem aria-labelledby="top-modules-detail" key={index}>
+              <DataListCell>
+                  <span>{trimStr(name)}</span>
+              </DataListCell>
+              <DataCellEnd>{host_task_count}</DataCellEnd>
+          </DataListItem>
+      ))}
     </DataList>
 );
 
