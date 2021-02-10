@@ -8,11 +8,10 @@ const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
 const jobExplorerOptionsEndpoint =
   '/api/tower-analytics/v1/job_explorer_options/';
 const ROIEndpoint = '/api/tower-analytics/v1/roi_templates/';
-const ROITemplatesOptionsEndpoint =
-  '/api/tower-analytics/v1/roi_templates_options/';
-const orgOptionsEndpoint = `/api/tower-analytics/v1/dashboard_organization_statistics_options/`;
-const clustersOptionsEndpoint =
-  '/api/tower-analytics/v1/dashboard_clusters_options/';
+const ROITemplatesOptionsEndpoint = '/api/tower-analytics/v1/roi_templates_options/';
+const orgOptionsEndpoint = '/api/tower-analytics/v1/dashboard_organization_statistics_options/';
+const hostExplorerEndpoint = '/api/tower-analytics/v1/host_explorer';
+const clustersOptionsEndpoint = '/api/tower-analytics/v1/dashboard_clusters_options/';
 const eventExplorerEndpoint = '/api/tower-analytics/v1/event_explorer/';
 
 function getAbsoluteUrl() {
@@ -49,6 +48,27 @@ export const readOrgOptions = ({ params = {}}) => {
     return fetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
+    }).then(handleResponse);
+};
+
+export const readHostAcrossOrg = ({ params = {}}) => {
+    const combined = {
+        ...params,
+        attributes: [ 'total_unique_host_count' ],
+        group_by_time: true,
+        group_by: 'org',
+        sort_by: `host_task_count:${params.sort_by}`
+    };
+
+    let url = new URL(hostExplorerEndpoint, getAbsoluteUrl());
+    url.search = stringify({
+        limit: combined.limit,
+        sort_by: combined.sort_by
+    });
+
+    return fetch(url, {
+        method: 'POST',
+        body: JSON.stringify(combined)
     }).then(handleResponse);
 };
 

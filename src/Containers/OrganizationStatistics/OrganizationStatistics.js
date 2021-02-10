@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -13,6 +13,7 @@ import ApiErrorState from '../../Components/ApiErrorState';
 import {
     preflightRequest,
     readJobsByDateAndOrg,
+    readHostAcrossOrg,
     readJobRunsByOrg,
     readJobEventsByOrg,
     readOrgOptions
@@ -27,7 +28,9 @@ import {
 import {
     Card,
     CardBody,
-    CardTitle as PFCardTitle
+    CardTitle as PFCardTitle,
+    Tabs,
+    Tab
 } from '@patternfly/react-core';
 
 import GroupedBarChart from '../../Charts/GroupedBarChart';
@@ -81,14 +84,14 @@ const optionsMapper = options => {
     return { ...rest, sort_by: meta.sort_by };
 };
 
-const orgsChartMapper = ({ dates: data = []}) =>
+const orgsChartMapper = attrName => ({ dates: data = []}) =>
     data.map(({ date, items }) => ({
         date,
-        items: items.map(({ id, total_count, name }) => ({
+        items: items.map(({ id, [attrName]: value, name }) => ({
             id,
             date,
-            value: total_count,
-            name: id === -1 ? 'Others' : name || 'No organization'
+            value,
+            name: id === -1 ? 'Others' : (name || 'No organization')
         }))
     }));
 
@@ -99,15 +102,31 @@ const pieChartMapper = attrName => ({ items = []}) =>
         name: id === -1 ? 'Others' : name || 'No organization'
     }));
 
+const chartMapper = [
+    {
+        api: readJobsByDateAndOrg,
+        attr: 'total_count',
+        label: 'Jobs across organizations'
+    },
+    {
+        api: readHostAcrossOrg,
+        attr: 'total_unique_host_count',
+        label: 'Hosts across organizations'
+    }
+];
+
 const OrganizationStatistics = ({ history }) => {
     const [ preflight, setPreflight ] = useApi(null);
-    const [ orgs, setOrgs ] = useApi([], orgsChartMapper);
+    const [ activeTabKey, setActiveTabKey ] = useState(0);
+    const [ orgs, setOrgs ] = useApi([], orgsChartMapper(chartMapper[activeTabKey].attr));
     const [ jobs, setJobs ] = useApi([], pieChartMapper('host_count'));
     const [ tasks, setTasks ] = useApi([], pieChartMapper('host_task_count'));
     const [ options, setOptions ] = useApi({}, optionsMapper);
     const { queryParams, setFromToolbar } = useQueryParams(
         constants.defaultParams
     );
+
+    const handleTabClick = (_, tabIndex) => { setActiveTabKey(tabIndex); };
 
     useEffect(() => {
         insights.chrome.appNavClick({
@@ -119,10 +138,14 @@ const OrganizationStatistics = ({ history }) => {
     }, []);
 
     useEffect(() => {
-        setOrgs(readJobsByDateAndOrg({ params: queryParams }));
         setJobs(readJobRunsByOrg({ params: queryParams }));
         setTasks(readJobEventsByOrg({ params: queryParams }));
     }, [ queryParams ]);
+
+    useEffect(() => {
+        const apiPromise = chartMapper[activeTabKey].api;
+        setOrgs(apiPromise({ params: queryParams }));
+    }, [ queryParams, activeTabKey ]);
 
     return (
         <React.Fragment>
@@ -146,6 +169,10 @@ const OrganizationStatistics = ({ history }) => {
                             <CardTitle>
                                 <h2>Organization Status</h2>
                             </CardTitle>
+                            <Tabs activeKey={ activeTabKey } onSelect={ handleTabClick }>
+                                <Tab eventKey={ 0 } title={ 'Orgs' }/>
+                                <Tab eventKey={ 1 } title={ 'Hosts' }/>
+                            </Tabs>
                             <CardBody>
                                 {orgs.isLoading && <LoadingState />}
                                 {orgs.error && <ApiErrorState message={orgs.error.error} />}
@@ -154,10 +181,11 @@ const OrganizationStatistics = ({ history }) => {
                                     <GroupedBarChart
                                         margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
                                         id="d3-grouped-bar-chart-root"
-                                        data={orgs.data}
-                                        history={history}
-                                        timeFrame={orgs.data.length}
-                                        colorFunc={colorFunc}
+                                        data={ orgs.data }
+                                        history={ history }
+                                        timeFrame={ orgs.data .length }
+                                        colorFunc={ colorFunc }
+                                        yLabel={ chartMapper[activeTabKey].label }
                                     />
                                 )}
                             </CardBody>
@@ -167,7 +195,7 @@ const OrganizationStatistics = ({ history }) => {
                                 <CardBody style={{ padding: 0 }}>
                                     <CardTitle style={{ padding: 0 }}>
                                         <h2 style={{ marginLeft: '20px' }}>
-                      Job Runs by Organization
+                                            Job Runs by Organization
                                         </h2>
                                     </CardTitle>
                                     {jobs.isLoading && <LoadingState />}
@@ -188,7 +216,7 @@ const OrganizationStatistics = ({ history }) => {
                                 <CardBody style={{ padding: 0 }}>
                                     <CardTitle style={{ padding: 0 }}>
                                         <h2 style={{ marginLeft: '20px' }}>
-                      Usage by Organization (Tasks)
+                                            Usage by Organization (Tasks)
                                         </h2>
                                     </CardTitle>
                                     {tasks.isLoading && <LoadingState />}

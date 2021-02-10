@@ -310,7 +310,7 @@ const GroupedBarChart = (props) => {
         .attr('x', 0 - height / 2)
         .attr('dy', '1em')
         .style('text-anchor', 'middle')
-        .text('Jobs across orgs');
+        .text(props.yLabel);
 
         // add x axis
         svg
@@ -421,7 +421,8 @@ GroupedBarChart.propTypes = {
     getWidth: PropTypes.func,
     timeFrame: PropTypes.number,
     history: PropTypes.object,
-    colorFunc: PropTypes.func
+    colorFunc: PropTypes.func,
+    yLabel: PropTypes.string
 };
 
 export default initializeChart(GroupedBarChart);
