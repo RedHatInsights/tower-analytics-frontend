@@ -1,8 +1,23 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { ToolbarFilter, Select, SelectOption } from '@patternfly/react-core';
-import { handleCheckboxChips, handleSingleChips } from './helpers';
+import {
+    ToolbarFilter,
+    Select,
+    SelectOption
+} from '@patternfly/react-core';
+
+import {
+    handleCheckboxChips,
+    handleSingleChips
+} from './helpers';
 import { optionsForCategories } from './constants';
+
+const renderValues = values =>
+    values && values.map(({ key, value, description }) => (
+        <SelectOption key={ key } value={ key } description={ description }>
+            { value }
+        </SelectOption>
+    ));
 
 const ToolbarFilterItem = ({
     categoryKey,
@@ -41,10 +56,22 @@ const ToolbarFilterItem = ({
             setFilter(selection);
             setExpanded(false);
         } else {
-            setFilter(
-                event.target.checked
-                    ? [ ...filter, selection ]
-                    : filter.filter(value => value !== selection)
+            setFilter(!filter.includes(selection)
+                ? [ ...filter, selection ]
+                : filter.filter(value => value !== selection)
+            );
+        }
+    };
+
+    const onFilter = event => {
+        const textInput = event.target.value;
+        if (textInput === '') {
+            return renderValues(values);
+        } else {
+            return renderValues(
+                values.filter(({ value }) =>
+                    value.toLowerCase().includes(textInput.toLowerCase())
+                )
             );
         }
     };
@@ -59,20 +86,17 @@ const ToolbarFilterItem = ({
             deleteChip={hasChips ? onDelete : null}
         >
             <Select
-                variant={options.isSingle ? 'single' : 'checkbox'}
-                aria-label={categoryKey}
-                onToggle={() => setExpanded(!expanded)}
-                onSelect={onSelect}
-                selections={filter}
-                isOpen={expanded}
-                placeholderText={options.placeholder}
+                variant={ options.isSingle ? 'single' : 'checkbox' }
+                aria-label={ categoryKey }
+                onToggle={ () => setExpanded(!expanded) }
+                onSelect={ onSelect }
+                selections={ filter }
+                isOpen={ expanded }
+                onFilter={ onFilter }
+                hasInlineFilter
+                placeholderText={ options.placeholder }
             >
-                {values &&
-          values.map(({ key, value, description }) => (
-              <SelectOption key={key} value={key} description={description}>
-                  {value}
-              </SelectOption>
-          ))}
+                { renderValues(values) }
             </Select>
         </ToolbarFilter>
     );
