@@ -275,7 +275,7 @@ const PieChart = ({
 
         return () => {
             clearTimeout(timeout);
-            window.removeEventListener('resize', this.resize);
+            window.removeEventListener('resize', resize);
         };
     }, []);
 
