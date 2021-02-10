@@ -180,9 +180,10 @@ const PieChart = ({
             count: Math.round(org.count)
         };
     }).sort((a, b) => (a.count > b.count) ? 1 : ((b.count > a.count) ? -1 : 0));
+
     const [ selectedIds, setSelectedIds ] = useState(
-        data.map(({ id }) => id).slice(0, 8)
-    );
+        data.map(({ id }) => id).slice(0, 8));
+
     let timeout = null;
 
     const handleToggle = id => {
@@ -285,7 +286,7 @@ const PieChart = ({
             <div id={ id } />
             { colors.length > 0 && (
                 <Legend
-                    id="d3-grouped-bar-legend"
+                    id={ `${id}-legend` }
                     data={ colors }
                     selected={ selectedIds }
                     onToggle={ handleToggle }

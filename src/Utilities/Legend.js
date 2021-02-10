@@ -82,7 +82,7 @@ const Legend = ({
                                 onChange={ handleChange }
                                 aria-label={ name }
                                 value={ id }
-                                id={ `${name}-${id}` }
+                                key={ index }
                             />
                         ) }
                     </LegendDetail>

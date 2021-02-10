@@ -399,7 +399,7 @@ const GroupedBarChart = (props) => {
             <div id={ props.id } />
             { colors.length > 0 && (
                 <Legend
-                    id="d3-grouped-bar-legend"
+                    id={ `${props.id}-legend` }
                     data={ colors }
                     selected={ selectedIds }
                     onToggle={ handleToggle }
