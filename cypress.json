@@ -2,9 +2,14 @@
     "projectId": "wwyf7n",
     "chromeWebSecurity": false,
     "waitForAnimations": true,
-    "videoCompression": 0,
     "viewportHeight": 2000,
+    "video": false,
+    "videoUploadOnPasses": false,
     "viewportWidth": 1600,
+    "retries": {
+      "runMode": 2,
+      "openMode": 0
+      },
     "baseUrl": "https://prod.foo.redhat.com:8443",
     "env": {
         "appid":"#automation-analytics-application",
