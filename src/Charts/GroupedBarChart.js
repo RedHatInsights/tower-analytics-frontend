@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 
 import initializeChart from './BaseChart';
 import * as d3 from 'd3';
@@ -171,6 +172,7 @@ class Tooltip {
 }
 
 const GroupedBarChart = (props) => {
+    const history = useHistory();
     const orgsList = props.data[0].items;
     const colors = orgsList.map(org => {
         const name = org.id === -1 ? 'Others' : org.name;
@@ -211,7 +213,7 @@ const GroupedBarChart = (props) => {
         };
 
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
-        props.history.push({
+        history.push({
             pathname: jobExplorer,
             search
         });
@@ -413,14 +415,11 @@ const GroupedBarChart = (props) => {
 
 GroupedBarChart.propTypes = {
     id: PropTypes.string,
-    isAccessible: PropTypes.bool,
     data: PropTypes.array,
-    value: PropTypes.array,
     margin: PropTypes.object,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func,
     timeFrame: PropTypes.number,
-    history: PropTypes.object,
     colorFunc: PropTypes.func,
     yLabel: PropTypes.string
 };
