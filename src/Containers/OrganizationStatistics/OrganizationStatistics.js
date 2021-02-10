@@ -166,9 +166,6 @@ const OrganizationStatistics = ({ history }) => {
                 <React.Fragment>
                     <Main>
                         <TopCard>
-                            <CardTitle>
-                                <h2>Organization Status</h2>
-                            </CardTitle>
                             <Tabs activeKey={ activeTabKey } onSelect={ handleTabClick }>
                                 <Tab eventKey={ 0 } title={ 'Orgs' }/>
                                 <Tab eventKey={ 1 } title={ 'Hosts' }/>
