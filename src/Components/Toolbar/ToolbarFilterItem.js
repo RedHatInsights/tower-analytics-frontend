@@ -71,6 +71,19 @@ const ToolbarFilterItem = ({
         }
     };
 
+    const onFilter = event => {
+        const textInput = event.target.value;
+        if (textInput === '') {
+            return renderValues(values);
+        } else {
+            return renderValues(
+                values.filter(({ value }) =>
+                    value.toLowerCase().includes(textInput.toLowerCase())
+                )
+            );
+        }
+    };
+
     return (
         <ToolbarFilter
             data-cy={categoryKey}
@@ -87,7 +100,9 @@ const ToolbarFilterItem = ({
                 onSelect={onSelect}
                 selections={filter}
                 isOpen={expanded}
+                hasInlineFilter
                 placeholderText={options.placeholder}
+                onFilter={ onFilter }
                 maxHeight={ '1000%' }
             >
                 { renderValues(values) }
