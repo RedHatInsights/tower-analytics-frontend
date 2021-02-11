@@ -12,7 +12,11 @@ import {
     Tooltip,
     Popover
 } from '@patternfly/react-core';
-import { InfoCircleIcon } from '@patternfly/react-icons';
+import {
+    InfoCircleIcon,
+    ToggleOnIcon,
+    ToggleOffIcon
+} from '@patternfly/react-icons';
 
 import {
     convertSecondsToMins,
@@ -101,46 +105,49 @@ QuestionIconTooltip.propTypes = {
 const TopTemplates = ({
     data = [],
     setDataRunTime = () => {},
+    setEnabled = () => {},
     redirectToJobExplorer = () => {}
 }) => (
     <Card style={{ overflow: 'auto', flex: '1 1 0' }} className="top-templates">
         <CardBody>
             <p>Enter the time it takes to run the following templates manually.</p>
-            {data.map(data => (
-                <div key={data.id}>
+            {data.map(item => (
+                <div key={item.id}>
                     <Tooltip content={'List of jobs for this template for past 30 days'}>
                         <Button
                             style={{ padding: '15px 0 10px' }}
                             component="a"
-                            onClick={() => redirectToJobExplorer(data.id)}
+                            onClick={() => redirectToJobExplorer(item.id)}
                             variant="link"
                         >
-                            {data.name}
+                            {item.name}
                         </Button>
                     </Tooltip>
                     <TemplateDetail>
-                        <InputAndText key={data.id}>
+                        <InputAndText key={item.id}>
                             <InputGroup>
                                 <TextInput
-                                    id={data.id}
+                                    id={item.id}
                                     type="number"
                                     aria-label="time run manually"
-                                    value={convertSecondsToMins(data.avgRunTime)}
+                                    value={convertSecondsToMins(item.avgRunTime)}
                                     onChange={minutes =>
-                                        setDataRunTime(convertMinsToSeconds(minutes), data.id)
+                                        setDataRunTime(convertMinsToSeconds(minutes), item.id)
                                     }
                                 />
                                 <InputGroupText>min</InputGroupText>
                             </InputGroup>
                         </InputAndText>
                         <TemplateDetailSubTitle>
-              x {data.successful_hosts_total} host runs
+                            x {item.successful_hosts_total} host runs
                         </TemplateDetailSubTitle>
                         <IconGroup>
-                            <QuestionIconTooltip data={data} />
+                            <QuestionIconTooltip data={item} />
+                            { !item.enabled && <ToggleOffIcon onClick={ () => setEnabled(item.id)(true) } /> }
+                            { item.enabled && <ToggleOnIcon onClick={ () => setEnabled(item.id)(false) } /> }
                         </IconGroup>
                     </TemplateDetail>
-                    <p style={{ color: '#486B00' }}>${data.delta.toFixed(2)}</p>
+                    <p style={{ color: '#486B00' }}>${item.delta.toFixed(2)}</p>
                 </div>
             ))}
         </CardBody>
@@ -152,7 +159,8 @@ TopTemplates.propTypes = {
     setDataRunTime: PropTypes.func,
     redirectToJobExplorer: PropTypes.func,
     deselectedIds: PropTypes.array,
-    setDeselectedIds: PropTypes.func
+    setDeselectedIds: PropTypes.func,
+    setEnabled: PropTypes.func
 };
 
 export default TopTemplates;

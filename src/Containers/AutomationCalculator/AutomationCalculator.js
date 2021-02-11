@@ -60,8 +60,11 @@ const mapApi = ({ items = []}) =>
         delta: 0,
         avgRunTime: 3600,
         manualCost: 0,
-        automatedCost: 0
+        automatedCost: 0,
+        enabled: true
     }));
+
+const filterDisabled = data => data.filter(({ enabled }) => enabled);
 
 const updateDeltaCost = (data, costAutomation, costManual) =>
     data.map(el => {
@@ -118,6 +121,14 @@ const AutomationCalculator = ({ history }) => {
         setDataInApi(updatedData);
     };
 
+    const setEnabled = id => value => {
+        setDataInApi(api.data.map(el =>
+            el.id === id
+                ? { ...el, enabled: value }
+                : el
+        ));
+    };
+
     useEffect(() => {
         setPreflight(preflightRequest());
         setOptions(readROIOptions({ params: queryParams }));
@@ -163,7 +174,7 @@ const AutomationCalculator = ({ history }) => {
                                 <TopTemplatesSavings
                                     margin={{ top: 20, right: 20, bottom: 20, left: 70 }}
                                     id="d3-roi-chart-root"
-                                    data={api.data}
+                                    data={filterDisabled(api.data)}
                                 />
                                 <p style={{ textAlign: 'center' }}>Templates</p>
                             </React.Fragment>
@@ -180,7 +191,7 @@ const AutomationCalculator = ({ history }) => {
     const renderRight = () => (
         <WrapperRight>
             <Main style={{ paddingBottom: '0', paddingLeft: '0' }}>
-                <TotalSavings totalSavings={computeTotalSavings(api.data)} />
+                <TotalSavings totalSavings={computeTotalSavings(filterDisabled(api.data))} />
             </Main>
             <Main
                 style={{
@@ -201,6 +212,7 @@ const AutomationCalculator = ({ history }) => {
                     data={api.data}
                     setDataRunTime={setDataRunTime}
                     setUnfilteredData={api.data}
+                    setEnabled={setEnabled}
                 />
             </Main>
         </WrapperRight>
