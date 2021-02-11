@@ -210,6 +210,11 @@ const AutomationCalculator = ({ history }) => {
         <React.Fragment>
             <PageHeader style={{ flex: '0' }}>
                 <PageHeaderTitle title={'Automation Calculator'} />
+                <FilterableToolbar
+                    categories={options.data}
+                    filters={queryParams}
+                    setFilters={setFromToolbar}
+                />
             </PageHeader>
             {preflight.error && (
                 <Main>
@@ -218,17 +223,6 @@ const AutomationCalculator = ({ history }) => {
             )}
             {preflight.isSuccess && (
                 <React.Fragment>
-                    <Main style={{ paddingBottom: '0' }}>
-                        <Card>
-                            <CardBody>
-                                <FilterableToolbar
-                                    categories={options.data}
-                                    filters={queryParams}
-                                    setFilters={setFromToolbar}
-                                />
-                            </CardBody>
-                        </Card>
-                    </Main>
                     <Wrapper className="automation-wrapper">
                         {renderLeft()}
                         {renderRight()}
