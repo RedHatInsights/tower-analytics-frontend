@@ -12,7 +12,11 @@ import {
     Tooltip,
     Popover
 } from '@patternfly/react-core';
-import { InfoCircleIcon } from '@patternfly/react-icons';
+import {
+    InfoCircleIcon,
+    ToggleOnIcon,
+    ToggleOffIcon
+} from '@patternfly/react-icons';
 
 import {
     convertSecondsToMins,
@@ -72,20 +76,24 @@ const InputAndText = styled.div`
   flex: 1;
 `;
 
-export const QuestionIconTooltip = ({ data }) => (
+export const QuestionIconTooltip = ({
+    successfulElapsedTotal,
+    totalOrgCount,
+    totalClusterCount
+}) => (
     <Popover
         aria-label="template detail popover"
         position="left"
         bodyContent={
             <TooltipWrapper>
                 <p>
-                    <b>Success elapsed sum</b>: {data.successful_elapsed_total.toFixed(2)}
+                    <b>Success elapsed sum</b>: {successfulElapsedTotal.toFixed(2)}
                 </p>
                 <p>
-                    <b>Number of associated organizations</b>: {data.total_org_count}
+                    <b>Number of associated organizations</b>: {totalOrgCount}
                 </p>
                 <p>
-                    <b>Number of associated clusters</b>: {data.total_cluster_count}
+                    <b>Number of associated clusters</b>: {totalClusterCount}
                 </p>
             </TooltipWrapper>
         }
@@ -95,52 +103,71 @@ export const QuestionIconTooltip = ({ data }) => (
 );
 
 QuestionIconTooltip.propTypes = {
-    data: PropTypes.object
+    successfulElapsedTotal: PropTypes.number,
+    totalOrgCount: PropTypes.number,
+    totalClusterCount: PropTypes.number
 };
 
 const TopTemplates = ({
     data = [],
     setDataRunTime = () => {},
+    setEnabled = () => {},
     redirectToJobExplorer = () => {}
 }) => (
     <Card style={{ overflow: 'auto', flex: '1 1 0' }} className="top-templates">
         <CardBody>
             <p>Enter the time it takes to run the following templates manually.</p>
-            {data.map(data => (
-                <div key={data.id}>
+            {data.map(({
+                id,
+                name,
+                avgRunTime,
+                enabled,
+                delta,
+                successful_hosts_total,
+                successful_elapsed_total,
+                total_org_count,
+                total_cluster_count
+            }) => (
+                <div key={id}>
                     <Tooltip content={'List of jobs for this template for past 30 days'}>
                         <Button
                             style={{ padding: '15px 0 10px' }}
                             component="a"
-                            onClick={() => redirectToJobExplorer(data.id)}
+                            onClick={() => redirectToJobExplorer(id)}
                             variant="link"
                         >
-                            {data.name}
+                            {name}
                         </Button>
                     </Tooltip>
                     <TemplateDetail>
-                        <InputAndText key={data.id}>
+                        <InputAndText key={id}>
                             <InputGroup>
                                 <TextInput
-                                    id={data.id}
+                                    id={id}
                                     type="number"
                                     aria-label="time run manually"
-                                    value={convertSecondsToMins(data.avgRunTime)}
+                                    value={convertSecondsToMins(avgRunTime)}
                                     onChange={minutes =>
-                                        setDataRunTime(convertMinsToSeconds(minutes), data.id)
+                                        setDataRunTime(convertMinsToSeconds(minutes), id)
                                     }
                                 />
                                 <InputGroupText>min</InputGroupText>
                             </InputGroup>
                         </InputAndText>
                         <TemplateDetailSubTitle>
-              x {data.successful_hosts_total} host runs
+                            x {successful_hosts_total} host runs
                         </TemplateDetailSubTitle>
                         <IconGroup>
-                            <QuestionIconTooltip data={data} />
+                            <QuestionIconTooltip
+                                successfulElapsedTotal={successful_elapsed_total}
+                                totalOrgCount={total_org_count}
+                                totalClusterCount={total_cluster_count}
+                            />
+                            { !enabled && <ToggleOffIcon onClick={ () => setEnabled(id)(true) } /> }
+                            { enabled && <ToggleOnIcon onClick={ () => setEnabled(id)(false) } /> }
                         </IconGroup>
                     </TemplateDetail>
-                    <p style={{ color: '#486B00' }}>${data.delta.toFixed(2)}</p>
+                    <p style={{ color: '#486B00' }}>${delta.toFixed(2)}</p>
                 </div>
             ))}
         </CardBody>
@@ -152,7 +179,8 @@ TopTemplates.propTypes = {
     setDataRunTime: PropTypes.func,
     redirectToJobExplorer: PropTypes.func,
     deselectedIds: PropTypes.array,
-    setDeselectedIds: PropTypes.func
+    setDeselectedIds: PropTypes.func,
+    setEnabled: PropTypes.func
 };
 
 export default TopTemplates;
