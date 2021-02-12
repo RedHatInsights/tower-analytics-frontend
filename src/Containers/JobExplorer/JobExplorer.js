@@ -65,14 +65,13 @@ const JobExplorer = ({ location: { search }, history }) => {
     const [ currPage, setCurrPage ] = useState(1);
     const [ options, setOptions ] = useApi({}, optionsMapper);
 
-    let initialSearchParams = parse(search, {
-        arrayFormat: 'bracket',
-        parseBooleans: true
-    });
-    let combined = { ...initialQueryParams, ...initialSearchParams };
-    const { queryParams, setLimit, setOffset, setFromToolbar } = useQueryParams(
-        combined
-    );
+    const {
+        queryParams,
+        setLimit,
+        setOffset,
+        setFromToolbar,
+        dispatch
+    } = useQueryParams(initialQueryParams);
 
     const updateURL = () => {
         const { jobExplorer } = Paths;
@@ -93,6 +92,16 @@ const JobExplorer = ({ location: { search }, history }) => {
                 })
             // Loading is set false when the data also loaded
         );
+
+        const initialSearchParams = parse(search, {
+            arrayFormat: 'bracket',
+            parseBooleans: true
+        });
+
+        dispatch({ type: 'REINITIALIZE', value: {
+            ...initialQueryParams,
+            ...initialSearchParams
+        }});
     }, []);
 
     useEffect(() => {

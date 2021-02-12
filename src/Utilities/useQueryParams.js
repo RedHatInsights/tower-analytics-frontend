@@ -63,6 +63,8 @@ export const useQueryParams = initial => {
                 return { ...state, ...newValues };
             }
 
+            case 'REINITIALIZE':
+                return { ...value };
             case 'RESET_FILTER':
                 return {
                     ...state,
