@@ -7,6 +7,7 @@ import Legend from '../Utilities/Legend';
 import { Paths } from '../paths';
 import { stringify } from 'query-string';
 import styled from 'styled-components';
+import { formatDate as dateForJobExplorer } from '../Utilities/helpers';
 
 const Wrapper = styled.div`
   display: flex;
@@ -191,7 +192,7 @@ const GroupedBarChart = (props) => {
         }
 
         const { jobExplorer } = Paths;
-        const formattedDate = formatDate(date);
+        const formattedDate = dateForJobExplorer(date);
         const initialQueryParams = {
             quick_date_range: 'custom',
             start_date: formattedDate,
