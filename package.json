@@ -19,7 +19,8 @@
     "react-router-dom": "^5.2.0",
     "redux": "^3.7.2",
     "redux-logger": "^3.0.6",
-    "redux-promise-middleware": "^5.1.1"
+    "redux-promise-middleware": "^5.1.1",
+    "redux-toolkit": "^1.1.2"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
@@ -65,8 +66,8 @@
     "enzyme-adapter-react-16": "^1.15.2",
     "enzyme-to-json": "^3.3.4",
     "eslint": "7.19.0",
-    "eslint-loader": "4.0.2",
     "eslint-config-prettier": "^2.10.0",
+    "eslint-loader": "4.0.2",
     "eslint-plugin-react": "^7.11.1",
     "fetch-mock-jest": "^1.3.0",
     "identity-obj-proxy": "^3.0.0",
@@ -84,6 +85,7 @@
     "stylelint": "^9.10.1",
     "stylelint-config-recommended-scss": "^3.2.0",
     "stylelint-scss": "^3.3.0",
+    "typescript": "^4.1.5",
     "webpack": "^4.17.2",
     "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.2.3"
