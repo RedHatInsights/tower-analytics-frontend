@@ -87,7 +87,8 @@ const FilterableToolbar = ({
                 setFilter={value => setFilters('quick_date_range', value)}
                 hasChips={false}
             />
-            {filters.quick_date_range === 'custom' && (
+            {filters.quick_date_range &&
+            filters.quick_date_range.includes('custom') && (
                 <CustomDateSelector
                     startDate={filters.start_date ? filters.start_date : ''}
                     endDate={filters.end_date ? filters.end_date : ''}
