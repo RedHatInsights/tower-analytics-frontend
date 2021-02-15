@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
     ToolbarFilter,
     Select,
-    SelectOption
+    SelectOption as PFSelectOption
 } from '@patternfly/react-core';
 
 import {
@@ -11,11 +11,19 @@ import {
     handleSingleChips
 } from './helpers';
 import { optionsForCategories } from './constants';
+import styled from 'styled-components';
+
+const SelectOption = styled(PFSelectOption)`
+    display: block;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+`;
 
 const renderValues = values =>
     values && values.map(({ key, value, description }) => (
         <SelectOption key={ key } value={ key } description={ description }>
-            { value }
+            <span style={{ marginLeft: 5 }}>{ value } </span>
         </SelectOption>
     ));
 
@@ -86,15 +94,16 @@ const ToolbarFilterItem = ({
             deleteChip={hasChips ? onDelete : null}
         >
             <Select
-                variant={ options.isSingle ? 'single' : 'checkbox' }
-                aria-label={ categoryKey }
-                onToggle={ () => setExpanded(!expanded) }
-                onSelect={ onSelect }
-                selections={ filter }
-                isOpen={ expanded }
-                onFilter={ onFilter }
+                variant={options.isSingle ? 'single' : 'checkbox'}
+                aria-label={categoryKey}
+                onToggle={() => setExpanded(!expanded)}
+                onSelect={onSelect}
+                selections={filter}
+                isOpen={expanded}
                 hasInlineFilter
-                placeholderText={ options.placeholder }
+                placeholderText={options.placeholder}
+                onFilter={ onFilter }
+                maxHeight={ '1000%' }
             >
                 { renderValues(values) }
             </Select>
