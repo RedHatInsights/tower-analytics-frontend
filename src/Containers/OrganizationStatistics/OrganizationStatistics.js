@@ -128,6 +128,11 @@ const OrganizationStatistics = ({ history }) => {
         <React.Fragment>
             <PageHeader>
                 <PageHeaderTitle title={'Organization Statistics'} />
+                <FilterableToolbar
+                    categories={options.data}
+                    filters={queryParams}
+                    setFilters={setFromToolbar}
+                />
             </PageHeader>
             {preflight.error && (
                 <Main>
@@ -136,17 +141,6 @@ const OrganizationStatistics = ({ history }) => {
             )}
             {preflight.isSuccess && (
                 <React.Fragment>
-                    <Main style={{ paddingBottom: '0' }}>
-                        <Card>
-                            <CardBody>
-                                <FilterableToolbar
-                                    categories={options.data}
-                                    filters={queryParams}
-                                    setFilters={setFromToolbar}
-                                />
-                            </CardBody>
-                        </Card>
-                    </Main>
                     <Main>
                         <TopCard>
                             <CardTitle>
