@@ -42,6 +42,7 @@ export const useQueryParams = initial => {
             case 'SET_CLUSTER':
             case 'SET_TEMPLATE':
             case 'SET_SORTBY':
+            case 'SET_SORTORDER':
             case 'SET_ROOT_WORKFLOWS_AND_JOBS':
                 return { ...state, ...value };
             case 'SET_QUICK_DATE_RANGE': {
@@ -85,6 +86,7 @@ export const useQueryParams = initial => {
         cluster_id: 'SET_CLUSTER',
         template_id: 'SET_TEMPLATE',
         sort_by: 'SET_SORTBY',
+        sort_order: 'SET_SORTORDER',
         start_date: 'SET_START_DATE',
         end_date: 'SET_END_DATE',
         only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS'
