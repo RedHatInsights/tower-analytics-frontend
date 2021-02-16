@@ -148,11 +148,12 @@ export const readClustersOptions = ({ params = {}}) => {
 };
 
 export const readJobExplorer = ({ params = {}}) => {
-    const { limit, offset, sort_by } = params;
+    const { limit, offset, sort_by, sort_order } = params;
+    const combinedSort = `${sort_by}${sort_order}`;
     const paginationParams = {
         limit,
         offset,
-        sort_by
+        sort_by: combinedSort
     };
     const qs = stringify(paginationParams);
     const formattedUrl = getAbsoluteUrl();
