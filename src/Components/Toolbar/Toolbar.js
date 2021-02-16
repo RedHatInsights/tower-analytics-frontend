@@ -19,6 +19,7 @@ import {
 import {
     FilterIcon,
     SortAmountDownIcon,
+    SortAmountUpIcon,
     CogIcon,
     QuestionCircleIcon,
     TimesIcon
@@ -37,6 +38,7 @@ const FilterableToolbar = ({
     hasSettings = false
 }) => {
     const [ settingsExpanded, setSettingsExpanded ] = useState(false);
+    const [ isAsc, setIsAsc ] = useState(false);
     const { quick_date_range, sort_by, ...restCategories } = categories;
 
     // Filter out elements which are not in the option object.
@@ -53,6 +55,15 @@ const FilterableToolbar = ({
 
     const onInputChange = (type, value) => {
         setFilters(type, value);
+    };
+
+    const getSortOrder = val => {
+        isAsc ? `${val}:asc` : `${val}:desc`;
+    };
+
+    const handleSortToggle = () => {
+        setIsAsc(!isAsc);
+        setFilters('sort_by', getSortOrder(filters.sort_by));
     };
 
     const FilterCategoriesGroup = () => (
@@ -104,11 +115,12 @@ const FilterableToolbar = ({
                 categoryKey="sort_by"
                 filter={filters.sort_by}
                 values={sort_by}
-                setFilter={value => setFilters('sort_by', value)}
+                setFilter={value => setFilters('sort_by', getSortOrder(value))}
                 hasChips={false}
             />
-            <Button variant="control">
-                <SortAmountDownIcon />
+            <Button variant="control" onClick={handleSortToggle}>
+                {isAsc && (<SortAmountUpIcon />)}
+                {!isAsc && (<SortAmountDownIcon />)}
             </Button>
         </ToolbarGroup>
     );
