@@ -191,12 +191,17 @@ export const readClustersBarChart = ({ params = {}}) => {
 };
 
 export const readROI = ({ params = {}}) => {
+    const { sort_order, sort_by, ...rest } = params;
+    const combined = {
+        ...rest,
+        sort_by: `${sort_by}${sort_order}`
+    };
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(ROIEndpoint, formattedUrl);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+    Object.keys(combined).forEach(key => url.searchParams.append(key, params[key]));
     return fetch(url, {
         method: 'POST',
-        body: JSON.stringify(params)
+        body: JSON.stringify(combined)
     }).then(handleResponse);
 };
 
