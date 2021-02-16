@@ -25,13 +25,9 @@ import {
 } from '../../Utilities/helpers';
 
 const TemplateDetail = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  div,
   em {
-    padding-right: 5px;
+    display: block;
+    padding: 5px 0;
   }
 
   @media (max-width: 1490px) {
@@ -77,6 +73,19 @@ const InputAndText = styled.div`
   flex: 1;
 `;
 
+export const showSortAttr = (details, s) => {
+    const trimmed = s.split(':')[0];
+    const sortAttribute = Object.keys(details).map(k =>
+        k === trimmed ? `${details[k]}` : null
+    );
+
+    return (
+        <TemplateDetailSubTitle>
+            {capitalize(trimmed.split('_').join(' '))}: {sortAttribute}
+        </TemplateDetailSubTitle>
+    );
+};
+
 export const QuestionIconTooltip = ({ details }) => {
     return (
         <Popover
@@ -103,6 +112,7 @@ QuestionIconTooltip.propTypes = {
 
 const TopTemplates = ({
     data = [],
+    sortBy = null,
     setDataRunTime = () => {},
     setEnabled = () => {},
     redirectToJobExplorer = () => {}
@@ -140,6 +150,7 @@ const TopTemplates = ({
                         <TemplateDetailSubTitle>
                             x {d.successful_hosts_total} host runs
                         </TemplateDetailSubTitle>
+                        {showSortAttr(d, sortBy)}
                         <IconGroup>
                             <QuestionIconTooltip
                                 details={d}
@@ -161,7 +172,8 @@ TopTemplates.propTypes = {
     redirectToJobExplorer: PropTypes.func,
     deselectedIds: PropTypes.array,
     setDeselectedIds: PropTypes.func,
-    setEnabled: PropTypes.func
+    setEnabled: PropTypes.func,
+    sortBy: PropTypes.string
 };
 
 export default TopTemplates;
