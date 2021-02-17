@@ -7,7 +7,8 @@ import EmptyState from '../../Components/EmptyState';
 import {
     preflightRequest,
     readClustersOptions,
-    readJobExplorer,
+    readSuccessfulFailedJobs,
+    readJobsGroupByTemplate,
     readEventExplorer
 } from '../../Api';
 
@@ -161,9 +162,9 @@ const Clusters = () => {
     // Get and update the data
     useEffect(() => {
         const fetchEndpoints = () => {
-            setData(readJobExplorer({ params: queryParams }));
-            setTemplates(readJobExplorer({ params: topTemplatesParams }));
-            setWorkflows(readJobExplorer({ params: topWorkflowParams }));
+            setData(readSuccessfulFailedJobs({ params: queryParams }));
+            setTemplates(readJobsGroupByTemplate({ params: topTemplatesParams }));
+            setWorkflows(readJobsGroupByTemplate({ params: topWorkflowParams }));
             setModules(readEventExplorer({ params: topModuleParams }));
         };
 
