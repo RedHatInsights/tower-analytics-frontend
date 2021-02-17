@@ -148,12 +148,11 @@ export const readClustersOptions = ({ params = {}}) => {
 };
 
 export const readJobExplorer = ({ params = {}}) => {
-    const { limit, offset, sort_by, sort_order } = params;
-    const combinedSort = `${sort_by}${sort_order}`;
+    const { limit, offset, sort_by } = params;
     const paginationParams = {
         limit,
         offset,
-        sort_by: combinedSort
+        sort_by
     };
     const qs = stringify(paginationParams);
     const formattedUrl = getAbsoluteUrl();
@@ -217,10 +216,10 @@ export const readClustersBarChart = ({ params = {}}) => {
 };
 
 export const readROI = ({ params = {}}) => {
-    const { sort_order, sort_by, ...rest } = params;
+    const { sort_by, ...rest } = params;
     const combined = {
         ...rest,
-        sort_by: `${sort_by}${sort_order}`
+        sort_by
     };
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(ROIEndpoint, formattedUrl);

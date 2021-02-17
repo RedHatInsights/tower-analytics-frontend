@@ -103,21 +103,21 @@ const FilterableToolbar = ({
         <ToolbarGroup variant="filter-group">
             <ToolbarFilterItem
                 categoryKey="sort_by"
-                filter={filters.sort_by}
+                filter={filters.sort_attr}
                 values={sort_by}
-                setFilter={value => setFilters('sort_by', value)}
+                setFilter={value => setFilters('sort_attr', value.split(':')[0])}
                 hasChips={false}
             />
             <Button variant="control"
                 onClick={() =>
                     setFilters(
                         'sort_order',
-                        filters.sort_order === ':asc' ? ':desc' : ':asc'
+                        filters.sort_order === 'asc' ? 'desc' : 'asc'
                     )
                 }
             >
-                {filters.sort_order === ':asc' && (<SortAmountUpIcon />)}
-                {filters.sort_order === ':desc' && (<SortAmountDownIcon />)}
+                {filters.sort_order === 'asc' && (<SortAmountUpIcon />)}
+                {filters.sort_order === 'desc' && (<SortAmountDownIcon />)}
             </Button>
         </ToolbarGroup>
     );
