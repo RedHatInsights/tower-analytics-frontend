@@ -182,6 +182,7 @@ const GroupedBarChart = ({
             return height - y(d.value);
         })
         .on('mouseover', function(d) {
+            d3.select(this).style('cursor', onClick ? 'pointer' : 'default');
             d3.select(this).style('fill', d3.rgb(color(d.name)).darker(1));
             tooltip.handleMouseOver();
         })
