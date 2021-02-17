@@ -34,6 +34,21 @@ const dummyPieData = size => ({
     }))
 });
 
+const hostExplorerUrl = 'path:/api/tower-analytics/v1/host_explorer';
+const dummyHostsData = size => ({
+    dates: [ ...Array(size).keys() ].map(el => ({
+        items: [ ...Array(size).keys() ].map(i => ({
+            id: i - 1,
+            total_count: i * el,
+            name: i === 0 ? '' : 'org name',
+            host_task_count: 8000,
+            total_org_count: 1,
+            total_unique_host_count: 100
+        })),
+        date: new Date()
+    }))
+});
+
 const jobExplorerOptionsUrl =
   'path:/api/tower-analytics/v1/dashboard_organization_statistics_options/';
 const jobExplorerOptions = {
@@ -49,7 +64,6 @@ const jobExplorerOptions = {
 
 const defaultQueryParams = {
     group_by: 'org',
-    include_others: true,
     quick_date_range: 'last_30_days',
     limit: 5,
     job_type: [ 'workflowjob', 'job' ],
@@ -59,6 +73,18 @@ const defaultQueryParams = {
     org_id: [],
     status: [],
     template_id: []
+};
+
+const defaultHostsQueryParams = {
+    status: [],
+    org_id: [],
+    quick_date_range: 'last_30_days',
+    limit: 5,
+    job_type: [ 'workflowjob', 'job' ],
+    cluster_id: [],
+    template_id: [],
+    start_date: null,
+    end_date: null
 };
 
 const lastCallBody = url => JSON.parse(fetchMock.lastCall(url)[1].body);
@@ -92,6 +118,7 @@ describe('Containers/OrganizationStatistics', () => {
             { ...dummyPieData(5) }
         );
         fetchMock.post({ url: jobExplorerOptionsUrl }, { ...jobExplorerOptions });
+        fetchMock.post({ url: hostExplorerUrl }, { ...dummyHostsData(5) });
     });
 
     afterEach(() => {
@@ -165,11 +192,90 @@ describe('Containers/OrganizationStatistics', () => {
         });
         wrapper.update();
 
-        const { sort_by, attributes, granularity, ...rest } = lastCallBody(
+        const {
+            sort_by,
+            attributes,
+            granularity,
+            include_others,
+            ...rest
+        } = lastCallBody(
             jobExplorerUrl
         );
 
         expect(sort_by.split(':')[1]).toBe('desc');
         expect(rest).toEqual(defaultQueryParams);
+    });
+
+    it('should handle the tab swithcing correctly', async () => {
+        await act(async () => {
+            wrapper = mountPage(OrganizationStatistics);
+        });
+        wrapper.update();
+
+        const tabs = wrapper.find('.pf-c-tabs__link');
+
+        // Click on the hosts tab
+        await act(async () => {
+            tabs.at(2).simulate('click');
+        });
+        wrapper.update();
+
+        // Wait for the call to hosts options and hosts data
+        const checkHostsCall = () => {
+            const {
+                sort_by,
+                attributes,
+                granularity,
+                group_by,
+                group_by_time,
+                ...rest } = lastCallBody(hostExplorerUrl);
+            expect(rest).toEqual(defaultHostsQueryParams);
+        };
+
+        checkHostsCall();
+
+        // Click on the orgs tab
+        await act(async () => {
+            tabs.at(0).simulate('click');
+        });
+        wrapper.update();
+
+        // Wait for the calls for the orgs options and orgs data
+        const checkOrgsCall = () => {
+            const {
+                sort_by,
+                attributes,
+                granularity,
+                group_by_time,
+                ...rest } = lastCallBody(jobExplorerUrl);
+            expect(rest).toEqual(defaultQueryParams);
+        };
+
+        checkOrgsCall();
+    });
+
+    xit('shoud redirect to the job explorer page with the correct params', async () => {
+        // This test is not possible to run, since the d3 is not rendering
+        // in enzyme.
+        await act(async () => {
+            wrapper = mountPage(OrganizationStatistics);
+        });
+        wrapper.update();
+
+        // Click on a bar which is not an other
+        // Wait last call to be to JobExplorer page
+    });
+
+    xit('should not redirect to job explorer clicking on the hosts chart', async () => {
+        // This test is not possible to run, since the d3 is not rendering
+        // in enzyme.
+        await act(async () => {
+            wrapper = mountPage(OrganizationStatistics);
+        });
+        wrapper.update();
+
+        // Click on the hosts chart
+        // Click on the bar
+        // Await no new call
     });
 });

@@ -91,6 +91,7 @@
   "scripts": {
     "build": "webpack --config config/prod.webpack.config.js",
     "test": "jest --verbose",
+    "test_dev": "jest --coverage=false --watch",
     "integration_headless": "cypress run --headless --browser chrome",
     "integration": "cypress open",
     "lint": "npm-run-all lint:*",
