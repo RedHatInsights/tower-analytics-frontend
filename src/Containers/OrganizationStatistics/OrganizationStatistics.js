@@ -176,14 +176,14 @@ const OrganizationStatistics = ({ history }) => {
     }, []);
 
     useEffect(() => {
-        setJobs(readJobRunsByOrg({ params: queryParams }));
-        setTasks(readJobEventsByOrg({ params: queryParams }));
-    }, [ queryParams ]);
-
-    useEffect(() => {
         const apiPromise = chartMapper[activeTabKey].api;
         setOrgs(apiPromise({ params: queryParams }));
     }, [ queryParams, activeTabKey ]);
+
+    useEffect(() => {
+        setJobs(readJobRunsByOrg({ params: queryParams }));
+        setTasks(readJobEventsByOrg({ params: queryParams }));
+    }, [ queryParams ]);
 
     return (
         <React.Fragment>
