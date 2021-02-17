@@ -4,6 +4,8 @@ import styled from 'styled-components';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import useApi from '../../Utilities/useApi';
+import useRedirect from '../../Utilities/useRedirect';
+import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
 
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
@@ -33,7 +35,11 @@ import {
     Tab
 } from '@patternfly/react-core';
 
-import GroupedBarChart from '../../Charts/GroupedBarChart';
+import {
+    GroupedBarChart,
+    OrgsTooltip,
+    HostsTooltip
+} from '../../Charts/GroupedBarChart/';
 import PieChart from '../../Charts/PieChart';
 import FilterableToolbar from '../../Components/Toolbar/';
 import { organizationStatistics as constants } from '../../Utilities/constants';
@@ -102,20 +108,52 @@ const pieChartMapper = attrName => ({ items = []}) =>
         name: id === -1 ? 'Others' : name || 'No organization'
     }));
 
+const redirectToJobExplorer = toJobExplorer => ({ date, id }) => {
+    if (id === -1) {
+        // disable clicking on "others" block
+        return;
+    }
+
+    const formattedDate = dateForJobExplorer(date);
+    const initialQueryParams = {
+        quick_date_range: 'custom',
+        start_date: formattedDate,
+        end_date: formattedDate,
+        status: [
+            'successful',
+            'failed',
+            'new',
+            'pending',
+            'waiting',
+            'error',
+            'canceled',
+            'running'
+        ],
+        org_id: [ id ]
+    };
+
+    toJobExplorer(initialQueryParams);
+};
+
 const chartMapper = [
     {
         api: readJobsByDateAndOrg,
         attr: 'total_count',
-        label: 'Jobs across organizations'
+        label: 'Jobs across organizations',
+        onClick: redirectToJobExplorer,
+        tooltip: OrgsTooltip
     },
     {
         api: readHostAcrossOrg,
         attr: 'total_unique_host_count',
-        label: 'Hosts across organizations'
+        label: 'Hosts across organizations',
+        onClick: () => null,
+        tooltip: HostsTooltip
     }
 ];
 
 const OrganizationStatistics = ({ history }) => {
+    const toJobExplorer = useRedirect(history, 'jobExplorer');
     const [ preflight, setPreflight ] = useApi(null);
     const [ activeTabKey, setActiveTabKey ] = useState(0);
     const [ orgs, setOrgs ] = useApi([], orgsChartMapper(chartMapper[activeTabKey].attr));
@@ -183,6 +221,8 @@ const OrganizationStatistics = ({ history }) => {
                                         timeFrame={ orgs.data .length }
                                         colorFunc={ colorFunc }
                                         yLabel={ chartMapper[activeTabKey].label }
+                                        onClick={ chartMapper[activeTabKey].onClick(toJobExplorer) }
+                                        TooltipClass={ chartMapper[activeTabKey].tooltip }
                                     />
                                 )}
                             </CardBody>
