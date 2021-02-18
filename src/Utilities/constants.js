@@ -58,7 +58,7 @@ export const organizationStatistics = {
         status: [],
         org_id: [],
         quick_date_range: 'last_30_days',
-        sort_attr: 'desc',
+        sort_attr: 'Order',
         sort_order: 'desc',
         limit: 5,
         job_type: [ 'workflowjob', 'job' ],
