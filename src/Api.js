@@ -240,17 +240,12 @@ export const readClustersBarChart = ({ params = {}}) => {
 };
 
 export const readROI = ({ params = {}}) => {
-    const { sort_by, ...rest } = params;
-    const combined = {
-        ...rest,
-        sort_by
-    };
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(ROIEndpoint, formattedUrl);
-    Object.keys(combined).forEach(key => url.searchParams.append(key, params[key]));
+    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     return authenticatedFetch(url, {
         method: 'POST',
-        body: JSON.stringify(combined)
+        body: JSON.stringify(params)
     }).then(handleResponse);
 };
 
