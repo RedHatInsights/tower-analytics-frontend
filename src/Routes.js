@@ -20,35 +20,35 @@ import { Paths } from './paths';
  *
  */
 const Clusters = asyncComponent(() =>
-  import(
-      /* webpackChunkName: "automation_analytics" */
-      './Containers/Clusters/Clusters'
-  )
+    import(
+        /* webpackChunkName: "automation_analytics" */
+        './Containers/Clusters/Clusters'
+    )
 );
 const OrganizationStatistics = asyncComponent(() =>
-  import(
-      /* webpackChunkName: "automation_analytics" */
-      './Containers/OrganizationStatistics/OrganizationStatistics'
-  )
+    import(
+        /* webpackChunkName: "automation_analytics" */
+        './Containers/OrganizationStatistics/OrganizationStatistics'
+    )
 );
 const Notifications = asyncComponent(() =>
-  import(
-      /* webpackChunkName: "automation_analytics" */
-      './Containers/Notifications/Notifications'
-  )
+    import(
+        /* webpackChunkName: "automation_analytics" */
+        './Containers/Notifications/Notifications'
+    )
 );
 const AutomationCalculator = asyncComponent(() =>
-  import(
-      /* webpackChunkName: "automation_analytics" */
-      './Containers/AutomationCalculator/AutomationCalculator'
-  )
+    import(
+        /* webpackChunkName: "automation_analytics" */
+        './Containers/AutomationCalculator/AutomationCalculator'
+    )
 );
 
 const JobExplorer = asyncComponent(() =>
-  import(
-      /* webpackChunkName: "automation_analytics" */
-      './Containers/JobExplorer/JobExplorer'
-  )
+    import(
+        /* webpackChunkName: "automation_analytics" */
+        './Containers/JobExplorer/JobExplorer'
+    )
 );
 
 const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {

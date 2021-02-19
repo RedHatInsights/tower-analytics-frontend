@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "sourceMap": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "target": "es5",
+    "lib": ["es6", "dom"],
+    "skipLibCheck": true,
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+    "noErrorTruncation": true,
+    "strict": true, // Never set this rule to false. Setting strict to false basically turns off any type check and we could not use TS at all.
+    "typeRoots": [
+      "./node_modules/@types",
+      "./src/types/",
+  ]
+  },
+  "include": ["./src/**/*.ts", "./src/**/*.tsx", "./src/**/*.js"],
+  "exclude": ["./dist"]
+}

@@ -11,6 +11,20 @@ extends:
   - 'eslint:recommended'
   - 'prettier'
   - 'plugin:react/recommended'
+# Adding as an override ts linting only for the ts and tsx files
+overrides:
+  - files:
+      - 'src/**/*.{ts,tsx}'
+    extends:
+      - 'plugin:@typescript-eslint/recommended'
+      - 'plugin:@typescript-eslint/recommended-requiring-type-checking'
+    parser: '@typescript-eslint/parser'
+    rules:
+        no-use-before-define: off
+        "@typescript-eslint/no-use-before-define": error
+    parserOptions:
+      tsconfigRootDir: ./
+      project: ./tsconfig.json
 parserOptions:
   ecmaVersion: 7
   sourceType: module
