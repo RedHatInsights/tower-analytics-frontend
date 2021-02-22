@@ -85,6 +85,7 @@
     "stylelint": "^9.10.1",
     "stylelint-config-recommended-scss": "^3.2.0",
     "stylelint-scss": "^3.3.0",
+    "ts-loader": "^8.0.17",
     "typescript": "^4.1.5",
     "webpack": "^4.17.2",
     "webpack-bundle-analyzer": "^3.3.2",
