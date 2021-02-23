@@ -1,4 +1,4 @@
-import { pfmulti } from './colors.js';
+import { pfmulti } from './colors';
 
 describe('Utilities/colors', () => {
     it('has colors', () => {
