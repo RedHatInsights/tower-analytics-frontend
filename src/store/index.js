@@ -1,4 +1,4 @@
-import ReducerRegistry from '@redhat-cloud-services/frontend-components-utilities/ReducerRegistry';
+import ReducerRegistry from '@redhat-cloud-services/frontend-components-utilities/files/cjs/ReducerRegistry';
 import promiseMiddleware from 'redux-promise-middleware';
 
 let registry;
@@ -8,7 +8,7 @@ export function init(...middleware) {
         throw new Error('store already initialized');
     }
 
-    registry = new ReducerRegistry({}, [ promiseMiddleware(), ...middleware ]);
+    registry = new ReducerRegistry({}, [ promiseMiddleware, ...middleware ]);
 
     //If you want to register all of your reducers, this is good place.
     /*
