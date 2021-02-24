@@ -11,7 +11,7 @@ jobs:
   cypress-tests:
     # # Temporarily disabling the cypress test until the full stack
     # # or the tests are not ready for running them correctly.
-    # if: ${{ false }}  # disable for now
+    if: ${{ false }}  # disable for now
 
     runs-on: ubuntu-latest
 
@@ -30,6 +30,53 @@ jobs:
         run: make stack_ci_cypress
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+
+  cypress-proxy-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Set node version
+        uses: actions/setup-node@v2
+        with:
+          node-version: '10'
+
+      - name: Checkout the branch
+        uses: actions/checkout@v2
+
+      - name: Checkout the proxy repo
+        uses: actions/checkout@v2
+        with:
+          repository: RedHatInsights/insights-proxy
+          path: insights-proxy
+
+      - name: Set up proxy
+        working-directory: ./insights-proxy
+        run: |
+          npm i
+          sudo bash scripts/patch-etc-hosts.sh
+          bash scripts/update.sh
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v2
+        with:
+          record: true
+          browser: chrome
+          headless: true
+          build: npm run build
+          start: |
+            npm run start
+            npm run proxy
+          spec: cypress/integration/**/*spec.js
+          wait-on: 'https://localhost:8002/'
+        env:
+          CYPRESS_BASE_URL: 'https://prod.foo.redhat.com:1337/beta'
+          CYPRESS_USERNAME: redhat-eng-bthomass
+          CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_OPTIONS: '--max_old_space_size=16384'
+          NODE_TLS_REJECT_UNAUTHORIZED: 0
+          START_SERVER_AND_TEST_INSECURE: 1
 
   jest-tests:
     runs-on: ubuntu-latest
