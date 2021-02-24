@@ -8,29 +8,6 @@ on:
     branches: [ devel ]
 
 jobs:
-  cypress-tests:
-    # # Temporarily disabling the cypress test until the full stack
-    # # or the tests are not ready for running them correctly.
-    if: ${{ false }}  # disable for now
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout the anayltics pipeline repo
-        uses: actions/checkout@v2
-        with:
-          repository: RedHatInsights/analytics-pipeline
-
-      - name: Checkout the fronted branch
-        uses: actions/checkout@v2
-        with:
-          path: srv/tower-analytics-frontend
-
-      - name: Spin up the stack and run cypress tests
-        run: make stack_ci_cypress
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-
   cypress-proxy-tests:
     runs-on: ubuntu-latest
 
@@ -78,9 +55,8 @@ jobs:
           NODE_TLS_REJECT_UNAUTHORIZED: 0
           START_SERVER_AND_TEST_INSECURE: 1
 
-  jest-tests:
+  lint:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -92,6 +68,19 @@ jobs:
 
       - name: Check the code with linter
         run: npm run lint
+
+
+  jest-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '10'
+
+      - name: Install modules
+        run: npm ci
 
       - name: Run tests
         run: npm run test

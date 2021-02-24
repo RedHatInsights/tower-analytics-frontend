@@ -5,9 +5,8 @@ on:
     branches: [ devel ]
 
 jobs:
-  jest-tests:
+  lint:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
@@ -20,12 +19,30 @@ jobs:
       - name: Check the code with linter
         run: npm run lint
 
+
+  jest-tests:
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '10'
+
+      - name: Install modules
+        run: npm ci
+
       - name: Run tests
         run: npm run test
 
   cypress-cloud-beta:
     runs-on: ubuntu-latest
     needs: jest-tests
+    # disable for now - we need jest deploy before running this
+    # the jest deploy is more complicated process and we need to wait for beta to update
+    # before running cypress tests on beta
+    if: ${{ false }}
 
     steps:
       - name: Set node version
