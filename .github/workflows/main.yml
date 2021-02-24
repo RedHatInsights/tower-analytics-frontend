@@ -9,9 +9,9 @@ on:
 
 jobs:
   cypress-tests:
-    # Temporarily disabling the cypress test until the full stack
-    # or the tests are not ready for running them correctly.
-    if: ${{ false }}  # disable for now
+    # # Temporarily disabling the cypress test until the full stack
+    # # or the tests are not ready for running them correctly.
+    # if: ${{ false }}  # disable for now
 
     runs-on: ubuntu-latest
 

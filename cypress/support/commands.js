@@ -52,12 +52,12 @@ Cypress.Commands.add('clearFeatureDialogs', () => {
 });
 
 Cypress.Commands.add('loginFlow', () => {
-    cy.intercept(
-        'https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token'
-    ).as('token');
+    // cy.intercept(
+    //     'https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token'
+    // ).as('token');
 
     cy.visit('/');
-    cy.get('[data-ouia-component-id="1"]').click();
+    cy.get('[data-ouia-component-id="0"]').click();
 
     cy.getUsername().then(uname => cy.get('#username').type(`${uname}{enter}`));
     // Inportant!
@@ -68,5 +68,7 @@ Cypress.Commands.add('loginFlow', () => {
     cy.getPassword().then(password =>
         cy.get('#password').type(`${password}{enter}`, { log: false }));
 
-    cy.wait('@token');
+    // cy.wait('@token');
+    cy.url().should('eq', Cypress.config().baseUrl + '/');
+
 });
