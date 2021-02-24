@@ -20,17 +20,14 @@ import {
 
 import {
     convertSecondsToMins,
-    convertMinsToSeconds
+    convertMinsToSeconds,
+    capitalize
 } from '../../Utilities/helpers';
 
 const TemplateDetail = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  div,
   em {
-    padding-right: 5px;
+    display: block;
+    padding: 5px 0;
   }
 
   @media (max-width: 1490px) {
@@ -76,25 +73,30 @@ const InputAndText = styled.div`
   flex: 1;
 `;
 
-export const QuestionIconTooltip = ({
-    successfulElapsedTotal,
-    totalOrgCount,
-    totalClusterCount
-}) => (
+const showSortAttr = (details, sortBy) => {
+    const trimmed = sortBy.split(':')[0];
+    const sortAttribute = Object.keys(details).map(k =>
+        k === trimmed ? `${details[k]}` : null
+    );
+
+    return (
+        <TemplateDetailSubTitle>
+            {capitalize(trimmed.split('_').join(' '))}: {sortAttribute}
+        </TemplateDetailSubTitle>
+    );
+};
+
+const QuestionIconTooltip = ({ details }) => (
     <Popover
         aria-label="template detail popover"
         position="left"
         bodyContent={
             <TooltipWrapper>
-                <p>
-                    <b>Success elapsed sum</b>: {successfulElapsedTotal.toFixed(2)}
-                </p>
-                <p>
-                    <b>Number of associated organizations</b>: {totalOrgCount}
-                </p>
-                <p>
-                    <b>Number of associated clusters</b>: {totalClusterCount}
-                </p>
+                {Object.keys(details).map((k, i) => (
+                    <p key={i}>
+                        <b>{capitalize(k.split('_').join(' '))}</b>: {details[k]}
+                    </p>
+                ))}
             </TooltipWrapper>
         }
     >
@@ -103,13 +105,12 @@ export const QuestionIconTooltip = ({
 );
 
 QuestionIconTooltip.propTypes = {
-    successfulElapsedTotal: PropTypes.number,
-    totalOrgCount: PropTypes.number,
-    totalClusterCount: PropTypes.number
+    details: PropTypes.object
 };
 
 const TopTemplates = ({
     data = [],
+    sortBy = '',
     setDataRunTime = () => {},
     setEnabled = () => {},
     redirectToJobExplorer = () => {}
@@ -117,57 +118,46 @@ const TopTemplates = ({
     <Card style={{ overflow: 'auto', flex: '1 1 0' }} className="top-templates">
         <CardBody>
             <p>Enter the time it takes to run the following templates manually.</p>
-            {data.map(({
-                id,
-                name,
-                avgRunTime,
-                enabled,
-                delta,
-                successful_hosts_total,
-                successful_elapsed_total,
-                total_org_count,
-                total_cluster_count
-            }) => (
-                <div key={id}>
+            {data.map(d => (
+                <div key={d.id}>
                     <Tooltip content={'List of jobs for this template for past 30 days'}>
                         <Button
                             style={{ padding: '15px 0 10px' }}
                             component="a"
-                            onClick={() => redirectToJobExplorer(id)}
+                            onClick={() => redirectToJobExplorer(d.id)}
                             variant="link"
                         >
-                            {name}
+                            {d.name}
                         </Button>
                     </Tooltip>
                     <TemplateDetail>
-                        <InputAndText key={id}>
+                        <InputAndText key={d.id}>
                             <InputGroup>
                                 <TextInput
-                                    id={id}
+                                    id={d.id}
                                     type="number"
                                     aria-label="time run manually"
-                                    value={convertSecondsToMins(avgRunTime)}
+                                    value={convertSecondsToMins(d.avgRunTime)}
                                     onChange={minutes =>
-                                        setDataRunTime(convertMinsToSeconds(minutes), id)
+                                        setDataRunTime(convertMinsToSeconds(minutes), d.id)
                                     }
                                 />
                                 <InputGroupText>min</InputGroupText>
                             </InputGroup>
                         </InputAndText>
                         <TemplateDetailSubTitle>
-                            x {successful_hosts_total} host runs
+                            x {d.successful_hosts_total} host runs
                         </TemplateDetailSubTitle>
+                        {showSortAttr(d, sortBy)}
                         <IconGroup>
                             <QuestionIconTooltip
-                                successfulElapsedTotal={successful_elapsed_total}
-                                totalOrgCount={total_org_count}
-                                totalClusterCount={total_cluster_count}
+                                details={d}
                             />
-                            { !enabled && <ToggleOffIcon onClick={ () => setEnabled(id)(true) } /> }
-                            { enabled && <ToggleOnIcon onClick={ () => setEnabled(id)(false) } /> }
+                            { !d.enabled && <ToggleOffIcon onClick={ () => setEnabled(d.id)(true) } /> }
+                            { d.enabled && <ToggleOnIcon onClick={ () => setEnabled(d.id)(false) } /> }
                         </IconGroup>
                     </TemplateDetail>
-                    <p style={{ color: '#486B00' }}>${delta.toFixed(2)}</p>
+                    <p style={{ color: '#486B00' }}>${d.delta.toFixed(2)}</p>
                 </div>
             ))}
         </CardBody>
@@ -180,7 +170,8 @@ TopTemplates.propTypes = {
     redirectToJobExplorer: PropTypes.func,
     deselectedIds: PropTypes.array,
     setDeselectedIds: PropTypes.func,
-    setEnabled: PropTypes.func
+    setEnabled: PropTypes.func,
+    sortBy: PropTypes.string
 };
 
 export default TopTemplates;

@@ -213,6 +213,7 @@ const AutomationCalculator = ({ history }) => {
                     setDataRunTime={setDataRunTime}
                     setUnfilteredData={api.data}
                     setEnabled={setEnabled}
+                    sortBy={queryParams.sort_by}
                 />
             </Main>
         </WrapperRight>
