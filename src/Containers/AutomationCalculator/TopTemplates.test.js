@@ -49,13 +49,13 @@ describe('Containers/AutomationCalculator/TopTemplates', () => {
     });
 
     it('should render with dummy data', () => {
-        const wrapper = mount(<TopTemplates data={dummyData} sortBy={'foo'} />);
+        const wrapper = mount(<TopTemplates data={dummyData} sortBy={'foo:asc'} />);
         expect(wrapper.find('input')).toHaveLength(3);
     });
 
     it('should call redirect on link click', () => {
         const wrapper = mount(
-            <TopTemplates data={dummyData} redirectToJobExplorer={fn} sortBy={'foo'} />
+            <TopTemplates data={dummyData} redirectToJobExplorer={fn} sortBy={'foo:desc'} />
         );
         wrapper
         .find('a')

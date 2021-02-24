@@ -73,8 +73,8 @@ const InputAndText = styled.div`
   flex: 1;
 `;
 
-export const showSortAttr = (details, s) => {
-    const trimmed = s.split(':')[0];
+const showSortAttr = (details, sortBy) => {
+    const trimmed = sortBy.split(':')[0];
     const sortAttribute = Object.keys(details).map(k =>
         k === trimmed ? `${details[k]}` : null
     );
@@ -86,25 +86,23 @@ export const showSortAttr = (details, s) => {
     );
 };
 
-export const QuestionIconTooltip = ({ details }) => {
-    return (
-        <Popover
-            aria-label="template detail popover"
-            position="left"
-            bodyContent={
-                <TooltipWrapper>
-                    {Object.keys(details).map((k, i) => (
-                        <p key={i}>
-                            <b>{capitalize(k.split('_').join(' '))}</b>: {details[k]}
-                        </p>
-                    ))}
-                </TooltipWrapper>
-            }
-        >
-            <InfoCircleIcon />
-        </Popover>
-    );
-};
+const QuestionIconTooltip = ({ details }) => (
+    <Popover
+        aria-label="template detail popover"
+        position="left"
+        bodyContent={
+            <TooltipWrapper>
+                {Object.keys(details).map((k, i) => (
+                    <p key={i}>
+                        <b>{capitalize(k.split('_').join(' '))}</b>: {details[k]}
+                    </p>
+                ))}
+            </TooltipWrapper>
+        }
+    >
+        <InfoCircleIcon />
+    </Popover>
+);
 
 QuestionIconTooltip.propTypes = {
     details: PropTypes.object
@@ -112,7 +110,7 @@ QuestionIconTooltip.propTypes = {
 
 const TopTemplates = ({
     data = [],
-    sortBy = null,
+    sortBy = '',
     setDataRunTime = () => {},
     setEnabled = () => {},
     redirectToJobExplorer = () => {}
