@@ -105,7 +105,7 @@ const FilterableToolbar = ({
                 categoryKey="sort_by"
                 filter={filters.sort_attr}
                 values={sort_by}
-                setFilter={value => setFilters('sort_attr', value.split(':')[0])}
+                setFilter={value => setFilters('sort_attr', value)}
                 hasChips={false}
             />
             <Button variant="control"
