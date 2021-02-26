@@ -1,25 +1,21 @@
 import { stringify } from 'query-string';
-
+/* v0 endpoints */
 const clustersEndpoint = `/api/tower-analytics/v0/clusters/`;
-const notificationsEndPoint = `/api/tower-analytics/v0/notifications/`;
+const notificationsEndpoint = `/api/tower-analytics/v0/notifications/`;
 const preflightEndpoint = `/api/tower-analytics/v0/authorized/`;
 
+/* v1 endpoints */
 const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
-const jobExplorerOptionsEndpoint =
-  '/api/tower-analytics/v1/job_explorer_options/';
+const hostExplorerEndpoint = '/api/tower-analytics/v1/host_explorer';
+const eventExplorerEndpoint = '/api/tower-analytics/v1/event_explorer/';
 const ROIEndpoint = '/api/tower-analytics/v1/roi_templates/';
+
+/* page options endpoints */
+const jobExplorerOptionsEndpoint =
+    '/api/tower-analytics/v1/job_explorer_options/';
 const ROITemplatesOptionsEndpoint = '/api/tower-analytics/v1/roi_templates_options/';
 const orgOptionsEndpoint = '/api/tower-analytics/v1/dashboard_organization_statistics_options/';
-const hostExplorerEndpoint = '/api/tower-analytics/v1/host_explorer/';
 const clustersOptionsEndpoint = '/api/tower-analytics/v1/dashboard_clusters_options/';
-const eventExplorerEndpoint = '/api/tower-analytics/v1/event_explorer/';
-
-function getAbsoluteUrl() {
-    const url = window.location.href;
-    let arr = url.split('/');
-    arr.pop();
-    return arr.join('/');
-}
 
 function handleResponse(response) {
     return response.json().then(json => {
@@ -46,187 +42,107 @@ export const preflightRequest = () => {
     return authenticatedFetch(preflightEndpoint).then(handleResponse);
 };
 
-/* Section: Orgs page */
-export const readOrgOptions = ({ params = {}}) => {
-    let url = new URL(orgOptionsEndpoint, getAbsoluteUrl());
+export const readJobExplorer = ({ params = {} }) => {
+    const { limit, offset, sort_by } = params;
+    const paginationParams = {
+        limit,
+        offset,
+        sort_by
+    };
+    const qs = stringify(paginationParams);
+    let url = new URL(jobExplorerEndpoint, window.location.origin);
+    url.search = qs;
     return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);
 };
 
-export const readHostAcrossOrg = ({ params = {}}) => {
-    const combined = {
-        ...params,
-        attributes: [ 'total_unique_host_count' ],
-        group_by_time: true,
-        group_by: 'org',
-        sort_by: `host_task_count:desc`
+export const readEventExplorer = ({ params = {} }) => {
+    const { limit, offset, sort_by } = params;
+    const paginationParams = {
+        limit,
+        offset,
+        sort_by
     };
-
-    let url = new URL(hostExplorerEndpoint, getAbsoluteUrl());
-    url.search = stringify({
-        limit: combined.limit,
-        sort_by: combined.sort_by
-    });
-
+    const qs = stringify(paginationParams);
+    let url = new URL(eventExplorerEndpoint, window.location.origin);
+    url.search = qs;
     return authenticatedFetch(url, {
         method: 'POST',
-        body: JSON.stringify(combined)
+        body: JSON.stringify(params)
     }).then(handleResponse);
 };
 
-export const readJobsByDateAndOrg = ({ params = {}}) => {
-    const combined = {
-        ...params,
-        attributes: [ 'total_count' ],
-        group_by_time: true,
-        group_by: 'org',
-        sort_by: `total_count:desc`
+export const readROI = ({ params = {} }) => {
+    const { limit, offset, sort_by } = params;
+    const paginationParams = {
+        limit,
+        offset,
+        sort_by
     };
-
-    let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
-    url.search = stringify({
-        limit: combined.limit,
-        sort_by: combined.sort_by
-    });
-
+    const qs = stringify(paginationParams);
+    let url = new URL(ROIEndpoint, window.location.origin);
+    url.search = qs;
     return authenticatedFetch(url, {
         method: 'POST',
-        body: JSON.stringify(combined)
+        body: JSON.stringify(params)
     }).then(handleResponse);
 };
 
-export const readJobRunsByOrg = ({ params = {}}) => {
-    const combined = {
-        ...params,
-        group_by: 'org',
-        include_others: true,
-        attributes: [ 'host_count' ],
-        sort_by: `total_count:desc`
+export const readHostExplorer = ({ params = {} }) => {
+    const { limit, offset, sort_by } = params;
+    const paginationParams = {
+        limit,
+        offset,
+        sort_by
     };
-
-    let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
-    url.search = stringify({
-        limit: combined.limit,
-        sort_by: combined.sort_by
-    });
-
+    const qs = stringify(paginationParams);
+    let url = new URL(hostExplorerEndpoint, window.location.origin);
+    url.search = qs;
     return authenticatedFetch(url, {
         method: 'POST',
-        body: JSON.stringify(combined)
+        body: JSON.stringify(params)
     }).then(handleResponse);
 };
 
-export const readJobEventsByOrg = ({ params = {}}) => {
-    const combined = {
-        ...params,
-        group_by: 'org',
-        include_others: true,
-        granularity: 'daily',
-        attributes: [ 'host_task_count' ],
-        sort_by: `host_task_count:desc`
-    };
-
-    let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
-    url.search = stringify({
-        limit: combined.limit,
-        sort_by: combined.sort_by
-    });
-
+export const readClustersOptions = ({ params = {} }) => {
+    let url = new URL(clustersOptionsEndpoint, window.location.origin);
     return authenticatedFetch(url, {
         method: 'POST',
-        body: JSON.stringify(combined)
+        body: JSON.stringify(params)
     }).then(handleResponse);
 };
-/* End of section: Orgs page */
 
-// used in Notifications.js
+export const readOrgOptions = ({ params = {} }) => {
+    let url = new URL(orgOptionsEndpoint, window.location.origin);
+    return authenticatedFetch(url, {
+        method: 'POST',
+        body: JSON.stringify(params)
+    }).then(handleResponse);
+};
+
+export const readROIOptions = ({ params = {} }) => {
+    let url = new URL(ROITemplatesOptionsEndpoint, window.location.origin);
+    return authenticatedFetch(url, {
+        method: 'POST',
+        body: JSON.stringify(params)
+    }).then(handleResponse);
+};
+
+// v0 endpoints used in Notifications.js
 export const readClusters = () => {
     return authenticatedFetch(clustersEndpoint).then(handleResponse);
 };
 
-export const readNotifications = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(notificationsEndPoint, formattedUrl);
+export const readNotifications = ({ params = {} }) => {
+    let url = new URL(notificationsEndpoint, window.location.origin);
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     return authenticatedFetch(url).then(handleResponse);
 };
 
-export const readJobExplorerOptions = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(jobExplorerOptionsEndpoint, formattedUrl);
-    return authenticatedFetch(url, {
-        method: 'POST',
-        body: JSON.stringify(params)
-    }).then(handleResponse);
-};
-
-export const readClustersOptions = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(clustersOptionsEndpoint, formattedUrl);
-    return authenticatedFetch(url, {
-        method: 'POST',
-        body: JSON.stringify(params)
-    }).then(handleResponse);
-};
-
-export const readJobExplorer = ({ params = {}}) => {
-    const { limit, offset, sort_by } = params;
-    const paginationParams = {
-        limit,
-        offset,
-        sort_by
-    };
-    const qs = stringify(paginationParams);
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(jobExplorerEndpoint, formattedUrl);
-    url.search = qs;
-    return authenticatedFetch(url, {
-        method: 'POST',
-        body: JSON.stringify(params)
-    }).then(handleResponse);
-};
-
-export const readEventExplorer = ({ params = {}}) => {
-    const { limit, offset, sort_by } = params;
-    const paginationParams = {
-        limit,
-        offset,
-        sort_by
-    };
-    const qs = stringify(paginationParams);
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(eventExplorerEndpoint, formattedUrl);
-    url.search = qs;
-    return authenticatedFetch(url, {
-        method: 'POST',
-        body: JSON.stringify(params)
-    }).then(handleResponse);
-};
-
-export const readClustersBarChart = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(jobExplorerEndpoint, formattedUrl);
-    return authenticatedFetch(url, {
-        method: 'POST',
-        body: JSON.stringify(params)
-    }).then(handleResponse);
-};
-
-export const readROI = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(ROIEndpoint, formattedUrl);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return authenticatedFetch(url, {
-        method: 'POST',
-        body: JSON.stringify(params)
-    }).then(handleResponse);
-};
-
-export const readROIOptions = ({ params = {}}) => {
-    const formattedUrl = getAbsoluteUrl();
-    let url = new URL(ROITemplatesOptionsEndpoint, formattedUrl);
+export const readJobExplorerOptions = ({ params = {} }) => {
+    let url = new URL(jobExplorerOptionsEndpoint, window.location.origin);
     return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)

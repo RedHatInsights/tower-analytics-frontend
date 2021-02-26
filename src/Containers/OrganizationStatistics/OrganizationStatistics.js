@@ -14,10 +14,8 @@ import ApiErrorState from '../../Components/ApiErrorState';
 
 import {
     preflightRequest,
-    readJobsByDateAndOrg,
-    readHostAcrossOrg,
-    readJobRunsByOrg,
-    readJobEventsByOrg,
+    readJobExplorer,
+    readHostExplorer,
     readOrgOptions
 } from '../../Api';
 
@@ -139,14 +137,14 @@ const redirectToJobExplorer = (toJobExplorer, queryParams) => ({ date, id }) => 
 
 const chartMapper = [
     {
-        api: readJobsByDateAndOrg,
+        api: readJobExplorer,
         attr: 'total_count',
         label: 'Jobs across organizations',
         onClick: redirectToJobExplorer,
         tooltip: OrgsTooltip
     },
     {
-        api: readHostAcrossOrg,
+        api: readHostExplorer,
         attr: 'total_unique_host_count',
         label: 'Hosts across organizations',
         onClick: () => null,
@@ -166,6 +164,39 @@ const OrganizationStatistics = ({ history }) => {
         constants.defaultParams
     );
 
+    const jobEventsByOrgParams = {
+        ...queryParams,
+        group_by: 'org',
+        include_others: true,
+        granularity: 'daily',
+        attributes: [ 'host_task_count' ],
+        sort_by: `host_task_count:${queryParams.sort_by}`
+    };
+
+    const jobRunsByOrgParams = {
+        ...queryParams,
+        group_by: 'org',
+        include_others: true,
+        attributes: [ 'host_count' ],
+        sort_by: `total_count:${queryParams.sort_by}`
+    };
+
+    const jobsByDateAndOrgParams = {
+        ...queryParams,
+        attributes: [ 'total_count' ],
+        group_by_time: true,
+        group_by: 'org',
+        sort_by: `total_count:${queryParams.sort_by}`
+    };
+
+    const hostAcrossOrgParams = {
+        ...queryParams,
+        attributes: [ 'total_unique_host_count' ],
+        group_by_time: true,
+        group_by: 'org',
+        sort_by: `host_task_count:${queryParams.sort_by}`
+    };
+
     const handleTabClick = (_, tabIndex) => { setActiveTabKey(tabIndex); };
 
     useEffect(() => {
@@ -178,13 +209,14 @@ const OrganizationStatistics = ({ history }) => {
     }, []);
 
     useEffect(() => {
-        const apiPromise = chartMapper[activeTabKey].api;
-        setOrgs(apiPromise({ params: queryParams }));
+        const { api: readJobsOrHosts } = chartMapper[activeTabKey];
+        const params = activeTabKey === 0 ? jobsByDateAndOrgParams : hostAcrossOrgParams;
+        setOrgs(readJobsOrHosts({ params }));
     }, [ queryParams, activeTabKey ]);
 
     useEffect(() => {
-        setJobs(readJobRunsByOrg({ params: queryParams }));
-        setTasks(readJobEventsByOrg({ params: queryParams }));
+        setJobs(readJobExplorer({ params: jobRunsByOrgParams }));
+        setTasks(readJobExplorer({ params: jobEventsByOrgParams }));
     }, [ queryParams ]);
 
     return (
