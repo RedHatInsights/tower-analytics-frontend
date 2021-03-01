@@ -1,5 +1,5 @@
 # This is a basic workflow to help you get started with Actions
-name: CI
+name: CI for PRs
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the devel branch
@@ -7,25 +7,80 @@ on:
   pull_request:
     branches: [ devel ]
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  cypress-proxy-tests:
     runs-on: ubuntu-latest
-    env:
-      CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: clone the pipeline repo
-        run: git clone https://github.com/RedHatInsights/analytics-pipeline $GITHUB_WORKSPACE/analytics-pipeline
-
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - name: Set node version
+        uses: actions/setup-node@v2
         with:
-          path: analytics-pipeline/srv/tower-analytics-frontend
+          node-version: '10'
 
-      - name: make the stack
-        run: make stack_ci_cypress
-        working-directory: analytics-pipeline
+      - name: Checkout the branch
+        uses: actions/checkout@v2
+
+      - name: Checkout the proxy repo
+        uses: actions/checkout@v2
+        with:
+          repository: RedHatInsights/insights-proxy
+          path: insights-proxy
+
+      - name: Set up proxy
+        working-directory: ./insights-proxy
+        run: |
+          npm i
+          sudo bash scripts/patch-etc-hosts.sh
+          bash scripts/update.sh
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v2
+        with:
+          record: true
+          browser: chrome
+          headless: true
+          build: npm run build
+          start: |
+            npm run start
+            npm run proxy
+          spec: cypress/integration/**/*spec.js
+          wait-on: 'https://localhost:8002/'
+        env:
+          CYPRESS_BASE_URL: 'https://prod.foo.redhat.com:1337/beta'
+          CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
+          CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_OPTIONS: '--max_old_space_size=16384'
+          NODE_TLS_REJECT_UNAUTHORIZED: 0
+          START_SERVER_AND_TEST_INSECURE: 1
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '10'
+
+      - name: Install modules
+        run: npm ci
+
+      - name: Check the code with linter
+        run: npm run lint
+
+
+  jest-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '10'
+
+      - name: Install modules
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test

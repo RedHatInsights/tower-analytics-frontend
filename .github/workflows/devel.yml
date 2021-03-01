@@ -1,0 +1,70 @@
+name: Deployed CI
+
+on:
+  push:
+    branches: [ devel ]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '10'
+
+      - name: Install modules
+        run: npm ci
+
+      - name: Check the code with linter
+        run: npm run lint
+
+
+  jest-tests:
+    runs-on: ubuntu-latest
+    needs: lint
+
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '10'
+
+      - name: Install modules
+        run: npm ci
+
+      - name: Run tests
+        run: npm run test
+
+  cypress-cloud-beta:
+    runs-on: ubuntu-latest
+    needs: jest-tests
+    # disable for now - we need jest deploy before running this
+    # the jest deploy is more complicated process and we need to wait for beta to update
+    # before running cypress tests on beta
+    if: ${{ false }}
+
+    steps:
+      - name: Set node version
+        uses: actions/setup-node@v2
+        with:
+          node-version: '10'
+
+      - name: Checkout the branch
+        uses: actions/checkout@v2
+
+      - name: Run Cypress tests
+        uses: cypress-io/github-action@v2
+        with:
+          record: true
+          browser: chrome
+          headless: true
+          build: npm run build
+          spec: cypress/integration/**/*spec.js
+          wait-on: 'https://cloud.redhat.com/beta'
+        env:
+          CYPRESS_BASE_URL: 'https://cloud.redhat.com/beta'
+          CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
+          CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
+          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

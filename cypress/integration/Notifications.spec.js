@@ -1,4 +1,4 @@
-/* global cy, Cypress, before */
+/* global cy, Cypress */
 import {
     notificationsUrl
 } from './constants';
@@ -42,14 +42,8 @@ async function fuzzNotificationsPage() {
 }
 
 describe('Notification page smoketests', () => {
-    before(() => {
-        // open the cloud landing page ...
-        cy.visit('/');
-
-        // sso login ...
-        cy.get('[data-ouia-component-id="1"]').click();
-        cy.getUsername().then(uname => cy.get('#username').type(`${uname}{enter}`));
-        cy.getPassword().then(password => cy.get('#password').type(`${password}{enter}`));
+    beforeEach(() => {
+        cy.loginFlow();
         cy.visit(notificationsUrl);
     });
 

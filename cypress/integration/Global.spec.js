@@ -1,4 +1,4 @@
-/* global cy, before */
+/* global cy */
 import {
     calculatorUrl,
     jobExplorerUrl,
@@ -8,14 +8,8 @@ import {
 } from './constants';
 
 describe('automation analytics smoketests', () => {
-    before(() => {
-        // open the cloud landing page ...
-        cy.visit('/');
-
-        // sso login ...
-        cy.get('[data-ouia-component-id="1"]').click();
-        cy.getUsername().then(uname => cy.get('#username').type(`${uname}{enter}`));
-        cy.getPassword().then(password => cy.get('#password').type(`${password}{enter}`));
+    beforeEach(() => {
+        cy.loginFlow();
     });
 
     it('has all the AA navigation items', () => {
