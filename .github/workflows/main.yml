@@ -47,7 +47,7 @@ jobs:
           wait-on: 'https://localhost:8002/'
         env:
           CYPRESS_BASE_URL: 'https://prod.foo.redhat.com:1337/beta'
-          CYPRESS_USERNAME: redhat-eng-bthomass
+          CYPRESS_USERNAME: ${{ secrets.CYPRESS_USERNAME }}
           CYPRESS_PASSWORD: ${{ secrets.CYPRESS_PASSWORD }}
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
