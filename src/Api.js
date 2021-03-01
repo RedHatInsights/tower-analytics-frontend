@@ -10,7 +10,7 @@ const jobExplorerOptionsEndpoint =
 const ROIEndpoint = '/api/tower-analytics/v1/roi_templates/';
 const ROITemplatesOptionsEndpoint = '/api/tower-analytics/v1/roi_templates_options/';
 const orgOptionsEndpoint = '/api/tower-analytics/v1/dashboard_organization_statistics_options/';
-const hostExplorerEndpoint = '/api/tower-analytics/v1/host_explorer';
+const hostExplorerEndpoint = '/api/tower-analytics/v1/host_explorer/';
 const clustersOptionsEndpoint = '/api/tower-analytics/v1/dashboard_clusters_options/';
 const eventExplorerEndpoint = '/api/tower-analytics/v1/event_explorer/';
 

@@ -34,7 +34,7 @@ const dummyPieData = size => ({
     }))
 });
 
-const hostExplorerUrl = 'path:/api/tower-analytics/v1/host_explorer';
+const hostExplorerUrl = 'path:/api/tower-analytics/v1/host_explorer/';
 const dummyHostsData = size => ({
     dates: [ ...Array(size).keys() ].map(el => ({
         items: [ ...Array(size).keys() ].map(i => ({
