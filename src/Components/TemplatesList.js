@@ -109,7 +109,9 @@ TemplatesList.propTypes = {
     templates: PropTypes.array,
     isLoading: PropTypes.bool,
     queryParams: PropTypes.object,
-    title: PropTypes.string
+    title: PropTypes.string,
+    qp: PropTypes.object,
+    jobType: PropTypes.string
 };
 
 export default TemplatesList;
