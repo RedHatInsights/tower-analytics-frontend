@@ -74,7 +74,7 @@ module.exports = {
             {
               '@redhat-cloud-services/frontend-components': {
                 transform: (importName) =>
-                  `@redhat-cloud-services/frontend-components/components/cjs/${FECMapper[importName] || importName}`,
+                  `@redhat-cloud-services/frontend-components/${FECMapper[importName] || importName}`,
                 preventFullImport: false,
                 skipDefaultConversion: true
               }
