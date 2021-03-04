@@ -130,9 +130,8 @@ const Notifications = () => {
             return readNotifications({ params: queryParams });
         };
 
-        const update = async () => {
+        const update = () => {
             setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
             getData().then(({ notifications: notificationsData = [], meta }) => {
                 setNotificationsData(notificationsData);
                 setMeta(meta);
@@ -157,7 +156,6 @@ const Notifications = () => {
 
         async function initializeWithPreflight() {
             setIsLoading(true);
-            await window.insights.chrome.auth.getUser();
             await preflightRequest().catch(error => {
                 setPreFlightError({ preflightError: error });
             });
