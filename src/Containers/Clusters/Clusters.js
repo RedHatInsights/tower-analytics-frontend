@@ -26,7 +26,7 @@ import {
     CardTitle as PFCardTitle
 } from '@patternfly/react-core';
 
-import BarChart from '../../Charts/BarChart';
+// import BarChart from '../../Charts/BarChart';
 import LineChart from '../../Charts/LineChart';
 import ModulesList from '../../Components/ModulesList';
 import TemplatesList from '../../Components/TemplatesList';
@@ -34,6 +34,14 @@ import FilterableToolbar from '../../Components/Toolbar';
 import ApiErrorState from '../../Components/ApiErrorState';
 
 import { clusters } from '../../Utilities/constants';
+
+import {
+    functions,
+    ChartRenderer,
+    TooltipType,
+    ChartKind,
+    ChartType
+} from 'react-data-explorer';
 
 const initialTopTemplateParams = {
     group_by: 'template',
@@ -107,6 +115,8 @@ const Clusters = () => {
         initialOptionsParams
     );
 
+    const [ dataExplorer, setDataExplorer ] = useState({ charts: [], functions });
+
     const {
         cluster_id,
         org_id,
@@ -168,6 +178,97 @@ const Clusters = () => {
         };
 
         fetchEndpoints();
+
+        setDataExplorer({
+            ...dataExplorer,
+            charts: [
+                {
+                    id: 1000,
+                    kind: ChartKind.wrapper,
+                    parent: null,
+                    props: {
+                        height: 120,
+                        padding: {
+                            top: 3,
+                            bottom: 20,
+                            left: 25,
+                            right: 3
+                        },
+                        domainPadding: 15
+                    },
+                    xAxis: {
+                        label: 'Date',
+                        tickFormat: 'formatDateAsDayMonth',
+                        style: {
+                            axisLabel: { fontSize: 4, padding: 10 },
+                            ticks: { size: 3 },
+                            tickLabels: { fontSize: 3, padding: 1 }
+                        }
+                    },
+                    yAxis: {
+                        label: 'Jobs across all clusters',
+                        style: {
+                            axisLabel: { fontSize: 4, padding: 10 },
+                            ticks: { size: 3 },
+                            tickLabels: { fontSize: 3, padding: 1 }
+                        }
+                    }
+                },
+                {
+                    id: 1100,
+                    kind: ChartKind.stack,
+                    parent: 1000,
+                    props: {},
+                    api: {
+                        params: queryParams,
+                        url: 'https://prod.foo.redhat.com:1337/api/tower-analytics/v1/job_explorer/',
+                        optionUrl: '/demo/api/jobExplorerOptions.json'
+                    }
+                },
+                {
+                    id: 1002,
+                    kind: ChartKind.simple,
+                    type: ChartType.bar,
+                    parent: 1100,
+                    props: {
+                        x: 'created_date',
+                        y: 'failed_count',
+                        style: {
+                            data: {
+                                fill: '#A30000'
+                            }
+                        }
+                    },
+                    legend: {
+                        type: TooltipType.default,
+                        props: {},
+                        labelAttr: 'failed_count',
+                        labelName: 'Failed'
+                    },
+                    onClick: 'consoleLog'
+                },
+                {
+                    id: 1001,
+                    kind: ChartKind.simple,
+                    type: ChartType.bar,
+                    parent: 1100,
+                    props: {
+                        x: 'created_date',
+                        y: 'successful_count',
+                        style: {
+                            data: {
+                                fill: '#6EC664'
+                            }
+                        }
+                    },
+                    legend: {
+                        type: TooltipType.default,
+                        props: {},
+                        labelAttr: 'successful_count'
+                    }
+                }
+            ]
+        });
     }, [ queryParams ]);
 
     return (
@@ -200,13 +301,7 @@ const Clusters = () => {
                             <CardBody>
                                 {isLoading && <LoadingState />}
                                 {queryParams.cluster_id.length <= 0 && isSuccess && (
-                                    <BarChart
-                                        margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                                        id="d3-bar-chart-root"
-                                        data={chartData}
-                                        templateId={queryParams.template_id}
-                                        orgId={queryParams.org_id}
-                                    />
+                                    <ChartRenderer data={dataExplorer} />
                                 )}
                                 {queryParams.cluster_id.length > 0 && isSuccess && (
                                     <LineChart
