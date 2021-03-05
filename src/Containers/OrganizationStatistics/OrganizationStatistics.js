@@ -205,7 +205,7 @@ const OrganizationStatistics = ({ history }) => {
                     <Main>
                         <TopCard>
                             <Tabs activeKey={ activeTabKey } onSelect={ handleTabClick }>
-                                <Tab eventKey={ 0 } title={ 'Orgs' }/>
+                                <Tab eventKey={ 0 } title={ 'Jobs' }/>
                                 <Tab eventKey={ 1 } title={ 'Hosts' }/>
                             </Tabs>
                             <CardBody>
