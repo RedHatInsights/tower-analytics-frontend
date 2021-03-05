@@ -55,22 +55,18 @@ const useApi = (initialData, postprocess = d => d) => {
         dispatch({ type: 'FETCH_INIT' });
 
         // Fetching
-        window.insights.chrome.auth.getUser().then(() =>
-            request
-            .then(data => {
-                if (!didCancel) {
-                    dispatch({
-                        type: 'FETCH_SUCCESS',
-                        payload: postprocess(data)
-                    });
-                }
-            })
-            .catch(e => {
-                if (!didCancel) {
-                    dispatch({ type: 'FETCH_FAILURE', payload: e });
-                }
-            })
-        );
+        request.then(data => {
+            if (!didCancel) {
+                dispatch({
+                    type: 'FETCH_SUCCESS',
+                    payload: postprocess(data)
+                });
+            }
+        }).catch(e => {
+            if (!didCancel) {
+                dispatch({ type: 'FETCH_FAILURE', payload: e });
+            }
+        });
 
         return () => {
             didCancel = true;

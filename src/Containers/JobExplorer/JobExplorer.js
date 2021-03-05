@@ -85,13 +85,9 @@ const JobExplorer = ({ location: { search }, history }) => {
     useEffect(() => {
         insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
 
-        window.insights.chrome.auth.getUser().then(
-            () =>
-                preflightRequest().catch(error => {
-                    setPreFlightError({ preflightError: error });
-                })
-            // Loading is set false when the data also loaded
-        );
+        preflightRequest().catch(error => {
+            setPreFlightError({ preflightError: error });
+        });
 
         const initialSearchParams = parse(search, {
             arrayFormat: 'bracket',

@@ -148,7 +148,6 @@ const Clusters = () => {
 
     useEffect(() => {
         async function initializeWithPreflight() {
-            await window.insights.chrome.auth.getUser();
             await preflightRequest().catch(error => {
                 setPreFlightError({ preflightError: error });
             });

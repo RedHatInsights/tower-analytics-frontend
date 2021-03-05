@@ -38,14 +38,18 @@ function handleResponse(response) {
     });
 }
 
+function authenticatedFetch(endpoint, options) {
+    return window.insights.chrome.auth.getUser().then(() => fetch(endpoint, options));
+}
+
 export const preflightRequest = () => {
-    return fetch(preflightEndpoint).then(handleResponse);
+    return authenticatedFetch(preflightEndpoint).then(handleResponse);
 };
 
 /* Section: Orgs page */
 export const readOrgOptions = ({ params = {}}) => {
     let url = new URL(orgOptionsEndpoint, getAbsoluteUrl());
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);
@@ -66,7 +70,7 @@ export const readHostAcrossOrg = ({ params = {}}) => {
         sort_by: combined.sort_by
     });
 
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(combined)
     }).then(handleResponse);
@@ -87,7 +91,7 @@ export const readJobsByDateAndOrg = ({ params = {}}) => {
         sort_by: combined.sort_by
     });
 
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(combined)
     }).then(handleResponse);
@@ -108,7 +112,7 @@ export const readJobRunsByOrg = ({ params = {}}) => {
         sort_by: combined.sort_by
     });
 
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(combined)
     }).then(handleResponse);
@@ -130,7 +134,7 @@ export const readJobEventsByOrg = ({ params = {}}) => {
         sort_by: combined.sort_by
     });
 
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(combined)
     }).then(handleResponse);
@@ -139,20 +143,20 @@ export const readJobEventsByOrg = ({ params = {}}) => {
 
 // used in Notifications.js
 export const readClusters = () => {
-    return fetch(clustersEndpoint).then(handleResponse);
+    return authenticatedFetch(clustersEndpoint).then(handleResponse);
 };
 
 export const readNotifications = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(notificationsEndPoint, formattedUrl);
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url).then(handleResponse);
+    return authenticatedFetch(url).then(handleResponse);
 };
 
 export const readJobExplorerOptions = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(jobExplorerOptionsEndpoint, formattedUrl);
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);
@@ -161,7 +165,7 @@ export const readJobExplorerOptions = ({ params = {}}) => {
 export const readClustersOptions = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(clustersOptionsEndpoint, formattedUrl);
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);
@@ -178,7 +182,7 @@ export const readJobExplorer = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(jobExplorerEndpoint, formattedUrl);
     url.search = qs;
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);
@@ -195,7 +199,7 @@ export const readEventExplorer = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(eventExplorerEndpoint, formattedUrl);
     url.search = qs;
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);
@@ -204,7 +208,7 @@ export const readEventExplorer = ({ params = {}}) => {
 export const readClustersBarChart = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(jobExplorerEndpoint, formattedUrl);
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);
@@ -214,7 +218,7 @@ export const readROI = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(ROIEndpoint, formattedUrl);
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);
@@ -223,7 +227,7 @@ export const readROI = ({ params = {}}) => {
 export const readROIOptions = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(ROITemplatesOptionsEndpoint, formattedUrl);
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);
