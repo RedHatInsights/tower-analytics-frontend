@@ -61,7 +61,7 @@ export const readHostAcrossOrg = ({ params = {}}) => {
         attributes: [ 'total_unique_host_count' ],
         group_by_time: true,
         group_by: 'org',
-        sort_by: `host_task_count:${params.sort_by}`
+        sort_by: `host_task_count:desc`
     };
 
     let url = new URL(hostExplorerEndpoint, getAbsoluteUrl());
@@ -82,7 +82,7 @@ export const readJobsByDateAndOrg = ({ params = {}}) => {
         attributes: [ 'total_count' ],
         group_by_time: true,
         group_by: 'org',
-        sort_by: `total_count:${params.sort_by}`
+        sort_by: `total_count:desc`
     };
 
     let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
@@ -103,7 +103,7 @@ export const readJobRunsByOrg = ({ params = {}}) => {
         group_by: 'org',
         include_others: true,
         attributes: [ 'host_count' ],
-        sort_by: `total_count:${params.sort_by}`
+        sort_by: `total_count:desc`
     };
 
     let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
@@ -125,7 +125,7 @@ export const readJobEventsByOrg = ({ params = {}}) => {
         include_others: true,
         granularity: 'daily',
         attributes: [ 'host_task_count' ],
-        sort_by: `host_task_count:${params.sort_by}`
+        sort_by: `host_task_count:desc`
     };
 
     let url = new URL(jobExplorerEndpoint, getAbsoluteUrl());
