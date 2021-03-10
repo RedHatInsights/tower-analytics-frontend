@@ -86,8 +86,8 @@ const TopCard = styled(Card)`
 const colorFunc = scaleOrdinal(pfmulti);
 
 const optionsMapper = options => {
-    const { meta, inventory_id, ...rest } = options;
-    return { ...rest, sort_by: meta.sort_by };
+    const { inventory_id, ...rest } = options;
+    return { ...rest };
 };
 
 const orgsChartMapper = attrName => ({ dates: data = []}) =>
