@@ -26,6 +26,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 2 # For codecov action it has to be != 1
       - uses: actions/setup-node@v2
         with:
           node-version: '10'
@@ -35,6 +37,9 @@ jobs:
 
       - name: Run tests
         run: npm run test
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
 
   cypress-cloud-beta:
     runs-on: ubuntu-latest
