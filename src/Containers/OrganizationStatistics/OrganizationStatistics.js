@@ -108,14 +108,16 @@ const pieChartMapper = attrName => ({ items = []}) =>
         name: id === -1 ? 'Others' : name || 'No organization'
     }));
 
-const redirectToJobExplorer = toJobExplorer => ({ date, id }) => {
+const redirectToJobExplorer = (toJobExplorer, queryParams) => ({ date, id }) => {
     if (id === -1) {
         // disable clicking on "others" block
         return;
     }
 
+    const { sort_by, ...rest } = queryParams;
     const formattedDate = dateForJobExplorer(date);
     const initialQueryParams = {
+        ...rest,
         quick_date_range: 'custom',
         start_date: formattedDate,
         end_date: formattedDate,
@@ -221,7 +223,7 @@ const OrganizationStatistics = ({ history }) => {
                                         timeFrame={ orgs.data .length }
                                         colorFunc={ colorFunc }
                                         yLabel={ chartMapper[activeTabKey].label }
-                                        onClick={ chartMapper[activeTabKey].onClick(toJobExplorer) }
+                                        onClick={ chartMapper[activeTabKey].onClick(toJobExplorer, queryParams) }
                                         TooltipClass={ chartMapper[activeTabKey].tooltip }
                                     />
                                 )}
