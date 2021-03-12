@@ -198,7 +198,7 @@ export const readJobsGroupByTemplate = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(jobExplorerEndpoint, formattedUrl);
     url.search = qs;
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);
@@ -207,7 +207,7 @@ export const readJobsGroupByTemplate = ({ params = {}}) => {
 export const readSuccessfulFailedJobs = ({ params = {}}) => {
     const formattedUrl = getAbsoluteUrl();
     let url = new URL(jobExplorerEndpoint, formattedUrl);
-    return fetch(url, {
+    return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
     }).then(handleResponse);

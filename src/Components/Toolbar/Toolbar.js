@@ -38,7 +38,7 @@ const FilterableToolbar = ({
     hasSettings = false
 }) => {
     const [ settingsExpanded, setSettingsExpanded ] = useState(false);
-    const { quick_date_range, sort_by, ...restCategories } = categories;
+    const { quick_date_range, sort_options, ...restCategories } = categories;
 
     // Filter out elements which are not in the option object.
     const filterCategories = Object.keys(restCategories)
@@ -102,19 +102,19 @@ const FilterableToolbar = ({
     const SortByGroup = () => (
         <ToolbarGroup variant="filter-group">
             <ToolbarFilterItem
-                categoryKey="sort_by"
-                filter={filters.sort_attr}
-                values={sort_by}
-                setFilter={value => setFilters('sort_attr', value)}
+                categoryKey="sort_options"
+                filter={filters.sort_options}
+                values={sort_options}
+                setFilter={value =>
+                    setFilters('sort_options', value)
+                }
                 hasChips={false}
             />
             <Button variant="control"
-                onClick={() =>
-                    setFilters(
-                        'sort_order',
-                        filters.sort_order === 'asc' ? 'desc' : 'asc'
-                    )
-                }
+                onClick={() => setFilters(
+                    'sort_order',
+                    filters.sort_order === 'asc' ? 'desc' : 'asc'
+                )}
             >
                 {filters.sort_order === 'asc' && (<SortAmountUpIcon />)}
                 {filters.sort_order === 'desc' && (<SortAmountDownIcon />)}
@@ -180,7 +180,7 @@ const FilterableToolbar = ({
                         <FilterCategoriesGroup />
                     )}
                     {quick_date_range && <QuickDateGroup />}
-                    {sort_by && <SortByGroup />}
+                    {sort_options && <SortByGroup />}
                     {hasSettings && (
                         <ToolbarItem>
                             <Button

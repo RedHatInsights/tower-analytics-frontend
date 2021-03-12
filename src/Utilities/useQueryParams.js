@@ -6,7 +6,7 @@ import { formatDate } from '../Utilities/helpers';
 export const useQueryParams = initial => {
     const initialWithCalculatedParams = {
         ...initial,
-        sort_by: `${initial.sort_attr}:${initial.sort_order}`
+        sort_by: `${initial.sort_options}:${initial.sort_order}`
     };
 
     const paramsReducer = (state, { type, value }) => {
@@ -67,35 +67,46 @@ export const useQueryParams = initial => {
                 return { ...state, ...newValues };
             }
 
-            // I know this is ugly, we could put it into a middleware but I had
-            // no mood for writing now a middleware for useReducer. If we can use
-            // react redux then there is already a nice middleware system.
-            //
-            // If not I can write a middleware for react useReducer, and ofload the
-            // recalculation logic there. That way we would have a separate function
-            // for sync of the sort_by and the attr/order. That would be cleaner for sure.
-            //
-            // useReducer middleware tutorial: https://www.robinwieruch.de/react-usereducer-middleware
-            case 'SET_SORT_ATTR':
+            // options and order are used for toolbar filter display purposes
+            case 'SET_SORT_OPTIONS': {
+                let order;
+                if (state?.sort_by) {
+                    order = state.sort_by.split(':')[1];
+                } else {
+                    order = state.sort_order;
+                }
+
                 return {
                     ...state,
-                    sort_attr: value.sort_attr,
-                    sort_by: `${value.sort_attr}:${state.sort_by.split(':')[1]}` // Update sort by
+                    sort_options: value.sort_options,
+                    sort_by: `${value.sort_options}:${order}` // Update sort by
                 };
-            case 'SET_SORT_ORDER':
+            }
+
+            case 'SET_SORT_ORDER': {
+                let attr;
+                if (state?.sort_by) {
+                    attr = state.sort_by.split(':')[0];
+                } else {
+                    attr = state.sort_options;
+                }
+
                 return {
                     ...state,
                     sort_order: value.sort_order,
-                    sort_by: `${state.sort_by.split(':')[0]}:${value.sort_order}` // Update sort by
+                    sort_by: `${attr}:${value.sort_order}` // Update sort by
                 };
+            }
+
+            // sort_by is used for api purposes
             case 'SET_SORT_BY':
                 return {
                     ...state,
                     sort_by: value.sort_by,
-                    sort_attr: value.sort_by.split(':')[0],
+                    sort_options: value.sort_by.split(':')[0],
                     sort_order: value.sort_by.split(':')[1]
                 };
-            ///////////////////////////////////////////////////////////////////////////////////
+
             case 'REINITIALIZE':
                 return { ...value };
             case 'RESET_FILTER':
@@ -119,7 +130,7 @@ export const useQueryParams = initial => {
         template_id: 'SET_TEMPLATE',
         sort_by: 'SET_SORT_BY',
         sort_order: 'SET_SORT_ORDER',
-        sort_attr: `SET_SORT_ATTR`,
+        sort_options: `SET_SORT_OPTIONS`,
         start_date: 'SET_START_DATE',
         end_date: 'SET_END_DATE',
         only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS'
