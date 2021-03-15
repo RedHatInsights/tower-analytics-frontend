@@ -188,6 +188,31 @@ export const readJobExplorer = ({ params = {}}) => {
     }).then(handleResponse);
 };
 
+export const readJobsGroupByTemplate = ({ params = {}}) => {
+    const { limit, offset } = params;
+    const paginationParams = {
+        limit,
+        offset
+    };
+    const qs = stringify(paginationParams);
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(jobExplorerEndpoint, formattedUrl);
+    url.search = qs;
+    return authenticatedFetch(url, {
+        method: 'POST',
+        body: JSON.stringify(params)
+    }).then(handleResponse);
+};
+
+export const readSuccessfulFailedJobs = ({ params = {}}) => {
+    const formattedUrl = getAbsoluteUrl();
+    let url = new URL(jobExplorerEndpoint, formattedUrl);
+    return authenticatedFetch(url, {
+        method: 'POST',
+        body: JSON.stringify(params)
+    }).then(handleResponse);
+};
+
 export const readEventExplorer = ({ params = {}}) => {
     const { limit, offset, sort_by } = params;
     const paginationParams = {

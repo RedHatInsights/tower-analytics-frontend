@@ -4,6 +4,11 @@ import moment from 'moment';
 import { formatDate } from '../Utilities/helpers';
 
 export const useQueryParams = initial => {
+    const initialWithCalculatedParams = {
+        ...initial,
+        ...initial.sort_options && initial.sort_order && { sort_by: `${initial.sort_options}:${initial.sort_order}` }
+    };
+
     const paramsReducer = (state, { type, value }) => {
         switch (type) {
             /* v0 api reducers */
@@ -33,7 +38,7 @@ export const useQueryParams = initial => {
 
                 return { ...state, ...value };
 
-                /* v1 api reducers */
+            /* v1 api reducers */
             case 'SET_OFFSET':
             case 'SET_ATTRIBUTES':
             case 'SET_JOB_TYPE':
@@ -41,7 +46,6 @@ export const useQueryParams = initial => {
             case 'SET_ORG':
             case 'SET_CLUSTER':
             case 'SET_TEMPLATE':
-            case 'SET_SORTBY':
             case 'SET_ROOT_WORKFLOWS_AND_JOBS':
                 return { ...state, ...value };
             case 'SET_QUICK_DATE_RANGE': {
@@ -63,19 +67,35 @@ export const useQueryParams = initial => {
                 return { ...state, ...newValues };
             }
 
+            case 'SET_SORT_OPTIONS': {
+                return {
+                    ...state,
+                    sort_options: value.sort_options,
+                    ...state.sort_order && { sort_by: `${value.sort_options}:${state.sort_order}` } // Update sort by
+                };
+            }
+
+            case 'SET_SORT_ORDER': {
+                return {
+                    ...state,
+                    sort_order: value.sort_order,
+                    ...state.sort_options && { sort_by: `${state.sort_options}:${value.sort_order}` } // Update sort by
+                };
+            }
+
             case 'REINITIALIZE':
                 return { ...value };
             case 'RESET_FILTER':
                 return {
                     ...state,
-                    ...initial
+                    ...initialWithCalculatedParams
                 };
             default:
                 throw new Error();
         }
     };
 
-    const [ queryParams, dispatch ] = useReducer(paramsReducer, { ...initial });
+    const [ queryParams, dispatch ] = useReducer(paramsReducer, { ...initialWithCalculatedParams });
 
     const actionMapper = {
         status: 'SET_STATUS',
@@ -84,7 +104,8 @@ export const useQueryParams = initial => {
         org_id: 'SET_ORG',
         cluster_id: 'SET_CLUSTER',
         template_id: 'SET_TEMPLATE',
-        sort_by: 'SET_SORTBY',
+        sort_order: 'SET_SORT_ORDER',
+        sort_options: `SET_SORT_OPTIONS`,
         start_date: 'SET_START_DATE',
         end_date: 'SET_END_DATE',
         only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS'

@@ -7,7 +7,7 @@ const mockCategories = {
     cluster_id: [],
     template_id: [],
     quick_date_range: [],
-    sort_by: []
+    sort_options: []
 };
 
 const mockFilters = { status: null, quick_date_range: null };
@@ -68,14 +68,14 @@ describe('Components/Toolbar/FilterableToolbar', () => {
             const filterItem = wrapper.find('ToolbarFilterItem');
             expect(filterItem.length).toEqual(Object.keys(mockCategories).length);
         });
-        it('should filter out quick_date_range and sort_by params', () => {
+        it('should filter out quick_date_range and sort_options params', () => {
             let wrapper = mount(
                 <FilterableToolbar categories={mockCategories} filters={mockFilters} />
             );
             const filterItem = wrapper
             .find('FilterCategoriesGroup')
             .find('ToolbarFilterItem');
-            const { sort_by, quick_date_range, ...rest } = mockCategories;
+            const { sort_options, quick_date_range, ...rest } = mockCategories;
             expect(filterItem.length).toEqual(Object.keys(rest).length);
         });
     });

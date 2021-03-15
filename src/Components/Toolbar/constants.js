@@ -29,7 +29,7 @@ export const optionsForCategories = {
         name: 'Template',
         placeholder: 'Filter by template'
     },
-    sort_by: {
+    sort_options: {
         isSingle: true,
         name: 'Sort by',
         placeholder: 'Sort by attribute'
