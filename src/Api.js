@@ -42,7 +42,7 @@ export const preflightRequest = () => {
     return authenticatedFetch(preflightEndpoint).then(handleResponse);
 };
 
-export const readJobExplorer = ({ params = {} }) => {
+export const readJobExplorer = ({ params = {}}) => {
     const { limit, offset, sort_by } = params;
     const paginationParams = {
         limit,
@@ -58,7 +58,7 @@ export const readJobExplorer = ({ params = {} }) => {
     }).then(handleResponse);
 };
 
-export const readEventExplorer = ({ params = {} }) => {
+export const readEventExplorer = ({ params = {}}) => {
     const { limit, offset, sort_by } = params;
     const paginationParams = {
         limit,
@@ -74,7 +74,7 @@ export const readEventExplorer = ({ params = {} }) => {
     }).then(handleResponse);
 };
 
-export const readROI = ({ params = {} }) => {
+export const readROI = ({ params = {}}) => {
     const { limit, offset, sort_by } = params;
     const paginationParams = {
         limit,
@@ -90,7 +90,7 @@ export const readROI = ({ params = {} }) => {
     }).then(handleResponse);
 };
 
-export const readHostExplorer = ({ params = {} }) => {
+export const readHostExplorer = ({ params = {}}) => {
     const { limit, offset, sort_by } = params;
     const paginationParams = {
         limit,
@@ -106,7 +106,7 @@ export const readHostExplorer = ({ params = {} }) => {
     }).then(handleResponse);
 };
 
-export const readClustersOptions = ({ params = {} }) => {
+export const readClustersOptions = ({ params = {}}) => {
     let url = new URL(clustersOptionsEndpoint, window.location.origin);
     return authenticatedFetch(url, {
         method: 'POST',
@@ -114,7 +114,7 @@ export const readClustersOptions = ({ params = {} }) => {
     }).then(handleResponse);
 };
 
-export const readOrgOptions = ({ params = {} }) => {
+export const readOrgOptions = ({ params = {}}) => {
     let url = new URL(orgOptionsEndpoint, window.location.origin);
     return authenticatedFetch(url, {
         method: 'POST',
@@ -122,7 +122,7 @@ export const readOrgOptions = ({ params = {} }) => {
     }).then(handleResponse);
 };
 
-export const readROIOptions = ({ params = {} }) => {
+export const readROIOptions = ({ params = {}}) => {
     let url = new URL(ROITemplatesOptionsEndpoint, window.location.origin);
     return authenticatedFetch(url, {
         method: 'POST',
@@ -135,13 +135,13 @@ export const readClusters = () => {
     return authenticatedFetch(clustersEndpoint).then(handleResponse);
 };
 
-export const readNotifications = ({ params = {} }) => {
+export const readNotifications = ({ params = {}}) => {
     let url = new URL(notificationsEndpoint, window.location.origin);
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
     return authenticatedFetch(url).then(handleResponse);
 };
 
-export const readJobExplorerOptions = ({ params = {} }) => {
+export const readJobExplorerOptions = ({ params = {}}) => {
     let url = new URL(jobExplorerOptionsEndpoint, window.location.origin);
     return authenticatedFetch(url, {
         method: 'POST',
