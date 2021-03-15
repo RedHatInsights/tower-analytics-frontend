@@ -67,7 +67,6 @@ export const useQueryParams = initial => {
                 return { ...state, ...newValues };
             }
 
-            // options and order are used for toolbar filter display purposes
             case 'SET_SORT_OPTIONS': {
                 return {
                     ...state,
@@ -83,15 +82,6 @@ export const useQueryParams = initial => {
                     ...state.sort_options && { sort_by: `${state.sort_options}:${value.sort_order}` } // Update sort by
                 };
             }
-
-            // sort_by is used for api purposes
-            case 'SET_SORT_BY':
-                return {
-                    ...state,
-                    sort_by: value.sort_by,
-                    sort_options: value.sort_by.split(':')[0],
-                    sort_order: value.sort_by.split(':')[1]
-                };
 
             case 'REINITIALIZE':
                 return { ...value };
@@ -114,7 +104,6 @@ export const useQueryParams = initial => {
         org_id: 'SET_ORG',
         cluster_id: 'SET_CLUSTER',
         template_id: 'SET_TEMPLATE',
-        sort_by: 'SET_SORT_BY',
         sort_order: 'SET_SORT_ORDER',
         sort_options: `SET_SORT_OPTIONS`,
         start_date: 'SET_START_DATE',
