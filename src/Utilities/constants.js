@@ -58,8 +58,6 @@ export const organizationStatistics = {
         status: [],
         org_id: [],
         quick_date_range: 'last_30_days',
-        sort_options: 'order',
-        sort_order: 'desc',
         limit: 5,
         job_type: [ 'workflowjob', 'job' ],
         cluster_id: [],
