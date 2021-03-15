@@ -6,7 +6,7 @@ import { formatDate } from '../Utilities/helpers';
 export const useQueryParams = initial => {
     const initialWithCalculatedParams = {
         ...initial,
-        sort_by: `${initial.sort_options}:${initial.sort_order}`
+        ...initial.sort_options && initial.sort_order && { sort_by: `${initial.sort_options}:${initial.sort_order}` }
     };
 
     const paramsReducer = (state, { type, value }) => {
@@ -69,32 +69,18 @@ export const useQueryParams = initial => {
 
             // options and order are used for toolbar filter display purposes
             case 'SET_SORT_OPTIONS': {
-                let order;
-                if (state?.sort_by) {
-                    order = state.sort_by.split(':')[1];
-                } else {
-                    order = state.sort_order;
-                }
-
                 return {
                     ...state,
                     sort_options: value.sort_options,
-                    sort_by: `${value.sort_options}:${order}` // Update sort by
+                    ...state.sort_order && { sort_by: `${value.sort_options}:${state.sort_order}` } // Update sort by
                 };
             }
 
             case 'SET_SORT_ORDER': {
-                let attr;
-                if (state?.sort_by) {
-                    attr = state.sort_by.split(':')[0];
-                } else {
-                    attr = state.sort_options;
-                }
-
                 return {
                     ...state,
                     sort_order: value.sort_order,
-                    sort_by: `${attr}:${value.sort_order}` // Update sort by
+                    ...state.sort_options && { sort_by: `${state.sort_options}:${value.sort_order}` } // Update sort by
                 };
             }
 
