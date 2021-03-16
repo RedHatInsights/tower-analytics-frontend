@@ -86,10 +86,7 @@ export const useQueryParams = initial => {
             case 'REINITIALIZE':
                 return { ...value };
             case 'RESET_FILTER':
-                return {
-                    ...state,
-                    ...initialWithCalculatedParams
-                };
+                return { ...initialWithCalculatedParams };
             default:
                 throw new Error();
         }

@@ -20,8 +20,6 @@ export const jobExplorer = {
         template_id: [],
         sort_options: 'created',
         sort_order: 'desc',
-        start_date: null,
-        end_date: null,
         only_root_workflows_and_standalone_jobs: false,
         limit: 5
     }
