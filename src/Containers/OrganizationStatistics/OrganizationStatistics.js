@@ -170,7 +170,7 @@ const OrganizationStatistics = ({ history }) => {
         include_others: true,
         granularity: 'daily',
         attributes: [ 'host_task_count' ],
-        sort_by: `host_task_count:${queryParams.sort_by}`
+        sort_by: `host_task_count:desc`
     };
 
     const jobRunsByOrgParams = {
@@ -178,7 +178,7 @@ const OrganizationStatistics = ({ history }) => {
         group_by: 'org',
         include_others: true,
         attributes: [ 'host_count' ],
-        sort_by: `total_count:${queryParams.sort_by}`
+        sort_by: `total_count:desc`
     };
 
     const jobsByDateAndOrgParams = {
@@ -186,7 +186,7 @@ const OrganizationStatistics = ({ history }) => {
         attributes: [ 'total_count' ],
         group_by_time: true,
         group_by: 'org',
-        sort_by: `total_count:${queryParams.sort_by}`
+        sort_by: `total_count:desc`
     };
 
     const hostAcrossOrgParams = {
@@ -194,7 +194,7 @@ const OrganizationStatistics = ({ history }) => {
         attributes: [ 'total_unique_host_count' ],
         group_by_time: true,
         group_by: 'org',
-        sort_by: `host_task_count:${queryParams.sort_by}`
+        sort_by: `host_task_count:desc`
     };
 
     const handleTabClick = (_, tabIndex) => { setActiveTabKey(tabIndex); };
