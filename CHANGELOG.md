@@ -15,6 +15,8 @@
 
 ### Fixed
 - Bug where the user could enter negative and non numeric values in the manual and automated cost input in Automation Calculator view.
+- Bug where the notifications did not load when the 'View All' notifications were selected.
+- Bug where the notification item timestamp showed up unreadable.
 
 ## 1.1.2 - 2020-12-16
 
