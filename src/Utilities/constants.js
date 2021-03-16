@@ -48,8 +48,7 @@ export const roi = {
             'total_cluster_count'
         ],
         group_by: 'template',
-        group_by_time: false,
-        granularity: 'monthly'
+        group_by_time: false
     }
 };
 
