@@ -57,7 +57,8 @@ Cypress.Commands.add('loginFlow', () => {
     // ).as('token');
 
     cy.visit('/');
-    cy.get('[data-ouia-component-id="0"]').click();
+
+    cy.get('.pf-c-page__header-tools > .pf-c-button').click();
 
     cy.getUsername().then(uname => cy.get('#username').type(`${uname}{enter}`));
     // Inportant!

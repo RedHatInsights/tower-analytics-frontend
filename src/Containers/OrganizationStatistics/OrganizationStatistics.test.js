@@ -206,7 +206,7 @@ describe('Containers/OrganizationStatistics', () => {
         expect(rest).toEqual(defaultQueryParams);
     });
 
-    it('should handle the tab swithcing correctly', async () => {
+    it('should handle the tab switching correctly', async () => {
         await act(async () => {
             wrapper = mountPage(OrganizationStatistics);
         });

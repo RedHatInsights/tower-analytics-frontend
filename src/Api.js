@@ -6,7 +6,7 @@ const preflightEndpoint = `/api/tower-analytics/v0/authorized/`;
 
 /* v1 endpoints */
 const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
-const hostExplorerEndpoint = '/api/tower-analytics/v1/host_explorer';
+const hostExplorerEndpoint = '/api/tower-analytics/v1/host_explorer/';
 const eventExplorerEndpoint = '/api/tower-analytics/v1/event_explorer/';
 const ROIEndpoint = '/api/tower-analytics/v1/roi_templates/';
 
