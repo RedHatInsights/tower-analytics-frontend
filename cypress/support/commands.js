@@ -57,7 +57,7 @@ Cypress.Commands.add('loginFlow', () => {
     // ).as('token');
 
     cy.visit('/');
-    cy.get('[data-ouia-component-id="0"]').click();
+    cy.get('[data-ouia-component-id="1"]').click();
 
     cy.getUsername().then(uname => cy.get('#username').type(`${uname}{enter}`));
     // Inportant!
