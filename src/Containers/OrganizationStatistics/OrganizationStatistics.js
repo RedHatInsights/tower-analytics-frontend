@@ -157,7 +157,7 @@ const OrganizationStatistics = ({ history }) => {
     const [ preflight, setPreflight ] = useApi(null);
     const [ activeTabKey, setActiveTabKey ] = useState(0);
     const [ orgs, setOrgs ] = useApi([], orgsChartMapper(chartMapper[activeTabKey].attr));
-    const [ jobs, setJobs ] = useApi([], pieChartMapper('host_count'));
+    const [ jobs, setJobs ] = useApi([], pieChartMapper('total_count'));
     const [ tasks, setTasks ] = useApi([], pieChartMapper('host_task_count'));
     const [ options, setOptions ] = useApi({}, optionsMapper);
     const { queryParams, setFromToolbar } = useQueryParams(
@@ -166,34 +166,33 @@ const OrganizationStatistics = ({ history }) => {
 
     const jobEventsByOrgParams = {
         ...queryParams,
+        attributes: [ 'host_task_count' ],
         group_by: 'org',
         include_others: true,
-        granularity: 'daily',
-        attributes: [ 'host_task_count' ],
         sort_by: `host_task_count:desc`
     };
 
     const jobRunsByOrgParams = {
         ...queryParams,
+        attributes: [ 'total_count' ],
         group_by: 'org',
         include_others: true,
-        attributes: [ 'host_count' ],
         sort_by: `total_count:desc`
     };
 
     const jobsByDateAndOrgParams = {
         ...queryParams,
         attributes: [ 'total_count' ],
-        group_by_time: true,
         group_by: 'org',
+        group_by_time: true,
         sort_by: `total_count:desc`
     };
 
     const hostAcrossOrgParams = {
         ...queryParams,
         attributes: [ 'total_unique_host_count' ],
-        group_by_time: true,
         group_by: 'org',
+        group_by_time: true,
         sort_by: `host_task_count:desc`
     };
 
