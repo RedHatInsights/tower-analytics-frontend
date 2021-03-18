@@ -168,7 +168,6 @@ const OrganizationStatistics = ({ history }) => {
         ...queryParams,
         group_by: 'org',
         include_others: true,
-        granularity: 'daily',
         attributes: [ 'host_task_count' ],
         sort_by: `host_task_count:desc`
     };
