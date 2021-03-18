@@ -177,7 +177,7 @@ const OrganizationStatistics = ({ history }) => {
         ...queryParams,
         group_by: 'org',
         include_others: true,
-        attributes: [ 'host_count' ],
+        attributes: [ 'total_count' ],
         sort_by: `total_count:desc`
     };
 
