@@ -166,33 +166,33 @@ const OrganizationStatistics = ({ history }) => {
 
     const jobEventsByOrgParams = {
         ...queryParams,
+        attributes: [ 'host_task_count' ],
         group_by: 'org',
         include_others: true,
-        attributes: [ 'host_task_count' ],
         sort_by: `host_task_count:desc`
     };
 
     const jobRunsByOrgParams = {
         ...queryParams,
+        attributes: [ 'total_count' ],
         group_by: 'org',
         include_others: true,
-        attributes: [ 'total_count' ],
         sort_by: `total_count:desc`
     };
 
     const jobsByDateAndOrgParams = {
         ...queryParams,
         attributes: [ 'total_count' ],
-        group_by_time: true,
         group_by: 'org',
+        group_by_time: true,
         sort_by: `total_count:desc`
     };
 
     const hostAcrossOrgParams = {
         ...queryParams,
         attributes: [ 'total_unique_host_count' ],
-        group_by_time: true,
         group_by: 'org',
+        group_by_time: true,
         sort_by: `host_task_count:desc`
     };
 
