@@ -157,7 +157,7 @@ const OrganizationStatistics = ({ history }) => {
     const [ preflight, setPreflight ] = useApi(null);
     const [ activeTabKey, setActiveTabKey ] = useState(0);
     const [ orgs, setOrgs ] = useApi([], orgsChartMapper(chartMapper[activeTabKey].attr));
-    const [ jobs, setJobs ] = useApi([], pieChartMapper('host_count'));
+    const [ jobs, setJobs ] = useApi([], pieChartMapper('total_count'));
     const [ tasks, setTasks ] = useApi([], pieChartMapper('host_task_count'));
     const [ options, setOptions ] = useApi({}, optionsMapper);
     const { queryParams, setFromToolbar } = useQueryParams(
