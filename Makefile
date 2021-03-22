@@ -1,4 +1,4 @@
-.PHONY: all build fully_local_dev_start
+.PHONY: all build fully_local_dev_install_mac fully_local_dev_start
 
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 GIT_BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
@@ -15,10 +15,11 @@ all: build
 build:
 	docker build -t tower-analytics-frontend:${BRANCH} .
 
+fully_local_dev_install_mac:
+	brew install tmux
+
 fully_local_dev_start:
-	tmux new-session -d -s aa "exec npm run test_dev"
-	tmux select-window -t aa:0
-	tmux split-window -h -p 20 "cd ${REL_BACKEND_PATH} && exec make ui"
+	tmux new-session -d -s aa "cd ${REL_BACKEND_PATH} && exec make ui"
 	tmux select-window -t aa:0
 	tmux split-window -v -p 70 "exec npm start"
 	tmux select-pane -U
@@ -31,6 +32,6 @@ fully_local_dev_start:
 	tmux resize-pane -U 5
 	tmux select-pane -D
 	tmux resize-pane -U 5
-	tmux select-pane -L
+	tmux select-pane -D
 	tmux set mouse on
 	tmux attach -t aa
