@@ -79,6 +79,7 @@
     "postcss": "^7.0.16",
     "prop-types": "^15.6.2",
     "query-string": "^6.12.1",
+    "react-data-explorer": "0.0.17",
     "redux-mock-store": "^1.5.4",
     "styled-components": "^4.3.1",
     "stylelint": "^9.10.1",
