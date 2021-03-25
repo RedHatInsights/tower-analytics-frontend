@@ -164,7 +164,7 @@ const ModalContents = ({
                 'canceled',
                 'running'
             ],
-            job_type: [ 'job' ],
+            job_type: [ jobType ],
             quick_date_range: 'last_30_days'
         };
 
