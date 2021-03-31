@@ -191,7 +191,7 @@ const ModalContents = ({
         ],
         group_by_time: false,
         limit: 5,
-        sort_by: 'created:asc',
+        sort_by: 'created:desc',
         quick_date_range: qp.quick_date_range
             ? qp.quick_date_range
             : 'last_30_days',
