@@ -3,9 +3,9 @@
 BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
 GIT_BRANCH ?= $(shell git rev-parse --abbrev-ref HEAD)
 
-REL_BACKEND_PATH ?= ../tower-analytics-backend
+REL_BACKEND_PATH ?= ../automation-analytics-backend
 REL_PROXY_PATH ?= ../insights-proxy
-REL_PROXY_CONFIG_PATH ?= ../tower-analytics-frontend/config/fast-api.spandx.config.js bash scripts/run.sh
+REL_PROXY_CONFIG_PATH ?= ../tower-analytics-frontend/config/fast-api.spandx.config.js
 REL_CRC_CONFIG_PATH ?= ../cloud-services-config
 
 
@@ -23,7 +23,7 @@ fully_local_dev_start:
 	tmux select-window -t aa:0
 	tmux split-window -v -p 70 "exec npm start"
 	tmux select-pane -U
-	tmux split-window -v "cd ${REL_PROXY_PATH} && SPANDX_CONFIG=${REL_PROXY_CONFIG_PATH}"
+	tmux split-window -v "cd ${REL_PROXY_PATH} && SPANDX_CONFIG=${REL_PROXY_CONFIG_PATH} bash scripts/run.sh"
 	tmux split-window -v "cd ${REL_CRC_CONFIG_PATH} && exec npx http-server -p 8889"
 	tmux select-pane -U
 	tmux select-pane -U
