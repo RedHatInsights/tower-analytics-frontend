@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
@@ -26,8 +27,17 @@ import {
     CardTitle as PFCardTitle
 } from '@patternfly/react-core';
 
-import BarChart from '../../Charts/BarChart';
-import LineChart from '../../Charts/LineChart';
+import {
+    functions,
+    ChartRenderer,
+    ChartKind,
+    ChartType,
+    ChartTopLevelType,
+    ChartTooltipType
+} from 'react-data-explorer';
+
+// import BarChart from '../../Charts/BarChart';
+// import LineChart from '../../Charts/LineChart';
 import ModulesList from '../../Components/ModulesList';
 import TemplatesList from '../../Components/TemplatesList';
 import FilterableToolbar from '../../Components/Toolbar';
@@ -74,7 +84,7 @@ const Clusters = () => {
             isLoading,
             isSuccess,
             error,
-            data: { items: chartData = []}
+            // data: { items: chartData = []}
         },
         setData
     ] = useApi({ items: []});
@@ -98,6 +108,9 @@ const Clusters = () => {
         setModules
     ] = useApi({ items: []});
     const [{ data: options = []}, setOptions ] = useApi({}, optionsMapper);
+
+    const [ barChartData, setBarChartData ] = useState({ charts: [], functions });
+    const [ lineChartData, setLineChartData ] = useState({ charts: [], functions });
 
     const initialOptionsParams = {
         attributes: jobExplorer.attributes
@@ -146,6 +159,10 @@ const Clusters = () => {
         ...initialModuleParams
     };
 
+    // useEffect(() => {
+    // }, []);
+    
+    // Get and update the data
     useEffect(() => {
         async function initializeWithPreflight() {
             await preflightRequest().catch(error => {
@@ -153,12 +170,8 @@ const Clusters = () => {
             });
             setOptions(readClustersOptions({ params: optionsQueryParams }));
         }
-
+    
         initializeWithPreflight();
-    }, []);
-
-    // Get and update the data
-    useEffect(() => {
         const fetchEndpoints = () => {
             setData(readJobExplorer({ params: queryParams }));
             setTemplates(readJobExplorer({ params: topTemplatesParams }));
@@ -167,6 +180,155 @@ const Clusters = () => {
         };
 
         fetchEndpoints();
+
+        setLineChartData({
+            ...lineChartData,
+            charts: [
+                {
+                    id: 2000,
+                    kind: ChartKind.wrapper,
+                    type: ChartTopLevelType.chart,
+                    parent: null,
+                    props: {
+                        height: 300,
+                        minDomain: 0
+                    },
+                    xAxis: {
+                        label: 'Date',
+                        tickFormat: 'formatDateAsDayMonth'
+                    },
+                    yAxis: {
+                        label: 'Job runs'
+                    },
+                    tooltip: {
+                        cursor: false,
+                    },
+                    api: {
+                        params: queryParams,
+                        url: 'https://prod.foo.redhat.com:1337/api/tower-analytics/v1/job_explorer/',
+                        optionUrl: 'https://prod.foo.redhat.com:1337/api/tower-analytics/v1/dashboard_clusters_options/'
+                    }
+                },
+                {
+                    id: 2100,
+                    kind: ChartKind.group,
+                    parent: 2000,
+                    props: {}
+                },
+                {
+                    id: 2002,
+                    kind: ChartKind.simple,
+                    type: ChartType.line,
+                    parent: 2100,
+                    props: {
+                        x: 'created_date',
+                        y: 'failed_count',
+                        style: {
+                            data: {
+                                stroke: '#A30000'
+                            }
+                        }
+                    },
+                    tooltip: {
+                        labelName: 'Failed'
+                    },
+                    onClick: 'consoleLog'
+                },
+                {
+                    id: 2001,
+                    kind: ChartKind.simple,
+                    type: ChartType.line,
+                    parent: 2100,
+                    props: {
+                        x: 'created_date',
+                        y: 'successful_count',
+                        style: {
+                            data: {
+                                stroke: '#6EC664'
+                            }
+                        }
+                    }
+                }
+            ]
+        });
+
+        setBarChartData({
+            ...barChartData,
+            charts: [
+                {
+                    id: 1000,
+                    kind: ChartKind.wrapper,
+                    type: ChartTopLevelType.chart,
+                    parent: null,
+                    props: {
+                        height: 300,
+                        domainPadding: 20
+                    },
+                    xAxis: {
+                        label: 'Date',
+                        tickFormat: 'formatDateAsDayMonth'
+                    },
+                    yAxis: {
+                        label: 'Jobs across all clusters'
+                    },
+                    api: {
+                        params: queryParams,
+                        url: 'https://prod.foo.redhat.com:1337/api/tower-analytics/v1/job_explorer/',
+                        optionUrl: 'https://prod.foo.redhat.com:1337/api/tower-analytics/v1/dashboard_clusters_options/'
+                    }
+                },
+                {
+                    id: 1100,
+                    kind: ChartKind.stack,
+                    parent: 1000,
+                    props: {}
+                },
+                // {
+                //     id: 1002,
+                //     kind: ChartKind.simple,
+                //     type: ChartType.bar,
+                //     parent: 1100,
+                //     props: {
+                //         x: 'created_date',
+                //         y: 'failed_count',
+                //     },
+                //     tooltip: {
+                //         type: ChartTooltipType.default,
+                //         props: {},
+                //         labelName: 'Failed'
+                //     },
+                //     onClick: 'consoleLog'
+                // },
+                {
+                    id: 1001,
+                    kind: ChartKind.simple,
+                    type: ChartType.bar,
+                    parent: 1100,
+                    props: {
+                        x: 'created_date',
+                        y: 'successful_count',
+                    },
+                    tooltip: {
+                        type: ChartTooltipType.default,
+                        props: {}
+                    }
+                },
+                {
+                    id: 1002,
+                    kind: ChartKind.simple,
+                    type: ChartType.bar,
+                    parent: 1100,
+                    props: {
+                        x: 'created_date',
+                        y: 'host_count',
+                    },
+                    tooltip: {
+                        type: ChartTooltipType.default,
+                        props: {}
+                    }
+                }
+            ]
+        });
     }, [ queryParams ]);
 
     return (
@@ -199,23 +361,25 @@ const Clusters = () => {
                             <CardBody>
                                 {isLoading && <LoadingState />}
                                 {queryParams.cluster_id.length <= 0 && isSuccess && (
-                                    <BarChart
-                                        margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                                        id="d3-bar-chart-root"
-                                        data={chartData}
-                                        templateId={queryParams.template_id}
-                                        orgId={queryParams.org_id}
-                                    />
+                                    // <BarChart
+                                    //     margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
+                                    //     id="d3-bar-chart-root"
+                                    //     data={chartData}
+                                    //     templateId={queryParams.template_id}
+                                    //     orgId={queryParams.org_id}
+                                    // />
+                                    <ChartRenderer data={barChartData} />
                                 )}
                                 {queryParams.cluster_id.length > 0 && isSuccess && (
-                                    <LineChart
-                                        margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                                        id="d3-line-chart-root"
-                                        data={chartData}
-                                        clusterId={queryParams.cluster_id}
-                                        templateId={queryParams.template_id}
-                                        orgId={queryParams.org_id}
-                                    />
+                                    // <LineChart
+                                    //     margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
+                                    //     id="d3-line-chart-root"
+                                    //     data={chartData}
+                                    //     clusterId={queryParams.cluster_id}
+                                    //     templateId={queryParams.template_id}
+                                    //     orgId={queryParams.org_id}
+                                    // />
+                                    <ChartRenderer data={lineChartData} />
                                 )}
                             </CardBody>
                         </Card>

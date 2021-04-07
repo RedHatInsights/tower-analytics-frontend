@@ -74,5 +74,8 @@ export const clusters = {
         cluster_id: [],
         template_id: [],
         only_root_workflows_and_standalone_jobs: false
-    }
+    },
+    attributes: [
+        'successful_count', 'failed_count', 'total_count'
+    ]
 };
