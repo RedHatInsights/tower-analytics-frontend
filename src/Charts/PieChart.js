@@ -303,7 +303,6 @@ PieChart.propTypes = {
     margin: PropTypes.object,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func,
-    timeFrame: PropTypes.number,
     colorFunc: PropTypes.func
 };
 

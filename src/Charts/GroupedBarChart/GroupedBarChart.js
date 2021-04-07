@@ -48,7 +48,7 @@ const GroupedBarChart = ({
     const draw = () => {
         // Clear our chart container element first
         d3.selectAll('#' + props.id + ' > *').remove();
-        let { data: unformattedData, timeFrame } = props;
+        let { data: unformattedData } = props;
         const data = unformattedData.reduce((formatted, { date, items }) => {
             const selectedOrgs = items.filter(({ id }) => selectedIds.includes(id));
             return formatted.concat({ date, selectedOrgs });
@@ -64,11 +64,12 @@ const GroupedBarChart = ({
         const x1 = d3.scaleBand();
         const y = d3.scaleLinear().range([ height, 0 ]);
         // format our X Axis ticks
-        const maxTicks = Math.round(data.length / (timeFrame / 2));
+        const maxTicksOneMonth = Math.round(data.length / (data.length / 2));
+        const maxTicksTwoMonths = Math.round(data.length / (data.length / 4));
         let ticks = data.map(d => d.date);
-        if (timeFrame === 31) {
+        if (data.length > 14) {
             ticks = data
-            .map((d, i) => (i % maxTicks === 0 ? d.date : undefined))
+            .map((d, i) => (i % (data.length > 31 ? maxTicksTwoMonths : maxTicksOneMonth) === 0 ? d.date : undefined))
             .filter(item => item);
         }
 
@@ -238,7 +239,6 @@ GroupedBarChart.propTypes = {
     margin: PropTypes.object,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func,
-    timeFrame: PropTypes.number,
     colorFunc: PropTypes.func,
     yLabel: PropTypes.string,
     onClick: PropTypes.func,
