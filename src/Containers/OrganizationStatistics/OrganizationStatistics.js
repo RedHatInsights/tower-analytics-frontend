@@ -251,7 +251,6 @@ const OrganizationStatistics = ({ history }) => {
                                         id="d3-grouped-bar-chart-root"
                                         data={ orgs.data }
                                         history={ history }
-                                        timeFrame={ orgs.data .length }
                                         colorFunc={ colorFunc }
                                         yLabel={ chartMapper[activeTabKey].label }
                                         onClick={ chartMapper[activeTabKey].onClick(toJobExplorer, queryParams) }
@@ -276,7 +275,6 @@ const OrganizationStatistics = ({ history }) => {
                                             margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                                             id="d3-donut-1-chart-root"
                                             data={jobs.data}
-                                            timeFrame={jobs.data.length}
                                             colorFunc={colorFunc}
                                         />
                                     )}
@@ -297,7 +295,6 @@ const OrganizationStatistics = ({ history }) => {
                                             margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                                             id="d3-donut-2-chart-root"
                                             data={tasks.data}
-                                            timeFrame={tasks.data.length}
                                             colorFunc={colorFunc}
                                         />
                                     )}
