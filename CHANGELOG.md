@@ -1,5 +1,10 @@
 # Change log
-## [Unreleased]
+
+## 1.2.1 - 2021-04-08
+### Fixed
+- Bug where tick labels in the Organization Statistics chart were too crowded at certain time intervals.
+
+## 1.2 - 2021-04-07
 ### Added
 - Filterable toolbar to Clusters view.
 - Filterable toolbar to Organization Statistics view.
