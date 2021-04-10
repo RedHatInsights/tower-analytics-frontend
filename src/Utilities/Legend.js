@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Switch as PFSwitch } from '@patternfly/react-core';
+import { Switch } from '@patternfly/react-core';
 
 import styled from 'styled-components';
 
@@ -45,15 +45,9 @@ const Title = styled.span`
 
 const SubTitle = styled.span`
   font-size: 15px;
-  margin-left: 20px;
-`;
-
-const Switch = styled(PFSwitch)`
-  margin-left: 20px;
-
-  svg {
-    display: none;
-  }
+  margin-left: auto;
+  margin-right: 0;
+  padding-right: 10px;
 `;
 
 const Legend = ({
@@ -62,8 +56,6 @@ const Legend = ({
     height,
     onToggle
 }) => {
-    const handleChange = (_isChecked, { target: { value }}) => { onToggle(parseFloat(value)); };
-
     return (
         <Container height={ height }>
             { data.map(
@@ -73,13 +65,13 @@ const Legend = ({
                             <Color color={ value } />
                             <Title>{ name }</Title>
                         </Wrapper>
-                        { count && (
-                            <SubTitle>{ count }</SubTitle>
-                        ) }
+                        {count && (
+                            <SubTitle>{count}</SubTitle>
+                        )}
                         { selected && (
                             <Switch
                                 isChecked={ selected.some(selection => selection === id) }
-                                onChange={ handleChange }
+                                onChange={ () => onToggle(id) }
                                 aria-label={ name }
                                 value={ id }
                                 key={ index }
