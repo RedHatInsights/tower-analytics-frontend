@@ -171,13 +171,12 @@ const PieChart = ({
     getWidth,
     getHeight
 }) => {
-    const colors = data.map(org => {
-        const name = org.id === -1 ? 'Others' : org.name;
+    const colors = data.map(({ id, name, count }) => {
         return {
-            id: org.id,
+            id,
             name,
-            value: color(name),
-            count: Math.round(org.count)
+            value: color(id),
+            count: Math.round(count)
         };
     }).sort((a, b) => (a.count > b.count) ? 1 : ((b.count > a.count) ? -1 : 0));
 
@@ -242,16 +241,16 @@ const PieChart = ({
         .enter()
         .append('path')
         .attr('d', arc)
-        .attr('fill', d => color(d.data.name));
+        .attr('fill', d => color(d.data.id));
 
         svg
         .selectAll('path')
         .on('mouseover', function(d) {
-            d3.select(this).style('fill', d3.rgb(color(d.data.name)).darker(1));
+            d3.select(this).style('fill', d3.rgb(color(d.data.id)).darker(1));
             donutTooltip.handleMouseOver(d);
         })
         .on('mouseout', function(d) {
-            d3.select(this).style('fill', color(d.data.name));
+            d3.select(this).style('fill', color(d.data.id));
             donutTooltip.handleMouseOut();
         })
         .on('mousemove', donutTooltip.handleMouseOver);

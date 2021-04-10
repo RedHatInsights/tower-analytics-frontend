@@ -88,22 +88,24 @@ const optionsMapper = options => {
     return { ...rest };
 };
 
-const orgsChartMapper = attrName => ({ dates: data = []}) =>
-    data.map(({ date, items }) => ({
+const orgsChartMapper = attrName => ({ dates: data = [], meta }) => ({
+    data: data.map(({ date, items }) => ({
         date,
         items: items.map(({ id, [attrName]: value, name }) => ({
             id,
             date,
             value,
-            name: id === -1 ? 'Others' : (name || 'No organization')
+            name: name || 'No organization'
         }))
-    }));
+    })),
+    legend: meta.legend
+});
 
 const pieChartMapper = attrName => ({ items = []}) =>
     items.map(({ id, [attrName]: count, name }) => ({
         id,
         count,
-        name: id === -1 ? 'Others' : name || 'No organization'
+        name: name || 'No organization'
     }));
 
 const redirectToJobExplorer = (toJobExplorer, queryParams) => ({ date, id }) => {
@@ -244,12 +246,13 @@ const OrganizationStatistics = ({ history }) => {
                             <CardBody>
                                 {orgs.isLoading && <LoadingState />}
                                 {orgs.error && <ApiErrorState message={orgs.error.error} />}
-                                {orgs.isSuccess && orgs.data.length <= 0 && <NoData />}
-                                {orgs.isSuccess && orgs.data.length > 0 && (
+                                {orgs.isSuccess && orgs.data?.data.length <= 0 && <NoData />}
+                                {orgs.isSuccess && orgs.data?.data.length > 0 && (
                                     <GroupedBarChart
                                         margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
                                         id="d3-grouped-bar-chart-root"
-                                        data={ orgs.data }
+                                        data={ orgs.data.data }
+                                        legend={ orgs.data.legend }
                                         history={ history }
                                         colorFunc={ colorFunc }
                                         yLabel={ chartMapper[activeTabKey].label }
