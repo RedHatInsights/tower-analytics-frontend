@@ -42,7 +42,7 @@ jobs:
           build: npm run build
           start: |
             npm run start
-            npm run proxy
+            npm run proxy:ci
           spec: cypress/integration/**/*spec.js
           wait-on: 'https://localhost:8002/'
         env:

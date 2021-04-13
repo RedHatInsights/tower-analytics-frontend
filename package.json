@@ -91,7 +91,7 @@
     "webpack-cli": "^3.2.3"
   },
   "scripts": {
-    "proxy": "SPANDX_CONFIG=./config/spandx.config.js bash ./insights-proxy/scripts/run.sh",
+    "proxy:ci": "SPANDX_CONFIG=./config/spandx.config.js bash ./insights-proxy/scripts/run.sh",
     "proxy:local": "SPANDX_CONFIG=./config/spandx.config.js bash ../insights-proxy/scripts/run.sh",
     "build": "webpack --config config/prod.webpack.config.js",
     "test": "jest --verbose",
