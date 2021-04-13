@@ -21,19 +21,18 @@ const formatDate = date => {
 const GroupedBarChart = ({
     onClick = null,
     TooltipClass,
+    legend,
     ...props
 }) => {
-    const orgsList = props.data[0].items;
-    const colors = orgsList.map(org => {
-        const name = org.id === -1 ? 'Others' : org.name;
+    const colors = legend.map(({ id, name }) => {
         return {
             name,
-            value: props.colorFunc(name),
-            id: org.id
+            value: props.colorFunc(id),
+            id
         };
     });
     const [ selectedIds, setSelectedIds ] = useState(
-        orgsList.map(({ id }) => id).slice(0, 8)
+        legend.map(({ id }) => id).slice(0, 8)
     );
     let timeout = null;
 
@@ -99,12 +98,11 @@ const GroupedBarChart = ({
         );
 
         const dates = data.map(d => d.date);
-        const selectedOrgNames = data[0].selectedOrgs.map(d => d.name);
         const tooltip = new TooltipClass({
             svg: '#' + props.id
         });
         x0.domain(dates);
-        x1.domain(selectedOrgNames).range([ 0, x0.bandwidth() ]); // unsorted
+        x1.domain(selectedIds).range([ 0, x0.bandwidth() ]);
         y.domain([
             0,
             d3.max(data, date => d3.max(date.selectedOrgs, d => d.value * 1.15)) || 8
@@ -171,10 +169,10 @@ const GroupedBarChart = ({
         .append('rect')
         .attr('width', x1.bandwidth())
         .attr('x', function(d) {
-            return x1(d.name);
+            return x1(d.id);
         }) // unsorted
         .style('fill', function(d) {
-            return color(d.name);
+            return color(d.id);
         })
         .attr('y', function(d) {
             return y(d.value);
@@ -184,12 +182,12 @@ const GroupedBarChart = ({
         })
         .on('mouseover', function(d) {
             d3.select(this).style('cursor', onClick ? 'pointer' : 'default');
-            d3.select(this).style('fill', d3.rgb(color(d.name)).darker(1));
+            d3.select(this).style('fill', d3.rgb(color(d.id)).darker(1));
             tooltip.handleMouseOver();
         })
         .on('mousemove', tooltip.handleMouseOver)
         .on('mouseout', function(d) {
-            d3.select(this).style('fill', color(d.name));
+            d3.select(this).style('fill', color(d.id));
             tooltip.handleMouseOut();
         })
         .on('click', onClick);
@@ -236,6 +234,7 @@ const GroupedBarChart = ({
 GroupedBarChart.propTypes = {
     id: PropTypes.string,
     data: PropTypes.array,
+    legend: PropTypes.array,
     margin: PropTypes.object,
     getHeight: PropTypes.func,
     getWidth: PropTypes.func,
