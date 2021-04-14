@@ -21,9 +21,11 @@ import {
 
 import {
     Main,
+    NotAuthorized,
     PageHeader,
     PageHeaderTitle
 } from '@redhat-cloud-services/frontend-components';
+import { notAuthorizedParams } from '../../Utilities/constants';
 
 import {
     Card,
@@ -219,6 +221,10 @@ const OrganizationStatistics = ({ history }) => {
         setJobs(readJobExplorer({ params: jobRunsByOrgParams }));
         setTasks(readJobExplorer({ params: jobEventsByOrgParams }));
     }, [ queryParams ]);
+
+    if (preflight?.error?.status === 403) {
+        return <NotAuthorized { ...notAuthorizedParams } />;
+    }
 
     return (
         <React.Fragment>

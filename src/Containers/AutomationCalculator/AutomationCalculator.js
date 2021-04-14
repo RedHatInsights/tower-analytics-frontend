@@ -3,10 +3,12 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import {
     Main,
+    NotAuthorized,
     PageHeader,
     PageHeaderTitle
 } from '@redhat-cloud-services/frontend-components';
 import { Card, CardBody } from '@patternfly/react-core';
+import { notAuthorizedParams } from '../../Utilities/constants';
 
 // Imports from custom components
 import LoadingState from '../../Components/LoadingState';
@@ -218,6 +220,10 @@ const AutomationCalculator = ({ history }) => {
             </Main>
         </WrapperRight>
     );
+    console.log('options', preflight);
+    if (preflight?.error?.status === 403) {
+        return <NotAuthorized { ...notAuthorizedParams } />;
+    }
 
     return (
         <React.Fragment>

@@ -3,7 +3,8 @@ import { stringify } from 'query-string';
 import {
     mountPage,
     preflight200,
-    preflight400
+    preflight400,
+    preflight403
 } from '../../Utilities/tests/helpers';
 import fetchMock from 'fetch-mock-jest';
 import JobExplorer from './JobExplorer';
@@ -90,6 +91,16 @@ describe('Containers/JobExplorer', () => {
         wrapper.update();
 
         expect(wrapper.text()).toEqual(expect.stringContaining('Not authorized'));
+    });
+
+    it('should render RBAC Access error', async () => {
+        fetchMock.get({ ...preflight403 });
+        await act(async () => {
+            wrapper = mountPage(JobExplorer);
+        });
+        wrapper.update();
+
+        expect(wrapper.text()).toEqual(expect.stringContaining('RBAC Access Denied'));
     });
 
     it('should render api error', async () => {

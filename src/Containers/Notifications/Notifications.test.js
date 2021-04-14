@@ -3,7 +3,8 @@ import { parse } from 'query-string';
 import {
     mountPage,
     preflight200,
-    preflight400
+    preflight400,
+    preflight403
 } from '../../Utilities/tests/helpers';
 import fetchMock from 'fetch-mock-jest';
 import Notifications from './Notifications.js';
@@ -90,6 +91,16 @@ describe('Containers/Notifications', () => {
         expect(wrapper.text()).toEqual(expect.stringContaining('Not authorized'));
     });
 
+    it('should render RBAC Access error', async () => {
+        fetchMock.get({ ...preflight403, overwriteRoutes: true });
+        await act(async () => {
+            wrapper = mountPage(Notifications);
+        });
+        wrapper.update();
+
+        expect(wrapper.text()).toEqual(expect.stringContaining('RBAC Access Denied'));
+    });
+
     xit('should render api error', async () => {
         fetchMock.get({
             url: notificationsUrl,
@@ -102,7 +113,9 @@ describe('Containers/Notifications', () => {
         });
         wrapper.update();
 
-        expect(wrapper.text()).toEqual(expect.stringContaining('General Error'));
+        expect(wrapper.text()).toEqual(expect.stringContaining('RBAC Access Denied'));
+        // RBAC access denied displayed
+        expect(wrapper.find('a')).toHaveLength(1);
     });
 
     it('should render with empty response', async () => {
