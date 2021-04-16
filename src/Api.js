@@ -28,6 +28,11 @@ function handleResponse(response) {
                 status: response.status,
                 message: json
             });
+        } else if (response.status === 403) {
+            return Promise.reject({
+                status: response.status,
+                error: 'RBAC access denied'
+            });
         } else {
             return Promise.reject(json);
         }
