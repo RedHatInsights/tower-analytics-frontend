@@ -7,6 +7,8 @@ import {
     readPlans
 } from '../../Api';
 
+import { formatDateTime } from '../../Utilities/helpers';
+
 import {
     Main,
     PageHeader,
@@ -58,7 +60,7 @@ const SavingsPlanner = () => {
                 <Main>
                 <Gallery hasGutter>
                     { isSuccess && data.length > 0 && data.map(i => (
-                        <Card isHoverable isCompact>
+                        <Card isHoverable isCompact key={i.id}>
                             <CardHeader>
                                 <CardHeaderMain>
                                     <CardTitle>{i.name}</CardTitle>
@@ -89,7 +91,7 @@ const SavingsPlanner = () => {
                                     <Label variant="outline" color="green" icon={<CheckIcon />}>
                                         Running
                                     </Label></p>
-                                <p>Last updated: {i.modified}</p>
+                                <p>Last updated: {formatDateTime(i.modified)}</p>
                             </CardBody>
                             <CardFooter>
                                 <Label>{i.category}</Label>
