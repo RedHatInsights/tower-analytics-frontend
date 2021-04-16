@@ -3,10 +3,17 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import {
+    preflightRequest,
+    readPlans
+} from '../../Api';
+
+import {
     Main,
     PageHeader,
     PageHeaderTitle
 } from '@redhat-cloud-services/frontend-components';
+
+import useApi from '../../Utilities/useApi';
 
 import {
     Card,
@@ -18,11 +25,7 @@ import {
     CardFooter,
     Checkbox,
     Dropdown,
-    DropdownToggle,
-    DropdownItem,
-    DropdownSeparator,
     KebabToggle,
-    Flex, FlexItem,
     Label,
     Gallery
 } from '@patternfly/react-core';
@@ -30,6 +33,23 @@ import {
 import { ChartBarIcon, CheckIcon } from '@patternfly/react-icons';
 
 const SavingsPlanner = () => {
+    const [
+        {
+            isLoading,
+            isSuccess,
+            error,
+            data: { items: data = [] }
+        },
+        setData
+    ] = useApi({ items: [] });
+    useEffect(() => {
+        const fetchEndpoints = () => {
+            setData(readPlans({ params: { limit: 10 } }));
+        };
+
+        fetchEndpoints();
+    }, []);
+
     return (
         <React.Fragment>
             <PageHeader>
@@ -37,10 +57,11 @@ const SavingsPlanner = () => {
             </PageHeader>
                 <Main>
                 <Gallery hasGutter>
-                    <Card isHoverable isCompact>
+                    { isSuccess && data.length > 0 && data.map(i => (
+                        <Card isHoverable isCompact>
                             <CardHeader>
                                 <CardHeaderMain>
-                                    <CardTitle>Check Uptime</CardTitle>
+                                    <CardTitle>{i.name}</CardTitle>
                                 </CardHeaderMain>
                                 <CardActions>
                                     <Dropdown
@@ -61,94 +82,20 @@ const SavingsPlanner = () => {
                                 </CardActions>
                             </CardHeader>
                             <CardBody>
-                                <p>Farm-to-table vice vape edison bulb kitsch street art gentrify intelligentsia meditation snackwave.</p>
-                                <p>Frequency: </p>
+                                <p>{i.description}</p>
+                                <p>Frequency: {i.frequency_period}</p>
                                 <p>Template: </p>
                                 <p>Automation status{' '}
                                     <Label variant="outline" color="green" icon={<CheckIcon />}>
                                         Running
                                     </Label></p>
-                                <p>Last updated: </p>
+                                <p>Last updated: {i.modified}</p>
                             </CardBody>
                             <CardFooter>
-                                <Label>Docker</Label>
+                                <Label>{i.category}</Label>
                             </CardFooter>
                         </Card>
-                
-                    <Card isHoverable isCompact>
-                            <CardHeader>
-                                <CardHeaderMain>
-                                    <CardTitle>Configure Cron Jobs</CardTitle>
-                                </CardHeaderMain>
-                                <CardActions>
-                                    <Dropdown
-                                        onSelect={() => { }}
-                                        toggle={<KebabToggle onToggle={() => { }} />}
-                                        isOpen={false}
-                                        isPlain
-                                        dropdownItems={[]}
-                                        position={'right'}
-                                    />
-                                    <Checkbox
-                                        isChecked={false}
-                                        onChange={() => { }}
-                                        aria-label="card checkbox example"
-                                        id="check-1"
-                                        name="check1"
-                                    />
-                                </CardActions>
-                            </CardHeader>
-                            <CardBody>
-                                <p>Health goth kogi vaporware gluten-free forage franzen.</p>
-                                <p>Frequency: </p>
-                                <p>Template: </p>
-                                <p>Automation status{' '}
-                                    <Label variant="outline" color="red" icon={<CheckIcon />}>
-                                        Not Running
-                                    </Label></p>
-                                <p>Last updated: </p>
-                            </CardBody>
-                            <CardFooter>
-                                <Label>Server</Label>
-                            </CardFooter>
-                        </Card>
-                    <Card isHoverable isCompact>
-                            <CardHeader>
-                                <CardHeaderMain>
-                                    <CardTitle>Gather Stats</CardTitle>
-                                </CardHeaderMain>
-                                <CardActions>
-                                    <Dropdown
-                                        onSelect={() => { }}
-                                        toggle={<KebabToggle onToggle={() => { }} />}
-                                        isOpen={false}
-                                        isPlain
-                                        dropdownItems={[]}
-                                        position={'right'}
-                                    />
-                                    <Checkbox
-                                        isChecked={false}
-                                        onChange={() => { }}
-                                        aria-label="card checkbox example"
-                                        id="check-1"
-                                        name="check1"
-                                    />
-                                </CardActions>
-                            </CardHeader>
-                            <CardBody>
-                                <p>BodCopper mug blog truffaut chambray selvage vinyl fixie kombucha DIY ugh occupy letterpress.</p>
-                                <p>Frequency: </p>
-                                <p>Template: </p>
-                                <p>Automation status{' '}
-                                    <Label variant="outline" color="green" icon={<CheckIcon />}>
-                                        Running
-                                    </Label></p>
-                                <p>Last updated: </p>
-                            </CardBody>
-                            <CardFooter>
-                                <Label>Networking</Label>
-                            </CardFooter>
-                        </Card>
+                    ))}
                 </Gallery>
                 </Main>
         </React.Fragment>
