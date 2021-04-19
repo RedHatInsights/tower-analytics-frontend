@@ -10,6 +10,7 @@ import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
 import ApiErrorState from '../../Components/ApiErrorState';
+
 import {
     preflightRequest,
     readJobExplorer,
@@ -19,9 +20,11 @@ import { jobExplorer } from '../../Utilities/constants';
 
 import {
     Main,
+    NotAuthorized,
     PageHeader,
     PageHeaderTitle
 } from '@redhat-cloud-services/frontend-components';
+import { notAuthorizedParams } from '../../Utilities/constants';
 
 import {
     Card,
@@ -120,6 +123,10 @@ const JobExplorer = ({ location: { search }, history }) => {
         setOffset(nextOffset);
         setCurrPage(page);
     };
+
+    if (preflightError?.preflightError?.status === 403) {
+        return <NotAuthorized { ...notAuthorizedParams } />;
+    }
 
     return (
         <React.Fragment>

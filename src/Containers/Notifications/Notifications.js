@@ -10,9 +10,11 @@ import { preflightRequest, readClusters, readNotifications } from '../../Api';
 
 import {
     Main,
+    NotAuthorized,
     PageHeader,
     PageHeaderTitle
 } from '@redhat-cloud-services/frontend-components';
+import { notAuthorizedParams } from '../../Utilities/constants';
 
 import {
     Card,
@@ -197,6 +199,10 @@ const Notifications = () => {
         setOffset(nextOffset);
         setCurrPage(page);
     };
+
+    if (preflightError?.preflightError?.status === 403) {
+        return <NotAuthorized { ...notAuthorizedParams } />;
+    }
 
     return (
         <React.Fragment>
