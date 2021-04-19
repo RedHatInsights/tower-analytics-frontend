@@ -16,13 +16,13 @@ describe('Components/Toolbar/FilterableToolbar', () => {
     describe('General Toolbar', () => {
         it('should render without issuess', () => {
             let wrapper = shallow(
-                <FilterableToolbar categories={mockCategories} filters={mockFilters} />
+                <FilterableToolbar categories={mockCategories} filters={mockFilters} setFilters={() => {}} />
             );
             expect(wrapper).toBeTruthy();
         });
         it('should render 3 sections: Filters, Date Range, Sort', () => {
             let wrapper = shallow(
-                <FilterableToolbar categories={mockCategories} filters={mockFilters} />
+                <FilterableToolbar categories={mockCategories} filters={mockFilters} setFilters={() => {}} />
             );
             const filters = wrapper.find('FilterCategoriesGroup');
             const date = wrapper.find('QuickDateGroup');
@@ -36,6 +36,7 @@ describe('Components/Toolbar/FilterableToolbar', () => {
                 <FilterableToolbar
                     categories={mockCategories}
                     filters={mockFilters}
+                    setFilters={() => {}}
                     hasSettings
                 />
             );
@@ -48,6 +49,7 @@ describe('Components/Toolbar/FilterableToolbar', () => {
                 <FilterableToolbar
                     categories={mockCategories}
                     filters={mockFilters}
+                    setFilters={() => {}}
                     pagination={mockPagination}
                 />
             );
@@ -63,14 +65,14 @@ describe('Components/Toolbar/FilterableToolbar', () => {
             };
 
             let wrapper = mount(
-                <FilterableToolbar categories={mockCategories} filters={mockFilters} />
+                <FilterableToolbar categories={mockCategories} filters={mockFilters} setFilters={() => {}} />
             );
             const filterItem = wrapper.find('ToolbarFilterItem');
             expect(filterItem.length).toEqual(Object.keys(mockCategories).length);
         });
         it('should filter out quick_date_range and sort_options params', () => {
             let wrapper = mount(
-                <FilterableToolbar categories={mockCategories} filters={mockFilters} />
+                <FilterableToolbar categories={mockCategories} filters={mockFilters} setFilters={() => {}} />
             );
             const filterItem = wrapper
             .find('FilterCategoriesGroup')
