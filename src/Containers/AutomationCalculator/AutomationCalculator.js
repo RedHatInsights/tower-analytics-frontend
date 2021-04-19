@@ -220,7 +220,7 @@ const AutomationCalculator = ({ history }) => {
             </Main>
         </WrapperRight>
     );
-    console.log('options', preflight);
+
     if (preflight?.error?.status === 403) {
         return <NotAuthorized { ...notAuthorizedParams } />;
     }
