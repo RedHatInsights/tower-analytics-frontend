@@ -68,15 +68,16 @@ const Legend = ({
                         {count && (
                             <SubTitle>{count}</SubTitle>
                         )}
-                        { selected && (
+                        {selected && (
                             <Switch
-                                isChecked={ selected.some(selection => selection === id) }
-                                onChange={ () => onToggle(id) }
-                                aria-label={ name }
-                                value={ id }
-                                key={ index }
+                                isChecked={selected.some(selection => selection === id)}
+                                onChange={() => onToggle(id)}
+                                aria-label={name}
+                                value={id}
+                                key={index}
+                                id={id}
                             />
-                        ) }
+                        )}
                     </LegendDetail>
                 )) }
         </Container>
