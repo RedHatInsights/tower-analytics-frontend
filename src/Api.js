@@ -17,6 +17,7 @@ const jobExplorerOptionsEndpoint =
 const ROITemplatesOptionsEndpoint = '/api/tower-analytics/v1/roi_templates_options/';
 const orgOptionsEndpoint = '/api/tower-analytics/v1/dashboard_organization_statistics_options/';
 const clustersOptionsEndpoint = '/api/tower-analytics/v1/dashboard_clusters_options/';
+const planOptionsEndpoint = '/api/tower-analytics/v1/plan_options/';
 
 function handleResponse(response) {
     return response.json().then(json => {
@@ -149,6 +150,13 @@ export const readROIOptions = ({ params = {}}) => {
     return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
+    }).then(handleResponse);
+};
+
+export const readPlanOptions = () => {
+    let url = new URL(planOptionsEndpoint, window.location.origin);
+    return authenticatedFetch(url, {
+        method: 'GET'
     }).then(handleResponse);
 };
 

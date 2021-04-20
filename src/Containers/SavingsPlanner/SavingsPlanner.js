@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 
 import {
     preflightRequest,
+    readPlanOptions,
     readPlans
 } from '../../Api';
 
@@ -32,7 +33,12 @@ import {
     Gallery
 } from '@patternfly/react-core';
 
-import { ChartBarIcon, CheckIcon } from '@patternfly/react-icons';
+import { ChartBarIcon, CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
+import styled from 'styled-components';
+
+const CardLabel = styled.span`
+  margin-right: 5px;
+`;
 
 const SavingsPlanner = () => {
     const [
@@ -44,13 +50,28 @@ const SavingsPlanner = () => {
         },
         setData
     ] = useApi({ items: [] });
+    const [ options, setOptions ] = useApi({});
+
     useEffect(() => {
         const fetchEndpoints = () => {
             setData(readPlans({ params: { limit: 10 } }));
+            setOptions(readPlanOptions());
         };
 
         fetchEndpoints();
     }, []);
+
+    const showTemplate = id => {
+        if (!id) {
+            return;
+        };
+        if (options.isSuccess) {
+            const selectedTemplate = options.data.templates.filter(t => t.id === id);
+            return(
+                <a>{selectedTemplate[0].name}</a>
+            );
+        }
+    }
 
     return (
         <React.Fragment>
@@ -59,7 +80,7 @@ const SavingsPlanner = () => {
             </PageHeader>
                 <Main>
                 <Gallery hasGutter>
-                    { isSuccess && data.length > 0 && data.map(i => (
+                    { isSuccess && data.map(i => (
                         <Card isHoverable isCompact key={i.id}>
                             <CardHeader>
                                 <CardHeaderMain>
@@ -84,14 +105,28 @@ const SavingsPlanner = () => {
                                 </CardActions>
                             </CardHeader>
                             <CardBody>
-                                <p>{i.description}</p>
-                                <p>Frequency: {i.frequency_period}</p>
-                                <p>Template: </p>
-                                <p>Automation status{' '}
-                                    <Label variant="outline" color="green" icon={<CheckIcon />}>
-                                        Running
-                                    </Label></p>
-                                <p>Last updated: {formatDateTime(i.modified)}</p>
+                                {i.description ? (<p>{i.description}</p>) : null}
+                                <div>
+                                    <CardLabel>Frequency:</CardLabel> {i.frequency_period ? i.frequency_period : (<em>None</em>)}
+                                </div>
+                                <div>
+                                    <CardLabel>Template:</CardLabel> {i.template_id ? showTemplate(i.template_id) : (<em>None</em>)}
+                                </div>
+                                <div>
+                                    <CardLabel>Automation status</CardLabel>
+                                        { i.automation_status.status === 'successful' ? (
+                                            <Label variant="outline" color="green" icon={<CheckCircleIcon />}>
+                                                Running
+                                            </Label>
+                                        ) : (
+                                            <Label variant="outline" color="red" icon={<ExclamationCircleIcon />}>
+                                                Not Running
+                                            </Label>
+                                        )}
+                                </div>
+                                <div>
+                                    <CardLabel>Last updated:</CardLabel> {formatDateTime(i.modified)}
+                                </div>
                             </CardBody>
                             <CardFooter>
                                 <Label>{i.category}</Label>
