@@ -1,5 +1,6 @@
 /* eslint-disable */
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import {
@@ -7,6 +8,8 @@ import {
     readPlanOptions,
     readPlans
 } from '../../Api';
+
+import { Paths } from '../../paths';
 
 import { formatDateTime } from '../../Utilities/helpers';
 
@@ -35,12 +38,30 @@ import {
 
 import { ChartBarIcon, CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 import styled from 'styled-components';
+import { stringify } from 'query-string';
+
 
 const CardLabel = styled.span`
   margin-right: 5px;
 `;
 
 const SavingsPlanner = () => {
+    let history = useHistory();
+    
+    const redirectToJobExplorer = templateId => {
+        const { jobExplorer } = Paths;
+        const initialQueryParams = {
+            quick_date_range: 'last_30_days',
+            status: ['failed', 'successful'],
+            template_id: [ templateId ]
+        };
+        const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
+        history.push({
+            pathname: jobExplorer,
+            search
+        });
+    }
+
     const [
         {
             isLoading,
@@ -68,7 +89,7 @@ const SavingsPlanner = () => {
         if (options.isSuccess) {
             const selectedTemplate = options.data.templates.filter(t => t.id === id);
             return(
-                <a>{selectedTemplate[0].name}</a>
+                <a onClick={() => redirectToJobExplorer(selectedTemplate[0].id)}>{selectedTemplate[0].name}</a>
             );
         }
     }
@@ -107,10 +128,10 @@ const SavingsPlanner = () => {
                             <CardBody>
                                 {i.description ? (<p>{i.description}</p>) : null}
                                 <div>
-                                    <CardLabel>Frequency:</CardLabel> {i.frequency_period ? i.frequency_period : (<em>None</em>)}
+                                    <CardLabel>Frequency</CardLabel> {i.frequency_period ? i.frequency_period : (<em>None</em>)}
                                 </div>
                                 <div>
-                                    <CardLabel>Template:</CardLabel> {i.template_id ? showTemplate(i.template_id) : (<em>None</em>)}
+                                    <CardLabel>Template</CardLabel> {i.template_id ? showTemplate(i.template_id) : (<em>None</em>)}
                                 </div>
                                 <div>
                                     <CardLabel>Automation status</CardLabel>
@@ -125,7 +146,7 @@ const SavingsPlanner = () => {
                                         )}
                                 </div>
                                 <div>
-                                    <CardLabel>Last updated:</CardLabel> {formatDateTime(i.modified)}
+                                    <CardLabel>Last updated</CardLabel> {formatDateTime(i.modified)}
                                 </div>
                             </CardBody>
                             <CardFooter>
