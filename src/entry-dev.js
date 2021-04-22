@@ -9,7 +9,7 @@ import getBaseName from './Utilities/getBaseName';
 
 ReactDOM.render(
     <Provider store={init(logger).getStore()}>
-        <Router basename={getBaseName(window.location.pathname)}>
+        <Router basename={getBaseName()}>
             <App />
         </Router>
     </Provider>,
