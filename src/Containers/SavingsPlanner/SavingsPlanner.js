@@ -34,7 +34,9 @@ const perPageOptions = [
 ];
 
 const qp = {
-    limit: 5
+    limit: 5,
+    sort_options: 'modified',
+    sort_order: 'desc',
 };
 
 

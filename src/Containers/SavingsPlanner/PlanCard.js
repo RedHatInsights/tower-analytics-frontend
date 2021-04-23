@@ -37,7 +37,7 @@ const PlanCard = (
         id,
         description,
         frequency_period,
-        template_id,
+        template_details,
         automation_status,
         modified,
         category,
@@ -62,14 +62,13 @@ const PlanCard = (
         });
     }
 
-    const showTemplate = id => {
-        if (!id) {
+    const showTemplate = template => {
+        if (!template) {
             return;
         };
         if (isSuccess) {
-            const selectedTemplate = templates.filter(t => t.id === id);
             return (
-                <a onClick={() => redirectToJobExplorer(selectedTemplate[0].id)}>{selectedTemplate[0].name}</a>
+                <a onClick={() => redirectToJobExplorer(template.id)}>{template.name}</a>
             );
         }
     }
@@ -115,7 +114,7 @@ const PlanCard = (
                     <CardLabel>Frequency</CardLabel> {frequency_period ? frequency_period : (<em>None</em>)}
                 </div>
                 <div>
-                    <CardLabel>Template</CardLabel> {template_id ? showTemplate(template_id) : (<em>None</em>)}
+                    <CardLabel>Template</CardLabel> {template_details ? showTemplate(template_details) : (<em>None</em>)}
                 </div>
                 <div>
                     <CardLabel>Automation status</CardLabel>
