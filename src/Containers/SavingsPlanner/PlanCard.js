@@ -25,6 +25,8 @@ import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons'
 import styled from 'styled-components';
 import { stringify } from 'query-string';
 
+import { Link, useRouteMatch } from 'react-router-dom';
+
 const CardLabel = styled.span`
   margin-right: 5px;
 `;
@@ -43,6 +45,7 @@ const PlanCard = (
     }) => {
     const [ isCardKebabOpen, setIsCardKebabOpen ] = useState(false);
 
+    const match = useRouteMatch();
     let history = useHistory();
 
     const redirectToJobExplorer = templateId => {
@@ -78,7 +81,11 @@ const PlanCard = (
         <Card isHoverable isCompact>
             <CardHeader>
                 <CardHeaderMain>
-                    <CardTitle>{name}</CardTitle>
+                    <CardTitle>
+                        <Link to={`${match.url}/${id}`}>
+                            {name}
+                        </Link>
+                    </CardTitle>
                 </CardHeaderMain>
                 <CardActions>
                     <Dropdown

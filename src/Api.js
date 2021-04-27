@@ -129,6 +129,14 @@ export const readPlans = ({ params = {}}) => {
     }).then(handleResponse);
 };
 
+export const readPlan = ({ params = {}}) => {
+    let url = new URL(plansEndpoint, window.location.origin);
+    return authenticatedFetch(url, {
+        method: 'POST',
+        body: JSON.stringify(params)
+    }).then(handleResponse);
+};
+
 export const readClustersOptions = ({ params = {}}) => {
     let url = new URL(clustersOptionsEndpoint, window.location.origin);
     return authenticatedFetch(url, {
