@@ -40,12 +40,12 @@ export const optionsForCategories = {
         placeholder: 'Sort by automation status'
     },
     frequency_period: {
-        isSingle: false,
+        isSingle: true,
         name: 'Frequency',
         placeholder: 'Sort by frequency'
     },
-    categories: {
-        isSingle: false,
+    category: {
+        isSingle: true,
         name: 'Category',
         placeholder: 'Sort by category'
     }

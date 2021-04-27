@@ -77,6 +77,15 @@ export const clusters = {
     }
 };
 
+export const savingsPlanner = {
+    defaultParams: {
+        template_id: [],
+        automation_status: [],
+        category: '',
+        frequency_period: null
+    }
+};
+
 export const notAuthorizedParams = {
     title: 'RBAC Access Denied',
     description: 'User does not have privileges to perform this action. Contact your organization adminstrator(s) for more information.'
