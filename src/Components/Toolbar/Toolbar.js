@@ -3,32 +3,19 @@ import PropTypes from 'prop-types';
 import {
     Toolbar,
     ToolbarContent,
-    ToolbarGroup,
     Button,
-    ToolbarItem,
-    Tooltip,
-    Switch
-} from '@patternfly/react-core';
-import {
-    Card,
-    CardTitle,
-    CardBody,
-    CardActions,
-    CardHeader
+    ToolbarItem
 } from '@patternfly/react-core';
 import {
     FilterIcon,
-    SortAmountDownIcon,
-    SortAmountUpIcon,
-    CogIcon,
-    QuestionCircleIcon,
-    TimesIcon
+    CogIcon
 } from '@patternfly/react-icons';
 
-import CategoryDropdown from './CategoryDropdown';
-import CustomDateSelector from './CustomDateSelector';
 import { optionsForCategories } from './constants';
-import ToolbarFilterItem from './ToolbarFilterItem';
+import FilterCategoriesGroup from './Groups/FiltersCategoriesGroup';
+import QuickDateGroup from './Groups/QuickDateGroup';
+import SortByGroup from './Groups/SortByGroup';
+import SettingsPanel from './Groups/SettingsPanel';
 
 const FilterableToolbar = ({
     categories,
@@ -48,121 +35,6 @@ const FilterableToolbar = ({
         return obj;
     }, {});
 
-    const [ currentCategory, setCurrentCategory ] = useState(
-        Object.keys(filterCategories)[0]
-    );
-
-    const onInputChange = (type, value) => {
-        setFilters(type, value);
-    };
-
-    const FilterCategoriesGroup = () => (
-        <ToolbarGroup variant="filter-group">
-            <CategoryDropdown
-                selected={currentCategory}
-                setSelected={setCurrentCategory}
-                categories={Object.keys(filterCategories).map(el => ({
-                    key: el,
-                    name: optionsForCategories[el].name
-                }))}
-            />
-            {Object.keys(filterCategories).map(key => (
-                <ToolbarFilterItem
-                    key={key}
-                    categoryKey={key}
-                    filter={filters[key]}
-                    values={categories[key]}
-                    isVisible={currentCategory === key}
-                    setFilter={value => setFilters(key, value)}
-                />
-            ))}
-        </ToolbarGroup>
-    );
-
-    const QuickDateGroup = () => (
-        <ToolbarGroup variant="filter-group">
-            <ToolbarFilterItem
-                categoryKey="quick_date_range"
-                filter={filters.quick_date_range}
-                values={quick_date_range}
-                setFilter={value => setFilters('quick_date_range', value)}
-                hasChips={false}
-            />
-            {filters.quick_date_range &&
-            filters.quick_date_range.includes('custom') && (
-                <CustomDateSelector
-                    startDate={filters.start_date ? filters.start_date : ''}
-                    endDate={filters.end_date ? filters.end_date : ''}
-                    onInputChange={onInputChange}
-                />
-            )}
-        </ToolbarGroup>
-    );
-
-    const SortByGroup = () => (
-        <ToolbarGroup variant="filter-group">
-            <ToolbarFilterItem
-                categoryKey="sort_options"
-                filter={filters.sort_options}
-                values={sort_options}
-                setFilter={value =>
-                    setFilters('sort_options', value)
-                }
-                hasChips={false}
-            />
-            <Button variant="control"
-                onClick={() => setFilters(
-                    'sort_order',
-                    filters.sort_order === 'asc' ? 'desc' : 'asc'
-                )}
-            >
-                {filters.sort_order === 'asc' && (<SortAmountUpIcon />)}
-                {filters.sort_order === 'desc' && (<SortAmountDownIcon />)}
-            </Button>
-        </ToolbarGroup>
-    );
-
-    /* TODO: For future work: make settings more modular for different pages */
-    const Settings = () => (
-        <Card isFlat style={{ backgroundColor: '#EEEEEE' }}>
-            <CardHeader>
-                <CardActions>
-                    <Button
-                        variant="plain"
-                        onClick={() => setSettingsExpanded(!settingsExpanded)}
-                    >
-                        <TimesIcon />
-                    </Button>
-                </CardActions>
-                <CardTitle>Settings</CardTitle>
-            </CardHeader>
-            <CardBody>
-                <Switch
-                    id="showRootWorkflowJobs"
-                    label="Ignore nested workflows and jobs"
-                    labelOff="Ignore nested workflows and jobs"
-                    isChecked={filters.only_root_workflows_and_standalone_jobs}
-                    onChange={val => {
-                        setFilters('only_root_workflows_and_standalone_jobs', val);
-                    }}
-                />
-                <Tooltip
-                    position={'top'}
-                    content={
-                        <div>
-                            {' '}
-              If enabled, nested workflows and jobs will not be included in the
-              overall totals. Enable this option to filter out duplicate
-              entries.
-                        </div>
-                    }
-                >
-                    <QuestionCircleIcon />
-                </Tooltip>
-            </CardBody>
-        </Card>
-    );
-
     return (
         <>
             <Toolbar
@@ -177,10 +49,24 @@ const FilterableToolbar = ({
                         <FilterIcon />
                     </Button>
                     {Object.keys(filterCategories).length > 0 && (
-                        <FilterCategoriesGroup />
+                        <FilterCategoriesGroup
+                            filterCategories={filterCategories}
+                            filters={filters}
+                            setFilters={setFilters}
+                        />
                     )}
-                    {quick_date_range && <QuickDateGroup />}
-                    {sort_options && <SortByGroup />}
+                    {quick_date_range &&
+                        <QuickDateGroup
+                            filters={filters}
+                            setFilters={setFilters}
+                            values={quick_date_range}
+                        />}
+                    {sort_options &&
+                        <SortByGroup
+                            filters={filters}
+                            setFilters={setFilters}
+                            sort_options={sort_options}
+                        />}
                     {hasSettings && (
                         <ToolbarItem>
                             <Button
@@ -202,7 +88,13 @@ const FilterableToolbar = ({
                         </ToolbarItem>
                     )}
                 </ToolbarContent>
-                {settingsExpanded && <Settings />}
+                {settingsExpanded &&
+                    <SettingsPanel
+                        filters={filters}
+                        setFilters={setFilters}
+                        settingsExpanded={settingsExpanded}
+                        setSettingsExpanded={setSettingsExpanded}
+                    />}
             </Toolbar>
         </>
     );
