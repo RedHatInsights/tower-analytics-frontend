@@ -166,89 +166,106 @@ const Clusters = () => {
       setWorkflows(readJobExplorer({ params: topWorkflowParams }));
       setModules(readEventExplorer({ params: topModuleParams }));
     };
-
     fetchEndpoints();
   }, [queryParams]);
 
-  if (preflightError?.preflightError?.status === 403) {
-    return <NotAuthorized {...notAuthorizedParams} />;
-  }
+    useEffect(() => {
+        async function initializeWithPreflight() {
+            await preflightRequest().catch(error => {
+                setPreFlightError({ preflightError: error });
+            });
+            setOptions(readClustersOptions({ params: optionsQueryParams }));
+        }
 
-  return (
-    <React.Fragment>
-      <PageHeader>
-        <PageHeaderTitle title={'Clusters'} />
-        <FilterableToolbar
-          categories={options}
-          filters={queryParams}
-          setFilters={setFromToolbar}
-        />
-      </PageHeader>
-      {preflightError && (
-        <Main>
-          <EmptyState {...preflightError} />
-        </Main>
-      )}
-      {error && (
-        <Main>
-          <ApiErrorState message={error.error} />
-        </Main>
-      )}
-      {!preflightError && !error && (
-        <>
-          <Main>
-            <Card>
-              <PFCardTitle>
-                <h2>Job status</h2>
-              </PFCardTitle>
-              <CardBody>
-                {isLoading && <LoadingState />}
-                {queryParams.cluster_id.length <= 0 && isSuccess && (
-                  <BarChart
-                    margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                    id="d3-bar-chart-root"
-                    data={chartData}
-                    templateId={queryParams.template_id}
-                    orgId={queryParams.org_id}
-                  />
-                )}
-                {queryParams.cluster_id.length > 0 && isSuccess && (
-                  <LineChart
-                    margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                    id="d3-line-chart-root"
-                    data={chartData}
-                    clusterId={queryParams.cluster_id}
-                    templateId={queryParams.template_id}
-                    orgId={queryParams.org_id}
-                  />
-                )}
-              </CardBody>
-            </Card>
-            <div
-              className="dataCard"
-              style={{ display: 'flex', marginTop: '20px' }}
-            >
-              <TemplatesList
-                qp={queryParams}
-                templates={workflows}
-                isLoading={isLoading}
-                title={'Top workflows'}
-                jobType={'workflowjob'}
-              />
-              <TemplatesList
-                qp={queryParams}
-                templates={templates}
-                isLoading={isLoading}
-                title={'Top templates'}
-                jobType={'job'}
-              />
-              <ModulesList modules={modules} isLoading={isLoading} />
-            </div>
-          </Main>
-        </>
-      )}
-    </React.Fragment>
-  );
+        initializeWithPreflight();
+    }, []);
+
+    // Get and update the data
+    useEffect(() => {
+        const fetchEndpoints = () => {
+            setData(readJobExplorer({ params: queryParams }));
+            setTemplates(readJobExplorer({ params: topTemplatesParams }));
+            setWorkflows(readJobExplorer({ params: topWorkflowParams }));
+            setModules(readEventExplorer({ params: topModuleParams }));
+        };
+
+        fetchEndpoints();
+    }, [ queryParams ]);
+
+    if (preflightError?.preflightError?.status === 403) {
+        return <NotAuthorized { ...notAuthorizedParams } />;
+    }
+
+    return (
+        <React.Fragment>
+            <PageHeader>
+                <PageHeaderTitle title={'Clusters'} />
+                <FilterableToolbar
+                    categories={options}
+                    filters={queryParams}
+                    setFilters={setFromToolbar}
+                />
+            </PageHeader>
+            {(preflightError || error) && (
+                <Main>
+                    { preflightError ? <EmptyState {...preflightError} /> : <ApiErrorState message={error.error} /> }
+                </Main>
+            )}
+            {!preflightError && !error && (
+                <>
+                    <Main>
+                        <Card>
+                            <PFCardTitle>
+                                <h2>Job status</h2>
+                            </PFCardTitle>
+                            <CardBody>
+                                {isLoading && <LoadingState />}
+                                {queryParams.cluster_id.length <= 0 && isSuccess && (
+                                    <BarChart
+                                        margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
+                                        id="d3-bar-chart-root"
+                                        data={chartData}
+                                        templateId={queryParams.template_id}
+                                        orgId={queryParams.org_id}
+                                    />
+                                )}
+                                {queryParams.cluster_id.length > 0 && isSuccess && (
+                                    <LineChart
+                                        margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
+                                        id="d3-line-chart-root"
+                                        data={chartData}
+                                        clusterId={queryParams.cluster_id}
+                                        templateId={queryParams.template_id}
+                                        orgId={queryParams.org_id}
+                                    />
+                                )}
+                            </CardBody>
+                        </Card>
+                        <div
+                            className="dataCard"
+                            style={{ display: 'flex', marginTop: '20px' }}
+                        >
+                            <TemplatesList
+                                qp={queryParams}
+                                templates={workflows}
+                                isLoading={isLoading}
+                                title={'Top workflows'}
+                                jobType={'workflowjob'}
+                            />
+                            <TemplatesList
+                                qp={queryParams}
+                                templates={templates}
+                                isLoading={isLoading}
+                                title={'Top templates'}
+                                jobType={'job'}
+                            />
+                            <ModulesList modules={modules} isLoading={isLoading} />
+                        </div>
+                    </Main>
+                </>
+            )}
+        </React.Fragment>
+    );
 };
 
 export default Clusters;
