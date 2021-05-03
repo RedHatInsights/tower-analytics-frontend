@@ -81,8 +81,9 @@ export const savingsPlanner = {
     defaultParams: {
         template_id: [],
         automation_status: [],
-        category: '',
-        frequency_period: null
+        category: [],
+        frequency_period: [],
+        name: ''
     }
 };
 

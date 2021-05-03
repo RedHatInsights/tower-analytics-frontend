@@ -3,8 +3,16 @@ import PropTypes from 'prop-types';
 import {
     ToolbarFilter,
     Select,
-    SelectOption as PFSelectOption
+    SelectOption as PFSelectOption,
+    TextInput,
+    InputGroup,
+    ToolbarItem,
+    Button
 } from '@patternfly/react-core';
+
+import {
+    SearchIcon
+} from '@patternfly/react-icons';
 
 import {
     handleCheckboxChips,
@@ -36,6 +44,7 @@ const ToolbarFilterItem = ({
     setFilter
 }) => {
     const [ expanded, setExpanded ] = useState(false);
+    const [ searchVal, setSearchVal ] = useState('');
     const options = optionsForCategories[categoryKey];
 
     const onDelete = (name, valueToDelete) => {
@@ -71,30 +80,67 @@ const ToolbarFilterItem = ({
         }
     };
 
-    return (
-        <ToolbarFilter
-            data-cy={categoryKey}
-            key={categoryKey}
-            showToolbarItem={isVisible}
-            chips={hasChips ? handleChips() : []}
-            categoryName={options.name}
-            deleteChip={hasChips ? onDelete : null}
-        >
-            <Select
-                variant={options.isSingle ? 'single' : 'checkbox'}
-                aria-label={categoryKey}
-                onToggle={() => setExpanded(!expanded)}
-                onSelect={onSelect}
-                selections={filter}
-                isOpen={expanded}
-                hasInlineFilter
-                placeholderText={options.placeholder}
-                maxHeight={ '1000%' }
+    const handleOnClick = () => {
+        setFilter(searchVal);
+        setSearchVal(searchVal);
+    };
+
+    const handleInputChange = e => {
+        setSearchVal(e);
+    };
+
+    const renderSearch = () => {
+        return (
+            <ToolbarItem>
+                <InputGroup>
+                    <TextInput name="textInput1" id="textInput1" type="search" aria-label="search input example" onChange={handleInputChange} />
+                    <Button variant='control' aria-label="search button for search input">
+                        <SearchIcon onClick={handleOnClick} />
+                    </Button>
+                </InputGroup>
+            </ToolbarItem>
+        );
+    };
+
+    if (categoryKey === 'name') {
+        return (
+            <ToolbarFilter
+                data-cy={categoryKey}
+                key={categoryKey}
+                showToolbarItem={isVisible}
+                chips={[]}
+                categoryName={options.name}
+                deleteChip={null}
             >
-                { renderValues(values) }
-            </Select>
-        </ToolbarFilter>
-    );
+                { renderSearch() }
+            </ToolbarFilter>
+        );
+    } else {
+        return (
+            <ToolbarFilter
+                data-cy={categoryKey}
+                key={categoryKey}
+                showToolbarItem={isVisible}
+                chips={hasChips ? handleChips() : []}
+                categoryName={options.name}
+                deleteChip={hasChips ? onDelete : null}
+            >
+                <Select
+                    variant={options.isSingle ? 'single' : 'checkbox'}
+                    aria-label={categoryKey}
+                    onToggle={() => setExpanded(!expanded)}
+                    onSelect={onSelect}
+                    selections={filter}
+                    isOpen={expanded}
+                    hasInlineFilter
+                    placeholderText={options.placeholder}
+                    maxHeight={'1000%'}
+                >
+                    { renderValues(values)}
+                </Select>
+            </ToolbarFilter>
+        );
+    }
 };
 
 ToolbarFilterItem.propTypes = {

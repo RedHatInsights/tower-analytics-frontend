@@ -62,6 +62,11 @@ const SavingsPlanner = () => {
     const [ options, setOptions ] = useApi({});
     const [ currPage, setCurrPage ] = useState(1);
 
+    const combinedOptions = {
+        ...options.data,
+        name: [{ key: 'name', value: null }]
+    };
+
     const returnOffsetVal = page => (page - 1) * queryParams.limit;
 
     const handleSetPage = page => {
@@ -91,7 +96,7 @@ const SavingsPlanner = () => {
             <PageHeader>
                 <PageHeaderTitle title={'Savings Planner'} />
                 <FilterableToolbar
-                    categories={options.data}
+                    categories={combinedOptions}
                     filters={queryParams}
                     setFilters={setFromToolbar}
                     pagination={

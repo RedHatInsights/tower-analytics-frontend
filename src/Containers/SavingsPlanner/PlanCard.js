@@ -77,10 +77,10 @@ const PlanCard = (
         <React.Fragment key={id}>
             <DropdownItem key="edit" onClick={() => { }} position="right">
                 Edit
-                                </DropdownItem>
+            </DropdownItem>
             <DropdownItem key="link" onClick={() => { }} position="right">
                 Link template
-                                </DropdownItem>
+            </DropdownItem>
         </React.Fragment>
     ];
 
