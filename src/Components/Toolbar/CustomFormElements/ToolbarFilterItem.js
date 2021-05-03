@@ -9,8 +9,8 @@ import {
 import {
     handleCheckboxChips,
     handleSingleChips
-} from './helpers';
-import { optionsForCategories } from './constants';
+} from '../helpers';
+import { optionsForCategories } from '../constants';
 import styled from 'styled-components';
 
 const SelectOption = styled(PFSelectOption)`
