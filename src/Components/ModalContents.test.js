@@ -61,17 +61,15 @@ describe('Components/ModalContents', () => {
                 url: jobExplorerUrl,
                 repeat: 1
             },
-            { ...mockStats }
+            mockStats
         );
         fetchMock.post(
             {
                 url: jobExplorerUrl,
-                body: { limit: 5, sort_by: 'created:asc' },
-                matchPartialBody: true,
                 overwriteRoutes: false,
                 repeat: 1
             },
-            { ...mockRelatedJobs }
+            mockRelatedJobs
         );
     });
 
