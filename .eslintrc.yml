@@ -63,6 +63,7 @@ rules:
     - 150
   new-cap: 2
   no-bitwise: 2
+  no-console: error
   no-caller: 2
   no-mixed-spaces-and-tabs: 2
   no-multiple-empty-lines:
