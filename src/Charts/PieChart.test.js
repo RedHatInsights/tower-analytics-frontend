@@ -100,7 +100,7 @@ describe("Charts/PieChart/Tooltip", () => {
     document.body.remove(container2);
   });
 
-  it("should render data with success_rate successfully", () => {
+  it.skip("should render data with success_rate successfully", () => {
     // d3 creates "paths" for each slice of the pie ...
     const paths = container1.getElementsByTagName("path");
 
@@ -131,7 +131,7 @@ describe("Charts/PieChart/Tooltip", () => {
     }
   });
 
-  it("should render data without success_rate successfully", () => {
+  it.skip("should render data without success_rate successfully", () => {
     // d3 creates "paths" for each slice of the pie ...
     const paths = container2.getElementsByTagName("path");
 
