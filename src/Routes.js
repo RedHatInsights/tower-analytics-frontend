@@ -5,35 +5,35 @@ import asyncComponent from './Utilities/asyncComponent';
 import { Paths } from './paths';
 
 const Clusters = asyncComponent(() =>
-    import(
-        /* webpackChunkName: "automation_analytics" */
-        './Containers/Clusters/Clusters'
-    )
+  import(
+    /* webpackChunkName: "automation_analytics" */
+    './Containers/Clusters/Clusters'
+  )
 );
 const OrganizationStatistics = asyncComponent(() =>
-    import(
-        /* webpackChunkName: "automation_analytics" */
-        './Containers/OrganizationStatistics/OrganizationStatistics'
-    )
+  import(
+    /* webpackChunkName: "automation_analytics" */
+    './Containers/OrganizationStatistics/OrganizationStatistics'
+  )
 );
 const Notifications = asyncComponent(() =>
-    import(
-        /* webpackChunkName: "automation_analytics" */
-        './Containers/Notifications/Notifications'
-    )
+  import(
+    /* webpackChunkName: "automation_analytics" */
+    './Containers/Notifications/Notifications'
+  )
 );
 const AutomationCalculator = asyncComponent(() =>
-    import(
-        /* webpackChunkName: "automation_analytics" */
-        './Containers/AutomationCalculator/AutomationCalculator'
-    )
+  import(
+    /* webpackChunkName: "automation_analytics" */
+    './Containers/AutomationCalculator/AutomationCalculator'
+  )
 );
 
 const JobExplorer = asyncComponent(() =>
-    import(
-        /* webpackChunkName: "automation_analytics" */
-        './Containers/JobExplorer/JobExplorer'
-    )
+  import(
+    /* webpackChunkName: "automation_analytics" */
+    './Containers/JobExplorer/JobExplorer'
+  )
 );
 
 const SavingsPlanner = asyncComponent(() =>
@@ -51,19 +51,18 @@ const SavingsPlan = asyncComponent(() =>
 );
 
 const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {
-    const root = document.getElementById('root');
-    root.removeAttribute('class');
-    root.classList.add(`page__${rootClass}`, 'pf-c-page__main');
-    root.setAttribute('role', 'main');
+  const root = document.getElementById('root');
+  root.removeAttribute('class');
+  root.classList.add(`page__${rootClass}`, 'pf-c-page__main');
+  root.setAttribute('role', 'main');
 
-    return <Route {...rest} component={Component} />;
+  return <Route {...rest} component={Component} />;
 };
 
 InsightsRoute.propTypes = {
-    component: PropTypes.func,
-    rootClass: PropTypes.string
+  component: PropTypes.func,
+  rootClass: PropTypes.string,
 };
-
 
 export const Routes = () => {
     return (

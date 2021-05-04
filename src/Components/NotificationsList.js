@@ -4,10 +4,10 @@ import styled from 'styled-components';
 import moment from 'moment';
 
 import {
-    NotificationDrawerList as PFNotificationDrawerList,
-    NotificationDrawerListItem as PFNotificationDrawerListItem,
-    NotificationDrawerListItemBody,
-    NotificationDrawerListItemHeader
+  NotificationDrawerList as PFNotificationDrawerList,
+  NotificationDrawerListItem as PFNotificationDrawerListItem,
+  NotificationDrawerListItemBody,
+  NotificationDrawerListItemHeader,
 } from '@patternfly/react-core';
 
 import { ExternalLinkAltIcon as PFExternalLinkAltIcon } from '@patternfly/react-icons';
@@ -37,217 +37,217 @@ const NotificationDrawerList = styled(PFNotificationDrawerList)`
   }
 `;
 
-const stringifyDate = date => {
-    const day = moment(date);
-    const oneHour = 60 * 60 * 1000;
-    const now = moment().utc();
+const stringifyDate = (date) => {
+  const day = moment(date);
+  const oneHour = 60 * 60 * 1000;
+  const now = moment().utc();
 
-    if (now.isAfter(day)) {
-        return `${now.diff(day, 'days')} day(s) ago.`;
+  if (now.isAfter(day)) {
+    return `${now.diff(day, 'days')} day(s) ago.`;
+  }
+
+  if (day.isSame(now, 'day')) {
+    if (day.valueOf() > oneHour) {
+      return `${day.diff(now, 'hours')} hour(s) ago.`;
     }
 
-    if (day.isSame(now, 'day')) {
-        if (day.valueOf() > oneHour) {
-            return `${day.diff(now, 'hours')} hour(s) ago.`;
-        }
-
-        return `${now.diff(day, 'minutes')} minute(s) ago.`;
-    }
+    return `${now.diff(day, 'minutes')} minute(s) ago.`;
+  }
 };
 
 const AllNotificationTemplate = ({ notifications }) =>
-    notifications.map(
-        ({ date, message, label, notification_id: id, tower_url: url }) => {
-            if (label === '' || label === 'notice') {
-                return (
-                    <NotificationDrawerListItem variant="info" key={date + '-' + id}>
-                        <NotificationDrawerListItemHeader
-                            variant="info"
-                            title={
-                                <>
-                                    {url ? (
-                                        <a target="_blank" rel="noopener noreferrer" href={url}>
-                                            {capitalize(label)}
-                                            <ExternalLinkAltIcon />
-                                        </a>
-                                    ) : (
-                                        capitalize(label)
-                                    )}
-                                </>
-                            }
-                        />
-                        <NotificationDrawerListItemBody>
-                            {message}{' '}
-                        </NotificationDrawerListItemBody>
-                    </NotificationDrawerListItem>
-                );
-            }
-
-            if (label === 'error') {
-                return (
-                    <NotificationDrawerListItem variant="danger" key={date + '-' + id}>
-                        <NotificationDrawerListItemHeader
-                            variant="danger"
-                            title={
-                                <>
-                                    {url ? (
-                                        <a target="_blank" rel="noopener noreferrer" href={url}>
-                                            {capitalize(label)}
-                                            <ExternalLinkAltIcon />
-                                        </a>
-                                    ) : (
-                                        capitalize(label)
-                                    )}
-                                </>
-                            }
-                        />
-                        <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
-                            {message}{' '}
-                        </NotificationDrawerListItemBody>
-                    </NotificationDrawerListItem>
-                );
-            }
-
-            if (label === 'warning') {
-                return (
-                    <NotificationDrawerListItem variant="warning" key={date + '-' + id}>
-                        <NotificationDrawerListItemHeader
-                            variant="warning"
-                            title={
-                                <>
-                                    {url ? (
-                                        <a target="_blank" rel="noopener noreferrer" href={url}>
-                                            {capitalize(label)}
-                                            <ExternalLinkAltIcon />
-                                        </a>
-                                    ) : (
-                                        capitalize(label)
-                                    )}
-                                </>
-                            }
-                        />
-                        <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
-                            {message}{' '}
-                        </NotificationDrawerListItemBody>
-                    </NotificationDrawerListItem>
-                );
-            }
-        }
-    );
-
-const ErrorNotificationTemplate = ({ notifications }) =>
-    notifications
-    .filter(notification => notification.label === 'error')
-    .map(({ message, date, label, notification_id: id, tower_url: url }) => (
-        <NotificationDrawerListItem variant="danger" key={date + '-' + id}>
+  notifications.map(
+    ({ date, message, label, notification_id: id, tower_url: url }) => {
+      if (label === '' || label === 'notice') {
+        return (
+          <NotificationDrawerListItem variant="info" key={date + '-' + id}>
             <NotificationDrawerListItemHeader
-                variant="danger"
-                title={
-                    <>
-                        {url ? (
-                            <a target="_blank" rel="noopener noreferrer" href={url}>
-                                {capitalize(label)}
-                                <ExternalLinkAltIcon />
-                            </a>
-                        ) : (
-                            capitalize(label)
-                        )}
-                    </>
-                }
+              variant="info"
+              title={
+                <>
+                  {url ? (
+                    <a target="_blank" rel="noopener noreferrer" href={url}>
+                      {capitalize(label)}
+                      <ExternalLinkAltIcon />
+                    </a>
+                  ) : (
+                    capitalize(label)
+                  )}
+                </>
+              }
+            />
+            <NotificationDrawerListItemBody>
+              {message}{' '}
+            </NotificationDrawerListItemBody>
+          </NotificationDrawerListItem>
+        );
+      }
+
+      if (label === 'error') {
+        return (
+          <NotificationDrawerListItem variant="danger" key={date + '-' + id}>
+            <NotificationDrawerListItemHeader
+              variant="danger"
+              title={
+                <>
+                  {url ? (
+                    <a target="_blank" rel="noopener noreferrer" href={url}>
+                      {capitalize(label)}
+                      <ExternalLinkAltIcon />
+                    </a>
+                  ) : (
+                    capitalize(label)
+                  )}
+                </>
+              }
             />
             <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
-                {message}{' '}
+              {message}{' '}
             </NotificationDrawerListItemBody>
-        </NotificationDrawerListItem>
+          </NotificationDrawerListItem>
+        );
+      }
+
+      if (label === 'warning') {
+        return (
+          <NotificationDrawerListItem variant="warning" key={date + '-' + id}>
+            <NotificationDrawerListItemHeader
+              variant="warning"
+              title={
+                <>
+                  {url ? (
+                    <a target="_blank" rel="noopener noreferrer" href={url}>
+                      {capitalize(label)}
+                      <ExternalLinkAltIcon />
+                    </a>
+                  ) : (
+                    capitalize(label)
+                  )}
+                </>
+              }
+            />
+            <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
+              {message}{' '}
+            </NotificationDrawerListItemBody>
+          </NotificationDrawerListItem>
+        );
+      }
+    }
+  );
+
+const ErrorNotificationTemplate = ({ notifications }) =>
+  notifications
+    .filter((notification) => notification.label === 'error')
+    .map(({ message, date, label, notification_id: id, tower_url: url }) => (
+      <NotificationDrawerListItem variant="danger" key={date + '-' + id}>
+        <NotificationDrawerListItemHeader
+          variant="danger"
+          title={
+            <>
+              {url ? (
+                <a target="_blank" rel="noopener noreferrer" href={url}>
+                  {capitalize(label)}
+                  <ExternalLinkAltIcon />
+                </a>
+              ) : (
+                capitalize(label)
+              )}
+            </>
+          }
+        />
+        <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
+          {message}{' '}
+        </NotificationDrawerListItemBody>
+      </NotificationDrawerListItem>
     ));
 
 const NoticeNotificationTemplate = ({ notifications }) =>
-    notifications
-    .filter(notification => notification.label === 'notice')
+  notifications
+    .filter((notification) => notification.label === 'notice')
     .map(({ message, date, label, notification_id: id, tower_url: url }) => (
-        <NotificationDrawerListItem variant="info" key={date + '-' + id}>
-            <NotificationDrawerListItemHeader
-                variant="info"
-                title={
-                    <>
-                        {url ? (
-                            <a target="_blank" rel="noopener noreferrer" href={url}>
-                                {capitalize(label)}
-                                <ExternalLinkAltIcon />
-                            </a>
-                        ) : (
-                            capitalize(label)
-                        )}
-                    </>
-                }
-            />
-            <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
-                {message}{' '}
-            </NotificationDrawerListItemBody>
-        </NotificationDrawerListItem>
+      <NotificationDrawerListItem variant="info" key={date + '-' + id}>
+        <NotificationDrawerListItemHeader
+          variant="info"
+          title={
+            <>
+              {url ? (
+                <a target="_blank" rel="noopener noreferrer" href={url}>
+                  {capitalize(label)}
+                  <ExternalLinkAltIcon />
+                </a>
+              ) : (
+                capitalize(label)
+              )}
+            </>
+          }
+        />
+        <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
+          {message}{' '}
+        </NotificationDrawerListItemBody>
+      </NotificationDrawerListItem>
     ));
 
 const WarningNotificationTemplate = ({ notifications }) =>
-    notifications
-    .filter(notification => notification.label === 'warning')
+  notifications
+    .filter((notification) => notification.label === 'warning')
     .map(({ message, date, label, notification_id: id, tower_url: url }) => (
-        <NotificationDrawerListItem variant="warning" key={date + '-' + id}>
-            <NotificationDrawerListItemHeader
-                variant="warning"
-                title={
-                    <>
-                        {url ? (
-                            <a target="_blank" rel="noopener noreferrer" href={url}>
-                                {capitalize(label)}
-                                <ExternalLinkAltIcon />
-                            </a>
-                        ) : (
-                            capitalize(label)
-                        )}
-                    </>
-                }
-            />
-            <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
-                {message}{' '}
-            </NotificationDrawerListItemBody>
-        </NotificationDrawerListItem>
+      <NotificationDrawerListItem variant="warning" key={date + '-' + id}>
+        <NotificationDrawerListItemHeader
+          variant="warning"
+          title={
+            <>
+              {url ? (
+                <a target="_blank" rel="noopener noreferrer" href={url}>
+                  {capitalize(label)}
+                  <ExternalLinkAltIcon />
+                </a>
+              ) : (
+                capitalize(label)
+              )}
+            </>
+          }
+        />
+        <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
+          {message}{' '}
+        </NotificationDrawerListItemBody>
+      </NotificationDrawerListItem>
     ));
 
 const NotificationsList = ({ filterBy, notifications }) => (
-    <>
-        <NotificationDrawerList>
-            {notifications.length <= 0 && <LoadingState />}
-            {filterBy === '' && (
-                <AllNotificationTemplate notifications={notifications} />
-            )}
-            {filterBy === 'notice' && (
-                <NoticeNotificationTemplate notifications={notifications} />
-            )}
-            {filterBy === 'error' && (
-                <ErrorNotificationTemplate notifications={notifications} />
-            )}
-            {filterBy === 'warning' && (
-                <WarningNotificationTemplate notifications={notifications} />
-            )}
-        </NotificationDrawerList>
-    </>
+  <>
+    <NotificationDrawerList>
+      {notifications.length <= 0 && <LoadingState />}
+      {filterBy === '' && (
+        <AllNotificationTemplate notifications={notifications} />
+      )}
+      {filterBy === 'notice' && (
+        <NoticeNotificationTemplate notifications={notifications} />
+      )}
+      {filterBy === 'error' && (
+        <ErrorNotificationTemplate notifications={notifications} />
+      )}
+      {filterBy === 'warning' && (
+        <WarningNotificationTemplate notifications={notifications} />
+      )}
+    </NotificationDrawerList>
+  </>
 );
 
 AllNotificationTemplate.propTypes = {
-    notifications: PropTypes.array
+  notifications: PropTypes.array,
 };
 
 ErrorNotificationTemplate.propTypes = {
-    notifications: PropTypes.array
+  notifications: PropTypes.array,
 };
 
 WarningNotificationTemplate.propTypes = {
-    notifications: PropTypes.array
+  notifications: PropTypes.array,
 };
 
 NotificationsList.propTypes = {
-    notifications: PropTypes.array,
-    filterBy: PropTypes.string
+  notifications: PropTypes.array,
+  filterBy: PropTypes.string,
 };
 
 export default NotificationsList;

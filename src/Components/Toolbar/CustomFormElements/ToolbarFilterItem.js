@@ -22,43 +22,44 @@ import { optionsForCategories } from '../constants';
 import styled from 'styled-components';
 
 const SelectOption = styled(PFSelectOption)`
-    display: block;
-    overflow-x: hidden;
-    text-overflow: ellipsis;
-    max-width: 300px;
+  display: block;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
 `;
 
-const renderValues = values =>
-    values && values.map(({ key, value, description }) => (
-        <SelectOption key={ key } value={ key } description={ description }>
-            <span style={{ marginLeft: 5 }}>{ value } </span>
-        </SelectOption>
-    ));
+const renderValues = (values) =>
+  values &&
+  values.map(({ key, value, description }) => (
+    <SelectOption key={key} value={key} description={description}>
+      <span style={{ marginLeft: 5 }}>{value} </span>
+    </SelectOption>
+  ));
 
 const ToolbarFilterItem = ({
-    categoryKey,
-    filter = null,
-    values = [],
-    isVisible = true,
-    hasChips = true,
-    setFilter
+  categoryKey,
+  filter = null,
+  values = [],
+  isVisible = true,
+  hasChips = true,
+  setFilter,
 }) => {
     const [ expanded, setExpanded ] = useState(false);
     const [ searchVal, setSearchVal ] = useState('');
     const options = optionsForCategories[categoryKey];
 
-    const onDelete = (name, valueToDelete) => {
-        const single = optionsForCategories[categoryKey].isSingle;
+  const onDelete = (name, valueToDelete) => {
+    const single = optionsForCategories[categoryKey].isSingle;
 
-        if (single) {
-            setFilter(null);
-        } else {
-            const keyToDelete = values.find(({ value }) => value === valueToDelete)
-            .key;
-            const filteredArr = filter.filter(value => value !== keyToDelete);
-            setFilter(filteredArr);
-        }
-    };
+    if (single) {
+      setFilter(null);
+    } else {
+      const keyToDelete = values.find(({ value }) => value === valueToDelete)
+        .key;
+      const filteredArr = filter.filter((value) => value !== keyToDelete);
+      setFilter(filteredArr);
+    }
+  };
 
     const onFilter = (_event, textInput) => {
         if (textInput === '') {
@@ -80,17 +81,18 @@ const ToolbarFilterItem = ({
         }
     };
 
-    const onSelect = (event, selection) => {
-        if (options.isSingle) {
-            setFilter(selection);
-            setExpanded(false);
-        } else {
-            setFilter(!filter.includes(selection)
-                ? [ ...filter, selection ]
-                : filter.filter(value => value !== selection)
-            );
-        }
-    };
+  const onSelect = (event, selection) => {
+    if (options.isSingle) {
+      setFilter(selection);
+      setExpanded(false);
+    } else {
+      setFilter(
+        !filter.includes(selection)
+          ? [...filter, selection]
+          : filter.filter((value) => value !== selection)
+      );
+    }
+  };
 
     const handleOnClick = () => {
         setFilter(searchVal);
@@ -157,12 +159,12 @@ const ToolbarFilterItem = ({
 };
 
 ToolbarFilterItem.propTypes = {
-    categoryKey: PropTypes.string.isRequired,
-    filter: PropTypes.any,
-    values: PropTypes.array,
-    isVisible: PropTypes.bool,
-    hasChips: PropTypes.bool,
-    setFilter: PropTypes.func.isRequired
+  categoryKey: PropTypes.string.isRequired,
+  filter: PropTypes.any,
+  values: PropTypes.array,
+  isVisible: PropTypes.bool,
+  hasChips: PropTypes.bool,
+  setFilter: PropTypes.func.isRequired,
 };
 
 export default ToolbarFilterItem;

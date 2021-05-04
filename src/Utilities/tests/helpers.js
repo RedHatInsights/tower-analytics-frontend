@@ -1,3 +1,4 @@
+import React from 'react';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 
@@ -6,32 +7,32 @@ const mockStore = configureStore();
 const store = mockStore({});
 
 export const history = {
-    push: jest.fn(),
-    replace: jest.fn()
+  push: jest.fn(),
+  replace: jest.fn(),
 };
 
 const defaultParams = {
-    search: ''
+  search: '',
 };
 
 export const mountPage = (Component, { search } = defaultParams) =>
-    mount(
-        <Provider store={store}>
-            <Component history={history} location={{ search }} />
-        </Provider>
-    );
+  mount(
+    <Provider store={store}>
+      <Component history={history} location={{ search }} />
+    </Provider>
+  );
 
 export const preflight200 = {
-    url: '/api/tower-analytics/v0/authorized/',
-    response: { msg: 'Authorized' }
+  url: '/api/tower-analytics/v0/authorized/',
+  response: { msg: 'Authorized' },
 };
 
 export const preflight400 = {
-    url: '/api/tower-analytics/v0/authorized/',
-    response: { throws: { status: 401 }, status: 401 }
+  url: '/api/tower-analytics/v0/authorized/',
+  response: { throws: { status: 401 }, status: 401 },
 };
 
 export const preflight403 = {
-    url: '/api/tower-analytics/v0/authorized/',
-    response: { throws: { status: 403 }, status: 403 }
+  url: '/api/tower-analytics/v0/authorized/',
+  response: { throws: { status: 403 }, status: 403 },
 };
