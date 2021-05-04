@@ -3,25 +3,25 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import {
-    Button,
-    Card,
-    CardBody,
-    InputGroup,
-    InputGroupText,
-    TextInput,
-    Tooltip,
-    Popover
+  Button,
+  Card,
+  CardBody,
+  InputGroup,
+  InputGroupText,
+  TextInput,
+  Tooltip,
+  Popover,
 } from '@patternfly/react-core';
 import {
-    InfoCircleIcon,
-    ToggleOnIcon,
-    ToggleOffIcon
+  InfoCircleIcon,
+  ToggleOnIcon,
+  ToggleOffIcon,
 } from '@patternfly/react-icons';
 
 import {
-    convertSecondsToMins,
-    convertMinsToSeconds,
-    capitalize
+  convertSecondsToMins,
+  convertMinsToSeconds,
+  capitalize,
 } from '../../Utilities/helpers';
 
 const TemplateDetail = styled.div`
@@ -74,104 +74,106 @@ const InputAndText = styled.div`
 `;
 
 const showSortAttr = (details, sortBy) => {
-    const trimmed = sortBy.split(':')[0];
-    const sortAttribute = Object.keys(details).map(k =>
-        k === trimmed ? `${details[k]}` : null
-    );
+  const trimmed = sortBy.split(':')[0];
+  const sortAttribute = Object.keys(details).map((k) =>
+    k === trimmed ? `${details[k]}` : null
+  );
 
-    return (
-        <TemplateDetailSubTitle>
-            {capitalize(trimmed.split('_').join(' '))}: {sortAttribute}
-        </TemplateDetailSubTitle>
-    );
+  return (
+    <TemplateDetailSubTitle>
+      {capitalize(trimmed.split('_').join(' '))}: {sortAttribute}
+    </TemplateDetailSubTitle>
+  );
 };
 
 const QuestionIconTooltip = ({ details }) => (
-    <Popover
-        aria-label="template detail popover"
-        position="left"
-        bodyContent={
-            <TooltipWrapper>
-                {Object.keys(details).map((k, i) => (
-                    <p key={i}>
-                        <b>{capitalize(k.split('_').join(' '))}</b>: {details[k]}
-                    </p>
-                ))}
-            </TooltipWrapper>
-        }
-    >
-        <InfoCircleIcon />
-    </Popover>
+  <Popover
+    aria-label="template detail popover"
+    position="left"
+    bodyContent={
+      <TooltipWrapper>
+        {Object.keys(details).map((k, i) => (
+          <p key={i}>
+            <b>{capitalize(k.split('_').join(' '))}</b>: {details[k]}
+          </p>
+        ))}
+      </TooltipWrapper>
+    }
+  >
+    <InfoCircleIcon />
+  </Popover>
 );
 
 QuestionIconTooltip.propTypes = {
-    details: PropTypes.object
+  details: PropTypes.object,
 };
 
 const TopTemplates = ({
-    data = [],
-    sortBy = '',
-    setDataRunTime = () => {},
-    setEnabled = () => {},
-    redirectToJobExplorer = () => {}
+  data = [],
+  sortBy = '',
+  setDataRunTime = () => {},
+  setEnabled = () => {},
+  redirectToJobExplorer = () => {},
 }) => (
-    <Card style={{ overflow: 'auto', flex: '1 1 0' }} className="top-templates">
-        <CardBody>
-            <p>Enter the time it takes to run the following templates manually.</p>
-            {data.map(d => (
-                <div key={d.id}>
-                    <Tooltip content={'List of jobs for this template for past 30 days'}>
-                        <Button
-                            style={{ padding: '15px 0 10px' }}
-                            component="a"
-                            onClick={() => redirectToJobExplorer(d.id)}
-                            variant="link"
-                        >
-                            {d.name}
-                        </Button>
-                    </Tooltip>
-                    <TemplateDetail>
-                        <InputAndText key={d.id}>
-                            <InputGroup>
-                                <TextInput
-                                    id={d.id}
-                                    type="number"
-                                    aria-label="time run manually"
-                                    value={convertSecondsToMins(d.avgRunTime)}
-                                    onChange={minutes =>
-                                        setDataRunTime(convertMinsToSeconds(minutes), d.id)
-                                    }
-                                />
-                                <InputGroupText>min</InputGroupText>
-                            </InputGroup>
-                        </InputAndText>
-                        <TemplateDetailSubTitle>
-                            x {d.successful_hosts_total} host runs
-                        </TemplateDetailSubTitle>
-                        {showSortAttr(d, sortBy)}
-                        <IconGroup>
-                            <QuestionIconTooltip
-                                details={d}
-                            />
-                            { !d.enabled && <ToggleOffIcon onClick={ () => setEnabled(d.id)(true) } /> }
-                            { d.enabled && <ToggleOnIcon onClick={ () => setEnabled(d.id)(false) } /> }
-                        </IconGroup>
-                    </TemplateDetail>
-                    <p style={{ color: '#486B00' }}>${d.delta.toFixed(2)}</p>
-                </div>
-            ))}
-        </CardBody>
-    </Card>
+  <Card style={{ overflow: 'auto', flex: '1 1 0' }} className="top-templates">
+    <CardBody>
+      <p>Enter the time it takes to run the following templates manually.</p>
+      {data.map((d) => (
+        <div key={d.id}>
+          <Tooltip content={'List of jobs for this template for past 30 days'}>
+            <Button
+              style={{ padding: '15px 0 10px' }}
+              component="a"
+              onClick={() => redirectToJobExplorer(d.id)}
+              variant="link"
+            >
+              {d.name}
+            </Button>
+          </Tooltip>
+          <TemplateDetail>
+            <InputAndText key={d.id}>
+              <InputGroup>
+                <TextInput
+                  id={d.id}
+                  type="number"
+                  aria-label="time run manually"
+                  value={convertSecondsToMins(d.avgRunTime)}
+                  onChange={(minutes) =>
+                    setDataRunTime(convertMinsToSeconds(minutes), d.id)
+                  }
+                />
+                <InputGroupText>min</InputGroupText>
+              </InputGroup>
+            </InputAndText>
+            <TemplateDetailSubTitle>
+              x {d.successful_hosts_total} host runs
+            </TemplateDetailSubTitle>
+            {showSortAttr(d, sortBy)}
+            <IconGroup>
+              <QuestionIconTooltip details={d} />
+              {!d.enabled && (
+                <ToggleOffIcon onClick={() => setEnabled(d.id)(true)} />
+              )}
+              {d.enabled && (
+                <ToggleOnIcon onClick={() => setEnabled(d.id)(false)} />
+              )}
+            </IconGroup>
+          </TemplateDetail>
+          <p style={{ color: '#486B00' }}>${d.delta.toFixed(2)}</p>
+        </div>
+      ))}
+    </CardBody>
+  </Card>
 );
 
 TopTemplates.propTypes = {
-    data: PropTypes.array,
-    setDataRunTime: PropTypes.func,
-    redirectToJobExplorer: PropTypes.func,
-    deselectedIds: PropTypes.array,
-    setDeselectedIds: PropTypes.func,
-    setEnabled: PropTypes.func,
-    sortBy: PropTypes.string
+  data: PropTypes.array,
+  setDataRunTime: PropTypes.func,
+  redirectToJobExplorer: PropTypes.func,
+  deselectedIds: PropTypes.array,
+  setDeselectedIds: PropTypes.func,
+  setEnabled: PropTypes.func,
+  sortBy: PropTypes.string,
 };
 
 export default TopTemplates;

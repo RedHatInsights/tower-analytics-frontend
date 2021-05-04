@@ -3,3 +3,6 @@ extends:
 globals:
   insights: true
   shallow: true
+  render: true
+  mount: true
+  React: true

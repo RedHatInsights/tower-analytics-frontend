@@ -5,30 +5,34 @@ import './App.scss';
 import packageJson from '../package.json';
 
 const App = () => {
-    const history = useHistory
-    useEffect(() => {
-        insights.chrome.init();
-        insights.chrome.identifyApp('automation-analytics');
-        const appNav = insights.chrome.on('APP_NAVIGATION', event => {
-            if (event.domEvent) {
-                history.push(`/${event.navId}`);
-            }
-        });
-    
-        return () => {
-            appNav();
-        };
-    }, []);
+  const history = useHistory;
+  useEffect(() => {
+    insights.chrome.init();
+    insights.chrome.identifyApp('automation-analytics');
+    const appNav = insights.chrome.on('APP_NAVIGATION', (event) => {
+      if (event.domEvent) {
+        history.push(`/${event.navId}`);
+      }
+    });
 
-    /**
-     * Remove automation-analytics class once main.yml has module config
-     */
+    return () => {
+      appNav();
+    };
+  }, []);
 
-    return (
-        <div className="automation-analytics" id="automation-analytics-application" version={packageJson.version}>
-            <Routes/>
-        </div>
-    );
+  /**
+   * Remove automation-analytics class once main.yml has module config
+   */
+
+  return (
+    <div
+      className="automation-analytics"
+      id="automation-analytics-application"
+      version={packageJson.version}
+    >
+      <Routes />
+    </div>
+  );
 };
 
 export default App;

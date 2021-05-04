@@ -13,32 +13,32 @@ import EmptyState from '../../Components/EmptyState';
 import ApiErrorState from '../../Components/ApiErrorState';
 
 import {
-    preflightRequest,
-    readJobExplorer,
-    readHostExplorer,
-    readOrgOptions
+  preflightRequest,
+  readJobExplorer,
+  readHostExplorer,
+  readOrgOptions,
 } from '../../Api';
 
+import Main from '@redhat-cloud-services/frontend-components/Main';
+import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import {
-    Main,
-    NotAuthorized,
-    PageHeader,
-    PageHeaderTitle
-} from '@redhat-cloud-services/frontend-components';
+  PageHeader,
+  PageHeaderTitle,
+} from '@redhat-cloud-services/frontend-components/PageHeader';
 import { notAuthorizedParams } from '../../Utilities/constants';
 
 import {
-    Card,
-    CardBody,
-    CardTitle as PFCardTitle,
-    Tabs,
-    Tab
+  Card,
+  CardBody,
+  CardTitle as PFCardTitle,
+  Tabs,
+  Tab,
 } from '@patternfly/react-core';
 
 import {
-    GroupedBarChart,
-    OrgsTooltip,
-    HostsTooltip
+  GroupedBarChart,
+  OrgsTooltip,
+  HostsTooltip,
 } from '../../Charts/GroupedBarChart/';
 import PieChart from '../../Charts/PieChart';
 import FilterableToolbar from '../../Components/Toolbar/';
@@ -85,240 +85,252 @@ const TopCard = styled(Card)`
 
 const colorFunc = scaleOrdinal(pfmulti);
 
-const optionsMapper = options => {
-    const { inventory_id, ...rest } = options;
-    return { ...rest };
+const optionsMapper = (options) => {
+  const { inventory_id, ...rest } = options;
+  return { ...rest };
 };
 
-const orgsChartMapper = attrName => ({ dates: data = [], meta }) => ({
-    data: data.map(({ date, items }) => ({
-        date,
-        items: items.map(({ id, [attrName]: value, name }) => ({
-            id,
-            date,
-            value,
-            name: name || 'No organization'
-        }))
+const orgsChartMapper = (attrName) => ({ dates: data = [], meta }) => ({
+  data: data.map(({ date, items }) => ({
+    date,
+    items: items.map(({ id, [attrName]: value, name }) => ({
+      id,
+      date,
+      value,
+      name: name || 'No organization',
     })),
-    legend: meta.legend
+  })),
+  legend: meta.legend,
 });
 
-const pieChartMapper = attrName => ({ items = []}) =>
-    items.map(({ id, [attrName]: count, name }) => ({
-        id,
-        count,
-        name: name || 'No organization'
-    }));
+const pieChartMapper = (attrName) => ({ items = [] }) =>
+  items.map(({ id, [attrName]: count, name }) => ({
+    id,
+    count,
+    name: name || 'No organization',
+  }));
 
-const redirectToJobExplorer = (toJobExplorer, queryParams) => ({ date, id }) => {
-    if (id === -1) {
-        // disable clicking on "others" block
-        return;
-    }
+const redirectToJobExplorer = (toJobExplorer, queryParams) => ({
+  date,
+  id,
+}) => {
+  if (id === -1) {
+    // disable clicking on "others" block
+    return;
+  }
 
-    const { sort_by, ...rest } = queryParams;
-    const formattedDate = dateForJobExplorer(date);
-    const initialQueryParams = {
-        ...rest,
-        quick_date_range: 'custom',
-        start_date: formattedDate,
-        end_date: formattedDate,
-        status: [
-            'successful',
-            'failed',
-            'new',
-            'pending',
-            'waiting',
-            'error',
-            'canceled',
-            'running'
-        ],
-        org_id: [ id ]
-    };
+  const { sort_by, ...rest } = queryParams;
+  const formattedDate = dateForJobExplorer(date);
+  const initialQueryParams = {
+    ...rest,
+    quick_date_range: 'custom',
+    start_date: formattedDate,
+    end_date: formattedDate,
+    status: [
+      'successful',
+      'failed',
+      'new',
+      'pending',
+      'waiting',
+      'error',
+      'canceled',
+      'running',
+    ],
+    org_id: [id],
+  };
 
-    toJobExplorer(initialQueryParams);
+  toJobExplorer(initialQueryParams);
 };
 
 const chartMapper = [
-    {
-        api: readJobExplorer,
-        attr: 'total_count',
-        label: 'Jobs across organizations',
-        onClick: redirectToJobExplorer,
-        tooltip: OrgsTooltip
-    },
-    {
-        api: readHostExplorer,
-        attr: 'total_unique_host_count',
-        label: 'Hosts across organizations',
-        onClick: () => null,
-        tooltip: HostsTooltip
-    }
+  {
+    api: readJobExplorer,
+    attr: 'total_count',
+    label: 'Jobs across organizations',
+    onClick: redirectToJobExplorer,
+    tooltip: OrgsTooltip,
+  },
+  {
+    api: readHostExplorer,
+    attr: 'total_unique_host_count',
+    label: 'Hosts across organizations',
+    onClick: () => null,
+    tooltip: HostsTooltip,
+  },
 ];
 
 const OrganizationStatistics = ({ history }) => {
-    const toJobExplorer = useRedirect(history, 'jobExplorer');
-    const [ preflight, setPreflight ] = useApi(null);
-    const [ activeTabKey, setActiveTabKey ] = useState(0);
-    const [ orgs, setOrgs ] = useApi([], orgsChartMapper(chartMapper[activeTabKey].attr));
-    const [ jobs, setJobs ] = useApi([], pieChartMapper('total_count'));
-    const [ tasks, setTasks ] = useApi([], pieChartMapper('host_task_count'));
-    const [ options, setOptions ] = useApi({}, optionsMapper);
-    const { queryParams, setFromToolbar } = useQueryParams(
-        constants.defaultParams
-    );
+  const toJobExplorer = useRedirect(history, 'jobExplorer');
+  const [preflight, setPreflight] = useApi(null);
+  const [activeTabKey, setActiveTabKey] = useState(0);
+  const [orgs, setOrgs] = useApi(
+    [],
+    orgsChartMapper(chartMapper[activeTabKey].attr)
+  );
+  const [jobs, setJobs] = useApi([], pieChartMapper('total_count'));
+  const [tasks, setTasks] = useApi([], pieChartMapper('host_task_count'));
+  const [options, setOptions] = useApi({}, optionsMapper);
+  const { queryParams, setFromToolbar } = useQueryParams(
+    constants.defaultParams
+  );
 
-    const jobEventsByOrgParams = {
-        ...queryParams,
-        attributes: [ 'host_task_count' ],
-        group_by: 'org',
-        include_others: true,
-        sort_by: `host_task_count:desc`
-    };
+  const jobEventsByOrgParams = {
+    ...queryParams,
+    attributes: ['host_task_count'],
+    group_by: 'org',
+    include_others: true,
+    sort_by: `host_task_count:desc`,
+  };
 
-    const jobRunsByOrgParams = {
-        ...queryParams,
-        attributes: [ 'total_count' ],
-        group_by: 'org',
-        include_others: true,
-        sort_by: `total_count:desc`
-    };
+  const jobRunsByOrgParams = {
+    ...queryParams,
+    attributes: ['total_count'],
+    group_by: 'org',
+    include_others: true,
+    sort_by: `total_count:desc`,
+  };
 
-    const jobsByDateAndOrgParams = {
-        ...queryParams,
-        attributes: [ 'total_count' ],
-        group_by: 'org',
-        group_by_time: true,
-        sort_by: `total_count:desc`
-    };
+  const jobsByDateAndOrgParams = {
+    ...queryParams,
+    attributes: ['total_count'],
+    group_by: 'org',
+    group_by_time: true,
+    sort_by: `total_count:desc`,
+  };
 
-    const hostAcrossOrgParams = {
-        ...queryParams,
-        attributes: [ 'total_unique_host_count' ],
-        group_by: 'org',
-        group_by_time: true,
-        sort_by: `host_task_count:desc`
-    };
+  const hostAcrossOrgParams = {
+    ...queryParams,
+    attributes: ['total_unique_host_count'],
+    group_by: 'org',
+    group_by_time: true,
+    sort_by: `host_task_count:desc`,
+  };
 
-    const handleTabClick = (_, tabIndex) => { setActiveTabKey(tabIndex); };
+  const handleTabClick = (_, tabIndex) => {
+    setActiveTabKey(tabIndex);
+  };
 
-    useEffect(() => {
-        insights.chrome.appNavClick({
-            id: 'organization-statistics',
-            secondaryNav: true
-        });
-        setPreflight(preflightRequest());
-        setOptions(readOrgOptions({ params: queryParams }));
-    }, []);
+  useEffect(() => {
+    insights.chrome.appNavClick({
+      id: 'organization-statistics',
+      secondaryNav: true,
+    });
+    setPreflight(preflightRequest());
+    setOptions(readOrgOptions({ params: queryParams }));
+  }, []);
 
-    useEffect(() => {
-        const { api: readJobsOrHosts } = chartMapper[activeTabKey];
-        const params = activeTabKey === 0 ? jobsByDateAndOrgParams : hostAcrossOrgParams;
-        setOrgs(readJobsOrHosts({ params }));
-    }, [ queryParams, activeTabKey ]);
+  useEffect(() => {
+    const { api: readJobsOrHosts } = chartMapper[activeTabKey];
+    const params =
+      activeTabKey === 0 ? jobsByDateAndOrgParams : hostAcrossOrgParams;
+    setOrgs(readJobsOrHosts({ params }));
+  }, [queryParams, activeTabKey]);
 
-    useEffect(() => {
-        setJobs(readJobExplorer({ params: jobRunsByOrgParams }));
-        setTasks(readJobExplorer({ params: jobEventsByOrgParams }));
-    }, [ queryParams ]);
+  useEffect(() => {
+    setJobs(readJobExplorer({ params: jobRunsByOrgParams }));
+    setTasks(readJobExplorer({ params: jobEventsByOrgParams }));
+  }, [queryParams]);
 
-    if (preflight?.error?.status === 403) {
-        return <NotAuthorized { ...notAuthorizedParams } />;
-    }
+  if (preflight?.error?.status === 403) {
+    return <NotAuthorized {...notAuthorizedParams} />;
+  }
 
-    return (
+  return (
+    <React.Fragment>
+      <PageHeader>
+        <PageHeaderTitle title={'Organization Statistics'} />
+        <FilterableToolbar
+          categories={options.data}
+          filters={queryParams}
+          setFilters={setFromToolbar}
+        />
+      </PageHeader>
+      {preflight.error && (
+        <Main>
+          <EmptyState preflightError={preflight.error} />
+        </Main>
+      )}
+      {preflight.isSuccess && (
         <React.Fragment>
-            <PageHeader>
-                <PageHeaderTitle title={'Organization Statistics'} />
-                <FilterableToolbar
-                    categories={options.data}
-                    filters={queryParams}
-                    setFilters={setFromToolbar}
-                />
-            </PageHeader>
-            {preflight.error && (
-                <Main>
-                    <EmptyState preflightError={preflight.error} />
-                </Main>
-            )}
-            {preflight.isSuccess && (
-                <React.Fragment>
-                    <Main>
-                        <TopCard>
-                            <Tabs activeKey={ activeTabKey } onSelect={ handleTabClick }>
-                                <Tab eventKey={ 0 } title={ 'Jobs' }/>
-                                <Tab eventKey={ 1 } title={ 'Hosts' }/>
-                            </Tabs>
-                            <CardBody>
-                                {orgs.isLoading && <LoadingState />}
-                                {orgs.error && <ApiErrorState message={orgs.error.error} />}
-                                {orgs.isSuccess && orgs.data?.data.length <= 0 && <NoData />}
-                                {orgs.isSuccess && orgs.data?.data.length > 0 && (
-                                    <GroupedBarChart
-                                        margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
-                                        id="d3-grouped-bar-chart-root"
-                                        data={ orgs.data.data }
-                                        legend={ orgs.data.legend }
-                                        history={ history }
-                                        colorFunc={ colorFunc }
-                                        yLabel={ chartMapper[activeTabKey].label }
-                                        onClick={ chartMapper[activeTabKey].onClick(toJobExplorer, queryParams) }
-                                        TooltipClass={ chartMapper[activeTabKey].tooltip }
-                                    />
-                                )}
-                            </CardBody>
-                        </TopCard>
-                        <CardContainer>
-                            <Card>
-                                <CardBody style={{ padding: 0 }}>
-                                    <CardTitle style={{ padding: 0 }}>
-                                        <h2 style={{ marginLeft: '20px' }}>
-                                            Job Runs by Organization
-                                        </h2>
-                                    </CardTitle>
-                                    {jobs.isLoading && <LoadingState />}
-                                    {jobs.error && <ApiErrorState message={jobs.error.error} />}
-                                    {jobs.isSuccess && jobs.data.length <= 0 && <NoData />}
-                                    {jobs.isSuccess && jobs.data.length > 0 && (
-                                        <PieChart
-                                            margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
-                                            id="d3-donut-1-chart-root"
-                                            data={jobs.data}
-                                            colorFunc={colorFunc}
-                                        />
-                                    )}
-                                </CardBody>
-                            </Card>
-                            <Card>
-                                <CardBody style={{ padding: 0 }}>
-                                    <CardTitle style={{ padding: 0 }}>
-                                        <h2 style={{ marginLeft: '20px' }}>
-                                            Usage by Organization (Tasks)
-                                        </h2>
-                                    </CardTitle>
-                                    {tasks.isLoading && <LoadingState />}
-                                    {tasks.error && <ApiErrorState message={tasks.error.error} />}
-                                    {tasks.isSuccess && tasks.data.length <= 0 && <NoData />}
-                                    {tasks.isSuccess && tasks.data.length > 0 && (
-                                        <PieChart
-                                            margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
-                                            id="d3-donut-2-chart-root"
-                                            data={tasks.data}
-                                            colorFunc={colorFunc}
-                                        />
-                                    )}
-                                </CardBody>
-                            </Card>
-                        </CardContainer>
-                    </Main>
-                </React.Fragment>
-            )}
+          <Main>
+            <TopCard>
+              <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
+                <Tab eventKey={0} title={'Jobs'} />
+                <Tab eventKey={1} title={'Hosts'} />
+              </Tabs>
+              <CardBody>
+                {orgs.isLoading && <LoadingState />}
+                {orgs.error && <ApiErrorState message={orgs.error.error} />}
+                {orgs.isSuccess && orgs.data?.data.length <= 0 && <NoData />}
+                {orgs.isSuccess && orgs.data?.data.length > 0 && (
+                  <GroupedBarChart
+                    margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
+                    id="d3-grouped-bar-chart-root"
+                    data={orgs.data.data}
+                    legend={orgs.data.legend}
+                    history={history}
+                    colorFunc={colorFunc}
+                    yLabel={chartMapper[activeTabKey].label}
+                    onClick={chartMapper[activeTabKey].onClick(
+                      toJobExplorer,
+                      queryParams
+                    )}
+                    TooltipClass={chartMapper[activeTabKey].tooltip}
+                  />
+                )}
+              </CardBody>
+            </TopCard>
+            <CardContainer>
+              <Card>
+                <CardBody style={{ padding: 0 }}>
+                  <CardTitle style={{ padding: 0 }}>
+                    <h2 style={{ marginLeft: '20px' }}>
+                      Job Runs by Organization
+                    </h2>
+                  </CardTitle>
+                  {jobs.isLoading && <LoadingState />}
+                  {jobs.error && <ApiErrorState message={jobs.error.error} />}
+                  {jobs.isSuccess && jobs.data.length <= 0 && <NoData />}
+                  {jobs.isSuccess && jobs.data.length > 0 && (
+                    <PieChart
+                      margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
+                      id="d3-donut-1-chart-root"
+                      data={jobs.data}
+                      colorFunc={colorFunc}
+                    />
+                  )}
+                </CardBody>
+              </Card>
+              <Card>
+                <CardBody style={{ padding: 0 }}>
+                  <CardTitle style={{ padding: 0 }}>
+                    <h2 style={{ marginLeft: '20px' }}>
+                      Usage by Organization (Tasks)
+                    </h2>
+                  </CardTitle>
+                  {tasks.isLoading && <LoadingState />}
+                  {tasks.error && <ApiErrorState message={tasks.error.error} />}
+                  {tasks.isSuccess && tasks.data.length <= 0 && <NoData />}
+                  {tasks.isSuccess && tasks.data.length > 0 && (
+                    <PieChart
+                      margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
+                      id="d3-donut-2-chart-root"
+                      data={tasks.data}
+                      colorFunc={colorFunc}
+                    />
+                  )}
+                </CardBody>
+              </Card>
+            </CardContainer>
+          </Main>
         </React.Fragment>
-    );
+      )}
+    </React.Fragment>
+  );
 };
 
 OrganizationStatistics.propTypes = {
-    history: PropTypes.object
+  history: PropTypes.object,
 };
 
 export default OrganizationStatistics;

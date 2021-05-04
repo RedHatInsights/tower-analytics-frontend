@@ -5,9 +5,9 @@ import LoadingState from '../Components/LoadingState';
 import NoData from '../Components/NoData';
 
 import {
-    DataList,
-    DataListItem as PFDataListItem,
-    DataListCell as PFDataListCell
+  DataList,
+  DataListItem as PFDataListItem,
+  DataListCell as PFDataListCell,
 } from '@patternfly/react-core';
 
 import ModalContents from './ModalContents';
@@ -32,86 +32,86 @@ const DataCellEnd = styled(DataListCell)`
 `;
 
 const TemplatesList = ({ templates, isLoading, qp, title, jobType }) => {
-    const [ selectedId, setSelectedId ] = useState(null);
-    const [ isModalOpen, setIsModalOpen ] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    return (
-        <>
-            <DataList
-                aria-label="Top Templates"
-                style={{
-                    maxHeight: '400px',
-                    overflow: 'auto',
-                    height: '400px',
-                    background: 'white'
-                }}
-            >
-                <DataListItem aria-labelledby="top-templates-header">
-                    <DataListCell>
-                        <h3>{title}</h3>
-                    </DataListCell>
-                    <DataCellEnd>
-                        <h3>Usage</h3>
-                    </DataCellEnd>
-                </DataListItem>
-                {isLoading && (
-                    <PFDataListItem
-                        aria-labelledby="templates-loading"
-                        key={isLoading}
-                        style={{ border: 'none' }}
-                    >
-                        <PFDataListCell>
-                            <LoadingState />
-                        </PFDataListCell>
-                    </PFDataListItem>
-                )}
-                {!isLoading && templates.length <= 0 && (
-                    <PFDataListItem
-                        aria-labelledby="templates-no-data"
-                        key={isLoading}
-                        style={{ border: 'none' }}
-                    >
-                        <PFDataListCell>
-                            <NoData />
-                        </PFDataListCell>
-                    </PFDataListItem>
-                )}
-                {!isLoading &&
+  return (
+    <>
+      <DataList
+        aria-label="Top Templates"
+        style={{
+          maxHeight: '400px',
+          overflow: 'auto',
+          height: '400px',
+          background: 'white',
+        }}
+      >
+        <DataListItem aria-labelledby="top-templates-header">
+          <DataListCell>
+            <h3>{title}</h3>
+          </DataListCell>
+          <DataCellEnd>
+            <h3>Usage</h3>
+          </DataCellEnd>
+        </DataListItem>
+        {isLoading && (
+          <PFDataListItem
+            aria-labelledby="templates-loading"
+            key={isLoading}
+            style={{ border: 'none' }}
+          >
+            <PFDataListCell>
+              <LoadingState />
+            </PFDataListCell>
+          </PFDataListItem>
+        )}
+        {!isLoading && templates.length <= 0 && (
+          <PFDataListItem
+            aria-labelledby="templates-no-data"
+            key={isLoading}
+            style={{ border: 'none' }}
+          >
+            <PFDataListCell>
+              <NoData />
+            </PFDataListCell>
+          </PFDataListItem>
+        )}
+        {!isLoading &&
           templates.map(({ name, total_count, id }, index) => (
-              <DataListItem aria-labelledby="top-templates-detail" key={index}>
-                  <DataListCell>
-                      <a
-                          onClick={() => {
-                              setIsModalOpen(true);
-                              setSelectedId(id);
-                          }}
-                      >
-                          {name}
-                      </a>
-                  </DataListCell>
-                  <DataCellEnd>{total_count}</DataCellEnd>
-              </DataListItem>
+            <DataListItem aria-labelledby="top-templates-detail" key={index}>
+              <DataListCell>
+                <a
+                  onClick={() => {
+                    setIsModalOpen(true);
+                    setSelectedId(id);
+                  }}
+                >
+                  {name}
+                </a>
+              </DataListCell>
+              <DataCellEnd>{total_count}</DataCellEnd>
+            </DataListItem>
           ))}
-            </DataList>
-            <ModalContents
-                isOpen={isModalOpen}
-                handleModal={setIsModalOpen}
-                selectedId={selectedId}
-                qp={qp}
-                jobType={jobType}
-                handleCloseBtn={setSelectedId}
-            />
-        </>
-    );
+      </DataList>
+      <ModalContents
+        isOpen={isModalOpen}
+        handleModal={setIsModalOpen}
+        selectedId={selectedId}
+        qp={qp}
+        jobType={jobType}
+        handleCloseBtn={setSelectedId}
+      />
+    </>
+  );
 };
 
 TemplatesList.propTypes = {
-    templates: PropTypes.array,
-    isLoading: PropTypes.bool,
-    queryParams: PropTypes.object,
-    title: PropTypes.string,
-    qp: PropTypes.object,
-    jobType: PropTypes.string
+  templates: PropTypes.array,
+  isLoading: PropTypes.bool,
+  queryParams: PropTypes.object,
+  title: PropTypes.string,
+  qp: PropTypes.object,
+  jobType: PropTypes.string,
 };
 
 export default TemplatesList;

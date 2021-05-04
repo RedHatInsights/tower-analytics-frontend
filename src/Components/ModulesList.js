@@ -6,9 +6,9 @@ import LoadingState from '../Components/LoadingState';
 import NoData from '../Components/NoData';
 
 import {
-    DataList,
-    DataListItem as PFDataListItem,
-    DataListCell as PFDataListCell
+  DataList,
+  DataListItem as PFDataListItem,
+  DataListCell as PFDataListCell,
 } from '@patternfly/react-core';
 
 const DataListCell = styled(PFDataListCell)`
@@ -29,62 +29,62 @@ const DataCellEnd = styled(DataListCell)`
 `;
 
 const ModulesList = ({ modules, isLoading }) => (
-    <DataList
-        aria-label="Top Modules"
-        style={{
-            maxHeight: '400px',
-            overflow: 'auto',
-            height: '400px',
-            background: 'white'
-        }}
-    >
-        <DataListItem aria-labelledby="top-modules-header">
-            <DataListCell>
-                <h3>Top modules</h3>
-            </DataListCell>
-            <DataCellEnd>
-                <h3>Usage</h3>
-            </DataCellEnd>
-        </DataListItem>
-        {isLoading && (
-            <PFDataListItem
-                aria-labelledby="modules-loading"
-                key={isLoading}
-                style={{ border: 'none' }}
-            >
-                <PFDataListCell>
-                    <LoadingState />
-                </PFDataListCell>
-            </PFDataListItem>
-        )}
-        {!isLoading && modules.length <= 0 && (
-            <PFDataListItem
-                aria-labelledby="modules-no-data"
-                key={isLoading}
-                style={{ border: 'none' }}
-            >
-                <PFDataListCell>
-                    <NoData />
-                </PFDataListCell>
-            </PFDataListItem>
-        )}
-        {!isLoading &&
+  <DataList
+    aria-label="Top Modules"
+    style={{
+      maxHeight: '400px',
+      overflow: 'auto',
+      height: '400px',
+      background: 'white',
+    }}
+  >
+    <DataListItem aria-labelledby="top-modules-header">
+      <DataListCell>
+        <h3>Top modules</h3>
+      </DataListCell>
+      <DataCellEnd>
+        <h3>Usage</h3>
+      </DataCellEnd>
+    </DataListItem>
+    {isLoading && (
+      <PFDataListItem
+        aria-labelledby="modules-loading"
+        key={isLoading}
+        style={{ border: 'none' }}
+      >
+        <PFDataListCell>
+          <LoadingState />
+        </PFDataListCell>
+      </PFDataListItem>
+    )}
+    {!isLoading && modules.length <= 0 && (
+      <PFDataListItem
+        aria-labelledby="modules-no-data"
+        key={isLoading}
+        style={{ border: 'none' }}
+      >
+        <PFDataListCell>
+          <NoData />
+        </PFDataListCell>
+      </PFDataListItem>
+    )}
+    {!isLoading &&
       modules
-      .filter(module => module.name !== null)
-      .map(({ name, host_task_count }, index) => (
+        .filter((module) => module.name !== null)
+        .map(({ name, host_task_count }, index) => (
           <DataListItem aria-labelledby="top-modules-detail" key={index}>
-              <DataListCell>
-                  <span>{trimStr(name)}</span>
-              </DataListCell>
-              <DataCellEnd>{host_task_count}</DataCellEnd>
+            <DataListCell>
+              <span>{trimStr(name)}</span>
+            </DataListCell>
+            <DataCellEnd>{host_task_count}</DataCellEnd>
           </DataListItem>
-      ))}
-    </DataList>
+        ))}
+  </DataList>
 );
 
 ModulesList.propTypes = {
-    modules: PropTypes.array,
-    isLoading: PropTypes.bool
+  modules: PropTypes.array,
+  isLoading: PropTypes.bool,
 };
 
 export default ModulesList;

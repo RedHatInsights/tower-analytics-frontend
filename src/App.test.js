@@ -4,37 +4,37 @@ import { mountPage } from './Utilities/tests/helpers';
 import packageJson from '../package.json';
 
 describe('App', () => {
-    it('should have function', () => {
-        expect(App).toBeTruthy();
-    });
+  it('should have function', () => {
+    expect(App).toBeTruthy();
+  });
 
-    it('should return a div with a version attribute', () => {
-        const history = {
-            listen() {
-                return { unlisten() {} };
-            },
-            replace() {},
-            push() {},
-            length: 1,
-            action: 'PUSH',
-            location: {
-                pathname: '/somewhere',
-                search: '',
-                hash: '#howdy'
-            }
-        };
+  it('should return a div with a version attribute', () => {
+    const history = {
+      listen() {
+        return { unlisten() {} };
+      },
+      replace() {},
+      push() {},
+      length: 1,
+      action: 'PUSH',
+      location: {
+        pathname: '/somewhere',
+        search: '',
+        hash: '#howdy',
+      },
+    };
 
-        const Component = () => (
-            <Router history={history}>
-                <App />
-            </Router>
-        );
+    const Component = () => (
+      <Router history={history}>
+        <App />
+      </Router>
+    );
 
-        const wrapper = mountPage(Component);
+    const wrapper = mountPage(Component);
 
-        let componentVersion = wrapper
-        .find('#automation-analytics-application')
-        .props().version;
-        expect(componentVersion).toBe(packageJson.version);
-    });
+    let componentVersion = wrapper
+      .find('#automation-analytics-application')
+      .props().version;
+    expect(componentVersion).toBe(packageJson.version);
+  });
 });
