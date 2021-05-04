@@ -71,8 +71,7 @@ const ToolbarFilterItem = ({
         }
     };
 
-    const onFilter = event => {
-        const textInput = event.target.value;
+    const onFilter = (_event, textInput) => {
         if (textInput === '') {
             return renderValues(values);
         } else {
