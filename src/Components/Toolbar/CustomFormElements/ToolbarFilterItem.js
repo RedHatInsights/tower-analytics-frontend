@@ -105,7 +105,7 @@ const ToolbarFilterItem = ({
         return (
             <ToolbarItem>
                 <InputGroup>
-                    <TextInput name="textInput1" id="textInput1" type="search" aria-label="search input example" onChange={handleInputChange} />
+                    <TextInput name="textInput1" id="textInput1" type="search" aria-label="search input" onChange={handleInputChange} />
                     <Button variant='control' aria-label="search button for search input">
                         <SearchIcon onClick={handleOnClick} />
                     </Button>

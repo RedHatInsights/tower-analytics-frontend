@@ -102,7 +102,7 @@ const PlanCard = (
                     <Checkbox
                         isChecked={false}
                         onChange={() => { }}
-                        aria-label="card checkbox example"
+                        aria-label="card checkbox"
                         id="check-1"
                         name="check1"
                     />
