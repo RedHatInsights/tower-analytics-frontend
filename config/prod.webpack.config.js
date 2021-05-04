@@ -1,24 +1,20 @@
-
-/* global require, module, __dirname */
 const { resolve } = require('path');
 const config = require('@redhat-cloud-services/frontend-components-config');
 const { config: webpackConfig, plugins } = config({
-    rootFolder: resolve(__dirname, '../')
+  rootFolder: resolve(__dirname, '../'),
+  https: true,
+  skipChrome2: true,
 });
-const overrideConfig = require('./overrides.config');
 
-const { output: { filename, chunkFilename }} = overrideConfig;
-const combined = {
-    ...webpackConfig,
-    output: {
-        ...webpackConfig.output,
-        filename,
-        chunkFilename
+plugins.push(
+  require('@redhat-cloud-services/frontend-components-config/federated-modules')(
+    {
+      root: resolve(__dirname, '../'),
     }
-};
+  )
+);
 
 module.exports = {
-    ...combined,
-    plugins
+  ...webpackConfig,
+  plugins,
 };
-

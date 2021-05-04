@@ -2,23 +2,8 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
 import asyncComponent from './Utilities/asyncComponent';
-import some from 'lodash/some';
 import { Paths } from './paths';
 
-/**
- * Aysnc imports of components
- *
- * https://webpack.js.org/guides/code-splitting/
- * https://reactjs.org/docs/code-splitting.html
- *
- * pros:
- *      1) code splitting
- *      2) can be used in server-side rendering
- * cons:
- *      1) nameing chunk names adds unnecessary docs to code,
- *         see the difference with DashboardMap and InventoryDeployments.
- *
- */
 const Clusters = asyncComponent(() =>
     import(
         /* webpackChunkName: "automation_analytics" */
@@ -79,16 +64,8 @@ InsightsRoute.propTypes = {
     rootClass: PropTypes.string
 };
 
-/**
- * the Switch component changes routes depending on the path.
- *
- * Route properties:
- *      exact - path must match exactly,
- *      path - https://prod.foo.redhat.com:1337/insights/advisor/rules
- *      component - component to be rendered when a route has been chosen.
- */
-export const Routes = props => {
-    const path = props.childProps.location.pathname;
+
+export const Routes = () => {
     return (
         <Switch>
             <InsightsRoute
@@ -127,15 +104,9 @@ export const Routes = props => {
                 rootClass="SavingsPlanner"
             />
             {/* Finally, catch all unmatched routes and redirect to Clusters page */}
-            <Route
-                render={() =>
-                    some(Paths, p => p === path) ? null : <Redirect to={Paths.clusters} />
-                }
-            />
+            <Route>
+                <Redirect to={Paths.clusters} />
+            </Route>
         </Switch>
     );
-};
-
-Routes.propTypes = {
-    childProps: PropTypes.any
 };
