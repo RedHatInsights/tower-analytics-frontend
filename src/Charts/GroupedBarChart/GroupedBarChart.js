@@ -244,4 +244,8 @@ GroupedBarChart.propTypes = {
     TooltipClass: PropTypes.any.isRequired
 };
 
+GroupedBarChart.defaultProps = {
+    legend: []
+}
+
 export default initializeChart(GroupedBarChart);
