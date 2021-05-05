@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import moment from 'moment';
+import DateFormat from '@redhat-cloud-services/frontend-components/DateFormat';
 
 import {
     NotificationDrawerList as PFNotificationDrawerList,
@@ -21,10 +21,8 @@ const ExternalLinkAltIcon = styled(PFExternalLinkAltIcon)`
 `;
 
 const NotificationDrawerListItem = styled(PFNotificationDrawerListItem)`
-  border-top: 1px solid var(--pf-global--BorderColor--light-100
-    );
-  border-bottom::nth-child(odd): 1px solid var(--pf-global--BorderColor--light-100
-    );
+  border-top: 1px solid var(--pf-global--BorderColor--light-100);
+  border-bottom::nth-child(odd): 1px solid var(--pf-global--BorderColor--light-100);
   box-shadow: none;
   &:focus {
     outline: none;
@@ -36,24 +34,6 @@ const NotificationDrawerList = styled(PFNotificationDrawerList)`
     border-bottom: 1px solid var(--pf-global--BorderColor--light-100);
   }
 `;
-
-const stringifyDate = date => {
-    const day = moment(date);
-    const oneHour = 60 * 60 * 1000;
-    const now = moment().utc();
-
-    if (now.isAfter(day)) {
-        return `${now.diff(day, 'days')} day(s) ago.`;
-    }
-
-    if (day.isSame(now, 'day')) {
-        if (day.valueOf() > oneHour) {
-            return `${day.diff(now, 'hours')} hour(s) ago.`;
-        }
-
-        return `${now.diff(day, 'minutes')} minute(s) ago.`;
-    }
-};
 
 const AllNotificationTemplate = ({ notifications }) =>
     notifications.map(
@@ -101,7 +81,7 @@ const AllNotificationTemplate = ({ notifications }) =>
                                 </>
                             }
                         />
-                        <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
+                        <NotificationDrawerListItemBody timestamp={<DateFormat date={date} />}>
                             {message}{' '}
                         </NotificationDrawerListItemBody>
                     </NotificationDrawerListItem>
@@ -126,7 +106,7 @@ const AllNotificationTemplate = ({ notifications }) =>
                                 </>
                             }
                         />
-                        <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
+                        <NotificationDrawerListItemBody timestamp={<DateFormat date={date} />}>
                             {message}{' '}
                         </NotificationDrawerListItemBody>
                     </NotificationDrawerListItem>
@@ -155,7 +135,7 @@ const ErrorNotificationTemplate = ({ notifications }) =>
                     </>
                 }
             />
-            <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
+            <NotificationDrawerListItemBody timestamp={<DateFormat date={date} />}>
                 {message}{' '}
             </NotificationDrawerListItemBody>
         </NotificationDrawerListItem>
@@ -181,7 +161,7 @@ const NoticeNotificationTemplate = ({ notifications }) =>
                     </>
                 }
             />
-            <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
+            <NotificationDrawerListItemBody timestamp={<DateFormat date={date} />}>
                 {message}{' '}
             </NotificationDrawerListItemBody>
         </NotificationDrawerListItem>
@@ -207,7 +187,7 @@ const WarningNotificationTemplate = ({ notifications }) =>
                     </>
                 }
             />
-            <NotificationDrawerListItemBody timestamp={stringifyDate(date)}>
+            <NotificationDrawerListItemBody timestamp={<DateFormat date={date} />}>
                 {message}{' '}
             </NotificationDrawerListItemBody>
         </NotificationDrawerListItem>
