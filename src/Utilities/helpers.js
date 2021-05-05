@@ -28,7 +28,10 @@ export function formatDateTime(dateTime) {
 }
 
 export function formatDate(date) {
-    return moment(date).format('YYYY-MM-DD');
+    date = new Date(date);
+    const offset = date.getTimezoneOffset();
+    date = new Date(date.getTime() - (offset * 60 * 1000));
+    return date.toISOString().split('T')[0];
 }
 
 export function formatSeconds(seconds) {
