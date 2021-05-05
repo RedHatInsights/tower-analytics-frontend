@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from 'react';
 
 import {
+    preflightRequest,
     readPlanOptions,
     readPlans
 } from '../../Api';
 import FilterableToolbar from '../../Components/Toolbar/';
 import ApiErrorState from '../../Components/ApiErrorState';
 import LoadingState from '../../Components/LoadingState';
+import EmptyState from '../../Components/EmptyState';
 import PlanCard from './PlanCard';
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import useApi from '../../Utilities/useApi';
 import { savingsPlanner } from '../../Utilities/constants';
+import { notAuthorizedParams } from '../../Utilities/constants';
 
 import {
     Main,
     PageHeader,
-    PageHeaderTitle
+    PageHeaderTitle,
+    NotAuthorized
 } from '@redhat-cloud-services/frontend-components';
 
 import {
@@ -61,6 +65,7 @@ const SavingsPlanner = () => {
     ] = useApi({ meta: {}, items: []});
     const [ options, setOptions ] = useApi({});
     const [ currPage, setCurrPage ] = useState(1);
+    const [ preflightError, setPreFlightError ] = useState(null);
 
     const combinedOptions = {
         ...options.data,
@@ -84,12 +89,19 @@ const SavingsPlanner = () => {
 
     useEffect(() => {
         const fetchEndpoints = () => {
+            preflightRequest().catch(error => {
+                setPreFlightError({ preflightError: error });
+            });
             setData(readPlans({ params: queryParams }));
             setOptions(readPlanOptions());
         };
 
         fetchEndpoints();
     }, [ queryParams ]);
+
+    if (preflightError?.preflightError?.status === 403) {
+        return <NotAuthorized {...notAuthorizedParams} />;
+    }
 
     return (
         <React.Fragment>
@@ -118,6 +130,11 @@ const SavingsPlanner = () => {
                     }
                 />
             </PageHeader>
+            {preflightError && (
+                <Main>
+                    <EmptyState {...preflightError} />
+                </Main>
+            )}
             {error && (
                 <Main style={{ height: '100vh' }}>
                     <ApiErrorState message={error.error} />
@@ -135,7 +152,6 @@ const SavingsPlanner = () => {
                             <PlanCard
                                 key={datum.id}
                                 isSuccess={options.isSuccess}
-                                templates={options.data.templates}
                                 {...datum}
                             />
                         ))}

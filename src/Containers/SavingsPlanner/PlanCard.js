@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -22,10 +21,9 @@ import {
     Label
 } from '@patternfly/react-core';
 
-import { CheckCircleIcon, ExclamationCircleIcon, TrashIcon } from '@patternfly/react-icons';
+import { CheckCircleIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 import styled from 'styled-components';
 import { stringify } from 'query-string';
-
 
 const CardLabel = styled.span`
   margin-right: 5px;
@@ -41,8 +39,7 @@ const PlanCard = (
         automation_status,
         modified,
         category,
-        isSuccess,
-        templates
+        isSuccess
     }) => {
     const [ isCardKebabOpen, setIsCardKebabOpen ] = useState(false);
 
@@ -52,26 +49,19 @@ const PlanCard = (
         const { jobExplorer } = Paths;
         const initialQueryParams = {
             quick_date_range: 'last_30_days',
-            status: ['failed', 'successful'],
-            template_id: [templateId]
+            status: [ 'failed', 'successful' ],
+            template_id: [ templateId ]
         };
         const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
         history.push({
             pathname: jobExplorer,
             search
         });
-    }
+    };
 
-    const showTemplate = template => {
-        if (!template) {
-            return;
-        };
-        if (isSuccess) {
-            return (
-                <a onClick={() => redirectToJobExplorer(template.id)}>{template.name}</a>
-            );
-        }
-    }
+    const renderTemplateLink = template => {
+        return (template && isSuccess ? < a onClick = {() => redirectToJobExplorer(template.id)}> { template.name }</a> : null);
+    };
 
     const kebabDropDownItems = [
         <React.Fragment key={id}>
@@ -114,7 +104,7 @@ const PlanCard = (
                     <CardLabel>Frequency</CardLabel> {frequency_period ? frequency_period : (<em>None</em>)}
                 </div>
                 <div>
-                    <CardLabel>Template</CardLabel> {template_details ? showTemplate(template_details) : (<em>None</em>)}
+                    <CardLabel>Template</CardLabel> {template_details ? renderTemplateLink(template_details) : (<em>None</em>)}
                 </div>
                 <div>
                     <CardLabel>Automation status</CardLabel>
@@ -141,7 +131,14 @@ const PlanCard = (
 
 PlanCard.propTypes = {
     isSuccess: PropTypes.bool,
-    templates: PropTypes.array
+    name: PropTypes.string,
+    id: PropTypes.number,
+    description: PropTypes.string,
+    frequency_period: PropTypes.string,
+    template_details: PropTypes.object,
+    modified: PropTypes.string,
+    category: PropTypes.string,
+    automation_status: PropTypes.object
 };
 
 export default PlanCard;
