@@ -22,6 +22,12 @@ import {
 } from '@redhat-cloud-services/frontend-components/PageHeader';
 import { notAuthorizedParams } from '../../Utilities/constants';
 
+import { Router } from 'react-router-dom';
+import { createMemoryHistory } from 'history';
+const history = createMemoryHistory({
+    initialEntries: [ '/clusters' ]
+});
+
 import {
   Card,
   CardBody,
@@ -212,7 +218,7 @@ const Clusters = () => {
                 </Main>
             )}
             {!preflightError && !error && (
-                <>
+                <Router history={history}>
                     <Main>
                         <Card>
                             <PFCardTitle>
@@ -262,9 +268,10 @@ const Clusters = () => {
                             <ModulesList modules={modules} isLoading={isLoading} />
                         </div>
                     </Main>
-                </>
+                </Router>
             )}
         </React.Fragment>
+
     );
 };
 
