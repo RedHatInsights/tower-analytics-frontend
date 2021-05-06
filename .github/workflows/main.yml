@@ -37,7 +37,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           record: true
-          browser: chrome
+          browser: firefox
           headless: true
           build: npm run build
           start: |

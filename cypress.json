@@ -1,6 +1,5 @@
 {
     "projectId": "wwyf7n",
-    "chromeWebSecurity": false,
     "waitForAnimations": true,
     "viewportHeight": 2000,
     "video": false,

@@ -19,7 +19,6 @@ const App = () => {
       appNav();
     };
   }, []);
-
   /**
    * Remove automation-analytics class once main.yml has module config
    */
