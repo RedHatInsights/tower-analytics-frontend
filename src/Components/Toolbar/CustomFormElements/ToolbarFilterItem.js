@@ -60,6 +60,18 @@ const ToolbarFilterItem = ({
         }
     };
 
+    const onFilter = (_event, textInput) => {
+        if (textInput === '') {
+            return renderValues(values);
+        } else {
+            return renderValues(
+                values.filter(({ value }) =>
+                    value.toLowerCase().includes(textInput.toLowerCase())
+                )
+            );
+        }
+    };
+
     const handleChips = () => {
         if (options.isSingle) {
             return handleSingleChips(filter, values);
@@ -134,6 +146,7 @@ const ToolbarFilterItem = ({
                     isOpen={expanded}
                     hasInlineFilter
                     placeholderText={options.placeholder}
+                    onFilter={onFilter}
                     maxHeight={'1000%'}
                 >
                     { renderValues(values)}
