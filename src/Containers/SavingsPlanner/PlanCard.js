@@ -130,8 +130,8 @@ const PlanCard = (
 };
 
 PlanCard.propTypes = {
-    isSuccess: PropTypes.bool,
-    name: PropTypes.string,
+    isSuccess: PropTypes.bool.isRequired,
+    name: PropTypes.string.isRequired,
     id: PropTypes.number,
     description: PropTypes.string,
     frequency_period: PropTypes.string,
