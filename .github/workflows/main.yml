@@ -10,6 +10,8 @@ on:
 jobs:
   cypress-proxy-tests:
     runs-on: ubuntu-latest
+    # disable for now - too many flaky tests
+    if: ${{ false }}
 
     steps:
       - name: Set node version
