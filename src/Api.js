@@ -9,6 +9,7 @@ const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
 const hostExplorerEndpoint = '/api/tower-analytics/v1/host_explorer/';
 const eventExplorerEndpoint = '/api/tower-analytics/v1/event_explorer/';
 const ROIEndpoint = '/api/tower-analytics/v1/roi_templates/';
+const plansEndpoint = '/api/tower-analytics/v1/plans/';
 
 /* page options endpoints */
 const jobExplorerOptionsEndpoint =
@@ -16,6 +17,7 @@ const jobExplorerOptionsEndpoint =
 const ROITemplatesOptionsEndpoint = '/api/tower-analytics/v1/roi_templates_options/';
 const orgOptionsEndpoint = '/api/tower-analytics/v1/dashboard_organization_statistics_options/';
 const clustersOptionsEndpoint = '/api/tower-analytics/v1/dashboard_clusters_options/';
+const planOptionsEndpoint = '/api/tower-analytics/v1/plan_options/';
 
 function handleResponse(response) {
     return response.json().then(json => {
@@ -111,6 +113,22 @@ export const readHostExplorer = ({ params = {}}) => {
     }).then(handleResponse);
 };
 
+export const readPlans = ({ params = {}}) => {
+    const { limit, offset, sort_by } = params;
+    const paginationParams = {
+        limit,
+        offset,
+        sort_by
+    };
+    const qs = stringify(paginationParams);
+    let url = new URL(plansEndpoint, window.location.origin);
+    url.search = qs;
+    return authenticatedFetch(url, {
+        method: 'POST',
+        body: JSON.stringify(params)
+    }).then(handleResponse);
+};
+
 export const readClustersOptions = ({ params = {}}) => {
     let url = new URL(clustersOptionsEndpoint, window.location.origin);
     return authenticatedFetch(url, {
@@ -132,6 +150,13 @@ export const readROIOptions = ({ params = {}}) => {
     return authenticatedFetch(url, {
         method: 'POST',
         body: JSON.stringify(params)
+    }).then(handleResponse);
+};
+
+export const readPlanOptions = () => {
+    let url = new URL(planOptionsEndpoint, window.location.origin);
+    return authenticatedFetch(url, {
+        method: 'GET'
     }).then(handleResponse);
 };
 

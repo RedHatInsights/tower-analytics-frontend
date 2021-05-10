@@ -46,6 +46,10 @@ export const useQueryParams = initial => {
             case 'SET_ORG':
             case 'SET_CLUSTER':
             case 'SET_TEMPLATE':
+            case 'SET_AUTOMATION_STATUS':
+            case 'SET_CATEGORY':
+            case 'SET_FREQUENCY':
+            case 'SET_NAME':
             case 'SET_ROOT_WORKFLOWS_AND_JOBS':
                 return { ...state, ...value };
             case 'SET_QUICK_DATE_RANGE': {
@@ -105,6 +109,10 @@ export const useQueryParams = initial => {
         sort_options: `SET_SORT_OPTIONS`,
         start_date: 'SET_START_DATE',
         end_date: 'SET_END_DATE',
+        automation_status: 'SET_AUTOMATION_STATUS',
+        category: 'SET_CATEGORY',
+        frequency_period: 'SET_FREQUENCY',
+        name: 'SET_NAME',
         only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS'
     };
 

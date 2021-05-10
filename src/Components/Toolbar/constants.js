@@ -33,5 +33,25 @@ export const optionsForCategories = {
         isSingle: true,
         name: 'Sort by',
         placeholder: 'Sort by attribute'
+    },
+    automation_status: {
+        isSingle: false,
+        name: 'Automation status',
+        placeholder: 'Filter by automation status'
+    },
+    frequency_period: {
+        isSingle: false,
+        name: 'Frequency',
+        placeholder: 'Filter by frequency'
+    },
+    category: {
+        isSingle: false,
+        name: 'Category',
+        placeholder: 'Filter by category'
+    },
+    name: {
+        isSingle: true,
+        name: 'Name',
+        placeholder: 'Filter by name'
     }
 };

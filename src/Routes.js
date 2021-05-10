@@ -51,6 +51,13 @@ const JobExplorer = asyncComponent(() =>
     )
 );
 
+const SavingsPlanner = asyncComponent(() =>
+    import(
+        /* webpackChunkName: "automation_analytics" */
+        './Containers/SavingsPlanner/SavingsPlanner'
+    )
+);
+
 const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {
     const root = document.getElementById('root');
     root.removeAttribute('class');
@@ -101,6 +108,11 @@ export const Routes = props => {
                 path={Paths.jobExplorer}
                 component={JobExplorer}
                 rootClass="jobExplorer"
+            />
+            <InsightsRoute
+                path={Paths.savingsPlanner}
+                component={SavingsPlanner}
+                rootClass="SavingsPlanner"
             />
             {/* Finally, catch all unmatched routes and redirect to Clusters page */}
             <Route
