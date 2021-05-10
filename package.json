@@ -83,7 +83,8 @@
   },
   "scripts": {
     "proxy:ci": "SPANDX_CONFIG=./config/spandx.config.js bash ./insights-proxy/scripts/run.sh",
-    "proxy:local": "SPANDX_CONFIG=./config/spandx.config.js bash ../insights-proxy/scripts/run.sh",
+    "proxy:local": "SPANDX_CONFIG=./profiles/local-frontend.js bash ../insights-proxy/scripts/run.sh",
+    "proxy:local-api": "SPANDX_CONFIG=./profiles/local-frontend-and-api.js bash ../insights-proxy/scripts/run.sh",
     "build": "webpack --config config/prod.webpack.config.js",
     "test": "jest --verbose",
     "test:watch": "jest --coverage=false --watch",
