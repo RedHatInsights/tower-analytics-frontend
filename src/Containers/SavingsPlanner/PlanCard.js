@@ -32,13 +32,13 @@ const CardLabel = styled.span`
 const PlanCard = (
     {
         name,
-        id,
-        description,
-        frequency_period,
-        template_details,
-        automation_status,
-        modified,
-        category,
+        id = null,
+        description = '',
+        frequency_period = '',
+        template_details = {},
+        automation_status = {},
+        modified = '',
+        category = '',
         isSuccess
     }) => {
     const [ isCardKebabOpen, setIsCardKebabOpen ] = useState(false);
@@ -60,7 +60,7 @@ const PlanCard = (
     };
 
     const renderTemplateLink = template => {
-        return (template && isSuccess ? < a onClick = {() => redirectToJobExplorer(template.id)}> { template.name }</a> : null);
+        return (template && isSuccess ? <a onClick={() => redirectToJobExplorer(template.id)}>{template.name}</a> : null);
     };
 
     const kebabDropDownItems = [
