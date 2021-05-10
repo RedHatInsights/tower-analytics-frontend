@@ -4,5 +4,6 @@ export const Paths = {
     notifications: '/notifications',
     automationCalculator: '/automation-calculator',
     jobExplorer: '/job-explorer',
-    savingsPlanner: '/savings-planner'
+    savingsPlanner: '/savings-planner',
+    savingsPlan: '/savings-planner/:id'
 };
