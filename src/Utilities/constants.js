@@ -78,13 +78,13 @@ export const clusters = {
 };
 
 export const savingsPlanner = {
-    defaultParams: {
-        template_id: [],
-        automation_status: [],
-        category: [],
-        frequency_period: [],
-        name: ''
-    }
+  defaultParams: {
+    template_id: [],
+    automation_status: [],
+    category: [],
+    frequency_period: [],
+    name: '',
+  },
 };
 
 export const notAuthorizedParams = {

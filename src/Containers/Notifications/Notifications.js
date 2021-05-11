@@ -115,13 +115,8 @@ const Notifications = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [meta, setMeta] = useState({});
   const [currPage, setCurrPage] = useState(1);
-  const {
-    queryParams,
-    setId,
-    setLimit,
-    setOffset,
-    setSeverity,
-  } = useQueryParams(initialQueryParams);
+  const { queryParams, setId, setLimit, setOffset, setSeverity } =
+    useQueryParams(initialQueryParams);
 
   useEffect(() => {
     if (firstRender) {

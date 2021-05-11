@@ -90,57 +90,60 @@ const optionsMapper = (options) => {
   return { ...rest };
 };
 
-const orgsChartMapper = (attrName) => ({ dates: data = [], meta }) => ({
-  data: data.map(({ date, items }) => ({
-    date,
-    items: items.map(({ id, [attrName]: value, name }) => ({
-      id,
+const orgsChartMapper =
+  (attrName) =>
+  ({ dates: data = [], meta }) => ({
+    data: data.map(({ date, items }) => ({
       date,
-      value,
-      name: name || 'No organization',
+      items: items.map(({ id, [attrName]: value, name }) => ({
+        id,
+        date,
+        value,
+        name: name || 'No organization',
+      })),
     })),
-  })),
-  legend: meta.legend,
-});
+    legend: meta.legend,
+  });
 
-const pieChartMapper = (attrName) => ({ items = [] }) =>
-  items.map(({ id, [attrName]: count, name }) => ({
-    id,
-    count,
-    name: name || 'No organization',
-  }));
+const pieChartMapper =
+  (attrName) =>
+  ({ items = [] }) =>
+    items.map(({ id, [attrName]: count, name }) => ({
+      id,
+      count,
+      name: name || 'No organization',
+    }));
 
-const redirectToJobExplorer = (toJobExplorer, queryParams) => ({
-  date,
-  id,
-}) => {
-  if (id === -1) {
-    // disable clicking on "others" block
-    return;
-  }
+const redirectToJobExplorer =
+  (toJobExplorer, queryParams) =>
+  ({ date, id }) => {
+    if (id === -1) {
+      // disable clicking on "others" block
+      return;
+    }
 
-  const { sort_by, ...rest } = queryParams;
-  const formattedDate = dateForJobExplorer(date);
-  const initialQueryParams = {
-    ...rest,
-    quick_date_range: 'custom',
-    start_date: formattedDate,
-    end_date: formattedDate,
-    status: [
-      'successful',
-      'failed',
-      'new',
-      'pending',
-      'waiting',
-      'error',
-      'canceled',
-      'running',
-    ],
-    org_id: [id],
+    const { sort_by, ...rest } = queryParams;
+    const formattedDate = dateForJobExplorer(date);
+    const initialQueryParams = {
+      ...rest,
+      quick_date_range: 'custom',
+      start_date: formattedDate,
+      end_date: formattedDate,
+      status: [
+        'successful',
+        'failed',
+        'new',
+        'pending',
+        'waiting',
+        'error',
+        'canceled',
+        'running',
+      ],
+      org_id: [id],
+    };
+
+    toJobExplorer(initialQueryParams);
   };
-
-  toJobExplorer(initialQueryParams);
-};
 
 const chartMapper = [
   {

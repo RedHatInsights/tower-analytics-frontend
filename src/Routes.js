@@ -37,17 +37,17 @@ const JobExplorer = asyncComponent(() =>
 );
 
 const SavingsPlanner = asyncComponent(() =>
-    import(
-        /* webpackChunkName: "automation_analytics" */
-        './Containers/SavingsPlanner/SavingsPlanner'
-    )
+  import(
+    /* webpackChunkName: "automation_analytics" */
+    './Containers/SavingsPlanner/SavingsPlanner'
+  )
 );
 
 const SavingsPlan = asyncComponent(() =>
-    import(
-        /* webpackChunkName: "automation_analytics" */
-        './Containers/SavingsPlanner/SavingsPlan'
-    )
+  import(
+    /* webpackChunkName: "automation_analytics" */
+    './Containers/SavingsPlanner/SavingsPlan'
+  )
 );
 
 const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {
@@ -65,47 +65,47 @@ InsightsRoute.propTypes = {
 };
 
 export const Routes = () => {
-    return (
-        <Switch>
-            <InsightsRoute
-                path={Paths.clusters}
-                component={Clusters}
-                rootClass="clusters"
-            />
-            <InsightsRoute
-                path={Paths.organizationStatistics}
-                component={OrganizationStatistics}
-                rootClass="organizationStatistics"
-            />
-            <InsightsRoute
-                path={Paths.notifications}
-                component={Notifications}
-                rootClass="notifications"
-            />
-            <InsightsRoute
-                path={Paths.automationCalculator}
-                component={AutomationCalculator}
-                rootClass="automationCalculator"
-            />
-            <InsightsRoute
-                path={Paths.jobExplorer}
-                component={JobExplorer}
-                rootClass="jobExplorer"
-            />
-            <InsightsRoute
-                path={Paths.savingsPlan}
-                component={SavingsPlan}
-                rootClass="SavingsPlan"
-            />
-            <InsightsRoute
-                path={Paths.savingsPlanner}
-                component={SavingsPlanner}
-                rootClass="SavingsPlanner"
-            />
-            {/* Finally, catch all unmatched routes and redirect to Clusters page */}
-            <Route>
-                <Redirect to={Paths.clusters} />
-            </Route>
-        </Switch>
-    );
+  return (
+    <Switch>
+      <InsightsRoute
+        path={Paths.clusters}
+        component={Clusters}
+        rootClass="clusters"
+      />
+      <InsightsRoute
+        path={Paths.organizationStatistics}
+        component={OrganizationStatistics}
+        rootClass="organizationStatistics"
+      />
+      <InsightsRoute
+        path={Paths.notifications}
+        component={Notifications}
+        rootClass="notifications"
+      />
+      <InsightsRoute
+        path={Paths.automationCalculator}
+        component={AutomationCalculator}
+        rootClass="automationCalculator"
+      />
+      <InsightsRoute
+        path={Paths.jobExplorer}
+        component={JobExplorer}
+        rootClass="jobExplorer"
+      />
+      <InsightsRoute
+        path={Paths.savingsPlan}
+        component={SavingsPlan}
+        rootClass="SavingsPlan"
+      />
+      <InsightsRoute
+        path={Paths.savingsPlanner}
+        component={SavingsPlanner}
+        rootClass="SavingsPlanner"
+      />
+      {/* Finally, catch all unmatched routes and redirect to Clusters page */}
+      <Route>
+        <Redirect to={Paths.clusters} />
+      </Route>
+    </Switch>
+  );
 };

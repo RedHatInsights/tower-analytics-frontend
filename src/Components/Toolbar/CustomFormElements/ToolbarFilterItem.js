@@ -1,23 +1,18 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-    ToolbarFilter,
-    Select,
-    SelectOption as PFSelectOption,
-    TextInput,
-    InputGroup,
-    ToolbarItem,
-    Button
+  ToolbarFilter,
+  Select,
+  SelectOption as PFSelectOption,
+  TextInput,
+  InputGroup,
+  ToolbarItem,
+  Button,
 } from '@patternfly/react-core';
 
-import {
-    SearchIcon
-} from '@patternfly/react-icons';
+import { SearchIcon } from '@patternfly/react-icons';
 
-import {
-    handleCheckboxChips,
-    handleSingleChips
-} from '../helpers';
+import { handleCheckboxChips, handleSingleChips } from '../helpers';
 import { optionsForCategories } from '../constants';
 import styled from 'styled-components';
 
@@ -44,9 +39,9 @@ const ToolbarFilterItem = ({
   hasChips = true,
   setFilter,
 }) => {
-    const [ expanded, setExpanded ] = useState(false);
-    const [ searchVal, setSearchVal ] = useState('');
-    const options = optionsForCategories[categoryKey];
+  const [expanded, setExpanded] = useState(false);
+  const [searchVal, setSearchVal] = useState('');
+  const options = optionsForCategories[categoryKey];
 
   const onDelete = (name, valueToDelete) => {
     const single = optionsForCategories[categoryKey].isSingle;
@@ -54,32 +49,33 @@ const ToolbarFilterItem = ({
     if (single) {
       setFilter(null);
     } else {
-      const keyToDelete = values.find(({ value }) => value === valueToDelete)
-        .key;
+      const keyToDelete = values.find(
+        ({ value }) => value === valueToDelete
+      ).key;
       const filteredArr = filter.filter((value) => value !== keyToDelete);
       setFilter(filteredArr);
     }
   };
 
-    const onFilter = (_event, textInput) => {
-        if (textInput === '') {
-            return renderValues(values);
-        } else {
-            return renderValues(
-                values.filter(({ value }) =>
-                    value.toLowerCase().includes(textInput.toLowerCase())
-                )
-            );
-        }
-    };
+  const onFilter = (_event, textInput) => {
+    if (textInput === '') {
+      return renderValues(values);
+    } else {
+      return renderValues(
+        values.filter(({ value }) =>
+          value.toLowerCase().includes(textInput.toLowerCase())
+        )
+      );
+    }
+  };
 
-    const handleChips = () => {
-        if (options.isSingle) {
-            return handleSingleChips(filter, values);
-        } else {
-            return handleCheckboxChips(filter, values);
-        }
-    };
+  const handleChips = () => {
+    if (options.isSingle) {
+      return handleSingleChips(filter, values);
+    } else {
+      return handleCheckboxChips(filter, values);
+    }
+  };
 
   const onSelect = (event, selection) => {
     if (options.isSingle) {
@@ -94,68 +90,74 @@ const ToolbarFilterItem = ({
     }
   };
 
-    const handleOnClick = () => {
-        setFilter(searchVal);
-        setSearchVal(searchVal);
-    };
+  const handleOnClick = () => {
+    setFilter(searchVal);
+    setSearchVal(searchVal);
+  };
 
-    const handleInputChange = e => {
-        setSearchVal(e);
-    };
+  const handleInputChange = (e) => {
+    setSearchVal(e);
+  };
 
-    const renderSearch = () => {
-        return (
-            <ToolbarItem>
-                <InputGroup>
-                    <TextInput name="textInput1" id="textInput1" type="search" aria-label="search input" onChange={handleInputChange} />
-                    <Button variant='control' aria-label="search button for search input">
-                        <SearchIcon onClick={handleOnClick} />
-                    </Button>
-                </InputGroup>
-            </ToolbarItem>
-        );
-    };
+  const renderSearch = () => {
+    return (
+      <ToolbarItem>
+        <InputGroup>
+          <TextInput
+            name="textInput1"
+            id="textInput1"
+            type="search"
+            aria-label="search input"
+            onChange={handleInputChange}
+          />
+          <Button variant="control" aria-label="search button for search input">
+            <SearchIcon onClick={handleOnClick} />
+          </Button>
+        </InputGroup>
+      </ToolbarItem>
+    );
+  };
 
-    if (categoryKey === 'name') {
-        return (
-            <ToolbarFilter
-                data-cy={categoryKey}
-                key={categoryKey}
-                showToolbarItem={isVisible}
-                chips={[]}
-                categoryName={options.name}
-                deleteChip={null}
-            >
-                { renderSearch() }
-            </ToolbarFilter>
-        );
-    } else {
-        return (
-            <ToolbarFilter
-                data-cy={categoryKey}
-                key={categoryKey}
-                showToolbarItem={isVisible}
-                chips={hasChips ? handleChips() : []}
-                categoryName={options.name}
-                deleteChip={hasChips ? onDelete : null}
-            >
-                <Select
-                    variant={options.isSingle ? 'single' : 'checkbox'}
-                    aria-label={categoryKey}
-                    onToggle={() => setExpanded(!expanded)}
-                    onSelect={onSelect}
-                    selections={filter}
-                    isOpen={expanded}
-                    hasInlineFilter
-                    placeholderText={options.placeholder}
-                    onFilter={onFilter}
-                    maxHeight={'1000%'}
-                >
-                    { renderValues(values)}
-                </Select>
-            </ToolbarFilter>
-        );
-    }
+  if (categoryKey === 'name') {
+    return (
+      <ToolbarFilter
+        data-cy={categoryKey}
+        key={categoryKey}
+        showToolbarItem={isVisible}
+        chips={[]}
+        categoryName={options.name}
+        deleteChip={null}
+      >
+        {renderSearch()}
+      </ToolbarFilter>
+    );
+  } else {
+    return (
+      <ToolbarFilter
+        data-cy={categoryKey}
+        key={categoryKey}
+        showToolbarItem={isVisible}
+        chips={hasChips ? handleChips() : []}
+        categoryName={options.name}
+        deleteChip={hasChips ? onDelete : null}
+      >
+        <Select
+          variant={options.isSingle ? 'single' : 'checkbox'}
+          aria-label={categoryKey}
+          onToggle={() => setExpanded(!expanded)}
+          onSelect={onSelect}
+          selections={filter}
+          isOpen={expanded}
+          hasInlineFilter
+          placeholderText={options.placeholder}
+          onFilter={onFilter}
+          maxHeight={'1000%'}
+        >
+          {renderValues(values)}
+        </Select>
+      </ToolbarFilter>
+    );
+  }
 };
 
 ToolbarFilterItem.propTypes = {

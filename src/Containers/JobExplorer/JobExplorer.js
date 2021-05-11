@@ -68,13 +68,8 @@ const JobExplorer = ({ location: { search }, history }) => {
   const [currPage, setCurrPage] = useState(1);
   const [options, setOptions] = useApi({}, optionsMapper);
 
-  const {
-    queryParams,
-    setLimit,
-    setOffset,
-    setFromToolbar,
-    dispatch,
-  } = useQueryParams(initialQueryParams);
+  const { queryParams, setLimit, setOffset, setFromToolbar, dispatch } =
+    useQueryParams(initialQueryParams);
 
   const updateURL = () => {
     const { jobExplorer } = Paths;

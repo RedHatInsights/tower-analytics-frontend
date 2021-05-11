@@ -105,9 +105,8 @@ const Clusters = () => {
     attributes: jobExplorer.attributes,
   };
 
-  const { queryParams: optionsQueryParams } = useQueryParams(
-    initialOptionsParams
-  );
+  const { queryParams: optionsQueryParams } =
+    useQueryParams(initialOptionsParams);
 
   const {
     cluster_id,
