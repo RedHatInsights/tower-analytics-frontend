@@ -12,8 +12,8 @@ import { savingsPlanner } from '../../Utilities/constants';
 import { notAuthorizedParams } from '../../Utilities/constants';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
-import PageHeader from '@redhat-cloud-services/frontend-components/PageHeader';
-import PageHeaderTitle from '@redhat-cloud-services/frontend-components/PageHeaderTitle';
+import { PageHeader, PageHeaderTitle } from '@redhat-cloud-services/frontend-components/PageHeader';
+
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 
 import { Gallery, Pagination, PaginationVariant } from '@patternfly/react-core';
