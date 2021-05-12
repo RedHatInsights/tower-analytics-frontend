@@ -1,0 +1,56 @@
+ansible:
+  title: Red Hat Ansible Automation Platform
+  frontend:
+    sub_apps:
+      - id: automation-analytics
+        default: true
+      - id: automation-hub
+      - id: catalog
+      - id: settings-ansible
+  top_level: true
+
+api-docs:
+  title: API documentation
+  deployment_repo: https://github.com/RedHatInsights/api-frontend-build
+  frontend:
+    paths:
+      - /docs/api
+      - /docs
+
+approval:
+  title: Approval
+  api:
+    versions:
+      - v1
+    isBeta: true
+  deployment_repo: https://github.com/RedHatInsights/approvals-frontend-deploy.git
+  frontend:
+    paths:
+      - /ansible/catalog/approval
+    reload: catalog/approval
+
+automation-analytics:
+  title: Automation Analytics
+  api:
+    versions:
+      - v1
+    isBeta: true
+  deployment_repo: https://github.com/RedHatInsights/tower-analytics-frontend-build.git
+  frontend:
+    paths:
+      - /ansible
+      - /ansible/insights
+    sub_apps:
+      - id: clusters
+        title: Clusters
+        default: true
+      - id: organization-statistics
+        title: Organization statistics
+      - id: automation-calculator
+        title: Automation calculator
+      - id: notifications
+        title: Notifications
+      - id: job-explorer
+        title: Job explorer
+      - id: savings-planner
+        title: Savings Planner
