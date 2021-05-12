@@ -102,7 +102,10 @@ const orgsChartMapper =
         name: name || 'No organization',
       })),
     })),
-    legend: meta.legend,
+    legend: meta.legend.map((el) => ({
+      ...el,
+      name: el.name || 'No organization',
+    })),
   });
 
 const pieChartMapper =
