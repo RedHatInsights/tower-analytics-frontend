@@ -50,7 +50,7 @@ const SubTitle = styled.span`
   padding-right: 10px;
 `;
 
-const Legend = ({ data, selected, height, onToggle }) => {
+const Legend = ({ data, selected, height, onToggle, chartName }) => {
   return (
     <Container height={height}>
       {data.map(({ name, value, id, count }, index) => (
@@ -64,10 +64,9 @@ const Legend = ({ data, selected, height, onToggle }) => {
             <Switch
               isChecked={selected.some((selection) => selection === id)}
               onChange={() => onToggle(id)}
-              aria-label={name}
+              aria-label={`${chartName}-${name}`}
               value={id}
               key={index}
-              id={id}
             />
           )}
         </LegendDetail>
@@ -77,10 +76,11 @@ const Legend = ({ data, selected, height, onToggle }) => {
 };
 
 Legend.propTypes = {
-  data: PropTypes.array,
-  selected: PropTypes.array,
-  onToggle: PropTypes.func,
-  height: PropTypes.string,
+  data: PropTypes.array.isRequired,
+  selected: PropTypes.array.isRequired,
+  onToggle: PropTypes.func.isRequired,
+  height: PropTypes.string.isRequired,
+  chartName: PropTypes.string.isRequired,
 };
 
 export default Legend;
