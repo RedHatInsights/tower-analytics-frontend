@@ -1,40 +1,37 @@
 import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
-import { withRouter } from 'react-router-dom';
-import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import { Routes } from './Routes';
 import './App.scss';
 import packageJson from '../package.json';
 
-const App = props => {
-    useEffect(() => {
-        insights.chrome.init();
-        insights.chrome.identifyApp('automation-analytics');
-        const appNav = insights.chrome.on('APP_NAVIGATION', event => {
-            if (event.domEvent) {
-                props.history.push(`/${event.navId}`);
-            }
-        });
+const App = () => {
+  const history = useHistory;
+  useEffect(() => {
+    insights.chrome.init();
+    insights.chrome.identifyApp('automation-analytics');
+    const appNav = insights.chrome.on('APP_NAVIGATION', (event) => {
+      if (event.domEvent) {
+        history.push(`/${event.navId}`);
+      }
+    });
 
-        return () => {
-            appNav();
-        };
-    }, []);
+    return () => {
+      appNav();
+    };
+  }, []);
+  /**
+   * Remove automation-analytics class once main.yml has module config
+   */
 
-    return (
-        <div id="automation-analytics-application" version={packageJson.version}>
-            <Routes childProps={props} />
-        </div>
-    );
+  return (
+    <div
+      className="automation-analytics"
+      id="automation-analytics-application"
+      version={packageJson.version}
+    >
+      <Routes />
+    </div>
+  );
 };
 
-App.propTypes = {
-    history: PropTypes.object
-};
-
-/**
- * withRouter: https://reacttraining.com/react-router/web/api/withRouter
- * connect: https://github.com/reactjs/react-redux/blob/master/docs/api.md
- *          https://reactjs.org/docs/higher-order-components.html
- */
-export default withRouter(connect()(App));
+export default App;

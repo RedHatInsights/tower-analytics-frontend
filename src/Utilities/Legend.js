@@ -9,7 +9,7 @@ const Container = styled.div`
   margin-bottom: 20px;
   overflow: auto;
   width: 100%;
-  height: ${props => props.height};
+  height: ${(props) => props.height};
 `;
 
 const LegendDetail = styled.div`
@@ -25,12 +25,12 @@ const Wrapper = styled.div`
   overflow: auto;
 `;
 
-const Color = styled.div.attrs(props => ({
-    color: props.color || 'black'
+const Color = styled.div.attrs((props) => ({
+  color: props.color || 'black',
 }))`
   min-width: 12px;
   height: 12px;
-  background: ${props => props.color};
+  background: ${(props) => props.color};
   margin-right: 20px;
 `;
 
@@ -50,45 +50,37 @@ const SubTitle = styled.span`
   padding-right: 10px;
 `;
 
-const Legend = ({
-    data,
-    selected,
-    height,
-    onToggle
-}) => {
-    return (
-        <Container height={ height }>
-            { data.map(
-                ({ name, value, id, count }, index) => (
-                    <LegendDetail key={ index }>
-                        <Wrapper>
-                            <Color color={ value } />
-                            <Title>{ name }</Title>
-                        </Wrapper>
-                        {count && (
-                            <SubTitle>{count}</SubTitle>
-                        )}
-                        {selected && (
-                            <Switch
-                                isChecked={selected.some(selection => selection === id)}
-                                onChange={() => onToggle(id)}
-                                aria-label={name}
-                                value={id}
-                                key={index}
-                                id={id}
-                            />
-                        )}
-                    </LegendDetail>
-                )) }
-        </Container>
-    );
+const Legend = ({ data, selected, height, onToggle }) => {
+  return (
+    <Container height={height}>
+      {data.map(({ name, value, id, count }, index) => (
+        <LegendDetail key={index}>
+          <Wrapper>
+            <Color color={value} />
+            <Title>{name}</Title>
+          </Wrapper>
+          {count && <SubTitle>{count}</SubTitle>}
+          {selected && (
+            <Switch
+              isChecked={selected.some((selection) => selection === id)}
+              onChange={() => onToggle(id)}
+              aria-label={name}
+              value={id}
+              key={index}
+              id={id}
+            />
+          )}
+        </LegendDetail>
+      ))}
+    </Container>
+  );
 };
 
 Legend.propTypes = {
-    data: PropTypes.array,
-    selected: PropTypes.array,
-    onToggle: PropTypes.func,
-    height: PropTypes.string
+  data: PropTypes.array,
+  selected: PropTypes.array,
+  onToggle: PropTypes.func,
+  height: PropTypes.string,
 };
 
 export default Legend;
