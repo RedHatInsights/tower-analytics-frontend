@@ -12,6 +12,7 @@ fully_local_dev_install_mac:
 	brew install tmux
 
 start:
+	-tmux kill-session -t aa
 	tmux new-session -d -s aa "cd ${REL_BACKEND_PATH} && exec make ui"
 	tmux select-window -t aa:0
 	tmux split-window -v -p 70 "exec npm run start:beta"
