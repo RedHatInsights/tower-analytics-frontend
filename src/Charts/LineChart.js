@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
 import initializeChart from './BaseChart';
 import PropTypes from 'prop-types';
 import Tooltip from '../Utilities/Tooltip';
@@ -331,4 +330,4 @@ LineChart.propTypes = {
   history: PropTypes.object,
 };
 
-export default initializeChart(withRouter(LineChart));
+export default initializeChart(LineChart);
