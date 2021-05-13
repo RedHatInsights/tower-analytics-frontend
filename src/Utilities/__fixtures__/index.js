@@ -5,6 +5,8 @@ import preflightRequest404 from './preflightRequest404';
 import readClusterOptions from './readClusterOptions';
 import readEventExplorer from './readEventExplorer';
 import readJobExplorer from './readJobExplorer';
+import readPlans from './readPlans';
+import readPlansOptions from './readPlansOptions';
 
 export default {
     preflightRequest200,
@@ -13,5 +15,7 @@ export default {
     preflightRequest404,
     readClusterOptions,
     readEventExplorer,
-    readJobExplorer
+    readJobExplorer,
+    readPlans,
+    readPlansOptions
 };
