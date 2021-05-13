@@ -1,6 +1,4 @@
 import React, { Component } from 'react';
-import { withRouter } from 'react-router-dom';
-
 import initializeChart from './BaseChart';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
@@ -225,4 +223,4 @@ BarChart.propTypes = {
   history: PropTypes.object,
 };
 
-export default initializeChart(withRouter(BarChart));
+export default initializeChart(BarChart);
