@@ -85,11 +85,6 @@ const TopCard = styled(Card)`
 
 const colorFunc = scaleOrdinal(pfmulti);
 
-const optionsMapper = (options) => {
-  const { inventory_id, ...rest } = options;
-  return { ...rest };
-};
-
 const orgsChartMapper =
   (attrName) =>
   ({ dates: data = [], meta }) => ({
@@ -175,7 +170,7 @@ const OrganizationStatistics = ({ history }) => {
   );
   const [jobs, setJobs] = useApi([], pieChartMapper('total_count'));
   const [tasks, setTasks] = useApi([], pieChartMapper('host_task_count'));
-  const [options, setOptions] = useApi({}, optionsMapper);
+  const [options, setOptions] = useApi({});
   const { queryParams, setFromToolbar } = useQueryParams(
     constants.defaultParams
   );

@@ -54,4 +54,9 @@ export const optionsForCategories = {
     name: 'Name',
     placeholder: 'Filter by name',
   },
+  inventory_id: {
+    isSingle: false,
+    name: 'Inventory',
+    placeholder: 'Filter by inventory',
+  },
 };

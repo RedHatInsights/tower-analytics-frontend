@@ -49,11 +49,6 @@ const initialQueryParams = {
   attributes: jobExplorer.attributes,
 };
 
-const optionsMapper = (options) => {
-  const { groupBy, attributes, ...rest } = options;
-  return rest;
-};
-
 const JobExplorer = ({ location: { search }, history }) => {
   const [preflightError, setPreFlightError] = useState(null);
   const [
@@ -66,7 +61,7 @@ const JobExplorer = ({ location: { search }, history }) => {
     setData,
   ] = useApi({ meta: {}, items: [] });
   const [currPage, setCurrPage] = useState(1);
-  const [options, setOptions] = useApi({}, optionsMapper);
+  const [options, setOptions] = useApi({});
 
   const { queryParams, setLimit, setOffset, setFromToolbar, dispatch } =
     useQueryParams(initialQueryParams);

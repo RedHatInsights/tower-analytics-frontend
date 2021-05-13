@@ -62,11 +62,6 @@ const initialModuleParams = {
 const Clusters = () => {
   const [preflightError, setPreFlightError] = useState(null);
 
-  const optionsMapper = (options) => {
-    const { groupBy, attributes, ...rest } = options;
-    return rest;
-  };
-
   const { queryParams, setFromToolbar } = useQueryParams({
     ...clusters.defaultParams,
   });
@@ -99,7 +94,7 @@ const Clusters = () => {
     },
     setModules,
   ] = useApi({ items: [] });
-  const [{ data: options = [] }, setOptions] = useApi({}, optionsMapper);
+  const [{ data: options = [] }, setOptions] = useApi({});
 
   const initialOptionsParams = {
     attributes: jobExplorer.attributes,
