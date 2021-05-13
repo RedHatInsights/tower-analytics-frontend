@@ -10,7 +10,7 @@ const TopCard = styled(Card)`
   min-height: 500px;
 `;
 
-const GraphTab = ({ tabsArray }) => {
+const StatisticsTab = ({ tabsArray }) => {
   return (
     <>
       <TopCard>
@@ -21,8 +21,8 @@ const GraphTab = ({ tabsArray }) => {
   );
 };
 
-GraphTab.propTypes = {
-  tabsArray: PropTypes.array,
+StatisticsTab.propTypes = {
+    tabsArray: PropTypes.array
 };
 
-export default GraphTab;
+export default StatisticsTab;

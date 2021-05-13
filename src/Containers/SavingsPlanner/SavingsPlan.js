@@ -3,9 +3,10 @@ import { useParams, Route, Switch } from 'react-router-dom';
 import { CaretLeftIcon } from '@patternfly/react-icons';
 
 import DetailsTab from './DetailsTab';
-import GraphTab from './GraphTab';
+import StatisticsTab from './StatisticsTab';
 import SavingsPlanner from './SavingsPlanner';
 import ApiErrorState from '../../Components/ApiErrorState';
+import { notAuthorizedParams } from '../../Utilities/constants';
 
 import {
   PageHeader,
@@ -13,14 +14,15 @@ import {
 } from '@redhat-cloud-services/frontend-components/PageHeader';
 import Breadcrumbs from '../../Components/Breadcrumbs';
 
-import { readPlan } from '../../Api';
+import {preflightRequest, readPlan} from '../../Api';
 
 import useApi from '../../Utilities/useApi';
 
 const SavingsPlan = () => {
   let { id } = useParams();
+  const [preflightError, setPreFlightError] = useState(null);
   const pageTitle =
-    location.pathname.indexOf('/graph') !== -1 ? 'Graph' : 'Details';
+    location.pathname.indexOf('/statistics') !== -1 ? 'Statistics' : 'Details';
   const [selectedId, setSelectedId] = useState(id);
   const [
     {
@@ -34,6 +36,9 @@ const SavingsPlan = () => {
 
   useEffect(() => {
     setSelectedId(id);
+    preflightRequest().catch((error) => {
+      setPreFlightError({ preflightError: error });
+    });
     const fetchEndpoints = () => {
       setData(readPlan({ params: queryParams }));
     };
@@ -53,7 +58,7 @@ const SavingsPlan = () => {
       link: `/savings-planner`,
     },
     { id: 1, name: 'Details', link: `/savings-planner/${selectedId}/details` },
-    { id: 2, name: 'Graph', link: `/savings-planner/${selectedId}/graph` },
+    { id: 2, name: 'Statistics', link: `/savings-planner/${selectedId}/statistics` },
   ];
 
   const showCardHeader = !location.pathname.endsWith('edit');
@@ -64,7 +69,9 @@ const SavingsPlan = () => {
         { title: plans[0].name, navigate: breadcrumbUrl },
       ]
     : [];
-
+  if (preflightError?.preflightError?.status === 403) {
+    return <NotAuthorized {...notAuthorizedParams} />;
+  }
   return (
     <>
       {error && (
@@ -80,8 +87,8 @@ const SavingsPlan = () => {
           </PageHeader>
           {showCardHeader && (
             <Switch>
-              <Route path="/savings-planner/:id/graph">
-                <GraphTab tabsArray={tabsArray} />
+              <Route path="/savings-planner/:id/statistics">
+                <StatisticsTab tabsArray={tabsArray} />
               </Route>
               <Route path="/savings-planner/:id/details">
                 <DetailsTab plans={plans} tabsArray={tabsArray} />
