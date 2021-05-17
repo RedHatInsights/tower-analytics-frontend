@@ -16,6 +16,7 @@
     "d3": "^5.9.2",
     "moment": "^2.29.1",
     "react": "^17.0.2",
+    "react-data-explorer": "0.0.26",
     "react-dom": "^17.0.2",
     "react-redux": "^7.2.4",
     "react-router-dom": "^5.2.0",
