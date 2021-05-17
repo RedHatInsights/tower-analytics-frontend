@@ -88,7 +88,7 @@ const SavingsPlan = () => {
           {showCardHeader && (
             <Switch>
               <Route path="/savings-planner/:id/statistics">
-                <StatisticsTab tabsArray={tabsArray} />
+                <StatisticsTab tabsArray={tabsArray} data={plans[0]} queryParams={queryParams} />
               </Route>
               <Route path="/savings-planner/:id/details">
                 <DetailsTab plans={plans} tabsArray={tabsArray} />
