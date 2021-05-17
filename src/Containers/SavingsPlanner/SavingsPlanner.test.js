@@ -1,5 +1,5 @@
 import { act } from 'react-dom/test-utils';
-import { screen, wait } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { renderPage } from '../../Utilities/tests/helpers.reactTestingLib';
 import SavingsPlanner from './SavingsPlanner';
 
@@ -35,12 +35,10 @@ describe('<SavingsPlanner />', () => {
         expect(screen.getByText('RBAC Access Denied'));
     });
 
-    test('has rendered SavingsPlanner component with data', async () => {
-        // api.readPlans.mockResolvedValueOnce(mockResponses.readPlans);
+    test('user can see a list of plans', async () => {
         await act(async () => { renderPage(SavingsPlanner); });
-        // expect(api.readPlans).toHaveBeenCalledTimes(1);
         expect(screen.getAllByText(/Savings Planner/i));
-        // expect(screen.getByText('Manage Azure Resource Groups'));
-        // await wait(() => expect(screen.getByText("Manage Azure Resource Groups")).toBeInTheDocument());
+        const planName = mockResponses.readPlans.items[0].name;
+        expect(screen.getByText(planName));
     });
 });
