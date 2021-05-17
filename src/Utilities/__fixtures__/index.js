@@ -9,13 +9,13 @@ import readPlans from './readPlans';
 import readPlansOptions from './readPlansOptions';
 
 export default {
-    preflightRequest200,
-    preflightRequest401,
-    preflightRequest403,
-    preflightRequest404,
-    readClusterOptions,
-    readEventExplorer,
-    readJobExplorer,
-    readPlans,
-    readPlansOptions
+  preflightRequest200,
+  preflightRequest401,
+  preflightRequest403,
+  preflightRequest404,
+  readClusterOptions,
+  readEventExplorer,
+  readJobExplorer,
+  readPlans,
+  readPlansOptions,
 };
