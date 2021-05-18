@@ -5,6 +5,7 @@ import FilterableToolbar from '../../Components/Toolbar/';
 import ApiErrorState from '../../Components/ApiErrorState';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
+import Pagination from '../../Components/Pagination';
 import PlanCard from './PlanCard';
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import useApi from '../../Utilities/useApi';
@@ -19,15 +20,7 @@ import {
 
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 
-import { Gallery, Pagination, PaginationVariant } from '@patternfly/react-core';
-
-const perPageOptions = [
-  { title: '5', value: 5 },
-  { title: '10', value: 10 },
-  { title: '15', value: 15 },
-  { title: '20', value: 20 },
-  { title: '25', value: 25 },
-];
+import { Gallery, PaginationVariant } from '@patternfly/react-core';
 
 const qp = {
   limit: 5,
@@ -61,21 +54,6 @@ const SavingsPlanner = () => {
     name: [{ key: 'name', value: null }],
   };
 
-  const returnOffsetVal = (page) => (page - 1) * queryParams.limit;
-
-  const handleSetPage = (page) => {
-    const nextOffset = returnOffsetVal(page);
-    setOffset(nextOffset);
-    setCurrPage(page);
-  };
-
-  const handlePerPageSelect = (perPage, page) => {
-    setLimit(perPage);
-    const nextOffset = returnOffsetVal(page);
-    setOffset(nextOffset);
-    setCurrPage(page);
-  };
-
   useEffect(() => {
     const fetchEndpoints = () => {
       preflightRequest().catch((error) => {
@@ -102,18 +80,13 @@ const SavingsPlanner = () => {
           setFilters={setFromToolbar}
           pagination={
             <Pagination
-              itemCount={meta && meta.total_count ? meta.total_count : 0}
-              widgetId="pagination-options-menu-top"
-              perPageOptions={perPageOptions}
-              perPage={queryParams.limit}
-              page={currPage}
+              count={meta?.total_count ? meta.total_count : 0}
+              limit={queryParams.limit}
               variant={PaginationVariant.top}
-              onPerPageSelect={(_event, perPage, page) => {
-                handlePerPageSelect(perPage, page);
-              }}
-              onSetPage={(_event, pageNumber) => {
-                handleSetPage(pageNumber);
-              }}
+              handleSetLimit={setLimit}
+              handleSetOffset={setOffset}
+              handleSetCurrPage={setCurrPage}
+              currPage={currPage}
               isCompact
             />
           }
@@ -149,18 +122,13 @@ const SavingsPlanner = () => {
         </Main>
       )}
       <Pagination
-        itemCount={meta && meta.total_count ? meta.total_count : 0}
-        widgetId="pagination-options-menu-top"
-        perPageOptions={perPageOptions}
-        perPage={queryParams.limit}
-        page={currPage}
+        count={meta?.total_count ? meta.total_count : 0}
+        limit={queryParams.limit}
         variant={PaginationVariant.bottom}
-        onPerPageSelect={(_event, perPage, page) => {
-          handlePerPageSelect(perPage, page);
-        }}
-        onSetPage={(_event, pageNumber) => {
-          handleSetPage(pageNumber);
-        }}
+        handleSetLimit={setLimit}
+        handleSetOffset={setOffset}
+        handleSetCurrPage={setCurrPage}
+        currPage={currPage}
         isSticky
       />
     </React.Fragment>

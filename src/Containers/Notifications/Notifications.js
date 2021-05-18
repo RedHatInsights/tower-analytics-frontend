@@ -22,12 +22,12 @@ import {
   CardTitle as PFCardTitle,
   FormSelect,
   FormSelectOption,
-  Pagination,
   PaginationVariant,
   NotificationDrawer,
 } from '@patternfly/react-core';
 
 import NotificationsList from '../../Components/NotificationsList';
+import Pagination from '../../Components/Pagination';
 
 const CardTitle = styled(PFCardTitle)`
   display: flex;
@@ -71,14 +71,6 @@ const notificationOptions = [
   { value: 'warning', label: 'View Warning', disabled: false },
   { value: 'notice', label: 'View Notice', disabled: false },
   { value: '', label: 'View All', disabled: false },
-];
-
-const perPageOptions = [
-  { title: '5', value: 5 },
-  { title: '10', value: 10 },
-  { title: '20', value: 20 },
-  { title: '50', value: 50 },
-  { title: '100', value: 100 },
 ];
 
 function formatClusterName(data) {
@@ -177,24 +169,6 @@ const Notifications = () => {
     return () => (ignore = true);
   }, []);
 
-  const returnOffsetVal = (page) => {
-    let offsetVal = (page - 1) * queryParams.limit;
-    return offsetVal;
-  };
-
-  const handleSetPage = (page) => {
-    const nextOffset = returnOffsetVal(page);
-    setOffset(nextOffset);
-    setCurrPage(page);
-  };
-
-  const handlePerPageSelect = (perPage, page) => {
-    setLimit(perPage);
-    const nextOffset = returnOffsetVal(page);
-    setOffset(nextOffset);
-    setCurrPage(page);
-  };
-
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
@@ -258,18 +232,13 @@ const Notifications = () => {
                   </FormSelect>
                 </DropdownGroup>
                 <Pagination
-                  itemCount={meta && meta.count ? meta.count : 0}
-                  widgetId="pagination-options-menu-top"
-                  perPageOptions={perPageOptions}
-                  perPage={queryParams.limit}
-                  page={currPage}
+                  count={meta?.count ? meta.count : 0}
+                  limit={queryParams.limit}
                   variant={PaginationVariant.top}
-                  onPerPageSelect={(_event, perPage, page) => {
-                    handlePerPageSelect(perPage, page);
-                  }}
-                  onSetPage={(_event, pageNumber) => {
-                    handleSetPage(pageNumber);
-                  }}
+                  handleSetLimit={setLimit}
+                  handleSetOffset={setOffset}
+                  handleSetCurrPage={setCurrPage}
+                  currPage={currPage}
                   isCompact
                 />
               </CardTitle>
@@ -286,19 +255,13 @@ const Notifications = () => {
                   </NotificationDrawer>
                 )}
                 <Pagination
-                  itemCount={meta && meta.count ? meta.count : 0}
-                  widgetId="pagination-options-menu-bottom"
-                  perPageOptions={perPageOptions}
-                  perPage={queryParams.limit}
-                  page={currPage}
+                  count={meta?.count ? meta.count : 0}
+                  limit={queryParams.limit}
                   variant={PaginationVariant.bottom}
-                  onPerPageSelect={(_event, perPage, page) => {
-                    handlePerPageSelect(perPage, page);
-                  }}
-                  onSetPage={(_event, pageNumber) => {
-                    handleSetPage(pageNumber);
-                  }}
-                  style={{ marginTop: '20px' }}
+                  handleSetLimit={setLimit}
+                  handleSetOffset={setOffset}
+                  handleSetCurrPage={setCurrPage}
+                  currPage={currPage}
                 />
               </CardBody>
             </Card>
