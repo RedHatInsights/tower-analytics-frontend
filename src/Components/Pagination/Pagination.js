@@ -31,7 +31,7 @@ const Pagination = ({
   return (
     <PFPagination
       itemCount={count}
-      widgetId="pagination-options-menu-top"
+      widgetId="aa-pagination"
       perPageOptions={perPageOptions}
       perPage={limit}
       page={currPage}
