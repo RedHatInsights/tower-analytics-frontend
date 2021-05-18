@@ -82,7 +82,6 @@ const SavingsPlanner = () => {
             <Pagination
               count={meta?.total_count ? meta.total_count : 0}
               limit={queryParams.limit}
-              variant={PaginationVariant.top}
               handleSetLimit={setLimit}
               handleSetOffset={setOffset}
               handleSetCurrPage={setCurrPage}

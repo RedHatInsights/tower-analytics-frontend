@@ -234,7 +234,6 @@ const Notifications = () => {
                 <Pagination
                   count={meta?.count ? meta.count : 0}
                   limit={queryParams.limit}
-                  variant={PaginationVariant.top}
                   handleSetLimit={setLimit}
                   handleSetOffset={setOffset}
                   handleSetCurrPage={setCurrPage}

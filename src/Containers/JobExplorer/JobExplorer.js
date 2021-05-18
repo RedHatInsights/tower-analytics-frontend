@@ -118,7 +118,6 @@ const JobExplorer = ({ location: { search }, history }) => {
                   <Pagination
                     count={meta?.count ? meta.count : 0}
                     limit={queryParams.limit}
-                    variant={PaginationVariant.top}
                     handleSetLimit={setLimit}
                     handleSetOffset={setOffset}
                     handleSetCurrPage={setCurrPage}

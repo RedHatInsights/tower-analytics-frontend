@@ -1,18 +1,25 @@
+import React from 'react';
 import PropTypes from 'prop-types';
-import { perPageOptions } from './constants';
 
 import { Pagination as PFPagination } from '@patternfly/react-core';
 
 const Pagination = ({
   limit,
   count,
-  variant = 'top',
   handleSetOffset,
   handleSetLimit,
   currPage,
   handleSetCurrPage,
   ...props
 }) => {
+  const perPageOptions = [
+    { title: '5', value: 5 },
+    { title: '10', value: 10 },
+    { title: '15', value: 15 },
+    { title: '20', value: 20 },
+    { title: '25', value: 25 },
+  ];
+
   const returnOffsetVal = (page) => (page - 1) * limit;
 
   const handleSetPage = (page) => {
@@ -35,7 +42,6 @@ const Pagination = ({
       perPageOptions={perPageOptions}
       perPage={limit}
       page={currPage}
-      variant={variant}
       onPerPageSelect={(_event, perPage, page) => {
         handlePerPageSelect(perPage, page);
       }}
@@ -53,8 +59,7 @@ Pagination.propTypes = {
   currPage: PropTypes.number.isRequired,
   handleSetCurrPage: PropTypes.func.isRequired,
   handleSetLimit: PropTypes.func.isRequired,
-  handleSetOffset: PropTypes.func.isRequired,
-  variant: PropTypes.string,
+  handleSetOffset: PropTypes.func.isRequired
 };
 
 export default Pagination;
