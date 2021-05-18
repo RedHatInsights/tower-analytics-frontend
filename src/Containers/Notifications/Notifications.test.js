@@ -186,7 +186,7 @@ describe('Containers/Notifications', () => {
     wrapper.update();
 
     expect(lastCallBody(notificationsUrl)).toEqual({
-      limit: '20',
+      limit: '15',
       offset: '0',
     });
   });
@@ -210,7 +210,7 @@ describe('Containers/Notifications', () => {
     wrapper.update();
 
     expect(lastCallBody(notificationsUrl)).toEqual({
-      limit: '50',
+      limit: '20',
       offset: '0',
     });
   });

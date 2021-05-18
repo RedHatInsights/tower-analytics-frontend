@@ -10,6 +10,7 @@ import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
 import ApiErrorState from '../../Components/ApiErrorState';
+import Pagination from '../../Components/Pagination';
 
 import {
   preflightRequest,
@@ -26,23 +27,10 @@ import {
 } from '@redhat-cloud-services/frontend-components/PageHeader';
 import { notAuthorizedParams } from '../../Utilities/constants';
 
-import {
-  Card,
-  CardBody,
-  Pagination,
-  PaginationVariant,
-} from '@patternfly/react-core';
+import { Card, CardBody, PaginationVariant } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
 import FilterableToolbar from '../../Components/Toolbar/';
-
-const perPageOptions = [
-  { title: '5', value: 5 },
-  { title: '10', value: 10 },
-  { title: '15', value: 15 },
-  { title: '20', value: 20 },
-  { title: '25', value: 25 },
-];
 
 const initialQueryParams = {
   ...jobExplorer.defaultParams,
@@ -51,6 +39,7 @@ const initialQueryParams = {
 
 const JobExplorer = ({ location: { search }, history }) => {
   const [preflightError, setPreFlightError] = useState(null);
+  const [currPage, setCurrPage] = useState(1);
   const [
     {
       isLoading,
@@ -60,7 +49,6 @@ const JobExplorer = ({ location: { search }, history }) => {
     },
     setData,
   ] = useApi({ meta: {}, items: [] });
-  const [currPage, setCurrPage] = useState(1);
   const [options, setOptions] = useApi({});
 
   const { queryParams, setLimit, setOffset, setFromToolbar, dispatch } =
@@ -102,21 +90,6 @@ const JobExplorer = ({ location: { search }, history }) => {
     updateURL();
   }, [queryParams]);
 
-  const returnOffsetVal = (page) => (page - 1) * queryParams.limit;
-
-  const handleSetPage = (page) => {
-    const nextOffset = returnOffsetVal(page);
-    setOffset(nextOffset);
-    setCurrPage(page);
-  };
-
-  const handlePerPageSelect = (perPage, page) => {
-    setLimit(perPage);
-    const nextOffset = returnOffsetVal(page);
-    setOffset(nextOffset);
-    setCurrPage(page);
-  };
-
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
@@ -143,18 +116,12 @@ const JobExplorer = ({ location: { search }, history }) => {
                 setFilters={setFromToolbar}
                 pagination={
                   <Pagination
-                    itemCount={meta && meta.count ? meta.count : 0}
-                    widgetId="pagination-options-menu-top"
-                    perPageOptions={perPageOptions}
-                    perPage={queryParams.limit}
-                    page={currPage}
-                    variant={PaginationVariant.top}
-                    onPerPageSelect={(_event, perPage, page) => {
-                      handlePerPageSelect(perPage, page);
-                    }}
-                    onSetPage={(_event, pageNumber) => {
-                      handleSetPage(pageNumber);
-                    }}
+                    count={meta?.count ? meta.count : 0}
+                    limit={queryParams.limit}
+                    handleSetLimit={setLimit}
+                    handleSetOffset={setOffset}
+                    handleSetCurrPage={setCurrPage}
+                    currPage={currPage}
                     isCompact
                   />
                 }
@@ -165,19 +132,13 @@ const JobExplorer = ({ location: { search }, history }) => {
               {isSuccess && data.length <= 0 && <NoResults />}
               {isSuccess && data.length > 0 && <JobExplorerList jobs={data} />}
               <Pagination
-                itemCount={meta && meta.count ? meta.count : 0}
-                widgetId="pagination-options-menu-bottom"
-                perPageOptions={perPageOptions}
-                perPage={queryParams.limit}
-                page={currPage}
+                count={meta?.count ? meta.count : 0}
+                limit={queryParams.limit}
                 variant={PaginationVariant.bottom}
-                onPerPageSelect={(_event, perPage, page) => {
-                  handlePerPageSelect(perPage, page);
-                }}
-                onSetPage={(_event, pageNumber) => {
-                  handleSetPage(pageNumber);
-                }}
-                style={{ marginTop: '20px' }}
+                handleSetLimit={setLimit}
+                handleSetOffset={setOffset}
+                handleSetCurrPage={setCurrPage}
+                currPage={currPage}
               />
             </CardBody>
           </Card>
