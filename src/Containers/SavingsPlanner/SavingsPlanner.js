@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { preflightRequest, readPlanOptions, readPlans } from '../../Api';
 import FilterableToolbar from '../../Components/Toolbar/';
@@ -17,12 +18,17 @@ import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
-
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 
-import { Gallery, PaginationVariant } from '@patternfly/react-core';
+import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
+
+// TODO: update to fining this out from API RBAC
+const canAddPlan = true;
 
 const SavingsPlanner = () => {
+  const history = useHistory();
+  const { pathname } = useLocation();
+
   const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(
     savingsPlanner.defaultParams
   );
@@ -67,6 +73,24 @@ const SavingsPlanner = () => {
           categories={combinedOptions}
           filters={queryParams}
           setFilters={setFromToolbar}
+          additionalControls={[
+            ...(canAddPlan
+              ? [
+                  <Button
+                    key="add-plan-button"
+                    variant="primary"
+                    aria-label="Add plan"
+                    onClick={() => {
+                      history.push({
+                        pathname: `${pathname}/add`,
+                      });
+                    }}
+                  >
+                    Add plan
+                  </Button>,
+                ]
+              : []),
+          ]}
           pagination={
             <Pagination
               count={meta?.total_count}
