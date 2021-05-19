@@ -10,6 +10,7 @@ const hostExplorerEndpoint = '/api/tower-analytics/v1/host_explorer/';
 const eventExplorerEndpoint = '/api/tower-analytics/v1/event_explorer/';
 const ROIEndpoint = '/api/tower-analytics/v1/roi_templates/';
 const plansEndpoint = '/api/tower-analytics/v1/plans/';
+const planEndpoint = '/api/tower-analytics/v1/plan/';
 
 /* page options endpoints */
 const jobExplorerOptionsEndpoint =
@@ -128,6 +129,14 @@ export const readPlans = ({ params = {} }) => {
   const qs = stringify(paginationParams);
   let url = new URL(plansEndpoint, window.location.origin);
   url.search = qs;
+  return authenticatedFetch(url, {
+    method: 'POST',
+    body: JSON.stringify(params),
+  }).then(handleResponse);
+};
+
+export const createPlan = ({ params = {} }) => {
+  let url = new URL(planEndpoint, window.location.origin);
   return authenticatedFetch(url, {
     method: 'POST',
     body: JSON.stringify(params),
