@@ -18,7 +18,7 @@ const TemplateRow = styled(DataListItemRow)`
   align-items: center;
 `;
 
-const Templates = ({ templates = [], templateId, setTemplateId }) => {
+const Templates = ({ templates = [], template_id, setField }) => {
   return (
     <Form>
       <>
@@ -32,9 +32,9 @@ const Templates = ({ templates = [], templateId, setTemplateId }) => {
                 <TemplateRow>
                   <DataListControl>
                     <Radio
-                      isChecked={templateId === key}
+                      isChecked={template_id === key}
                       name={`radio-${key}`}
-                      onChange={() => setTemplateId(key)}
+                      onChange={() => setField('template_id', key)}
                       aria-label={`Radio selector for template ${key}.`}
                       id={`radio-${key}`}
                       value={key}
@@ -59,8 +59,8 @@ const Templates = ({ templates = [], templateId, setTemplateId }) => {
 
 Templates.propTypes = {
   templates: PropTypes.array,
-  templateId: PropTypes.number.isRequired,
-  setTemplateId: PropTypes.func.isRequired,
+  template_id: PropTypes.number.isRequired,
+  setField: PropTypes.func.isRequired,
 };
 
 Templates.defaultProps = {

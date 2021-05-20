@@ -7,6 +7,7 @@ import { Wizard } from '@patternfly/react-core';
 import { Paths } from '../../../paths';
 
 import useApi from '../../../Utilities/useApi';
+import useForm from '../../../Utilities/useForm';
 
 import { createPlan } from '../../../Api';
 
@@ -32,15 +33,16 @@ const Form = ({ title, options }) => {
   }, []);
 
   const [{ isSuccess }, setData] = useApi({ meta: {}, items: [] });
-
-  const [name, setName] = useState('');
-  const [category, setCategory] = useState('system');
-  const [description, setDescription] = useState('');
-  const [manualTime, setManualTime] = useState(240);
-  const [hosts, setHosts] = useState(1);
-  const [frequencyPeriod, setFrequencyPeriod] = useState('weekly');
-  const [tasks, setTasks] = useState([]);
-  const [templateId, setTemplateId] = useState(-2);
+  const { formData, setField } = useForm({
+    name: '',
+    category: 'system',
+    description: '',
+    manual_time: 240,
+    hosts: 1,
+    frequency_period: 'weekly',
+    tasks: [],
+    template_id: -2,
+  });
 
   const onStepChange = (newStep) => {
     history.replace({
@@ -49,22 +51,21 @@ const Form = ({ title, options }) => {
   };
 
   const onSave = () => {
+    if (formData.template_id === -2) {
+      delete formData.template_id;
+    }
+
+    formData.tasks = formData.tasks.map((task, index) => ({
+      task,
+      task_order: index + 1,
+    }));
+
     setData(
       createPlan({
         params: {
-          name,
-          category,
-          description,
-          manual_time: manualTime,
-          hosts,
-          frequency_period: frequencyPeriod,
-          tasks: tasks.map((task, index) => ({
-            task,
-            task_order: index + 1,
-          })),
-          template_id: templateId,
           hourly_rate: 50,
           frequency_per_period: 1,
+          ...formData,
         },
       })
     );
@@ -76,28 +77,14 @@ const Form = ({ title, options }) => {
       id: 'details',
       name: 'Details',
       component: (
-        <Details
-          options={options}
-          name={name}
-          setName={setName}
-          category={category}
-          setCategory={setCategory}
-          description={description}
-          setDescription={setDescription}
-          manualTime={manualTime}
-          setManualTime={setManualTime}
-          hosts={hosts}
-          setHosts={setHosts}
-          frequencyPeriod={frequencyPeriod}
-          setFrequencyPeriod={setFrequencyPeriod}
-        />
+        <Details options={options} formData={formData} setField={setField} />
       ),
     },
     {
       step_number: 2,
       id: 'tasks',
       name: 'Tasks',
-      component: <Tasks tasks={tasks} setTasks={setTasks} />,
+      component: <Tasks tasks={formData.tasks} setField={setField} />,
     },
     {
       step_number: 3,
@@ -106,8 +93,8 @@ const Form = ({ title, options }) => {
       component: (
         <Templates
           templates={options?.data?.template_id}
-          templateId={templateId}
-          setTemplateId={setTemplateId}
+          template_id={formData.template_id}
+          setField={setField}
         />
       ),
       nextButtonText: 'Save',

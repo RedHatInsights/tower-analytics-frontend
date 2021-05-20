@@ -12,21 +12,10 @@ import {
 
 import Popover from '../../../Components/Popover';
 
-const Details = ({
-  options,
-  name,
-  setName,
-  category,
-  setCategory,
-  description,
-  setDescription,
-  manualTime,
-  setManualTime,
-  hosts,
-  setHosts,
-  frequencyPeriod,
-  setFrequencyPeriod,
-}) => {
+const Details = ({ options, formData, setField }) => {
+  const { name, category, description, manual_time, hosts, frequency_period } =
+    formData;
+
   const [categoryIsOpen, setCategoryIsOpen] = useState(false);
   const [manualTimeIsOpen, setManualTimeIsOpen] = useState(false);
   const [frequencyPeriodIsOpen, setFrequencyPeriodIsOpen] = useState(false);
@@ -47,7 +36,7 @@ const Details = ({
               id="name-field"
               name="name"
               value={name}
-              onChange={(newName) => setName(newName)}
+              onChange={(newName) => setField('name', newName)}
             />
           </FormGroup>
           <FormGroup
@@ -62,7 +51,7 @@ const Details = ({
               aria-label={'Plan category selector'}
               onToggle={() => setCategoryIsOpen(!categoryIsOpen)}
               onSelect={(_event, selection) => {
-                setCategory(selection);
+                setField('category', selection);
                 setCategoryIsOpen(false);
               }}
               selections={category}
@@ -81,7 +70,9 @@ const Details = ({
               id="description-field"
               name="description"
               value={description}
-              onChange={(newDescription) => setDescription(newDescription)}
+              onChange={(newDescription) =>
+                setField('description', newDescription)
+              }
             />
           </FormGroup>
           <FormGroup
@@ -99,10 +90,10 @@ const Details = ({
               aria-label={'Plan time selector'}
               onToggle={() => setManualTimeIsOpen(!manualTimeIsOpen)}
               onSelect={(_event, selection) => {
-                setManualTime(selection);
+                setField('manual_time', selection);
                 setManualTimeIsOpen(false);
               }}
-              selections={manualTime}
+              selections={manual_time}
             >
               {(options.data?.manual_time || []).map(({ key, value }) => (
                 <SelectOption key={key} value={key}>
@@ -121,7 +112,7 @@ const Details = ({
               id="hosts-field"
               name="hosts"
               value={hosts}
-              onChange={(newHosts) => setHosts(newHosts)}
+              onChange={(newHosts) => setField('hosts', newHosts)}
             />
           </FormGroup>
           <FormGroup
@@ -141,10 +132,10 @@ const Details = ({
                 setFrequencyPeriodIsOpen(!frequencyPeriodIsOpen);
               }}
               onSelect={(_event, selection) => {
-                setFrequencyPeriod(selection);
+                setField('frequency_period', selection);
                 setFrequencyPeriodIsOpen(false);
               }}
-              selections={frequencyPeriod}
+              selections={frequency_period}
             >
               {(options.data?.frequency_period || []).map(({ key, value }) => (
                 <SelectOption key={key} value={key}>
@@ -161,18 +152,8 @@ const Details = ({
 
 Details.propTypes = {
   options: PropTypes.object.isRequired,
-  name: PropTypes.string.isRequired,
-  setName: PropTypes.func.isRequired,
-  category: PropTypes.string.isRequired,
-  setCategory: PropTypes.func.isRequired,
-  description: PropTypes.string.isRequired,
-  setDescription: PropTypes.func.isRequired,
-  manualTime: PropTypes.number.isRequired,
-  setManualTime: PropTypes.func.isRequired,
-  hosts: PropTypes.number.isRequired,
-  setHosts: PropTypes.func.isRequired,
-  frequencyPeriod: PropTypes.string.isRequired,
-  setFrequencyPeriod: PropTypes.func.isRequired,
+  formData: PropTypes.object.isRequired,
+  setField: PropTypes.func.isRequired,
 };
 
 export default Details;

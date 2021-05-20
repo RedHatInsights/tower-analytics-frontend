@@ -41,7 +41,11 @@ const TaskRow = styled(DataListItemRow)`
   align-items: center;
 `;
 
-const Tasks = ({ tasks, setTasks }) => {
+const Tasks = ({ tasks, setField }) => {
+  const setTasks = (val) => {
+    setField('tasks', val);
+  };
+
   const [taskToAdd, setTaskToAdd] = useState('');
 
   const [liveText, setLiveText] = useState('');
@@ -174,7 +178,7 @@ const Tasks = ({ tasks, setTasks }) => {
 
 Tasks.propTypes = {
   tasks: PropTypes.array.isRequired,
-  setTasks: PropTypes.func.isRequired,
+  setField: PropTypes.func.isRequired,
 };
 
 export default Tasks;
