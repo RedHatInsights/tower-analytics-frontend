@@ -6,6 +6,14 @@ describe('Utilities/Legend', () => {
     expect(Legend).toBeTruthy();
   });
   it('should render successfully', () => {
-    mount(<Legend data={[]} selected={[]} height="100" />);
+    mount(
+      <Legend
+        data={[]}
+        selected={[]}
+        height="100"
+        onToggle={() => {}}
+        chartName={'testname'}
+      />
+    );
   });
 });
