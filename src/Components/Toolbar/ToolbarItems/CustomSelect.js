@@ -3,14 +3,15 @@ import PropTypes from 'prop-types';
 import {
   ToolbarFilter,
   Select,
-  SelectOption as PFSelectOption,
+  SelectOption,
+  SelectVariant,
 } from '@patternfly/react-core';
 
 import { handleCheckboxChips, handleSingleChips } from '../helpers';
 import { optionsForCategories } from '../constants';
 import styled from 'styled-components';
 
-const SelectOption = styled(PFSelectOption)`
+const OptionSpan = styled('span')`
   display: block;
   overflow-x: hidden;
   text-overflow: ellipsis;
@@ -21,7 +22,7 @@ const renderValues = (values) =>
   values &&
   values.map(({ key, value, description }) => (
     <SelectOption key={key} value={key} description={description}>
-      <span style={{ marginLeft: 5 }}>{value} </span>
+      <OptionSpan>{value}</OptionSpan>
     </SelectOption>
   ));
 
@@ -92,7 +93,9 @@ const CustomSelect = ({
       deleteChip={options.hasChips ? onDelete : null}
     >
       <Select
-        variant={options.isSingle ? 'single' : 'checkbox'}
+        variant={
+          options.isSingle ? SelectVariant.single : SelectVariant.checkbox
+        }
         aria-label={options.name}
         onToggle={() => setExpanded(!expanded)}
         onSelect={onSelect}
