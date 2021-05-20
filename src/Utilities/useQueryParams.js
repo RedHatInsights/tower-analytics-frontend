@@ -54,6 +54,7 @@ export const useQueryParams = (initial) => {
       case 'SET_FREQUENCY':
       case 'SET_NAME':
       case 'SET_ROOT_WORKFLOWS_AND_JOBS':
+      case 'SET_INVENTORY':
         return { ...state, ...value };
       case 'SET_QUICK_DATE_RANGE': {
         let newState = { ...state };
@@ -99,7 +100,7 @@ export const useQueryParams = (initial) => {
       case 'RESET_FILTER':
         return { ...initialWithCalculatedParams };
       default:
-        throw new Error();
+        throw new Error(`The query params reducer action (${type}) not found.`);
     }
   };
 
@@ -123,6 +124,7 @@ export const useQueryParams = (initial) => {
     frequency_period: 'SET_FREQUENCY',
     name: 'SET_NAME',
     only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS',
+    inventory_id: 'SET_INVENTORY',
   };
 
   return {
