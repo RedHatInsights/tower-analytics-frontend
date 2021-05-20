@@ -34,7 +34,7 @@ const combined = {
 };
 
 const SavingsPlanner = () => {
-  const { queryParams, setLimit, setOffset, setFromToolbar } =
+  const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(combined);
   const [
     {
@@ -46,7 +46,6 @@ const SavingsPlanner = () => {
     setData,
   ] = useApi({ meta: {}, items: [] });
   const [options, setOptions] = useApi({});
-  const [currPage, setCurrPage] = useState(1);
   const [preflightError, setPreFlightError] = useState(null);
 
   const combinedOptions = {
@@ -80,12 +79,9 @@ const SavingsPlanner = () => {
           setFilters={setFromToolbar}
           pagination={
             <Pagination
-              count={meta?.total_count ? meta.total_count : 0}
-              limit={queryParams.limit}
-              handleSetLimit={setLimit}
-              handleSetOffset={setOffset}
-              handleSetCurrPage={setCurrPage}
-              currPage={currPage}
+              count={meta?.count}
+              params={queryParams}
+              setPagination={setFromPagination}
               isCompact
             />
           }
@@ -121,13 +117,10 @@ const SavingsPlanner = () => {
         </Main>
       )}
       <Pagination
-        count={meta?.total_count ? meta.total_count : 0}
-        limit={queryParams.limit}
+        count={meta?.count}
+        params={queryParams}
+        setPagination={setFromPagination}
         variant={PaginationVariant.bottom}
-        handleSetLimit={setLimit}
-        handleSetOffset={setOffset}
-        handleSetCurrPage={setCurrPage}
-        currPage={currPage}
         isSticky
       />
     </React.Fragment>
