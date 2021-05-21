@@ -117,7 +117,10 @@ const JobExplorer = ({ location: { search }, history }) => {
                 pagination={
                   <Pagination
                     count={meta?.count}
-                    params={queryParams}
+                    params={{
+                      limit: queryParams.limit,
+                      offset: queryParams.offset,
+                    }}
                     setPagination={setFromPagination}
                     isCompact
                   />
@@ -130,7 +133,10 @@ const JobExplorer = ({ location: { search }, history }) => {
               {isSuccess && data.length > 0 && <JobExplorerList jobs={data} />}
               <Pagination
                 count={meta?.count}
-                params={queryParams}
+                params={{
+                  limit: queryParams.limit,
+                  offset: queryParams.offset,
+                }}
                 setPagination={setFromPagination}
                 variant={PaginationVariant.bottom}
               />

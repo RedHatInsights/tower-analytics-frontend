@@ -230,7 +230,10 @@ const Notifications = () => {
                 </DropdownGroup>
                 <Pagination
                   count={meta?.count}
-                  params={queryParams}
+                  params={{
+                    limit: queryParams.limit,
+                    offset: queryParams.offset,
+                  }}
                   setPagination={setFromPagination}
                   isCompact
                 />
@@ -249,7 +252,10 @@ const Notifications = () => {
                 )}
                 <Pagination
                   count={meta?.count}
-                  params={queryParams}
+                  params={{
+                    limit: queryParams.limit,
+                    offset: queryParams.offset,
+                  }}
                   setPagination={setFromPagination}
                   variant={PaginationVariant.bottom}
                 />

@@ -80,7 +80,10 @@ const SavingsPlanner = () => {
           pagination={
             <Pagination
               count={meta?.count}
-              params={queryParams}
+              params={{
+                limit: queryParams.limit,
+                offset: queryParams.offset,
+              }}
               setPagination={setFromPagination}
               isCompact
             />
@@ -118,7 +121,10 @@ const SavingsPlanner = () => {
       )}
       <Pagination
         count={meta?.count}
-        params={queryParams}
+        params={{
+          limit: queryParams.limit,
+          offset: queryParams.offset,
+        }}
         setPagination={setFromPagination}
         variant={PaginationVariant.bottom}
         isSticky
