@@ -90,7 +90,6 @@ export const savingsPlanner = {
     offset: 0,
     sort_options: 'modified',
     sort_order: 'desc',
-
   },
 };
 

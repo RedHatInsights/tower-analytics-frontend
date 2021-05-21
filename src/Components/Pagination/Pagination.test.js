@@ -1,5 +1,5 @@
 import Pagination from './Pagination';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, screen } from '@testing-library/react';
 
 describe('Components/Pagination', () => {
   const params = {
@@ -13,33 +13,33 @@ describe('Components/Pagination', () => {
     setPagination.mockReset();
   });
 
-  it('can render the pagination component', async () => {
+  it('can render the pagination component', () => {
     render(
       <Pagination count={count} params={params} setPagination={setPagination} />
     );
   });
 
-  it('can render the pagination component with default params', async () => {
+  it('can render the pagination component with default params', () => {
     render(<Pagination params={params} setPagination={setPagination} />);
   });
 
-  it('calls the pagination functions', async () => {
-    const { getByRole } = render(
+  it('calls the pagination functions', () => {
+    render(
       <Pagination count={count} params={params} setPagination={setPagination} />
     );
-    fireEvent.click(getByRole('button', { name: 'Go to next page' }));
+    fireEvent.click(screen.getByRole('button', { name: 'Go to next page' }));
 
-    expect(setPagination).toHaveBeenCalledWith(5);
+    expect(setPagination).toHaveBeenCalledWith(params.limit);
   });
 
-  it('can select number of items to display', async () => {
-    const { getByRole, getByText } = render(
+  it('can select number of items to display', () => {
+    render(
       <Pagination count={count} params={params} setPagination={setPagination} />
     );
 
-    fireEvent.click(getByRole('button', { name: 'Items per page' }));
-    fireEvent.click(getByText('10 per page'));
+    fireEvent.click(screen.getByRole('button', { name: 'Items per page' }));
+    fireEvent.click(screen.getByText('10 per page'));
 
-    expect(setPagination).toHaveBeenCalledWith(0, 10);
+    expect(setPagination).toHaveBeenCalledWith(params.offset, 10);
   });
 });

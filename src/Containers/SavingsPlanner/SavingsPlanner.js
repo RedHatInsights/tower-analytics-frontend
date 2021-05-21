@@ -69,7 +69,7 @@ const SavingsPlanner = () => {
           setFilters={setFromToolbar}
           pagination={
             <Pagination
-              count={meta?.count}
+              count={meta?.total_count}
               params={{
                 limit: queryParams.limit,
                 offset: queryParams.offset,
@@ -110,7 +110,7 @@ const SavingsPlanner = () => {
         </Main>
       )}
       <Pagination
-        count={meta?.count}
+        count={meta?.total_count}
         params={{
           limit: queryParams.limit,
           offset: queryParams.offset,
