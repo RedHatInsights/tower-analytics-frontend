@@ -18,6 +18,7 @@ export const jobExplorer = {
     org_id: [],
     cluster_id: [],
     template_id: [],
+    inventory_id: [],
     sort_options: 'created',
     sort_order: 'desc',
     only_root_workflows_and_standalone_jobs: false,
@@ -31,6 +32,7 @@ export const roi = {
     org_id: [],
     cluster_id: [],
     template_id: [],
+    inventory_id: [],
     quick_date_range: 'roi_last_year',
     job_type: ['job'],
     sort_options: 'template_productivity_score',
@@ -59,6 +61,7 @@ export const organizationStatistics = {
     job_type: ['workflowjob', 'job'],
     cluster_id: [],
     template_id: [],
+    inventory_id: [],
     start_date: null,
     end_date: null,
   },
@@ -73,6 +76,7 @@ export const clusters = {
     org_id: [],
     cluster_id: [],
     template_id: [],
+    inventory_id: [],
     only_root_workflows_and_standalone_jobs: false,
   },
 };
@@ -80,6 +84,7 @@ export const clusters = {
 export const savingsPlanner = {
   defaultParams: {
     template_id: [],
+    inventory_id: [],
     automation_status: [],
     category: [],
     frequency_period: [],

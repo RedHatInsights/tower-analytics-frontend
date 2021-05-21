@@ -74,6 +74,7 @@ const defaultQueryParams = {
   org_id: [],
   status: [],
   template_id: [],
+  inventory_id: [],
 };
 
 const defaultHostsQueryParams = {
@@ -84,6 +85,7 @@ const defaultHostsQueryParams = {
   job_type: ['workflowjob', 'job'],
   cluster_id: [],
   template_id: [],
+  inventory_id: [],
   start_date: null,
   end_date: null,
 };
