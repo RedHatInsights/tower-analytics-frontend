@@ -142,7 +142,7 @@ describe('Containers/JobExplorer', () => {
   it('should send the custom query params', async () => {
     const queryParams = {
       ...defaultQueryParams,
-      template_id: ['1', '2'],
+      template_id: [1, 2],
     };
 
     const search = stringify(

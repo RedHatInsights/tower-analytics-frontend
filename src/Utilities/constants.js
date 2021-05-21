@@ -86,6 +86,11 @@ export const savingsPlanner = {
     category: [],
     frequency_period: [],
     name: '',
+    limit: 5,
+    offset: 0,
+    sort_options: 'modified',
+    sort_order: 'desc',
+
   },
 };
 

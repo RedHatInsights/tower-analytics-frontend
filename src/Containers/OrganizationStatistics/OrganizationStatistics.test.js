@@ -1,4 +1,3 @@
-/* eslint-disable camelcase */
 import { act } from 'react-dom/test-utils';
 import {
   mountPage,
@@ -67,6 +66,7 @@ const defaultQueryParams = {
   group_by: 'org',
   quick_date_range: 'last_30_days',
   limit: 5,
+  offset: 0,
   job_type: ['workflowjob', 'job'],
   cluster_id: [],
   start_date: null,
@@ -81,6 +81,7 @@ const defaultHostsQueryParams = {
   org_id: [],
   quick_date_range: 'last_30_days',
   limit: 5,
+  offset: 0,
   job_type: ['workflowjob', 'job'],
   cluster_id: [],
   template_id: [],

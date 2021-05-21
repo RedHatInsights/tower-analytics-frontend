@@ -22,20 +22,10 @@ import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthori
 
 import { Gallery, PaginationVariant } from '@patternfly/react-core';
 
-const qp = {
-  limit: 5,
-  sort_options: 'modified',
-  sort_order: 'desc',
-};
-
-const combined = {
-  ...savingsPlanner.defaultParams,
-  ...qp,
-};
-
 const SavingsPlanner = () => {
-  const { queryParams, setFromPagination, setFromToolbar } =
-    useQueryParams(combined);
+  const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(
+    savingsPlanner.defaultParams
+  );
   const [
     {
       isLoading,
