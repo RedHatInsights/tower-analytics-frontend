@@ -30,6 +30,7 @@ describe('Components/Pagination', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Go to next page' }));
 
     expect(setPagination).toHaveBeenCalledWith(params.limit);
+    expect(setPagination).toHaveBeenCalledTimes(1);
   });
 
   it('can select number of items to display', () => {
@@ -41,5 +42,6 @@ describe('Components/Pagination', () => {
     fireEvent.click(screen.getByText('10 per page'));
 
     expect(setPagination).toHaveBeenCalledWith(params.offset, 10);
+    expect(setPagination).toHaveBeenCalledTimes(1);
   });
 });
