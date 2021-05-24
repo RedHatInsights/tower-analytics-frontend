@@ -58,30 +58,26 @@ describe('Utilities/useQueryParams', () => {
     expect(page.queryParams).toEqual(noSortOptionsInitialValues);
   });
 
-  it('returns setId, setStartDate, setEndDate, and setLimit as methods', () => {
+  it('returns setId, setStartDate and setEndDate as methods', () => {
     expect(page.setId).toBeInstanceOf(Function);
     expect(page.setStartDate).toBeInstanceOf(Function);
     expect(page.setEndDate).toBeInstanceOf(Function);
-    expect(page.setLimit).toBeInstanceOf(Function);
   });
 
   it('invoked methods returns new queryParams object', () => {
     act(() => {
       page.setId(1);
-      page.setLimit(2);
     });
     expect(page.queryParams).toEqual({
       ...initialValues,
       sort_by: 'count:asc',
       id: 1,
-      limit: 2,
     });
   });
 
-  it('setId, setLimit correctly handles null, undefined and NaN values', () => {
+  it('setId correctly handles null, undefined and NaN values', () => {
     act(() => {
       page.setId(null);
-      page.setLimit(undefined);
     });
     expect(page.queryParams).toEqual({
       foo: '1',
@@ -127,37 +123,6 @@ describe('Utilities/useQueryParams', () => {
       ...initialValues,
       sort_by: 'count:asc',
       startDate: expected,
-    });
-  });
-  it('setLimit returns expected value', () => {
-    act(() => {
-      page.setLimit(10);
-    });
-    expect(page.queryParams).toEqual({
-      ...initialValues,
-      sort_by: 'count:asc',
-      limit: 10,
-    });
-  });
-  it('setLimit returns nothing when passed a non-integer value', () => {
-    act(() => {
-      page.setLimit('bar');
-    });
-    expect(page.queryParams).toEqual({
-      ...initialValues,
-      sort_by: 'count:asc',
-    });
-  });
-  it('setLimit and setId cast strings into integers when passed string values', () => {
-    act(() => {
-      page.setLimit('10');
-      page.setId('100');
-    });
-    expect(page.queryParams).toEqual({
-      ...initialValues,
-      sort_by: 'count:asc',
-      id: 100,
-      limit: 10,
     });
   });
 });

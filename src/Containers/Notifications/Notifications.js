@@ -106,8 +106,7 @@ const Notifications = () => {
   const [firstRender, setFirstRender] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [meta, setMeta] = useState({});
-  const [currPage, setCurrPage] = useState(1);
-  const { queryParams, setId, setLimit, setOffset, setSeverity } =
+  const { queryParams, setId, setFromPagination, setSeverity } =
     useQueryParams(initialQueryParams);
 
   useEffect(() => {
@@ -195,8 +194,7 @@ const Notifications = () => {
                     onChange={(value) => {
                       setSelectedCluster(value);
                       setId(value);
-                      setOffset(0);
-                      setCurrPage(1);
+                      setFromPagination(0);
                     }}
                     aria-label="Select Cluster"
                   >
@@ -214,8 +212,7 @@ const Notifications = () => {
                     value={queryParams.severity || ''}
                     onChange={(value) => {
                       setSeverity(value);
-                      setOffset(0);
-                      setCurrPage(1);
+                      setFromPagination(0);
                     }}
                     aria-label="Select Notification Type"
                   >
@@ -232,12 +229,12 @@ const Notifications = () => {
                   </FormSelect>
                 </DropdownGroup>
                 <Pagination
-                  count={meta?.count ? meta.count : 0}
-                  limit={queryParams.limit}
-                  handleSetLimit={setLimit}
-                  handleSetOffset={setOffset}
-                  handleSetCurrPage={setCurrPage}
-                  currPage={currPage}
+                  count={meta?.count}
+                  params={{
+                    limit: queryParams.limit,
+                    offset: queryParams.offset,
+                  }}
+                  setPagination={setFromPagination}
                   isCompact
                 />
               </CardTitle>
@@ -254,13 +251,13 @@ const Notifications = () => {
                   </NotificationDrawer>
                 )}
                 <Pagination
-                  count={meta?.count ? meta.count : 0}
-                  limit={queryParams.limit}
+                  count={meta?.count}
+                  params={{
+                    limit: queryParams.limit,
+                    offset: queryParams.offset,
+                  }}
+                  setPagination={setFromPagination}
                   variant={PaginationVariant.bottom}
-                  handleSetLimit={setLimit}
-                  handleSetOffset={setOffset}
-                  handleSetCurrPage={setCurrPage}
-                  currPage={currPage}
                 />
               </CardBody>
             </Card>

@@ -1,58 +1,47 @@
 import Pagination from './Pagination';
 import { render, fireEvent, screen } from '@testing-library/react';
 
-test('User sees pagination UI', async () => {
-  const foo = jest.fn();
-  const bar = jest.fn();
-  const baz = jest.fn();
-  render(
-    <Pagination
-      count={15}
-      limit={5}
-      handleSetLimit={foo}
-      handleSetOffset={bar}
-      handleSetCurrPage={baz}
-      currPage={1}
-    />
-  );
-});
+describe('Components/Pagination', () => {
+  const params = {
+    offset: 0,
+    limit: 5,
+  };
+  const count = 15;
+  const setPagination = jest.fn();
 
-test('User can paginate', async () => {
-  const foo = jest.fn();
-  const bar = jest.fn();
-  const baz = jest.fn();
-  render(
-    <Pagination
-      count={15}
-      limit={5}
-      handleSetLimit={foo}
-      handleSetOffset={bar}
-      handleSetCurrPage={baz}
-      currPage={1}
-    />
-  );
-  fireEvent.click(screen.getByRole('button', { name: 'Go to next page' }));
+  beforeEach(() => {
+    setPagination.mockReset();
+  });
 
-  expect(bar).toHaveBeenCalled();
-  expect(baz).toHaveBeenCalled();
-});
+  it('can render the pagination component', () => {
+    render(
+      <Pagination count={count} params={params} setPagination={setPagination} />
+    );
+  });
 
-test('User can select number of items to display', async () => {
-  const foo = jest.fn();
-  const bar = jest.fn();
-  const baz = jest.fn();
-  render(
-    <Pagination
-      count={15}
-      limit={5}
-      handleSetLimit={foo}
-      handleSetOffset={bar}
-      handleSetCurrPage={baz}
-      currPage={1}
-    />
-  );
-  fireEvent.click(screen.getByRole('button', { name: 'Items per page' }));
-  fireEvent.click(screen.getByText('10 per page'));
+  it('can render the pagination component with default params', () => {
+    render(<Pagination params={params} setPagination={setPagination} />);
+  });
 
-  expect(foo).toHaveBeenCalled();
+  it('calls the pagination functions', () => {
+    render(
+      <Pagination count={count} params={params} setPagination={setPagination} />
+    );
+    fireEvent.click(screen.getByRole('button', { name: 'Go to next page' }));
+
+    expect(setPagination).toHaveBeenCalledWith(params.limit);
+    expect(setPagination).toHaveBeenCalledTimes(1);
+  });
+
+  it('can select number of items to display', () => {
+    render(
+      <Pagination count={count} params={params} setPagination={setPagination} />
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: 'Items per page' }));
+    fireEvent.click(screen.getByText('10 per page'));
+
+    expect(setPagination).toHaveBeenCalledWith(params.offset, 10);
+    expect(setPagination).toHaveBeenCalledTimes(1);
+  });
 });

@@ -23,6 +23,7 @@ export const jobExplorer = {
     sort_order: 'desc',
     only_root_workflows_and_standalone_jobs: false,
     limit: 5,
+    offset: 0,
   },
 };
 
@@ -58,6 +59,7 @@ export const organizationStatistics = {
     org_id: [],
     quick_date_range: 'last_30_days',
     limit: 5,
+    offset: 0,
     job_type: ['workflowjob', 'job'],
     cluster_id: [],
     template_id: [],
@@ -89,6 +91,10 @@ export const savingsPlanner = {
     category: [],
     frequency_period: [],
     name: '',
+    limit: 5,
+    offset: 0,
+    sort_options: 'modified',
+    sort_order: 'desc',
   },
 };
 

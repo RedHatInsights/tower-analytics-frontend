@@ -26,13 +26,6 @@ export const useQueryParams = (initial) => {
         }
 
         return { ...state, id: parseInt(value) };
-      case 'SET_LIMIT':
-        if (!parseInt(value.limit)) {
-          const { limit: ignored, ...rest } = state;
-          return rest;
-        }
-
-        return { ...state, limit: parseInt(value.limit) };
       case 'SET_SEVERITY':
         if (value.severity === '') {
           const { severity: ignored, ...rest } = state;
@@ -42,7 +35,14 @@ export const useQueryParams = (initial) => {
         return { ...state, ...value };
 
       /* v1 api reducers */
+      case 'SET_LIMIT':
+        return isNaN(value)
+          ? { ...state, limit: 5 } // Defaults back to 5
+          : { ...state, limit: parseInt(value) };
       case 'SET_OFFSET':
+        return isNaN(value)
+          ? { ...state, offset: 0 } // Defaults back to 0
+          : { ...state, offset: parseInt(value) };
       case 'SET_ATTRIBUTES':
       case 'SET_JOB_TYPE':
       case 'SET_STATUS':
@@ -130,13 +130,17 @@ export const useQueryParams = (initial) => {
   return {
     queryParams,
     dispatch,
-    setLimit: (limit) => dispatch({ type: 'SET_LIMIT', value: { limit } }),
-    setOffset: (offset) => dispatch({ type: 'SET_OFFSET', value: { offset } }),
     setFromToolbar: (varName, value = null) => {
       if (!varName) {
         dispatch({ type: 'RESET_FILTER' });
       } else {
         dispatch({ type: actionMapper[varName], value: { [varName]: value } });
+      }
+    },
+    setFromPagination: (offset, limit = null) => {
+      dispatch({ type: 'SET_OFFSET', value: offset });
+      if (limit) {
+        dispatch({ type: 'SET_LIMIT', value: limit });
       }
     },
     /* v0 api usage after this line */

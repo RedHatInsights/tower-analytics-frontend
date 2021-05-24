@@ -22,20 +22,10 @@ import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthori
 
 import { Gallery, PaginationVariant } from '@patternfly/react-core';
 
-const qp = {
-  limit: 5,
-  sort_options: 'modified',
-  sort_order: 'desc',
-};
-
-const combined = {
-  ...savingsPlanner.defaultParams,
-  ...qp,
-};
-
 const SavingsPlanner = () => {
-  const { queryParams, setLimit, setOffset, setFromToolbar } =
-    useQueryParams(combined);
+  const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(
+    savingsPlanner.defaultParams
+  );
   const [
     {
       isLoading,
@@ -46,7 +36,6 @@ const SavingsPlanner = () => {
     setData,
   ] = useApi({ meta: {}, items: [] });
   const [options, setOptions] = useApi({});
-  const [currPage, setCurrPage] = useState(1);
   const [preflightError, setPreFlightError] = useState(null);
 
   const combinedOptions = {
@@ -80,12 +69,12 @@ const SavingsPlanner = () => {
           setFilters={setFromToolbar}
           pagination={
             <Pagination
-              count={meta?.total_count ? meta.total_count : 0}
-              limit={queryParams.limit}
-              handleSetLimit={setLimit}
-              handleSetOffset={setOffset}
-              handleSetCurrPage={setCurrPage}
-              currPage={currPage}
+              count={meta?.total_count}
+              params={{
+                limit: queryParams.limit,
+                offset: queryParams.offset,
+              }}
+              setPagination={setFromPagination}
               isCompact
             />
           }
@@ -121,13 +110,13 @@ const SavingsPlanner = () => {
         </Main>
       )}
       <Pagination
-        count={meta?.total_count ? meta.total_count : 0}
-        limit={queryParams.limit}
+        count={meta?.total_count}
+        params={{
+          limit: queryParams.limit,
+          offset: queryParams.offset,
+        }}
+        setPagination={setFromPagination}
         variant={PaginationVariant.bottom}
-        handleSetLimit={setLimit}
-        handleSetOffset={setOffset}
-        handleSetCurrPage={setCurrPage}
-        currPage={currPage}
         isSticky
       />
     </React.Fragment>

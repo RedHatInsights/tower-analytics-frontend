@@ -39,7 +39,6 @@ const initialQueryParams = {
 
 const JobExplorer = ({ location: { search }, history }) => {
   const [preflightError, setPreFlightError] = useState(null);
-  const [currPage, setCurrPage] = useState(1);
   const [
     {
       isLoading,
@@ -51,7 +50,7 @@ const JobExplorer = ({ location: { search }, history }) => {
   ] = useApi({ meta: {}, items: [] });
   const [options, setOptions] = useApi({});
 
-  const { queryParams, setLimit, setOffset, setFromToolbar, dispatch } =
+  const { queryParams, setFromPagination, setFromToolbar, dispatch } =
     useQueryParams(initialQueryParams);
 
   const updateURL = () => {
@@ -73,6 +72,7 @@ const JobExplorer = ({ location: { search }, history }) => {
     const initialSearchParams = parse(search, {
       arrayFormat: 'bracket',
       parseBooleans: true,
+      parseNumbers: true,
     });
 
     dispatch({
@@ -116,12 +116,12 @@ const JobExplorer = ({ location: { search }, history }) => {
                 setFilters={setFromToolbar}
                 pagination={
                   <Pagination
-                    count={meta?.count ? meta.count : 0}
-                    limit={queryParams.limit}
-                    handleSetLimit={setLimit}
-                    handleSetOffset={setOffset}
-                    handleSetCurrPage={setCurrPage}
-                    currPage={currPage}
+                    count={meta?.count}
+                    params={{
+                      limit: queryParams.limit,
+                      offset: queryParams.offset,
+                    }}
+                    setPagination={setFromPagination}
                     isCompact
                   />
                 }
@@ -132,13 +132,13 @@ const JobExplorer = ({ location: { search }, history }) => {
               {isSuccess && data.length <= 0 && <NoResults />}
               {isSuccess && data.length > 0 && <JobExplorerList jobs={data} />}
               <Pagination
-                count={meta?.count ? meta.count : 0}
-                limit={queryParams.limit}
+                count={meta?.count}
+                params={{
+                  limit: queryParams.limit,
+                  offset: queryParams.offset,
+                }}
+                setPagination={setFromPagination}
                 variant={PaginationVariant.bottom}
-                handleSetLimit={setLimit}
-                handleSetOffset={setOffset}
-                handleSetCurrPage={setCurrPage}
-                currPage={currPage}
               />
             </CardBody>
           </Card>
