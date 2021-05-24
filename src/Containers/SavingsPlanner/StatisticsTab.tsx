@@ -42,6 +42,20 @@ const WrapperRight = styled.div`
   flex-direction: column;
 `;
 
+const LegendGroup = styled.div`
+  display: flex;
+  align-items: center;
+`;
+const LegendIcon = styled.div`
+  height: 10px;
+  width: 10px;
+  margin-right: 10px;
+  background: ${props => props.color};
+`;
+const LegendDescription = styled.div`
+  flex: 1;
+`;
+
 type DataYearsSeries = Record<string, number>;
 
 // This should model the return type somewhere next to the Api.js where the call is made.
@@ -77,10 +91,10 @@ const getChartData = (data: Data): ApiReturnType => {
   const years = ['initial', 'year1', 'year2', 'year3'];
   const statsData = years.map(year => ({
     year,
-    total_costs: data.projections.monetary_stats.total_costs[year],
+    total_costs: data.projections.monetary_stats.total_costs[year] * -1,
     total_benefits: data.projections.monetary_stats.total_benefits[year],
     cumulative_net_benefits: data.projections.monetary_stats.cumulative_net_benefits[year],
-    total_hours_spent_risk_adjusted: data.projections.time_stats.total_hours_spent_risk_adjusted[year],
+    total_hours_spent_risk_adjusted: data.projections.time_stats.total_hours_spent_risk_adjusted[year] * -1,
     total_hours_saved: data.projections.time_stats.total_hours_saved[year],
     cumulative_time_net_benefits: data.projections.time_stats.cumulative_time_net_benefits[year]
   }));
@@ -231,14 +245,24 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
       />
       <Card>
         <CardBody>
-            <div style={{'background': chartType == 'Money' ? '#81C46B' : '#0063CF','height':'10px','width':'10px', 'float':'left', 'padding':'0px', 'margin':'0px'}} />
-            <div style={{'padding':'0px', 'margin':'0px'}}>Operation savings efficiency from Ansible template</div>
-
-            <div style={{'background':'#EE7A00','height':'10px','width':'10px', 'float':'left', 'padding':'0px', 'margin':'0px'  }} />
-            <div style={{'padding':'0px', 'margin':'0px'}}>Cumulative net benefits</div>
-
-            <div style={{'background':'#58595c','height':'10px','width':'10px', 'float':'left', 'padding':'0px', 'margin':'0px'  }} />
-            <div style={{'padding':'0px', 'margin':'0px'}}>Costs</div>
+            <LegendGroup>
+              <LegendIcon color={chartType == 'Money' ? '#81C46B' : '#0063CF'} />
+              <LegendDescription>
+                Operation savings efficiency from Ansible template
+              </LegendDescription>
+            </LegendGroup>
+            <LegendGroup>
+              <LegendIcon color="#EE7A00" />
+              <LegendDescription>
+                Cumulative net benefits
+              </LegendDescription>
+            </LegendGroup>
+            <LegendGroup>
+              <LegendIcon color="#58595c" />
+              <LegendDescription>
+                Costs
+              </LegendDescription>
+            </LegendGroup>
         </CardBody>
       </Card>
       <AutomationFormula />
