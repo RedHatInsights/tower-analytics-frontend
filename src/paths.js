@@ -6,4 +6,5 @@ export const Paths = {
   jobExplorer: '/job-explorer',
   savingsPlanner: '/savings-planner',
   savingsPlan: '/savings-planner/:id',
+  savingsPlanAdd: '/savings-planner/add',
 };

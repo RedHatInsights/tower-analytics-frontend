@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Toolbar,
   ToolbarContent,
+  ToolbarGroup,
   Button,
   ToolbarItem,
 } from '@patternfly/react-core';
@@ -20,6 +21,7 @@ const FilterableToolbar = ({
   setFilters,
   pagination = null,
   hasSettings = false,
+  additionalControls = [],
 }) => {
   const [settingsExpanded, setSettingsExpanded] = useState(false);
   const { quick_date_range, sort_options, ...restCategories } = categories;
@@ -78,6 +80,13 @@ const FilterableToolbar = ({
               </Button>
             </ToolbarItem>
           )}
+          {additionalControls.length > 0 && (
+            <ToolbarGroup>
+              {additionalControls.map((control) => (
+                <ToolbarItem key={control.key}>{control}</ToolbarItem>
+              ))}
+            </ToolbarGroup>
+          )}
           {pagination && (
             <ToolbarItem
               variant="pagination"
@@ -106,6 +115,7 @@ FilterableToolbar.propTypes = {
   setFilters: PropTypes.func.isRequired,
   pagination: PropTypes.object,
   hasSettings: PropTypes.bool,
+  additionalControls: PropTypes.array,
 };
 
 export default FilterableToolbar;
