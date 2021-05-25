@@ -9,10 +9,10 @@ import {
   ChartThemeColor,
   ChartType,
   ChartTopLevelType,
-  ChartSchema
+  ChartSchema,
+  ApiReturnType,
+  ApiType,
 } from 'react-data-explorer';
-// This is little bit hacky, I will try to export them top level.
-import { ApiReturnType, ApiType } from 'react-data-explorer/dist/src/components/Chart/Api';
 
 import RoutedTabs from '../../Components/RoutedTabs';
 import AutomationFormula from "../AutomationCalculator/AutomationFormula";
