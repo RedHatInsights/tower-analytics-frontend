@@ -1,5 +1,5 @@
 import { act } from 'react-dom/test-utils';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { renderPage } from '../../Utilities/tests/helpers.reactTestingLib';
 import SavingsPlanner from './SavingsPlanner';
 
@@ -14,16 +14,14 @@ describe('<SavingsPlanner />', () => {
     api.readPlans.mockResolvedValue(mockResponses.readPlans);
   });
 
-  test('has rendered preflight/authorization error component', async () => {
+  it('has rendered preflight/authorization error component', async () => {
     api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest401);
-    await act(async () => {
-      renderPage(SavingsPlanner);
-    });
-    expect(screen.getAllByText(/Savings Planner/i));
+    renderPage(SavingsPlanner);
+    await waitFor(() => screen.getAllByText(/Savings Planner/i));
     expect(screen.getByText('Not authorized'));
   });
 
-  test('has rendered Empty page component', async () => {
+  it('has rendered Empty page component', async () => {
     api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest404);
     await act(async () => {
       renderPage(SavingsPlanner);
@@ -34,7 +32,7 @@ describe('<SavingsPlanner />', () => {
     );
   });
 
-  test('has rendered RBAC Access error component', async () => {
+  it('has rendered RBAC Access error component', async () => {
     api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest403);
     await act(async () => {
       renderPage(SavingsPlanner);
@@ -43,7 +41,7 @@ describe('<SavingsPlanner />', () => {
     expect(screen.getByText('RBAC Access Denied'));
   });
 
-  test('user can see a list of plans', async () => {
+  it('user can see a list of plans', async () => {
     await act(async () => {
       renderPage(SavingsPlanner);
     });
