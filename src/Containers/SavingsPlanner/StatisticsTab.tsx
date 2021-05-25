@@ -85,8 +85,6 @@ interface Props {
   data: Data
 };
 
-// Functions moved out: shadowing the data prop.
-// Renamed: name resmebling react state setters
 const getChartData = (data: Data): ApiReturnType => {
   const years = ['initial', 'year1', 'year2', 'year3'];
   const statsData = years.map(year => ({
