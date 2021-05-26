@@ -8,7 +8,7 @@ import {
 } from '@patternfly/react-core';
 
 import { SearchIcon } from '@patternfly/react-icons';
-import { optionsForCategories } from '../constants';
+import { optionsForCategories } from '../../constants';
 
 const InputText = ({ categoryKey, isVisible = true, value = '', setValue }) => {
   const [searchVal, setSearchVal] = useState(value);

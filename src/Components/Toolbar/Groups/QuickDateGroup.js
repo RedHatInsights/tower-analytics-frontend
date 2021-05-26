@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ToolbarGroup } from '@patternfly/react-core';
 
-import ToolbarItem from '../ToolbarItems/';
+import ToolbarItem from './ToolbarItem/ToolbarItem';
 
 const QuickDateGroup = ({ filters, setFilters, values }) => (
   <ToolbarGroup variant="filter-group">

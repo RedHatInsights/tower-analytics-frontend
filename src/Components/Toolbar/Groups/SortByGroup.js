@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ToolbarGroup, Button } from '@patternfly/react-core';
 import { SortAmountDownIcon, SortAmountUpIcon } from '@patternfly/react-icons';
 
-import ToolbarItem from '../ToolbarItems/';
+import ToolbarItem from './ToolbarItem/ToolbarItem';
 
 const SortByGroup = ({ filters, setFilters, sort_options }) => (
   <ToolbarGroup variant="filter-group">

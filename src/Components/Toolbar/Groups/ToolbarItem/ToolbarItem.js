@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import CustomSelect from './CustomSelect';
 import InputDate from './InputDate';
 import InputText from './InputText';
-import { optionsForCategories } from '../constants';
+import { optionsForCategories } from '../../constants';
 
 const components = {
   select: CustomSelect,

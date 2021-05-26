@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { InputGroup, TextInput } from '@patternfly/react-core';
-import { optionsForCategories } from '../constants';
+import { optionsForCategories } from '../../constants';
 
 const InputDate = ({ categoryKey, value = '', setValue = () => {} }) => {
   const options = optionsForCategories[categoryKey];

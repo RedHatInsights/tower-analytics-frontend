@@ -7,8 +7,8 @@ import {
   SelectVariant,
 } from '@patternfly/react-core';
 
-import { handleCheckboxChips, handleSingleChips } from '../helpers';
-import { optionsForCategories } from '../constants';
+import { handleCheckboxChips, handleSingleChips } from './helpers';
+import { optionsForCategories } from '../../constants';
 import styled from 'styled-components';
 
 const OptionSpan = styled('span')`
