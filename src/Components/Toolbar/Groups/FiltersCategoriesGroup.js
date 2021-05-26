@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ToolbarGroup } from '@patternfly/react-core';
 
-import CategoryDropdown from '../CustomFormElements/CategoryDropdown';
-import ToolbarFilterItem from '../CustomFormElements/ToolbarFilterItem';
+import CategoryDropdown from './CategoryDropdown';
+import ToolbarInput from './ToolbarInput/';
 import { optionsForCategories } from '../constants';
 
 const FilterCategoriesGroup = ({ filterCategories, filters, setFilters }) => {
@@ -22,13 +22,13 @@ const FilterCategoriesGroup = ({ filterCategories, filters, setFilters }) => {
         }))}
       />
       {Object.keys(filterCategories).map((key) => (
-        <ToolbarFilterItem
+        <ToolbarInput
           key={key}
           categoryKey={key}
-          filter={filters[key]}
-          values={filterCategories[key]}
+          value={filters[key]}
+          selectOptions={filterCategories[key]}
           isVisible={currentCategory === key}
-          setFilter={(value) => setFilters(key, value)}
+          setValue={(value) => setFilters(key, value)}
         />
       ))}
     </ToolbarGroup>

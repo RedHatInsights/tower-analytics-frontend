@@ -3,16 +3,15 @@ import PropTypes from 'prop-types';
 import { ToolbarGroup, Button } from '@patternfly/react-core';
 import { SortAmountDownIcon, SortAmountUpIcon } from '@patternfly/react-icons';
 
-import ToolbarFilterItem from '../CustomFormElements/ToolbarFilterItem';
+import ToolbarInput from './ToolbarInput';
 
 const SortByGroup = ({ filters, setFilters, sort_options }) => (
   <ToolbarGroup variant="filter-group">
-    <ToolbarFilterItem
+    <ToolbarInput
       categoryKey="sort_options"
-      filter={filters.sort_options}
-      values={sort_options}
-      setFilter={(value) => setFilters('sort_options', value)}
-      hasChips={false}
+      value={filters.sort_options}
+      selectOptions={sort_options}
+      setValue={(value) => setFilters('sort_options', value)}
     />
     <Button
       variant="control"

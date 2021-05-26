@@ -79,7 +79,7 @@ describe('Components/Toolbar/FilterableToolbar', () => {
           setFilters={() => {}}
         />
       );
-      const filterItem = wrapper.find('ToolbarFilterItem');
+      const filterItem = wrapper.find('ToolbarInput');
       expect(filterItem.length).toEqual(Object.keys(mockCategories).length);
     });
     it('should filter out quick_date_range and sort_options params', () => {
@@ -92,7 +92,7 @@ describe('Components/Toolbar/FilterableToolbar', () => {
       );
       const filterItem = wrapper
         .find('FilterCategoriesGroup')
-        .find('ToolbarFilterItem');
+        .find('ToolbarInput');
       const { sort_options, quick_date_range, ...rest } = mockCategories;
       expect(filterItem.length).toEqual(Object.keys(rest).length);
     });

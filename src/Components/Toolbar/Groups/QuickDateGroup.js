@@ -2,26 +2,30 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ToolbarGroup } from '@patternfly/react-core';
 
-import ToolbarFilterItem from '../CustomFormElements/ToolbarFilterItem';
-import CustomDateSelector from '../CustomFormElements/CustomDateSelector';
+import ToolbarInput from './ToolbarInput/';
 
 const QuickDateGroup = ({ filters, setFilters, values }) => (
   <ToolbarGroup variant="filter-group">
-    <ToolbarFilterItem
+    <ToolbarInput
       categoryKey="quick_date_range"
-      filter={filters.quick_date_range}
-      values={values}
-      setFilter={(value) => setFilters('quick_date_range', value)}
-      hasChips={false}
+      value={filters.quick_date_range}
+      selectOptions={values}
+      setValue={(value) => setFilters('quick_date_range', value)}
     />
-    {filters.quick_date_range &&
-      filters.quick_date_range.includes('custom') && (
-        <CustomDateSelector
-          startDate={filters.start_date ? filters.start_date : ''}
-          endDate={filters.end_date ? filters.end_date : ''}
-          onInputChange={setFilters}
+    {filters.quick_date_range && filters.quick_date_range.includes('custom') && (
+      <>
+        <ToolbarInput
+          categoryKey="start_date"
+          value={filters.start_date}
+          setValue={(e) => setFilters('start_date', e)}
         />
-      )}
+        <ToolbarInput
+          categoryKey="end_date"
+          value={filters.end_date}
+          setValue={(e) => setFilters('end_date', e)}
+        />
+      </>
+    )}
   </ToolbarGroup>
 );
 
