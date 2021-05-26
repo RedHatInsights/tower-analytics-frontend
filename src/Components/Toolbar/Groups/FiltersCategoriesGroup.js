@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { ToolbarGroup } from '@patternfly/react-core';
 
-import CategoryDropdown from './ToolbarItem/CategoryDropdown';
+import CategoryDropdown from './CategoryDropdown';
 import ToolbarItem from './ToolbarItem/ToolbarItem';
 import { optionsForCategories } from '../constants';
 
