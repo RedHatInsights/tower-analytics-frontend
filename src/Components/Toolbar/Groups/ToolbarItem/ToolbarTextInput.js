@@ -10,7 +10,12 @@ import {
 import { SearchIcon } from '@patternfly/react-icons';
 import { optionsForCategories } from '../../constants';
 
-const InputText = ({ categoryKey, isVisible = true, value = '', setValue }) => {
+const ToolbarTextInput = ({
+  categoryKey,
+  isVisible = true,
+  value = '',
+  setValue,
+}) => {
   const [searchVal, setSearchVal] = useState(value);
   const options = optionsForCategories[categoryKey];
 
@@ -56,11 +61,11 @@ const InputText = ({ categoryKey, isVisible = true, value = '', setValue }) => {
   );
 };
 
-InputText.propTypes = {
+ToolbarTextInput.propTypes = {
   categoryKey: PropTypes.string.isRequired,
   value: PropTypes.any,
   isVisible: PropTypes.bool,
   setValue: PropTypes.func.isRequired,
 };
 
-export default InputText;
+export default ToolbarTextInput;

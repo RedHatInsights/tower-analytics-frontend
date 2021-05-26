@@ -26,7 +26,7 @@ const renderValues = (values) =>
     </SelectOption>
   ));
 
-const CustomSelect = ({
+const ToolbarSelectInput = ({
   categoryKey,
   value,
   selectOptions,
@@ -112,7 +112,7 @@ const CustomSelect = ({
   );
 };
 
-CustomSelect.propTypes = {
+ToolbarSelectInput.propTypes = {
   categoryKey: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([
     PropTypes.string,
@@ -123,4 +123,4 @@ CustomSelect.propTypes = {
   setValue: PropTypes.func.isRequired,
 };
 
-export default CustomSelect;
+export default ToolbarSelectInput;

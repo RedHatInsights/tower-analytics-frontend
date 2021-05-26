@@ -1,14 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import CustomSelect from './CustomSelect';
-import InputDate from './InputDate';
-import InputText from './InputText';
+import ToolbarSelectInput from './ToolbarSelectInput';
+import ToolbarDateinput from './ToolbarDateinput';
+import ToolbarTextInput from './ToolbarTextInput';
 import { optionsForCategories } from '../../constants';
 
 const components = {
-  select: CustomSelect,
-  date: InputDate,
-  text: InputText,
+  select: ToolbarSelectInput,
+  date: ToolbarDateinput,
+  text: ToolbarTextInput,
 };
 
 const ToolbarItem = ({
