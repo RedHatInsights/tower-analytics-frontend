@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { InputGroup, TextInput } from '@patternfly/react-core';
 import { optionsForCategories } from '../../constants';
 
-const ToolbarDateinput = ({ categoryKey, value = '', setValue = () => {} }) => {
+const Date = ({ categoryKey, value = '', setValue = () => {} }) => {
   const options = optionsForCategories[categoryKey];
 
   return (
@@ -18,10 +18,10 @@ const ToolbarDateinput = ({ categoryKey, value = '', setValue = () => {} }) => {
   );
 };
 
-ToolbarDateinput.propTypes = {
+Date.propTypes = {
   categoryKey: PropTypes.string.isRequired,
   value: PropTypes.string,
   setValue: PropTypes.func.isRequired,
 };
 
-export default ToolbarDateinput;
+export default Date;

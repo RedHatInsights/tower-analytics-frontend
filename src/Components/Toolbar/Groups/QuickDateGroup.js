@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { ToolbarGroup } from '@patternfly/react-core';
 
-import ToolbarItem from './ToolbarItem/ToolbarItem';
+import ToolbarInput from './ToolbarInput/';
 
 const QuickDateGroup = ({ filters, setFilters, values }) => (
   <ToolbarGroup variant="filter-group">
-    <ToolbarItem
+    <ToolbarInput
       categoryKey="quick_date_range"
       value={filters.quick_date_range}
       selectOptions={values}
@@ -14,12 +14,12 @@ const QuickDateGroup = ({ filters, setFilters, values }) => (
     />
     {filters.quick_date_range && filters.quick_date_range.includes('custom') && (
       <>
-        <ToolbarItem
+        <ToolbarInput
           categoryKey="start_date"
           value={filters.start_date}
           setValue={(e) => setFilters('start_date', e)}
         />
-        <ToolbarItem
+        <ToolbarInput
           categoryKey="end_date"
           value={filters.end_date}
           setValue={(e) => setFilters('end_date', e)}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   ToolbarFilter,
-  Select,
+  Select as PFSelect,
   SelectOption,
   SelectVariant,
 } from '@patternfly/react-core';
@@ -26,7 +26,7 @@ const renderValues = (values) =>
     </SelectOption>
   ));
 
-const ToolbarSelectInput = ({
+const Select = ({
   categoryKey,
   value,
   selectOptions,
@@ -92,7 +92,7 @@ const ToolbarSelectInput = ({
       categoryName={options.name}
       deleteChip={options.hasChips ? onDelete : null}
     >
-      <Select
+      <PFSelect
         variant={
           options.isSingle ? SelectVariant.single : SelectVariant.checkbox
         }
@@ -107,12 +107,12 @@ const ToolbarSelectInput = ({
         maxHeight={'1000%'}
       >
         {renderValues(selectOptions)}
-      </Select>
+      </PFSelect>
     </ToolbarFilter>
   );
 };
 
-ToolbarSelectInput.propTypes = {
+Select.propTypes = {
   categoryKey: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([
     PropTypes.string,
@@ -123,4 +123,4 @@ ToolbarSelectInput.propTypes = {
   setValue: PropTypes.func.isRequired,
 };
 
-export default ToolbarSelectInput;
+export default Select;

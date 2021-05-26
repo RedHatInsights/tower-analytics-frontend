@@ -10,10 +10,12 @@ import {
 import { FilterIcon, CogIcon } from '@patternfly/react-icons';
 
 import { optionsForCategories } from './constants';
-import FilterCategoriesGroup from './Groups/FiltersCategoriesGroup';
-import QuickDateGroup from './Groups/QuickDateGroup';
-import SortByGroup from './Groups/SortByGroup';
-import SettingsPanel from './Groups/SettingsPanel';
+import {
+  FilterCategoriesGroup,
+  QuickDateGroup,
+  SortByGroup,
+  SettingsPanel,
+} from './Groups/';
 
 const FilterableToolbar = ({
   categories,

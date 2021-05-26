@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { ToolbarGroup } from '@patternfly/react-core';
 
 import CategoryDropdown from './CategoryDropdown';
-import ToolbarItem from './ToolbarItem/ToolbarItem';
+import ToolbarInput from './ToolbarInput/';
 import { optionsForCategories } from '../constants';
 
 const FilterCategoriesGroup = ({ filterCategories, filters, setFilters }) => {
@@ -22,7 +22,7 @@ const FilterCategoriesGroup = ({ filterCategories, filters, setFilters }) => {
         }))}
       />
       {Object.keys(filterCategories).map((key) => (
-        <ToolbarItem
+        <ToolbarInput
           key={key}
           categoryKey={key}
           value={filters[key]}

@@ -1,17 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ToolbarSelectInput from './ToolbarSelectInput';
-import ToolbarDateinput from './ToolbarDateinput';
-import ToolbarTextInput from './ToolbarTextInput';
+import Select from './Select';
+import Date from './Date';
+import Text from './Text';
 import { optionsForCategories } from '../../constants';
 
 const components = {
-  select: ToolbarSelectInput,
-  date: ToolbarDateinput,
-  text: ToolbarTextInput,
+  select: Select,
+  date: Date,
+  text: Text,
 };
 
-const ToolbarItem = ({
+const ToolbarInput = ({
   categoryKey,
   value,
   selectOptions,
@@ -44,7 +44,7 @@ const ToolbarItem = ({
   );
 };
 
-ToolbarItem.propTypes = {
+ToolbarInput.propTypes = {
   categoryKey: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([
     PropTypes.string,
@@ -55,4 +55,4 @@ ToolbarItem.propTypes = {
   setValue: PropTypes.func.isRequired,
 };
 
-export default ToolbarItem;
+export default ToolbarInput;
