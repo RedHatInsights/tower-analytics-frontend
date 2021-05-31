@@ -143,6 +143,13 @@ export const createPlan = ({ params = {} }) => {
   }).then(handleResponse);
 };
 
+export const deletePlan = ({ params = {} }) => {
+  let url = new URL(`${planEndpoint}${params.id}`, window.location.origin);
+  return authenticatedFetch(url, {
+    method: 'DELETE'
+  }).then(handleResponse);
+};
+
 export const updatePlan = ({ id, params = {} }) => {
   let url = new URL(`${planEndpoint}${id}`, window.location.origin);
   return authenticatedFetch(url, {

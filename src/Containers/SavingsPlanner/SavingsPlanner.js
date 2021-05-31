@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-
-import { preflightRequest, readPlanOptions, readPlans } from '../../Api';
+import { deletePlan, preflightRequest, readPlanOptions, readPlans } from '../../Api';
 import FilterableToolbar from '../../Components/Toolbar/';
 import ApiErrorState from '../../Components/ApiErrorState';
 import LoadingState from '../../Components/LoadingState';
@@ -22,8 +21,16 @@ import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthori
 
 import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
 
+import ToolbarDeleteButton from '../../Components/Toolbar/ToolbarDeleteButton';
+import useSelected from '../../Utilities/useSelected';
+import { useDeleteItems } from "../../Utilities/useRequest";
+import ErrorDetail from "../../Components/ErrorDetail";
+import AlertModal from "../../Components/AlertModal";
+
+
 // TODO: update to fining this out from API RBAC
 const canAddPlan = true;
+const canDeletePlan = true;
 
 const SavingsPlanner = () => {
   const history = useHistory();
@@ -49,17 +56,44 @@ const SavingsPlanner = () => {
     name: [{ key: 'name', value: null }],
   };
 
-  useEffect(() => {
-    const fetchEndpoints = () => {
-      preflightRequest().catch((error) => {
-        setPreFlightError({ preflightError: error });
-      });
-      setData(readPlans({ params: queryParams }));
-      setOptions(readPlanOptions());
-    };
+  const fetchEndpoints = () => {
+    preflightRequest().catch((error) => {
+      setPreFlightError({ preflightError: error });
+    });
+    setData(readPlans({ params: queryParams }));
+    setOptions(readPlanOptions());
+  };
 
+  useEffect(() => {
     fetchEndpoints();
   }, [queryParams]);
+
+  const { selected, isAllSelected, handleSelect, setSelected } = useSelected(
+    data
+  );
+
+  const {
+    isLoading: deleteLoading,
+    deletionError,
+    deleteItems: deleteItems,
+    clearDeletionError,
+  } = useDeleteItems(
+    useCallback(async () => {
+      return Promise.all(
+        selected.map((plan) => deletePlan({ params: {id: plan.id }}))
+      );
+    }, [selected]),
+    {
+      qsConfig: queryParams,
+      allItemsSelected: isAllSelected,
+      fetchItems: fetchEndpoints,
+    }
+  );
+
+  const handleDelete = async () => {
+    await deleteItems()
+    setSelected([]);
+  };
 
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
@@ -90,6 +124,14 @@ const SavingsPlanner = () => {
                   </Button>,
                 ]
               : []),
+              (canDeletePlan &&
+                <ToolbarDeleteButton
+                  key="delete-plan-button"
+                  onDelete={handleDelete}
+                  itemsToDelete={selected}
+                  pluralizedItemName={'Savings plan'}
+                />
+              )
           ]}
           pagination={
             <Pagination
@@ -114,7 +156,7 @@ const SavingsPlanner = () => {
           <ApiErrorState message={error.error} />
         </Main>
       )}
-      {isLoading && (
+      {(isLoading || deleteLoading) && (
         <Main style={{ height: '100vh' }}>
           <LoadingState />
         </Main>
@@ -127,7 +169,9 @@ const SavingsPlanner = () => {
                 <PlanCard
                   key={datum.id}
                   isSuccess={options.isSuccess}
-                  {...datum}
+                  selected={selected}
+                  plan={datum}
+                  handleSelect={handleSelect}
                 />
               ))}
           </Gallery>
@@ -143,6 +187,18 @@ const SavingsPlanner = () => {
         variant={PaginationVariant.bottom}
         isSticky
       />
+      {deletionError && (
+          <AlertModal
+            aria-label={'Deletion error'}
+            isOpen={deletionError}
+            onClose={clearDeletionError}
+            title={'Error'}
+            variant="error"
+          >
+            {'Failed to delete one or more plans.'}
+            <ErrorDetail error={deletionError} />
+          </AlertModal>
+      )}
     </React.Fragment>
   );
 };

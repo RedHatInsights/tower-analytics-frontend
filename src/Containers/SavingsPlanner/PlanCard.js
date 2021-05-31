@@ -29,22 +29,28 @@ import styled from 'styled-components';
 import { stringify } from 'query-string';
 
 import { Link, useRouteMatch } from 'react-router-dom';
+// import useSelected from "../../Utilities/useSelected";
 
 const CardLabel = styled.span`
   margin-right: 5px;
 `;
 
 const PlanCard = ({
-  name,
-  id = null,
-  description = '',
-  frequency_period = '',
-  template_details = {},
-  automation_status = {},
-  modified = '',
-  category = '',
   isSuccess,
+  plan,
+  selected = [],
+  handleSelect = () => {},
 }) => {
+  const {
+    id,
+    automation_status,
+    category,
+    description,
+    frequency_period,
+    modified,
+    name,
+    template_details,
+  } = plan;
   const [isCardKebabOpen, setIsCardKebabOpen] = useState(false);
 
   const match = useRouteMatch();
@@ -103,8 +109,8 @@ const PlanCard = ({
             position={'right'}
           />
           <Checkbox
-            isChecked={false}
-            onChange={() => {}}
+            onChange={() => handleSelect(plan)}
+            isChecked={selected.some(row => row.id === plan.id)}
             aria-label="card checkbox"
             id="check-1"
             name="check1"
@@ -155,14 +161,9 @@ const PlanCard = ({
 
 PlanCard.propTypes = {
   isSuccess: PropTypes.bool.isRequired,
-  name: PropTypes.string.isRequired,
-  id: PropTypes.number,
-  description: PropTypes.string,
-  frequency_period: PropTypes.string,
-  template_details: PropTypes.object,
-  modified: PropTypes.string,
-  category: PropTypes.string,
-  automation_status: PropTypes.object,
+  selected: PropTypes.array,
+  handleSelect: PropTypes.func,
+  plan: PropTypes.object,
 };
 
 export default PlanCard;
