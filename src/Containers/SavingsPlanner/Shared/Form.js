@@ -7,7 +7,7 @@ import { Wizard } from '@patternfly/react-core';
 import { Paths } from '../../../paths';
 
 import useApi from '../../../Utilities/useApi';
-import useForm from '../../../Utilities/useForm';
+import usePlanData from './usePlanData';
 
 import { createPlan } from '../../../Api';
 
@@ -20,6 +20,39 @@ const Form = ({ title, options }) => {
   const { hash } = useLocation();
 
   const [startStep, setStartStep] = useState(null);
+
+  const [{ isSuccess }, setData] = useApi({ meta: {}, items: [] });
+  const { formData, dispatch } = usePlanData(data);
+
+  const steps = [
+    {
+      step_number: 1,
+      id: 'details',
+      name: 'Details',
+      component: (
+        <Details options={options} formData={formData} dispatch={dispatch} />
+      ),
+    },
+    {
+      step_number: 2,
+      id: 'tasks',
+      name: 'Tasks',
+      component: <Tasks tasks={formData.tasks} dispatch={dispatch} />,
+    },
+    {
+      step_number: 3,
+      id: 'link_template',
+      name: 'Link template',
+      component: (
+        <Templates
+          templates={options?.data?.template_id}
+          template_id={formData.template_id}
+          dispatch={dispatch}
+        />
+      ),
+      nextButtonText: 'Save',
+    },
+  ];
 
   useEffect(() => {
     if (hash) {
@@ -51,22 +84,20 @@ const Form = ({ title, options }) => {
   };
 
   const onSave = () => {
-    if (formData.template_id === -2) {
-      delete formData.template_id;
+    const localFormData = { ...formData };
+
+    if (localFormData.template_id === -2) {
+      delete localFormData.template_id;
     }
 
-    formData.tasks = formData.tasks.map((task, index) => ({
+    localFormData.tasks = localFormData.tasks.map((task, index) => ({
       task,
       task_order: index + 1,
     }));
 
     setData(
       createPlan({
-        params: {
-          hourly_rate: 50,
-          frequency_per_period: 1,
-          ...formData,
-        },
+          params: localFormData,
       })
     );
   };
