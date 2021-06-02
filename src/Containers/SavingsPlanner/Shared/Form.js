@@ -22,7 +22,7 @@ const Form = ({ title, options, data = {} }) => {
   const [startStep, setStartStep] = useState(null);
 
   const [{ isSuccess }, setData] = useApi({ meta: {}, items: [] });
-  const { formData, dispatch } = usePlanData(data);
+  const { formData, formatPayload, dispatch } = usePlanData(data);
 
   const steps = [
     {
@@ -72,31 +72,20 @@ const Form = ({ title, options, data = {} }) => {
   };
 
   const onSave = () => {
-    const localFormData = { ...formData };
+    const payload = formatPayload(formData);
 
-    if (localFormData.template_id === -2) {
-      delete localFormData.template_id;
-    }
-
-    localFormData.tasks = localFormData.tasks.map((task, index) => ({
-      task,
-      task_order: index + 1,
-    }));
-
-    if (data?.id) {
-      setData(
-        updatePlan({
-          id: data?.id,
-          params: localFormData,
-        })
-      );
-    } else {
-      setData(
-        createPlan({
-          params: localFormData,
-        })
-      );
-    }
+    data?.id
+      ? setData(
+          updatePlan({
+            id: data?.id,
+            params: payload,
+          })
+        )
+      : setData(
+          createPlan({
+            params: payload,
+          })
+        );
   };
 
   const onClose = () => {

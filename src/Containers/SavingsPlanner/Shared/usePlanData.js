@@ -2,6 +2,24 @@ import { useReducer } from 'react';
 
 import { actions } from './constants';
 
+const formatPayload = (data) => {
+  if (data.template_id === -2) {
+    delete data.template_id;
+  }
+
+  data.tasks = data.tasks.map((task, index) => ({
+    task,
+    task_order: index + 1,
+  }));
+
+  // these two are fields the api expects but we don't
+  // have form elements for in the MVP.
+  data.hourly_rate = 50;
+  data.frequency_per_period = 1;
+
+  return data;
+};
+
 const convertTasks = (tasks = []) => {
   if (tasks?.length) {
     return tasks
@@ -72,14 +90,11 @@ const usePlanData = (initial) => {
     frequency_period: initial?.frequency_period || 'weekly',
     tasks: convertTasks(initial?.tasks) || [],
     template_id: initial?.template_id || -2,
-    // these two are fields the api expects but we don't
-    // have form elements for in the MVP.
-    hourly_rate: initial?.hourly_rate || 50,
-    frequency_per_period: initial?.frequency_per_period || 1,
   });
 
   return {
     formData,
+    formatPayload,
     dispatch,
   };
 };
