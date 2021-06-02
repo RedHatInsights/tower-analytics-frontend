@@ -71,35 +71,11 @@ const Form = ({ title, options }) => {
     );
   };
 
-  const steps = [
-    {
-      step_number: 1,
-      id: 'details',
-      name: 'Details',
-      component: (
-        <Details options={options} formData={formData} setField={setField} />
-      ),
-    },
-    {
-      step_number: 2,
-      id: 'tasks',
-      name: 'Tasks',
-      component: <Tasks tasks={formData.tasks} setField={setField} />,
-    },
-    {
-      step_number: 3,
-      id: 'link_template',
-      name: 'Link template',
-      component: (
-        <Templates
-          templates={options?.data?.template_id}
-          template_id={formData.template_id}
-          setField={setField}
-        />
-      ),
-      nextButtonText: 'Save',
-    },
-  ];
+  const onClose = () => {
+    history.push({
+      pathname: Paths.savingsPlanner,
+    });
+  };
 
   return (
     <>
@@ -112,6 +88,7 @@ const Form = ({ title, options }) => {
         onNext={onStepChange}
         onBack={onStepChange}
         onSave={onSave}
+          onClose={onClose}
         startAtStep={startStep}
         height="calc(100vh - 285px)"
       />
