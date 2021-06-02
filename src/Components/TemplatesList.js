@@ -35,10 +35,14 @@ const TemplatesList = ({ templates, isLoading, qp, title, jobType }) => {
   const [selectedId, setSelectedId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const displayJobType = type => {
+    return (type === 'job' ? 'templates' : 'workflows');
+  }
+
   return (
     <>
       <DataList
-        aria-label="Top Templates"
+        aria-label={`Top ${displayJobType(jobType)}`}
         style={{
           maxHeight: '400px',
           overflow: 'auto',
@@ -46,7 +50,7 @@ const TemplatesList = ({ templates, isLoading, qp, title, jobType }) => {
           background: 'white',
         }}
       >
-        <DataListItem aria-labelledby="top-templates-header">
+        <DataListItem aria-labelledby={`top-${displayJobType(jobType)}-header`}>
           <DataListCell>
             <h3>{title}</h3>
           </DataListCell>
@@ -56,7 +60,7 @@ const TemplatesList = ({ templates, isLoading, qp, title, jobType }) => {
         </DataListItem>
         {isLoading && (
           <PFDataListItem
-            aria-labelledby="templates-loading"
+            aria-labelledby={`${displayJobType(jobType)}-loading`}
             key={isLoading}
             style={{ border: 'none' }}
           >
@@ -67,7 +71,7 @@ const TemplatesList = ({ templates, isLoading, qp, title, jobType }) => {
         )}
         {!isLoading && templates.length <= 0 && (
           <PFDataListItem
-            aria-labelledby="templates-no-data"
+            aria-labelledby={`${displayJobType(jobType)}-no-data`}
             key={isLoading}
             style={{ border: 'none' }}
           >
@@ -78,7 +82,7 @@ const TemplatesList = ({ templates, isLoading, qp, title, jobType }) => {
         )}
         {!isLoading &&
           templates.map(({ name, total_count, id }, index) => (
-            <DataListItem aria-labelledby="top-templates-detail" key={index}>
+            <DataListItem aria-labelledby={`top-${displayJobType(jobType)}-detail`} key={index}>
               <DataListCell>
                 <a
                   onClick={() => {
