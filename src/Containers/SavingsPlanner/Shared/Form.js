@@ -22,7 +22,7 @@ const Form = ({ title, options, data = {} }) => {
   const [startStep, setStartStep] = useState(null);
 
   const [{ isSuccess }, setData] = useApi({ meta: {}, items: [] });
-  const { formData, formatPayload, dispatch } = usePlanData(data);
+  const { formData, requestPayload, dispatch } = usePlanData(data);
 
   const steps = [
     {
@@ -72,18 +72,16 @@ const Form = ({ title, options, data = {} }) => {
   };
 
   const onSave = () => {
-    const payload = formatPayload(formData);
-
     data?.id
       ? setData(
           updatePlan({
             id: data?.id,
-            params: payload,
+            params: requestPayload,
           })
         )
       : setData(
           createPlan({
-            params: payload,
+            params: requestPayload,
           })
         );
   };

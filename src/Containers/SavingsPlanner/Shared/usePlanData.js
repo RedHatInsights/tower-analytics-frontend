@@ -94,7 +94,7 @@ const usePlanData = (initial) => {
 
   return {
     formData,
-    formatPayload,
+    requestPayload: formatPayload({ ...formData }),
     dispatch,
   };
 };
