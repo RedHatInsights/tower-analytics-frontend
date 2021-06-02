@@ -7,8 +7,11 @@ import { stringify } from 'query-string';
 
 import { useHistory } from 'react-router-dom';
 
+import { Button } from '@patternfly/react-core';
+
 import {
-  Card,
+  CardBody as PFCardBody,
+  CardFooter,
   DescriptionList,
   DescriptionListTerm,
   DescriptionListGroup,
@@ -27,13 +30,20 @@ import {
 import { formatDateTime } from '../../Utilities/helpers';
 import RoutedTabs from '../../Components/RoutedTabs';
 
-const TopCard = styled(Card)`
+const CardBody = styled(PFCardBody)`
   min-height: 500px;
+  padding: 0;
+  padding-bottom: 20px;
+
+  &:first-child {
+    padding-top: 0;
+  }
 `;
 
 const DetailsTab = ({ tabsArray, plans }) => {
   let history = useHistory();
   const {
+    id,
     automation_status,
     category,
     description,
@@ -95,41 +105,57 @@ const DetailsTab = ({ tabsArray, plans }) => {
   };
 
   return (
-    <React.Fragment>
+    <>
       {plans && (
-        <TopCard>
-          <RoutedTabs tabsArray={tabsArray} />
-          <div style={{ padding: '1rem' }}>
-            <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
-              {Object.keys(labelsAndValues).map(
-                (key, i) =>
-                  labelsAndValues[key] !== undefined && (
-                    <DescriptionListGroup key={i}>
-                      <DescriptionListTerm>{key}</DescriptionListTerm>
-                      <DescriptionListDescription>
-                        {labelsAndValues[key]}
-                      </DescriptionListDescription>
-                    </DescriptionListGroup>
-                  )
+        <>
+          <CardBody>
+            <RoutedTabs tabsArray={tabsArray} />
+            <div style={{ padding: '1rem' }}>
+              <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
+                {Object.keys(labelsAndValues).map(
+                  (key, i) =>
+                    labelsAndValues[key] !== undefined && (
+                      <DescriptionListGroup key={i}>
+                        <DescriptionListTerm>{key}</DescriptionListTerm>
+                        <DescriptionListDescription>
+                          {labelsAndValues[key]}
+                        </DescriptionListDescription>
+                      </DescriptionListGroup>
+                    )
+                )}
+              </DescriptionList>
+              {tasks.length > 0 && (
+                <>
+                  <Divider style={{ padding: '1rem' }} component="div" />
+                  <DescriptionListTerm>Tasks</DescriptionListTerm>
+                  <TextContent>
+                    <List component="ol" type="1">
+                      {tasks.map((task) => (
+                        <ListItem key={task.id}>{task.task}</ListItem>
+                      ))}
+                    </List>
+                  </TextContent>
+                </>
               )}
-            </DescriptionList>
-            {tasks.length > 0 && (
-              <>
-                <Divider style={{ padding: '1rem' }} component="div" />
-                <DescriptionListTerm>Tasks</DescriptionListTerm>
-                <TextContent>
-                  <List component="ol" type="1">
-                    {tasks.map((task) => (
-                      <ListItem key={task.id}>{task.task}</ListItem>
-                    ))}
-                  </List>
-                </TextContent>
-              </>
-            )}
-          </div>
-        </TopCard>
+            </div>
+          </CardBody>
+          <CardFooter>
+            <Button
+              key="edit-plan-button"
+              variant="primary"
+              aria-label="Edit plan"
+              onClick={() => {
+                history.push({
+                  pathname: `${Paths.savingsPlan}${id}/edit`,
+                });
+              }}
+            >
+              Edit
+            </Button>
+          </CardFooter>
+        </>
       )}
-    </React.Fragment>
+    </>
   );
 };
 

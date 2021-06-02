@@ -143,6 +143,14 @@ export const createPlan = ({ params = {} }) => {
   }).then(handleResponse);
 };
 
+export const updatePlan = ({ id, params = {} }) => {
+  let url = new URL(`${planEndpoint}${id}`, window.location.origin);
+  return authenticatedFetch(url, {
+    method: 'PUT',
+    body: JSON.stringify(params),
+  }).then(handleResponse);
+};
+
 export const readPlan = ({ params = {} }) => {
   let url = new URL(plansEndpoint, window.location.origin);
   return authenticatedFetch(url, {

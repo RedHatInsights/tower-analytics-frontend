@@ -9,15 +9,15 @@ import { Paths } from '../../../paths';
 import useApi from '../../../Utilities/useApi';
 import usePlanData from './usePlanData';
 
-import { createPlan } from '../../../Api';
+import { createPlan, updatePlan } from '../../../Api';
 
 import Details from './Details';
 import Tasks from './Tasks';
 import Templates from './Templates';
 
-const Form = ({ title, options }) => {
+const Form = ({ title, options, data = {} }) => {
   const history = useHistory();
-  const { hash } = useLocation();
+  const { hash, pathname } = useLocation();
 
   const [startStep, setStartStep] = useState(null);
 
@@ -55,7 +55,7 @@ const Form = ({ title, options }) => {
   ];
 
   useEffect(() => {
-    if (hash) {
+    if (pathname.indexOf('/add') === -1 && hash) {
       setStartStep(steps.find((step) => `#${step.id}` === hash).step_number);
     } else {
       history.replace({
@@ -64,18 +64,6 @@ const Form = ({ title, options }) => {
       setStartStep(1);
     }
   }, []);
-
-  const [{ isSuccess }, setData] = useApi({ meta: {}, items: [] });
-  const { formData, setField } = useForm({
-    name: '',
-    category: 'system',
-    description: '',
-    manual_time: 240,
-    hosts: 1,
-    frequency_period: 'weekly',
-    tasks: [],
-    template_id: -2,
-  });
 
   const onStepChange = (newStep) => {
     history.replace({
@@ -95,11 +83,20 @@ const Form = ({ title, options }) => {
       task_order: index + 1,
     }));
 
-    setData(
-      createPlan({
+    if (data?.id) {
+      setData(
+        updatePlan({
+          id: data?.id,
           params: localFormData,
-      })
-    );
+        })
+      );
+    } else {
+      setData(
+        createPlan({
+          params: localFormData,
+        })
+      );
+    }
   };
 
   const onClose = () => {
@@ -111,18 +108,20 @@ const Form = ({ title, options }) => {
   return (
     <>
       {isSuccess && <Redirect to={Paths.savingsPlanner} />}
-      <Wizard
-        navAriaLabel={`${title} steps`}
-        mainAriaLabel={`${title} content`}
-        steps={steps}
-        onGoToStep={onStepChange}
-        onNext={onStepChange}
-        onBack={onStepChange}
-        onSave={onSave}
+      {startStep && (
+        <Wizard
+          navAriaLabel={`${title} steps`}
+          mainAriaLabel={`${title} content`}
+          steps={steps}
+          onGoToStep={onStepChange}
+          onNext={onStepChange}
+          onBack={onStepChange}
+          onSave={onSave}
           onClose={onClose}
-        startAtStep={startStep}
-        height="calc(100vh - 285px)"
-      />
+          startAtStep={startStep}
+          height="calc(100vh - 285px)"
+        />
+      )}
     </>
   );
 };
@@ -130,6 +129,11 @@ const Form = ({ title, options }) => {
 Form.propTypes = {
   title: PropTypes.string.isRequired,
   options: PropTypes.object.isRequired,
+  data: PropTypes.object,
+};
+
+Form.defaultProps = {
+  data: {},
 };
 
 export default Form;
