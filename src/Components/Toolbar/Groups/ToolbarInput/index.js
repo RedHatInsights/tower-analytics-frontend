@@ -47,8 +47,11 @@ const ToolbarInput = ({
 ToolbarInput.propTypes = {
   categoryKey: PropTypes.string.isRequired,
   value: PropTypes.oneOfType([
+    PropTypes.number,
     PropTypes.string,
-    PropTypes.arrayOf(PropTypes.string),
+    PropTypes.arrayOf(
+      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
+    ),
   ]),
   selectOptions: PropTypes.array,
   isVisible: PropTypes.bool,
