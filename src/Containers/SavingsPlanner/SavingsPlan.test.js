@@ -2,10 +2,16 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { createMemoryHistory } from 'history';
 import fetchMock from 'fetch-mock-jest';
+import configureStore from 'redux-mock-store';
+import { Provider } from 'react-redux';
 import {
   mountWithContexts,
   waitForElement,
 } from '../../Utilities/enzymeHelpers';
+
+const mockStore = configureStore();
+const store = mockStore({});
+
 fetchMock.config.overwriteRoutes = true;
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -57,13 +63,18 @@ describe('<SavingsPlan />', () => {
     });
 
     await act(async () => {
-      wrapper = mountWithContexts(<SavingsPlan />, {
-        context: {
-          router: {
-            history,
+      wrapper = mountWithContexts(
+        <Provider store={store}>
+          <SavingsPlan />
+        </Provider>,
+        {
+          context: {
+            router: {
+              history,
+            },
           },
-        },
-      });
+        }
+      );
     });
     wrapper.update();
     await waitForElement(wrapper, 'ContentLoading', (el) => el.length === 0);
