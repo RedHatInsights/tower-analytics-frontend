@@ -130,8 +130,8 @@ const DetailsTab = ({ tabsArray, plans }) => {
                   <DescriptionListTerm>Tasks</DescriptionListTerm>
                   <TextContent>
                     <List component="ol" type="1">
-                      {tasks.map((task) => (
-                        <ListItem key={task.id}>{task.task}</ListItem>
+                      {tasks.map(({ id, task }) => (
+                        <ListItem key={id}>{task}</ListItem>
                       ))}
                     </List>
                   </TextContent>
