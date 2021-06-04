@@ -21,6 +21,8 @@ import {
 } from '@patternfly/react-core';
 import { PlusIcon, TimesIcon } from '@patternfly/react-icons';
 
+import { actions } from './constants';
+
 const TaskSection = styled.div`
   margin-top: 20px;
 `;
@@ -41,9 +43,9 @@ const TaskRow = styled(DataListItemRow)`
   align-items: center;
 `;
 
-const Tasks = ({ tasks, setField }) => {
+const Tasks = ({ tasks, dispatch }) => {
   const setTasks = (val) => {
-    setField('tasks', val);
+    dispatch({ type: actions.SET_TASKS, value: val });
   };
 
   const [taskToAdd, setTaskToAdd] = useState('');
@@ -97,7 +99,7 @@ const Tasks = ({ tasks, setField }) => {
           >
             <InputGroup>
               <TextInput
-                placeholder="Enter a description of the task"
+                placeholder="Enter a description of each task"
                 type="text"
                 id="task-field"
                 name="task"
@@ -178,7 +180,7 @@ const Tasks = ({ tasks, setField }) => {
 
 Tasks.propTypes = {
   tasks: PropTypes.array.isRequired,
-  setField: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default Tasks;

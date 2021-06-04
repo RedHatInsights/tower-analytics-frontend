@@ -14,16 +14,18 @@ import {
   Radio,
 } from '@patternfly/react-core';
 
+import { actions } from './constants';
+
 const TemplateRow = styled(DataListItemRow)`
   align-items: center;
 `;
 
-const Templates = ({ templates = [], template_id, setField }) => {
+const Templates = ({ templates = [], template_id, dispatch }) => {
   return (
     <Form>
       <>
         <FormGroup
-          label="Link a template to this plan."
+          label="Link a template to this plan:"
           fieldId="template-link-field"
         >
           <DataList aria-label="draggable data list example" isCompact>
@@ -34,7 +36,9 @@ const Templates = ({ templates = [], template_id, setField }) => {
                     <Radio
                       isChecked={template_id === key}
                       name={`radio-${key}`}
-                      onChange={() => setField('template_id', key)}
+                      onChange={() =>
+                        dispatch({ type: actions.SET_TEMPLATE_ID, value: key })
+                      }
                       aria-label={`Radio selector for template ${key}.`}
                       id={`radio-${key}`}
                       value={key}
@@ -60,7 +64,7 @@ const Templates = ({ templates = [], template_id, setField }) => {
 Templates.propTypes = {
   templates: PropTypes.array,
   template_id: PropTypes.number.isRequired,
-  setField: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 Templates.defaultProps = {

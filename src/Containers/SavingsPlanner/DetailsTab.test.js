@@ -15,26 +15,26 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('../../Components/Breadcrumbs', () => {
-    return {
-        __esModule: true,
-        default: async () => [
-            {
-                id: 1,
-                name: 'Details',
-                link: '/savings-planner/1/details'
-            },
-            {
-                id: 2,
-                name: 'Graph',
-                link: '/savings-planner/1/statistics'
-            }
-        ]
-    };
+  return {
+    __esModule: true,
+    default: async () => [
+      {
+        id: 1,
+        name: 'Details',
+        link: '/savings-planner/1/details',
+      },
+      {
+        id: 2,
+        name: 'Graph',
+        link: '/savings-planner/1/statistics',
+      },
+    ],
+  };
 });
 
 const tabs = [
-    { name: 'Details', link: '/savings-planner/1/details', id: 1 },
-    { name: 'Graph', link: '/savings-planner/19/statistics', id: 2 }
+  { name: 'Details', link: '/savings-planner/1/details', id: 1 },
+  { name: 'Graph', link: '/savings-planner/19/statistics', id: 2 },
 ];
 
 const dummyData = [

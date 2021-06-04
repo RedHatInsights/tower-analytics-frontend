@@ -10,9 +10,9 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 
-import Popover from '../../../Components/Popover';
+import { actions } from './constants';
 
-const Details = ({ options, formData, setField }) => {
+const Details = ({ options, formData, dispatch }) => {
   const { name, category, description, manual_time, hosts, frequency_period } =
     formData;
 
@@ -36,7 +36,12 @@ const Details = ({ options, formData, setField }) => {
               id="name-field"
               name="name"
               value={name}
-              onChange={(newName) => setField('name', newName)}
+              onChange={(newName) =>
+                dispatch({
+                  type: actions.SET_NAME,
+                  value: newName,
+                })
+              }
             />
           </FormGroup>
           <FormGroup
@@ -51,7 +56,10 @@ const Details = ({ options, formData, setField }) => {
               aria-label={'Plan category selector'}
               onToggle={() => setCategoryIsOpen(!categoryIsOpen)}
               onSelect={(_event, selection) => {
-                setField('category', selection);
+                dispatch({
+                  type: actions.SET_CATEGORY,
+                  value: selection,
+                });
                 setCategoryIsOpen(false);
               }}
               selections={category}
@@ -63,7 +71,10 @@ const Details = ({ options, formData, setField }) => {
               ))}
             </Select>
           </FormGroup>
-          <FormGroup label="Description" fieldId="description-field">
+          <FormGroup
+            label="Enter a description of your automation plan"
+            fieldId="description-field"
+          >
             <TextInput
               type="text"
               placeholder="Place description here"
@@ -71,16 +82,16 @@ const Details = ({ options, formData, setField }) => {
               name="description"
               value={description}
               onChange={(newDescription) =>
-                setField('description', newDescription)
+                dispatch({
+                  type: actions.SET_DESCRIPTION,
+                  value: newDescription,
+                })
               }
             />
           </FormGroup>
           <FormGroup
             label="How long does it take to do this manually?"
             fieldId="manual-time-field"
-            labelIcon={
-              <Popover content="Select the option closest to the average amount of time the thing you are trying to automate takes each time it is done." />
-            }
           >
             <Select
               id="manual-time-field"
@@ -90,7 +101,10 @@ const Details = ({ options, formData, setField }) => {
               aria-label={'Plan time selector'}
               onToggle={() => setManualTimeIsOpen(!manualTimeIsOpen)}
               onSelect={(_event, selection) => {
-                setField('manual_time', selection);
+                dispatch({
+                  type: actions.SET_MANUAL_TIME,
+                  value: selection,
+                });
                 setManualTimeIsOpen(false);
               }}
               selections={manual_time}
@@ -112,15 +126,17 @@ const Details = ({ options, formData, setField }) => {
               id="hosts-field"
               name="hosts"
               value={hosts}
-              onChange={(newHosts) => setField('hosts', newHosts)}
+              onChange={(newHosts) =>
+                dispatch({
+                  type: actions.SET_HOSTS,
+                  value: newHosts,
+                })
+              }
             />
           </FormGroup>
           <FormGroup
             label="How often do you do this?"
             fieldId="frequency-period-field"
-            labelIcon={
-              <Popover content="Select the option closest to the average number of times the thing you are trying to automate is done manually." />
-            }
           >
             <Select
               id="frequency-period-field"
@@ -132,7 +148,10 @@ const Details = ({ options, formData, setField }) => {
                 setFrequencyPeriodIsOpen(!frequencyPeriodIsOpen);
               }}
               onSelect={(_event, selection) => {
-                setField('frequency_period', selection);
+                dispatch({
+                  type: actions.SET_FREQUENCY_PERIOD,
+                  value: selection,
+                });
                 setFrequencyPeriodIsOpen(false);
               }}
               selections={frequency_period}
@@ -153,7 +172,7 @@ const Details = ({ options, formData, setField }) => {
 Details.propTypes = {
   options: PropTypes.object.isRequired,
   formData: PropTypes.object.isRequired,
-  setField: PropTypes.func.isRequired,
+  dispatch: PropTypes.func.isRequired,
 };
 
 export default Details;
