@@ -3,7 +3,7 @@ import { render, fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 describe('SavingsPlanner/Shared/Details', () => {
-  const setField = jest.fn();
+  const mockDispatch = jest.fn();
   const mockFormData = {
     name: '',
     category: 'system',
@@ -99,7 +99,7 @@ describe('SavingsPlanner/Shared/Details', () => {
   };
 
   beforeEach(() => {
-    setField.mockReset();
+    mockDispatch.mockReset();
   });
 
   it('can see the shared/Details component', () => {
@@ -107,7 +107,7 @@ describe('SavingsPlanner/Shared/Details', () => {
       <Details
         options={mockOptions}
         formData={mockFormData}
-        setField={setField}
+        dispatch={mockDispatch}
       />
     );
   });
@@ -117,7 +117,7 @@ describe('SavingsPlanner/Shared/Details', () => {
       <Details
         options={mockOptions}
         formData={mockFormData}
-        setField={setField}
+        dispatch={mockDispatch}
       />
     );
     userEvent.type(
@@ -125,7 +125,7 @@ describe('SavingsPlanner/Shared/Details', () => {
       'foo'
     );
 
-    expect(setField).toHaveBeenCalled();
+    expect(mockDispatch).toHaveBeenCalled();
   });
 
   it('can enter a plan description', () => {
@@ -133,12 +133,17 @@ describe('SavingsPlanner/Shared/Details', () => {
       <Details
         options={mockOptions}
         formData={mockFormData}
-        setField={setField}
+        dispatch={mockDispatch}
       />
     );
-    userEvent.type(screen.getByRole('textbox', { name: 'Description' }), 'bar');
+    userEvent.type(
+      screen.getByRole('textbox', {
+        name: 'Enter a description of your automation plan',
+      }),
+      'bar'
+    );
 
-    expect(setField).toHaveBeenCalled();
+    expect(mockDispatch).toHaveBeenCalled();
   });
 
   it('can select a category from a dropdown', () => {
@@ -146,13 +151,16 @@ describe('SavingsPlanner/Shared/Details', () => {
       <Details
         options={mockOptions}
         formData={mockFormData}
-        setField={setField}
+        dispatch={mockDispatch}
       />
     );
     fireEvent.click(screen.getByRole('button', { name: 'System' }));
     fireEvent.click(screen.getByRole('option', { name: 'Development' }));
 
-    expect(setField).toHaveBeenCalledWith('category', 'development');
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'SET_CATEGORY',
+      value: 'development',
+    });
   });
 
   it('can select a frequency period from a dropdown', () => {
@@ -160,13 +168,16 @@ describe('SavingsPlanner/Shared/Details', () => {
       <Details
         options={mockOptions}
         formData={mockFormData}
-        setField={setField}
+        dispatch={mockDispatch}
       />
     );
     fireEvent.click(screen.getByRole('button', { name: 'Weekly' }));
     fireEvent.click(screen.getByRole('option', { name: 'Daily' }));
 
-    expect(setField).toHaveBeenCalledWith('frequency_period', 'daily');
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'SET_FREQUENCY_PERIOD',
+      value: 'daily',
+    });
   });
 
   it('can select a manual time from a dropdown', () => {
@@ -174,13 +185,16 @@ describe('SavingsPlanner/Shared/Details', () => {
       <Details
         options={mockOptions}
         formData={mockFormData}
-        setField={setField}
+        dispatch={mockDispatch}
       />
     );
     fireEvent.click(screen.getByRole('button', { name: '240' }));
     fireEvent.click(screen.getByRole('option', { name: '2 hours' }));
 
-    expect(setField).toHaveBeenCalledWith('manual_time', 120);
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'SET_MANUAL_TIME',
+      value: 120,
+    });
   });
 
   it('can change number of hosts', () => {
@@ -188,7 +202,7 @@ describe('SavingsPlanner/Shared/Details', () => {
       <Details
         options={mockOptions}
         formData={mockFormData}
-        setField={setField}
+        dispatch={mockDispatch}
       />
     );
     fireEvent.input(
@@ -198,6 +212,9 @@ describe('SavingsPlanner/Shared/Details', () => {
       { target: { value: 4 } }
     );
 
-    expect(setField).toHaveBeenCalledWith('hosts', '4');
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'SET_HOSTS',
+      value: '4',
+    });
   });
 });
