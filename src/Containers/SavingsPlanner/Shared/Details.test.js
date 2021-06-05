@@ -14,7 +14,7 @@ describe('SavingsPlanner/Shared/Details', () => {
     tasks: [],
     template_id: -2,
   };
-  const mockOptioins = {
+  const mockOptions = {
     data: {
       template_id: [
         {
@@ -102,20 +102,20 @@ describe('SavingsPlanner/Shared/Details', () => {
     setField.mockReset();
   });
 
-  it('user can see the shared/Details component', () => {
+  it('can see the shared/Details component', () => {
     render(
       <Details
-        options={mockOptioins}
+        options={mockOptions}
         formData={mockFormData}
         setField={setField}
       />
     );
   });
 
-  it('user can enter a plan name', () => {
+  it('can enter a plan name', () => {
     render(
       <Details
-        options={mockOptioins}
+        options={mockOptions}
         formData={mockFormData}
         setField={setField}
       />
@@ -128,10 +128,10 @@ describe('SavingsPlanner/Shared/Details', () => {
     expect(setField).toHaveBeenCalled();
   });
 
-  it('user can enter a plan description', () => {
+  it('can enter a plan description', () => {
     render(
       <Details
-        options={mockOptioins}
+        options={mockOptions}
         formData={mockFormData}
         setField={setField}
       />
@@ -141,10 +141,10 @@ describe('SavingsPlanner/Shared/Details', () => {
     expect(setField).toHaveBeenCalled();
   });
 
-  it('user can select a category from a dropdown', () => {
+  it('can select a category from a dropdown', () => {
     render(
       <Details
-        options={mockOptioins}
+        options={mockOptions}
         formData={mockFormData}
         setField={setField}
       />
@@ -152,14 +152,13 @@ describe('SavingsPlanner/Shared/Details', () => {
     fireEvent.click(screen.getByRole('button', { name: 'System' }));
     fireEvent.click(screen.getByRole('option', { name: 'Development' }));
 
-    expect(setField).toHaveBeenCalled();
     expect(setField).toHaveBeenCalledWith('category', 'development');
   });
 
-  it('user can select a frequency period from a dropdown', () => {
+  it('can select a frequency period from a dropdown', () => {
     render(
       <Details
-        options={mockOptioins}
+        options={mockOptions}
         formData={mockFormData}
         setField={setField}
       />
@@ -167,14 +166,13 @@ describe('SavingsPlanner/Shared/Details', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Weekly' }));
     fireEvent.click(screen.getByRole('option', { name: 'Daily' }));
 
-    expect(setField).toHaveBeenCalled();
     expect(setField).toHaveBeenCalledWith('frequency_period', 'daily');
   });
 
-  it('user can select a manual time from a dropdown', () => {
+  it('can select a manual time from a dropdown', () => {
     render(
       <Details
-        options={mockOptioins}
+        options={mockOptions}
         formData={mockFormData}
         setField={setField}
       />
@@ -182,14 +180,13 @@ describe('SavingsPlanner/Shared/Details', () => {
     fireEvent.click(screen.getByRole('button', { name: '240' }));
     fireEvent.click(screen.getByRole('option', { name: '2 hours' }));
 
-    expect(setField).toHaveBeenCalled();
     expect(setField).toHaveBeenCalledWith('manual_time', 120);
   });
 
-  it('user can change number of hosts', () => {
+  it('can change number of hosts', () => {
     render(
       <Details
-        options={mockOptioins}
+        options={mockOptions}
         formData={mockFormData}
         setField={setField}
       />
@@ -201,7 +198,6 @@ describe('SavingsPlanner/Shared/Details', () => {
       { target: { value: 4 } }
     );
 
-    expect(setField).toHaveBeenCalled();
     expect(setField).toHaveBeenCalledWith('hosts', '4');
   });
 });
