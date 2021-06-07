@@ -10,13 +10,13 @@ import {
   ChartType,
   ChartTopLevelType,
   ChartSchema,
-  ApiReturnType,
   ApiType,
 } from 'react-data-explorer';
 
 import RoutedTabs from '../../Components/RoutedTabs';
 import AutomationFormula from "../AutomationCalculator/AutomationFormula";
 import TotalSavings from "../AutomationCalculator/TotalSavings";
+import { NonGroupedApi } from 'react-data-explorer/dist/cjs/components/Chart/Api';
 
 const TopCard = styled(Card)`
   min-height: 500px;
@@ -85,16 +85,25 @@ interface Props {
   data: Data
 };
 
-const getChartData = (data: Data): ApiReturnType => {
+// TODO move this logic to the chart renderer
+const formatNumberAsK = (n: number): string => {
+  if (Math.abs(n) > 1000) {
+    return `${n / 1000}K`;
+  } else {
+    return `${n}`;
+  }
+}
+
+const getChartData = (data: Data): NonGroupedApi => {
   const years = ['initial', 'year1', 'year2', 'year3'];
   const statsData = years.map(year => ({
     year,
-    total_costs: data.projections.monetary_stats.total_costs[year] * -1,
-    total_benefits: data.projections.monetary_stats.total_benefits[year],
-    cumulative_net_benefits: data.projections.monetary_stats.cumulative_net_benefits[year],
-    total_hours_spent_risk_adjusted: data.projections.time_stats.total_hours_spent_risk_adjusted[year] * -1,
-    total_hours_saved: data.projections.time_stats.total_hours_saved[year],
-    cumulative_time_net_benefits: data.projections.time_stats.cumulative_time_net_benefits[year]
+    total_costs: +data.projections.monetary_stats.total_costs[year] * -1,
+    total_benefits: +data.projections.monetary_stats.total_benefits[year],
+    cumulative_net_benefits: +data.projections.monetary_stats.cumulative_net_benefits[year],
+    total_hours_spent_risk_adjusted: +data.projections.time_stats.total_hours_spent_risk_adjusted[year] * -1,
+    total_hours_saved: +data.projections.time_stats.total_hours_saved[year],
+    cumulative_time_net_benefits: +data.projections.time_stats.cumulative_time_net_benefits[year]
   }));
 
   return { items: statsData, type: ApiType.nonGrouped, response_type: '' };
@@ -109,6 +118,42 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
       ? d.projections.monetary_stats.cumulative_net_benefits.year3
       : d.projections.time_stats.cumulative_time_net_benefits.year3
 
+  // TODO move this logic to the chart renderer
+  const getDomainFromData = (): [number, number] => {
+    const chartData = getChartData(data) as NonGroupedApi;
+    let maxInAnyData = 0;
+    chartData.items.forEach(el => {
+      Object.keys(el).forEach((key) => {
+        if (!isNaN(el[key] as number)) {
+          const rounded = Math.pow(10, Math.floor(Math.log10(Math.abs(+el[key]))));
+          const value = rounded === 0 ?
+            0 : 
+            rounded * Math.ceil(Math.abs(+el[key])/rounded);
+          maxInAnyData = Math.max(maxInAnyData, value);
+        }
+      })
+    });
+    return [-maxInAnyData, maxInAnyData];
+  }
+
+  // TODO move this logic to the chart renderer
+  const getTickValues = (no = 3): number[] => {
+    no = Math.pow(2, no); // I don't know why it works only with the power of 2...
+    const domain = getDomainFromData();
+    const interval = Math.abs(domain[0]) + Math.abs(domain[1]);
+    const ticksInterval = interval / no;
+    const ticks = [0];
+    for(let i = 1; i < no/2; i++) {
+      ticks.unshift(-1 * ticksInterval * i);
+      ticks.push(ticksInterval * i);
+    }
+    return ticks; 
+  }
+
+  // TODO move this logic to the chart renderer
+  const getXOffsetForAxis = (height = 600): number => {
+    return height / 2 - 50;
+  };
 
   const barChartData: ChartSchema = {
     charts: [
@@ -120,27 +165,30 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         props: {
           height: 600,
           domainPadding: {
-            y: 20,
             x: 100
           },
-          themeColor: ChartThemeColor.gray,
-          style: {
-            parent: {
-                border: '1px solid gray'
-              }
+          padding: {
+            left: 70,
+            bottom: 70,
           },
+          themeColor: ChartThemeColor.gray
         },
         tooltip: {
           cursor: true
         },
         xAxis: {
           label: 'Time',
+          offsetY: getXOffsetForAxis()
         },
         yAxis: {
           label: chartType == 'Money' ? 'Money Saved' : 'Hours Saved',
+          tickFormat: 'formatNumberAsK',
           style: {
             grid: {stroke: '#D2D2D2'},
+            axisLabel: { padding: 50 }
           },
+          domain: {y: getDomainFromData()},
+          tickValues: getTickValues(),
         },
       },
       {
@@ -204,6 +252,10 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
     ],
     functions: {
       ...functions,
+      axisFormat: {
+        ...functions.axisFormat,
+        formatNumberAsK
+      },
       fetchFnc: () => new Promise((resolve) => { resolve(getChartData(data)); }),
     },
   };
