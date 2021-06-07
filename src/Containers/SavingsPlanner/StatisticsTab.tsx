@@ -120,10 +120,13 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
 
   // TODO move this logic to the chart renderer
   const getDomainFromData = (): [number, number] => {
+    const keys = chartType === 'Money' ?
+      ['total_coststs', 'total_benefits', 'cumulative_net_benefits'] :
+      ['total_hours_spent_risk_adjusted', 'total_hours_saved', 'cumulative_time_net_benefits'];
     const chartData = getChartData(data) as NonGroupedApi;
     let maxInAnyData = 0;
     chartData.items.forEach(el => {
-      Object.keys(el).forEach((key) => {
+      keys.forEach((key) => {
         if (!isNaN(el[key] as number)) {
           const rounded = Math.pow(10, Math.floor(Math.log10(Math.abs(+el[key]))));
           const value = rounded === 0 ?
