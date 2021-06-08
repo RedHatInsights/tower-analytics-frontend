@@ -14,9 +14,9 @@ import {
 } from 'react-data-explorer';
 
 import RoutedTabs from '../../Components/RoutedTabs';
-import AutomationFormula from "../AutomationCalculator/AutomationFormula";
-import TotalSavings from "../AutomationCalculator/TotalSavings";
+import TotalSavings from "./TotalSavings";
 import { NonGroupedApi } from 'react-data-explorer/dist/cjs/components/Chart/Api';
+import FormulaDescription from './FormulaDescription';
 
 const TopCard = styled(Card)`
   min-height: 500px;
@@ -88,7 +88,7 @@ interface Props {
 // TODO move this logic to the chart renderer
 const formatNumberAsK = (n: number): string => {
   if (Math.abs(n) > 1000) {
-    return `${(n / 1000).toFixed(0)}K`;
+    return `${(n / 1000).toFixed(1)}K`;
   } else {
     return `${n.toFixed(0)}`;
   }
@@ -356,7 +356,8 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
   const renderRight = () => (
     <WrapperRight>
       <TotalSavings
-        totalSavings={computeTotalSavings(data)}
+        value={computeTotalSavings(data)}
+        isMoney={chartType === 'Money'}
       />
       <Card>
         <CardBody>
@@ -380,7 +381,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
             </LegendGroup>
         </CardBody>
       </Card>
-      <AutomationFormula />
+      <FormulaDescription isMoney={chartType === 'Money'} />
     </WrapperRight>
   );
 
