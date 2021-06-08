@@ -1,7 +1,19 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Card, CardActions, CardBody, CardHeader, CardTitle, ToggleGroup, ToggleGroupItem } from '@patternfly/react-core';
+import {
+  Card,
+  CardActions,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  List,
+  ListItem,
+  ToggleGroup,
+  ToggleGroupItem
+} from '@patternfly/react-core';
+import { SquareFullIcon } from '@patternfly/react-icons';
+
 import {
   functions,
   ChartRenderer,
@@ -42,20 +54,6 @@ const WrapperRight = styled.div`
   flex-direction: column;
 `;
 
-const LegendGroup = styled.div`
-  display: flex;
-  align-items: center;
-`;
-const LegendIcon = styled.div`
-  height: 10px;
-  width: 10px;
-  margin-right: 10px;
-  background: ${props => props.color};
-`;
-const LegendDescription = styled.div`
-  flex: 1;
-`;
-
 type DataYearsSeries = Record<string, number>;
 
 // This should model the return type somewhere next to the Api.js where the call is made.
@@ -86,11 +84,11 @@ interface Props {
 };
 
 // TODO move this logic to the chart renderer
-const formatNumberAsK = (n: number): string => {
-  if (Math.abs(n) > 1000) {
-    return `${(n / 1000).toFixed(1)}K`;
+const formatNumberAsK = (n: string | number): string => {
+  if (Math.abs(+n) > 1000) {
+    return `${(+n / 1000).toFixed(1)}K`;
   } else {
-    return `${n.toFixed(0)}`;
+    return `${(+n).toFixed(0)}`;
   }
 }
 
@@ -359,25 +357,17 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
       />
       <Card>
         <CardBody>
-            <LegendGroup>
-              <LegendIcon color={chartType == 'Money' ? '#81C46B' : '#0063CF'} />
-              <LegendDescription>
+            <List isPlain>
+              <ListItem icon={<SquareFullIcon color={chartType == 'Money' ? '#81C46B' : '#0063CF'} />}>
                 Savings from automating this plan
-              </LegendDescription>
-            </LegendGroup>
-            <LegendGroup>
-              <LegendIcon color="#58595c" />
-              <LegendDescription>
+              </ListItem>
+              <ListItem icon={<SquareFullIcon color="#58595c" />}>
                 Costs from creating, maintaining and running the automation
-                </LegendDescription>
-            </LegendGroup>
-            <LegendGroup>
-              <LegendIcon color="#EE7A00" />
-              <LegendDescription>
+              </ListItem>
+              <ListItem icon={<SquareFullIcon color="#EE7A00" />}>
                 Cumulative savings over time
-              </LegendDescription>
-            </LegendGroup>
-
+              </ListItem>
+            </List>
         </CardBody>
       </Card>
       <FormulaDescription isMoney={chartType === 'Money'} />
@@ -396,20 +386,6 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
       </TopCard>
     </React.Fragment>
   );
-};
-
-StatisticsTab.propTypes = {
-  tabsArray: PropTypes.arrayOf(
-    PropTypes.exact({
-      id: PropTypes.number,
-      link: PropTypes.string,
-      name: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-    })
-  ).isRequired,
-  // This is really hard to modell, we can just comment out so we don't get 
-  // runtime warnings but TS should make it pretty safe to use as long as it is not
-  // dependent on user input which we sepcify in TS as 'any'
-  // data: PropTypes.object
 };
 
 export default StatisticsTab;
