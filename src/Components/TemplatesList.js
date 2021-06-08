@@ -35,9 +35,9 @@ const TemplatesList = ({ templates, isLoading, qp, title, jobType }) => {
   const [selectedId, setSelectedId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const displayJobType = type => {
-    return (type === 'job' ? 'templates' : 'workflows');
-  }
+  const displayJobType = (type) => {
+    return type === 'job' ? 'templates' : 'workflows';
+  };
 
   return (
     <>
@@ -82,7 +82,10 @@ const TemplatesList = ({ templates, isLoading, qp, title, jobType }) => {
         )}
         {!isLoading &&
           templates.map(({ name, total_count, id }, index) => (
-            <DataListItem aria-labelledby={`top-${displayJobType(jobType)}-detail`} key={index}>
+            <DataListItem
+              aria-labelledby={`top-${displayJobType(jobType)}-detail`}
+              key={index}
+            >
               <DataListCell>
                 <a
                   onClick={() => {

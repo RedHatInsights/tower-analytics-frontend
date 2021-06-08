@@ -27,7 +27,14 @@ const initializeChart = (Chart) => {
 
     let history = useHistory();
 
-    return <Chart {...props} getWidth={getWidth} getHeight={getHeight} history={history} />;
+    return (
+      <Chart
+        {...props}
+        getWidth={getWidth}
+        getHeight={getHeight}
+        history={history}
+      />
+    );
   };
 
   BaseChart.propTypes = {
