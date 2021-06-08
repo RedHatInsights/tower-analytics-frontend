@@ -364,21 +364,22 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
             <LegendGroup>
               <LegendIcon color={chartType == 'Money' ? '#81C46B' : '#0063CF'} />
               <LegendDescription>
-                Operation savings efficiency from Ansible template
-              </LegendDescription>
-            </LegendGroup>
-            <LegendGroup>
-              <LegendIcon color="#EE7A00" />
-              <LegendDescription>
-                Cumulative net benefits
+                Savings from automating this plan
               </LegendDescription>
             </LegendGroup>
             <LegendGroup>
               <LegendIcon color="#58595c" />
               <LegendDescription>
-                Costs
+                Costs from creating, maintaining and running the automation
+                </LegendDescription>
+            </LegendGroup>
+            <LegendGroup>
+              <LegendIcon color="#EE7A00" />
+              <LegendDescription>
+                Cumulative savings over time
               </LegendDescription>
             </LegendGroup>
+
         </CardBody>
       </Card>
       <FormulaDescription isMoney={chartType === 'Money'} />
