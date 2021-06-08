@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { Card, CardBody, ToggleGroup, ToggleGroupItem } from '@patternfly/react-core';
+import { Card, CardActions, CardBody, CardHeader, CardTitle, ToggleGroup, ToggleGroupItem } from '@patternfly/react-core';
 import {
   functions,
   ChartRenderer,
@@ -216,7 +216,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
    */
   const getXOffsetForAxis = (ticks: number[], height = 600): number => {
     const negativeTicks = ticks.filter(n => n < 0).length;
-    return ((height - 120 /*padding*/) / (ticks.length - 1)) * (negativeTicks);
+    return ((height - 70 /*padding*/) / (ticks.length - 1)) * (negativeTicks);
   };
 
   const barChartData: ChartSchema = {
@@ -233,8 +233,8 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
           },
           padding: {
             left: 80,
-            bottom: 80,
-            top: 40,
+            bottom: 70,
+            top: 0,
           },
           themeColor: ChartThemeColor.gray
         },
@@ -250,7 +250,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
           tickFormat: 'formatNumberAsK',
           style: {
             grid: {stroke: '#D2D2D2'},
-            axisLabel: { padding: 50 }
+            axisLabel: { padding: 60 }
           },
           domain: {y: getDomainFromTicks()},
           tickValues: cutCorners(getTickValues()),
@@ -329,23 +329,21 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
     setChartType(type);
   };
 
-  const renderButtons = () => {
-    return (
-      <ToggleGroup aria-label="toggleButton">
-        {types.map(type => (
-          <ToggleGroupItem key={type} text={type} buttonId={type} isSelected={chartType === type} onChange={() => toggleButton(type)} />
-        ))}
-      </ToggleGroup>
-    );
-  };
-
   const renderLeft = () => (
     <WrapperLeft>
       <Card>
-        <div>
-          <div style={{ padding: '1rem', 'float':'left'}}>{data.name}</div>
-          <div style={{ padding: '1rem', 'float':'right'}}>{renderButtons()}</div>
-        </div>
+        <CardHeader>
+          <CardActions>
+            <ToggleGroup aria-label="toggleButton">
+              {types.map(type => (
+                <ToggleGroupItem key={type} text={type} buttonId={type} isSelected={chartType === type} onChange={() => toggleButton(type)} />
+              ))}
+            </ToggleGroup>
+          </CardActions>
+          <CardTitle>
+            {data.name}
+          </CardTitle>
+        </CardHeader>
         <CardBody>
           <ChartRenderer data={barChartData} />
         </CardBody>
