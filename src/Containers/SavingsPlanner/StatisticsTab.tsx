@@ -216,7 +216,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
    */
   const getXOffsetForAxis = (ticks: number[], height = 600): number => {
     const negativeTicks = ticks.filter(n => n < 0).length;
-    return ((height - 70 /*padding*/) / (ticks.length - 1)) * (negativeTicks);
+    return ((height - 80 /*padding*/) / (ticks.length - 1)) * (negativeTicks);
   };
 
   const barChartData: ChartSchema = {
@@ -234,7 +234,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
           padding: {
             left: 80,
             bottom: 70,
-            top: 0,
+            top: 10,
           },
           themeColor: ChartThemeColor.gray
         },
