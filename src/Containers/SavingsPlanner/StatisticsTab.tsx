@@ -70,11 +70,18 @@ const formatNumberAsK = (n: string | number): string => {
   }
 }
 
+const yearLabels: Record<string, string> = {
+  initial: 'Initial',
+  year1: 'Year 1',
+  year2: 'Year 2',
+  year3: 'Year 3',
+}
+
 const getChartData = (data: Data): NonGroupedApi => {
   const years = ['initial', 'year1', 'year2', 'year3'];
   const statsData = years.map(year => ({
     total_costs: +data.projections.monetary_stats.total_costs[year] * -1,
-    year,
+    year: yearLabels[year],
     total_benefits: +data.projections.monetary_stats.total_benefits[year],
     cumulative_net_benefits: +data.projections.monetary_stats.cumulative_net_benefits[year],
     total_hours_spent_risk_adjusted: +data.projections.time_stats.total_hours_spent_risk_adjusted[year] * -1,
