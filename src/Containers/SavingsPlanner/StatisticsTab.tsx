@@ -88,17 +88,17 @@ interface Props {
 // TODO move this logic to the chart renderer
 const formatNumberAsK = (n: number): string => {
   if (Math.abs(n) > 1000) {
-    return `${n / 1000}K`;
+    return `${(n / 1000).toFixed(0)}K`;
   } else {
-    return `${n}`;
+    return `${n.toFixed(0)}`;
   }
 }
 
 const getChartData = (data: Data): NonGroupedApi => {
   const years = ['initial', 'year1', 'year2', 'year3'];
   const statsData = years.map(year => ({
-    year,
     total_costs: +data.projections.monetary_stats.total_costs[year] * -1,
+    year,
     total_benefits: +data.projections.monetary_stats.total_benefits[year],
     cumulative_net_benefits: +data.projections.monetary_stats.cumulative_net_benefits[year],
     total_hours_spent_risk_adjusted: +data.projections.time_stats.total_hours_spent_risk_adjusted[year] * -1,
@@ -119,12 +119,23 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
       : d.projections.time_stats.cumulative_time_net_benefits.year3
 
   // TODO move this logic to the chart renderer
+  /**
+   * It uses the log10 method to get the numbers "nice", meaning:
+   * 10, 20, ..., 100, 200, ..., 1000, 2000, ... 10000, 20000...
+   * 
+   * The keys for each dataset are hardcoded, if the keys change it
+   * should be reflected in this method too. 
+   * 
+   * @returns Gets the highest and the lovest value from the data.
+   */
   const getDomainFromData = (): [number, number] => {
     const keys = chartType === 'Money' ?
-      ['total_coststs', 'total_benefits', 'cumulative_net_benefits'] :
+      ['total_costs', 'total_benefits', 'cumulative_net_benefits'] :
       ['total_hours_spent_risk_adjusted', 'total_hours_saved', 'cumulative_time_net_benefits'];
+
     const chartData = getChartData(data) as NonGroupedApi;
     let maxInAnyData = 0;
+    let minInAnyData = 0;
     chartData.items.forEach(el => {
       keys.forEach((key) => {
         if (!isNaN(el[key] as number)) {
@@ -132,30 +143,80 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
           const value = rounded === 0 ?
             0 : 
             rounded * Math.ceil(Math.abs(+el[key])/rounded);
-          maxInAnyData = Math.max(maxInAnyData, value);
+          
+          if (el[key] > 0) {
+            maxInAnyData = Math.max(maxInAnyData, value);
+          } else {
+            minInAnyData = Math.min(minInAnyData, -value);
+          }
         }
       })
     });
-    return [-maxInAnyData, maxInAnyData];
+    
+    return [minInAnyData, maxInAnyData];
   }
 
   // TODO move this logic to the chart renderer
+  /**
+   * Calculate the ticks from the data set for the y axis of the chart.
+   * The number of tick is fixed in the no and depending how big negative and positive
+   * values are in the chart it can adds more ticks in negative or positive interval.
+   *  
+   * @param no log2 number of ticks we need for the chart.
+   * @returns Array of ticks where the domain should be the edge of this array.
+   */
   const getTickValues = (no = 3): number[] => {
     no = Math.pow(2, no); // I don't know why it works only with the power of 2...
     const domain = getDomainFromData();
     const interval = Math.abs(domain[0]) + Math.abs(domain[1]);
     const ticksInterval = interval / no;
-    const ticks = [0];
-    for(let i = 1; i < no/2; i++) {
-      ticks.unshift(-1 * ticksInterval * i);
-      ticks.push(ticksInterval * i);
+    let firstTick = -ticksInterval;
+    while (firstTick > domain[0] + ticksInterval) {
+      firstTick -= ticksInterval;
+    }
+    const ticks = [];
+    for(let i = 0; i <= no; i++) {
+      ticks.push(firstTick + ticksInterval * i);
     }
     return ticks; 
   }
 
+  /**
+   * Calculates the ticks and returning the edge ticks which mark the domain
+   * for the chart itself.
+   * 
+   * @returns Chart domain got from the ticks. 
+   */
+  const getDomainFromTicks = (): [number, number] => {
+    const ticks = getTickValues();
+    return [ticks[0], ticks[ticks.length -1]];
+  }
+
+  /**
+   * Removes the edge ticks.
+   * 
+   * @param ticks The ticsk for the chart where the edge ticks are the domain for the chart.
+   * @returns Ticks without the edge cases, to there is no tick on the x axis and at the top.
+   */
+  const cutCorners = (ticks: number[]) => {
+    ticks.pop();
+    ticks.shift();
+    return ticks;
+  }
+
   // TODO move this logic to the chart renderer
-  const getXOffsetForAxis = (height = 600): number => {
-    return height / 2 - 50;
+  /**
+   * Calculate the y offset for an axis from height and from the number of ticks
+   * and number of negative ticks. Has the top + bottom padding encoded as constant (120).
+   * Changing the margin will cause the function to calculate the offset wrogly.
+   * 
+   * @param ticks All the ticks for the chart, with the end ticks to be the edges of the domain
+   * @param height The height of the chart
+   * @returns Offset for the axis even if it has negative values.
+   */
+  const getXOffsetForAxis = (ticks: number[], height = 600): number => {
+    const negativeTicks = ticks.filter(n => n < 0).length;
+    return ((height - 120 /*padding*/) / (ticks.length - 1)) * (negativeTicks);
   };
 
   const barChartData: ChartSchema = {
@@ -171,8 +232,9 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
             x: 100
           },
           padding: {
-            left: 70,
-            bottom: 70,
+            left: 80,
+            bottom: 80,
+            top: 40,
           },
           themeColor: ChartThemeColor.gray
         },
@@ -181,7 +243,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         },
         xAxis: {
           label: 'Time',
-          offsetY: getXOffsetForAxis()
+          offsetY: getXOffsetForAxis(getTickValues())
         },
         yAxis: {
           label: chartType == 'Money' ? 'Money Saved' : 'Hours Saved',
@@ -190,8 +252,8 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
             grid: {stroke: '#D2D2D2'},
             axisLabel: { padding: 50 }
           },
-          domain: {y: getDomainFromData()},
-          tickValues: getTickValues(),
+          domain: {y: getDomainFromTicks()},
+          tickValues: cutCorners(getTickValues()),
         },
       },
       {
