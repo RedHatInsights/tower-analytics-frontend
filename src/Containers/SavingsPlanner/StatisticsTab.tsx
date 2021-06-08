@@ -7,6 +7,8 @@ import {
   CardBody,
   CardHeader,
   CardTitle,
+  Grid,
+  GridItem,
   List,
   ListItem,
   ToggleGroup,
@@ -29,30 +31,6 @@ import RoutedTabs from '../../Components/RoutedTabs';
 import TotalSavings from "./TotalSavings";
 import { NonGroupedApi } from 'react-data-explorer/dist/cjs/components/Chart/Api';
 import FormulaDescription from './FormulaDescription';
-
-const TopCard = styled(Card)`
-  min-height: 500px;
-`;
-
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 5fr 2fr;
-  height: 100%;
-`;
-
-const WrapperLeft = styled.div`
-  flex: 5;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-`;
-
-const WrapperRight = styled.div`
-  flex: 2;
-  height: 600;
-  display: flex;
-  flex-direction: column;
-`;
 
 type DataYearsSeries = Record<string, number>;
 
@@ -328,8 +306,8 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
   };
 
   const renderLeft = () => (
-    <WrapperLeft>
-      <Card>
+    <>
+      <Card isPlain>
         <CardHeader>
           <CardActions>
             <ToggleGroup aria-label="toggleButton">
@@ -346,16 +324,16 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
           <ChartRenderer data={barChartData} />
         </CardBody>
       </Card>
-    </WrapperLeft>
+    </>
   );
 
   const renderRight = () => (
-    <WrapperRight>
+    <>
       <TotalSavings
         value={computeTotalSavings(data)}
         isMoney={chartType === 'Money'}
       />
-      <Card>
+      <Card isPlain>
         <CardBody>
             <List isPlain>
               <ListItem icon={<SquareFullIcon color={chartType == 'Money' ? '#81C46B' : '#0063CF'} />}>
@@ -371,20 +349,22 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         </CardBody>
       </Card>
       <FormulaDescription isMoney={chartType === 'Money'} />
-    </WrapperRight>
+    </>
   );
 
 
   return (
-    <React.Fragment>
-      <TopCard>
-        <RoutedTabs tabsArray={tabsArray} />
-        <Wrapper className="statistics-wrapper">
+    <Card>
+      <RoutedTabs tabsArray={tabsArray} />
+      <Grid>
+        <GridItem span={9}>
           {renderLeft()}
+        </GridItem>
+        <GridItem span={3}>
           {renderRight()}
-        </Wrapper>
-      </TopCard>
-    </React.Fragment>
+        </GridItem>
+      </Grid>
+    </Card>
   );
 };
 

@@ -7,7 +7,7 @@ interface Props {
 }
 
 const FormulaDescription: FunctionComponent<Props> = ({ isMoney = true }) => (
-  <Card style={{ height: '100%' }}>
+  <Card isPlain>
     <CardTitle>Automation formula</CardTitle>
     <CardBody>
       <p>

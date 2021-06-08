@@ -14,7 +14,7 @@ interface Props {
 }
 
 const TotalSavings: FunctionComponent<Props> = ({ value = 0, isMoney = true }) => (
-  <Card>
+  <Card isPlain>
     <CardTitle style={{ paddingBottom: '0' }}>Total savings</CardTitle>
     <CardBody>
       <Title
