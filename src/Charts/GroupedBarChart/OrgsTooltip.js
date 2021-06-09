@@ -89,26 +89,30 @@ export default class OrgsTooltip {
       const maxLength = 16;
       date = d.date;
       orgName = d.name;
-      this.moreDetail = !d.name.endsWith('Others');
       jobs = d.value;
       if (d.name.length > maxLength) {
         orgName = d.name.slice(0, maxLength).concat('...');
       }
     }
 
-    this.boxHeight = this.moreDetail ? 68 : 50;
-    this.boundingBox.attr('height', this.boxHeight);
-    this.clickMore.text('');
+    let yAdjust = -11;
     
-    if (this.moreDetail) {
-      this.boxY = this.moreDetail ? -23 : -12;
-      this.yAdjust = this.moreDetail ? -11 : 0;
-
-      this.boundingBox.attr('y', this.boxY);
-      this.date.attr('y', 25 + this.yAdjust);
-      this.jobs.attr('y', 25 + this.yAdjust);
-      this.orgName.attr('y', 10 + this.yAdjust);
+    // Include 'Click for details' if more detail is available
+    console.log(d.moreDetail);
+    if (d.moreDetail) {
+      this.boundingBox.attr('height', 68);
+      this.boundingBox.attr('y', -23);
+      this.date.attr('y', 25 + yAdjust);
+      this.jobs.attr('y', 25 + yAdjust);
+      this.orgName.attr('y', 10 + yAdjust);
       this.clickMore.text('Click for details');
+    } else {
+      this.boundingBox.attr('height', 50);
+      this.boundingBox.attr('y', -12);
+      this.date.attr('y', 25);
+      this.jobs.attr('y', 25);
+      this.orgName.attr('y', 10);
+      this.clickMore.text('');
     }
 
     const formatTooltipDate = formatDate;
