@@ -14,20 +14,19 @@ import {
 } from '@patternfly/react-core';
 import { SquareFullIcon } from '@patternfly/react-icons';
 
-import {
+import ChartRenderer, {
   functions,
-  ChartRenderer,
   ChartKind,
   ChartThemeColor,
   ChartType,
   ChartTopLevelType,
   ChartSchema,
   ApiType,
-} from 'react-data-explorer';
+  NonGroupedApi,
+} from 'react-json-chart-builder';
 
 import RoutedTabs from '../../Components/RoutedTabs';
 import TotalSavings from "./TotalSavings";
-import { NonGroupedApi } from 'react-data-explorer/dist/cjs/components/Chart/Api';
 import FormulaDescription from './FormulaDescription';
 
 type DataYearsSeries = Record<string, number>;
@@ -58,15 +57,6 @@ interface Props {
   }[],
   data: Data
 };
-
-// TODO move this logic to the chart renderer
-const formatNumberAsK = (n: string | number): string => {
-  if (Math.abs(+n) > 1000) {
-    return `${(+n / 1000).toFixed(1)}K`;
-  } else {
-    return `${(+n).toFixed(0)}`;
-  }
-}
 
 const yearLabels: Record<string, string> = {
   initial: 'Initial',
@@ -112,109 +102,6 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
       ? d.projections.monetary_stats.cumulative_net_benefits.year3
       : d.projections.time_stats.cumulative_time_net_benefits.year3
 
-  // TODO move this logic to the chart renderer
-  /**
-   * It uses the log10 method to get the numbers "nice", meaning:
-   * 10, 20, ..., 100, 200, ..., 1000, 2000, ... 10000, 20000...
-   * 
-   * The keys for each dataset are hardcoded, if the keys change it
-   * should be reflected in this method too. 
-   * 
-   * @returns Gets the highest and the lovest value from the data.
-   */
-  const getDomainFromData = (): [number, number] => {
-    const keys = [
-      constants(isMoney).benefit.key,
-      constants(isMoney).cost.key,
-      constants(isMoney).net.key,
-    ]
-
-    const chartData = getChartData(data) as NonGroupedApi;
-    let maxInAnyData = 0;
-    let minInAnyData = 0;
-    chartData.items.forEach(el => {
-      keys.forEach((key) => {
-        if (!isNaN(el[key] as number)) {
-          const rounded = Math.pow(10, Math.floor(Math.log10(Math.abs(+el[key]))));
-          const value = rounded === 0 ?
-            0 : 
-            rounded * Math.ceil(Math.abs(+el[key])/rounded);
-          
-          if (el[key] > 0) {
-            maxInAnyData = Math.max(maxInAnyData, value);
-          } else {
-            minInAnyData = Math.min(minInAnyData, -value);
-          }
-        }
-      })
-    });
-    
-    return [minInAnyData, maxInAnyData];
-  }
-
-  // TODO move this logic to the chart renderer
-  /**
-   * Calculate the ticks from the data set for the y axis of the chart.
-   * The number of tick is fixed in the no and depending how big negative and positive
-   * values are in the chart it can adds more ticks in negative or positive interval.
-   *  
-   * @param no log2 number of ticks we need for the chart.
-   * @returns Array of ticks where the domain should be the edge of this array.
-   */
-  const getTickValues = (no = 3): number[] => {
-    no = Math.pow(2, no); // I don't know why it works only with the power of 2...
-    const domain = getDomainFromData();
-    const interval = Math.abs(domain[0]) + Math.abs(domain[1]);
-    const ticksInterval = interval / no;
-    let firstTick = -ticksInterval;
-    while (firstTick > domain[0] + ticksInterval) {
-      firstTick -= ticksInterval;
-    }
-    const ticks = [];
-    for(let i = 0; i <= no; i++) {
-      ticks.push(firstTick + ticksInterval * i);
-    }
-    return ticks; 
-  }
-
-  /**
-   * Calculates the ticks and returning the edge ticks which mark the domain
-   * for the chart itself.
-   * 
-   * @returns Chart domain got from the ticks. 
-   */
-  const getDomainFromTicks = (): [number, number] => {
-    const ticks = getTickValues();
-    return [ticks[0], ticks[ticks.length -1]];
-  }
-
-  /**
-   * Removes the edge ticks.
-   * 
-   * @param ticks The ticsk for the chart where the edge ticks are the domain for the chart.
-   * @returns Ticks without the edge cases, to there is no tick on the x axis and at the top.
-   */
-  const cutCorners = (ticks: number[]) => {
-    ticks.pop();
-    ticks.shift();
-    return ticks;
-  }
-
-  // TODO move this logic to the chart renderer
-  /**
-   * Calculate the y offset for an axis from height and from the number of ticks
-   * and number of negative ticks. Has the top + bottom padding encoded as constant (120).
-   * Changing the margin will cause the function to calculate the offset wrogly.
-   * 
-   * @param ticks All the ticks for the chart, with the end ticks to be the edges of the domain
-   * @param height The height of the chart
-   * @returns Offset for the axis even if it has negative values.
-   */
-  const getXOffsetForAxis = (ticks: number[], height = 600): number => {
-    const negativeTicks = ticks.filter(n => n < 0).length;
-    return ((height - 80 /*padding*/) / (ticks.length - 1)) * (negativeTicks);
-  };
-
   const barChartData: ChartSchema = {
     charts: [
       {
@@ -228,18 +115,17 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
             x: 100
           },
           padding: {
-            left: 80,
-            bottom: 70,
-            top: 10,
+            bottom: 60,
+            left: 80
           },
           themeColor: ChartThemeColor.gray
         },
         tooltip: {
-          cursor: true
+          cursor: true,
+          stickToAxis: 'x'
         },
         xAxis: {
           label: 'Time',
-          offsetY: getXOffsetForAxis(getTickValues())
         },
         yAxis: {
           label: isMoney ? 'Money Saved' : 'Hours Saved',
@@ -248,8 +134,6 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
             grid: {stroke: '#D2D2D2'},
             axisLabel: { padding: 60 }
           },
-          domain: {y: getDomainFromTicks()},
-          tickValues: cutCorners(getTickValues()),
         },
       },
       {
@@ -257,24 +141,6 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         kind: ChartKind.stack,
         parent: 1000,
         props: {},
-      },
-      {
-        id: 1101,
-        kind: ChartKind.simple,
-        type: ChartType.bar,
-        parent: 1001,
-        props: {
-          x: 'year',
-          y: constants(isMoney).cost.key,
-          barRatio: 0.8,
-          barWidth: 0,
-          style: {
-            data: {
-              fill: constants(isMoney).cost.color,
-              width: 120,
-            },
-          },
-        },
       },
       {
         id: 1102,
@@ -293,6 +159,30 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
             },
           },
         },
+        tooltip: {
+          labelName: 'Savings',
+        },
+      },
+      {
+        id: 1101,
+        kind: ChartKind.simple,
+        type: ChartType.bar,
+        parent: 1001,
+        props: {
+          x: 'year',
+          y: constants(isMoney).cost.key,
+          barRatio: 0.8,
+          barWidth: 0,
+          style: {
+            data: {
+              fill: constants(isMoney).cost.color,
+              width: 120,
+            },
+          },
+        },
+        tooltip: {
+          labelName: 'Costs',
+        },
       },
       {
         id: 1002,
@@ -309,14 +199,13 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
             },
           },
         },
+        tooltip: {
+          labelName: 'Cumulative savings over time',
+        },
       },
     ],
     functions: {
       ...functions,
-      axisFormat: {
-        ...functions.axisFormat,
-        formatNumberAsK
-      },
       fetchFnc: () => new Promise((resolve) => { resolve(getChartData(data)); }),
     },
   };
@@ -335,7 +224,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         </CardTitle>
       </CardHeader>
       <CardBody>
-        <ChartRenderer data={barChartData} />
+        <ChartRenderer schema={barChartData.charts} functions={barChartData.functions} />
       </CardBody>
     </Card>
   );
