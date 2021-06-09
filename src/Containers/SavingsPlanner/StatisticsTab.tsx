@@ -1,6 +1,4 @@
 import React, { FunctionComponent, useState } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import {
   Card,
   CardActions,
@@ -78,10 +76,9 @@ const yearLabels: Record<string, string> = {
 }
 
 const getChartData = (data: Data): NonGroupedApi => {
-  const years = ['initial', 'year1', 'year2', 'year3'];
-  const statsData = years.map(year => ({
-    total_costs: +data.projections.monetary_stats.total_costs[year] * -1,
+  const statsData = Object.keys(yearLabels).map(year => ({
     year: yearLabels[year],
+    total_costs: +data.projections.monetary_stats.total_costs[year] * -1,
     total_benefits: +data.projections.monetary_stats.total_benefits[year],
     cumulative_net_benefits: +data.projections.monetary_stats.cumulative_net_benefits[year],
     total_hours_spent_risk_adjusted: +data.projections.time_stats.total_hours_spent_risk_adjusted[year] * -1,
@@ -92,12 +89,26 @@ const getChartData = (data: Data): NonGroupedApi => {
   return { items: statsData, type: ApiType.nonGrouped, response_type: '' };
 };
 
+const constants = (isMoney: boolean) => ({
+  cost: {
+    key: isMoney ? 'total_costs' : 'total_hours_spent_risk_adjusted',
+    color: '#8B8D8F',
+  },
+  benefit: {
+    key: isMoney ? 'total_benefits' : 'total_hours_saved',
+    color: isMoney ? '#81C46B' : '#0063CF',
+  },
+  net: {
+    key: isMoney ? 'cumulative_net_benefits' : 'cumulative_time_net_benefits',
+    color: '#EE7A00'
+  }
+})
+
 const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
-  const types = ['Money', 'Time'];
-  const [chartType, setChartType] = useState(types[0]);
+  const [isMoney, setIsMoney] = useState(true);
 
   const computeTotalSavings = (d: Data): number =>
-    chartType == 'Money'
+    isMoney
       ? d.projections.monetary_stats.cumulative_net_benefits.year3
       : d.projections.time_stats.cumulative_time_net_benefits.year3
 
@@ -112,9 +123,11 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
    * @returns Gets the highest and the lovest value from the data.
    */
   const getDomainFromData = (): [number, number] => {
-    const keys = chartType === 'Money' ?
-      ['total_costs', 'total_benefits', 'cumulative_net_benefits'] :
-      ['total_hours_spent_risk_adjusted', 'total_hours_saved', 'cumulative_time_net_benefits'];
+    const keys = [
+      constants(isMoney).benefit.key,
+      constants(isMoney).cost.key,
+      constants(isMoney).net.key,
+    ]
 
     const chartData = getChartData(data) as NonGroupedApi;
     let maxInAnyData = 0;
@@ -229,7 +242,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
           offsetY: getXOffsetForAxis(getTickValues())
         },
         yAxis: {
-          label: chartType == 'Money' ? 'Money Saved' : 'Hours Saved',
+          label: isMoney ? 'Money Saved' : 'Hours Saved',
           tickFormat: 'formatNumberAsK',
           style: {
             grid: {stroke: '#D2D2D2'},
@@ -252,12 +265,12 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         parent: 1001,
         props: {
           x: 'year',
-          y: chartType == 'Money' ? 'total_costs' : 'total_hours_spent_risk_adjusted',
+          y: constants(isMoney).cost.key,
           barRatio: 0.8,
           barWidth: 0,
           style: {
             data: {
-              fill: '#8B8D8F',
+              fill: constants(isMoney).cost.color,
               width: 120,
             },
           },
@@ -270,12 +283,12 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         parent: 1001,
         props: {
           x: 'year',
-          y: chartType == 'Money' ? 'total_benefits' : 'total_hours_saved',
+          y: constants(isMoney).benefit.key,
           barRatio: 0.8,
           barWidth: 0,
           style: {
             data: {
-              fill: chartType == 'Money' ? '#81C46B' : '#0063CF',
+              fill: constants(isMoney).benefit.color,
               width: 120,
             },
           },
@@ -288,10 +301,10 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         parent: 1000,
         props: {
           x: 'year',
-          y: chartType === 'Money' ? 'cumulative_net_benefits' : 'cumulative_time_net_benefits',
+          y: constants(isMoney).net.key,
           style: {
             data: {
-              stroke: '#EE7A00',
+              stroke: constants(isMoney).net.color,
               strokeWidth: 5
             },
           },
@@ -308,54 +321,47 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
     },
   };
 
-  const toggleButton = (type: string) => {
-    setChartType(type);
-  };
-
   const renderLeft = () => (
-    <>
-      <Card isPlain>
-        <CardHeader>
-          <CardActions>
-            <ToggleGroup aria-label="toggleButton">
-              {types.map(type => (
-                <ToggleGroupItem key={type} text={type} buttonId={type} isSelected={chartType === type} onChange={() => toggleButton(type)} />
-              ))}
-            </ToggleGroup>
-          </CardActions>
-          <CardTitle>
-            {data.name}
-          </CardTitle>
-        </CardHeader>
-        <CardBody>
-          <ChartRenderer data={barChartData} />
-        </CardBody>
-      </Card>
-    </>
+    <Card isPlain>
+      <CardHeader>
+        <CardActions>
+          <ToggleGroup aria-label="toggleButton">
+            <ToggleGroupItem text='Money' buttonId='money' isSelected={isMoney} onChange={() => setIsMoney(true)} />
+            <ToggleGroupItem text='Time' buttonId='time' isSelected={!isMoney} onChange={() => setIsMoney(false)} />
+          </ToggleGroup>
+        </CardActions>
+        <CardTitle>
+          {data.name}
+        </CardTitle>
+      </CardHeader>
+      <CardBody>
+        <ChartRenderer data={barChartData} />
+      </CardBody>
+    </Card>
   );
 
   const renderRight = () => (
     <>
       <TotalSavings
         value={computeTotalSavings(data)}
-        isMoney={chartType === 'Money'}
+        isMoney={isMoney}
       />
       <Card isPlain>
         <CardBody>
             <List isPlain>
-              <ListItem icon={<SquareFullIcon color={chartType == 'Money' ? '#81C46B' : '#0063CF'} />}>
+            <ListItem icon={<SquareFullIcon color={constants(isMoney).benefit.color} />}>
                 Savings from automating this plan
               </ListItem>
-              <ListItem icon={<SquareFullIcon color="#58595c" />}>
+            <ListItem icon={<SquareFullIcon color={constants(isMoney).cost.color} />}>
                 Costs from creating, maintaining and running the automation
               </ListItem>
-              <ListItem icon={<SquareFullIcon color="#EE7A00" />}>
+            <ListItem icon={<SquareFullIcon color={constants(isMoney).net.color} />}>
                 Cumulative savings over time
               </ListItem>
             </List>
         </CardBody>
       </Card>
-      <FormulaDescription isMoney={chartType === 'Money'} />
+      <FormulaDescription isMoney={isMoney} />
     </>
   );
 
