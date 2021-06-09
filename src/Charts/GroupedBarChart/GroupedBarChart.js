@@ -176,7 +176,7 @@ const GroupedBarChart = ({
       .on('mouseover', function (d) {
         d3.select(this).style('cursor', onClick ? 'pointer' : 'default');
         d3.select(this).style('fill', d3.rgb(color(d.id)).darker(1));
-        tooltip.handleMouseOver();
+        tooltip.handleMouseOver(d);
       })
       .on('mousemove', tooltip.handleMouseOver)
       .on('mouseout', function (d) {
