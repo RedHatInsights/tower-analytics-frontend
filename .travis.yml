@@ -5,7 +5,7 @@ services:
 notifications:
   email: false
 node_js:
-  - '14'
+  - '15'
 install:
   - npm ci
 jobs:

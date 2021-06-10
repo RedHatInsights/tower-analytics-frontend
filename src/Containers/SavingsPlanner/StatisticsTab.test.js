@@ -45,7 +45,7 @@ describe('SavingsPlanner/StatisticsTab', () => {
         <StatisticsTab tabsArray={tabs} data={data} />
       </MemoryRouter>
     );
-    await waitFor(() => screen.getByText('Costs'));
+    await waitFor(() => screen.getByText('Money'));
     expect(screen.getByText('Name')).toBeTruthy();
   });
 });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
@@ -22,13 +22,22 @@ import {
   List,
   ListItem,
 } from '@patternfly/react-core';
-
+import CardActionsRow from '../../Components/CardActionsRow';
+import {
+  relatedResourceDeleteRequests,
+  getRelatedResourceDeleteCounts,
+} from '../../Utilities/getRelatedResourceDeleteDetails';
+import {deletePlan, readPlan} from '../../Api';
+import useRequest, { useDismissableError } from '../../Utilities/useRequest';
+import DeleteButton from '../../Components/DeleteButton/DeleteButton';
 import {
   CheckCircleIcon,
   ExclamationCircleIcon,
 } from '@patternfly/react-icons';
 import { formatDateTime } from '../../Utilities/helpers';
 import RoutedTabs from '../../Components/RoutedTabs';
+import AlertModal from '../../Components/AlertModal/AlertModal';
+import ErrorDetail from '../../Components/ErrorDetail/ErrorDetail';
 
 const CardBody = styled(PFCardBody)`
   min-height: 500px;
@@ -104,6 +113,41 @@ const DetailsTab = ({ tabsArray, plans }) => {
     'Last updated': modified ? <em>{formatDateTime(modified)}</em> : undefined,
   };
 
+  const { request: deletePlans, error: deleteError } = useRequest(
+    useCallback(async () => {
+      await deletePlan({ params: { id: id } });
+      history.push(`/savings-planner`);
+    }, [id, history])
+  );
+
+  const {
+    result: { isDeleteDisabled },
+    error: deleteDetailsError,
+    request: fetchDeleteDetails,
+  } = useRequest(
+    useCallback(async () => {
+      const { results: deleteDetails, error } =
+        await getRelatedResourceDeleteCounts(
+          relatedResourceDeleteRequests.savingsPlan(plans[0], readPlan)
+        );
+      if (error) {
+        throw new Error(error);
+      }
+      if (deleteDetails) {
+        return { isDeleteDisabled: true };
+      }
+      return { isDeleteDisabled: false };
+    }, [plans[0]]),
+    { isDeleteDisabled: false }
+  );
+
+  useEffect(() => {
+    fetchDeleteDetails();
+  }, [fetchDeleteDetails]);
+  const { error, dismissError } = useDismissableError(
+    deleteError || deleteDetailsError
+  );
+
   return (
     <>
       {plans && (
@@ -140,18 +184,41 @@ const DetailsTab = ({ tabsArray, plans }) => {
             </div>
           </CardBody>
           <CardFooter>
-            <Button
-              key="edit-plan-button"
-              variant="primary"
-              aria-label="Edit plan"
-              onClick={() => {
-                history.push({
-                  pathname: `${Paths.savingsPlan}${id}/edit`,
-                });
-              }}
-            >
-              Edit
-            </Button>
+            <CardActionsRow>
+              <Button
+                key="edit-plan-button"
+                variant="primary"
+                aria-label="Edit plan"
+                onClick={() => {
+                  history.push({
+                    pathname: `${Paths.savingsPlan}${id}/edit`,
+                  });
+                }}
+              >
+                Edit
+              </Button>
+              <DeleteButton
+                key={'delete-plan-button'}
+                name={name}
+                modalTitle={'Delete Plan'}
+                onConfirm={deletePlans}
+                disabledTooltip={
+                  isDeleteDisabled && 'This plan cannot be deleted'
+                }
+              >
+                {'Delete'}
+              </DeleteButton>
+            </CardActionsRow>
+            {error && (
+              <AlertModal
+                isOpen={error}
+                onClose={dismissError}
+                title={'Error'}
+                variant="error"
+              >
+                <ErrorDetail error={error} />
+              </AlertModal>
+            )}
           </CardFooter>
         </>
       )}
