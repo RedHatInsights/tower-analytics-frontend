@@ -20,7 +20,7 @@ const TotalSavings: FunctionComponent<Props> = ({ value = 0, isMoney = true }) =
       <Title
         headingLevel="h3"
         size="4xl"
-        style={{ color: 'var(--pf-global--success-color--200)' }}
+        style={{ color: isMoney ? '#81C46B' : '#0063CF' }}
       >
         {isMoney ? `$ ${floatToStringWithCommas(value)}` : `${value.toFixed(0)} hours`}
       </Title>
