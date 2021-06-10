@@ -98,7 +98,6 @@ export default class OrgsTooltip {
     let yAdjust = -11;
     
     // Include 'Click for details' if more detail is available
-    console.log(d.moreDetail);
     if (d.moreDetail) {
       this.boundingBox.attr('height', 68);
       this.boundingBox.attr('y', -23);
