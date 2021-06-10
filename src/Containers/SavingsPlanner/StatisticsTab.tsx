@@ -1,60 +1,33 @@
-import React, { FunctionComponent, useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Card, CardBody, ToggleGroup, ToggleGroupItem } from '@patternfly/react-core';
+import React, { FunctionComponent, useState } from 'react';
 import {
+  Card,
+  CardActions,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  Grid,
+  GridItem,
+  List,
+  ListItem,
+  ToggleGroup,
+  ToggleGroupItem
+} from '@patternfly/react-core';
+import { SquareFullIcon } from '@patternfly/react-icons';
+
+import ChartRenderer, {
   functions,
-  ChartRenderer,
   ChartKind,
   ChartThemeColor,
   ChartType,
   ChartTopLevelType,
   ChartSchema,
-  ApiReturnType,
   ApiType,
-} from 'react-data-explorer';
+  NonGroupedApi,
+} from 'react-json-chart-builder';
 
 import RoutedTabs from '../../Components/RoutedTabs';
-import AutomationFormula from "../AutomationCalculator/AutomationFormula";
-import TotalSavings from "../AutomationCalculator/TotalSavings";
-
-const TopCard = styled(Card)`
-  min-height: 500px;
-`;
-
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 5fr 2fr;
-  height: 100%;
-`;
-
-const WrapperLeft = styled.div`
-  flex: 5;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-`;
-
-const WrapperRight = styled.div`
-  flex: 2;
-  height: 600;
-  display: flex;
-  flex-direction: column;
-`;
-
-const LegendGroup = styled.div`
-  display: flex;
-  align-items: center;
-`;
-const LegendIcon = styled.div`
-  height: 10px;
-  width: 10px;
-  margin-right: 10px;
-  background: ${props => props.color};
-`;
-const LegendDescription = styled.div`
-  flex: 1;
-`;
+import TotalSavings from "./TotalSavings";
+import FormulaDescription from './FormulaDescription';
 
 type DataYearsSeries = Record<string, number>;
 
@@ -85,30 +58,49 @@ interface Props {
   data: Data
 };
 
-const getChartData = (data: Data): ApiReturnType => {
-  const years = ['initial', 'year1', 'year2', 'year3'];
-  const statsData = years.map(year => ({
-    year,
-    total_costs: data.projections.monetary_stats.total_costs[year] * -1,
-    total_benefits: data.projections.monetary_stats.total_benefits[year],
-    cumulative_net_benefits: data.projections.monetary_stats.cumulative_net_benefits[year],
-    total_hours_spent_risk_adjusted: data.projections.time_stats.total_hours_spent_risk_adjusted[year] * -1,
-    total_hours_saved: data.projections.time_stats.total_hours_saved[year],
-    cumulative_time_net_benefits: data.projections.time_stats.cumulative_time_net_benefits[year]
+const yearLabels: Record<string, string> = {
+  initial: 'Initial',
+  year1: 'Year 1',
+  year2: 'Year 2',
+  year3: 'Year 3',
+}
+
+const getChartData = (data: Data): NonGroupedApi => {
+  const statsData = Object.keys(yearLabels).map(year => ({
+    year: yearLabels[year],
+    total_costs: +data.projections.monetary_stats.total_costs[year] * -1,
+    total_benefits: +data.projections.monetary_stats.total_benefits[year],
+    cumulative_net_benefits: +data.projections.monetary_stats.cumulative_net_benefits[year],
+    total_hours_spent_risk_adjusted: +data.projections.time_stats.total_hours_spent_risk_adjusted[year] * -1,
+    total_hours_saved: +data.projections.time_stats.total_hours_saved[year],
+    cumulative_time_net_benefits: +data.projections.time_stats.cumulative_time_net_benefits[year]
   }));
 
   return { items: statsData, type: ApiType.nonGrouped, response_type: '' };
 };
 
+const constants = (isMoney: boolean) => ({
+  cost: {
+    key: isMoney ? 'total_costs' : 'total_hours_spent_risk_adjusted',
+    color: '#8B8D8F',
+  },
+  benefit: {
+    key: isMoney ? 'total_benefits' : 'total_hours_saved',
+    color: isMoney ? '#81C46B' : '#0063CF',
+  },
+  net: {
+    key: isMoney ? 'cumulative_net_benefits' : 'cumulative_time_net_benefits',
+    color: '#EE7A00'
+  }
+})
+
 const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
-  const types = ['Money', 'Time'];
-  const [chartType, setChartType] = useState(types[0]);
+  const [isMoney, setIsMoney] = useState(true);
 
   const computeTotalSavings = (d: Data): number =>
-    chartType == 'Money'
+    isMoney
       ? d.projections.monetary_stats.cumulative_net_benefits.year3
       : d.projections.time_stats.cumulative_time_net_benefits.year3
-
 
   const barChartData: ChartSchema = {
     charts: [
@@ -120,26 +112,27 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         props: {
           height: 600,
           domainPadding: {
-            y: 20,
             x: 100
           },
-          themeColor: ChartThemeColor.gray,
-          style: {
-            parent: {
-                border: '1px solid gray'
-              }
+          padding: {
+            bottom: 60,
+            left: 80
           },
+          themeColor: ChartThemeColor.gray
         },
         tooltip: {
-          cursor: true
+          cursor: true,
+          stickToAxis: 'x'
         },
         xAxis: {
           label: 'Time',
         },
         yAxis: {
-          label: chartType == 'Money' ? 'Money Saved' : 'Hours Saved',
+          label: isMoney ? 'Money Saved' : 'Hours Saved',
+          tickFormat: 'formatNumberAsK',
           style: {
             grid: {stroke: '#D2D2D2'},
+            axisLabel: { padding: 60 }
           },
         },
       },
@@ -150,39 +143,45 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         props: {},
       },
       {
-        id: 1101,
-        kind: ChartKind.simple,
-        type: ChartType.bar,
-        parent: 1001,
-        props: {
-          x: 'year',
-          y: chartType == 'Money' ? 'total_costs' : 'total_hours_spent_risk_adjusted',
-          barRatio: 0.8,
-          barWidth: 0,
-          style: {
-            data: {
-              fill: '#8B8D8F',
-              width: 120,
-            },
-          },
-        },
-      },
-      {
         id: 1102,
         kind: ChartKind.simple,
         type: ChartType.bar,
         parent: 1001,
         props: {
           x: 'year',
-          y: chartType == 'Money' ? 'total_benefits' : 'total_hours_saved',
+          y: constants(isMoney).benefit.key,
           barRatio: 0.8,
           barWidth: 0,
           style: {
             data: {
-              fill: chartType == 'Money' ? '#81C46B' : '#0063CF',
+              fill: constants(isMoney).benefit.color,
               width: 120,
             },
           },
+        },
+        tooltip: {
+          labelName: 'Savings',
+        },
+      },
+      {
+        id: 1101,
+        kind: ChartKind.simple,
+        type: ChartType.bar,
+        parent: 1001,
+        props: {
+          x: 'year',
+          y: constants(isMoney).cost.key,
+          barRatio: 0.8,
+          barWidth: 0,
+          style: {
+            data: {
+              fill: constants(isMoney).cost.color,
+              width: 120,
+            },
+          },
+        },
+        tooltip: {
+          labelName: 'Costs',
         },
       },
       {
@@ -192,13 +191,16 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         parent: 1000,
         props: {
           x: 'year',
-          y: chartType === 'Money' ? 'cumulative_net_benefits' : 'cumulative_time_net_benefits',
+          y: constants(isMoney).net.key,
           style: {
             data: {
-              stroke: '#EE7A00',
+              stroke: constants(isMoney).net.color,
               strokeWidth: 5
             },
           },
+        },
+        tooltip: {
+          labelName: 'Cumulative savings over time',
         },
       },
     ],
@@ -208,91 +210,64 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
     },
   };
 
-  const toggleButton = (type: string) => {
-    setChartType(type);
-  };
-
-  const renderButtons = () => {
-    return (
-      <ToggleGroup aria-label="toggleButton">
-        {types.map(type => (
-          <ToggleGroupItem key={type} text={type} buttonId={type} isSelected={chartType === type} onChange={() => toggleButton(type)} />
-        ))}
-      </ToggleGroup>
-    );
-  };
-
   const renderLeft = () => (
-    <WrapperLeft>
-      <Card>
-        <div>
-          <div style={{ padding: '1rem', 'float':'left'}}>{data.name}</div>
-          <div style={{ padding: '1rem', 'float':'right'}}>{renderButtons()}</div>
-        </div>
-        <CardBody>
-          <ChartRenderer data={barChartData} />
-        </CardBody>
-      </Card>
-    </WrapperLeft>
+    <Card isPlain>
+      <CardHeader>
+        <CardActions>
+          <ToggleGroup aria-label="toggleButton">
+            <ToggleGroupItem text='Money' buttonId='money' isSelected={isMoney} onChange={() => setIsMoney(true)} />
+            <ToggleGroupItem text='Time' buttonId='time' isSelected={!isMoney} onChange={() => setIsMoney(false)} />
+          </ToggleGroup>
+        </CardActions>
+        <CardTitle>
+          {data.name}
+        </CardTitle>
+      </CardHeader>
+      <CardBody>
+        <ChartRenderer schema={barChartData.charts} functions={barChartData.functions} />
+      </CardBody>
+    </Card>
   );
 
   const renderRight = () => (
-    <WrapperRight>
+    <>
       <TotalSavings
-        totalSavings={computeTotalSavings(data)}
+        value={computeTotalSavings(data)}
+        isMoney={isMoney}
       />
-      <Card>
+      <Card isPlain>
         <CardBody>
-            <LegendGroup>
-              <LegendIcon color={chartType == 'Money' ? '#81C46B' : '#0063CF'} />
-              <LegendDescription>
-                Operation savings efficiency from Ansible template
-              </LegendDescription>
-            </LegendGroup>
-            <LegendGroup>
-              <LegendIcon color="#EE7A00" />
-              <LegendDescription>
-                Cumulative net benefits
-              </LegendDescription>
-            </LegendGroup>
-            <LegendGroup>
-              <LegendIcon color="#58595c" />
-              <LegendDescription>
-                Costs
-              </LegendDescription>
-            </LegendGroup>
+            <List isPlain>
+            <ListItem icon={<SquareFullIcon color={constants(isMoney).benefit.color} />}>
+                Savings from automating this plan
+              </ListItem>
+            <ListItem icon={<SquareFullIcon color={constants(isMoney).cost.color} />}>
+                Costs from creating, maintaining and running the automation
+              </ListItem>
+            <ListItem icon={<SquareFullIcon color={constants(isMoney).net.color} />}>
+                Cumulative savings over time
+              </ListItem>
+            </List>
         </CardBody>
       </Card>
-      <AutomationFormula />
-    </WrapperRight>
+      <FormulaDescription isMoney={isMoney} />
+    </>
   );
 
 
   return (
-    <React.Fragment>
-      <TopCard>
-        <RoutedTabs tabsArray={tabsArray} />
-        <Wrapper className="statistics-wrapper">
+    <Card>
+      <RoutedTabs tabsArray={tabsArray} />
+      <Grid>
+        <GridItem span={9}>
           {renderLeft()}
+        </GridItem>
+        <GridItem span={3}>
           {renderRight()}
-        </Wrapper>
-      </TopCard>
-    </React.Fragment>
+        </GridItem>
+      </Grid>
+    </Card>
   );
-};
-
-StatisticsTab.propTypes = {
-  tabsArray: PropTypes.arrayOf(
-    PropTypes.exact({
-      id: PropTypes.number,
-      link: PropTypes.string,
-      name: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
-    })
-  ).isRequired,
-  // This is really hard to modell, we can just comment out so we don't get 
-  // runtime warnings but TS should make it pretty safe to use as long as it is not
-  // dependent on user input which we sepcify in TS as 'any'
-  // data: PropTypes.object
 };
 
 export default StatisticsTab;
