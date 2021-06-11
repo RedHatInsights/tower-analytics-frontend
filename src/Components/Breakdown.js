@@ -40,7 +40,6 @@ function title (str) {
 }
 
 const Breakdown = ({categoryCount, categoryColor}) => {
-    console.log(categoryCount)
     if (typeof(categoryCount) !== 'object' || categoryCount == null) {
         return;
     }
@@ -56,7 +55,6 @@ const Breakdown = ({categoryCount, categoryColor}) => {
             sortedCategories.push([k, v / total, categoryColor[k]]);
         }   
     }
-    console.log(sortedCategories)
 
     sortedCategories.sort((a, b) => {
         if (a[1] < b[1]) {
