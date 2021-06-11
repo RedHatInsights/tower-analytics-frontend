@@ -107,6 +107,15 @@ const DataCellEndCompact = styled(DataCellEnd)`
   padding: 7px !important;
 `;
 
+const ActionContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 2rem;
+`;
+
 const formatTopFailedTask = (data) => {
   if (!data) {
     return;
@@ -225,6 +234,12 @@ const ModalContents = ({
       'job_type',
       'successful_count',
       'failed_count',
+      'error_count',
+      'waiting_count',
+      'pending_count',
+      'canceled_count',
+      'new_count',
+      'running_count',
       'total_count',
       jobType === 'job' ? 'most_failed_tasks' : 'most_failed_steps',
     ],
@@ -238,7 +253,7 @@ const ModalContents = ({
   useEffect(() => {
     if (selectedId) {
       setStats(readJobExplorer({ params: agreggateTemplateParams }));
-      setRelatedJobs(readJobExplorer({ params: relatedTemplateJobsParams }));
+      setRelatedJobs(readJobExplorer({ params: relatedTemplateJobsParams }))
     }
   }, [selectedId]);
 
@@ -250,8 +265,32 @@ const ModalContents = ({
     'Total time'
   ]
 
-  console.log(stats);
-  console.log(relatedJobs);
+  let categoryCount;
+  if (stats == null || stats == 0) {
+    categoryCount = null;
+  } else {
+    categoryCount = {
+      success: stats.successful_count,
+      cancelled: stats.canceled_count,
+      error: stats.error_count,
+      failed: stats.failed_count,
+      new: stats.new_count,
+      pending: stats.pending_count,
+      running: stats.running_count,
+      waiting: stats.waiting_count
+    }
+  }
+
+  const categoryColor = {
+    success: "#95D58E",
+    cancelled: "#2C0000",
+    error: "#EF9234",
+    failed: "#C9190B",
+    new: "#8476D1",
+    pending: "#73C5C5",
+    running: "#2B9AF3",
+    waiting: "#35CAED"
+  }
 
   return (
     <Modal
@@ -263,29 +302,12 @@ const ModalContents = ({
         handleModal(false);
         handleCloseBtn(null);
       }}
-      actions={[
-        <Button
-          key="cancel"
-          variant="secondary"
-          onClick={() => {
-            handleModal(false);
-            handleCloseBtn(null);
-          }}
-        >
-          Close
-        </Button>,
-        <Button
-          component="a"
-          onClick={redirectToJobExplorer}
-          variant="link"
-        >
-          View all jobs
-        </Button>
-      ]}
     >
-      <Breakdown categoryCount={{success: 10, fail: 5, running: 15}} categoryColor={{success: "#00ff00", fail:"#ff0000", running:"#0000ff"}}/>
+      {
+        categoryCount && <Breakdown categoryCount={categoryCount} categoryColor={categoryColor}/>
+      }
 
-      <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }} style={{ marginBottom: '1rem'}}>
+      <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
         <DescriptionListGroup>
           <DescriptionListTerm>Number of runs</DescriptionListTerm>
           <DescriptionListDescription>{stats.total_count ? stats.total_count : 'Unavailable'}</DescriptionListDescription>
@@ -334,37 +356,56 @@ const ModalContents = ({
         </DescriptionListGroup>
       </DescriptionList>
       
-      <Divider component="div" style={{ marginBottom: '.5em'}}/>
+      <Divider component="div" style={{marginTop: '2rem', marginBottom: '1.5rem'}}/>
       <p><strong>Last 5 jobs</strong></p>
-      
-      <TableComposable aria-label='Template information table'>
-        <Thead>
-          <Tr>
-            {
-              tableCols.map((heading, idx) => (
-                <Th key={idx}>{heading}</Th>
-              ))
-            }
-          </Tr>
-        </Thead>
-        
-        {relatedJobs.length <= 0 && <LoadingState />}
-        {relatedJobs.length > 0 && (
-          <Tbody>
-            {
-              relatedJobs.map((job, idx) => (
-                <Tr key={`job-detail-${idx}`}>
-                  <Td>{`${job.id.id} - ${job.id.template_name}`}</Td>
-                  <Td><JobStatus status={job.status} /></Td>
-                  <Td>{job.cluster_name}</Td>
-                  <Td>{formatDateTime(job.finished)}</Td>
-                  <Td>{formatTotalTime(job.elapsed)}</Td>
-                </Tr>
-              ))
-            }
-          </Tbody>
-        )}
-      </TableComposable>
+
+      {relatedJobs.length <= 0 && <LoadingState />}
+      {relatedJobs.length > 0 && (
+        <TableComposable aria-label='Template information table' variant="compact">
+          <Thead>
+            <Tr>
+              {
+                tableCols.map((heading, idx) => (
+                  <Th key={idx}>{heading}</Th>
+                ))
+              }
+            </Tr>
+          </Thead>
+            <Tbody>
+              {
+                relatedJobs.map((job, idx) => (
+                  <Tr key={`job-detail-${idx}`}>
+                    <Td>{`${job.id.id} - ${job.id.template_name}`}</Td>
+                    <Td><JobStatus status={job.status} /></Td>
+                    <Td>{job.cluster_name}</Td>
+                    <Td>{formatDateTime(job.finished)}</Td>
+                    <Td>{formatTotalTime(job.elapsed)}</Td>
+                  </Tr>
+                ))
+              }
+            </Tbody>
+        </TableComposable>
+      )}
+      <ActionContainer>
+        <Button
+          key="cancel"
+          variant="secondary"
+          onClick={() => {
+            handleModal(false);
+            handleCloseBtn(null);
+          }}
+        >
+          Close
+        </Button>
+
+        <Button
+          component="a"
+          onClick={redirectToJobExplorer}
+          variant="link"
+        >
+          View all jobs
+        </Button>
+      </ActionContainer>
     </Modal>
   );
 };
