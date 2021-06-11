@@ -5,6 +5,7 @@ import FilterableToolbar from '../../Components/Toolbar/';
 import ApiErrorState from '../../Components/ApiErrorState';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
+import EmptyList from '../../Components/EmptyList';
 import Pagination from '../../Components/Pagination';
 import PlanCard from './PlanCard';
 import { useQueryParams } from '../../Utilities/useQueryParams';
@@ -159,6 +160,17 @@ const SavingsPlanner = () => {
       {(isLoading || deleteLoading) && (
         <Main style={{ height: '100vh' }}>
           <LoadingState />
+        </Main>
+      )}
+      {isSuccess && data.length === 0 && (
+        <Main>
+          <EmptyList
+            label={'Add plan'}
+            title={'No plans added'}
+            message={canAddPlan ? 'No plans have been added yet. Add your first plan.' : 'No plans have been added yet.'}
+            canAdd={canAddPlan}
+            path={`${pathname}/add`}
+           />
         </Main>
       )}
       {isSuccess && (

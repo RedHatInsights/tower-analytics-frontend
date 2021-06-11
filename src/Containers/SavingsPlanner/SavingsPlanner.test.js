@@ -41,6 +41,16 @@ describe('<SavingsPlanner />', () => {
     expect(screen.getByText('RBAC Access Denied'));
   });
 
+  it('user can see a empty list message with add plan button', async () => {
+    api.readPlans.mockResolvedValue({items: []})
+    await act(async () => {
+      renderPage(SavingsPlanner);
+    });
+    await waitFor(() => screen.getAllByText(/Add plan/i));
+    expect(screen.getByText('No plans added')).toBeTruthy;
+    expect(screen.getAllByText(/Savings Planner/i));
+  });
+
   it('user can see a list of plans', async () => {
     await act(async () => {
       renderPage(SavingsPlanner);

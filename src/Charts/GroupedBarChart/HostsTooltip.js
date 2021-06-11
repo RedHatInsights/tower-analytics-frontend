@@ -33,15 +33,15 @@ export default class HostsTooltip {
     this.boundingBox = this.toolTipBase
       .append('rect')
       .attr('x', 10)
-      .attr('y', -23)
+      .attr('y', -12)
       .attr('rx', 2)
-      .attr('height', 68)
+      .attr('height', 50)
       .attr('width', this.boxWidth)
       .attr('fill', '#393f44');
     this.date = this.toolTipBase
       .append('text')
       .attr('x', 20)
-      .attr('y', 14)
+      .attr('y', 25)
       .attr('font-size', 12)
       .attr('fill', 'white')
       .text('Date');
@@ -50,23 +50,16 @@ export default class HostsTooltip {
       .attr('fill', 'white')
       .attr('font-size', 12)
       .attr('x', 72)
-      .attr('y', 14)
+      .attr('y', 25)
       .text('0 Jobs');
     this.orgName = this.toolTipBase
       .append('text')
       .attr('fill', 'white')
       .attr('font-weight', 800)
       .attr('x', 20)
-      .attr('y', -1)
+      .attr('y', 10)
       .attr('font-size', 12)
       .text('Org');
-    this.clickMore = this.toolTipBase
-      .append('text')
-      .attr('fill', 'white')
-      .attr('x', 20)
-      .attr('y', 30)
-      .attr('font-size', 12)
-      .text('Click for details');
   }
 
   handleMouseOver = (d) => {
@@ -124,13 +117,11 @@ export default class HostsTooltip {
       this.boundingBox.attr('x', -adjustedWidth - 20);
       this.jobs.attr('x', -this.jobsWidth - 20 - 7);
       this.orgName.attr('x', -adjustedWidth - 7);
-      this.clickMore.attr('x', -adjustedWidth - 7);
       this.date.attr('x', -adjustedWidth - 7);
     } else {
       this.toolTipPoint.attr('transform', 'translate(10, 0) rotate(45)');
       this.boundingBox.attr('x', 10);
       this.orgName.attr('x', 20);
-      this.clickMore.attr('x', 20);
       this.jobs.attr('x', adjustedWidth / 2);
       this.date.attr('x', 20);
     }
