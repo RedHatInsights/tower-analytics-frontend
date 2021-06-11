@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import LoadingState from '../Components/LoadingState';
+import Breakdown from '../Components/Breakdown';
+import JobStatus from '../Components/JobStatus';
 import { Paths } from '../paths';
 import { stringify } from 'query-string';
 import useApi from '../Utilities/useApi';
@@ -17,6 +19,23 @@ import {
   Label,
   Modal,
 } from '@patternfly/react-core';
+
+import {
+  DescriptionList,
+  DescriptionListTerm,
+  DescriptionListGroup,
+  DescriptionListDescription,
+  Divider
+} from '@patternfly/react-core';
+
+import { 
+  TableComposable, 
+  Thead, 
+  Tbody, 
+  Tr, 
+  Th, 
+  Td 
+} from '@patternfly/react-table';
 
 import { CircleIcon } from '@patternfly/react-icons';
 
@@ -223,6 +242,17 @@ const ModalContents = ({
     }
   }, [selectedId]);
 
+  const tableCols = [
+    'Id/Name',
+    'Status',
+    'Cluster',
+    'Finished',
+    'Total time'
+  ]
+
+  console.log(stats);
+  console.log(relatedJobs);
+
   return (
     <Modal
       aria-label="modal"
@@ -244,94 +274,97 @@ const ModalContents = ({
         >
           Close
         </Button>,
+        <Button
+          component="a"
+          onClick={redirectToJobExplorer}
+          variant="link"
+        >
+          View all jobs
+        </Button>
       ]}
     >
-      <DataList aria-label="Selected Template Details">
-        <PFDataListItemNoBorder aria-labelledby="Selected Template Statistics">
-          <DataListFocus>
-            <div aria-labelledby="job runs">
-              <b style={{ marginRight: '10px' }}>Number of runs</b>
-              {stats.total_count ? stats.total_count : 'Unavailable'}
-            </div>
-            <div aria-labelledby="total time">
-              <b style={{ marginRight: '10px' }}>Total time</b>
-              {stats.elapsed ? formatTotalTime(stats.elapsed) : 'Unavailable'}
-            </div>
-            <div aria-labelledby="Avg Time">
-              <b style={{ marginRight: '10px' }}>Avg time</b>
-              {stats.elapsed
-                ? formatAvgRun(stats.elapsed, stats.total_count)
-                : 'Unavailable'}
-            </div>
-            <div aria-labelledby="success rate">
-              <b style={{ marginRight: '10px' }}>Success rate</b>
-              {!isNaN(stats.successful_count)
-                ? formatSuccessRate(stats.successful_count, stats.total_count)
-                : 'Unavailable'}
-            </div>
-            {stats.most_failed_tasks && (
-              <div aria-labelledby="most failed task">
-                <b style={{ marginRight: '10px' }}>Most failed task</b>
-                {stats.most_failed_tasks
-                  ? formatTopFailedTask(stats.most_failed_tasks)
-                  : 'Unavailable'}
-              </div>
-            )}
-            {stats.most_failed_steps && (
-              <div aria-labelledby="most failed step">
-                <b style={{ marginRight: '10px' }}>Most failed step</b>
-                {stats.most_failed_steps
-                  ? formatTopFailedStep(stats.most_failed_steps)
-                  : 'Unavailable'}
-              </div>
-            )}
-          </DataListFocus>
-        </PFDataListItemNoBorder>
-        <DataListItemCompact>
-          <DataListCellCompact key="last5jobs">
-            <Label variant="outline">Last 5 jobs</Label>
-          </DataListCellCompact>
-          ,
-          <DataCellEndCompact>
-            <Button
-              component="a"
-              onClick={redirectToJobExplorer}
-              variant="link"
-            >
-              View all jobs
-            </Button>
-          </DataCellEndCompact>
-        </DataListItemCompact>
-        <DataListItemCompact aria-labelledby="datalist header">
-          <PFDataListCell key="job heading">Id/Name</PFDataListCell>
-          <PFDataListCell key="cluster heading">Cluster</PFDataListCell>
-          <PFDataListCell key="start time heading">Start Time</PFDataListCell>
-          <PFDataListCell key="total time heading">Total Time</PFDataListCell>
-        </DataListItemCompact>
+      <Breakdown categoryCount={{success: 10, fail: 5, running: 15}} categoryColor={{success: "#00ff00", fail:"#ff0000", running:"#0000ff"}}/>
+
+      <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }} style={{ marginBottom: '1rem'}}>
+        <DescriptionListGroup>
+          <DescriptionListTerm>Number of runs</DescriptionListTerm>
+          <DescriptionListDescription>{stats.total_count ? stats.total_count : 'Unavailable'}</DescriptionListDescription>
+        </DescriptionListGroup>
+
+        <DescriptionListGroup>
+          <DescriptionListTerm>Total time</DescriptionListTerm>
+          <DescriptionListDescription>{stats.elapsed ? formatTotalTime(stats.elapsed) : 'Unavailable'}</DescriptionListDescription>
+        </DescriptionListGroup>
+
+        <DescriptionListGroup>
+          <DescriptionListTerm>Average time</DescriptionListTerm>
+          <DescriptionListDescription>
+            {stats.elapsed
+              ? formatAvgRun(stats.elapsed, stats.total_count)
+              : 'Unavailable'}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+
+        <DescriptionListGroup>
+          <DescriptionListTerm>Type</DescriptionListTerm>
+          <DescriptionListDescription>
+            {stats.id 
+              ? `${stats.id} (idk here)`
+              : 'Unavailable'
+            }
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+
+        <DescriptionListGroup>
+          <DescriptionListTerm>Success rate</DescriptionListTerm>
+          <DescriptionListDescription>
+            {!isNaN(stats.successful_count)
+              ? formatSuccessRate(stats.successful_count, stats.total_count)
+              : 'Unavailable'}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+
+        <DescriptionListGroup>
+          <DescriptionListTerm>Most failed task</DescriptionListTerm>
+          <DescriptionListDescription>
+            {stats.most_failed_tasks
+              ? formatTopFailedTask(stats.most_failed_tasks)
+              : 'Unavailable'}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+      </DescriptionList>
+      
+      <Divider component="div" style={{ marginBottom: '.5em'}}/>
+      <p><strong>Last 5 jobs</strong></p>
+      
+      <TableComposable aria-label='Template information table'>
+        <Thead>
+          <Tr>
+            {
+              tableCols.map((heading, idx) => (
+                <Th key={idx}>{heading}</Th>
+              ))
+            }
+          </Tr>
+        </Thead>
+        
         {relatedJobs.length <= 0 && <LoadingState />}
-        {relatedJobs.length > 0 &&
-          relatedJobs.map((job, index) => (
-            <DataListItem
-              style={{ padding: '10px 0' }}
-              key={`job-details-${index}`}
-              aria-labelledby="job details"
-            >
-              <PFDataListCell key="job name">
-                {job.status === 'successful' ? success : fail} {job.id.id} -{' '}
-                {job.id.template_name}
-              </PFDataListCell>
-              <PFDataListCell key="job cluster">
-                {job.cluster_name}
-              </PFDataListCell>
-              <PFDataListCell key="start time">
-                {formatDateTime(job.started)}
-              </PFDataListCell>
-              <PFDataListCell key="total time">
-                {formatSeconds(job.elapsed)}
-              </PFDataListCell>
-            </DataListItem>
-          ))}
-      </DataList>
+        {relatedJobs.length > 0 && (
+          <Tbody>
+            {
+              relatedJobs.map((job, idx) => (
+                <Tr key={`job-detail-${idx}`}>
+                  <Td>{`${job.id.id} - ${job.id.template_name}`}</Td>
+                  <Td><JobStatus status={job.status} /></Td>
+                  <Td>{job.cluster_name}</Td>
+                  <Td>{formatDateTime(job.finished)}</Td>
+                  <Td>{formatTotalTime(job.elapsed)}</Td>
+                </Tr>
+              ))
+            }
+          </Tbody>
+        )}
+      </TableComposable>
     </Modal>
   );
 };
