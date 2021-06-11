@@ -2,17 +2,6 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import {
-  DataListCell as PFDataListCell,
-  DataListContent,
-  DataList,
-  DataListItem,
-  DataListItemRow,
-  DataListItemCells as PFDataListItemCells,
-  DataListToggle as PFDataListToggle,
-  Tooltip,
-} from '@patternfly/react-core';
-
 import { 
   TableComposable, 
   Thead, 
@@ -22,8 +11,6 @@ import {
   Td, 
   ExpandableRowContent 
 } from '@patternfly/react-table';
-
-import { ExternalLinkAltIcon as PFExternalLinkIcon } from '@patternfly/react-icons';
 
 import LoadingState from '../Components/LoadingState';
 import { formatDateTime, formatJobType } from '../Utilities/helpers';
