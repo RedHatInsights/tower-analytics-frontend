@@ -331,7 +331,7 @@ const ModalContents = ({
           <DescriptionListTerm>Type</DescriptionListTerm>
           <DescriptionListDescription>
             {stats.id 
-              ? `${stats.id} (idk here)`
+              ? `${stats.id}`
               : 'Unavailable'
             }
           </DescriptionListDescription>
