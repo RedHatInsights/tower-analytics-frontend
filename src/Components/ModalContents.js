@@ -8,7 +8,7 @@ import JobStatus from '../Components/JobStatus';
 import { Paths } from '../paths';
 import { stringify } from 'query-string';
 import useApi from '../Utilities/useApi';
-import { formatDateTime, formatSeconds } from '../Utilities/helpers';
+import { formatDateTime, formatSeconds, formatJobType } from '../Utilities/helpers';
 import { readJobExplorer } from '../Api';
 
 import {
@@ -330,8 +330,8 @@ const ModalContents = ({
         <DescriptionListGroup>
           <DescriptionListTerm>Type</DescriptionListTerm>
           <DescriptionListDescription>
-            {stats.id 
-              ? `${stats.id}`
+            {jobType 
+              ? formatJobType(jobType)
               : 'Unavailable'
             }
           </DescriptionListDescription>
