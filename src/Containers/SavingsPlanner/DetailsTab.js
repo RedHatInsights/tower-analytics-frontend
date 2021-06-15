@@ -49,7 +49,7 @@ const CardBody = styled(PFCardBody)`
   }
 `;
 
-const DetailsTab = ({ tabsArray, plans }) => {
+const DetailsTab = ({ tabsArray, plans, canWrite }) => {
   let history = useHistory();
   const {
     id,
@@ -183,43 +183,45 @@ const DetailsTab = ({ tabsArray, plans }) => {
               )}
             </div>
           </CardBody>
-          <CardFooter>
-            <CardActionsRow>
-              <Button
-                key="edit-plan-button"
-                variant="primary"
-                aria-label="Edit plan"
-                onClick={() => {
-                  history.push({
-                    pathname: `${Paths.savingsPlan}${id}/edit`,
-                  });
-                }}
-              >
-                Edit
+          {canWrite && (
+            <CardFooter>
+              <CardActionsRow>
+                <Button
+                  key="edit-plan-button"
+                  variant="primary"
+                  aria-label="Edit plan"
+                  onClick={() => {
+                    history.push({
+                      pathname: `${Paths.savingsPlan}${id}/edit`,
+                    });
+                  }}
+                >
+                  Edit
               </Button>
-              <DeleteButton
-                key={'delete-plan-button'}
-                name={name}
-                modalTitle={'Delete Plan'}
-                onConfirm={deletePlans}
-                disabledTooltip={
-                  isDeleteDisabled && 'This plan cannot be deleted'
-                }
-              >
-                {'Delete'}
-              </DeleteButton>
-            </CardActionsRow>
-            {error && (
-              <AlertModal
-                isOpen={error}
-                onClose={dismissError}
-                title={'Error'}
-                variant="error"
-              >
-                <ErrorDetail error={error} />
-              </AlertModal>
-            )}
-          </CardFooter>
+                <DeleteButton
+                  key={'delete-plan-button'}
+                  name={name}
+                  modalTitle={'Delete Plan'}
+                  onConfirm={deletePlans}
+                  disabledTooltip={
+                    isDeleteDisabled && 'This plan cannot be deleted'
+                  }
+                >
+                  {'Delete'}
+                </DeleteButton>
+              </CardActionsRow>
+              {error && (
+                <AlertModal
+                  isOpen={error}
+                  onClose={dismissError}
+                  title={'Error'}
+                  variant="error"
+                >
+                  <ErrorDetail error={error} />
+                </AlertModal>
+              )}
+            </CardFooter>
+          )}
         </>
       )}
     </>
@@ -229,6 +231,7 @@ const DetailsTab = ({ tabsArray, plans }) => {
 DetailsTab.propTypes = {
   plans: PropTypes.array,
   tabsArray: PropTypes.array,
+  canWrite: PropTypes.bool.isRequired
 };
 
 export default DetailsTab;

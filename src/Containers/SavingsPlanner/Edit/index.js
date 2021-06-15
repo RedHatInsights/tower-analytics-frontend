@@ -1,14 +1,17 @@
 import React, { useEffect } from 'react';
+import { Redirect, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import useApi from '../../../Utilities/useApi';
 
 import { readPlanOptions } from '../../../Api';
+import { Paths } from '../../../paths';
 
 import Form from '../Shared/Form';
 
 const Edit = ({ data }) => {
   const [options, setOptions] = useApi({});
+  const { id } = useParams();
 
   useEffect(() => {
     setOptions(readPlanOptions());
@@ -23,7 +26,7 @@ const Edit = ({ data }) => {
   )
 
   if (options.isSuccess) {
-    return canWrite ? showEdit() : <Redirect to={Paths.savingsPlanner} />;
+    return canWrite ? showEdit() : <Redirect to={`${Paths.savingsPlanner}/${id}`} />;
   }
   return null;
 };
