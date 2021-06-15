@@ -28,11 +28,6 @@ import { useDeleteItems } from "../../Utilities/useRequest";
 import ErrorDetail from "../../Components/ErrorDetail";
 import AlertModal from "../../Components/AlertModal";
 
-
-// TODO: update to fining this out from API RBAC
-const canAddPlan = true;
-const canDeletePlan = true;
-
 const SavingsPlanner = () => {
   const history = useHistory();
   const { pathname } = useLocation();
@@ -68,6 +63,8 @@ const SavingsPlanner = () => {
   useEffect(() => {
     fetchEndpoints();
   }, [queryParams]);
+  
+  const canWrite = options.isSuccess && (options.data.meta.rbac.perms.write === true || options.data.meta.rbac.perms.all === true);
 
   const { selected, isAllSelected, handleSelect, setSelected } = useSelected(
     data
@@ -109,7 +106,7 @@ const SavingsPlanner = () => {
           filters={queryParams}
           setFilters={setFromToolbar}
           additionalControls={[
-            ...(canAddPlan
+            ...(canWrite
               ? [
                   <Button
                     key="add-plan-button"
@@ -125,7 +122,7 @@ const SavingsPlanner = () => {
                   </Button>,
                 ]
               : []),
-              (canDeletePlan &&
+              (canWrite &&
                 <ToolbarDeleteButton
                   key="delete-plan-button"
                   onDelete={handleDelete}
@@ -184,6 +181,7 @@ const SavingsPlanner = () => {
                   selected={selected}
                   plan={datum}
                   handleSelect={handleSelect}
+                  canWrite={canWrite}
                 />
               ))}
           </Gallery>

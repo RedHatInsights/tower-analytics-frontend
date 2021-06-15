@@ -14,15 +14,18 @@ const Edit = ({ data }) => {
     setOptions(readPlanOptions());
   }, []);
 
-  const title = 'Edit plan';
+  const canWrite = (options.isSuccess && (options.data.meta.rbac.perms.write === true || options.data.meta.rbac.perms.all === true));
 
-  return (
+  const showEdit = () => (
     <>
-      {options.isSuccess && (
-        <Form title={title} options={options} data={data} />
-      )}
+      <Form title="Edit plan" options={options} data={data} />
     </>
-  );
+  )
+
+  if (options.isSuccess) {
+    return canWrite ? showEdit() : <Redirect to={Paths.savingsPlanner} />;
+  }
+  return null;
 };
 
 Edit.propTypes = {
