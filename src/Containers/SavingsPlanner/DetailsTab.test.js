@@ -56,7 +56,7 @@ const dummyData = [
 
 let wrapper;
 it('should render successfully', () => {
-  wrapper = mount(<DetailsTab tabsArray={tabs} plans={dummyData} />);
+  wrapper = mount(<DetailsTab tabsArray={tabs} plans={dummyData} canWrite={true} />);
   wrapper.update();
   expect(wrapper.find('div.pf-c-description-list__text')).toHaveLength(9);
 });

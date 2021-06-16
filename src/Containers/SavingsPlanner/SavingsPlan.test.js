@@ -29,6 +29,11 @@ const dummyData = {
     isLoading: false,
     isSuccess: true,
     error: null,
+    rbac: {
+      perms: {
+        all: true
+      }
+    },
     items: [
       {
         id: 1,

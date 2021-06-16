@@ -1,5 +1,11 @@
 export default {
-  data: {
+    meta: {
+      rbac: {
+        perms: {
+          all: true
+        }
+      }
+    },
     items: {
       template_id: [
         {
@@ -40,7 +46,6 @@ export default {
         },
       ],
     },
-  },
   response: { msg: 'Success' },
   url: '/api/tower-analytics/v1/plan_options/',
 };
