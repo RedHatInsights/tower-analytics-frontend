@@ -40,6 +40,7 @@ const PlanCard = ({
   plan,
   selected = [],
   handleSelect = () => {},
+  canWrite,
 }) => {
   const {
     id,
@@ -103,27 +104,29 @@ const PlanCard = ({
             <Link to={`${match.url}/${id}`}>{name}</Link>
           </CardTitle>
         </CardHeaderMain>
-        <CardActions>
-          <Dropdown
-            onSelect={() => {}}
-            toggle={
-              <KebabToggle
-                onToggle={() => setIsCardKebabOpen(!isCardKebabOpen)}
-              />
-            }
-            isOpen={isCardKebabOpen}
-            isPlain
-            dropdownItems={kebabDropDownItems}
-            position={'right'}
-          />
-          <Checkbox
-            onChange={() => handleSelect(plan)}
-            isChecked={selected.some((row) => row.id === plan.id)}
-            aria-label="card checkbox"
-            id="check-1"
-            name="check1"
-          />
-        </CardActions>
+        {canWrite && (
+          <CardActions>
+            <Dropdown
+              onSelect={() => {}}
+              toggle={
+                <KebabToggle
+                  onToggle={() => setIsCardKebabOpen(!isCardKebabOpen)}
+                />
+              }
+              isOpen={isCardKebabOpen}
+              isPlain
+              dropdownItems={kebabDropDownItems}
+              position={'right'}
+            />
+            <Checkbox
+              onChange={() => handleSelect(plan)}
+              isChecked={selected.some((row) => row.id === plan.id)}
+              aria-label="card checkbox"
+              id="check-1"
+              name="check1"
+            />
+          </CardActions>
+        )}
       </CardHeader>
       <CardBody>
         {description ? <p>{description}</p> : null}
@@ -169,6 +172,7 @@ const PlanCard = ({
 
 PlanCard.propTypes = {
   isSuccess: PropTypes.bool.isRequired,
+  canWrite: PropTypes.bool.isRequired,
   selected: PropTypes.array,
   handleSelect: PropTypes.func,
   plan: PropTypes.object,
