@@ -78,10 +78,18 @@ const PlanCard = ({
 
   const kebabDropDownItems = [
     <React.Fragment key={id}>
-      <DropdownItem key="edit" onClick={() => {}} position="right">
+      <DropdownItem
+        key="edit"
+        onClick={() => history.push(`${match.url}/${id}/edit`)}
+        position="right"
+      >
         Edit
       </DropdownItem>
-      <DropdownItem key="link" onClick={() => {}} position="right">
+      <DropdownItem
+        key="link"
+        onClick={() => history.push(`${match.url}/${id}/edit#link_template`)}
+        position="right"
+      >
         Link template
       </DropdownItem>
     </React.Fragment>,
@@ -110,7 +118,7 @@ const PlanCard = ({
           />
           <Checkbox
             onChange={() => handleSelect(plan)}
-            isChecked={selected.some(row => row.id === plan.id)}
+            isChecked={selected.some((row) => row.id === plan.id)}
             aria-label="card checkbox"
             id="check-1"
             name="check1"
