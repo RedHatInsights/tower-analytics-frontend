@@ -44,11 +44,7 @@ const Form = ({ title, options, data = {} }) => {
       id: 'link_template',
       name: 'Link template',
       component: (
-        <Templates
-          templates={options?.data?.template_id}
-          template_id={formData.template_id}
-          dispatch={dispatch}
-        />
+        <Templates template_id={formData.template_id} dispatch={dispatch} />
       ),
       nextButtonText: 'Save',
     },
