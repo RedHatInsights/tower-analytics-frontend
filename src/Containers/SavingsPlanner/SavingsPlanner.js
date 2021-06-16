@@ -171,8 +171,8 @@ const SavingsPlanner = () => {
           <EmptyList
             label={'Add plan'}
             title={'No plans added'}
-            message={canAddPlan ? 'No plans have been added yet. Add your first plan.' : 'No plans have been added yet.'}
-            canAdd={canAddPlan}
+            message={canWrite ? 'No plans have been added yet. Add your first plan.' : 'No plans have been added yet.'}
+            canAdd={canWrite}
             path={`${pathname}/add`}
            />
         </Main>
