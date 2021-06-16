@@ -27,7 +27,7 @@ import {
   relatedResourceDeleteRequests,
   getRelatedResourceDeleteCounts,
 } from '../../Utilities/getRelatedResourceDeleteDetails';
-import {deletePlan, readPlan} from '../../Api';
+import { deletePlan, readPlan } from '../../Api';
 import useRequest, { useDismissableError } from '../../Utilities/useRequest';
 import DeleteButton from '../../Components/DeleteButton/DeleteButton';
 import {
@@ -197,7 +197,7 @@ const DetailsTab = ({ tabsArray, plans, canWrite }) => {
                   }}
                 >
                   Edit
-              </Button>
+                </Button>
                 <DeleteButton
                   key={'delete-plan-button'}
                   name={name}
@@ -231,7 +231,7 @@ const DetailsTab = ({ tabsArray, plans, canWrite }) => {
 DetailsTab.propTypes = {
   plans: PropTypes.array,
   tabsArray: PropTypes.array,
-  canWrite: PropTypes.bool.isRequired
+  canWrite: PropTypes.bool.isRequired,
 };
 
 export default DetailsTab;

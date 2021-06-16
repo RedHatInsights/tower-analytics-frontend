@@ -31,8 +31,8 @@ const dummyData = {
     error: null,
     rbac: {
       perms: {
-        all: true
-      }
+        all: true,
+      },
     },
     items: [
       {

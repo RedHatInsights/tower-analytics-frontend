@@ -1,6 +1,11 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { deletePlan, preflightRequest, readPlanOptions, readPlans } from '../../Api';
+import {
+  deletePlan,
+  preflightRequest,
+  readPlanOptions,
+  readPlans,
+} from '../../Api';
 import FilterableToolbar from '../../Components/Toolbar/';
 import ApiErrorState from '../../Components/ApiErrorState';
 import LoadingState from '../../Components/LoadingState';
@@ -24,9 +29,9 @@ import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
 
 import ToolbarDeleteButton from '../../Components/Toolbar/ToolbarDeleteButton';
 import useSelected from '../../Utilities/useSelected';
-import { useDeleteItems } from "../../Utilities/useRequest";
-import ErrorDetail from "../../Components/ErrorDetail";
-import AlertModal from "../../Components/AlertModal";
+import { useDeleteItems } from '../../Utilities/useRequest';
+import ErrorDetail from '../../Components/ErrorDetail';
+import AlertModal from '../../Components/AlertModal';
 
 const SavingsPlanner = () => {
   const history = useHistory();
@@ -63,12 +68,14 @@ const SavingsPlanner = () => {
   useEffect(() => {
     fetchEndpoints();
   }, [queryParams]);
-  
-  const canWrite = options.isSuccess && (options.data?.meta?.rbac?.perms?.write === true || options.data?.meta?.rbac?.perms?.all === true);
 
-  const { selected, isAllSelected, handleSelect, setSelected } = useSelected(
-    data
-  );
+  const canWrite =
+    options.isSuccess &&
+    (options.data?.meta?.rbac?.perms?.write === true ||
+      options.data?.meta?.rbac?.perms?.all === true);
+
+  const { selected, isAllSelected, handleSelect, setSelected } =
+    useSelected(data);
 
   const {
     isLoading: deleteLoading,
@@ -78,7 +85,7 @@ const SavingsPlanner = () => {
   } = useDeleteItems(
     useCallback(async () => {
       return Promise.all(
-        selected.map((plan) => deletePlan({ params: {id: plan.id }}))
+        selected.map((plan) => deletePlan({ params: { id: plan.id } }))
       );
     }, [selected]),
     {
@@ -89,7 +96,7 @@ const SavingsPlanner = () => {
   );
 
   const handleDelete = async () => {
-    await deleteItems()
+    await deleteItems();
     setSelected([]);
   };
 
@@ -122,14 +129,14 @@ const SavingsPlanner = () => {
                   </Button>,
                 ]
               : []),
-              (canWrite &&
-                <ToolbarDeleteButton
-                  key="delete-plan-button"
-                  onDelete={handleDelete}
-                  itemsToDelete={selected}
-                  pluralizedItemName={'Savings plan'}
-                />
-              )
+            canWrite && (
+              <ToolbarDeleteButton
+                key="delete-plan-button"
+                onDelete={handleDelete}
+                itemsToDelete={selected}
+                pluralizedItemName={'Savings plan'}
+              />
+            ),
           ]}
           pagination={
             <Pagination
@@ -198,16 +205,16 @@ const SavingsPlanner = () => {
         isSticky
       />
       {deletionError && (
-          <AlertModal
-            aria-label={'Deletion error'}
-            isOpen={deletionError}
-            onClose={clearDeletionError}
-            title={'Error'}
-            variant="error"
-          >
-            {'Failed to delete one or more plans.'}
-            <ErrorDetail error={deletionError} />
-          </AlertModal>
+        <AlertModal
+          aria-label={'Deletion error'}
+          isOpen={deletionError}
+          onClose={clearDeletionError}
+          title={'Error'}
+          variant="error"
+        >
+          {'Failed to delete one or more plans.'}
+          <ErrorDetail error={deletionError} />
+        </AlertModal>
       )}
     </React.Fragment>
   );

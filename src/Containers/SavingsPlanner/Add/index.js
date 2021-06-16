@@ -24,7 +24,10 @@ const Add = () => {
   useEffect(() => {
     setOptions(readPlanOptions());
   }, []);
-  const canWrite = (options.isSuccess && (options.data?.meta?.rbac?.perms?.write === true || options.data?.meta?.rbac?.perms?.all === true));
+  const canWrite =
+    options.isSuccess &&
+    (options.data?.meta?.rbac?.perms?.write === true ||
+      options.data?.meta?.rbac?.perms?.all === true);
   const title = 'Create new plan';
 
   const showAdd = () => (
@@ -43,7 +46,7 @@ const Add = () => {
         </Card>
       </Main>
     </>
-  )
+  );
   if (options.isSuccess) {
     return canWrite ? showAdd() : <Redirect to={Paths.savingsPlanner} />;
   }

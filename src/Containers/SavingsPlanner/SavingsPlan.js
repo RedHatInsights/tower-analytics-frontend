@@ -57,7 +57,8 @@ const SavingsPlan = () => {
     fetchEndpoints();
   }, []);
 
-  const canWrite = isSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
+  const canWrite =
+    isSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
   const tabsArray = [
     {
       id: 0,
@@ -111,13 +112,21 @@ const SavingsPlan = () => {
                   />
                 </Route>
                 <Route path="/savings-planner/:id/details">
-                  <DetailsTab plans={plans} tabsArray={tabsArray} canWrite={canWrite} />
+                  <DetailsTab
+                    plans={plans}
+                    tabsArray={tabsArray}
+                    canWrite={canWrite}
+                  />
                 </Route>
                 <Route path="/savings-planner/:id/edit">
                   <SavingsPlanEdit data={plans[0]} />
                 </Route>
                 <Route path="/savings-planner/:id">
-                  <DetailsTab plans={plans} tabsArray={tabsArray} canWrite={canWrite} />
+                  <DetailsTab
+                    plans={plans}
+                    tabsArray={tabsArray}
+                    canWrite={canWrite}
+                  />
                 </Route>
                 <Route exact path="/savings-planner">
                   <SavingsPlanner />

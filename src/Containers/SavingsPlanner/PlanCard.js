@@ -40,7 +40,7 @@ const PlanCard = ({
   plan,
   selected = [],
   handleSelect = () => {},
-  canWrite
+  canWrite,
 }) => {
   const {
     id,
@@ -96,29 +96,29 @@ const PlanCard = ({
             <Link to={`${match.url}/${id}`}>{name}</Link>
           </CardTitle>
         </CardHeaderMain>
-          {canWrite && (
-            <CardActions>
-                <Dropdown
-                  onSelect={() => {}}
-                  toggle={
-                    <KebabToggle
-                      onToggle={() => setIsCardKebabOpen(!isCardKebabOpen)}
-                    />
-                  }
-                  isOpen={isCardKebabOpen}
-                  isPlain
-                  dropdownItems={kebabDropDownItems}
-                  position={'right'}
+        {canWrite && (
+          <CardActions>
+            <Dropdown
+              onSelect={() => {}}
+              toggle={
+                <KebabToggle
+                  onToggle={() => setIsCardKebabOpen(!isCardKebabOpen)}
                 />
-              <Checkbox
-                onChange={() => handleSelect(plan)}
-                isChecked={selected.some(row => row.id === plan.id)}
-                aria-label="card checkbox"
-                id="check-1"
-                name="check1"
-              />
-            </CardActions>
-          )}
+              }
+              isOpen={isCardKebabOpen}
+              isPlain
+              dropdownItems={kebabDropDownItems}
+              position={'right'}
+            />
+            <Checkbox
+              onChange={() => handleSelect(plan)}
+              isChecked={selected.some((row) => row.id === plan.id)}
+              aria-label="card checkbox"
+              id="check-1"
+              name="check1"
+            />
+          </CardActions>
+        )}
       </CardHeader>
       <CardBody>
         {description ? <p>{description}</p> : null}

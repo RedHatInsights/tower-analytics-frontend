@@ -17,16 +17,23 @@ const Edit = ({ data }) => {
     setOptions(readPlanOptions());
   }, []);
 
-  const canWrite = (options.isSuccess && (options.data?.meta?.rbac?.perms?.write === true || options.data?.meta?.rbac?.perms?.all === true));
+  const canWrite =
+    options.isSuccess &&
+    (options.data?.meta?.rbac?.perms?.write === true ||
+      options.data?.meta?.rbac?.perms?.all === true);
 
   const showEdit = () => (
     <>
       <Form title="Edit plan" options={options} data={data} />
     </>
-  )
+  );
 
   if (options.isSuccess) {
-    return canWrite ? showEdit() : <Redirect to={`${Paths.savingsPlanner}/${id}`} />;
+    return canWrite ? (
+      showEdit()
+    ) : (
+      <Redirect to={`${Paths.savingsPlanner}/${id}`} />
+    );
   }
   return null;
 };

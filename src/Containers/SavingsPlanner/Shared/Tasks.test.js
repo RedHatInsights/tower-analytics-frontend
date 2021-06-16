@@ -23,7 +23,10 @@ describe('SavingsPlanner/Shared/Tasks', () => {
       'qux'
     );
     fireEvent.click(screen.getByRole('button', { name: 'Add task' }));
-    expect(mockDispatch).toHaveBeenCalledWith({"type": "SET_TASKS", "value": mockTasks.concat('qux')});
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'SET_TASKS',
+      value: mockTasks.concat('qux'),
+    });
   });
 
   it('can add a task by hitting "enter" key', () => {
@@ -33,12 +36,18 @@ describe('SavingsPlanner/Shared/Tasks', () => {
     });
     userEvent.type(taskInput, 'quux');
     fireEvent.keyDown(taskInput, { key: 'Enter', code: 'Enter' });
-    expect(mockDispatch).toHaveBeenCalledWith({ "type": "SET_TASKS", "value": mockTasks.concat('quux') });
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'SET_TASKS',
+      value: mockTasks.concat('quux'),
+    });
   });
 
   it('can delete a task', () => {
     render(<Tasks tasks={mockTasks} dispatch={mockDispatch} />);
     fireEvent.click(screen.getAllByRole('button', { name: 'Delete' })[0]);
-    expect(mockDispatch).toHaveBeenCalledWith({ "type": "SET_TASKS", "value": mockTasks.slice(1) });
+    expect(mockDispatch).toHaveBeenCalledWith({
+      type: 'SET_TASKS',
+      value: mockTasks.slice(1),
+    });
   });
 });
