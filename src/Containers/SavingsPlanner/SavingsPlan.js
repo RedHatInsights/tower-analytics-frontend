@@ -57,7 +57,7 @@ const SavingsPlan = () => {
     fetchEndpoints();
   }, []);
 
-  const canWrite = isSuccess && (rbac.perms.write === true || rbac.perms.all === true);
+  const canWrite = isSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
   const tabsArray = [
     {
       id: 0,

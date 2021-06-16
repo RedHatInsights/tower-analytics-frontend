@@ -17,7 +17,7 @@ const Edit = ({ data }) => {
     setOptions(readPlanOptions());
   }, []);
 
-  const canWrite = (options.isSuccess && (options.data.meta.rbac.perms.write === true || options.data.meta.rbac.perms.all === true));
+  const canWrite = (options.isSuccess && (options.data?.meta?.rbac?.perms?.write === true || options.data?.meta?.rbac?.perms?.all === true));
 
   const showEdit = () => (
     <>
