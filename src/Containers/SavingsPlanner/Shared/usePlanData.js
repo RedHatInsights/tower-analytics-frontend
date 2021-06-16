@@ -3,10 +3,6 @@ import { useReducer } from 'react';
 import { actions } from './constants';
 
 const formatPayload = (data) => {
-  if (data.template_id === -2) {
-    delete data.template_id;
-  }
-
   data.tasks = data.tasks.map((task, index) => ({
     task,
     task_order: index + 1,
