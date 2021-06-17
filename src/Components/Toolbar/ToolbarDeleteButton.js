@@ -203,16 +203,18 @@ function ToolbarDeleteButton({
   return (
     <>
       <Tooltip content={renderTooltip()} position="top">
-        <Button
-          variant="secondary"
-          ouiaId="delete-button"
-          spinnerAriaValueText={isLoading ? 'Loading' : undefined}
-          aria-label={'Delete'}
-          onClick={() => toggleModal(true)}
-          isDisabled={isDisabled}
-        >
-          {'Delete'}
-        </Button>
+        <div>
+          <Button
+            variant="secondary"
+            ouiaId="delete-button"
+            spinnerAriaValueText={isLoading ? 'Loading' : undefined}
+            aria-label={'Delete'}
+            onClick={() => toggleModal(true)}
+            isDisabled={isDisabled}
+          >
+            {'Delete'}
+          </Button>
+        </div>
       </Tooltip>
 
       {isModalOpen && (
@@ -228,7 +230,7 @@ function ToolbarDeleteButton({
               variant="danger"
               aria-label={'confirm delete'}
               isDisabled={Boolean(
-                deleteDetails //&& itemsToDelete[0]?.type === 'credential_type'
+                deleteDetails
               )}
               onClick={handleDelete}
             >
