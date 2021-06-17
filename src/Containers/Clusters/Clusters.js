@@ -200,8 +200,7 @@ const Clusters = () => {
                   margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
                   id="d3-bar-chart-root"
                   data={chartData}
-                  templateId={queryParams.template_id}
-                  orgId={queryParams.org_id}
+                  queryParams={queryParams}
                 />
               )}
               {queryParams.cluster_id.length > 0 && isSuccess && (
@@ -209,9 +208,7 @@ const Clusters = () => {
                   margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
                   id="d3-line-chart-root"
                   data={chartData}
-                  clusterId={queryParams.cluster_id}
-                  templateId={queryParams.template_id}
-                  orgId={queryParams.org_id}
+                  queryParams={queryParams}
                 />
               )}
             </CardBody>

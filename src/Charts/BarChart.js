@@ -23,15 +23,16 @@ class BarChart extends Component {
   redirectToJobExplorer({ data: { DATE: date } }) {
     const { jobExplorer } = Paths;
     const formattedDate = formatDate(date);
-    const { orgId, templateId } = this.props;
     const initialQueryParams = {
       start_date: formattedDate,
       end_date: formattedDate,
       quick_date_range: 'custom',
       status: ['failed', 'successful'],
-      template_id: templateId,
-      org_id: orgId,
+      template_id: this.props.queryParams.template_id,
+      org_id: this.props.queryParams.org_id,
+      job_type: this.props.queryParams.job_type
     };
+    
     const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
     this.props.history.push({
       pathname: jobExplorer,
@@ -214,8 +215,7 @@ class BarChart extends Component {
 
 BarChart.propTypes = {
   id: PropTypes.string,
-  templateId: PropTypes.array,
-  orgId: PropTypes.array,
+  queryParams: PropTypes.object,
   data: PropTypes.array,
   margin: PropTypes.object,
   getHeight: PropTypes.func,
