@@ -26,7 +26,6 @@ const JobExplorerList = ({ jobs }) => {
       [idx]: !expanded[idx]
     });
   }
-  let rowIdx = -2
 
   return (
     <TableComposable aria-label="Job Explorer Table" variant="compact">
@@ -42,13 +41,10 @@ const JobExplorerList = ({ jobs }) => {
       </Thead>
       <Tbody>
         {
-          jobs.map((job, idx) => {
-            rowIdx += 2;
-
-            return (
-              <React.Fragment key={idx}>
-                <Tr key={rowIdx}>
-                  <Td key={`row-${rowIdx}_0`} 
+          jobs.map((job, idx) => (
+              <React.Fragment key={job.id.id}>
+                <Tr>
+                  <Td
                     expand={{
                       rowIndex: idx,
                       isExpanded: expanded[idx],
@@ -61,21 +57,20 @@ const JobExplorerList = ({ jobs }) => {
                   <Td>{job.org_name}</Td>
                   <Td>{formatJobType(job.job_type)}</Td>
                 </Tr>
-                <Tr key={rowIdx + 1} isExpanded={expanded[idx] === true}>
-                  <Td key={`row-${rowIdx + 1}_0`} />
-                  <Td key={`row-${rowIdx + 1}_1`} noPadding={false} colSpan={2}>
+                <Tr isExpanded={expanded[idx] === true}>
+                  <Td noPadding={false} colSpan={2}>
                     <ExpandableRowContent><strong>Created:</strong> {formatDateTime(job.created)}</ExpandableRowContent>
                   </Td>
-                  <Td key={`row-${rowIdx + 1}_2`} noPadding={false} colSpan={2}>
+                  <Td noPadding={false} colSpan={2}>
                     <ExpandableRowContent><strong>Started:</strong> {formatDateTime(job.started)}</ExpandableRowContent>
                   </Td>
-                  <Td key={`row-${rowIdx + 1}_3`} noPadding={false} colSpan={2}>
+                  <Td noPadding={false} colSpan={2}>
                     <ExpandableRowContent><strong>Finished:</strong> {formatDateTime(job.finished)}</ExpandableRowContent>
                   </Td>
                 </Tr>
               </React.Fragment>
             )
-          })
+          )
         }
       </Tbody>
     </TableComposable>
