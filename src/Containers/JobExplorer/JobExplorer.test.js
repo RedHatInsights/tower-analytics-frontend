@@ -169,7 +169,8 @@ describe('Containers/JobExplorer', () => {
     wrapper.update();
 
     // The fetchMock returns 5 data + the header row
-    expect(wrapper.find('.pf-c-data-list__item-row')).toHaveLength(6);
+    // Does not include expandable rows
+    expect(wrapper.find('tr:not(.pf-c-table__expandable-row)')).toHaveLength(6);
   });
 
   it('should display the correct page number', async () => {
