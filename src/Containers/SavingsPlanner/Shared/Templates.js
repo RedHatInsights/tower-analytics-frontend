@@ -52,6 +52,8 @@ const initialQueryParams = {
   limit: 10,
   group_by_time: false,
   offset: 0,
+  sort_options: 'name',
+  sort_order: 'desc',
 };
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
@@ -125,7 +127,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
           >
             <FilterableToolbar
               hideQuickDateRange
-              hideSortOptions
               categories={options.data}
               filters={queryParams}
               setFilters={setFromToolbar}
