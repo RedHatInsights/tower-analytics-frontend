@@ -209,33 +209,42 @@ const ModalContents = ({
   const descriptionStats = [
     {
       label: 'Number of runs',
+      id: 'total-runs',
       value: stats.total_count ? stats.total_count : 'Unavailable',
     },
     {
       label: 'Total time',
+      id: 'total-time',
       value: stats.elapsed ? formatTotalTime(stats.elapsed) : 'Unavailable',
     },
     {
       label: 'Average time',
+      id: 'avg-time',
       value: stats.elapsed
         ? formatAvgRun(stats.elapsed, stats.total_count)
         : 'Unavailable',
     },
-    { label: 'Type', value: jobType ? formatJobType(jobType) : 'Unavailable' },
+    {
+      label: 'Type',
+      id: 'type',
+      value: jobType ? formatJobType(jobType) : 'Unavailable',
+    },
     {
       label: 'Success rate',
+      id: 'success-rate',
       value: !isNaN(stats.successful_count)
         ? formatSuccessRate(stats.successful_count, stats.total_count)
         : 'Unavailable',
     },
     {
       label: 'Most failed task',
+      id: 'most-failed',
       value: stats.most_failed_tasks
         ? formatTopFailedTask(stats.most_failed_tasks)
         : 'Unavailable',
     },
   ];
-  console.log(descriptionStats);
+
   return (
     <Modal
       aria-label="modal"
@@ -255,8 +264,8 @@ const ModalContents = ({
       )}
 
       <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
-        {descriptionStats.map(({ label, value }) => (
-          <DescriptionListGroup key={label}>
+        {descriptionStats.map(({ label, id, value }) => (
+          <DescriptionListGroup className={id} key={label}>
             <DescriptionListTerm>{label}</DescriptionListTerm>
             <DescriptionListDescription>{value}</DescriptionListDescription>
           </DescriptionListGroup>
