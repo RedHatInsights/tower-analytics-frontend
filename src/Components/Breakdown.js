@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const BarContainer = styled.div`
   display: flex;
@@ -40,9 +41,8 @@ function title(str) {
 }
 
 const Breakdown = ({ categoryCount = {}, categoryColor }) => {
-  const totalCount = Object.keys(categoryCount).reduce(
-    (a, b) => a + categoryCount[b],
-    0
+  const totalCount = Object.values(categoryCount).reduce(
+    (accumulated, currentVal) => accumulated + currentVal
   );
 
   const sortedCategories = Object.keys(categoryCount)
@@ -87,6 +87,11 @@ const Breakdown = ({ categoryCount = {}, categoryColor }) => {
       </LabelsContainer>
     </>
   );
+};
+
+Breakdown.propTypes = {
+  categoryColor: PropTypes.object,
+  categoryCount: PropTypes.object,
 };
 
 export default Breakdown;
