@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+
 import { Modal, Title } from '@patternfly/react-core';
 import {
   CheckCircleIcon,
@@ -16,14 +18,14 @@ const Header = styled.div`
   }
 `;
 
-function AlertModal({
-  isOpen = null,
+const AlertModal = ({
+  isOpen,
   title,
-  label,
-  variant,
+  label = 'Alert modal',
+  variant = 'warning',
   children,
   ...props
-}) {
+}) => {
   const variantIcons = {
     danger: (
       <ExclamationCircleIcon
@@ -69,9 +71,9 @@ function AlertModal({
   return (
     <Modal
       header={customHeader}
-      aria-label={label || 'Alert modal'}
+      aria-label={label}
       aria-labelledby="alert-modal-header-label"
-      isOpen={Boolean(isOpen)}
+      isOpen={!!isOpen}
       variant="small"
       title={title}
       {...props}
@@ -79,6 +81,14 @@ function AlertModal({
       {children}
     </Modal>
   );
-}
+};
+
+AlertModal.propTypes = {
+  isOpen: PropTypes.bool.isRequired,
+  title: PropTypes.string.isRequired,
+  label: PropTypes.string,
+  variant: PropTypes.string,
+  children: PropTypes.node,
+};
 
 export default AlertModal;

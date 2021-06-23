@@ -42,7 +42,7 @@ describe('<SavingsPlanner />', () => {
   });
 
   it('user can see a empty list message with add plan button', async () => {
-    api.readPlans.mockResolvedValue({items: []})
+    api.readPlans.mockResolvedValue({ items: [] });
     await act(async () => {
       renderPage(SavingsPlanner);
     });
