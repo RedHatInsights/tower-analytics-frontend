@@ -22,7 +22,7 @@ const AlertModal = ({
   isOpen,
   title,
   label = 'Alert modal',
-  variant,
+  variant = 'info',
   children,
   ...props
 }) => {

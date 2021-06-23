@@ -36,7 +36,7 @@ const DeleteButton = ({
 
   const toggleModal = async (isModalOpen) => {
     setIsLoading(true);
-    if (deleteDetailsRequests?.length && isModalOpen) {
+    if (deleteDetailsRequests?.length > 0 && isModalOpen) {
       const { results, error } = await getRelatedResourceDeleteCounts(
         deleteDetailsRequests
       );
@@ -53,7 +53,8 @@ const DeleteButton = ({
   if (deleteMessageError) {
     return (
       <AlertModal
-        isOpen={deleteMessageError}
+        isOpen={deleteMessageError ? true : false}
+        variant={'error'}
         title={'Error!'}
         onClose={() => {
           toggleModal(false);

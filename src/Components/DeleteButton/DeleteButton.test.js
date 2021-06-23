@@ -18,6 +18,7 @@ describe('<DeleteButton />', () => {
       <DeleteButton
         onConfirm={() => {}}
         name="Foo"
+        isDisabled={false}
         deleteDetailsRequests={[
           {
             label: 'Plan',
@@ -44,6 +45,7 @@ describe('<DeleteButton />', () => {
       <DeleteButton
         onConfirm={onConfirm}
         itemsToDelete="foo"
+        isDisabled={false}
         deleteDetailsRequests={[
           {
             label: 'Plan',
