@@ -30,9 +30,9 @@ class BarChart extends Component {
       status: ['failed', 'successful'],
       template_id: this.props.queryParams.template_id,
       org_id: this.props.queryParams.org_id,
-      job_type: this.props.queryParams.job_type
+      job_type: this.props.queryParams.job_type,
     };
-    
+
     const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
     this.props.history.push({
       pathname: jobExplorer,

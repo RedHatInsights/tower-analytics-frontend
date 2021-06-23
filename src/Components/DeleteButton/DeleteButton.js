@@ -10,29 +10,31 @@ import ErrorDetail from '../ErrorDetail';
 const WarningMessage = styled(Alert)`
   margin-top: 10px;
 `;
+
 const Label = styled.span`
   && {
     margin-right: 10px;
   }
 `;
-function DeleteButton({
+
+const DeleteButton = ({
   onConfirm,
   modalTitle,
   name,
   variant,
-  children,
   isDisabled,
-  ouiaId,
+  ouiaId = null,
   deleteMessage,
   deleteDetailsRequests,
   disabledTooltip,
-}) {
+  children,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [deleteMessageError, setDeleteMessageError] = useState();
   const [deleteDetails, setDeleteDetails] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const toggleModal = async isModalOpen => {
+  const toggleModal = async (isModalOpen) => {
     setIsLoading(true);
     if (deleteDetailsRequests?.length && isModalOpen) {
       const { results, error } = await getRelatedResourceDeleteCounts(
@@ -62,6 +64,7 @@ function DeleteButton({
       </AlertModal>
     );
   }
+
   return (
     <>
       {disabledTooltip ? (
@@ -144,14 +147,21 @@ function DeleteButton({
       </AlertModal>
     </>
   );
-}
-
-DeleteButton.propTypes = {
-  ouiaId: PropTypes.string,
 };
 
-DeleteButton.defaultProps = {
-  ouiaId: null,
+// TODO Harpreet Kataria I was not able to figure out the exact type of the
+// deleteDetailsRequests. Cna you please fill in?
+DeleteButton.propTypes = {
+  onConfirm: PropTypes.func.isRequired,
+  modalTitle: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  variant: PropTypes.object.isRequired,
+  isDisabled: PropTypes.bool.isRequired,
+  ouiaId: PropTypes.string,
+  deleteMessage: PropTypes.string.isRequired,
+  deleteDetailsRequests: PropTypes.array.isRequired,
+  disabledTooltip: PropTypes.bool.isRequired,
+  children: PropTypes.node,
 };
 
 export default DeleteButton;

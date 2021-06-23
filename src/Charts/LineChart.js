@@ -32,7 +32,7 @@ class LineChart extends Component {
       cluster_id: this.props.queryParams.cluster_id,
       org_id: this.props.queryParams.org_id,
       template_id: this.props.queryParams.template_id,
-      job_type: this.props.queryParams.job_type
+      job_type: this.props.queryParams.job_type,
     };
 
     const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });

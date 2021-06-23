@@ -50,7 +50,7 @@ function ErrorDetail({ error }) {
         <CardBody>
           {Array.isArray(message) ? (
             <ul>
-              {message.map(m =>
+              {message.map((m) =>
                 typeof m === 'string' ? <li key={m}>{m}</li> : null
               )}
             </ul>

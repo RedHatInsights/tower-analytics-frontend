@@ -63,12 +63,12 @@ export default class OrgsTooltip {
       .text('Org');
 
     this.clickMore = this.toolTipBase
-    .append('text')
-    .attr('fill', 'white')
-    .attr('x', 20)
-    .attr('y', 30)
-    .attr('font-size', 12)
-    .text('');
+      .append('text')
+      .attr('fill', 'white')
+      .attr('x', 20)
+      .attr('y', 30)
+      .attr('font-size', 12)
+      .text('');
   }
 
   handleMouseOver = (d) => {
@@ -96,7 +96,7 @@ export default class OrgsTooltip {
     }
 
     let yAdjust = -11;
-    
+
     // Include 'Click for details' if more detail is available
     if (d.moreDetail) {
       this.boundingBox.attr('height', 68);

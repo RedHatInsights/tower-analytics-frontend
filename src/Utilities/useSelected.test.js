@@ -10,7 +10,7 @@ const TestHook = ({ callback }) => {
   return null;
 };
 
-const testHook = callback => {
+const testHook = (callback) => {
   render(<TestHook callback={callback} />);
 };
 
@@ -48,9 +48,8 @@ describe('useSelected hook', () => {
 
   test('should return expected isAllSelected value', () => {
     testHook(() => {
-      ({ selected, isAllSelected, handleSelect, setSelected } = useSelected(
-        array
-      ));
+      ({ selected, isAllSelected, handleSelect, setSelected } =
+        useSelected(array));
     });
 
     act(() => {
