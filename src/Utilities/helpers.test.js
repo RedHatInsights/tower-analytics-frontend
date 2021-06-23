@@ -1,4 +1,3 @@
-/* eslint quotes: 0 */
 import { isNumeric } from './helpers.js';
 import { trimStr } from './helpers.js';
 import { formatDate } from './helpers.js';

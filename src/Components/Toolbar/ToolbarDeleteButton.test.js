@@ -2,7 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { readPlan } from "../../Api";
+import { readPlan } from '../../Api';
 import ToolbarDeleteButton from './ToolbarDeleteButton';
 jest.mock('../../Api');
 
@@ -18,7 +18,9 @@ describe('<ToolbarDeleteButton />', () => {
     deleteDetailsRequests = [
       {
         label: 'Plan',
-        request: readPlan.mockImplementation(() => Promise.resolve({ items: { count: 1 } })),
+        request: readPlan.mockImplementation(() =>
+          Promise.resolve({ items: { count: 1 } })
+        ),
       },
     ];
   });
@@ -28,9 +30,7 @@ describe('<ToolbarDeleteButton />', () => {
   });
 
   test('should render button', () => {
-    render(
-      <ToolbarDeleteButton onDelete={() => {}} itemsToDelete={[]} />
-    );
+    render(<ToolbarDeleteButton onDelete={() => {}} itemsToDelete={[]} />);
     expect(screen.getByRole('button')).toBeTruthy();
   });
 
@@ -46,7 +46,7 @@ describe('<ToolbarDeleteButton />', () => {
     );
     expect(screen.getByLabelText('Delete'));
     await act(async () => {
-       fireEvent.click(screen.getByRole('button'));
+      fireEvent.click(screen.getByRole('button'));
     });
     expect(screen.getByLabelText('Alert modal')).toBeTruthy();
   });
@@ -75,16 +75,23 @@ describe('<ToolbarDeleteButton />', () => {
     expect(screen.getByLabelText('Delete'));
     const button = await waitFor(() => screen.getByRole('button'));
     await act(async () => {
-      fireEvent.click(button)
+      fireEvent.click(button);
     });
     expect(screen.getByLabelText('Alert modal')).toBeTruthy();
-    expect(screen.getByLabelText('confirm delete').closest('button').hasAttribute('disabled')).toBe(false);
+    expect(
+      screen
+        .getByLabelText('confirm delete')
+        .closest('button')
+        .hasAttribute('disabled')
+    ).toBe(false);
   });
 
   test('should disable confirm delete button', async () => {
     const request = {
-      request: readPlan.mockImplementation(() => Promise.resolve({ items: { count: 3 } })),
-      label: 'Plan'
+      request: readPlan.mockImplementation(() =>
+        Promise.resolve({ items: { count: 3 } })
+      ),
+      label: 'Plan',
     };
     await act(async () => {
       render(
@@ -94,30 +101,36 @@ describe('<ToolbarDeleteButton />', () => {
             {
               name: 'foo',
               id: 1,
-            }
+            },
           ]}
           deleteDetailsRequests={[request]}
           deleteMessage="Delete this?"
           warningMessage="Are you sure to want to delete this"
         />
       );
-    })
+    });
 
     expect(screen.getByLabelText('Delete'));
     const button = await waitFor(() => screen.getByRole('button'));
     await act(async () => {
-      fireEvent.click(button)
+      fireEvent.click(button);
     });
     expect(screen.getByLabelText('Alert modal')).toBeTruthy();
-    expect(screen.getByLabelText('confirm delete').closest('button').hasAttribute('disabled')).toBe(true);
+    expect(
+      screen
+        .getByLabelText('confirm delete')
+        .closest('button')
+        .hasAttribute('disabled')
+    ).toBe(true);
   });
 
   test('should open delete error modal', async () => {
-    const request =
-      {
-        label: 'Plan',
-        request: readPlan.mockImplementation(() => Promise.reject({ response: {data: 'An error occurred', status: 403,  }})),
-      };
+    const request = {
+      label: 'Plan',
+      request: readPlan.mockImplementation(() =>
+        Promise.reject({ response: { data: 'An error occurred', status: 403 } })
+      ),
+    };
 
     await act(async () => {
       render(
@@ -133,26 +146,29 @@ describe('<ToolbarDeleteButton />', () => {
 
     const button = await waitFor(() => screen.getByRole('button'));
     await act(async () => {
-      fireEvent.click(button)
+      fireEvent.click(button);
     });
     expect(screen.getByLabelText('Alert modal')).toBeTruthy();
     expect(screen.getByText('An error occurred')).toBeTruthy();
   });
 
-  test('should invoke onDelete prop', async() => {
+  test('should invoke onDelete prop', async () => {
     const onDelete = jest.fn();
-    render(
-      <ToolbarDeleteButton onDelete={onDelete} itemsToDelete={[itemA]} />
-    );
+    render(<ToolbarDeleteButton onDelete={onDelete} itemsToDelete={[itemA]} />);
     const button = await waitFor(() => screen.getByRole('button'));
     await act(async () => {
-      fireEvent.click(button)
+      fireEvent.click(button);
     });
     expect(screen.getByLabelText('Alert modal')).toBeTruthy();
-    expect(screen.getByLabelText('confirm delete').closest('button').hasAttribute('disabled')).toBe(false);
+    expect(
+      screen
+        .getByLabelText('confirm delete')
+        .closest('button')
+        .hasAttribute('disabled')
+    ).toBe(false);
     const deleteButton = screen.getByLabelText('confirm delete');
     await act(async () => {
-      fireEvent.click(deleteButton)
+      fireEvent.click(deleteButton);
     });
     expect(screen.queryByLabelText('Alert modal')).toBe(null);
   });

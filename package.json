@@ -92,7 +92,7 @@
     "test:watch": "jest --coverage=false --watch",
     "integration": "cypress open",
     "integration:headless": "cypress run --headless --browser chrome",
-    "lint": "(eslint config src) & (stylelint 'src/**/*.scss' --config .stylelintrc.json)",
+    "lint": "(eslint config src) && (stylelint 'src/**/*.scss' --config .stylelintrc.json)",
     "lint:js:fix": "eslint config src --fix",
     "start": "NODE_ENV=development webpack serve --config config/dev.webpack.config.js",
     "start:beta": "BETA=true NODE_ENV=development webpack serve --config config/dev.webpack.config.js",

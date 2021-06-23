@@ -24,7 +24,8 @@ describe('EmptyList', () => {
         title={'No plans added'}
         message={'No plans have been added yet. Add your first plan.'}
         canAdd={true}
-        path={'/some_link'}/>
+        path={'/some_link'}
+      />
     );
     expect(screen.getByText('No plans added')).toBeTruthy;
     expect(screen.getByRole('button')).toBeTruthy;

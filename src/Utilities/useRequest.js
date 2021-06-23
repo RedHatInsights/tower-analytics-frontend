@@ -1,5 +1,4 @@
 import { useEffect, useState, useCallback } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
 import useIsMounted from './useIsMounted';
 
 /*
@@ -44,7 +43,6 @@ export default function useRequest(makeRequest, initialValue) {
           }
         }
       },
-      /* eslint-disable-next-line react-hooks/exhaustive-deps */
       [makeRequest]
     ),
     setValue: setResult,
@@ -89,15 +87,13 @@ export function useDismissableError(error) {
  */
 export function useDeleteItems(
   makeRequest,
-  { qsConfig = null, allItemsSelected = false, fetchItems = null } = {}
+  { qsConfig = null, fetchItems = null } = {}
 ) {
-  const location = useLocation();
-  const history = useHistory();
-
-  const { error: requestError, isLoading, request } = useRequest(
-    makeRequest,
-    null
-  );
+  const {
+    error: requestError,
+    isLoading,
+    request,
+  } = useRequest(makeRequest, null);
   const { error, dismissError } = useDismissableError(requestError);
   const deleteItems = async () => {
     await request();

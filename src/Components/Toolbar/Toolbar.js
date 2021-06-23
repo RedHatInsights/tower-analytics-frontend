@@ -86,8 +86,8 @@ const FilterableToolbar = ({
           )}
           {additionalControls.length > 0 && (
             <ToolbarGroup>
-              {additionalControls.map((control) => (
-                <ToolbarItem key={control.key}>{control}</ToolbarItem>
+              {additionalControls.map((control, idx) => (
+                <ToolbarItem key={idx}>{control}</ToolbarItem>
               ))}
             </ToolbarGroup>
           )}

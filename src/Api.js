@@ -146,7 +146,7 @@ export const createPlan = ({ params = {} }) => {
 export const deletePlan = ({ params = {} }) => {
   let url = new URL(`${planEndpoint}${params.id}`, window.location.origin);
   return authenticatedFetch(url, {
-    method: 'DELETE'
+    method: 'DELETE',
   }).then(handleResponse);
 };
 
