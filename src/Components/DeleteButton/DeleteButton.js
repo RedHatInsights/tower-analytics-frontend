@@ -26,7 +26,7 @@ const DeleteButton = ({
   ouiaId = null,
   deleteMessage = 'Delete?',
   deleteDetailsRequests = [],
-  disabledTooltip,
+  disabledTooltip = 'This item cannot be deleted',
   children,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -158,7 +158,7 @@ DeleteButton.propTypes = {
   ouiaId: PropTypes.string,
   deleteMessage: PropTypes.string,
   deleteDetailsRequests: PropTypes.array,
-  disabledTooltip: PropTypes.bool.isRequired,
+  disabledTooltip: PropTypes.bool,
   children: PropTypes.node,
 };
 

@@ -22,7 +22,7 @@ const AlertModal = ({
   isOpen,
   title,
   label = 'Alert modal',
-  variant,
+  variant = 'warning',
   children,
   ...props
 }) => {
@@ -87,7 +87,7 @@ AlertModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
   label: PropTypes.string,
-  variant: PropTypes.string.isRequired,
+  variant: PropTypes.string,
   children: PropTypes.node,
 };
 

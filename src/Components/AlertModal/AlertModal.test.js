@@ -6,7 +6,7 @@ describe('<AlertModal />', () => {
   it('renders the expected content', () => {
     render(
       <MemoryRouter>
-        <AlertModal isOpen="true" title="Danger!" variant="warning">
+        <AlertModal isOpen={true} title={'Danger!'} variant={'warning'}>
           Are you sure?
         </AlertModal>
       </MemoryRouter>

@@ -72,7 +72,7 @@ const ToolbarDeleteButton = ({
   const [deleteDetails, setDeleteDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [deleteMessageError, setDeleteMessageError] = useState();
+  const [deleteMessageError, setDeleteMessageError] = useState('');
   const handleDelete = () => {
     onDelete();
     toggleModal();
@@ -168,7 +168,7 @@ const ToolbarDeleteButton = ({
   if (deleteMessageError) {
     return (
       <AlertModal
-        isOpen={deleteMessageError}
+        isOpen={!!deleteMessageError}
         title={'Error!'}
         onClose={() => {
           toggleModal(false);
