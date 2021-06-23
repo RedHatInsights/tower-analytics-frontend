@@ -12,6 +12,16 @@ import { formatDateTime, formatJobType } from '../Utilities/helpers';
 import { readJobExplorer } from '../Api';
 
 import { Button, Modal } from '@patternfly/react-core';
+import {
+  global_palette_blue_300,
+  global_palette_green_200,
+  global_palette_red_100,
+  global_palette_black_850,
+  global_palette_orange_300,
+  global_palette_purple_300,
+  global_palette_cyan_200,
+  global_palette_light_green_200,
+} from '@patternfly/react-tokens';
 
 import {
   DescriptionList,
@@ -196,14 +206,14 @@ const ModalContents = ({
     : null;
 
   const categoryColor = {
-    success: '#95D58E',
-    cancelled: '#2C0000',
-    error: '#EF9234',
-    failed: '#C9190B',
-    new: '#8476D1',
-    pending: '#73C5C5',
-    running: '#2B9AF3',
-    waiting: '#35CAED',
+    success: global_palette_green_200.value,
+    cancelled: global_palette_black_850.value,
+    error: global_palette_orange_300.value,
+    failed: global_palette_red_100.value,
+    new: global_palette_cyan_200.value,
+    pending: global_palette_purple_300.value,
+    running: global_palette_blue_300.value,
+    waiting: global_palette_light_green_200.value,
   };
 
   const descriptionStats = [

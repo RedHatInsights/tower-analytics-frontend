@@ -36,6 +36,8 @@ const Square = styled.div`
   margin-right: 0.5rem;
 `;
 
+const whiteSpace = 0.15; // Currently in percent of total bar width
+
 function title(str) {
   return str[0].toUpperCase() + str.slice(1).toLowerCase();
 }
@@ -59,23 +61,47 @@ const Breakdown = ({ categoryCount = {}, categoryColor }) => {
     .map((category) => {
       return {
         name: category,
-        bar_spacing: categoryCount[category] / totalCount,
+        barSpacing: categoryCount[category] / totalCount,
         color: categoryColor[category],
       };
     });
 
+  const remainingSpace = 1 - ((sortedCategories.length - 1) * whiteSpace) / 100;
+
   return (
     <>
       <BarContainer>
-        {sortedCategories.map(({ name, bar_spacing, color }) => (
-          <Bar
-            key={name}
-            style={{
-              backgroundColor: color,
-              width: `${bar_spacing * 100}%`,
-            }}
-          />
-        ))}
+        {sortedCategories.map(({ barSpacing, color }, idx) => {
+          if (idx < sortedCategories.length - 1) {
+            return (
+              <React.Fragment key={idx}>
+                <Bar
+                  style={{
+                    backgroundColor: color,
+                    width: `${barSpacing * 100 * remainingSpace}%`,
+                  }}
+                />
+                <Bar
+                  style={{
+                    backgroundColor: 'transparent',
+                    width: `${whiteSpace}%`,
+                  }}
+                />
+              </React.Fragment>
+            );
+          } else {
+            return (
+              <React.Fragment key={idx}>
+                <Bar
+                  style={{
+                    backgroundColor: color,
+                    width: `${barSpacing * 100 * remainingSpace}%`,
+                  }}
+                />
+              </React.Fragment>
+            );
+          }
+        })}
       </BarContainer>
       <LabelsContainer>
         {sortedCategories.map(({ name, color }) => (
