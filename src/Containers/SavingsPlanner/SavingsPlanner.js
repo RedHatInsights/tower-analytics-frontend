@@ -1,5 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import Main from '@redhat-cloud-services/frontend-components/Main';
+import {
+  PageHeader,
+  PageHeaderTitle,
+} from '@redhat-cloud-services/frontend-components/PageHeader';
+import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
+import {
+  Button,
+  Gallery,
+  PaginationVariant,
+  Grid,
+  GridItem,
+} from '@patternfly/react-core';
+
 import {
   deletePlan,
   preflightRequest,
@@ -17,15 +31,6 @@ import { useQueryParams } from '../../Utilities/useQueryParams';
 import useApi from '../../Utilities/useApi';
 import { savingsPlanner } from '../../Utilities/constants';
 import { notAuthorizedParams } from '../../Utilities/constants';
-
-import Main from '@redhat-cloud-services/frontend-components/Main';
-import {
-  PageHeader,
-  PageHeaderTitle,
-} from '@redhat-cloud-services/frontend-components/PageHeader';
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
-
-import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
 
 import ToolbarDeleteButton from '../../Components/Toolbar/ToolbarDeleteButton';
 import useSelected from '../../Utilities/useSelected';
@@ -182,32 +187,37 @@ const SavingsPlanner = () => {
         </Main>
       )}
       {isSuccess && (
-        <Main style={{ height: '100vh' }}>
-          <Gallery hasGutter>
-            {options.isSuccess &&
-              data.map((datum) => (
-                <PlanCard
-                  key={datum.id}
-                  isSuccess={options.isSuccess}
-                  selected={selected}
-                  plan={datum}
-                  handleSelect={handleSelect}
-                  canWrite={canWrite}
-                />
-              ))}
-          </Gallery>
+        <Main>
+          <Grid hasGutter>
+            <GridItem span={12}>
+              <Gallery hasGutter>
+                {options.isSuccess &&
+                  data.map((datum) => (
+                    <PlanCard
+                      key={datum.id}
+                      isSuccess={options.isSuccess}
+                      selected={selected}
+                      plan={datum}
+                      handleSelect={handleSelect}
+                      canWrite={canWrite}
+                    />
+                  ))}
+              </Gallery>
+            </GridItem>
+            <GridItem span={12}>
+              <Pagination
+                count={meta?.total_count}
+                params={{
+                  limit: queryParams.limit,
+                  offset: queryParams.offset,
+                }}
+                setPagination={setFromPagination}
+                variant={PaginationVariant.bottom}
+              />
+            </GridItem>
+          </Grid>
         </Main>
       )}
-      <Pagination
-        count={meta?.total_count}
-        params={{
-          limit: queryParams.limit,
-          offset: queryParams.offset,
-        }}
-        setPagination={setFromPagination}
-        variant={PaginationVariant.bottom}
-        isSticky
-      />
       {deletionError && (
         <AlertModal
           aria-label={'Deletion error'}
