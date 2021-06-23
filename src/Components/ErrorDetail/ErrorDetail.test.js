@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import ErrorDetail from './ErrorDetail';
 
 describe('<ErrorDetail />', () => {
-  it('renders the expected content', async() => {
+  it('renders the expected content', async () => {
     render(
       <ErrorDetail
         error={
@@ -18,9 +18,9 @@ describe('<ErrorDetail />', () => {
       />
     );
     await (() => expect(screen.getByText('Error:')).toBeTruthy());
-  })
+  });
 
-  it('testing errors', async() => {
+  it('testing errors', async () => {
     render(
       <ErrorDetail
         error={
@@ -39,7 +39,7 @@ describe('<ErrorDetail />', () => {
       />
     );
     await (() => {
-     expect(screen.getByRole('pf-c-expandable-section__toggle')).toBeTruthy();
+      expect(screen.getByRole('pf-c-expandable-section__toggle')).toBeTruthy();
     });
   });
 });

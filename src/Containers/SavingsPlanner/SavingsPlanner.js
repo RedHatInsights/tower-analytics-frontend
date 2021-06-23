@@ -1,6 +1,25 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { deletePlan, preflightRequest, readPlanOptions, readPlans } from '../../Api';
+import Main from '@redhat-cloud-services/frontend-components/Main';
+import {
+  PageHeader,
+  PageHeaderTitle,
+} from '@redhat-cloud-services/frontend-components/PageHeader';
+import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
+import {
+  Button,
+  Gallery,
+  PaginationVariant,
+  Grid,
+  GridItem,
+} from '@patternfly/react-core';
+
+import {
+  deletePlan,
+  preflightRequest,
+  readPlanOptions,
+  readPlans,
+} from '../../Api';
 import FilterableToolbar from '../../Components/Toolbar/';
 import ApiErrorState from '../../Components/ApiErrorState';
 import LoadingState from '../../Components/LoadingState';
@@ -13,25 +32,11 @@ import useApi from '../../Utilities/useApi';
 import { savingsPlanner } from '../../Utilities/constants';
 import { notAuthorizedParams } from '../../Utilities/constants';
 
-import Main from '@redhat-cloud-services/frontend-components/Main';
-import {
-  PageHeader,
-  PageHeaderTitle,
-} from '@redhat-cloud-services/frontend-components/PageHeader';
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
-
-import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
-
 import ToolbarDeleteButton from '../../Components/Toolbar/ToolbarDeleteButton';
 import useSelected from '../../Utilities/useSelected';
-import { useDeleteItems } from "../../Utilities/useRequest";
-import ErrorDetail from "../../Components/ErrorDetail";
-import AlertModal from "../../Components/AlertModal";
-
-
-// TODO: update to fining this out from API RBAC
-const canAddPlan = true;
-const canDeletePlan = true;
+import { useDeleteItems } from '../../Utilities/useRequest';
+import ErrorDetail from '../../Components/ErrorDetail';
+import AlertModal from '../../Components/AlertModal';
 
 const SavingsPlanner = () => {
   const history = useHistory();
@@ -69,9 +74,13 @@ const SavingsPlanner = () => {
     fetchEndpoints();
   }, [queryParams]);
 
-  const { selected, isAllSelected, handleSelect, setSelected } = useSelected(
-    data
-  );
+  const canWrite =
+    options.isSuccess &&
+    (options.data?.meta?.rbac?.perms?.write === true ||
+      options.data?.meta?.rbac?.perms?.all === true);
+
+  const { selected, isAllSelected, handleSelect, setSelected } =
+    useSelected(data);
 
   const {
     isLoading: deleteLoading,
@@ -81,7 +90,7 @@ const SavingsPlanner = () => {
   } = useDeleteItems(
     useCallback(async () => {
       return Promise.all(
-        selected.map((plan) => deletePlan({ params: {id: plan.id }}))
+        selected.map((plan) => deletePlan({ params: { id: plan.id } }))
       );
     }, [selected]),
     {
@@ -92,7 +101,7 @@ const SavingsPlanner = () => {
   );
 
   const handleDelete = async () => {
-    await deleteItems()
+    await deleteItems();
     setSelected([]);
   };
 
@@ -109,7 +118,7 @@ const SavingsPlanner = () => {
           filters={queryParams}
           setFilters={setFromToolbar}
           additionalControls={[
-            ...(canAddPlan
+            ...(canWrite
               ? [
                   <Button
                     key="add-plan-button"
@@ -125,14 +134,14 @@ const SavingsPlanner = () => {
                   </Button>,
                 ]
               : []),
-              (canDeletePlan &&
-                <ToolbarDeleteButton
-                  key="delete-plan-button"
-                  onDelete={handleDelete}
-                  itemsToDelete={selected}
-                  pluralizedItemName={'Savings plan'}
-                />
-              )
+            canWrite && (
+              <ToolbarDeleteButton
+                key="delete-plan-button"
+                onDelete={handleDelete}
+                itemsToDelete={selected}
+                pluralizedItemName={'Savings plan'}
+              />
+            ),
           ]}
           pagination={
             <Pagination
@@ -167,49 +176,59 @@ const SavingsPlanner = () => {
           <EmptyList
             label={'Add plan'}
             title={'No plans added'}
-            message={canAddPlan ? 'No plans have been added yet. Add your first plan.' : 'No plans have been added yet.'}
-            canAdd={canAddPlan}
+            message={
+              canWrite
+                ? 'No plans have been added yet. Add your first plan.'
+                : 'No plans have been added yet.'
+            }
+            canAdd={canWrite}
             path={`${pathname}/add`}
-           />
+          />
         </Main>
       )}
       {isSuccess && (
-        <Main style={{ height: '100vh' }}>
-          <Gallery hasGutter>
-            {options.isSuccess &&
-              data.map((datum) => (
-                <PlanCard
-                  key={datum.id}
-                  isSuccess={options.isSuccess}
-                  selected={selected}
-                  plan={datum}
-                  handleSelect={handleSelect}
-                />
-              ))}
-          </Gallery>
+        <Main>
+          <Grid hasGutter>
+            <GridItem span={12}>
+              <Gallery hasGutter>
+                {options.isSuccess &&
+                  data.map((datum) => (
+                    <PlanCard
+                      key={datum.id}
+                      isSuccess={options.isSuccess}
+                      selected={selected}
+                      plan={datum}
+                      handleSelect={handleSelect}
+                      canWrite={canWrite}
+                    />
+                  ))}
+              </Gallery>
+            </GridItem>
+            <GridItem span={12}>
+              <Pagination
+                count={meta?.total_count}
+                params={{
+                  limit: queryParams.limit,
+                  offset: queryParams.offset,
+                }}
+                setPagination={setFromPagination}
+                variant={PaginationVariant.bottom}
+              />
+            </GridItem>
+          </Grid>
         </Main>
       )}
-      <Pagination
-        count={meta?.total_count}
-        params={{
-          limit: queryParams.limit,
-          offset: queryParams.offset,
-        }}
-        setPagination={setFromPagination}
-        variant={PaginationVariant.bottom}
-        isSticky
-      />
       {deletionError && (
-          <AlertModal
-            aria-label={'Deletion error'}
-            isOpen={deletionError}
-            onClose={clearDeletionError}
-            title={'Error'}
-            variant="error"
-          >
-            {'Failed to delete one or more plans.'}
-            <ErrorDetail error={deletionError} />
-          </AlertModal>
+        <AlertModal
+          aria-label={'Deletion error'}
+          isOpen={deletionError}
+          onClose={clearDeletionError}
+          title={'Error'}
+          variant="error"
+        >
+          {'Failed to delete one or more plans.'}
+          <ErrorDetail error={deletionError} />
+        </AlertModal>
       )}
     </React.Fragment>
   );

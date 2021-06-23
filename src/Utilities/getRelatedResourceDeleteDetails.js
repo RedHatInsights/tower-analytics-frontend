@@ -30,7 +30,7 @@ export const relatedResourceDeleteRequests = {
     {
       request: async () =>
         readRecordApi({
-          params: {id: [selected.id]}
+          params: { id: [selected.id] },
         }),
       label: 'Plan',
     },

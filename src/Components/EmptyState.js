@@ -1,4 +1,3 @@
-/*eslint max-len: ["error", { "ignoreStrings": true }]*/
 import React from 'react';
 import PropTypes from 'prop-types';
 import {

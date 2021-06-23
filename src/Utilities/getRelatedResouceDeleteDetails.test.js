@@ -17,12 +17,9 @@ describe('delete details', () => {
       relatedResourceDeleteRequests.savingsPlan({ id: 1 }, plan)
     );
     expect(plan).toBeCalledWith({
-      "params":  {
-         "id": [
-           1,
-         ],
-       },
+      params: {
+        id: [1],
+      },
     });
   });
-
 });
