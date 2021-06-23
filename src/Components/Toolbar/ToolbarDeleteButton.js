@@ -58,21 +58,14 @@ const requiredField = (props) => {
   return null;
 };
 
-const ItemToDelete = PropTypes.shape({
-  id: PropTypes.number.isRequired,
-  name: requiredField,
-  username: requiredField,
-  image: requiredField,
-});
-
 const ToolbarDeleteButton = ({
   itemsToDelete,
   pluralizedItemName = 'Items',
-  errorMessage,
   onDelete,
-  warningMessage = null,
-  deleteDetailsRequests,
-  deleteMessage,
+  errorMessage = 'Error while deleting',
+  warningMessage = 'Are you sure that you want to delete this',
+  deleteDetailsRequests = [],
+  deleteMessage = 'Delete this?',
   cannotDelete = (item) => !item,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -251,18 +244,22 @@ const ToolbarDeleteButton = ({
   );
 };
 
-// TODO Harpreet Kataria I was not able to figure out the exact type of the
-// deleteDetailsRequests. Cna you please fill in?
-// Same for the delete message
 ToolbarDeleteButton.propTypes = {
-  itemsToDelete: PropTypes.arrayOf(ItemToDelete).isRequired,
+  itemsToDelete: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: requiredField,
+      username: requiredField,
+      image: requiredField,
+    })
+  ).isRequired,
   pluralizedItemName: PropTypes.string,
-  errorMessage: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string,
   warningMessage: PropTypes.node,
-  deleteDetailsRequests: PropTypes.array.isRequired,
+  deleteDetailsRequests: PropTypes.array,
   cannotDelete: PropTypes.func,
-  deleteMessage: PropTypes.object.isRequired,
+  deleteMessage: PropTypes.string,
 };
 
 export default ToolbarDeleteButton;

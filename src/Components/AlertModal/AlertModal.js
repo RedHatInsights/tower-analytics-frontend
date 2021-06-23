@@ -19,9 +19,9 @@ const Header = styled.div`
 `;
 
 const AlertModal = ({
-  isOpen = null,
+  isOpen,
   title,
-  label,
+  label = 'Alert modal',
   variant,
   children,
   ...props
@@ -71,9 +71,9 @@ const AlertModal = ({
   return (
     <Modal
       header={customHeader}
-      aria-label={label || 'Alert modal'}
+      aria-label={label}
       aria-labelledby="alert-modal-header-label"
-      isOpen={Boolean(isOpen)}
+      isOpen={!!isOpen}
       variant="small"
       title={title}
       {...props}
@@ -84,9 +84,9 @@ const AlertModal = ({
 };
 
 AlertModal.propTypes = {
-  isOpen: PropTypes.bool,
+  isOpen: PropTypes.bool.isRequired,
   title: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
+  label: PropTypes.string,
   variant: PropTypes.string.isRequired,
   children: PropTypes.node,
 };

@@ -19,13 +19,13 @@ const Label = styled.span`
 
 const DeleteButton = ({
   onConfirm,
-  modalTitle,
-  name,
-  variant,
-  isDisabled,
+  modalTitle = 'Delete',
+  name = '',
+  variant = 'secondary',
+  isDisabled = true,
   ouiaId = null,
-  deleteMessage,
-  deleteDetailsRequests,
+  deleteMessage = 'Delete?',
+  deleteDetailsRequests = [],
   disabledTooltip,
   children,
 }) => {
@@ -149,17 +149,15 @@ const DeleteButton = ({
   );
 };
 
-// TODO Harpreet Kataria I was not able to figure out the exact type of the
-// deleteDetailsRequests. Cna you please fill in?
 DeleteButton.propTypes = {
   onConfirm: PropTypes.func.isRequired,
-  modalTitle: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  variant: PropTypes.object.isRequired,
-  isDisabled: PropTypes.bool.isRequired,
+  modalTitle: PropTypes.string,
+  name: PropTypes.string,
+  variant: PropTypes.object,
+  isDisabled: PropTypes.bool,
   ouiaId: PropTypes.string,
-  deleteMessage: PropTypes.string.isRequired,
-  deleteDetailsRequests: PropTypes.array.isRequired,
+  deleteMessage: PropTypes.string,
+  deleteDetailsRequests: PropTypes.array,
   disabledTooltip: PropTypes.bool.isRequired,
   children: PropTypes.node,
 };
