@@ -86,8 +86,7 @@ const JobExplorerList = ({ jobs }) => {
 };
 
 JobExplorerList.propTypes = {
-  jobs: PropTypes.array,
-  windowWidth: PropTypes.number,
+  jobs: PropTypes.array.isRequired,
 };
 
 export default JobExplorerList;
