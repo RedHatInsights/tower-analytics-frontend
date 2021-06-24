@@ -17,7 +17,12 @@ import JobStatus from './JobStatus';
 const cols = ['Id/Name', 'Status', 'Cluster', 'Organization', 'Type'];
 
 const JobExplorerList = ({ jobs }) => {
-  const [expanded, setExpanded] = useState(Array(jobs.length).fill(false));
+  const [expanded, setExpanded] = useState(
+    jobs.reduce((obj, job) => {
+      obj[job.id.id] = false;
+      return obj;
+    }, {})
+  );
   const handleExpansion = (event, idx) => {
     setExpanded({
       ...expanded,
@@ -36,13 +41,13 @@ const JobExplorerList = ({ jobs }) => {
         </Tr>
       </Thead>
       <Tbody>
-        {jobs.map((job, idx) => (
+        {jobs.map((job) => (
           <React.Fragment key={job.id.id}>
             <Tr>
               <Td
                 expand={{
-                  rowIndex: idx,
-                  isExpanded: expanded[idx],
+                  rowIndex: job.id.id,
+                  isExpanded: expanded[job.id.id],
                   onToggle: handleExpansion,
                 }}
               />
@@ -56,7 +61,7 @@ const JobExplorerList = ({ jobs }) => {
               <Td>{job.org_name}</Td>
               <Td>{formatJobType(job.job_type)}</Td>
             </Tr>
-            <Tr isExpanded={expanded[idx] === true}>
+            <Tr isExpanded={expanded[job.id.id] === true}>
               <Td noPadding={false} colSpan={2}>
                 <ExpandableRowContent>
                   <strong>Created:</strong> {formatDateTime(job.created)}
