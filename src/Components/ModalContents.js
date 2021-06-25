@@ -99,6 +99,7 @@ const ModalContents = ({
       data: { items: relatedJobs = [] },
     },
     setRelatedJobs,
+    setSynchJobs,
   ] = useApi({ items: [] });
   const [
     {
@@ -107,6 +108,7 @@ const ModalContents = ({
       },
     },
     setStats,
+    setSynchStats,
   ] = useApi({ items: [] });
 
   let history = useHistory();
@@ -255,6 +257,13 @@ const ModalContents = ({
     },
   ];
 
+  const cleanup = () => {
+    setSynchStats({ items: [] });
+    setSynchJobs({ items: [] });
+    handleModal(false);
+    handleCloseBtn(null);
+  };
+
   return (
     <Modal
       aria-label="modal"
@@ -262,8 +271,7 @@ const ModalContents = ({
       title={stats.name ? stats.name : 'no-template-name'}
       isOpen={isOpen}
       onClose={() => {
-        handleModal(false);
-        handleCloseBtn(null);
+        cleanup();
       }}
     >
       {categoryCount && (
@@ -323,8 +331,7 @@ const ModalContents = ({
           key="cancel"
           variant="secondary"
           onClick={() => {
-            handleModal(false);
-            handleCloseBtn(null);
+            cleanup();
           }}
         >
           Close
