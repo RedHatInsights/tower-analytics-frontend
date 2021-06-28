@@ -3,6 +3,7 @@ import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import LoadingState from '../Components/LoadingState';
+import ApiErrorState from '../Components/ApiErrorState';
 import Breakdown from '../Components/Breakdown';
 import JobStatus from '../Components/JobStatus';
 import { Paths } from '../paths';
@@ -96,6 +97,9 @@ const ModalContents = ({
 }) => {
   const [
     {
+      isLoading,
+      isSuccess,
+      error,
       data: { items: relatedJobs = [] },
     },
     setRelatedJobs,
@@ -258,8 +262,6 @@ const ModalContents = ({
   ];
 
   const cleanup = () => {
-    setSynchStats({ items: [] });
-    setSynchJobs({ items: [] });
     handleModal(false);
     handleCloseBtn(null);
   };
@@ -274,58 +276,63 @@ const ModalContents = ({
         cleanup();
       }}
     >
-      {categoryCount && (
-        <Breakdown
-          categoryCount={categoryCount}
-          categoryColor={categoryColor}
-        />
-      )}
+      {isLoading && <LoadingState />}
+      {error && <ApiErrorState message={error.error} />}
 
-      <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
-        {descriptionStats.map(({ label, id, value }) => (
-          <DescriptionListGroup className={id} key={label}>
-            <DescriptionListTerm>{label}</DescriptionListTerm>
-            <DescriptionListDescription>{value}</DescriptionListDescription>
-          </DescriptionListGroup>
-        ))}
-      </DescriptionList>
+      {isSuccess && (
+        <>
+          {categoryCount && (
+            <Breakdown
+              categoryCount={categoryCount}
+              categoryColor={categoryColor}
+            />
+          )}
 
-      <Divider
-        component="div"
-        style={{ marginTop: '2rem', marginBottom: '1.5rem' }}
-      />
-      <p>
-        <strong>Last 5 jobs</strong>
-      </p>
-
-      {relatedJobs.length <= 0 && <LoadingState />}
-      {relatedJobs.length > 0 && (
-        <TableComposable
-          aria-label="Template information table"
-          variant="compact"
-        >
-          <Thead>
-            <Tr>
-              {tableCols.map((heading, idx) => (
-                <Th key={idx}>{heading}</Th>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {relatedJobs.map((job, idx) => (
-              <Tr key={`job-detail-${idx}`}>
-                <Td>{`${job.id.id} - ${job.id.template_name}`}</Td>
-                <Td>
-                  <JobStatus status={job.status} />
-                </Td>
-                <Td>{job.cluster_name}</Td>
-                <Td>{formatDateTime(job.finished)}</Td>
-                <Td>{formatTotalTime(job.elapsed)}</Td>
-              </Tr>
+          <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
+            {descriptionStats.map(({ label, id, value }) => (
+              <DescriptionListGroup className={id} key={label}>
+                <DescriptionListTerm>{label}</DescriptionListTerm>
+                <DescriptionListDescription>{value}</DescriptionListDescription>
+              </DescriptionListGroup>
             ))}
-          </Tbody>
-        </TableComposable>
+          </DescriptionList>
+
+          <Divider
+            component="div"
+            style={{ marginTop: '2rem', marginBottom: '1.5rem' }}
+          />
+          <p>
+            <strong>Last 5 jobs</strong>
+          </p>
+
+          <TableComposable
+            aria-label="Template information table"
+            variant="compact"
+          >
+            <Thead>
+              <Tr>
+                {tableCols.map((heading, idx) => (
+                  <Th key={idx}>{heading}</Th>
+                ))}
+              </Tr>
+            </Thead>
+            <Tbody>
+              {relatedJobs.map((job, idx) => (
+                <Tr key={`job-detail-${idx}`}>
+                  <Td>{`${job.id.id} - ${job.id.template_name}`}</Td>
+                  <Td>
+                    <JobStatus status={job.status} />
+                  </Td>
+                  <Td>{job.cluster_name}</Td>
+                  <Td>{formatDateTime(job.finished)}</Td>
+                  <Td>{formatTotalTime(job.elapsed)}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </TableComposable>
+        </>
       )}
+
       <ActionContainer>
         <Button
           key="cancel"
