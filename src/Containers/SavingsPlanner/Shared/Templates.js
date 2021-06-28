@@ -57,6 +57,27 @@ const initialQueryParams = {
 };
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
+  const [sortDirection, setSortDirection] = React.useState('desc');
+  const columnIndex = 1;
+
+  const onSort = () => {
+    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    queryParamsDispatch({
+      type: 'SET_SORT_ORDER',
+      value: { sort_order: sortDirection },
+    });
+  };
+  const sortParams = {
+    sort: {
+      sortBy: {
+        index: columnIndex,
+        direction: sortDirection,
+      },
+      onSort,
+      columnIndex,
+    },
+  };
+
   const { pathname, hash, search } = useLocation();
   const history = useHistory();
 
@@ -127,6 +148,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
           >
             <FilterableToolbar
               hideQuickDateRange
+              hideSortOptions
               categories={options.data}
               filters={queryParams}
               setFilters={setFromToolbar}
@@ -153,7 +175,9 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
                 <Thead>
                   <Tr>
                     <Th />
-                    <Th key="template-name-column-header">Name</Th>
+                    <Th key="0" {...sortParams}>
+                      Name
+                    </Th>
                   </Tr>
                 </Thead>
                 <Tbody>
