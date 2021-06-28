@@ -103,7 +103,6 @@ const ModalContents = ({
       data: { items: relatedJobs = [] },
     },
     setRelatedJobs,
-    setSynchJobs,
   ] = useApi({ items: [] });
   const [
     {
@@ -112,7 +111,6 @@ const ModalContents = ({
       },
     },
     setStats,
-    setSynchStats,
   ] = useApi({ items: [] });
 
   let history = useHistory();
