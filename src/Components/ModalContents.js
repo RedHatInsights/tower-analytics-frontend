@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import LoadingState from '../Components/LoadingState';
 import ApiErrorState from '../Components/ApiErrorState';
+import NoResults from './NoResults';
 import Breakdown from '../Components/Breakdown';
 import JobStatus from '../Components/JobStatus';
 import { Paths } from '../paths';
@@ -276,8 +277,8 @@ const ModalContents = ({
     >
       {isLoading && <LoadingState />}
       {error && <ApiErrorState message={error.error} />}
-
-      {isSuccess && (
+      {isSuccess && relatedJobs.length <= 0 && <NoResults />}
+      {isSuccess && relatedJobs.length > 0 && (
         <>
           {categoryCount && (
             <Breakdown
