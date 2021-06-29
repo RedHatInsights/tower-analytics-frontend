@@ -3,6 +3,8 @@ import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import LoadingState from '../Components/LoadingState';
+import ApiErrorState from '../Components/ApiErrorState';
+import NoResults from './NoResults';
 import Breakdown from '../Components/Breakdown';
 import JobStatus from '../Components/JobStatus';
 import { Paths } from '../paths';
@@ -64,21 +66,6 @@ const formatTopFailedTask = (data) => {
   return `Unavailable`;
 };
 
-// const formatTopFailedStep = (data) => {
-//   if (!data) {
-//     return;
-//   }
-
-//   if (data && data[0]) {
-//     const percentage = Math.ceil(
-//       (data[0].failed_count / data[0].total_failed_count) * 100
-//     );
-//     return `${data[0].template_name} ${percentage}%`;
-//   }
-
-//   return `Unavailable`;
-// };
-
 const formatSuccessRate = (successCount, totalCount) =>
   Math.ceil((successCount / totalCount) * 100) + '%';
 const formatAvgRun = (elapsed, totalCount) =>
@@ -86,19 +73,16 @@ const formatAvgRun = (elapsed, totalCount) =>
 const formatTotalTime = (elapsed) =>
   new Date(elapsed * 1000).toISOString().substr(11, 8);
 
-const ModalContents = ({
-  selectedId,
-  isOpen,
-  handleModal,
-  qp,
-  jobType,
-  handleCloseBtn,
-}) => {
+const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
   const [
     {
+      isLoading,
+      isSuccess,
+      error,
       data: { items: relatedJobs = [] },
     },
     setRelatedJobs,
+    setSynchJobs,
   ] = useApi({ items: [] });
   const [
     {
@@ -107,6 +91,7 @@ const ModalContents = ({
       },
     },
     setStats,
+    setSynchStats,
   ] = useApi({ items: [] });
 
   let history = useHistory();
@@ -184,10 +169,8 @@ const ModalContents = ({
   };
 
   useEffect(() => {
-    if (selectedId) {
-      setStats(readJobExplorer({ params: agreggateTemplateParams }));
-      setRelatedJobs(readJobExplorer({ params: relatedTemplateJobsParams }));
-    }
+    setStats(readJobExplorer({ params: agreggateTemplateParams }));
+    setRelatedJobs(readJobExplorer({ params: relatedTemplateJobsParams }));
   }, [selectedId]);
 
   const tableCols = ['Id/Name', 'Status', 'Cluster', 'Finished', 'Total time'];
@@ -255,76 +238,83 @@ const ModalContents = ({
     },
   ];
 
+  const cleanup = () => {
+    handleModal(false);
+    setSynchStats({ items: [] });
+    setSynchJobs({ items: [] });
+  };
+
   return (
     <Modal
       aria-label="modal"
       width={'80%'}
-      title={stats.name ? stats.name : 'no-template-name'}
+      title={stats.name ? stats.name : 'No template name'}
       isOpen={isOpen}
-      onClose={() => {
-        handleModal(false);
-        handleCloseBtn(null);
-      }}
+      onClose={cleanup}
     >
-      {categoryCount && (
-        <Breakdown
-          categoryCount={categoryCount}
-          categoryColor={categoryColor}
-        />
-      )}
+      {isLoading && <LoadingState />}
+      {error && <ApiErrorState message={error.error} />}
+      {isSuccess && relatedJobs.length <= 0 && <NoResults />}
+      {isSuccess && relatedJobs.length > 0 && (
+        <>
+          {categoryCount && (
+            <Breakdown
+              categoryCount={categoryCount}
+              categoryColor={categoryColor}
+            />
+          )}
 
-      <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
-        {descriptionStats.map(({ label, id, value }) => (
-          <DescriptionListGroup className={id} key={label}>
-            <DescriptionListTerm>{label}</DescriptionListTerm>
-            <DescriptionListDescription>{value}</DescriptionListDescription>
-          </DescriptionListGroup>
-        ))}
-      </DescriptionList>
-
-      <Divider
-        component="div"
-        style={{ marginTop: '2rem', marginBottom: '1.5rem' }}
-      />
-      <p>
-        <strong>Last 5 jobs</strong>
-      </p>
-
-      {relatedJobs.length <= 0 && <LoadingState />}
-      {relatedJobs.length > 0 && (
-        <TableComposable
-          aria-label="Template information table"
-          variant="compact"
-        >
-          <Thead>
-            <Tr>
-              {tableCols.map((heading, idx) => (
-                <Th key={idx}>{heading}</Th>
-              ))}
-            </Tr>
-          </Thead>
-          <Tbody>
-            {relatedJobs.map((job, idx) => (
-              <Tr key={`job-detail-${idx}`}>
-                <Td>{`${job.id.id} - ${job.id.template_name}`}</Td>
-                <Td>
-                  <JobStatus status={job.status} />
-                </Td>
-                <Td>{job.cluster_name}</Td>
-                <Td>{formatDateTime(job.finished)}</Td>
-                <Td>{formatTotalTime(job.elapsed)}</Td>
-              </Tr>
+          <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
+            {descriptionStats.map(({ label, id, value }) => (
+              <DescriptionListGroup className={id} key={label}>
+                <DescriptionListTerm>{label}</DescriptionListTerm>
+                <DescriptionListDescription>{value}</DescriptionListDescription>
+              </DescriptionListGroup>
             ))}
-          </Tbody>
-        </TableComposable>
+          </DescriptionList>
+
+          <Divider
+            component="div"
+            style={{ marginTop: '2rem', marginBottom: '1.5rem' }}
+          />
+          <p>
+            <strong>Last 5 jobs</strong>
+          </p>
+
+          <TableComposable
+            aria-label="Template information table"
+            variant="compact"
+          >
+            <Thead>
+              <Tr>
+                {tableCols.map((heading, idx) => (
+                  <Th key={idx}>{heading}</Th>
+                ))}
+              </Tr>
+            </Thead>
+            <Tbody>
+              {relatedJobs.map((job, idx) => (
+                <Tr key={`job-detail-${idx}`}>
+                  <Td>{`${job.id.id} - ${job.id.template_name}`}</Td>
+                  <Td>
+                    <JobStatus status={job.status} />
+                  </Td>
+                  <Td>{job.cluster_name}</Td>
+                  <Td>{formatDateTime(job.finished)}</Td>
+                  <Td>{formatTotalTime(job.elapsed)}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </TableComposable>
+        </>
       )}
+
       <ActionContainer>
         <Button
           key="cancel"
           variant="secondary"
           onClick={() => {
-            handleModal(false);
-            handleCloseBtn(null);
+            cleanup();
           }}
         >
           Close
@@ -339,12 +329,11 @@ const ModalContents = ({
 };
 
 ModalContents.propTypes = {
-  selectedId: PropTypes.number,
-  qp: PropTypes.object,
-  jobType: PropTypes.string,
-  handleCloseBtn: PropTypes.func,
-  isOpen: PropTypes.bool,
-  handleModal: PropTypes.func,
+  selectedId: PropTypes.number.isRequired,
+  qp: PropTypes.object.isRequired,
+  jobType: PropTypes.string.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  handleModal: PropTypes.func.isRequired,
 };
 
 export default ModalContents;

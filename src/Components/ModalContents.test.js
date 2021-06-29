@@ -87,7 +87,6 @@ describe('Components/ModalContents', () => {
           selectedId={1}
           qp={mockQueryParams}
           jobType={'Foo'}
-          handleCloseBtn={() => {}}
         />
       );
     });
@@ -104,7 +103,6 @@ describe('Components/ModalContents', () => {
           selectedId={1}
           qp={mockQueryParams}
           jobType={'Foo'}
-          handleCloseBtn={() => {}}
         />
       );
     });
@@ -123,7 +121,6 @@ describe('Components/ModalContents', () => {
           selectedId={1}
           qp={mockQueryParams}
           jobType={'Foo'}
-          handleCloseBtn={() => {}}
         />
       );
     });
@@ -144,7 +141,6 @@ describe('Components/ModalContents', () => {
           selectedId={1}
           qp={mockQueryParams}
           jobType={'Foo'}
-          handleCloseBtn={() => {}}
         />
       );
     });
