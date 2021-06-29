@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { Card, CardBody } from '@patternfly/react-core';
+import {
+  Card,
+  CardBody,
+  Grid,
+  GridItem,
+  Stack,
+  StackItem,
+} from '@patternfly/react-core';
 import { notAuthorizedParams } from '../../Utilities/constants';
 
 // Imports from custom components
@@ -36,25 +42,6 @@ import TotalSavings from './TotalSavings';
 import CalculationCost from './CalculationCost';
 import AutomationFormula from './AutomationFormula';
 import TopTemplates from './TopTemplates';
-
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 5fr 2fr;
-  height: 100%;
-`;
-
-const WrapperLeft = styled.div`
-  flex: 5;
-  display: flex;
-  flex-direction: column;
-  overflow: auto;
-`;
-
-const WrapperRight = styled.div`
-  flex: 2;
-  display: flex;
-  flex-direction: column;
-`;
 
 const mapApi = ({ items = [] }) =>
   items.map((el) => ({
@@ -161,8 +148,8 @@ const AutomationCalculator = ({ history }) => {
   };
 
   const renderLeft = () => (
-    <WrapperLeft>
-      <Main style={{ paddingBottom: '0' }}>
+    <Stack hasGutter>
+      <StackItem>
         <Card>
           <BorderedCardTitle>Automation savings</BorderedCardTitle>
           <CardBody>
@@ -181,53 +168,64 @@ const AutomationCalculator = ({ history }) => {
             )}
           </CardBody>
         </Card>
-      </Main>
-      <Main>
+      </StackItem>
+      <StackItem isFilled>
         <AutomationFormula />
-      </Main>
-    </WrapperLeft>
+      </StackItem>
+    </Stack>
   );
 
   const renderRight = () => (
-    <WrapperRight>
-      <Main style={{ paddingBottom: '0', paddingLeft: '0' }}>
+    <Stack hasGutter>
+      <StackItem>
         <TotalSavings
           totalSavings={computeTotalSavings(filterDisabled(api.data))}
         />
-      </Main>
-      <Main
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          flex: '1 1 0',
-          paddingLeft: '0',
-        }}
-      >
-        <CalculationCost
-          costManual={costManual}
-          setCostManual={setCostManual}
-          costAutomation={costAutomation}
-          setCostAutomation={setCostAutomation}
-        />
-        <TopTemplates
-          redirectToJobExplorer={redirectToJobExplorer}
-          data={api.data}
-          setDataRunTime={setDataRunTime}
-          setUnfilteredData={api.data}
-          setEnabled={setEnabled}
-          sortBy={queryParams.sort_by}
-        />
-      </Main>
-    </WrapperRight>
+      </StackItem>
+      <StackItem>
+        <Stack>
+          <StackItem>
+            <CalculationCost
+              costManual={costManual}
+              setCostManual={setCostManual}
+              costAutomation={costAutomation}
+              setCostAutomation={setCostAutomation}
+            />
+          </StackItem>
+          <StackItem style={{ overflow: 'auto', maxHeight: '48vh' }}>
+            <TopTemplates
+              redirectToJobExplorer={redirectToJobExplorer}
+              data={api.data}
+              setDataRunTime={setDataRunTime}
+              setUnfilteredData={api.data}
+              setEnabled={setEnabled}
+              sortBy={queryParams.sort_by}
+            />
+          </StackItem>
+        </Stack>
+      </StackItem>
+    </Stack>
   );
 
   if (preflight?.error?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 
+  const renderContents = () => {
+    if (preflight.error) return <EmptyState preflightError={preflight.error} />;
+    else if (preflight.isSuccess)
+      return (
+        <Grid hasGutter className="automation-wrapper">
+          <GridItem span={9}>{renderLeft()}</GridItem>
+          <GridItem span={3}>{renderRight()}</GridItem>
+        </Grid>
+      );
+    else return <></>;
+  };
+
   return (
-    <React.Fragment>
-      <PageHeader style={{ flex: '0' }}>
+    <>
+      <PageHeader>
         <PageHeaderTitle title={'Automation Calculator'} />
         <FilterableToolbar
           categories={options.data}
@@ -235,20 +233,8 @@ const AutomationCalculator = ({ history }) => {
           setFilters={setFromToolbar}
         />
       </PageHeader>
-      {preflight.error && (
-        <Main>
-          <EmptyState preflightError={preflight.error} />
-        </Main>
-      )}
-      {preflight.isSuccess && (
-        <React.Fragment>
-          <Wrapper className="automation-wrapper">
-            {renderLeft()}
-            {renderRight()}
-          </Wrapper>
-        </React.Fragment>
-      )}
-    </React.Fragment>
+      <Main>{renderContents()}</Main>
+    </>
   );
 };
 
