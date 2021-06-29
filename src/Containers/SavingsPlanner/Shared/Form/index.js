@@ -154,9 +154,15 @@ const Form = ({ title, options, data = {} }) => {
   };
 
   const onClose = () => {
-    history.push({
-      pathname: Paths.savingsPlanner,
-    });
+    if (location.pathname.indexOf('/edit') !== -1) {
+      history.push({
+        pathname: `${Paths.savingsPlanner}/${data?.id}`,
+      });
+    } else {
+      history.push({
+        pathname: Paths.savingsPlanner,
+      });
+    }
   };
 
   return (
