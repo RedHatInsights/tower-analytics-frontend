@@ -1,4 +1,4 @@
-import { Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import React from 'react';
 import asyncComponent from './Utilities/asyncComponent';
@@ -39,21 +39,21 @@ const JobExplorer = asyncComponent(() =>
 const SavingsPlanAdd = asyncComponent(() =>
   import(
     /* webpackChunkName: "automation_analytics" */
-    './Containers/SavingsPlanner/Add/index'
+    './Containers/SavingsPlanner/Add'
   )
 );
 
 const SavingsPlanner = asyncComponent(() =>
   import(
     /* webpackChunkName: "automation_analytics" */
-    './Containers/SavingsPlanner/SavingsPlanner'
+    './Containers/SavingsPlanner/List'
   )
 );
 
 const SavingsPlan = asyncComponent(() =>
   import(
     /* webpackChunkName: "automation_analytics" */
-    './Containers/SavingsPlanner/SavingsPlan'
+    './Containers/SavingsPlanner/Details'
   )
 );
 
@@ -72,8 +72,11 @@ InsightsRoute.propTypes = {
 };
 
 export const Routes = () => {
+  const { pathname } = useLocation();
+
   return (
     <Switch>
+      <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
       <InsightsRoute
         path={Paths.clusters}
         component={Clusters}

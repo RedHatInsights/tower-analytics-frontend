@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import StatisticsTab from './StatisticsTab';
+import StatisticsTab from '.';
 
 const tabs = [
   { name: 'Details', link: '/savings-planner/1/details', id: 1 },
@@ -38,7 +38,7 @@ const data = {
   },
 };
 
-describe('SavingsPlanner/StatisticsTab', () => {
+describe('SavingsPlanner/Details/StatisticsTab', () => {
   it('should render successfully', async () => {
     render(
       <MemoryRouter>

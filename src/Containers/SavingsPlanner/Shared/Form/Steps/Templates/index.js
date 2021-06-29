@@ -21,25 +21,25 @@ import {
 
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 
-import LoadingState from '../../../Components/LoadingState';
-import EmptyState from '../../../Components/EmptyState';
-import NoResults from '../../../Components/NoResults';
-import ApiErrorState from '../../../Components/ApiErrorState';
-import Pagination from '../../../Components/Pagination';
+import LoadingState from '../../../../../../Components/LoadingState';
+import EmptyState from '../../../../../../Components/EmptyState';
+import NoResults from '../../../../../../Components/NoResults';
+import ApiErrorState from '../../../../../../Components/ApiErrorState';
+import Pagination from '../../../../../../Components/Pagination';
 
-import { notAuthorizedParams } from '../../../Utilities/constants';
-import { useQueryParams } from '../../../Utilities/useQueryParams';
-import useApi from '../../../Utilities/useApi';
+import { notAuthorizedParams } from '../../../../../../Utilities/constants';
+import { useQueryParams } from '../../../../../../Utilities/useQueryParams';
+import useApi from '../../../../../../Utilities/useApi';
 
 import {
   preflightRequest,
   readJobExplorer,
   readJobExplorerOptions,
-} from '../../../Api';
+} from '../../../../../../Api';
 
-import FilterableToolbar from '../../../Components/Toolbar/';
+import FilterableToolbar from '../../../../../../Components/Toolbar/';
 
-import { actions } from './constants';
+import { actions } from '../../../constants';
 
 const ListFooter = styled.div`
   display: flex;

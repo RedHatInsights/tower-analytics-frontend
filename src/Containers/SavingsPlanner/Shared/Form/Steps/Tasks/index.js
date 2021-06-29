@@ -21,7 +21,7 @@ import {
 } from '@patternfly/react-core';
 import { PlusIcon, TimesIcon } from '@patternfly/react-icons';
 
-import { actions } from './constants';
+import { actions } from '../../../constants';
 
 const TaskSection = styled.div`
   margin-top: 20px;
@@ -74,8 +74,10 @@ const Tasks = ({ tasks, dispatch }) => {
   };
 
   const appendTask = () => {
-    setTasks([...tasks, taskToAdd]);
-    setTaskToAdd('');
+    if (taskToAdd !== '') {
+      setTasks([...tasks, taskToAdd]);
+      setTaskToAdd('');
+    }
   };
 
   const handleTextKeyDown = (e) => {

@@ -2,45 +2,69 @@ import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-import { Paths } from '../../paths';
-
-import { formatDateTime } from '../../Utilities/helpers';
-
 import {
   Card,
   CardHeader,
   CardHeaderMain,
   CardActions,
-  CardTitle,
+  CardTitle as PFCardTitle,
   CardBody,
   CardFooter,
-  Checkbox,
+  Checkbox as PFCheckbox,
   Dropdown,
   DropdownItem,
   KebabToggle,
   Label,
 } from '@patternfly/react-core';
 
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-} from '@patternfly/react-icons';
+import { ExclamationCircleIcon } from '@patternfly/react-icons';
 import styled from 'styled-components';
 import { stringify } from 'query-string';
 
 import { Link, useRouteMatch } from 'react-router-dom';
+
+import { Paths } from '../../../../paths';
+
+import { formatDateTime } from '../../../../Utilities/helpers';
+
+import JobStatus from '../../../../Components/JobStatus';
+
 // import useSelected from "../../Utilities/useSelected";
+
+const CardTitle = styled(PFCardTitle)`
+  word-break: break-word;
+`;
 
 const CardLabel = styled.span`
   margin-right: 5px;
+  font-weight: bold;
 `;
 
-const PlanCard = ({
+const Small = styled.small`
+  display: block;
+  margin-bottom: 10px;
+  color: #6a6e73;
+`;
+
+const Checkbox = styled(PFCheckbox)`
+  &.pf-c-check.pf-m-standalone {
+    margin-top: -3px;
+  }
+`;
+
+const CardDetail = styled.div`
+  display: flex;
+  min-height: 30px;
+  align-items: center;
+`;
+
+const ListItem = ({
   isSuccess,
   plan,
   selected = [],
   handleSelect = () => {},
   canWrite,
+  options,
 }) => {
   const {
     id,
@@ -53,7 +77,7 @@ const PlanCard = ({
     template_details,
   } = plan;
   const [isCardKebabOpen, setIsCardKebabOpen] = useState(false);
-
+  console.log(options);
   const match = useRouteMatch();
   let history = useHistory();
 
@@ -77,6 +101,11 @@ const PlanCard = ({
     ) : null;
   };
 
+  const renderOptionsBasedValue = (key, val) => {
+    return options.data[key].find(({ key: apiValue }) => apiValue === val)
+      .value;
+  };
+
   const kebabDropDownItems = [
     <React.Fragment key={id}>
       <DropdownItem
@@ -85,6 +114,13 @@ const PlanCard = ({
         position="right"
       >
         Edit
+      </DropdownItem>
+      <DropdownItem
+        key="link"
+        onClick={() => history.push(`${match.url}/${id}/edit#tasks`)}
+        position="right"
+      >
+        Manage tasks
       </DropdownItem>
       <DropdownItem
         key="link"
@@ -97,7 +133,7 @@ const PlanCard = ({
   ];
 
   return (
-    <Card isHoverable isCompact>
+    <Card>
       <CardHeader>
         <CardHeaderMain>
           <CardTitle>
@@ -129,25 +165,36 @@ const PlanCard = ({
         )}
       </CardHeader>
       <CardBody>
-        {description ? <p>{description}</p> : null}
-        <div>
+        {description ? <Small>{description}</Small> : null}
+        <CardDetail>
           <CardLabel>Frequency</CardLabel>{' '}
-          {frequency_period ? frequency_period : <em>None</em>}
-        </div>
-        <div>
+          {frequency_period ? (
+            renderOptionsBasedValue('frequency_period', frequency_period)
+          ) : (
+            <span>None</span>
+          )}
+        </CardDetail>
+        <CardDetail>
           <CardLabel>Template</CardLabel>{' '}
-          {template_details ? (
+          {Object.keys(template_details || {}).length !== 0 ? (
             renderTemplateLink(template_details)
           ) : (
-            <em>None</em>
+            <span>
+              None -{' '}
+              <a
+                onClick={() =>
+                  history.push(`${match.url}/${id}/edit#link_template`)
+                }
+              >
+                Link template
+              </a>
+            </span>
           )}
-        </div>
-        <div>
-          <CardLabel>Automation status</CardLabel>
-          {automation_status.status === 'successful' ? (
-            <Label variant="outline" color="green" icon={<CheckCircleIcon />}>
-              Running
-            </Label>
+        </CardDetail>
+        <CardDetail>
+          <CardLabel>Last job status</CardLabel>
+          {automation_status.status !== 'None' ? (
+            <JobStatus status={automation_status.status} />
           ) : (
             <Label
               variant="outline"
@@ -157,25 +204,26 @@ const PlanCard = ({
               Not Running
             </Label>
           )}
-        </div>
-        <div>
+        </CardDetail>
+        <CardDetail>
           <CardLabel>Last updated</CardLabel>{' '}
-          <em>{formatDateTime(modified)}</em>
-        </div>
+          <span>{formatDateTime(modified)}</span>
+        </CardDetail>
       </CardBody>
       <CardFooter>
-        <Label>{category}</Label>
+        <Label>{renderOptionsBasedValue('category', category)}</Label>
       </CardFooter>
     </Card>
   );
 };
 
-PlanCard.propTypes = {
+ListItem.propTypes = {
   isSuccess: PropTypes.bool.isRequired,
   canWrite: PropTypes.bool.isRequired,
   selected: PropTypes.array,
   handleSelect: PropTypes.func,
   plan: PropTypes.object,
+  options: PropTypes.object,
 };
 
-export default PlanCard;
+export default ListItem;

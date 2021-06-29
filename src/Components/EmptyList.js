@@ -16,13 +16,14 @@ const EmptyList = ({
   title = 'No items found.',
   message = '',
   canAdd = false,
+  icon = AddCircleOIcon,
   path,
 }) => {
   const history = useHistory();
 
   return (
     <EmptyState variant="full">
-      <EmptyStateIcon icon={AddCircleOIcon} />
+      <EmptyStateIcon icon={icon} />
       <Title size="lg" headingLevel="h3">
         {title}
       </Title>
@@ -51,6 +52,7 @@ EmptyList.propTypes = {
   message: PropTypes.string,
   title: PropTypes.string,
   path: PropTypes.string.isRequired,
+  icon: PropTypes.component,
 };
 
 export default EmptyList;

@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 import {
   mountWithContexts,
   waitForElement,
-} from '../../Utilities/enzymeHelpers';
+} from '../../../Utilities/enzymeHelpers';
 
 const mockStore = configureStore();
 const store = mockStore({});
@@ -20,7 +20,7 @@ jest.mock('react-router-dom', () => ({
     params: { id: 1 },
   }),
 }));
-import SavingsPlan from './SavingsPlan';
+import Details from '.';
 
 const readPlanUrl = 'path:/api/tower-analytics/v1/plans/';
 const dummyData = {
@@ -53,7 +53,7 @@ const dummyData = {
   },
 };
 
-describe('<SavingsPlan />', () => {
+describe('SavingsPlanner/Details', () => {
   let wrapper;
 
   afterEach(() => {
@@ -70,7 +70,7 @@ describe('<SavingsPlan />', () => {
     await act(async () => {
       wrapper = mountWithContexts(
         <Provider store={store}>
-          <SavingsPlan />
+          <Details />
         </Provider>,
         {
           context: {

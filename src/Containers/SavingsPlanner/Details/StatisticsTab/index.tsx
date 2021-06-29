@@ -25,7 +25,8 @@ import ChartRenderer, {
   NonGroupedApi,
 } from 'react-json-chart-builder';
 
-import RoutedTabs from '../../Components/RoutedTabs';
+import RoutedTabs from '../../../../Components/RoutedTabs';
+
 import TotalSavings from "./TotalSavings";
 import FormulaDescription from './FormulaDescription';
 
