@@ -69,7 +69,6 @@ const Form = ({ title, options, data = {} }) => {
     <WizardFooter>
       <WizardContextConsumer>
         {({ activeStep, onNext, onBack, onClose }) => {
-          console.log(data);
           if (activeStep.step_number !== 3) {
             return (
               <>
