@@ -100,14 +100,15 @@ const TemplatesList = ({ templates, isLoading, qp, title, jobType }) => {
             </DataListItem>
           ))}
       </DataList>
-      <ModalContents
-        isOpen={isModalOpen}
-        handleModal={setIsModalOpen}
-        selectedId={selectedId}
-        qp={qp}
-        jobType={jobType}
-        handleCloseBtn={setSelectedId}
-      />
+      {selectedId && (
+        <ModalContents
+          isOpen={isModalOpen}
+          handleModal={setIsModalOpen}
+          selectedId={selectedId}
+          qp={qp}
+          jobType={jobType}
+        />
+      )}
     </>
   );
 };

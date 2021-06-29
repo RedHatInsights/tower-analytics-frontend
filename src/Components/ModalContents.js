@@ -66,21 +66,6 @@ const formatTopFailedTask = (data) => {
   return `Unavailable`;
 };
 
-// const formatTopFailedStep = (data) => {
-//   if (!data) {
-//     return;
-//   }
-
-//   if (data && data[0]) {
-//     const percentage = Math.ceil(
-//       (data[0].failed_count / data[0].total_failed_count) * 100
-//     );
-//     return `${data[0].template_name} ${percentage}%`;
-//   }
-
-//   return `Unavailable`;
-// };
-
 const formatSuccessRate = (successCount, totalCount) =>
   Math.ceil((successCount / totalCount) * 100) + '%';
 const formatAvgRun = (elapsed, totalCount) =>
@@ -88,14 +73,7 @@ const formatAvgRun = (elapsed, totalCount) =>
 const formatTotalTime = (elapsed) =>
   new Date(elapsed * 1000).toISOString().substr(11, 8);
 
-const ModalContents = ({
-  selectedId,
-  isOpen,
-  handleModal,
-  qp,
-  jobType,
-  handleCloseBtn,
-}) => {
+const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
   const [
     {
       isLoading,
@@ -104,6 +82,7 @@ const ModalContents = ({
       data: { items: relatedJobs = [] },
     },
     setRelatedJobs,
+    setSynchJobs,
   ] = useApi({ items: [] });
   const [
     {
@@ -112,6 +91,7 @@ const ModalContents = ({
       },
     },
     setStats,
+    setSynchStats,
   ] = useApi({ items: [] });
 
   let history = useHistory();
@@ -189,10 +169,8 @@ const ModalContents = ({
   };
 
   useEffect(() => {
-    if (selectedId) {
-      setStats(readJobExplorer({ params: agreggateTemplateParams }));
-      setRelatedJobs(readJobExplorer({ params: relatedTemplateJobsParams }));
-    }
+    setStats(readJobExplorer({ params: agreggateTemplateParams }));
+    setRelatedJobs(readJobExplorer({ params: relatedTemplateJobsParams }));
   }, [selectedId]);
 
   const tableCols = ['Id/Name', 'Status', 'Cluster', 'Finished', 'Total time'];
@@ -262,18 +240,17 @@ const ModalContents = ({
 
   const cleanup = () => {
     handleModal(false);
-    handleCloseBtn(null);
+    setSynchStats({ items: [] });
+    setSynchJobs({ items: [] });
   };
 
   return (
     <Modal
       aria-label="modal"
       width={'80%'}
-      title={stats.name ? stats.name : 'no-template-name'}
+      title={stats.name ? stats.name : 'No template name'}
       isOpen={isOpen}
-      onClose={() => {
-        cleanup();
-      }}
+      onClose={cleanup}
     >
       {isLoading && <LoadingState />}
       {error && <ApiErrorState message={error.error} />}
@@ -352,12 +329,11 @@ const ModalContents = ({
 };
 
 ModalContents.propTypes = {
-  selectedId: PropTypes.number,
-  qp: PropTypes.object,
-  jobType: PropTypes.string,
-  handleCloseBtn: PropTypes.func,
-  isOpen: PropTypes.bool,
-  handleModal: PropTypes.func,
+  selectedId: PropTypes.number.isRequired,
+  qp: PropTypes.object.isRequired,
+  jobType: PropTypes.string.isRequired,
+  isOpen: PropTypes.bool.isRequired,
+  handleModal: PropTypes.func.isRequired,
 };
 
 export default ModalContents;
