@@ -74,8 +74,9 @@ const Tasks = ({ tasks, dispatch }) => {
   };
 
   const appendTask = () => {
-    if (taskToAdd !== '') {
-      setTasks([...tasks, taskToAdd]);
+    const trimmedTask = taskToAdd.trim();
+    if (trimmedTask !== '') {
+      setTasks([...tasks, trimmedTask]);
       setTaskToAdd('');
     }
   };
@@ -111,6 +112,7 @@ const Tasks = ({ tasks, dispatch }) => {
               />
               <Button
                 onClick={appendTask}
+                isDisabled={taskToAdd.trim() === ''}
                 variant="control"
                 aria-label="Add task"
               >
