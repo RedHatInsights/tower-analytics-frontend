@@ -5,12 +5,33 @@ import { Tr, Td, ExpandableRowContent } from '@patternfly/react-table';
 
 import { formatDateTime, formatJobType } from '../Utilities/helpers';
 import JobStatus from './JobStatus';
+import {
+  DescriptionList,
+  DescriptionListGroup,
+  DescriptionListTerm,
+  DescriptionListDescription,
+} from '@patternfly/react-core';
 
 const JobExplorerListRow = ({ job }) => {
   const [expanded, setExpanded] = useState(false);
   const handleExpansion = () => {
     setExpanded(!expanded);
   };
+
+  const expandedInfo = [
+    {
+      label: 'Created',
+      value: job.created ? formatDateTime(job.created) : 'Unavailable',
+    },
+    {
+      label: 'Started',
+      value: job.created ? formatDateTime(job.started) : 'Unavailable',
+    },
+    {
+      label: 'Finished',
+      value: job.created ? formatDateTime(job.finished) : 'Unavailable',
+    },
+  ];
   return (
     <>
       <Tr>
@@ -32,19 +53,18 @@ const JobExplorerListRow = ({ job }) => {
         <Td>{formatJobType(job.job_type)}</Td>
       </Tr>
       <Tr isExpanded={expanded}>
-        <Td noPadding={false} colSpan={2}>
+        <Td colSpan={6}>
           <ExpandableRowContent>
-            <strong>Created:</strong> {formatDateTime(job.created)}
-          </ExpandableRowContent>
-        </Td>
-        <Td noPadding={false} colSpan={2}>
-          <ExpandableRowContent>
-            <strong>Started:</strong> {formatDateTime(job.started)}
-          </ExpandableRowContent>
-        </Td>
-        <Td noPadding={false} colSpan={2}>
-          <ExpandableRowContent>
-            <strong>Finished:</strong> {formatDateTime(job.finished)}
+            <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
+              {expandedInfo.map(({ label, value }) => (
+                <DescriptionListGroup key={label}>
+                  <DescriptionListTerm>{label}</DescriptionListTerm>
+                  <DescriptionListDescription>
+                    {value}
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+              ))}
+            </DescriptionList>
           </ExpandableRowContent>
         </Td>
       </Tr>
