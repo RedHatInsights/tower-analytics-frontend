@@ -175,9 +175,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
                 <Thead>
                   <Tr>
                     <Th />
-                    <Th key="0" {...sortParams}>
-                      Name
-                    </Th>
+                    <Th {...sortParams}>Name</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
