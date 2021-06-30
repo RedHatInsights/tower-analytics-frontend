@@ -123,7 +123,34 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         },
         tooltip: {
           cursor: true,
-          stickToAxis: 'x'
+          stickToAxis: 'x',
+          mouseFollow: true,
+          legendTooltip: {
+            legendData: [
+              {
+                childName: constants(isMoney).benefit.key,
+                name: 'Savings',
+                symbol: {
+                  fill: constants(isMoney).benefit.color,
+                }
+              },
+              {
+                childName: constants(isMoney).cost.key,
+                name: 'Costs',
+                symbol: {
+                  fill: constants(isMoney).cost.color,
+                }
+              },
+              {
+                childName: constants(isMoney).net.key,
+                name: 'Cumulative savings over time',
+                symbol: {
+                  fill: constants(isMoney).net.color,
+                }
+              }
+            ],
+            titleProperyForLegend: 'year'
+          }
         },
         xAxis: {
           label: 'Time',
@@ -147,6 +174,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         id: 1102,
         kind: ChartKind.simple,
         type: ChartType.bar,
+        name: constants(isMoney).benefit.key,
         parent: 1001,
         props: {
           x: 'year',
@@ -161,13 +189,14 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
           },
         },
         tooltip: {
-          labelName: 'Savings',
+          labelName: '',
         },
       },
       {
         id: 1101,
         kind: ChartKind.simple,
         type: ChartType.bar,
+        name: constants(isMoney).cost.key,
         parent: 1001,
         props: {
           x: 'year',
@@ -182,13 +211,14 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
           },
         },
         tooltip: {
-          labelName: 'Costs',
+          labelName: '',
         },
       },
       {
         id: 1002,
         kind: ChartKind.simple,
         type: ChartType.line,
+        name: constants(isMoney).net.key,
         parent: 1000,
         props: {
           x: 'year',
@@ -201,7 +231,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
           },
         },
         tooltip: {
-          labelName: 'Cumulative savings over time',
+          labelName: '',
         },
       },
     ],
