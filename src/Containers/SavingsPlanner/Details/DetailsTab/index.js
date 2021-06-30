@@ -97,8 +97,10 @@ const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
   };
 
   const renderOptionsBasedValue = (key, val) => {
-    return options.data[key].find(({ key: apiValue }) => apiValue === val)
-      .value;
+    const fromOptionsValue = (options.data[key] || []).find(
+      ({ key: apiValue }) => apiValue === val
+    );
+    return (fromOptionsValue || {}).value;
   };
 
   const labelsAndValues = {
@@ -116,7 +118,7 @@ const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
       : undefined,
     Template: template_id ? showTemplate(template_details) : undefined,
     'Last job status':
-      automation_status.status !== 'None' ? (
+      automation_status.status && automation_status.status !== 'None' ? (
         <JobStatus status={automation_status.status} />
       ) : (
         <Label variant="outline" color="red" icon={<ExclamationCircleIcon />}>
@@ -229,12 +231,12 @@ const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
               </CardActionsRow>
               {error && (
                 <AlertModal
-                  isOpen={error}
+                  isOpen={!!error}
                   onClose={dismissError}
                   title={'Error'}
                   variant="error"
                 >
-                  <ErrorDetail error={error} />
+                  <ErrorDetail error={error.detail} />
                 </AlertModal>
               )}
             </CardFooter>

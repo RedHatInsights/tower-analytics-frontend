@@ -61,7 +61,7 @@ const DeleteButton = ({
           setDeleteMessageError();
         }}
       >
-        <ErrorDetail error={deleteMessageError} />
+        <ErrorDetail error={deleteMessageError.detail} />
       </AlertModal>
     );
   }

@@ -128,7 +128,7 @@ const ToolbarDeleteButton = ({
           setDeleteMessageError();
         }}
       >
-        <ErrorDetail error={deleteMessageError} />
+        <ErrorDetail error={deleteMessageError.detail} />
       </AlertModal>
     );
   }

@@ -77,7 +77,6 @@ const ListItem = ({
     template_details,
   } = plan;
   const [isCardKebabOpen, setIsCardKebabOpen] = useState(false);
-  console.log(options);
   const match = useRouteMatch();
   let history = useHistory();
 
