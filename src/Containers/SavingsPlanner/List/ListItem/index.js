@@ -25,11 +25,11 @@ import { Link, useRouteMatch } from 'react-router-dom';
 
 import { Paths } from '../../../../paths';
 
+import formatCurrency from '../../Shared/currencyFormatter';
+
 import { formatDateTime } from '../../../../Utilities/helpers';
 
 import JobStatus from '../../../../Components/JobStatus';
-
-// import useSelected from "../../Utilities/useSelected";
 
 const CardTitle = styled(PFCardTitle)`
   word-break: break-word;
@@ -75,7 +75,12 @@ const ListItem = ({
     modified,
     name,
     template_details,
+    projections,
   } = plan;
+
+  const projectedSavings =
+    projections?.monetary_stats?.cumulative_net_benefits?.year3;
+
   const [isCardKebabOpen, setIsCardKebabOpen] = useState(false);
   const match = useRouteMatch();
   let history = useHistory();
@@ -204,6 +209,14 @@ const ListItem = ({
             </Label>
           )}
         </CardDetail>
+        {projectedSavings && (
+          <CardDetail>
+            <CardLabel>Projected savings</CardLabel>
+            <a onClick={() => history.push(`${match.url}/${id}/statistics`)}>
+              {formatCurrency(projectedSavings)}
+            </a>
+          </CardDetail>
+        )}
         <CardDetail>
           <CardLabel>Last updated</CardLabel>{' '}
           <span>{formatDateTime(modified)}</span>
