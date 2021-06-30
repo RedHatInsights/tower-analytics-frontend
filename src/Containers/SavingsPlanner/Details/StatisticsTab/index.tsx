@@ -146,7 +146,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
               },
               {
                 childName: constants(isMoney).net.key,
-                name: 'Cumulative savings over time',
+                name: 'Cumulative savings',
                 symbol: {
                   fill: constants(isMoney).net.color,
                 }
