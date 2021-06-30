@@ -9,6 +9,14 @@ const dataFetchReducer = (state, action) => {
         isSuccess: false,
         error: null,
       };
+    case 'RESET':
+      return {
+        ...state,
+        isLoading: true,
+        isSuccess: false,
+        error: null,
+        data: action.payload,
+      };
     case 'FETCH_SUCCESS':
       return {
         ...state,
@@ -79,7 +87,11 @@ const useApi = (initialData, postprocess = (d) => d) => {
     dispatch({ type: 'UPDATE_DATA', payload: data });
   };
 
-  return [state, setRequest, setData];
+  const reset = () => {
+    dispatch({ type: 'RESET', payload: initialData });
+  };
+
+  return [state, setRequest, setData, reset];
 };
 
 export default useApi;

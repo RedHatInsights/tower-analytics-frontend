@@ -2,7 +2,7 @@ import reactRouterDom from 'react-router-dom';
 const pushMock = jest.fn();
 reactRouterDom.useHistory = jest.fn().mockReturnValue({ push: pushMock });
 
-import DetailsTab from './DetailsTab';
+import DetailsTab from '.';
 
 jest.mock('react-router-dom', () => ({
   useLocation: jest.fn().mockReturnValue({
@@ -14,7 +14,7 @@ jest.mock('react-router-dom', () => ({
   }),
 }));
 
-jest.mock('../../Components/Breadcrumbs', () => {
+jest.mock('../../../../Components/Breadcrumbs', () => {
   return {
     __esModule: true,
     default: async () => [
@@ -57,8 +57,13 @@ const dummyData = [
 let wrapper;
 it('should render successfully', () => {
   wrapper = mount(
-    <DetailsTab tabsArray={tabs} plans={dummyData} canWrite={true} />
+    <DetailsTab
+      tabsArray={tabs}
+      plans={dummyData}
+      canWrite={true}
+      options={{ data: {} }}
+    />
   );
   wrapper.update();
-  expect(wrapper.find('div.pf-c-description-list__text')).toHaveLength(9);
+  expect(wrapper.find('div.pf-c-description-list__text')).toHaveLength(6);
 });

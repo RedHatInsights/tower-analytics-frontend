@@ -1,39 +1,13 @@
-import React, { useContext, useEffect, useState } from 'react';
-import {
-  func,
-  bool,
-  node,
-  number,
-  string,
-  arrayOf,
-  shape,
-  checkPropTypes,
-} from 'prop-types';
-import styled from 'styled-components';
-import {
-  Alert,
-  Badge,
-  Button,
-  DropdownItem,
-  Tooltip,
-} from '@patternfly/react-core';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { Button, Tooltip } from '@patternfly/react-core';
 import AlertModal from '../AlertModal';
 
 import { getRelatedResourceDeleteCounts } from '../../Utilities/getRelatedResourceDeleteDetails';
 
 import ErrorDetail from '../ErrorDetail';
 
-const WarningMessage = styled(Alert)`
-  margin-top: 10px;
-`;
-
-const Label = styled.span`
-  && {
-    margin-right: 10px;
-  }
-`;
-
-const requiredField = props => {
+const requiredField = (props) => {
   const { name, username, image } = props;
   if (!name && !username && !image) {
     return new Error(
@@ -41,9 +15,9 @@ const requiredField = props => {
     );
   }
   if (name) {
-    checkPropTypes(
+    PropTypes.checkPropTypes(
       {
-        name: string,
+        name: PropTypes.string,
       },
       { name: props.name },
       'prop',
@@ -51,9 +25,9 @@ const requiredField = props => {
     );
   }
   if (username) {
-    checkPropTypes(
+    PropTypes.checkPropTypes(
       {
-        username: string,
+        username: PropTypes.string,
       },
       { username: props.username },
       'prop',
@@ -61,9 +35,9 @@ const requiredField = props => {
     );
   }
   if (image) {
-    checkPropTypes(
+    PropTypes.checkPropTypes(
       {
-        image: string,
+        image: PropTypes.string,
       },
       { image: props.image },
       'prop',
@@ -73,34 +47,25 @@ const requiredField = props => {
   return null;
 };
 
-const ItemToDelete = shape({
-  id: number.isRequired,
-  name: requiredField,
-  username: requiredField,
-  image: requiredField,
-});
-
-function ToolbarDeleteButton({
+const ToolbarDeleteButton = ({
   itemsToDelete,
-  pluralizedItemName,
-  errorMessage,
+  pluralizedItemName = 'Items',
   onDelete,
-  deleteDetailsRequests,
-  warningMessage,
-  deleteMessage,
-  cannotDelete,
-}) {
+  errorMessage = 'Error while deleting',
+  deleteDetailsRequests = [],
+  cannotDelete = (item) => !item,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [deleteDetails, setDeleteDetails] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const [deleteMessageError, setDeleteMessageError] = useState();
+  const [deleteMessageError, setDeleteMessageError] = useState('');
   const handleDelete = () => {
     onDelete();
     toggleModal();
   };
 
-  const toggleModal = async isOpen => {
+  const toggleModal = async (isOpen) => {
     setIsLoading(true);
     setDeleteDetails(null);
     if (
@@ -125,8 +90,9 @@ function ToolbarDeleteButton({
   const renderTooltip = () => {
     const itemsUnableToDelete = itemsToDelete
       .filter(cannotDelete)
-      .map(item => item.name || item.username)
+      .map((item) => item.name || item.username)
       .join(', ');
+
     if (itemsToDelete.some(cannotDelete)) {
       return (
         <div>
@@ -152,53 +118,20 @@ function ToolbarDeleteButton({
   const isDisabled =
     itemsToDelete.length === 0 || itemsToDelete.some(cannotDelete);
 
-  const buildDeleteWarning = () => {
-    const deleteMessages = [];
-    if (warningMessage) {
-      deleteMessages.push(warningMessage);
-    }
-    if (deleteMessage) {
-      if (deleteDetails || itemsToDelete.length > 1) {
-        deleteMessages.push(deleteMessage);
-      }
-    }
-
-    return (
-      <div>
-        {deleteMessages.map(message => (
-          <div aria-label={message} key={message}>
-            {message}
-          </div>
-        ))}
-        {deleteDetails &&
-          Object.entries(deleteDetails).map(([key, value]) => (
-            <div key={key} aria-label={`${key}: ${value}`}>
-              <Label>{key}</Label>
-              <Badge>{value}</Badge>
-            </div>
-          ))}
-      </div>
-    );
-  };
-
   if (deleteMessageError) {
     return (
       <AlertModal
-        isOpen={deleteMessageError}
+        isOpen={!!deleteMessageError}
         title={'Error!'}
         onClose={() => {
           toggleModal(false);
           setDeleteMessageError();
         }}
       >
-        <ErrorDetail error={deleteMessageError} />
+        <ErrorDetail error={deleteMessageError.detail} />
       </AlertModal>
     );
   }
-  const shouldShowDeleteWarning =
-    warningMessage ||
-    (itemsToDelete.length === 1 && deleteDetails) ||
-    (itemsToDelete.length > 1 && deleteMessage);
 
   return (
     <>
@@ -229,9 +162,7 @@ function ToolbarDeleteButton({
               key="delete"
               variant="danger"
               aria-label={'confirm delete'}
-              isDisabled={Boolean(
-                deleteDetails
-              )}
+              isDisabled={Boolean(deleteDetails)}
               onClick={handleDelete}
             >
               {'Delete'}
@@ -247,37 +178,34 @@ function ToolbarDeleteButton({
           ]}
         >
           <div>{'This action will delete the following:'}</div>
-          {itemsToDelete.map(item => (
+          {itemsToDelete.map((item) => (
             <span key={item.id}>
               <strong>{item.name || item.username || item.image}</strong>
               <br />
             </span>
           ))}
-          {shouldShowDeleteWarning && (
-            <WarningMessage
-              variant="warning"
-              isInline
-              title={buildDeleteWarning()}
-            />
-          )}
         </AlertModal>
       )}
     </>
   );
-}
-
-ToolbarDeleteButton.propTypes = {
-  onDelete: func.isRequired,
-  itemsToDelete: arrayOf(ItemToDelete).isRequired,
-  pluralizedItemName: string,
-  warningMessage: node,
-  cannotDelete: func,
 };
 
-ToolbarDeleteButton.defaultProps = {
-  pluralizedItemName: 'Items',
-  warningMessage: null,
-  cannotDelete: item => !item,
+ToolbarDeleteButton.propTypes = {
+  itemsToDelete: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      name: requiredField,
+      username: requiredField,
+      image: requiredField,
+    })
+  ).isRequired,
+  pluralizedItemName: PropTypes.string,
+  onDelete: PropTypes.func.isRequired,
+  errorMessage: PropTypes.string,
+  warningMessage: PropTypes.node,
+  deleteDetailsRequests: PropTypes.array,
+  cannotDelete: PropTypes.func,
+  deleteMessage: PropTypes.string,
 };
 
 export default ToolbarDeleteButton;

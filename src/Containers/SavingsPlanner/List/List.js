@@ -1,39 +1,54 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { useHistory, useLocation } from 'react-router-dom';
-import {
-  deletePlan,
-  preflightRequest,
-  readPlanOptions,
-  readPlans,
-} from '../../Api';
-import FilterableToolbar from '../../Components/Toolbar/';
-import ApiErrorState from '../../Components/ApiErrorState';
-import LoadingState from '../../Components/LoadingState';
-import EmptyState from '../../Components/EmptyState';
-import EmptyList from '../../Components/EmptyList';
-import Pagination from '../../Components/Pagination';
-import PlanCard from './PlanCard';
-import { useQueryParams } from '../../Utilities/useQueryParams';
-import useApi from '../../Utilities/useApi';
-import { savingsPlanner } from '../../Utilities/constants';
-import { notAuthorizedParams } from '../../Utilities/constants';
-
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
-
 import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
+import { AddCircleOIcon, SearchIcon } from '@patternfly/react-icons';
 
-import ToolbarDeleteButton from '../../Components/Toolbar/ToolbarDeleteButton';
-import useSelected from '../../Utilities/useSelected';
-import { useDeleteItems } from '../../Utilities/useRequest';
-import ErrorDetail from '../../Components/ErrorDetail';
-import AlertModal from '../../Components/AlertModal';
+import {
+  deletePlan,
+  preflightRequest,
+  readPlanOptions,
+  readPlans,
+} from '../../../Api';
+import FilterableToolbar from '../../../Components/Toolbar';
+import ApiErrorState from '../../../Components/ApiErrorState';
+import LoadingState from '../../../Components/LoadingState';
+import EmptyState from '../../../Components/EmptyState';
+import EmptyList from '../../../Components/EmptyList';
+import Pagination from '../../../Components/Pagination';
+import PlanCard from './ListItem';
+import { useQueryParams } from '../../../Utilities/useQueryParams';
+import useApi from '../../../Utilities/useApi';
+import { savingsPlanner } from '../../../Utilities/constants';
+import { notAuthorizedParams } from '../../../Utilities/constants';
 
-const SavingsPlanner = () => {
+import ToolbarDeleteButton from '../../../Components/Toolbar/ToolbarDeleteButton';
+import useSelected from '../../../Utilities/useSelected';
+import { useDeleteItems } from '../../../Utilities/useRequest';
+import ErrorDetail from '../../../Components/ErrorDetail';
+import AlertModal from '../../../Components/AlertModal';
+
+const PageContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 76px);
+`;
+
+const FlexMain = styled(Main)`
+  flex-grow: 1;
+`;
+
+const Footer = styled.div`
+  flex-shrink: 0;
+`;
+
+const List = () => {
   const history = useHistory();
   const { pathname } = useLocation();
 
@@ -104,8 +119,10 @@ const SavingsPlanner = () => {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 
+  const EmptyListIcon = canWrite ? AddCircleOIcon : SearchIcon;
+
   return (
-    <React.Fragment>
+    <PageContainer>
       <PageHeader>
         <PageHeaderTitle title={'Savings Planner'} />
         <FilterableToolbar
@@ -129,7 +146,7 @@ const SavingsPlanner = () => {
                   </Button>,
                 ]
               : []),
-            canWrite && (
+            canWrite && isSuccess && data.length > 0 && (
               <ToolbarDeleteButton
                 key="delete-plan-button"
                 onDelete={handleDelete}
@@ -139,47 +156,65 @@ const SavingsPlanner = () => {
             ),
           ]}
           pagination={
-            <Pagination
-              count={meta?.total_count}
-              params={{
-                limit: queryParams.limit,
-                offset: queryParams.offset,
-              }}
-              setPagination={setFromPagination}
-              isCompact
-            />
+            isSuccess && data.length > 0 ? (
+              <Pagination
+                count={meta?.total_count}
+                params={{
+                  limit: queryParams.limit,
+                  offset: queryParams.offset,
+                }}
+                setPagination={setFromPagination}
+                isCompact
+              />
+            ) : (
+              <div></div>
+            )
           }
         />
       </PageHeader>
       {preflightError && (
-        <Main>
+        <FlexMain>
           <EmptyState {...preflightError} />
-        </Main>
+        </FlexMain>
       )}
       {error && (
-        <Main style={{ height: '100vh' }}>
+        <FlexMain>
           <ApiErrorState message={error.error} />
-        </Main>
+        </FlexMain>
       )}
       {(isLoading || deleteLoading) && (
-        <Main style={{ height: '100vh' }}>
+        <FlexMain>
           <LoadingState />
-        </Main>
+        </FlexMain>
       )}
-      {isSuccess && data.length === 0 && (
-        <Main>
+      {isSuccess && data.length === 0 && !(isLoading || deleteLoading) && (
+        <FlexMain>
           <EmptyList
+            icon={EmptyListIcon}
             label={'Add plan'}
-            title={'No plans added'}
-            message={canWrite ? 'No plans have been added yet. Add your first plan.' : 'No plans have been added yet.'}
+            title={'No plans found'}
+            message={
+              canWrite
+                ? 'Update the applied filters or add a new plan.'
+                : 'Update the applied filters.'
+            }
             canAdd={canWrite}
             path={`${pathname}/add`}
-           />
-        </Main>
+          />
+        </FlexMain>
       )}
-      {isSuccess && (
-        <Main style={{ height: '100vh' }}>
-          <Gallery hasGutter>
+      {isSuccess && !(isLoading || deleteLoading) && (
+        <FlexMain>
+          <Gallery
+            hasGutter
+            minWidths={{
+              sm: '307px',
+              md: '307px',
+              lg: '307px',
+              xl: '307px',
+              '2xl': '307px',
+            }}
+          >
             {options.isSuccess &&
               data.map((datum) => (
                 <PlanCard
@@ -189,21 +224,25 @@ const SavingsPlanner = () => {
                   plan={datum}
                   handleSelect={handleSelect}
                   canWrite={canWrite}
+                  options={options}
                 />
               ))}
           </Gallery>
-        </Main>
+        </FlexMain>
       )}
-      <Pagination
-        count={meta?.total_count}
-        params={{
-          limit: queryParams.limit,
-          offset: queryParams.offset,
-        }}
-        setPagination={setFromPagination}
-        variant={PaginationVariant.bottom}
-        isSticky
-      />
+      {data.length > 0 && !(isLoading || deleteLoading) && (
+        <Footer>
+          <Pagination
+            count={meta?.total_count}
+            params={{
+              limit: queryParams.limit,
+              offset: queryParams.offset,
+            }}
+            setPagination={setFromPagination}
+            variant={PaginationVariant.bottom}
+          />
+        </Footer>
+      )}
       {deletionError && (
         <AlertModal
           aria-label={'Deletion error'}
@@ -213,11 +252,11 @@ const SavingsPlanner = () => {
           variant="error"
         >
           {'Failed to delete one or more plans.'}
-          <ErrorDetail error={deletionError} />
+          <ErrorDetail error={deletionError.detail} />
         </AlertModal>
       )}
-    </React.Fragment>
+    </PageContainer>
   );
 };
 
-export default SavingsPlanner;
+export default List;

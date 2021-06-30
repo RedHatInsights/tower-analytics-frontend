@@ -1,8 +1,8 @@
-import Tasks from './Tasks';
+import Tasks from '.';
 import { render, fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-describe('SavingsPlanner/Shared/Tasks', () => {
+describe('SavingsPlanner/Shared/Form/Steps/Tasks', () => {
   const mockDispatch = jest.fn();
   const mockTasks = ['foo', 'bar', 'baz'];
 

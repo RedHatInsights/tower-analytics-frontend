@@ -13,7 +13,10 @@ interface Props {
   isMoney?: boolean
 }
 
-const TotalSavings: FunctionComponent<Props> = ({ value = 0, isMoney = true }) => (
+const TotalSavings: FunctionComponent<Props> = ({
+  value = 0,
+  isMoney = true,
+}) => (
   <Card isPlain>
     <CardTitle style={{ paddingBottom: '0' }}>Total savings</CardTitle>
     <CardBody>
@@ -22,7 +25,9 @@ const TotalSavings: FunctionComponent<Props> = ({ value = 0, isMoney = true }) =
         size="4xl"
         style={{ color: isMoney ? '#81C46B' : '#0063CF' }}
       >
-        {isMoney ? `$ ${floatToStringWithCommas(value)}` : `${value.toFixed(0)} hours`}
+        {isMoney
+          ? `$ ${floatToStringWithCommas(value)}`
+          : `${value.toFixed(0)} hours`}
       </Title>
     </CardBody>
   </Card>
@@ -30,7 +35,7 @@ const TotalSavings: FunctionComponent<Props> = ({ value = 0, isMoney = true }) =
 
 TotalSavings.propTypes = {
   value: PropTypes.number,
-  isMoney: PropTypes.bool
+  isMoney: PropTypes.bool,
 };
 
 export default TotalSavings;

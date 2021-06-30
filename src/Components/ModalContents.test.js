@@ -87,7 +87,6 @@ describe('Components/ModalContents', () => {
           selectedId={1}
           qp={mockQueryParams}
           jobType={'Foo'}
-          handleCloseBtn={() => {}}
         />
       );
     });
@@ -104,7 +103,6 @@ describe('Components/ModalContents', () => {
           selectedId={1}
           qp={mockQueryParams}
           jobType={'Foo'}
-          handleCloseBtn={() => {}}
         />
       );
     });
@@ -123,17 +121,14 @@ describe('Components/ModalContents', () => {
           selectedId={1}
           qp={mockQueryParams}
           jobType={'Foo'}
-          handleCloseBtn={() => {}}
         />
       );
     });
 
     wrapper.update();
-    const statsBox = wrapper.find(
-      'DataListItem[aria-labelledby="Selected Template Statistics"]'
-    );
-    const jobRuns = statsBox.find('div[aria-labelledby="job runs"]');
-    expect(jobRuns.text()).toMatch(String(mockStats.items[0].total_count));
+    const jobRuns = wrapper.find('.total-runs');
+    const count = jobRuns.find('dd');
+    expect(count.text()).toMatch(String(mockStats.items[0].total_count));
   });
   it('should display the the correct success rate', async () => {
     const calculateSuccessRate = (successCount, totalCount) =>
@@ -146,20 +141,17 @@ describe('Components/ModalContents', () => {
           selectedId={1}
           qp={mockQueryParams}
           jobType={'Foo'}
-          handleCloseBtn={() => {}}
         />
       );
     });
 
     wrapper.update();
-    const statsBox = wrapper.find(
-      'DataListItem[aria-labelledby="Selected Template Statistics"]'
-    );
-    const successRate = statsBox.find('div[aria-labelledby="success rate"]');
+    const successRate = wrapper.find('.success-rate');
+    const rate = successRate.find('dd');
     const expected = calculateSuccessRate(
       mockStats.items[0].successful_count,
       mockStats.items[0].total_count
     );
-    expect(successRate.text()).toMatch(expected);
+    expect(rate.text()).toMatch(expected);
   });
 });

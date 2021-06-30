@@ -15,11 +15,11 @@ export default function useSelected(list = []) {
   const [selected, setSelected] = useState([]);
   const isAllSelected = selected.length > 0 && selected.length === list.length;
 
-  const handleSelect = row => {
-    if (selected.some(s => s.id === row.id)) {
-      setSelected(prevState => [...prevState.filter(i => i.id !== row.id)]);
+  const handleSelect = (row) => {
+    if (selected.some((s) => s.id === row.id)) {
+      setSelected((prevState) => [...prevState.filter((i) => i.id !== row.id)]);
     } else {
-      setSelected(prevState => [...prevState, row]);
+      setSelected((prevState) => [...prevState, row]);
     }
   };
   return { selected, isAllSelected, handleSelect, setSelected };

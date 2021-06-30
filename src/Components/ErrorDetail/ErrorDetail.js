@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -7,7 +7,6 @@ import {
   CardBody as PFCardBody,
   ExpandableSection as PFExpandable,
 } from '@patternfly/react-core';
-import getErrorMessage from './getErrorMessage';
 
 const Card = styled(PFCard)`
   background-color: var(--pf-global--BackgroundColor--200);
@@ -31,39 +30,10 @@ const Expandable = styled(PFExpandable)`
 `;
 
 function ErrorDetail({ error }) {
-  const { response } = error;
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
-  };
-
-  const renderNetworkError = () => {
-    const message = getErrorMessage(response);
-
-    return (
-      <Fragment>
-        <CardBody>
-          {response?.config?.method.toUpperCase()} {response?.config?.url}{' '}
-          <strong>{response?.status}</strong>
-        </CardBody>
-        <CardBody>
-          {Array.isArray(message) ? (
-            <ul>
-              {message.map(m =>
-                typeof m === 'string' ? <li key={m}>{m}</li> : null
-              )}
-            </ul>
-          ) : (
-            message
-          )}
-        </CardBody>
-      </Fragment>
-    );
-  };
-
-  const renderStack = () => {
-    return <CardBody>{error.stack}</CardBody>;
   };
 
   return (
@@ -73,16 +43,24 @@ function ErrorDetail({ error }) {
       isExpanded={isExpanded}
     >
       <Card>
-        {Object.prototype.hasOwnProperty.call(error, 'response')
-          ? renderNetworkError()
-          : renderStack()}
+        <CardBody>
+          {Array.isArray(error) ? (
+            <ul>
+              {error.map((m) =>
+                typeof m === 'string' ? <li key={m}>{m}</li> : null
+              )}
+            </ul>
+          ) : (
+            error
+          )}
+        </CardBody>
       </Card>
     </Expandable>
   );
 }
 
 ErrorDetail.propTypes = {
-  error: PropTypes.instanceOf(Error).isRequired,
+  error: PropTypes.arrayOf(PropTypes.string),
 };
 
 export default ErrorDetail;

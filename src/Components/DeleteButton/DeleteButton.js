@@ -10,31 +10,33 @@ import ErrorDetail from '../ErrorDetail';
 const WarningMessage = styled(Alert)`
   margin-top: 10px;
 `;
+
 const Label = styled.span`
   && {
     margin-right: 10px;
   }
 `;
-function DeleteButton({
+
+const DeleteButton = ({
   onConfirm,
-  modalTitle,
-  name,
-  variant,
+  modalTitle = 'Delete',
+  name = '',
+  variant = 'secondary',
+  isDisabled = false,
+  ouiaId = null,
+  deleteMessage = 'Delete?',
+  deleteDetailsRequests = [],
+  disabledTooltip = 'This item cannot be deleted',
   children,
-  isDisabled,
-  ouiaId,
-  deleteMessage,
-  deleteDetailsRequests,
-  disabledTooltip,
-}) {
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [deleteMessageError, setDeleteMessageError] = useState();
   const [deleteDetails, setDeleteDetails] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-  const toggleModal = async isModalOpen => {
+  const toggleModal = async (isModalOpen) => {
     setIsLoading(true);
-    if (deleteDetailsRequests?.length && isModalOpen) {
+    if (deleteDetailsRequests.length > 0 && isModalOpen) {
       const { results, error } = await getRelatedResourceDeleteCounts(
         deleteDetailsRequests
       );
@@ -51,17 +53,19 @@ function DeleteButton({
   if (deleteMessageError) {
     return (
       <AlertModal
-        isOpen={deleteMessageError}
+        isOpen={!!deleteMessageError}
+        variant={'error'}
         title={'Error!'}
         onClose={() => {
           toggleModal(false);
           setDeleteMessageError();
         }}
       >
-        <ErrorDetail error={deleteMessageError} />
+        <ErrorDetail error={deleteMessageError.detail} />
       </AlertModal>
     );
   }
+
   return (
     <>
       {disabledTooltip ? (
@@ -144,14 +148,19 @@ function DeleteButton({
       </AlertModal>
     </>
   );
-}
-
-DeleteButton.propTypes = {
-  ouiaId: PropTypes.string,
 };
 
-DeleteButton.defaultProps = {
-  ouiaId: null,
+DeleteButton.propTypes = {
+  onConfirm: PropTypes.func.isRequired,
+  modalTitle: PropTypes.string,
+  name: PropTypes.string,
+  variant: PropTypes.object,
+  isDisabled: PropTypes.bool,
+  ouiaId: PropTypes.string,
+  deleteMessage: PropTypes.string,
+  deleteDetailsRequests: PropTypes.array,
+  disabledTooltip: PropTypes.bool,
+  children: PropTypes.node,
 };
 
 export default DeleteButton;

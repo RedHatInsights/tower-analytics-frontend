@@ -1,8 +1,8 @@
-import Details from './Details';
+import Details from '.';
 import { render, fireEvent, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
-describe('SavingsPlanner/Shared/Details', () => {
+describe('SavingsPlanner/Shared/Form/Steps/Details', () => {
   const mockDispatch = jest.fn();
   const mockFormData = {
     name: '',

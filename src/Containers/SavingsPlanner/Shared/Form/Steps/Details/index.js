@@ -10,7 +10,7 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 
-import { actions } from './constants';
+import { actions } from '../../../constants';
 
 const Details = ({ options, formData, dispatch }) => {
   const { name, category, description, manual_time, hosts, frequency_period } =
@@ -44,11 +44,7 @@ const Details = ({ options, formData, dispatch }) => {
               }
             />
           </FormGroup>
-          <FormGroup
-            label="What type of task is it?"
-            isRequired
-            fieldId="category-field"
-          >
+          <FormGroup label="What type of task is it?" fieldId="category-field">
             <Select
               id="category-field"
               isOpen={categoryIsOpen}

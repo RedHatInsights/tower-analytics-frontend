@@ -175,7 +175,10 @@ const GroupedBarChart = ({
       })
       .on('mouseover', function (d) {
         d.moreDetail = !d.name.endsWith('Others');
-        d3.select(this).style('cursor', (onClick && d.moreDetail) ? 'pointer' : 'default');
+        d3.select(this).style(
+          'cursor',
+          onClick && d.moreDetail ? 'pointer' : 'default'
+        );
         d3.select(this).style('fill', d3.rgb(color(d.id)).darker(1));
         tooltip.handleMouseOver(d);
       })

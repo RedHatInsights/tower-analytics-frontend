@@ -2,10 +2,10 @@ import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
-import { Paths } from '../../paths';
+import { Paths } from '../../../../paths';
 import { stringify } from 'query-string';
 
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { Button } from '@patternfly/react-core';
 
@@ -16,28 +16,27 @@ import {
   DescriptionListTerm,
   DescriptionListGroup,
   DescriptionListDescription,
-  Divider,
+  Divider as PFDivider,
   Label,
-  TextContent,
   List,
   ListItem,
 } from '@patternfly/react-core';
-import CardActionsRow from '../../Components/CardActionsRow';
+import CardActionsRow from '../../../../Components/CardActionsRow';
 import {
   relatedResourceDeleteRequests,
   getRelatedResourceDeleteCounts,
-} from '../../Utilities/getRelatedResourceDeleteDetails';
-import { deletePlan, readPlan } from '../../Api';
-import useRequest, { useDismissableError } from '../../Utilities/useRequest';
-import DeleteButton from '../../Components/DeleteButton/DeleteButton';
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-} from '@patternfly/react-icons';
-import { formatDateTime } from '../../Utilities/helpers';
-import RoutedTabs from '../../Components/RoutedTabs';
-import AlertModal from '../../Components/AlertModal/AlertModal';
-import ErrorDetail from '../../Components/ErrorDetail/ErrorDetail';
+} from '../../../../Utilities/getRelatedResourceDeleteDetails';
+import { deletePlan, readPlan } from '../../../../Api';
+import useRequest, {
+  useDismissableError,
+} from '../../../../Utilities/useRequest';
+import DeleteButton from '../../../../Components/DeleteButton/DeleteButton';
+import { ExclamationCircleIcon } from '@patternfly/react-icons';
+import { formatDateTime } from '../../../../Utilities/helpers';
+import RoutedTabs from '../../../../Components/RoutedTabs';
+import AlertModal from '../../../../Components/AlertModal/AlertModal';
+import ErrorDetail from '../../../../Components/ErrorDetail/ErrorDetail';
+import JobStatus from '../../../../Components/JobStatus';
 
 const CardBody = styled(PFCardBody)`
   min-height: 500px;
@@ -49,8 +48,13 @@ const CardBody = styled(PFCardBody)`
   }
 `;
 
-const DetailsTab = ({ tabsArray, plans, canWrite }) => {
-  let history = useHistory();
+const Divider = styled(PFDivider)`
+  padding-top: 24px;
+`;
+
+const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
+  const { pathname } = useLocation();
+  const history = useHistory();
   const {
     id,
     automation_status,
@@ -92,25 +96,38 @@ const DetailsTab = ({ tabsArray, plans, canWrite }) => {
     );
   };
 
+  const renderOptionsBasedValue = (key, val) => {
+    const fromOptionsValue = (options.data[key] || []).find(
+      ({ key: apiValue }) => apiValue === val
+    );
+    return (fromOptionsValue || {}).value;
+  };
+
   const labelsAndValues = {
     Name: name || undefined,
-    'Automation Type': category || undefined,
+    'Automation type': category
+      ? renderOptionsBasedValue('category', category)
+      : undefined,
     Description: description || undefined,
-    'Manual Time': manual_time || undefined,
+    'Manual time': manual_time
+      ? renderOptionsBasedValue('manual_time', manual_time)
+      : undefined,
     'Run on hosts': hosts || undefined,
-    Frequency: frequency_period || undefined,
+    Frequency: frequency_period
+      ? renderOptionsBasedValue('frequency_period', frequency_period)
+      : undefined,
     Template: template_id ? showTemplate(template_details) : undefined,
-    'Automation status':
-      automation_status.status === 'successful' ? (
-        <Label variant="outline" color="green" icon={<CheckCircleIcon />}>
-          Running
-        </Label>
+    'Last job status':
+      automation_status.status && automation_status.status !== 'None' ? (
+        <JobStatus status={automation_status.status} />
       ) : (
         <Label variant="outline" color="red" icon={<ExclamationCircleIcon />}>
           Not Running
         </Label>
       ),
-    'Last updated': modified ? <em>{formatDateTime(modified)}</em> : undefined,
+    'Last updated': modified ? (
+      <span>{formatDateTime(modified)}</span>
+    ) : undefined,
   };
 
   const { request: deletePlans, error: deleteError } = useRequest(
@@ -169,17 +186,19 @@ const DetailsTab = ({ tabsArray, plans, canWrite }) => {
                 )}
               </DescriptionList>
               {tasks.length > 0 && (
-                <>
-                  <Divider style={{ padding: '1rem' }} component="div" />
-                  <DescriptionListTerm>Tasks</DescriptionListTerm>
-                  <TextContent>
-                    <List component="ol" type="1">
-                      {tasks.map(({ id, task }) => (
-                        <ListItem key={id}>{task}</ListItem>
-                      ))}
-                    </List>
-                  </TextContent>
-                </>
+                <DescriptionList>
+                  <Divider component="div" />
+                  <DescriptionListGroup key={tasks}>
+                    <DescriptionListTerm>Tasks</DescriptionListTerm>
+                    <DescriptionListDescription>
+                      <List component="ol" type="1">
+                        {tasks.map(({ id, task }) => (
+                          <ListItem key={id}>{task}</ListItem>
+                        ))}
+                      </List>
+                    </DescriptionListDescription>
+                  </DescriptionListGroup>
+                </DescriptionList>
               )}
             </div>
           </CardBody>
@@ -192,7 +211,7 @@ const DetailsTab = ({ tabsArray, plans, canWrite }) => {
                   aria-label="Edit plan"
                   onClick={() => {
                     history.push({
-                      pathname: `${Paths.savingsPlan}${id}/edit`,
+                      pathname: `${pathname.split('/details')[0]}/edit`,
                     });
                   }}
                 >
@@ -212,12 +231,12 @@ const DetailsTab = ({ tabsArray, plans, canWrite }) => {
               </CardActionsRow>
               {error && (
                 <AlertModal
-                  isOpen={error}
+                  isOpen={!!error}
                   onClose={dismissError}
                   title={'Error'}
                   variant="error"
                 >
-                  <ErrorDetail error={error} />
+                  <ErrorDetail error={error.detail} />
                 </AlertModal>
               )}
             </CardFooter>
@@ -232,6 +251,7 @@ DetailsTab.propTypes = {
   plans: PropTypes.array,
   tabsArray: PropTypes.array,
   canWrite: PropTypes.bool.isRequired,
+  options: PropTypes.object.isRequired,
 };
 
 export default DetailsTab;
