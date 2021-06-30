@@ -149,7 +149,7 @@ describe('<ToolbarDeleteButton />', () => {
       fireEvent.click(button);
     });
     expect(screen.getByLabelText('Alert modal')).toBeTruthy();
-    expect(screen.getByText('An error occurred')).toBeTruthy();
+    expect(screen.getByText('Error!')).toBeTruthy();
   });
 
   test('should invoke onDelete prop', async () => {

@@ -1,22 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import { Alert, Badge, Button, Tooltip } from '@patternfly/react-core';
+import { Button, Tooltip } from '@patternfly/react-core';
 import AlertModal from '../AlertModal';
 
 import { getRelatedResourceDeleteCounts } from '../../Utilities/getRelatedResourceDeleteDetails';
 
 import ErrorDetail from '../ErrorDetail';
-
-const WarningMessage = styled(Alert)`
-  margin-top: 10px;
-`;
-
-const Label = styled.span`
-  && {
-    margin-right: 10px;
-  }
-`;
 
 const requiredField = (props) => {
   const { name, username, image } = props;
@@ -63,9 +52,7 @@ const ToolbarDeleteButton = ({
   pluralizedItemName = 'Items',
   onDelete,
   errorMessage = 'Error while deleting',
-  warningMessage = 'Are you sure that you want to delete this',
   deleteDetailsRequests = [],
-  deleteMessage = 'Delete this?',
   cannotDelete = (item) => !item,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -131,40 +118,6 @@ const ToolbarDeleteButton = ({
   const isDisabled =
     itemsToDelete.length === 0 || itemsToDelete.some(cannotDelete);
 
-  const buildDeleteWarning = () => {
-    const deleteMessages = [];
-    if (warningMessage) {
-      deleteMessages.push(warningMessage);
-    }
-    if (deleteMessage) {
-      if (deleteDetails || itemsToDelete.length > 1) {
-        deleteMessages.push(deleteMessage);
-      }
-    }
-
-    return (
-      <div>
-        {deleteMessages.map((message) => (
-          <div aria-label={message} key={message}>
-            {message}
-          </div>
-        ))}
-        {deleteDetails &&
-          Object.entries(deleteDetails).map(([key, value]) => (
-            <div key={key} aria-label={`${key}: ${value}`}>
-              <Label>{key}</Label>
-              <Badge>{value}</Badge>
-            </div>
-          ))}
-      </div>
-    );
-  };
-
-  const shouldShowDeleteWarning =
-    warningMessage ||
-    (itemsToDelete.length === 1 && deleteDetails) ||
-    (itemsToDelete.length > 1 && deleteMessage);
-
   if (deleteMessageError) {
     return (
       <AlertModal
@@ -175,7 +128,7 @@ const ToolbarDeleteButton = ({
           setDeleteMessageError();
         }}
       >
-        <ErrorDetail error={deleteMessageError} />
+        <ErrorDetail error={deleteMessageError.detail} />
       </AlertModal>
     );
   }
@@ -231,13 +184,6 @@ const ToolbarDeleteButton = ({
               <br />
             </span>
           ))}
-          {shouldShowDeleteWarning && (
-            <WarningMessage
-              variant="warning"
-              isInline
-              title={buildDeleteWarning()}
-            />
-          )}
         </AlertModal>
       )}
     </>

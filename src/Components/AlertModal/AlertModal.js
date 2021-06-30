@@ -3,13 +3,33 @@ import PropTypes from 'prop-types';
 
 import { Modal, Title } from '@patternfly/react-core';
 import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-  ExclamationTriangleIcon,
-  InfoCircleIcon,
-  TimesCircleIcon,
+  CheckCircleIcon as PFCheckCircleIcon,
+  ExclamationCircleIcon as PFExclamationCircleIcon,
+  ExclamationTriangleIcon as PFExclamationTriangleIcon,
+  InfoCircleIcon as PFInfoCircleIcon,
+  TimesCircleIcon as PFTimesCircleIcon,
 } from '@patternfly/react-icons';
 import styled from 'styled-components';
+
+const ExclamationCircleIcon = styled(PFExclamationCircleIcon)`
+  color: var(--pf-global--danger-color--100);
+`;
+
+const TimesCircleIcon = styled(PFTimesCircleIcon)`
+  color: var(--pf-global--danger-color--100);
+`;
+
+const InfoCircleIcon = styled(PFInfoCircleIcon)`
+  color: var(--pf-global--info-color--100);
+`;
+
+const CheckCircleIcon = styled(PFCheckCircleIcon)`
+  color: var(--pf-global--success-color--100);
+`;
+
+const ExclamationTriangleIcon = styled(PFExclamationTriangleIcon)`
+  color: var(--pf-global--warning-color--100);
+`;
 
 const Header = styled.div`
   display: flex;
@@ -27,36 +47,11 @@ const AlertModal = ({
   ...props
 }) => {
   const variantIcons = {
-    danger: (
-      <ExclamationCircleIcon
-        size="lg"
-        css="color: var(--pf-global--danger-color--100)"
-      />
-    ),
-    error: (
-      <TimesCircleIcon
-        size="lg"
-        css="color: var(--pf-global--danger-color--100)"
-      />
-    ),
-    info: (
-      <InfoCircleIcon
-        size="lg"
-        css="color: var(--pf-global--info-color--100)"
-      />
-    ),
-    success: (
-      <CheckCircleIcon
-        size="lg"
-        css="color: var(--pf-global--success-color--100)"
-      />
-    ),
-    warning: (
-      <ExclamationTriangleIcon
-        size="lg"
-        css="color: var(--pf-global--warning-color--100)"
-      />
-    ),
+    danger: <ExclamationCircleIcon size="lg" />,
+    error: <TimesCircleIcon size="lg" />,
+    info: <InfoCircleIcon size="lg" />,
+    success: <CheckCircleIcon size="lg" />,
+    warning: <ExclamationTriangleIcon size="lg" />,
   };
 
   const customHeader = (

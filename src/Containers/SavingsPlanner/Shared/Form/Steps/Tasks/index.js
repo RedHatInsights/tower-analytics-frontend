@@ -21,7 +21,7 @@ import {
 } from '@patternfly/react-core';
 import { PlusIcon, TimesIcon } from '@patternfly/react-icons';
 
-import { actions } from './constants';
+import { actions } from '../../../constants';
 
 const TaskSection = styled.div`
   margin-top: 20px;
@@ -74,8 +74,11 @@ const Tasks = ({ tasks, dispatch }) => {
   };
 
   const appendTask = () => {
-    setTasks([...tasks, taskToAdd]);
-    setTaskToAdd('');
+    const trimmedTask = taskToAdd.trim();
+    if (trimmedTask !== '') {
+      setTasks([...tasks, trimmedTask]);
+      setTaskToAdd('');
+    }
   };
 
   const handleTextKeyDown = (e) => {
@@ -109,6 +112,7 @@ const Tasks = ({ tasks, dispatch }) => {
               />
               <Button
                 onClick={appendTask}
+                isDisabled={taskToAdd.trim() === ''}
                 variant="control"
                 aria-label="Add task"
               >
