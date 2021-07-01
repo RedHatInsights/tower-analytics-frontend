@@ -1,4 +1,4 @@
-const formatCurrency = (s: number): string => {
+const currencyFormatter = (s: number): string => {
   const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
@@ -6,4 +6,4 @@ const formatCurrency = (s: number): string => {
 
   return formatter.format(s); /* $2,500.00 */
 }
-export default formatCurrency;
+export default currencyFormatter;
