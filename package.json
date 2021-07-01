@@ -97,7 +97,6 @@
     "lint:js:fix": "eslint config src --fix",
     "start": "NODE_ENV=development webpack serve --config config/dev.webpack.config.js",
     "start:beta": "BETA=true NODE_ENV=development webpack serve --config config/dev.webpack.config.js",
-    "start:container": "NODE_ENV=development webpack serve --config config/dev.webpack.config.js --host 0.0.0.0",
     "build:prod": "NODE_ENV=production webpack --config config/prod.webpack.config.js",
     "deploy": "npm-run-all build:prod lint test",
     "verify": "npm-run-all build:prod lint test"
