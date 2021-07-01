@@ -8,6 +8,10 @@ const formatPayload = (data) => {
     task_order: index + 1,
   }));
 
+  if (!data.hosts || data.hosts === '') {
+    data.hosts = 1;
+  }
+
   // these two are fields the api expects but we don't
   // have form elements for in the MVP.
   data.hourly_rate = 50;
