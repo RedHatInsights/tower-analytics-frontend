@@ -53,7 +53,8 @@ const initialQueryParams = {
   group_by_time: false,
   offset: 0,
   sort_options: 'name',
-  sort_order: 'desc',
+  sort_order: 'asc',
+  sort_by: 'name:asc',
 };
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
@@ -64,11 +65,14 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
 
   const onSort = () => {
     setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+  };
+  useEffect(() => {
     queryParamsDispatch({
       type: 'SET_SORT_ORDER',
       value: { sort_order: sortDirection },
     });
-  };
+  }, [sortDirection]);
+
   const sortParams = {
     sort: {
       sortBy: {
@@ -123,7 +127,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
       },
     });
   }, []);
-
+  console.log(queryParams);
   useEffect(() => {
     setData(readJobExplorer({ params: queryParams }));
     setOptions(readJobExplorerOptions({ params: queryParams }));
