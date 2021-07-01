@@ -1,12 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardBody, CardTitle, Title } from '@patternfly/react-core';
-
-const floatToStringWithCommas = (total) =>
-  total
-    .toFixed(2)
-    .toString()
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+import currencyFormatter from '../../Utilities/currencyFormatter';
 
 const TotalSavings = ({ totalSavings = 0 }) => (
   <Card style={{ borderTop: '3px solid #2B9AF3' }}>
@@ -17,7 +12,7 @@ const TotalSavings = ({ totalSavings = 0 }) => (
         size="4xl"
         style={{ color: 'var(--pf-global--success-color--200)' }}
       >
-        {floatToStringWithCommas(totalSavings)}
+        {currencyFormatter(totalSavings)}
       </Title>
     </CardBody>
   </Card>
