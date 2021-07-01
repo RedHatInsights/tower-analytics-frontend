@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Card, CardBody, CardTitle, Title } from '@patternfly/react-core';
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
-import formatHours from '../../../../../Utilities/hoursFormatter';
+import hoursFormatter from '../../../../../Utilities/hoursFormatter';
 interface Props {
   value?: number,
   isMoney?: boolean
@@ -22,7 +22,7 @@ const TotalSavings: FunctionComponent<Props> = ({
       >
         {isMoney
           ? `${currencyFormatter(value)}`
-          : `${formatHours(value)}`}
+          : `${hoursFormatter(value)}`}
       </Title>
     </CardBody>
   </Card>

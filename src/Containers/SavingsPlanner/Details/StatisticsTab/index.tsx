@@ -30,7 +30,7 @@ import RoutedTabs from '../../../../Components/RoutedTabs';
 import TotalSavings from "./TotalSavings";
 import FormulaDescription from './FormulaDescription';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
-import formatHours from '../../../../Utilities/hoursFormatter';
+import hoursFormatter from '../../../../Utilities/hoursFormatter';
 
 type DataYearsSeries = Record<string, number>;
 
@@ -100,7 +100,7 @@ const constants = (isMoney: boolean) => ({
 const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
   const [isMoney, setIsMoney] = useState(true);
 
-  const customTooltipFormatting = (datum: Record<string, string>) => isMoney ? currencyFormatter(+datum.y) : formatHours(+datum.y)
+  const customTooltipFormatting = (datum: Record<string, string>) => isMoney ? currencyFormatter(+datum.y) : hoursFormatter(+datum.y)
 
   const computeTotalSavings = (d: Data): number =>
     isMoney
