@@ -24,6 +24,8 @@ import {
   capitalize,
 } from '../../Utilities/helpers';
 
+import currencyFormatter from '../../Utilities/currencyFormatter';
+
 const TemplateDetail = styled.div`
   em {
     display: block;
@@ -159,7 +161,7 @@ const TopTemplates = ({
               )}
             </IconGroup>
           </TemplateDetail>
-          <p style={{ color: '#486B00' }}>${d.delta.toFixed(2)}</p>
+          <p style={{ color: '#486B00' }}>{currencyFormatter(+d.delta)}</p>
         </div>
       ))}
     </CardBody>

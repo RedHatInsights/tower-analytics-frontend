@@ -2,18 +2,12 @@ import PropTypes from 'prop-types';
 import React, { Component } from 'react';
 import * as d3 from 'd3';
 import initializeChart from './BaseChart';
+import currencyFormatter from '../Utilities/currencyFormatter';
 
 class Tooltip {
   constructor(props) {
     this.svg = props.svg;
     this.draw();
-  }
-
-  formatDollars(amount) {
-    return parseFloat(amount)
-      .toFixed(2)
-      .toString()
-      .replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   }
 
   draw() {
@@ -92,10 +86,10 @@ class Tooltip {
     if (!d) {
       return;
     } else {
-      savings = this.formatDollars(d.delta);
+      savings = currencyFormatter(+d.delta);
       name = d.name;
-      manualCost = this.formatDollars(d.manualCost);
-      automationCost = this.formatDollars(d.automatedCost);
+      manualCost = currencyFormatter(+d.manualCost);
+      automationCost = currencyFormatter(+d.automatedCost);
     }
 
     const toolTipWidth = this.toolTipBase.node().getBoundingClientRect().width;
@@ -106,9 +100,9 @@ class Tooltip {
     const overflow = 100 - (toolTipWidth / chartWidth) * 100;
     const flipped = overflow < (x / chartWidth) * 100;
     this.name.text('' + name);
-    this.savings.text('Total savings $' + savings);
-    this.manualCost.text('Manual Cost $' + manualCost);
-    this.automationCost.text('Automation Cost $' + automationCost);
+    this.savings.text(`Total savings ${savings}`);
+    this.manualCost.text(`Manual Cost ${manualCost}`);
+    this.automationCost.text(`Automation Cost ${automationCost}`);
     this.nameWidth = this.name.node().getComputedTextLength();
     this.savingsWidth = this.savings.node().getComputedTextLength();
     this.manualCostWidth = this.manualCost.node().getComputedTextLength();

@@ -25,8 +25,7 @@ import { Link, useRouteMatch } from 'react-router-dom';
 
 import { Paths } from '../../../../paths';
 
-import formatCurrency from '../../Shared/currencyFormatter';
-
+import currencyFormatter from '../../../../Utilities/currencyFormatter';
 import { formatDateTime } from '../../../../Utilities/helpers';
 
 import JobStatus from '../../../../Components/JobStatus';
@@ -213,7 +212,7 @@ const ListItem = ({
           <CardDetail>
             <CardLabel>Projected savings</CardLabel>
             <a onClick={() => history.push(`${match.url}/${id}/statistics`)}>
-              {formatCurrency(projectedSavings)}
+              {currencyFormatter(+projectedSavings)}
             </a>
           </CardDetail>
         )}
