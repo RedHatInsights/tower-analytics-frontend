@@ -41,6 +41,12 @@ const Text = ({ categoryKey, isVisible = true, value = '', setValue }) => {
           aria-label={options.name}
           value={searchVal}
           onChange={setSearchVal}
+          onKeyDown={(e) => {
+            if (e.key && e.key === 'Enter') {
+              e.preventDefault();
+              setValue(searchVal);
+            }
+          }}
         />
         <Button
           variant="control"

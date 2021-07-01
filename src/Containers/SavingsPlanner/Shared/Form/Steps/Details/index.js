@@ -50,6 +50,7 @@ const Details = ({ options, formData, dispatch }) => {
               isOpen={categoryIsOpen}
               variant={'single'}
               aria-label={'Plan category selector'}
+              maxHeight={390}
               onToggle={() => setCategoryIsOpen(!categoryIsOpen)}
               onSelect={(_event, selection) => {
                 dispatch({

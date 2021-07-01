@@ -37,25 +37,25 @@ function ErrorDetail({ error }) {
   };
 
   return (
-    <Expandable
-      toggleText={'Details'}
-      onToggle={handleToggle}
-      isExpanded={isExpanded}
-    >
-      <Card>
-        <CardBody>
-          {Array.isArray(error) ? (
-            <ul>
-              {error.map((m) =>
-                typeof m === 'string' ? <li key={m}>{m}</li> : null
-              )}
-            </ul>
-          ) : (
-            error
-          )}
-        </CardBody>
-      </Card>
-    </Expandable>
+    <>
+      {Array.isArray(error) && error.length && (
+        <Expandable
+          toggleText={'Details'}
+          onToggle={handleToggle}
+          isExpanded={isExpanded}
+        >
+          <Card>
+            <CardBody>
+              <ul>
+                {error.map((m) =>
+                  typeof m === 'string' ? <li key={m}>{m}</li> : null
+                )}
+              </ul>
+            </CardBody>
+          </Card>
+        </Expandable>
+      )}
+    </>
   );
 }
 
