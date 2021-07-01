@@ -21,7 +21,7 @@ const TotalSavings: FunctionComponent<Props> = ({
         style={{ color: isMoney ? '#81C46B' : '#0063CF' }}
       >
         {isMoney
-          ? `${formatCurrency(value.toString())}`
+          ? `${formatCurrency(value)}`
           : `${formatHours(value)}`}
       </Title>
     </CardBody>

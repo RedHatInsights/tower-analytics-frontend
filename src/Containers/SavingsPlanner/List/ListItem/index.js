@@ -213,7 +213,7 @@ const ListItem = ({
           <CardDetail>
             <CardLabel>Projected savings</CardLabel>
             <a onClick={() => history.push(`${match.url}/${id}/statistics`)}>
-              {formatCurrency(projectedSavings)}
+              {formatCurrency(+projectedSavings)}
             </a>
           </CardDetail>
         )}

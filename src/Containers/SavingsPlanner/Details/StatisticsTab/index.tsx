@@ -100,7 +100,7 @@ const constants = (isMoney: boolean) => ({
 const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
   const [isMoney, setIsMoney] = useState(true);
 
-  const customTooltipFormatting = (datum: Record<string, string>) => isMoney ? formatCurrency(datum.y) : formatHours(parseInt(datum.y))
+  const customTooltipFormatting = (datum: Record<string, string>) => isMoney ? formatCurrency(+datum.y) : formatHours(+datum.y)
 
   const computeTotalSavings = (d: Data): number =>
     isMoney
