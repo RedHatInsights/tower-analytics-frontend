@@ -8,7 +8,6 @@ import {
 } from '@redhat-cloud-services/frontend-components/PageHeader';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
-import { AddCircleOIcon, SearchIcon } from '@patternfly/react-icons';
 
 import {
   deletePlan,
@@ -40,12 +39,12 @@ const PageContainer = styled.div`
   height: calc(100vh - 76px);
 `;
 
-const FlexMain = styled(Main)`
-  flex-grow: 1;
-`;
-
 const Footer = styled.div`
   flex-shrink: 0;
+`;
+
+const FlexMain = styled(Main)`
+  flex-grow: 1;
 `;
 
 const List = () => {
@@ -119,7 +118,57 @@ const List = () => {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 
-  const EmptyListIcon = canWrite ? AddCircleOIcon : SearchIcon;
+  const renderContent = () => {
+    if (preflightError) return <EmptyState {...preflightError} />;
+
+    if (error) return <ApiErrorState message={error.error} />;
+
+    if (isLoading || deleteLoading) return <LoadingState />;
+
+    if (isSuccess && data.length === 0 && !(isLoading || deleteLoading))
+      return (
+        <EmptyList
+          label={'Add plan'}
+          title={'No plans found'}
+          message={
+            canWrite
+              ? 'Update the applied filters or add a new plan.'
+              : 'Update the applied filters.'
+          }
+          canAdd={canWrite}
+          path={`${pathname}/add`}
+        />
+      );
+
+    if (isSuccess && !(isLoading || deleteLoading))
+      return (
+        <Gallery
+          hasGutter
+          minWidths={{
+            sm: '307px',
+            md: '307px',
+            lg: '307px',
+            xl: '307px',
+            '2xl': '307px',
+          }}
+        >
+          {options.isSuccess &&
+            data.map((datum) => (
+              <PlanCard
+                key={datum.id}
+                isSuccess={options.isSuccess}
+                selected={selected}
+                plan={datum}
+                handleSelect={handleSelect}
+                canWrite={canWrite}
+                options={options}
+              />
+            ))}
+        </Gallery>
+      );
+
+    return <></>;
+  };
 
   return (
     <PageContainer>
@@ -172,64 +221,7 @@ const List = () => {
           }
         />
       </PageHeader>
-      {preflightError && (
-        <FlexMain>
-          <EmptyState {...preflightError} />
-        </FlexMain>
-      )}
-      {error && (
-        <FlexMain>
-          <ApiErrorState message={error.error} />
-        </FlexMain>
-      )}
-      {(isLoading || deleteLoading) && (
-        <FlexMain>
-          <LoadingState />
-        </FlexMain>
-      )}
-      {isSuccess && data.length === 0 && !(isLoading || deleteLoading) && (
-        <FlexMain>
-          <EmptyList
-            icon={EmptyListIcon}
-            label={'Add plan'}
-            title={'No plans found'}
-            message={
-              canWrite
-                ? 'Update the applied filters or add a new plan.'
-                : 'Update the applied filters.'
-            }
-            canAdd={canWrite}
-            path={`${pathname}/add`}
-          />
-        </FlexMain>
-      )}
-      {isSuccess && !(isLoading || deleteLoading) && (
-        <FlexMain>
-          <Gallery
-            hasGutter
-            minWidths={{
-              sm: '307px',
-              md: '307px',
-              lg: '307px',
-              xl: '307px',
-              '2xl': '307px',
-            }}
-          >
-            {options.isSuccess &&
-              data.map((datum) => (
-                <PlanCard
-                  key={datum.id}
-                  isSuccess={options.isSuccess}
-                  selected={selected}
-                  plan={datum}
-                  handleSelect={handleSelect}
-                  canWrite={canWrite}
-                  options={options}
-                />
-              ))}
-          </Gallery>
-        </FlexMain>
-      )}
+      <FlexMain>{renderContent()}</FlexMain>
       {data.length > 0 && !(isLoading || deleteLoading) && (
         <Footer>
           <Pagination
