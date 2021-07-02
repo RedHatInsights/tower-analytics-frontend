@@ -8,7 +8,6 @@ import {
 } from '@redhat-cloud-services/frontend-components/PageHeader';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
-import { AddCircleOIcon, SearchIcon } from '@patternfly/react-icons';
 
 import {
   deletePlan,
@@ -119,8 +118,6 @@ const List = () => {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 
-  const EmptyListIcon = canWrite ? AddCircleOIcon : SearchIcon;
-
   return (
     <PageContainer>
       <PageHeader>
@@ -190,7 +187,6 @@ const List = () => {
       {isSuccess && data.length === 0 && !(isLoading || deleteLoading) && (
         <FlexMain>
           <EmptyList
-            icon={EmptyListIcon}
             label={'Add plan'}
             title={'No plans found'}
             message={
