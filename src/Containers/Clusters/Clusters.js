@@ -25,7 +25,9 @@ import { notAuthorizedParams } from '../../Utilities/constants';
 import {
   Card,
   CardBody,
-  CardTitle as PFCardTitle,
+  CardTitle,
+  Grid,
+  GridItem,
 } from '@patternfly/react-core';
 
 import BarChart from '../../Charts/BarChart';
@@ -168,31 +170,20 @@ const Clusters = () => {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 
-  return (
-    <React.Fragment>
-      <PageHeader>
-        <PageHeaderTitle title={'Clusters'} />
-        <FilterableToolbar
-          categories={options}
-          filters={queryParams}
-          setFilters={setFromToolbar}
-        />
-      </PageHeader>
-      {(preflightError || error) && (
-        <Main>
-          {preflightError ? (
-            <EmptyState {...preflightError} />
-          ) : (
-            <ApiErrorState message={error.error} />
-          )}
-        </Main>
-      )}
-      {!preflightError && !error && (
-        <Main>
+  const renderContent = () => {
+    if (preflightError) return <EmptyState {...preflightError} />;
+
+    if (error) return <ApiErrorState message={error.error} />;
+
+    // Warning: we are not checking if ALL the api succeed
+    // this can cause an unsurfaced error when only some of them fails
+    return (
+      <Grid hasGutter>
+        <GridItem span={12}>
           <Card>
-            <PFCardTitle>
+            <CardTitle>
               <h2>Job status</h2>
-            </PFCardTitle>
+            </CardTitle>
             <CardBody>
               {isLoading && <LoadingState />}
               {queryParams.cluster_id.length <= 0 && isSuccess && (
@@ -213,29 +204,44 @@ const Clusters = () => {
               )}
             </CardBody>
           </Card>
-          <div
-            className="dataCard"
-            style={{ display: 'flex', marginTop: '20px' }}
-          >
-            <TemplatesList
-              qp={queryParams}
-              templates={workflows}
-              isLoading={isLoading}
-              title={'Top workflows'}
-              jobType={'workflowjob'}
-            />
-            <TemplatesList
-              qp={queryParams}
-              templates={templates}
-              isLoading={isLoading}
-              title={'Top templates'}
-              jobType={'job'}
-            />
-            <ModulesList modules={modules} isLoading={isLoading} />
-          </div>
-        </Main>
-      )}
-    </React.Fragment>
+        </GridItem>
+        <GridItem span={4}>
+          <TemplatesList
+            qp={queryParams}
+            templates={workflows}
+            isLoading={isLoading}
+            title={'Top workflows'}
+            jobType={'workflowjob'}
+          />
+        </GridItem>
+        <GridItem span={4}>
+          <TemplatesList
+            qp={queryParams}
+            templates={templates}
+            isLoading={isLoading}
+            title={'Top templates'}
+            jobType={'job'}
+          />
+        </GridItem>
+        <GridItem span={4}>
+          <ModulesList modules={modules} isLoading={isLoading} />
+        </GridItem>
+      </Grid>
+    );
+  };
+
+  return (
+    <>
+      <PageHeader>
+        <PageHeaderTitle title={'Clusters'} />
+        <FilterableToolbar
+          categories={options}
+          filters={queryParams}
+          setFilters={setFromToolbar}
+        />
+      </PageHeader>
+      <Main>{renderContent()}</Main>
+    </>
   );
 };
 
