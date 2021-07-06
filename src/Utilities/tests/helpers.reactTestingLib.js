@@ -26,3 +26,16 @@ export const renderPage = (Component, { search } = defaultParams) =>
       </MemoryRouter>
     </Provider>
   );
+
+export const renderPageWithProps = (
+  Component,
+  props = {},
+  { search } = defaultParams
+) =>
+  render(
+    <Provider store={store}>
+      <MemoryRouter>
+        <Component location={{ search }} {...props} />
+      </MemoryRouter>
+    </Provider>
+  );
