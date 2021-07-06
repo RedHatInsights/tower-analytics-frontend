@@ -1,9 +1,8 @@
 import { createContext } from 'react';
 
 export interface FeatureFlagType {
-  [key: string]: {
-    isEnabled: boolean
-  }
+  name: string
+  enabled: boolean
 }
 
-export const { Provider, Consumer } = createContext<FeatureFlagType>({});
+export const { Provider, Consumer } = createContext<FeatureFlagType[]>([]);

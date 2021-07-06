@@ -7,12 +7,11 @@ interface Props {
 }
 
 const FeatureFlagProvider: FunctionComponent<Props> = ({ children }) => {
-  const [features, setFeatures] = useState({});
+  const [features, setFeatures] = useState([]);
 
   useEffect(() => {
     getFeatures().then(flags => {
-      setFeatures(flags);
-      console.log(flags);
+      setFeatures(flags.toggles);
     });
   }, []);
 

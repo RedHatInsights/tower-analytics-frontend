@@ -7,13 +7,15 @@ interface Props {
   defaultChildren?: React.ReactNode
 };
 
-const FeatureFlag: FunctionComponent<Props> = ({ name, children, defaultChildren = null }) => (
+const FeatureFlag: FunctionComponent<Props> = ({ name: n, children, defaultChildren = null }) => (
   <Consumer>
-    {features => 
-      (features[name] && features[name].isEnabled)
+    {features => {
+      console.log(features);
+      const feature = features.find(({ name }) => name === n);
+      return (feature && feature.enabled)
         ? children
         : defaultChildren
-    }
+    }}
   </Consumer>
 );
 
