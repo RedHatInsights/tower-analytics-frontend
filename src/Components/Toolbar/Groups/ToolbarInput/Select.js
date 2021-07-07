@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
+  Tooltip,
   ToolbarFilter,
   Select as PFSelect,
   SelectOption,
@@ -22,7 +23,9 @@ const renderValues = (values) =>
   values &&
   values.map(({ key, value, description }) => (
     <SelectOption key={key} value={key} description={description}>
-      <OptionSpan>{value}</OptionSpan>
+      <Tooltip content={<div>{value}</div>}>
+        <OptionSpan>{value}</OptionSpan>
+      </Tooltip>
     </SelectOption>
   ));
 
