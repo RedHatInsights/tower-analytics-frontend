@@ -11,7 +11,11 @@ const FeatureFlagProvider: FunctionComponent<Props> = ({ children }) => {
 
   useEffect(() => {
     getFeatures().then(flags => {
-      setFeatures(flags.toggles);
+      if (flags && flags.toggles) {
+        setFeatures(flags.toggles);
+      } else {
+        setFeatures([]);
+      }
     });
   }, []);
 
