@@ -5,4 +5,5 @@ export interface FeatureFlagType {
   enabled: boolean
 }
 
-export const { Provider, Consumer } = createContext<FeatureFlagType[]>([]);
+export const FeatureFlagContext = createContext<FeatureFlagType[]>([]);
+export const Provider = FeatureFlagContext.Provider;

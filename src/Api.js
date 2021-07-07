@@ -23,7 +23,7 @@ const clustersOptionsEndpoint =
   '/api/tower-analytics/v1/dashboard_clusters_options/';
 const planOptionsEndpoint = '/api/tower-analytics/v1/plan_options/';
 
-const featuresEndpoint = '/api/featureflags/v0';
+const featuresEndpoint = '/api/featureflags/v0/';
 
 const handleResponse = (response) => {
   return response.json().then((json) => {
@@ -45,7 +45,7 @@ const handleResponse = (response) => {
       return Promise.reject(json);
     }
   });
-}
+};
 
 function authenticatedFetch(endpoint, options) {
   return window.insights.chrome.auth
@@ -57,7 +57,7 @@ export const getFeatures = async () => {
   try {
     const url = new URL(featuresEndpoint, window.location.origin);
     const response = await authenticatedFetch(url);
-    return response.json();
+    return response.ok ? response.json() : {};
   } catch (_error) {
     return {};
   }
