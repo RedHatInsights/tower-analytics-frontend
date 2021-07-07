@@ -30,9 +30,11 @@ import { notAuthorizedParams } from '../../Utilities/constants';
 import {
   Card,
   CardBody,
-  CardTitle as PFCardTitle,
+  CardTitle,
   Tabs,
   Tab,
+  Grid,
+  GridItem,
 } from '@patternfly/react-core';
 
 import {
@@ -48,39 +50,8 @@ import { organizationStatistics as constants } from '../../Utilities/constants';
 import { pfmulti } from '../../Utilities/colors';
 import { scaleOrdinal } from 'd3';
 
-const CardTitle = styled(PFCardTitle)`
-  border-bottom: 2px solid #ebebeb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  &&& {
-    min-height: 60px;
-    --pf-c-card--first-child--PaddingTop: 10px;
-    --pf-c-card__header--not-last-child--PaddingBottom: 10px;
-
-    h3 {
-      font-size: 0.875em;
-    }
-  }
-`;
-
-const CardContainer = styled.div`
-  display: flex;
-  overflow: hidden;
-
-  .pf-c-card {
-    width: 50%;
-    margin-top: 20px;
-    overflow: auto;
-  }
-
-  .pf-c-card:first-of-type {
-    margin-right: 20px;
-  }
-`;
-
-const TopCard = styled(Card)`
-  min-height: 500px;
+const Divider = styled('hr')`
+  border: 1px solid #ebebeb;
 `;
 
 const colorFunc = scaleOrdinal(pfmulti);
@@ -236,25 +207,14 @@ const OrganizationStatistics = ({ history }) => {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 
-  return (
-    <React.Fragment>
-      <PageHeader>
-        <PageHeaderTitle title={'Organization Statistics'} />
-        <FilterableToolbar
-          categories={options.data}
-          filters={queryParams}
-          setFilters={setFromToolbar}
-        />
-      </PageHeader>
-      {preflight.error && (
-        <Main>
-          <EmptyState preflightError={preflight.error} />
-        </Main>
-      )}
-      {preflight.isSuccess && (
-        <React.Fragment>
-          <Main>
-            <TopCard>
+  const renderContent = () => {
+    if (preflight.error) return <EmptyState preflightError={preflight.error} />;
+
+    if (preflight.isSuccess)
+      return (
+        <Grid hasGutter>
+          <GridItem span={12}>
+            <Card>
               <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
                 <Tab eventKey={0} title={'Jobs'} />
                 <Tab eventKey={1} title={'Hosts'} />
@@ -280,53 +240,68 @@ const OrganizationStatistics = ({ history }) => {
                   />
                 )}
               </CardBody>
-            </TopCard>
-            <CardContainer>
-              <Card>
-                <CardBody style={{ padding: 0 }}>
-                  <CardTitle style={{ padding: 0 }}>
-                    <h2 style={{ marginLeft: '20px' }}>
-                      Job Runs by Organization
-                    </h2>
-                  </CardTitle>
-                  {jobs.isLoading && <LoadingState />}
-                  {jobs.error && <ApiErrorState message={jobs.error.error} />}
-                  {jobs.isSuccess && jobs.data.length <= 0 && <NoData />}
-                  {jobs.isSuccess && jobs.data.length > 0 && (
-                    <PieChart
-                      margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
-                      id="d3-donut-1-chart-root"
-                      data={jobs.data}
-                      colorFunc={colorFunc}
-                    />
-                  )}
-                </CardBody>
-              </Card>
-              <Card>
-                <CardBody style={{ padding: 0 }}>
-                  <CardTitle style={{ padding: 0 }}>
-                    <h2 style={{ marginLeft: '20px' }}>
-                      Usage by Organization (Tasks)
-                    </h2>
-                  </CardTitle>
-                  {tasks.isLoading && <LoadingState />}
-                  {tasks.error && <ApiErrorState message={tasks.error.error} />}
-                  {tasks.isSuccess && tasks.data.length <= 0 && <NoData />}
-                  {tasks.isSuccess && tasks.data.length > 0 && (
-                    <PieChart
-                      margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
-                      id="d3-donut-2-chart-root"
-                      data={tasks.data}
-                      colorFunc={colorFunc}
-                    />
-                  )}
-                </CardBody>
-              </Card>
-            </CardContainer>
-          </Main>
-        </React.Fragment>
-      )}
-    </React.Fragment>
+            </Card>
+          </GridItem>
+          <GridItem span={6}>
+            <Card>
+              <CardTitle>
+                <h2>Job Runs by Organization</h2>
+              </CardTitle>
+              <Divider />
+              <CardBody>
+                {jobs.isLoading && <LoadingState />}
+                {jobs.error && <ApiErrorState message={jobs.error.error} />}
+                {jobs.isSuccess && jobs.data.length <= 0 && <NoData />}
+                {jobs.isSuccess && jobs.data.length > 0 && (
+                  <PieChart
+                    margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
+                    id="d3-donut-1-chart-root"
+                    data={jobs.data}
+                    colorFunc={colorFunc}
+                  />
+                )}
+              </CardBody>
+            </Card>
+          </GridItem>
+          <GridItem span={6}>
+            <Card>
+              <CardTitle>
+                <h2>Usage by Organization (Tasks)</h2>
+              </CardTitle>
+              <Divider />
+              <CardBody>
+                {tasks.isLoading && <LoadingState />}
+                {tasks.error && <ApiErrorState message={tasks.error.error} />}
+                {tasks.isSuccess && tasks.data.length <= 0 && <NoData />}
+                {tasks.isSuccess && tasks.data.length > 0 && (
+                  <PieChart
+                    margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
+                    id="d3-donut-2-chart-root"
+                    data={tasks.data}
+                    colorFunc={colorFunc}
+                  />
+                )}
+              </CardBody>
+            </Card>
+          </GridItem>
+        </Grid>
+      );
+
+    return '';
+  };
+
+  return (
+    <>
+      <PageHeader>
+        <PageHeaderTitle title={'Organization Statistics'} />
+        <FilterableToolbar
+          categories={options.data}
+          filters={queryParams}
+          setFilters={setFromToolbar}
+        />
+      </PageHeader>
+      <Main>{renderContent()}</Main>
+    </>
   );
 };
 
