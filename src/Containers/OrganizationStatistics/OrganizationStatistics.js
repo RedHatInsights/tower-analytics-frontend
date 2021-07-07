@@ -49,6 +49,8 @@ import { scaleOrdinal } from 'd3';
 import useRequest from '../../Utilities/useRequest';
 import { getQSConfig } from '../../Utilities/qs';
 
+import Report from './Report';
+
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
 `;
@@ -335,6 +337,9 @@ const OrganizationStatistics = ({ history }) => {
                 )}
               </CardBody>
             </Card>
+          </GridItem>
+          <GridItem>
+            <Report />
           </GridItem>
         </Grid>
       );
