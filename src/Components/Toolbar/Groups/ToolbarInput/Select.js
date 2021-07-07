@@ -21,19 +21,13 @@ const OptionSpan = styled('span')`
 
 const renderValues = (values) =>
   values &&
-  values.map(({ key, value, description }) =>
-    value.length >= 20 ? (
-      <SelectOption key={key} value={key} description={description}>
-        <Tooltip content={<div>{value}</div>}>
-          <OptionSpan>{value}</OptionSpan>
-        </Tooltip>
-      </SelectOption>
-    ) : (
-      <SelectOption key={key} value={key} description={description}>
+  values.map(({ key, value, description }) => (
+    <SelectOption key={key} value={key} description={description}>
+      <Tooltip content={<div>{value}</div>}>
         <OptionSpan>{value}</OptionSpan>
-      </SelectOption>
-    )
-  );
+      </Tooltip>
+    </SelectOption>
+  ));
 
 const Select = ({
   categoryKey,
