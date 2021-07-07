@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
+  Tooltip,
   ToolbarFilter,
   Select as PFSelect,
   SelectOption,
@@ -20,11 +21,19 @@ const OptionSpan = styled('span')`
 
 const renderValues = (values) =>
   values &&
-  values.map(({ key, value, description }) => (
-    <SelectOption key={key} value={key} description={description}>
-      <OptionSpan>{value}</OptionSpan>
-    </SelectOption>
-  ));
+  values.map(({ key, value, description }) =>
+    value.length >= 20 ? (
+      <SelectOption key={key} value={key} description={description}>
+        <Tooltip content={<div>{value}</div>}>
+          <OptionSpan>{value}</OptionSpan>
+        </Tooltip>
+      </SelectOption>
+    ) : (
+      <SelectOption key={key} value={key} description={description}>
+        <OptionSpan>{value}</OptionSpan>
+      </SelectOption>
+    )
+  );
 
 const Select = ({
   categoryKey,
