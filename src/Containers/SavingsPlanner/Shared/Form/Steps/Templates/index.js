@@ -58,7 +58,7 @@ const initialQueryParams = {
 };
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
-  const [sortDirection, setSortDirection] = React.useState(
+  const [sortDirection, setSortDirection] = useState(
     initialQueryParams.sort_order
   );
   const columnIndex = 1;
@@ -127,7 +127,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
       },
     });
   }, []);
-  console.log(queryParams);
   useEffect(() => {
     setData(readJobExplorer({ params: queryParams }));
     setOptions(readJobExplorerOptions({ params: queryParams }));
