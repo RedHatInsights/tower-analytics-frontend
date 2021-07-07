@@ -50,6 +50,8 @@ import { organizationStatistics as constants } from '../../Utilities/constants';
 import { pfmulti } from '../../Utilities/colors';
 import { scaleOrdinal } from 'd3';
 
+import Report from './Report';
+
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
 `;
@@ -283,6 +285,9 @@ const OrganizationStatistics = ({ history }) => {
                 )}
               </CardBody>
             </Card>
+          </GridItem>
+          <GridItem>
+            <Report />
           </GridItem>
         </Grid>
       );

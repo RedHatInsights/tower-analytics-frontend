@@ -2,7 +2,7 @@ import React, { FunctionComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Pagination as PFPagination } from '@patternfly/react-core';
 
-const perPageOptions = [
+const defaultPerPageOptions = [
   { title: '5', value: 5 },
   { title: '10', value: 10 },
   { title: '15', value: 15 },
@@ -14,6 +14,7 @@ type SetPagination = (offset: number, limit?: number) => void;
 
 interface Props {
   count?: number,
+  perPageOptions?: { title: string, value: number }[],
   params: {
     offset: number,
     limit: number,
@@ -22,7 +23,7 @@ interface Props {
   [x: string]: any
 };
 
-const Pagination: FunctionComponent<Props> = ({ count = 0, params, setPagination, ...props }) => {
+const Pagination: FunctionComponent<Props> = ({ count = 0, perPageOptions = null, params, setPagination, ...props }) => {
   const { offset, limit } = params;
   const currentPage = Math.floor(offset / limit + 1);
   const returnOffsetVal = (page: number) => (page - 1) * limit;
@@ -31,7 +32,7 @@ const Pagination: FunctionComponent<Props> = ({ count = 0, params, setPagination
     <PFPagination
       itemCount={count}
       widgetId="aa-pagination"
-      perPageOptions={perPageOptions}
+      perPageOptions={perPageOptions ?? defaultPerPageOptions}
       perPage={limit}
       page={currentPage}
       onPerPageSelect={(_event: any, perPage: number, page: number) => {
@@ -52,6 +53,12 @@ Pagination.propTypes = {
     limit: PropTypes.number.isRequired,
   }).isRequired,
   setPagination: PropTypes.func.isRequired,
+  perPageOptions: PropTypes.arrayOf(
+    PropTypes.exact({
+      title: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired
+    }).isRequired
+  )
 };
 
 export default Pagination;
