@@ -10,11 +10,14 @@ import {
 } from 'react-json-chart-builder';
 
 import { jobExplorerEndpoint, readWithPagination } from '../../Api';
+import { attrPairs } from './Report';
 
-export const customFunctions = {
+export const customFunctions = (data: unknown = null) => ({
   ...functions,
-  fetchFnc: (api: ChartApiProps) => readWithPagination(api.url, api.params)
-}
+  fetchFnc: (api: ChartApiProps) => data
+    ? new Promise((resolve) => { resolve(data); })
+    : readWithPagination(api.url, api.params) // This is just fallback, remove if not needed (we need the table unedr with same data then it is not needed)
+})
 
 interface Params {
   sort_options: string,
@@ -30,7 +33,7 @@ const schema = (params: Params): ChartSchemaElement[] => ([
     props: {
       height: 400,
       padding: {
-        right: 100
+        right: 50
       }
     },
     xAxis: {
@@ -38,7 +41,7 @@ const schema = (params: Params): ChartSchemaElement[] => ([
       tickFormat: 'formatDateAsDayMonth'
     },
     yAxis: {
-      label: params.sort_options,
+      label: attrPairs[params.sort_options],
       tickFormat: 'formatNumberAsK'
     },
     api: {
