@@ -23,7 +23,7 @@ const clustersOptionsEndpoint =
   '/api/tower-analytics/v1/dashboard_clusters_options/';
 const planOptionsEndpoint = '/api/tower-analytics/v1/plan_options/';
 
-const featuresEndpoint = '/api/featureflags/v0/';
+const featuresEndpoint = '/api/featureflags/v0';
 
 const handleResponse = (response) => {
   return response.json().then((json) => {
