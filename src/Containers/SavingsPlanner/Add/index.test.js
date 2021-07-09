@@ -13,7 +13,7 @@ describe('SavingsPlanner/Add', () => {
     api.readPlanOptions.mockResolvedValue(mockResponses.readPlansOptions);
   });
 
-  it('can see the Add component', async () => {
+  test('can see the Add component', async () => {
     await act(async () => {
       renderPage(Add);
     });
@@ -26,7 +26,7 @@ describe('SavingsPlanner/Add', () => {
     expect(screen.getByText('Link template')).toBeTruthy();
   });
 
-  it('redirects upon failure', async () => {
+  test('redirects upon 403', async () => {
     api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest403);
     api.readPlanOptions.mockResolvedValue({
       data: { meta: { rbac: { perms: { all: false } } } },
