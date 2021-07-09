@@ -6,7 +6,8 @@ import {
   ChartTopLevelType,
   ChartType,
   functions,
-  ChartApiProps
+  ChartApiProps,
+  ChartThemeColor
 } from 'react-json-chart-builder';
 
 import { jobExplorerEndpoint, readWithPagination } from '../../Api';
@@ -33,15 +34,16 @@ const schema = (params: Params): ChartSchemaElement[] => ([
     props: {
       height: 400,
       padding: {
-        right: 50
-      }
+        right: 100
+      },
+      themeColor: ChartThemeColor.multiOrdered
     },
     xAxis: {
       label: 'Date',
       tickFormat: 'formatDateAsDayMonth'
     },
     yAxis: {
-      label: attrPairs[params.sort_options],
+      label: attrPairs.find(({ key }) => key === params.sort_options)?.name || 'Y axis',
       tickFormat: 'formatNumberAsK'
     },
     api: {

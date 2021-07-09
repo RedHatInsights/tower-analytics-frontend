@@ -6,10 +6,7 @@ import { useQueryParams } from '../../Utilities/useQueryParams';
 import useRedirect from '../../Utilities/useRedirect';
 import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
 
-import LoadingState from '../../Components/LoadingState';
-import NoData from '../../Components/NoData';
 import EmptyState from '../../Components/EmptyState';
-import ApiErrorState from '../../Components/ApiErrorState';
 
 import {
   preflightRequest,
@@ -52,6 +49,9 @@ import useRequest from '../../Utilities/useRequest';
 import { getQSConfig } from '../../Utilities/qs';
 
 import Report from './Report';
+import ApiErrorState from './ApiErrorState';
+import LoadingState from './LoadingState';
+import NoData from './NoData';
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;

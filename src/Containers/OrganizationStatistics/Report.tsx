@@ -3,17 +3,22 @@ import React, { FunctionComponent, useEffect } from 'react';
 import ChartBuilder from 'react-json-chart-builder';
 import schema, { customFunctions } from './schema';
 
-import { Card, CardBody, CardFooter, Grid, GridItem } from '@patternfly/react-core';
+import { Card, CardBody, CardFooter, PaginationVariant } from '@patternfly/react-core';
 import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import Pagination from '../../Components/Pagination';
 
-
-import FilterableToolbar from '../../Components/Toolbar/Toolbar';
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
-import { readJobExplorer, readJobExplorerOptions } from '../../Api';
+import { readJobExplorer } from '../../Api';
 import useApi from '../../Utilities/useApi';
+
+import { global_disabled_color_300 } from '@patternfly/react-tokens';
+import ApiStatusWrapper from '../../Components/ApiStatusWrapper';
+
+const perPageOptions = [
+  { title: '4', value: 4 }
+];
 
 const defaultParams = {
   limit: 4,
@@ -35,110 +40,122 @@ const defaultParams = {
   sort_order: 'desc',
 }
 
-export const attrPairs: Record<string, string> = {
-  id: 'ID',
-  name: 'Template name',
-  host_count: 'Host count',
-  failed_host_count: 'Host failed count',
-  unreachable_host_count: 'Host unreachable count',
-  elapsed: 'Job elapsed time',
-  failed_count: 'Job failed count',
-  successful_count: 'Jobs successful count',
-  total_count: 'Jobs total count'
-}
+export const attrPairs: { key: string, name: string }[] = [
+  { key: 'id', name: 'ID' },
+  { key: 'name', name: 'Template name' },
+  { key: 'host_count', name: 'Host count' },
+  { key: 'failed_host_count', name: 'Host failed count' },
+  { key: 'unreachable_host_count', name: 'Host unreachable count' },
+  { key: 'elapsed', name: 'Job elapsed time' },
+  { key: 'failed_count', name: 'Job failed count' },
+  { key: 'successful_count', name: 'Jobs successful count' },
+  { key: 'total_count', name: 'Jobs total count' }
+];
+
+const isOther = (item: Record<string, string | number>, key: string) => (key === 'id' && item[key] === -1);
 
 const getText = (item: Record<string, string | number>, key: string) => {
-  if (key === 'id' && item[key] === -1) {
+  if (isOther(item, key)) {
     return '-'
   }
-
   return `${item[key]}`;
 }
 
-const perPageOptions = [
-  { title: '4', value: 4 }
-];
+const getOthersStyle = (item: Record<string, string | number>, key: string) => {
+  if (isOther(item, key)) {
+    return {
+      backgroundColor: global_disabled_color_300.value
+    }
+  }
+  return {};
+}
 
 const Report: FunctionComponent<Record<string, never>> = () => {
   const [
-    {
-      isSuccess,
-      data,
-    },
+    apiStatus,
     setData,
-  ] = useApi({ meta: {}, dates: [] });
-  const [options, setOptions] = useApi({}, ({ sort_options, sort_order }) => ({ sort_options, sort_order }));
-  const { queryParams, setFromToolbar, setFromPagination } = useQueryParams(
+  ] = useApi({ meta: { legend: [], count: 0 }, dates: [] });
+  const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(
     defaultParams
   );
 
   useEffect(() => {
-    setOptions(readJobExplorerOptions({ params: queryParams }));
     setData(readJobExplorer({ params: queryParams }));
   }, [queryParams]);
 
-  // TODO - make this normal furute me
-  if (!isSuccess) {
-    return <div style={{ height: '500px' }}></div>;
-  }
+  const onSort = (_event: any, index: number, direction: 'asc' | 'desc') => {
+    setFromToolbar('sort_order', direction);
+    setFromToolbar('sort_options', attrPairs[index]?.key);
+  };
+
+  const getSorParams = (currKey: string) => {
+    const blaclistKeys = ['id', 'name'];
+
+    if (blaclistKeys.includes(currKey))
+      return {};
+
+    return {
+      sort: {
+        sortBy: {
+          index: attrPairs.findIndex(({ key }) => key === queryParams.sort_options) || 0,
+          direction: queryParams.sort_order || 'none'
+        },
+        onSort,
+        columnIndex: attrPairs.findIndex(({ key }) => key === currKey)
+      }
+    }
+  };
 
   return (
-    <Grid>
-      <GridItem>
-        <FilterableToolbar
-          categories={options.data}
-          filters={queryParams}
-          setFilters={setFromToolbar}
-          pagination={
-            <Pagination
-              count={data.meta?.count}
-              perPageOptions={perPageOptions}
-              params={{
-                limit: queryParams.limit,
-                offset: queryParams.offset,
-              }}
-              setPagination={setFromPagination}
-              isCompact
-            />
-          }
-        />
-      </GridItem>
-      <GridItem>
-        <Card>
-          <CardBody >
-            <ChartBuilder schema={schema(queryParams)} functions={customFunctions(data)} />
-            <TableComposable aria-label="Report Table">
-              <Thead>
-                <Tr>
-                  {Object.values(attrPairs).map(name => (<Th key={name}>{name}</Th>))}
-                </Tr>
-              </Thead>
-              <Tbody>
-                {data.meta.legend.map((item: Record<string, string | number>) => (
-                  <Tr key={item.id}>
-                    {Object.keys(attrPairs).map(key => (
-                      <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
-                    ))}
-                  </Tr>
+    <ApiStatusWrapper api={apiStatus}>
+      <Card>
+        <CardBody>
+          <Pagination
+            count={apiStatus.data.meta.count}
+            perPageOptions={perPageOptions}
+            params={{
+              limit: queryParams.limit,
+              offset: queryParams.offset,
+            }}
+            setPagination={setFromPagination}
+          />
+          <ChartBuilder schema={schema(queryParams)} functions={customFunctions(apiStatus.data)} />
+          <TableComposable aria-label="Report Table">
+            <Thead>
+              <Tr>
+                {attrPairs.map(({ key, name }) => (
+                  <Th
+                    key={key}
+                    {...getSorParams(key)}
+                  >{name}</Th>
                 ))}
-              </Tbody>
-            </TableComposable>
-          </CardBody>
-          <CardFooter>
-            <Pagination
-              count={data.meta?.count}
-              perPageOptions={perPageOptions}
-              params={{
-                limit: queryParams.limit,
-                offset: queryParams.offset,
-              }}
-              setPagination={setFromPagination}
-            />
-          </CardFooter>
-        </Card>
-      </GridItem>
-    </Grid>
-    
+              </Tr>
+            </Thead>
+            <Tbody>
+              {apiStatus.data.meta.legend.map((item: Record<string, string | number>) => (
+                <Tr key={item.id} style={getOthersStyle(item, 'id')}>
+                  {attrPairs.map(({ key }) => (
+                    <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
+                  ))}
+                </Tr>
+              ))}
+            </Tbody>
+          </TableComposable>
+        </CardBody>
+        <CardFooter>
+          <Pagination
+            count={apiStatus.data.meta.count}
+            perPageOptions={perPageOptions}
+            params={{
+              limit: queryParams.limit,
+              offset: queryParams.offset,
+            }}
+            setPagination={setFromPagination}
+            variant={PaginationVariant.bottom}
+          />
+        </CardFooter>
+      </Card>
+    </ApiStatusWrapper>
   )
 }
 
