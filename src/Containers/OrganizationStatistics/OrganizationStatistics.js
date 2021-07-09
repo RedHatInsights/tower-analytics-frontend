@@ -7,10 +7,7 @@ import useApi from '../../Utilities/useApi';
 import useRedirect from '../../Utilities/useRedirect';
 import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
 
-import LoadingState from '../../Components/LoadingState';
-import NoData from '../../Components/NoData';
 import EmptyState from '../../Components/EmptyState';
-import ApiErrorState from '../../Components/ApiErrorState';
 
 import {
   preflightRequest,
@@ -51,6 +48,7 @@ import { pfmulti } from '../../Utilities/colors';
 import { scaleOrdinal } from 'd3';
 
 import Report from './Report';
+import ApiStatusWrapper from '../../Components/ApiStatusWrapper';
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
@@ -222,10 +220,7 @@ const OrganizationStatistics = ({ history }) => {
                 <Tab eventKey={1} title={'Hosts'} />
               </Tabs>
               <CardBody>
-                {orgs.isLoading && <LoadingState />}
-                {orgs.error && <ApiErrorState message={orgs.error.error} />}
-                {orgs.isSuccess && orgs.data?.data.length <= 0 && <NoData />}
-                {orgs.isSuccess && orgs.data?.data.length > 0 && (
+                <ApiStatusWrapper api={orgs}>
                   <GroupedBarChart
                     margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
                     id="d3-grouped-bar-chart-root"
@@ -240,7 +235,7 @@ const OrganizationStatistics = ({ history }) => {
                     )}
                     TooltipClass={chartMapper[activeTabKey].tooltip}
                   />
-                )}
+                </ApiStatusWrapper>
               </CardBody>
             </Card>
           </GridItem>
@@ -251,17 +246,14 @@ const OrganizationStatistics = ({ history }) => {
               </CardTitle>
               <Divider />
               <CardBody>
-                {jobs.isLoading && <LoadingState />}
-                {jobs.error && <ApiErrorState message={jobs.error.error} />}
-                {jobs.isSuccess && jobs.data.length <= 0 && <NoData />}
-                {jobs.isSuccess && jobs.data.length > 0 && (
+                <ApiStatusWrapper api={jobs}>
                   <PieChart
                     margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                     id="d3-donut-1-chart-root"
                     data={jobs.data}
                     colorFunc={colorFunc}
                   />
-                )}
+                </ApiStatusWrapper>
               </CardBody>
             </Card>
           </GridItem>
@@ -272,17 +264,14 @@ const OrganizationStatistics = ({ history }) => {
               </CardTitle>
               <Divider />
               <CardBody>
-                {tasks.isLoading && <LoadingState />}
-                {tasks.error && <ApiErrorState message={tasks.error.error} />}
-                {tasks.isSuccess && tasks.data.length <= 0 && <NoData />}
-                {tasks.isSuccess && tasks.data.length > 0 && (
+                <ApiStatusWrapper api={tasks}>
                   <PieChart
                     margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                     id="d3-donut-2-chart-root"
                     data={tasks.data}
                     colorFunc={colorFunc}
                   />
-                )}
+                </ApiStatusWrapper>
               </CardBody>
             </Card>
           </GridItem>
