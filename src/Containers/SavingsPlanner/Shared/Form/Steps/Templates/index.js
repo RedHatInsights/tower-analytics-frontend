@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import { parse, stringify } from 'query-string';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -29,7 +29,6 @@ import Pagination from '../../../../../../Components/Pagination';
 
 import { notAuthorizedParams } from '../../../../../../Utilities/constants';
 import { useQueryParams } from '../../../../../../Utilities/useQueryParams';
-import useApi from '../../../../../../Utilities/useApi';
 
 import {
   preflightRequest,
@@ -40,6 +39,7 @@ import {
 import FilterableToolbar from '../../../../../../Components/Toolbar/';
 
 import { actions } from '../../../constants';
+import useRequest from "../../../../../../Utilities/useRequest";
 
 const ListFooter = styled.div`
   display: flex;
@@ -62,16 +62,34 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
   const history = useHistory();
 
   const [preflightError, setPreFlightError] = useState(null);
-  const [
-    {
-      isLoading,
-      isSuccess,
-      error,
-      data: { meta = {}, items: templates = [] },
+
+  const {
+    result: {
+      templates,
+      count,
+      options
     },
-    setData,
-  ] = useApi({ meta: {}, items: [] });
-  const [options, setOptions] = useApi({});
+    error,
+    isLoading,
+    request: fetchEndpoints,
+  } = useRequest(
+    useCallback(async () => {
+      const [response, options] = await Promise.all([
+        readJobExplorer({ params: queryParams }),
+        readJobExplorerOptions({ params: queryParams })
+      ]);
+      return {
+        templates: response.items,
+        count: response.meta.count,
+        options: options
+      };
+    }, [location]),
+    {
+      templates: []
+    }
+  );
+
+  const isSuccess = !error && !isLoading && options && templates.length > 0
 
   const {
     queryParams,
@@ -118,8 +136,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     });
   }, []);
   useEffect(() => {
-    setData(readJobExplorer({ params: queryParams }));
-    setOptions(readJobExplorerOptions({ params: queryParams }));
+    fetchEndpoints()
     history.replace({
       pathname,
       hash,
@@ -134,7 +151,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     <>
       {preflightError && <EmptyState {...preflightError} />}
 
-      {!preflightError && (
+      {isSuccess && (
         <Form>
           <FormGroup
             label="Link a template to this plan:"
@@ -143,12 +160,12 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
             <FilterableToolbar
               hideQuickDateRange
               hideSortOptions
-              categories={options.data}
+              categories={options}
               filters={queryParams}
               setFilters={setFromToolbar}
               pagination={
                 <Pagination
-                  count={meta?.count}
+                  count={count}
                   params={{
                     limit: queryParams.limit,
                     offset: queryParams.offset,
@@ -214,7 +231,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
                 )}
               </div>
               <Pagination
-                count={meta?.count}
+                count={count}
                 params={{
                   limit: queryParams.limit,
                   offset: queryParams.offset,

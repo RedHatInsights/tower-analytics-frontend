@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
@@ -28,7 +28,6 @@ import { preflightRequest, readROI, readROIOptions } from '../../Api/';
 
 // Imports from utilities
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import useApi from '../../Utilities/useApi';
 import { roi as roiConst } from '../../Utilities/constants';
 import useRedirect from '../../Utilities/useRedirect';
 import { calculateDelta, convertSecondsToHours } from '../../Utilities/helpers';
@@ -42,6 +41,7 @@ import TotalSavings from './TotalSavings';
 import CalculationCost from './CalculationCost';
 import AutomationFormula from './AutomationFormula';
 import TopTemplates from './TopTemplates';
+import useRequest from "../../Utilities/useRequest";
 
 const mapApi = ({ items = [] }) =>
   items.map((el) => ({
@@ -77,12 +77,45 @@ const AutomationCalculator = ({ history }) => {
   const [costManual, setCostManual] = useState('50');
   const [costAutomation, setCostAutomation] = useState('20');
 
-  const [preflight, setPreflight] = useApi(null);
-  const [options, setOptions] = useApi({});
-  const [api, fetchApi, setDataInApi] = useApi([], (data) =>
-    updateDeltaCost(mapApi(data), costAutomation, costManual)
+  const {
+    result: { preflight },
+    error: preflightError,
+    isLoading: preflightIsLoading,
+    request: setPreflight,
+  } = useRequest(
+    useCallback(async () => {
+      const preflight = await preflightRequest()
+      return { preflight: preflight };
+    }, []),
+    { preflight: {}, preflightError, preflightIsLoading }
   );
 
+  const {
+    result: { options },
+    error: optionsError,
+    isLoading: optionsIsLoading,
+    request: setOptions,
+  } = useRequest(
+    useCallback(async () => {
+      const options = await readROIOptions({ params: queryParams })
+      return { options: options };
+    }, []),
+    { options: {}, optionsError,  optionsIsLoading }
+  );
+
+  const {
+    result: { data },
+    error: apiError,
+    isLoading: apiIsLoading,
+    request: setDataInApi,
+  } = useRequest(
+    useCallback(async () => {
+      const response = await readROI({ params: queryParams })
+      return { data: response };
+    }, []),
+    { data: [], apiError,  apiIsLoading }
+  );
+  const api = updateDeltaCost(mapApi(data), costAutomation, costManual)
   const { queryParams, setFromToolbar } = useQueryParams(
     roiConst.defaultParams
   );
@@ -117,22 +150,22 @@ const AutomationCalculator = ({ history }) => {
   };
 
   useEffect(() => {
-    setPreflight(preflightRequest());
-    setOptions(readROIOptions({ params: queryParams }));
+    setPreflight();
+    setOptions();
   }, []);
 
   /**
    * Recalculates the delta and costs in the data after the cost is changed.
    */
   useEffect(() => {
-    setDataInApi(updateDeltaCost(api.data, costAutomation, costManual));
+    setDataInApi(updateDeltaCost(api, costAutomation, costManual));
   }, [costAutomation, costManual]);
 
   /**
    * Get data from API depending on the queryParam.
    */
   useEffect(() => {
-    fetchApi(readROI({ params: queryParams }));
+    setDataInApi();
   }, [queryParams]);
 
   /**
@@ -153,15 +186,15 @@ const AutomationCalculator = ({ history }) => {
         <Card>
           <BorderedCardTitle>Automation savings</BorderedCardTitle>
           <CardBody>
-            {api.isLoading && <LoadingState />}
-            {api.error && <ApiErrorState message={api.error.error} />}
-            {api.isSuccess && api.data.length <= 0 && <NoData />}
-            {api.isSuccess && api.data.length > 0 && (
+            {apiIsLoading && <LoadingState />}
+            {apiError && <ApiErrorState message={apiError.error} />}
+            {api.length <= 0 && <NoData />}
+            {api.length > 0 && (
               <React.Fragment>
                 <TopTemplatesSavings
                   margin={{ top: 20, right: 20, bottom: 20, left: 70 }}
                   id="d3-roi-chart-root"
-                  data={filterDisabled(api.data)}
+                  data={filterDisabled(api)}
                 />
                 <p style={{ textAlign: 'center' }}>Templates</p>
               </React.Fragment>
@@ -179,7 +212,7 @@ const AutomationCalculator = ({ history }) => {
     <Stack hasGutter>
       <StackItem>
         <TotalSavings
-          totalSavings={computeTotalSavings(filterDisabled(api.data))}
+          totalSavings={computeTotalSavings(filterDisabled(api))}
         />
       </StackItem>
       <StackItem>
@@ -228,7 +261,7 @@ const AutomationCalculator = ({ history }) => {
       <PageHeader>
         <PageHeaderTitle title={'Automation Calculator'} />
         <FilterableToolbar
-          categories={options.data}
+          categories={options}
           filters={queryParams}
           setFilters={setFromToolbar}
         />

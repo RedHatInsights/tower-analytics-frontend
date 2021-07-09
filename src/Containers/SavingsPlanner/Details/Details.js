@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import { useParams, useLocation, Route, Switch } from 'react-router-dom';
 import { CaretLeftIcon } from '@patternfly/react-icons';
 import { Card } from '@patternfly/react-core';
@@ -21,9 +21,8 @@ import Breadcrumbs from '../../../Components/Breadcrumbs';
 
 import { preflightRequest, readPlan, readPlanOptions } from '../../../Api/';
 
-import useApi from '../../../Utilities/useApi';
-
 import SavingsPlanEdit from '../Edit';
+import useRequest from "../../../Utilities/useRequest";
 
 const Details = () => {
   const { id } = useParams();
@@ -40,30 +39,44 @@ const Details = () => {
     pageTitle = 'Edit plan';
   }
   const [selectedId, setSelectedId] = useState(id);
-  const [
-    {
-      isSuccess,
-      error,
-      data: { rbac = {}, items: plans = [] },
-    },
-    setData,
-  ] = useApi({ rbac: {}, items: [] });
-  const [options, setOptions] = useApi({});
   const queryParams = { id: [selectedId] };
 
+  const {
+    result: {
+      rbac,
+      plans,
+      options
+    },
+    error,
+    isLoading,
+    request: fetchEndpoints,
+  } = useRequest(
+    useCallback(async () => {
+      setSelectedId(id);
+      await preflightRequest().catch((error) => {
+        setPreFlightError({ preflightError: error });
+      });
+
+      const [response, options] = await Promise.all([
+        readPlan({ params: queryParams }),
+        readPlanOptions()
+      ]);
+      return {
+        plans: response.items,
+        rbac: response.rbac,
+        options: options
+      };
+    }, [location]),
+    {
+      plans: []
+    }
+  );
+
   useEffect(() => {
-    setSelectedId(id);
-    preflightRequest().catch((error) => {
-      setPreFlightError({ preflightError: error });
-    });
-    const fetchEndpoints = () => {
-      setData(readPlan({ params: queryParams }));
-      setOptions(readPlanOptions());
-    };
-
     fetchEndpoints();
-  }, [locationState]);
+  }, [fetchEndpoints]);
 
+  const isSuccess = !error && !isLoading && plans.length > 0
   const canWrite =
     isSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
   const tabsArray = [
@@ -102,7 +115,7 @@ const Details = () => {
           <ApiErrorState message={error.error} />
         </>
       )}
-      {isSuccess && options.isSuccess && (
+      {isSuccess && (
         <>
           <PageHeader>
             <Breadcrumbs items={breadcrumbsItems} />
