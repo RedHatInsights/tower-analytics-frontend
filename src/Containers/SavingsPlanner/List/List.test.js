@@ -35,7 +35,6 @@ describe.skip('SavingsPlanner/List', () => {
   it('has rendered RBAC Access error component', async () => {
     api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest403);
     await act(async () => {
-      console.log(List);
       renderPage(List);
     });
     expect(screen.queryByText(/Savings Planner/i)).toBeNull();

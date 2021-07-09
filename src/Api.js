@@ -23,7 +23,9 @@ const clustersOptionsEndpoint =
   '/api/tower-analytics/v1/dashboard_clusters_options/';
 const planOptionsEndpoint = '/api/tower-analytics/v1/plan_options/';
 
-function handleResponse(response) {
+const featuresEndpoint = '/api/featureflags/v0/';
+
+const handleResponse = (response) => {
   return response.json().then((json) => {
     if (response.ok) {
       return json;
@@ -43,7 +45,7 @@ function handleResponse(response) {
       return Promise.reject(json);
     }
   });
-}
+};
 
 function authenticatedFetch(endpoint, options) {
   return window.insights.chrome.auth
@@ -51,9 +53,18 @@ function authenticatedFetch(endpoint, options) {
     .then(() => fetch(endpoint, options));
 }
 
-export const preflightRequest = () => {
-  return authenticatedFetch(preflightEndpoint).then(handleResponse);
+export const getFeatures = async () => {
+  try {
+    const url = new URL(featuresEndpoint, window.location.origin);
+    const response = await authenticatedFetch(url);
+    return response.ok ? response.json() : {};
+  } catch (_error) {
+    return {};
+  }
 };
+
+export const preflightRequest = () =>
+  authenticatedFetch(preflightEndpoint).then(handleResponse);
 
 export const readJobExplorer = ({ params = {} }) => {
   const { limit, offset, sort_by } = params;
