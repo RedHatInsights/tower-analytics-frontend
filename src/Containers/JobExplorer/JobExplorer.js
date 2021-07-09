@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import { parse, stringify } from 'query-string';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import useApi from '../../Utilities/useApi';
+import useRequest from "../../Utilities/useRequest";
 import { Paths } from '../../paths';
 
 import LoadingState from '../../Components/LoadingState';
@@ -39,19 +39,46 @@ const initialQueryParams = {
 
 const JobExplorer = ({ location: { search }, history }) => {
   const [preflightError, setPreFlightError] = useState(null);
-  const [
-    {
-      isLoading,
-      isSuccess,
-      error,
-      data: { meta = {}, items: data = [] },
-    },
-    setData,
-  ] = useApi({ meta: {}, items: [] });
-  const [options, setOptions] = useApi({});
-
   const { queryParams, setFromPagination, setFromToolbar, dispatch } =
     useQueryParams(initialQueryParams);
+
+  const {
+    result: {
+      dataResponse,
+      meta,
+      optionsResponse
+    },
+    error,
+    isLoading,
+    request: fetchEndpoints,
+  } = useRequest(
+    useCallback(async () => {
+      await preflightRequest().catch((error) => {
+        setPreFlightError({ preflightError: error });
+      });
+
+      const [response, optionsResponse] = await Promise.all([
+        readJobExplorer({ params: queryParams }),
+        readJobExplorerOptions({ params: queryParams }),
+      ]);
+      return {
+        dataResponse: response.items,
+        meta: response.meta,
+        optionsResponse: optionsResponse
+      };
+    }, [location]),
+    {
+      items: [], optionsResponse: {}
+    }
+  );
+
+  const [options, setOptions] = useState(optionsResponse);
+  const [data, setData] = useState(dataResponse);
+
+  useEffect(() => {
+    setData(dataResponse);
+    setOptions(optionsResponse);
+  }, [dataResponse, optionsResponse]);
 
   const updateURL = () => {
     const { jobExplorer } = Paths;
@@ -85,15 +112,14 @@ const JobExplorer = ({ location: { search }, history }) => {
   }, []);
 
   useEffect(() => {
-    setData(readJobExplorer({ params: queryParams }));
-    setOptions(readJobExplorerOptions({ params: queryParams }));
+    fetchEndpoints();
     updateURL();
-  }, [queryParams]);
+  }, [queryParams, fetchEndpoints]);
 
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
-
+  const isSuccess = !error && !isLoading && data && options
   return (
     <React.Fragment>
       <PageHeader>
@@ -111,7 +137,7 @@ const JobExplorer = ({ location: { search }, history }) => {
           <Card>
             <CardBody>
               <FilterableToolbar
-                categories={options.data}
+                categories={options}
                 filters={queryParams}
                 setFilters={setFromToolbar}
                 pagination={

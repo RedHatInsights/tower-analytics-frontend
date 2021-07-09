@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import useApi from '../../Utilities/useApi';
 import useRedirect from '../../Utilities/useRedirect';
 import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
 
@@ -49,6 +48,7 @@ import { organizationStatistics as constants } from '../../Utilities/constants';
 // For chart colors
 import { pfmulti } from '../../Utilities/colors';
 import { scaleOrdinal } from 'd3';
+import useRequest from "../../Utilities/useRequest";
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
@@ -56,10 +56,8 @@ const Divider = styled('hr')`
 
 const colorFunc = scaleOrdinal(pfmulti);
 
-const orgsChartMapper =
-  (attrName) =>
-  ({ dates: data = [], meta }) => ({
-    data: data.map(({ date, items }) => ({
+const orgsChartMapper = (data = [], meta, attrName) => {
+    const dates = data.map(({ date, items }) => ({
       date,
       items: items.map(({ id, [attrName]: value, name }) => ({
         id,
@@ -67,21 +65,22 @@ const orgsChartMapper =
         value,
         name: name || 'No organization',
       })),
-    })),
-    legend: meta.legend.map((el) => ({
+    }))
+    meta.legend.map((el) => ({
       ...el,
       name: el.name || 'No organization',
-    })),
-  });
+    }))
+    return dates;
+  };
 
-const pieChartMapper =
-  (attrName) =>
-  ({ items = [] }) =>
-    items.map(({ id, [attrName]: count, name }) => ({
-      id,
-      count,
-      name: name || 'No organization',
-    }));
+const pieChartMapper = (items = [], attrName) => {
+  const data = items.map(({id, [attrName]: count, name}) => ({
+    id,
+    count,
+    name: name || 'No organization',
+  }))
+  return data;
+}
 
 const redirectToJobExplorer =
   (toJobExplorer, queryParams) =>
@@ -133,18 +132,94 @@ const chartMapper = [
 
 const OrganizationStatistics = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
-  const [preflight, setPreflight] = useApi(null);
   const [activeTabKey, setActiveTabKey] = useState(0);
-  const [orgs, setOrgs] = useApi(
-    [],
-    orgsChartMapper(chartMapper[activeTabKey].attr)
+
+  const {
+    result: { preflight },
+    error: preflightError,
+    isLoading: preflightIsLoading,
+    request: setPreflight,
+  } = useRequest(
+    useCallback(async () => {
+      const preflight = await preflightRequest()
+      return { preflight: preflight };
+    }, []),
+    { preflight: {}, preflightError, preflightIsLoading }
   );
-  const [jobs, setJobs] = useApi([], pieChartMapper('total_count'));
-  const [tasks, setTasks] = useApi([], pieChartMapper('host_task_count'));
-  const [options, setOptions] = useApi({});
+
+  const {
+    result: { jobs },
+    error: jobsError,
+    isLoading: jobsIsLoading,
+    request: setJobs,
+  } = useRequest(
+    useCallback(async () => {
+      const jobs = await readJobExplorer({ params: jobRunsByOrgParams })
+      return { jobs: jobs };
+    }, []),
+    { jobs: [], jobsError,  jobsIsLoading }
+  );
+
+  const {
+    result: { orgs },
+    error: orgsError,
+    isLoading: orgsIsLoading,
+    request: setOrgs,
+  } = useRequest(
+    useCallback(async (tabIndex = 0) => {
+      let orgs;
+      if(tabIndex === 0) {
+        orgs = await readJobExplorer({ params: jobsByDateAndOrgParams })
+      } else {
+        orgs = await readHostExplorer({ params: hostAcrossOrgParams })
+      }
+      return { orgs: orgs };
+    }, []),
+    { orgs: [], orgsError,  orgsIsLoading }
+  );
+
+  const {
+    result: { options },
+    error: optionsError,
+    isLoading: optionsIsLoading,
+    request: setOptions,
+  } = useRequest(
+    useCallback(async () => {
+      const options = await readOrgOptions({ params: queryParams })
+      return { options: options };
+    }, []),
+    { options: {}, optionsError, optionsIsLoading }
+  );
+
+  const {
+    result: {
+      tasks
+    },
+    error: tasksError,
+    isLoading: tasksIsLoading,
+    request: setTasks,
+  } = useRequest(
+    useCallback(async () => {
+      const tasks = await readJobExplorer({ params: jobEventsByOrgParams });
+      return {
+        tasks: tasks }
+    }, []),
+    { tasks: [], tasksError, tasksIsLoading }
+  );
+
   const { queryParams, setFromToolbar } = useQueryParams(
     constants.defaultParams
   );
+
+  useEffect(() => {
+    setOrgs(activeTabKey);
+  }, [queryParams, activeTabKey]);
+
+  useEffect(() => {
+    setTasks()
+    setOptions()
+    setJobs()
+  }, [queryParams]);
 
   const jobEventsByOrgParams = {
     ...queryParams,
@@ -187,21 +262,8 @@ const OrganizationStatistics = ({ history }) => {
       id: 'organization-statistics',
       secondaryNav: true,
     });
-    setPreflight(preflightRequest());
-    setOptions(readOrgOptions({ params: queryParams }));
+    setPreflight();
   }, []);
-
-  useEffect(() => {
-    const { api: readJobsOrHosts } = chartMapper[activeTabKey];
-    const params =
-      activeTabKey === 0 ? jobsByDateAndOrgParams : hostAcrossOrgParams;
-    setOrgs(readJobsOrHosts({ params }));
-  }, [queryParams, activeTabKey]);
-
-  useEffect(() => {
-    setJobs(readJobExplorer({ params: jobRunsByOrgParams }));
-    setTasks(readJobExplorer({ params: jobEventsByOrgParams }));
-  }, [queryParams]);
 
   if (preflight?.error?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
@@ -220,15 +282,15 @@ const OrganizationStatistics = ({ history }) => {
                 <Tab eventKey={1} title={'Hosts'} />
               </Tabs>
               <CardBody>
-                {orgs.isLoading && <LoadingState />}
-                {orgs.error && <ApiErrorState message={orgs.error.error} />}
-                {orgs.isSuccess && orgs.data?.data.length <= 0 && <NoData />}
-                {orgs.isSuccess && orgs.data?.data.length > 0 && (
+                {orgsIsLoading && <LoadingState />}
+                {orgsError && <ApiErrorState message={orgsError.error} />}
+                {orgs?.dates?.length <= 0 && <NoData />}
+                {orgs?.dates?.length > 0 && (
                   <GroupedBarChart
                     margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
                     id="d3-grouped-bar-chart-root"
-                    data={orgs.data.data}
-                    legend={orgs.data.legend}
+                    data={orgsChartMapper(orgs.dates, orgs.meta, chartMapper[activeTabKey].attr)}
+                    legend={orgs.meta.legend}
                     history={history}
                     colorFunc={colorFunc}
                     yLabel={chartMapper[activeTabKey].label}
@@ -249,14 +311,14 @@ const OrganizationStatistics = ({ history }) => {
               </CardTitle>
               <Divider />
               <CardBody>
-                {jobs.isLoading && <LoadingState />}
-                {jobs.error && <ApiErrorState message={jobs.error.error} />}
-                {jobs.isSuccess && jobs.data.length <= 0 && <NoData />}
-                {jobs.isSuccess && jobs.data.length > 0 && (
+                {jobsIsLoading && <LoadingState />}
+                {jobsError && <ApiErrorState message={jobs.error.error} />}
+                {jobs?.items?.length <= 0 && <NoData />}
+                {jobs?.items?.length > 0 && (
                   <PieChart
                     margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                     id="d3-donut-1-chart-root"
-                    data={jobs.data}
+                    data={jobs?.data}
                     colorFunc={colorFunc}
                   />
                 )}
@@ -270,10 +332,10 @@ const OrganizationStatistics = ({ history }) => {
               </CardTitle>
               <Divider />
               <CardBody>
-                {tasks.isLoading && <LoadingState />}
-                {tasks.error && <ApiErrorState message={tasks.error.error} />}
-                {tasks.isSuccess && tasks.data.length <= 0 && <NoData />}
-                {tasks.isSuccess && tasks.data.length > 0 && (
+                {tasksIsLoading && <LoadingState />}
+                {tasksError && <ApiErrorState message={tasks.error.error} />}
+                {tasks?.items?.length <= 0 && <NoData />}
+                {tasks?.items?.length > 0 && (
                   <PieChart
                     margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                     id="d3-donut-2-chart-root"

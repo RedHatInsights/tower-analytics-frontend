@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
-import { useHistory, useLocation, Redirect } from 'react-router-dom';
+import { useHistory, useLocation, useParams, Redirect } from 'react-router-dom';
 
 import {
   Button,
@@ -11,8 +11,7 @@ import {
 } from '@patternfly/react-core';
 
 import { Paths } from '../../../../paths';
-
-import useApi from '../../../../Utilities/useApi';
+import useRequest from "../../../../Utilities/useRequest";
 import usePlanData from '../usePlanData';
 
 import { createPlan, updatePlan } from '../../../../Api/';
@@ -27,16 +26,36 @@ import Templates from './Steps/Templates';
 const Form = ({ title, options, data = {} }) => {
   const history = useHistory();
   const { hash, pathname } = useLocation();
-
+  const { id } = useParams()
   const [startStep, setStartStep] = useState(null);
 
-  const [
-    { isSuccess, data: apiResponse, error },
-    setData,
-    // eslint-disable-next-line no-unused-vars
-    _throwThisAway,
-    reset,
-  ] = useApi(null);
+  const {
+    result: { data: apiResponse },
+    error,
+    request: setData,
+  } = useRequest(
+    useCallback(async (requestPayload, id) => {
+      if (typeof requestPayload !== 'undefined') {
+        if (id) {
+          data = await updatePlan({
+            id: id,
+            params: requestPayload,
+          })
+        } else {
+          data = await createPlan({
+            params: requestPayload,
+          })
+        }
+      }
+      return {
+        data
+      };
+    }, []),
+    {
+      apiResponse: data
+    }
+  );
+
   const { formData, requestPayload, dispatch } = usePlanData(data);
 
   const steps = [
@@ -139,18 +158,7 @@ const Form = ({ title, options, data = {} }) => {
   };
 
   const onSave = () => {
-    data?.id
-      ? setData(
-          updatePlan({
-            id: data?.id,
-            params: requestPayload,
-          })
-        )
-      : setData(
-          createPlan({
-            params: requestPayload,
-          })
-        );
+    setData(requestPayload, data?.id)
   };
 
   const onClose = () => {
@@ -165,9 +173,13 @@ const Form = ({ title, options, data = {} }) => {
     }
   };
 
+  const reset = () => {
+    setData();
+  }
+
   return (
     <>
-      {isSuccess && (
+      {!error && apiResponse?.plan_created && (
         <Redirect
           to={{
             pathname: `${Paths.savingsPlanner}/${

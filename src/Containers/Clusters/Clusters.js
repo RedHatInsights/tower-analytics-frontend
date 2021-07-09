@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect, useCallback} from 'react';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
@@ -12,7 +12,6 @@ import {
 } from '../../Api/';
 
 import { jobExplorer } from '../../Utilities/constants';
-import useApi from '../../Utilities/useApi';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
@@ -38,6 +37,7 @@ import FilterableToolbar from '../../Components/Toolbar';
 import ApiErrorState from '../../Components/ApiErrorState';
 
 import { clusters } from '../../Utilities/constants';
+import useRequest from "../../Utilities/useRequest";
 
 const initialTopTemplateParams = {
   group_by: 'template',
@@ -68,35 +68,38 @@ const Clusters = () => {
     ...clusters.defaultParams,
   });
 
-  const [
-    {
-      isLoading,
-      isSuccess,
-      error,
-      data: { items: chartData = [] },
+  const {
+    result: {
+      chartData,
+      modules,
+      options,
+      templates,
+      workflows
     },
-    setData,
-  ] = useApi({ items: [] });
-
-  const [
+    error,
+    isLoading,
+    request: fetchEndpoints,
+  } = useRequest(
+    useCallback(async () => {
+      const [chartData, modules, options, templates, workflows] = await Promise.all([
+        readJobExplorer({ params: queryParams }),
+        readEventExplorer({ params: topModuleParams }),
+        readClustersOptions({ params: optionsQueryParams }),
+        readJobExplorer({ params: topTemplatesParams }),
+        readJobExplorer({ params: topWorkflowParams })
+      ]);
+      return {
+        chartData: chartData.items,
+        modules: modules.items,
+        options: options,
+        templates: templates.items,
+        workflows: workflows.items
+      };
+    }, []),
     {
-      data: { items: templates = [] },
-    },
-    setTemplates,
-  ] = useApi({ items: [] });
-  const [
-    {
-      data: { items: workflows = [] },
-    },
-    setWorkflows,
-  ] = useApi({ items: [] });
-  const [
-    {
-      data: { items: modules = [] },
-    },
-    setModules,
-  ] = useApi({ items: [] });
-  const [{ data: options = [] }, setOptions] = useApi({});
+      chartData: [], modules: [], options: {}, templates: [], workflows: []
+    }
+  );
 
   const initialOptionsParams = {
     attributes: jobExplorer.attributes,
@@ -104,6 +107,11 @@ const Clusters = () => {
 
   const { queryParams: optionsQueryParams } =
     useQueryParams(initialOptionsParams);
+
+    // Get and update the data
+  useEffect(() => {
+    fetchEndpoints();
+  }, [queryParams, fetchEndpoints]);
 
   const {
     cluster_id,
@@ -149,26 +157,16 @@ const Clusters = () => {
       await preflightRequest().catch((error) => {
         setPreFlightError({ preflightError: error });
       });
-      setOptions(readClustersOptions({ params: optionsQueryParams }));
     }
 
     initializeWithPreflight();
   }, []);
 
-  // Get and update the data
-  useEffect(() => {
-    const fetchEndpoints = () => {
-      setData(readJobExplorer({ params: queryParams }));
-      setTemplates(readJobExplorer({ params: topTemplatesParams }));
-      setWorkflows(readJobExplorer({ params: topWorkflowParams }));
-      setModules(readEventExplorer({ params: topModuleParams }));
-    };
-    fetchEndpoints();
-  }, [queryParams]);
-
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
+
+  const isSuccess = !error && !isLoading && options
 
   const renderContent = () => {
     if (preflightError) return <EmptyState {...preflightError} />;
