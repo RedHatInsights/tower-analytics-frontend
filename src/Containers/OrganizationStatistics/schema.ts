@@ -41,7 +41,8 @@ const schema = (params: Params): ChartSchemaElement[] => ([
     },
     yAxis: {
       label: attrPairs.find(({ key }) => key === params.sort_options)?.name || 'Y axis',
-      tickFormat: 'formatNumberAsK'
+      tickFormat: 'formatNumberAsK',
+      showGrid: true,
     },
     api: {
       url: '',
@@ -64,7 +65,8 @@ const schema = (params: Params): ChartSchemaElement[] => ([
       parent: 0,
       props: {
         x: 'created_date',
-        y: params.sort_options
+        y: params.sort_options,
+        barWidth: 15,
       },
       tooltip: {
         standalone: true
