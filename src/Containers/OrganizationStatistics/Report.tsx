@@ -12,6 +12,7 @@ import { useQueryParams } from '../../Utilities/useQueryParams';
 
 import { readJobExplorer } from '../../Api';
 import useApi from '../../Utilities/useApi';
+import { formatTotalTime } from '../../Utilities/helpers';
 
 import { global_disabled_color_300 } from '@patternfly/react-tokens';
 import ApiStatusWrapper from '../../Components/ApiStatusWrapper';
@@ -57,6 +58,8 @@ const isOther = (item: Record<string, string | number>, key: string) => (key ===
 const getText = (item: Record<string, string | number>, key: string) => {
   if (isOther(item, key)) {
     return '-'
+  } else if (key === "elapsed") {
+    return formatTotalTime(item[key])
   }
   return `${item[key]}`;
 }
