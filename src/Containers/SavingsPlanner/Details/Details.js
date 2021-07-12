@@ -49,6 +49,7 @@ const Details = () => {
     },
     error,
     isLoading,
+    isSuccess,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
@@ -76,7 +77,6 @@ const Details = () => {
     fetchEndpoints();
   }, [fetchEndpoints]);
 
-  const isSuccess = !error && !isLoading && plans.length > 0
   const canWrite =
     isSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
   const tabsArray = [

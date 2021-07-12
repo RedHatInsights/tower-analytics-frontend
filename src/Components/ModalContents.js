@@ -81,6 +81,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     },
     error,
     isLoading,
+    isSuccess,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
@@ -244,7 +245,6 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
   const cleanup = () => {
     handleModal(false);
   };
-  const isSuccess = !isLoading && !error && stats && relatedJobs
 
   return (
     <Modal

@@ -50,6 +50,7 @@ const JobExplorer = ({ location: { search }, history }) => {
     },
     error,
     isLoading,
+    isSuccess,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
@@ -119,7 +120,7 @@ const JobExplorer = ({ location: { search }, history }) => {
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
-  const isSuccess = !error && !isLoading && data && options
+
   return (
     <React.Fragment>
       <PageHeader>

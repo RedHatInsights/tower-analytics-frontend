@@ -1,5 +1,7 @@
 import { act } from 'react-dom/test-utils';
 import {
+  history,
+  location,
   mountPage,
   preflight200,
   preflight400,
