@@ -86,6 +86,7 @@ const Clusters = () => {
     },
     error,
     isLoading,
+    isSuccess,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
@@ -175,8 +176,6 @@ const Clusters = () => {
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
-
-  const isSuccess = !error && !isLoading && options
 
   const renderContent = () => {
     if (preflightError) return <EmptyState {...preflightError} />;

@@ -70,6 +70,7 @@ const List = () => {
     },
     error,
     isLoading,
+    isSuccess,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
@@ -113,7 +114,6 @@ const List = () => {
     fetchEndpoints()
   }, [queryParams, urlstring]);
 
-  const isSuccess = !isLoading && !error && data?.length > 0
   const canWrite =
     isSuccess &&
     (rbac?.perms?.write === true ||

@@ -23,6 +23,7 @@ const Add = () => {
     result: options,
     error,
     isLoading,
+    isSuccess,
     request: fetchPlanOptions,
   } = useRequest(
     useCallback(async () => {
@@ -40,7 +41,6 @@ const Add = () => {
     fetchPlanOptions();
   }, [fetchPlanOptions]);
 
-  const isSuccess = !error && !isLoading && options?.data
   const canWrite =
     isSuccess &&
     (options.data?.meta?.rbac?.perms?.write === true ||
