@@ -1,5 +1,7 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom';
+
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import {
@@ -28,6 +30,7 @@ import { preflightRequest, readROI, readROIOptions } from '../../Api/';
 
 // Imports from utilities
 import { useQueryParams } from '../../Utilities/useQueryParams';
+import {encodeQueryString, getQSConfig, parseParams} from '../../Utilities/qs';
 import { roi as roiConst } from '../../Utilities/constants';
 import useRedirect from '../../Utilities/useRedirect';
 import { calculateDelta, convertSecondsToHours } from '../../Utilities/helpers';
@@ -72,10 +75,20 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
 const computeTotalSavings = (data) =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
+const QS_CONFIG = getQSConfig('roiConst', { ...roiConst.defaultParams }, ['limit', 'offset']);
+
 const AutomationCalculator = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
   const [costManual, setCostManual] = useState('50');
   const [costAutomation, setCostAutomation] = useState('20');
+  const location = useLocation();
+  const { pathname } = useLocation();
+
+  const query = location.search !== '' ? parseParams(QS_CONFIG, location.search) : QS_CONFIG.defaultParams
+  const { queryParams, setFromToolbar } = useQueryParams(query);
+
+  // params from url/querystring
+  const [urlstring, setUrlstring] = useState(encodeQueryString(queryParams))
 
   const {
     result: { preflight },
@@ -110,15 +123,12 @@ const AutomationCalculator = ({ history }) => {
     request: setDataInApi,
   } = useRequest(
     useCallback(async () => {
-      const response = await readROI({ params: queryParams })
+      const response = await readROI({ params: queryParams})
       return { data: response };
-    }, []),
+    }, [location, queryParams]),
     { data: [], apiError,  apiIsLoading }
   );
   const api = updateDeltaCost(mapApi(data), costAutomation, costManual)
-  const { queryParams, setFromToolbar } = useQueryParams(
-    roiConst.defaultParams
-  );
 
   /**
    * Modifies one elements avgRunTime in the unfilteredData
@@ -164,9 +174,16 @@ const AutomationCalculator = ({ history }) => {
   /**
    * Get data from API depending on the queryParam.
    */
+  // useEffect(() => {
+  //   setDataInApi();
+  // }, [queryParams]);
+
   useEffect(() => {
+
+    setUrlstring(encodeQueryString(queryParams))
+    history.push(`${pathname}?${urlstring}`)
     setDataInApi();
-  }, [queryParams]);
+  }, [queryParams, urlstring]);
 
   /**
    * Function to redirect to the job explorer page

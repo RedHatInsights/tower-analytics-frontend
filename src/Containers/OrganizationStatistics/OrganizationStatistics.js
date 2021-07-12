@@ -2,7 +2,10 @@ import React, {useCallback, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
+import {useHistory, useLocation} from 'react-router-dom';
+
 import { useQueryParams } from '../../Utilities/useQueryParams';
+import {encodeQueryString, getQSConfig, parseParams} from '../../Utilities/qs';
 import useRedirect from '../../Utilities/useRedirect';
 import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
 
@@ -129,10 +132,21 @@ const chartMapper = [
     tooltip: HostsTooltip,
   },
 ];
+const QS_CONFIG = getQSConfig('notifications', { ...constants.defaultParams }, ['limit', 'offset']);
 
 const OrganizationStatistics = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
   const [activeTabKey, setActiveTabKey] = useState(0);
+
+  const location = useLocation();
+  const { pathname } = useLocation();
+
+  // params from toolbar/searchbar
+  const query = location.search !== '' ? parseParams(QS_CONFIG, location.search) : QS_CONFIG.defaultParams
+  const { queryParams, setFromToolbar } = useQueryParams(query);
+
+  // params from url/querystring
+  const [urlstring, setUrlstring] = useState(encodeQueryString(queryParams))
 
   const {
     result: { preflight },
@@ -156,7 +170,7 @@ const OrganizationStatistics = ({ history }) => {
     useCallback(async () => {
       const jobs = await readJobExplorer({ params: jobRunsByOrgParams })
       return { jobs: jobs };
-    }, []),
+    }, [location]),
     { jobs: [], jobsError,  jobsIsLoading }
   );
 
@@ -174,7 +188,7 @@ const OrganizationStatistics = ({ history }) => {
         orgs = await readHostExplorer({ params: hostAcrossOrgParams })
       }
       return { orgs: orgs };
-    }, []),
+    }, [location]),
     { orgs: [], orgsError,  orgsIsLoading }
   );
 
@@ -187,7 +201,7 @@ const OrganizationStatistics = ({ history }) => {
     useCallback(async () => {
       const options = await readOrgOptions({ params: queryParams })
       return { options: options };
-    }, []),
+    }, [location]),
     { options: {}, optionsError, optionsIsLoading }
   );
 
@@ -203,23 +217,25 @@ const OrganizationStatistics = ({ history }) => {
       const tasks = await readJobExplorer({ params: jobEventsByOrgParams });
       return {
         tasks: tasks }
-    }, []),
+    }, [location]),
     { tasks: [], tasksError, tasksIsLoading }
-  );
-
-  const { queryParams, setFromToolbar } = useQueryParams(
-    constants.defaultParams
   );
 
   useEffect(() => {
     setOrgs(activeTabKey);
-  }, [queryParams, activeTabKey]);
+
+    setUrlstring(encodeQueryString(queryParams))
+    history.push(`${pathname}?${urlstring}`)
+  }, [queryParams, activeTabKey, urlstring]);
 
   useEffect(() => {
     setTasks()
     setOptions()
     setJobs()
-  }, [queryParams]);
+
+    setUrlstring(encodeQueryString(queryParams))
+    history.push(`${pathname}?${urlstring}`)
+  }, [queryParams, urlstring]);
 
   const jobEventsByOrgParams = {
     ...queryParams,

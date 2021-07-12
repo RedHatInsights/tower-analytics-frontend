@@ -29,6 +29,7 @@ import Pagination from '../../../../../../Components/Pagination';
 
 import { notAuthorizedParams } from '../../../../../../Utilities/constants';
 import { useQueryParams } from '../../../../../../Utilities/useQueryParams';
+import { getQSConfig } from '../../../../../../Utilities/qs';
 
 import {
   preflightRequest,
@@ -56,47 +57,51 @@ const initialQueryParams = {
   sort_order: 'asc',
   sort_by: 'name:asc',
 };
+const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, ['limit', 'offset']);
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
   const { pathname, hash, search } = useLocation();
   const history = useHistory();
+  const { queryParams, setFromPagination, setFromToolbar } =
+    useQueryParams(qsConfig);
 
   const [preflightError, setPreFlightError] = useState(null);
 
   const {
-    result: {
-      templates,
-      count,
-      options
-    },
+    result: { options },
     error,
-    isLoading,
+    isSuccess,
+    request: fetchOptions,
+  } = useRequest(
+    useCallback(async () => {
+      const response = await readJobExplorerOptions({ params: queryParams });
+      return { options: response };
+    }, [queryParams]),
+    { options: {} }
+  );
+
+  const {
+    result: { templates, count },
+    error: templatesIsError,
+    isLoading: templatesIsLoading,
+    isSuccess: templatesIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
-      const [response, options] = await Promise.all([
-        readJobExplorer({ params: queryParams }),
-        readJobExplorerOptions({ params: queryParams })
-      ]);
+      const response = await readJobExplorer({ params: queryParams });
       return {
         templates: response.items,
         count: response.meta.count,
-        options: options
       };
-    }, [location]),
+    }, [queryParams]),
     {
-      templates: []
+      templates: [],
+      count: 0,
+      templatesIsError,
+      templatesIsLoading,
+      templatesIsSuccess,
     }
   );
-
-  const isSuccess = !error && !isLoading && options && templates.length > 0
-
-  const {
-    queryParams,
-    setFromPagination,
-    setFromToolbar,
-    dispatch: queryParamsDispatch,
-  } = useQueryParams(initialQueryParams);
 
   const onSort = (_ev, _idx, dir) => {
     queryParamsDispatch({
@@ -115,11 +120,12 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
   };
 
   useEffect(() => {
-    insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
+    insights.chrome.appNavClick({ id: 'savings-planner', secondaryNav: true });
 
     preflightRequest().catch((error) => {
       setPreFlightError({ preflightError: error });
     });
+  }, []);
 
     const initialSearchParams = parse(search, {
       arrayFormat: 'bracket',
@@ -127,22 +133,20 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
       parseNumbers: true,
     });
 
-    queryParamsDispatch({
-      type: 'REINITIALIZE',
-      value: {
-        ...initialQueryParams,
-        ...initialSearchParams,
-      },
-    });
-  }, []);
   useEffect(() => {
-    fetchEndpoints()
     history.replace({
       pathname,
       hash,
-      search: stringify(queryParams, { arrayFormat: 'bracket' }),
+      search: stringify({...initialQueryParams, ...initialSearchParams}, { arrayFormat: 'bracket' }),
     });
+  }, []);
+
+  useEffect(() => {
+    fetchOptions();
+    fetchEndpoints();
   }, [queryParams]);
+
+
 
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;

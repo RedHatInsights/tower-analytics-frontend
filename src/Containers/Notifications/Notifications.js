@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
+import {encodeQueryString, getQSConfig, parseParams} from '../../Utilities/qs';
 
 import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
@@ -97,6 +99,7 @@ const initialQueryParams = {
   limit: 5,
   offset: 0,
 };
+const QS_CONFIG = getQSConfig('notifications', { ...initialQueryParams }, ['limit', 'offset']);
 
 const Notifications = () => {
   const [preflightError, setPreFlightError] = useState(null);
@@ -106,8 +109,17 @@ const Notifications = () => {
   const [firstRender, setFirstRender] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [meta, setMeta] = useState({});
-  const { queryParams, setId, setFromPagination, setSeverity } =
-    useQueryParams(initialQueryParams);
+
+  const history = useHistory();
+  const location = useLocation();
+  const { pathname } = useLocation();
+
+  // params from toolbar/searchbar
+  const query = location.search !== '' ? parseParams(QS_CONFIG, location.search) : QS_CONFIG.defaultParams
+  const { queryParams, setId, setFromPagination, setSeverity } = useQueryParams(query);
+
+  // params from url/querystring
+  const [urlstring, setUrlstring] = useState(encodeQueryString(queryParams))
 
   useEffect(() => {
     if (firstRender) {
@@ -128,7 +140,9 @@ const Notifications = () => {
     };
 
     update();
-  }, [queryParams]);
+    setUrlstring(encodeQueryString(queryParams))
+    history.push(`${pathname}?${urlstring}`)
+  }, [queryParams, urlstring]);
 
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'notifications', secondaryNav: true });
@@ -166,7 +180,7 @@ const Notifications = () => {
 
     initializeWithPreflight();
     return () => (ignore = true);
-  }, []);
+  }, [location]);
 
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;

@@ -29,7 +29,7 @@ import { notAuthorizedParams } from '../../../Utilities/constants';
 import ToolbarDeleteButton from '../../../Components/Toolbar/ToolbarDeleteButton';
 import useSelected from '../../../Utilities/useSelected';
 import useRequest, { useDeleteItems } from "../../../Utilities/useRequest";
-import {encodeQueryString, getQSConfig, parseQueryString} from '../../../Utilities/qs';
+import {encodeQueryString, getQSConfig, parseParams} from '../../../Utilities/qs';
 import ErrorDetail from '../../../Components/ErrorDetail';
 import AlertModal from '../../../Components/AlertModal';
 
@@ -54,7 +54,7 @@ const List = () => {
   const { pathname } = useLocation();
 
   // params from toolbar/searchbar
-  const query = location.search ? Object.fromEntries(new URLSearchParams(location.search)) : QS_CONFIG.defaultParams
+  const query = location.search ? parseParams(QS_CONFIG, location.search) : QS_CONFIG.defaultParams
   const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(query);
 
   // params from url/querystring
@@ -79,7 +79,7 @@ const List = () => {
       });
 
       const [response, optionsResponse] = await Promise.all([
-        readPlans({ params: parseQueryString(queryParams, urlstring) }),
+        readPlans({ params: queryParams }),
         readPlanOptions()
       ]);
       return {

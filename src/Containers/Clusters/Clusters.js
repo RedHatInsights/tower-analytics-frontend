@@ -1,6 +1,8 @@
 import React, {useState, useEffect, useCallback} from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
+import {encodeQueryString, getQSConfig, parseParams} from '../../Utilities/qs';
 
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
@@ -60,13 +62,20 @@ const initialModuleParams = {
   sort_by: 'host_task_count:desc',
   limit: 10,
 };
+const QS_CONFIG = getQSConfig('clusters', { ...clusters.defaultParams }, ['limit', 'offset']);
 
 const Clusters = () => {
   const [preflightError, setPreFlightError] = useState(null);
+  const history = useHistory();
+  const location = useLocation();
+  const { pathname } = useLocation();
 
-  const { queryParams, setFromToolbar } = useQueryParams({
-    ...clusters.defaultParams,
-  });
+  // params from toolbar/searchbar
+  const query = location.search !== '' ? parseParams(QS_CONFIG, location.search) : QS_CONFIG.defaultParams
+  const { queryParams, setFromToolbar } = useQueryParams(query);
+
+  // params from url/querystring
+  const [urlstring, setUrlstring] = useState(encodeQueryString(queryParams))
 
   const {
     result: {
@@ -95,7 +104,7 @@ const Clusters = () => {
         templates: templates.items,
         workflows: workflows.items
       };
-    }, []),
+    }, [location]),
     {
       chartData: [], modules: [], options: {}, templates: [], workflows: []
     }
@@ -108,10 +117,11 @@ const Clusters = () => {
   const { queryParams: optionsQueryParams } =
     useQueryParams(initialOptionsParams);
 
-    // Get and update the data
   useEffect(() => {
+    setUrlstring(encodeQueryString(queryParams))
+    history.push(`${pathname}?${urlstring}`)
     fetchEndpoints();
-  }, [queryParams, fetchEndpoints]);
+  }, [queryParams, urlstring]);
 
   const {
     cluster_id,
@@ -184,7 +194,7 @@ const Clusters = () => {
             </CardTitle>
             <CardBody>
               {isLoading && <LoadingState />}
-              {queryParams.cluster_id.length <= 0 && isSuccess && (
+              {queryParams.cluster_id?.length <= 0 && isSuccess && (
                 <BarChart
                   margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
                   id="d3-bar-chart-root"
@@ -192,7 +202,7 @@ const Clusters = () => {
                   queryParams={queryParams}
                 />
               )}
-              {queryParams.cluster_id.length > 0 && isSuccess && (
+              {queryParams.cluster_id?.length > 0 && isSuccess && (
                 <LineChart
                   margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
                   id="d3-line-chart-root"

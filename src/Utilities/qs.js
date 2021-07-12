@@ -1,3 +1,5 @@
+import {stringify} from "query-string";
+
 /**
  * Returns queryset config with defaults, if needed
  * @param {string} namespace for appending to url querystring
@@ -9,7 +11,21 @@ export function getQSConfig(
   namespace,
   defaultParams,
   integerFields = ['offset', 'limit'],
-  dateFields = ['modified', 'created']
+  dateFields = ['modified', 'created', 'start_date', 'end_date', 'finished'],
+  arrayFields = [
+    'automation_status',
+    'attributes',
+    'cluster_id',
+    'category',
+    'frequency_period',
+    'host_id',
+    'host_status',
+    'inventory_id',
+    'job_type',
+    'status',
+    'org_id',
+    'template_id',
+  ]
 ) {
   if (!namespace) {
     throw new Error('a QS namespace is required');
@@ -25,6 +41,7 @@ export function getQSConfig(
     defaultParams,
     integerFields,
     dateFields,
+    arrayFields
   };
 }
 
@@ -131,13 +148,57 @@ export const encodeQueryString = params => {
     .join('&');
 };
 
+// function encodeValue(key, value) {
+//   if (Array.isArray(value)) {
+//     return value
+//       .map(val => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`)
+//       .join('&');
+//   }
+//   return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+// }
+
 function encodeValue(key, value) {
-  if (Array.isArray(value)) {
-    return value
-      .map(val => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`)
-      .join('&');
+  if (value === '')
+    return false;
+  if (Array.isArray(value) || value === '[]') {
+    if (value === '[]' || value.length === 0) {
+      return `${encodeURIComponent(key)}=[]`
+    } else if (value.length === 1) {
+      return `${encodeURIComponent(key)}=[${encodeURIComponent(value)}]`
+    } else {
+      return value
+        .map(val => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`)
+        .join('&');
+    }
   }
   return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+}
+
+export function parseParams(config, params) {
+  const output = [];
+  const searchParams = new URLSearchParams(params);
+
+  // Set will return only unique keys()
+  new Set([...searchParams.keys()])
+    .forEach(key => {
+      if (config.dateFields && config.dateFields.some(v => v === key)) {
+        output[key] = new Date(searchParams.get(key))
+      } else if (config.arrayFields && config.arrayFields.some(v => v === key)) {
+        if (searchParams.get(key) === '[]') {
+          output[key] = []
+        } else {
+          output[key] = (searchParams.getAll(key).length > 1) ?
+            searchParams.getAll(key) : // get multiple values
+            new Array(searchParams.get(key).indexOf('[') >= 0 ? searchParams.get(key).slice(1, -1) : searchParams.get(key)) // get single value, but remove [] around the value
+        }
+        delete searchParams[key]
+      } else if (config.integerFields && config.integerFields.some(v => v === key)) {
+        output[key] = parseInt(searchParams.get(key))
+      } else {
+        output[key] = searchParams.get(key); // get single value
+      }
+    });
+  return output;
 }
 
 /**
