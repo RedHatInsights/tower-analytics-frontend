@@ -2,12 +2,11 @@ import React, {useCallback, useEffect, useState} from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-import {useHistory, useLocation} from 'react-router-dom';
+import {useLocation} from 'react-router-dom';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import {encodeQueryString, getQSConfig, parseParams} from '../../Utilities/qs';
 import useRedirect from '../../Utilities/useRedirect';
-import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
+import {formatDate as dateForJobExplorer, qsToObject, qsToString} from '../../Utilities/helpers';
 
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
@@ -27,7 +26,7 @@ import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { notAuthorizedParams } from '../../Utilities/constants';
+import {notAuthorizedParams} from '../../Utilities/constants';
 
 import {
   Card,
@@ -132,7 +131,6 @@ const chartMapper = [
     tooltip: HostsTooltip,
   },
 ];
-const QS_CONFIG = getQSConfig('notifications', { ...constants.defaultParams }, ['limit', 'offset']);
 
 const OrganizationStatistics = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
@@ -142,11 +140,11 @@ const OrganizationStatistics = ({ history }) => {
   const { pathname } = useLocation();
 
   // params from toolbar/searchbar
-  const query = location.search !== '' ? parseParams(QS_CONFIG, location.search) : QS_CONFIG.defaultParams
+  const query = location.search !== '' ? qsToObject(location.search) : constants.defaultParams
   const { queryParams, setFromToolbar } = useQueryParams(query);
 
   // params from url/querystring
-  const [urlstring, setUrlstring] = useState(encodeQueryString(queryParams))
+  const [urlstring, setUrlstring] = useState(queryParams)
 
   const {
     result: { preflight },
@@ -224,8 +222,9 @@ const OrganizationStatistics = ({ history }) => {
   useEffect(() => {
     setOrgs(activeTabKey);
 
-    setUrlstring(encodeQueryString(queryParams))
-    history.push(`${pathname}?${urlstring}`)
+    const search = qsToString(queryParams);
+    setUrlstring(search)
+    history.push(`${pathname}?${search}`)
   }, [queryParams, activeTabKey, urlstring]);
 
   useEffect(() => {
@@ -233,8 +232,9 @@ const OrganizationStatistics = ({ history }) => {
     setOptions()
     setJobs()
 
-    setUrlstring(encodeQueryString(queryParams))
-    history.push(`${pathname}?${urlstring}`)
+    const search = qsToString(queryParams);
+    setUrlstring(search)
+    history.push(`${pathname}?${search}`)
   }, [queryParams, urlstring]);
 
   const jobEventsByOrgParams = {

@@ -2,7 +2,6 @@ import React, {useState, useEffect, useCallback} from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import {encodeQueryString, getQSConfig, parseParams} from '../../Utilities/qs';
 
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
@@ -13,7 +12,7 @@ import {
   readEventExplorer,
 } from '../../Api/';
 
-import { jobExplorer } from '../../Utilities/constants';
+import {jobExplorer} from '../../Utilities/constants';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
@@ -40,6 +39,7 @@ import ApiErrorState from '../../Components/ApiErrorState';
 
 import { clusters } from '../../Utilities/constants';
 import useRequest from "../../Utilities/useRequest";
+import {qsToObject, qsToString} from "../../Utilities/helpers";
 
 const initialTopTemplateParams = {
   group_by: 'template',
@@ -62,7 +62,6 @@ const initialModuleParams = {
   sort_by: 'host_task_count:desc',
   limit: 10,
 };
-const QS_CONFIG = getQSConfig('clusters', { ...clusters.defaultParams }, ['limit', 'offset']);
 
 const Clusters = () => {
   const [preflightError, setPreFlightError] = useState(null);
@@ -71,11 +70,11 @@ const Clusters = () => {
   const { pathname } = useLocation();
 
   // params from toolbar/searchbar
-  const query = location.search !== '' ? parseParams(QS_CONFIG, location.search) : QS_CONFIG.defaultParams
+  const query = location.search !== '' ? qsToObject(location.search) : clusters.defaultParams
   const { queryParams, setFromToolbar } = useQueryParams(query);
 
   // params from url/querystring
-  const [urlstring, setUrlstring] = useState(encodeQueryString(queryParams))
+  const [urlstring, setUrlstring] = useState(queryParams)
 
   const {
     result: {
@@ -118,9 +117,10 @@ const Clusters = () => {
     useQueryParams(initialOptionsParams);
 
   useEffect(() => {
-    setUrlstring(encodeQueryString(queryParams))
-    history.push(`${pathname}?${urlstring}`)
-    fetchEndpoints();
+    const search = qsToString(queryParams);
+    setUrlstring(search)
+    history.push(`${pathname}?${search}`)
+    fetchEndpoints()
   }, [queryParams, urlstring]);
 
   const {
