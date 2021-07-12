@@ -134,7 +134,7 @@ const AutomationCalculator = ({ history }) => {
    * Used in top templates.
    */
   const setDataRunTime = (seconds, id) => {
-    const updatedData = api.data.map((el) => {
+    const updatedData = api.map((el) => {
       if (el.id === id) {
         el.avgRunTime = seconds;
         const updatedDelta = updateDeltaCost(
@@ -153,7 +153,7 @@ const AutomationCalculator = ({ history }) => {
 
   const setEnabled = (id) => (value) => {
     setDataInApi(
-      api.data.map((el) => (el.id === id ? { ...el, enabled: value } : el))
+      api.map((el) => (el.id === id ? { ...el, enabled: value } : el))
     );
   };
 
@@ -239,9 +239,9 @@ const AutomationCalculator = ({ history }) => {
           <StackItem style={{ overflow: 'auto', maxHeight: '48vh' }}>
             <TopTemplates
               redirectToJobExplorer={redirectToJobExplorer}
-              data={api.data}
+              data={api}
               setDataRunTime={setDataRunTime}
-              setUnfilteredData={api.data}
+              setUnfilteredData={api}
               setEnabled={setEnabled}
               sortBy={queryParams.sort_by}
             />
@@ -251,13 +251,13 @@ const AutomationCalculator = ({ history }) => {
     </Stack>
   );
 
-  if (preflight?.error?.status === 403) {
+  if (preflightError?.error?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 
   const renderContents = () => {
-    if (preflight.error) return <EmptyState preflightError={preflight.error} />;
-    else if (preflight.isSuccess)
+    if (preflightError) return <EmptyState preflightError={preflightError} />;
+    else if (api)
       return (
         <Grid hasGutter className="automation-wrapper">
           <GridItem span={9}>{renderLeft()}</GridItem>

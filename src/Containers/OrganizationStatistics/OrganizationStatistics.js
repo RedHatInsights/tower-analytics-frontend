@@ -286,9 +286,9 @@ const OrganizationStatistics = ({ history }) => {
   }
 
   const renderContent = () => {
-    if (preflight.error) return <EmptyState preflightError={preflight.error} />;
+    if (preflightError) return <EmptyState preflightError={preflightError} />;
 
-    if (preflight.isSuccess)
+    if (!preflightError)
       return (
         <Grid hasGutter>
           <GridItem span={12}>
@@ -334,7 +334,7 @@ const OrganizationStatistics = ({ history }) => {
                   <PieChart
                     margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                     id="d3-donut-1-chart-root"
-                    data={jobs?.data}
+                    data={jobs?.items}
                     colorFunc={colorFunc}
                   />
                 )}
@@ -355,7 +355,7 @@ const OrganizationStatistics = ({ history }) => {
                   <PieChart
                     margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                     id="d3-donut-2-chart-root"
-                    data={tasks.data}
+                    data={tasks.items}
                     colorFunc={colorFunc}
                   />
                 )}
@@ -373,7 +373,7 @@ const OrganizationStatistics = ({ history }) => {
       <PageHeader>
         <PageHeaderTitle title={'Organization Statistics'} />
         <FilterableToolbar
-          categories={options.data}
+          categories={options}
           filters={queryParams}
           setFilters={setFromToolbar}
         />
