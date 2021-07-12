@@ -10,7 +10,11 @@ import JobStatus from '../Components/JobStatus';
 import { Paths } from '../paths';
 import { stringify } from 'query-string';
 import useApi from '../Utilities/useApi';
-import { formatDateTime, formatJobType } from '../Utilities/helpers';
+import {
+  formatDateTime,
+  formatJobType,
+  formatTotalTime,
+} from '../Utilities/helpers';
 import { readJobExplorer } from '../Api';
 
 import { Button, Modal } from '@patternfly/react-core';
@@ -70,8 +74,6 @@ const formatSuccessRate = (successCount, totalCount) =>
   Math.ceil((successCount / totalCount) * 100) + '%';
 const formatAvgRun = (elapsed, totalCount) =>
   new Date(Math.ceil(elapsed / totalCount) * 1000).toISOString().substr(11, 8);
-const formatTotalTime = (elapsed) =>
-  new Date(elapsed * 1000).toISOString().substr(11, 8);
 
 const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
   const [
