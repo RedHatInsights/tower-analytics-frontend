@@ -13,7 +13,7 @@ import useApi from '../Utilities/useApi';
 import { formatDateTime, formatJobType } from '../Utilities/helpers';
 import { readJobExplorer } from '../Api/';
 
-import { Button, Modal } from '@patternfly/react-core';
+import { Button, Modal, ModalVariant } from '@patternfly/react-core';
 import {
   global_palette_blue_300,
   global_palette_green_200,
@@ -247,7 +247,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
   return (
     <Modal
       aria-label="modal"
-      width={'80%'}
+      variant={ModalVariant.medium}
       title={stats.name ? stats.name : 'No template name'}
       isOpen={isOpen}
       onClose={cleanup}

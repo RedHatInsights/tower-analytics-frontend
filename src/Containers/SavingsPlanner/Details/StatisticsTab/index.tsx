@@ -1,4 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
+import PropTypes from 'prop-types';
 import {
   Card,
   CardActions,
@@ -10,7 +11,7 @@ import {
   List,
   ListItem,
   ToggleGroup,
-  ToggleGroupItem
+  ToggleGroupItem,
 } from '@patternfly/react-core';
 import { SquareFullIcon } from '@patternfly/react-icons';
 
@@ -27,7 +28,7 @@ import ChartRenderer, {
 
 import RoutedTabs from '../../../../Components/RoutedTabs';
 
-import TotalSavings from "./TotalSavings";
+import TotalSavings from './TotalSavings';
 import FormulaDescription from './FormulaDescription';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
 import hoursFormatter from '../../../../Utilities/hoursFormatter';
@@ -37,46 +38,49 @@ type DataYearsSeries = Record<string, number>;
 // This should model the return type somewhere next to the Api.js where the call is made.
 // This is just a basic mockup of the exact data for TS to work.
 interface Data {
-  name: string,
+  name: string;
   projections: {
     time_stats: {
-      cumulative_time_net_benefits: DataYearsSeries,
-      total_hours_saved: DataYearsSeries,
-      total_hours_spent_risk_adjusted: DataYearsSeries
-    },
+      cumulative_time_net_benefits: DataYearsSeries;
+      total_hours_saved: DataYearsSeries;
+      total_hours_spent_risk_adjusted: DataYearsSeries;
+    };
     monetary_stats: {
-      cumulative_net_benefits: DataYearsSeries,
-      total_benefits: DataYearsSeries,
-      total_costs: DataYearsSeries
-    }
-  },
-};
+      cumulative_net_benefits: DataYearsSeries;
+      total_benefits: DataYearsSeries;
+      total_costs: DataYearsSeries;
+    };
+  };
+}
 
 interface Props {
   tabsArray: {
-    id: number,
-    link: string,
-    name: React.ReactNode
-  }[],
-  data: Data
-};
+    id: number;
+    link: string;
+    name: React.ReactNode;
+  }[];
+  data: Data;
+}
 
 const yearLabels: Record<string, string> = {
   initial: 'Initial',
   year1: 'Year 1',
   year2: 'Year 2',
   year3: 'Year 3',
-}
+};
 
 const getChartData = (data: Data): NonGroupedApi => {
-  const statsData = Object.keys(yearLabels).map(year => ({
+  const statsData = Object.keys(yearLabels).map((year) => ({
     year: yearLabels[year],
     total_costs: +data.projections.monetary_stats.total_costs[year] * -1,
     total_benefits: +data.projections.monetary_stats.total_benefits[year],
-    cumulative_net_benefits: +data.projections.monetary_stats.cumulative_net_benefits[year],
-    total_hours_spent_risk_adjusted: +data.projections.time_stats.total_hours_spent_risk_adjusted[year] * -1,
+    cumulative_net_benefits:
+      +data.projections.monetary_stats.cumulative_net_benefits[year],
+    total_hours_spent_risk_adjusted:
+      +data.projections.time_stats.total_hours_spent_risk_adjusted[year] * -1,
     total_hours_saved: +data.projections.time_stats.total_hours_saved[year],
-    cumulative_time_net_benefits: +data.projections.time_stats.cumulative_time_net_benefits[year]
+    cumulative_time_net_benefits:
+      +data.projections.time_stats.cumulative_time_net_benefits[year],
   }));
 
   return { items: statsData, type: ApiType.nonGrouped, response_type: '' };
@@ -93,19 +97,20 @@ const constants = (isMoney: boolean) => ({
   },
   net: {
     key: isMoney ? 'cumulative_net_benefits' : 'cumulative_time_net_benefits',
-    color: '#EE7A00'
-  }
-})
+    color: '#EE7A00',
+  },
+});
 
 const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
   const [isMoney, setIsMoney] = useState(true);
 
-  const customTooltipFormatting = (datum: Record<string, string>) => isMoney ? currencyFormatter(+datum.y) : hoursFormatter(+datum.y)
+  const customTooltipFormatting = (datum: Record<string, string>) =>
+    isMoney ? currencyFormatter(+datum.y) : hoursFormatter(+datum.y);
 
   const computeTotalSavings = (d: Data): number =>
     isMoney
       ? d.projections.monetary_stats.cumulative_net_benefits.year3
-      : d.projections.time_stats.cumulative_time_net_benefits.year3
+      : d.projections.time_stats.cumulative_time_net_benefits.year3;
 
   const barChartData: ChartSchema = {
     charts: [
@@ -117,13 +122,13 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
         props: {
           height: 600,
           domainPadding: {
-            x: 100
+            x: 100,
           },
           padding: {
             bottom: 60,
-            left: 80
+            left: 80,
           },
-          themeColor: ChartThemeColor.gray
+          themeColor: ChartThemeColor.gray,
         },
         tooltip: {
           cursor: true,
@@ -136,26 +141,26 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
                 name: 'Savings',
                 symbol: {
                   fill: constants(isMoney).benefit.color,
-                }
+                },
               },
               {
                 childName: constants(isMoney).cost.key,
                 name: 'Costs',
                 symbol: {
                   fill: constants(isMoney).cost.color,
-                }
+                },
               },
               {
                 childName: constants(isMoney).net.key,
                 name: 'Cumulative savings',
                 symbol: {
                   fill: constants(isMoney).net.color,
-                }
-              }
+                },
+              },
             ],
-            titleProperyForLegend: 'year'
+            titleProperyForLegend: 'year',
           },
-          customFnc: customTooltipFormatting
+          customFnc: customTooltipFormatting,
         },
         xAxis: {
           label: 'Time',
@@ -164,8 +169,8 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
           label: isMoney ? 'Money Saved' : 'Hours Saved',
           tickFormat: 'formatNumberAsK',
           style: {
-            grid: {stroke: '#D2D2D2'},
-            axisLabel: { padding: 60 }
+            grid: { stroke: '#D2D2D2' },
+            axisLabel: { padding: 60 },
           },
         },
       },
@@ -231,7 +236,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
           style: {
             data: {
               stroke: constants(isMoney).net.color,
-              strokeWidth: 5
+              strokeWidth: 5,
             },
           },
         },
@@ -242,7 +247,10 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
     ],
     functions: {
       ...functions,
-      fetchFnc: () => new Promise((resolve) => { resolve(getChartData(data)); }),
+      fetchFnc: () =>
+        new Promise((resolve) => {
+          resolve(getChartData(data));
+        }),
     },
   };
 
@@ -251,59 +259,81 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
       <CardHeader>
         <CardActions>
           <ToggleGroup aria-label="toggleButton">
-            <ToggleGroupItem text='Money' buttonId='money' isSelected={isMoney} onChange={() => setIsMoney(true)} />
-            <ToggleGroupItem text='Time' buttonId='time' isSelected={!isMoney} onChange={() => setIsMoney(false)} />
+            <ToggleGroupItem
+              text="Money"
+              buttonId="money"
+              isSelected={isMoney}
+              onChange={() => setIsMoney(true)}
+            />
+            <ToggleGroupItem
+              text="Time"
+              buttonId="time"
+              isSelected={!isMoney}
+              onChange={() => setIsMoney(false)}
+            />
           </ToggleGroup>
         </CardActions>
-        <CardTitle>
-          {data.name}
-        </CardTitle>
+        <CardTitle>{data.name}</CardTitle>
       </CardHeader>
       <CardBody>
-        <ChartRenderer schema={barChartData.charts} functions={barChartData.functions} />
+        <ChartRenderer
+          schema={barChartData.charts}
+          functions={barChartData.functions}
+        />
       </CardBody>
     </Card>
   );
 
   const renderRight = () => (
     <>
-      <TotalSavings
-        value={computeTotalSavings(data)}
-        isMoney={isMoney}
-      />
+      <TotalSavings value={computeTotalSavings(data)} isMoney={isMoney} />
       <Card isPlain>
         <CardBody>
-            <List isPlain>
-            <ListItem icon={<SquareFullIcon color={constants(isMoney).benefit.color} />}>
-                Savings from automating this plan
-              </ListItem>
-            <ListItem icon={<SquareFullIcon color={constants(isMoney).cost.color} />}>
-                Costs from creating, maintaining and running the automation
-              </ListItem>
-            <ListItem icon={<SquareFullIcon color={constants(isMoney).net.color} />}>
-                Cumulative savings over time
-              </ListItem>
-            </List>
+          <List isPlain>
+            <ListItem
+              icon={<SquareFullIcon color={constants(isMoney).benefit.color} />}
+            >
+              Savings from automating this plan
+            </ListItem>
+            <ListItem
+              icon={<SquareFullIcon color={constants(isMoney).cost.color} />}
+            >
+              Costs from creating, maintaining and running the automation
+            </ListItem>
+            <ListItem
+              icon={<SquareFullIcon color={constants(isMoney).net.color} />}
+            >
+              Cumulative savings over time
+            </ListItem>
+          </List>
         </CardBody>
       </Card>
-      <FormulaDescription isMoney={isMoney} />
+      <FormulaDescription />
     </>
   );
-
 
   return (
     <Card>
       <RoutedTabs tabsArray={tabsArray} />
       <Grid>
-        <GridItem span={9}>
-          {renderLeft()}
-        </GridItem>
-        <GridItem span={3}>
-          {renderRight()}
-        </GridItem>
+        <GridItem span={9}>{renderLeft()}</GridItem>
+        <GridItem span={3}>{renderRight()}</GridItem>
       </Grid>
     </Card>
   );
+};
+
+StatisticsTab.propTypes = {
+  /* eslint-disable-next-line */
+  /* @ts-ignore: Validation error */
+  data: PropTypes.object.isRequired,
+  tabsArray: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.number.isRequired,
+      link: PropTypes.string.isRequired,
+      name: PropTypes.node.isRequired,
+    }).isRequired
+  ).isRequired,
 };
 
 export default StatisticsTab;

@@ -13,16 +13,21 @@ const perPageOptions = [
 type SetPagination = (offset: number, limit?: number) => void;
 
 interface Props {
-  count?: number,
+  count?: number;
   params: {
-    offset: number,
-    limit: number,
-  },
-  setPagination: SetPagination,
-  [x: string]: any
-};
+    offset: number;
+    limit: number;
+  };
+  setPagination: SetPagination;
+  [x: string]: unknown;
+}
 
-const Pagination: FunctionComponent<Props> = ({ count = 0, params, setPagination, ...props }) => {
+const Pagination: FunctionComponent<Props> = ({
+  count = 0,
+  params,
+  setPagination,
+  ...props
+}) => {
   const { offset, limit } = params;
   const currentPage = Math.floor(offset / limit + 1);
   const returnOffsetVal = (page: number) => (page - 1) * limit;
@@ -34,10 +39,10 @@ const Pagination: FunctionComponent<Props> = ({ count = 0, params, setPagination
       perPageOptions={perPageOptions}
       perPage={limit}
       page={currentPage}
-      onPerPageSelect={(_event: any, perPage: number, page: number) => {
+      onPerPageSelect={(_event: unknown, perPage: number, page: number) => {
         setPagination(returnOffsetVal(page), perPage);
       }}
-      onSetPage={(_event: any, page: number) => {
+      onSetPage={(_event: unknown, page: number) => {
         setPagination(returnOffsetVal(page));
       }}
       {...props}

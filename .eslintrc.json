@@ -1,0 +1,34 @@
+{
+  "extends": [
+    "@redhat-cloud-services/eslint-config-redhat-cloud-services"
+  ],
+  "globals": {
+    "insights": true,
+    "shallow": true,
+    "render": true,
+    "mount": true,
+    "React": true
+  },
+  "overrides": [
+    {
+      "files": [
+        "*.ts",
+        "*.tsx"
+      ],
+      "extends": [
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking",
+        "prettier"
+      ],
+      "parser": "@typescript-eslint/parser",
+      "parserOptions": {
+        "project": [
+          "tsconfig.json"
+        ]
+      },
+      "plugins": [
+        "@typescript-eslint"
+      ]
+    }
+  ]
+}
