@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   ChartSchemaElement,
   ChartKind,
@@ -9,6 +10,8 @@ import {
   ChartThemeColor,
   ApiReturnType
 } from 'react-json-chart-builder';
+
+import { ChartLabel } from '@patternfly/react-charts';
 
 import { attrPairs } from './Report';
 
@@ -40,9 +43,10 @@ const schema = (params: Params): ChartSchemaElement[] => ([
       tickFormat: 'formatDateAsDayMonth'
     },
     yAxis: {
-      label: attrPairs.find(({ key }) => key === params.sort_options)?.name || 'Y axis',
       tickFormat: 'formatNumberAsK',
       showGrid: true,
+      axisLabelComponent: <ChartLabel dy={-15} />,
+      label: attrPairs.find(({ key }) => key === params.sort_options)?.name || 'Y axis',
     },
     api: {
       url: '',
