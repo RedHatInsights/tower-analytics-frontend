@@ -9,7 +9,7 @@ import {
   readClustersOptions,
   readJobExplorer,
   readEventExplorer,
-} from '../../Api';
+} from '../../Api/';
 
 import { jobExplorer } from '../../Utilities/constants';
 import useApi from '../../Utilities/useApi';

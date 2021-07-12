@@ -14,7 +14,7 @@ import {
   preflightRequest,
   readPlanOptions,
   readPlans,
-} from '../../../Api';
+} from '../../../Api/';
 import FilterableToolbar from '../../../Components/Toolbar';
 import ApiErrorState from '../../../Components/ApiErrorState';
 import LoadingState from '../../../Components/LoadingState';
@@ -98,9 +98,7 @@ const List = () => {
     clearDeletionError,
   } = useDeleteItems(
     useCallback(async () => {
-      return Promise.all(
-        selected.map((plan) => deletePlan({ params: { id: plan.id } }))
-      );
+      return Promise.all(selected.map((plan) => deletePlan({ id: plan.id })));
     }, [selected]),
     {
       qsConfig: queryParams,

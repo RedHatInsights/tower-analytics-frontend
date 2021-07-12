@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import useApi from '../../../Utilities/useApi';
 
-import { readPlanOptions } from '../../../Api';
+import { readPlanOptions } from '../../../Api/';
 import { Paths } from '../../../paths';
 
 import Form from '../Shared/Form';

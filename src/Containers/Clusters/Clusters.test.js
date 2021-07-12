@@ -4,7 +4,7 @@ import { renderPage } from '../../Utilities/tests/helpers.reactTestingLib';
 import Clusters from './Clusters';
 
 import mockResponses from '../../Utilities/__fixtures__/';
-import * as api from '../../Api';
+import * as api from '../../Api/';
 jest.mock('../../Api');
 
 describe('<Clusters />', () => {
