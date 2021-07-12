@@ -1,6 +1,5 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import PropTypes from 'prop-types';
-import { parse, stringify } from 'query-string';
 import { useHistory, useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -27,7 +26,7 @@ import NoResults from '../../../../../../Components/NoResults';
 import ApiErrorState from '../../../../../../Components/ApiErrorState';
 import Pagination from '../../../../../../Components/Pagination';
 
-import { notAuthorizedParams } from '../../../../../../Utilities/constants';
+import {notAuthorizedParams} from '../../../../../../Utilities/constants';
 import { useQueryParams } from '../../../../../../Utilities/useQueryParams';
 import { getQSConfig } from '../../../../../../Utilities/qs';
 
@@ -41,6 +40,7 @@ import FilterableToolbar from '../../../../../../Components/Toolbar/';
 
 import { actions } from '../../../constants';
 import useRequest from "../../../../../../Utilities/useRequest";
+import {qsToObject, qsToString} from "../../../../../../Utilities/helpers";
 
 const ListFooter = styled.div`
   display: flex;
@@ -60,7 +60,7 @@ const initialQueryParams = {
 const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, ['limit', 'offset']);
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
-  const { pathname, hash, search } = useLocation();
+  const { pathname } = useLocation();
   const history = useHistory();
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(qsConfig);

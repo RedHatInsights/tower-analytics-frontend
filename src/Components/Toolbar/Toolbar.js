@@ -16,6 +16,7 @@ import {
   SortByGroup,
   SettingsPanel,
 } from './Groups/';
+import {useLocation, useHistory} from "react-router-dom";
 
 const FilterableToolbar = ({
   categories,
@@ -29,6 +30,8 @@ const FilterableToolbar = ({
 }) => {
   const [settingsExpanded, setSettingsExpanded] = useState(false);
   const { quick_date_range, sort_options, ...restCategories } = categories;
+  const { pathname } = useLocation();
+  const history = useHistory()
 
   // Filter out elements which are not in the option object.
   const filterCategories = Object.keys(restCategories)
@@ -43,6 +46,10 @@ const FilterableToolbar = ({
       <Toolbar
         id="filterable-toolbar-with-chip-groups"
         clearAllFilters={() => {
+          history.replace({
+            pathname: pathname,
+            search: ''
+          });
           setFilters(null, null);
         }}
         collapseListedFiltersBreakpoint="xl"

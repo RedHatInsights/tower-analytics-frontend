@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import {encodeQueryString, getQSConfig, parseParams} from '../../Utilities/qs';
 
 import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
@@ -30,6 +29,7 @@ import {
 
 import NotificationsList from '../../Components/NotificationsList';
 import Pagination from '../../Components/Pagination';
+import { qsToObject, qsToString } from "../../Utilities/helpers";
 
 const CardTitle = styled(PFCardTitle)`
   display: flex;
@@ -99,7 +99,6 @@ const initialQueryParams = {
   limit: 5,
   offset: 0,
 };
-const QS_CONFIG = getQSConfig('notifications', { ...initialQueryParams }, ['limit', 'offset']);
 
 const Notifications = () => {
   const [preflightError, setPreFlightError] = useState(null);
@@ -115,11 +114,11 @@ const Notifications = () => {
   const { pathname } = useLocation();
 
   // params from toolbar/searchbar
-  const query = location.search !== '' ? parseParams(QS_CONFIG, location.search) : QS_CONFIG.defaultParams
+  const query = location.search !== '' ? qsToObject(location.search) : initialQueryParams
   const { queryParams, setId, setFromPagination, setSeverity } = useQueryParams(query);
 
   // params from url/querystring
-  const [urlstring, setUrlstring] = useState(encodeQueryString(queryParams))
+  const [urlstring, setUrlstring] = useState(queryParams)
 
   useEffect(() => {
     if (firstRender) {
@@ -140,8 +139,9 @@ const Notifications = () => {
     };
 
     update();
-    setUrlstring(encodeQueryString(queryParams))
-    history.push(`${pathname}?${urlstring}`)
+    const search = qsToString(queryParams);
+    setUrlstring(search)
+    history.push(`${pathname}?${search}`)
   }, [queryParams, urlstring]);
 
   useEffect(() => {

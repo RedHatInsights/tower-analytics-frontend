@@ -29,11 +29,10 @@ import { notAuthorizedParams } from '../../../Utilities/constants';
 import ToolbarDeleteButton from '../../../Components/Toolbar/ToolbarDeleteButton';
 import useSelected from '../../../Utilities/useSelected';
 import useRequest, { useDeleteItems } from "../../../Utilities/useRequest";
-import {encodeQueryString, getQSConfig, parseParams} from '../../../Utilities/qs';
 import ErrorDetail from '../../../Components/ErrorDetail';
 import AlertModal from '../../../Components/AlertModal';
+import {qsToObject, qsToString} from "../../../Utilities/helpers";
 
-const QS_CONFIG = getQSConfig('savings-planner', { ...savingsPlanner.defaultParams }, ['limit', 'offset']);
 const PageContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -54,11 +53,11 @@ const List = () => {
   const { pathname } = useLocation();
 
   // params from toolbar/searchbar
-  const query = location.search ? parseParams(QS_CONFIG, location.search) : QS_CONFIG.defaultParams
+  const query = location.search ? qsToObject(location.search) : savingsPlanner.defaultParams
   const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(query);
 
   // params from url/querystring
-  const [urlstring, setUrlstring] = useState(encodeQueryString(queryParams))
+  const [urlstring, setUrlstring] = useState(queryParams)
 
   const [preflightError, setPreFlightError] = useState(null);
 
@@ -108,13 +107,10 @@ const List = () => {
   };
 
   useEffect(() => {
-    fetchEndpoints();
-  }, [fetchEndpoints]);
-
-  useEffect(() => {
-    setUrlstring(encodeQueryString(queryParams))
-    history.push(`${pathname}?${urlstring}`)
-    //fetchEndpoints();
+    const search = qsToString(queryParams);
+    setUrlstring(search)
+    history.push(`${pathname}?${search}`)
+    fetchEndpoints()
   }, [queryParams, urlstring]);
 
   const isSuccess = !isLoading && !error && data?.length > 0

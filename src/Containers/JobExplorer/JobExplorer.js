@@ -1,10 +1,8 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import PropTypes from 'prop-types';
 import { parse, stringify } from 'query-string';
-import {useHistory, useLocation} from 'react-router-dom';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import {encodeQueryString, getQSConfig, parseParams} from '../../Utilities/qs';
 import useRequest from "../../Utilities/useRequest";
 import { Paths } from '../../paths';
 
@@ -39,19 +37,10 @@ const initialQueryParams = {
   attributes: jobExplorer.attributes,
 };
 
-const QS_CONFIG = getQSConfig('job-explorer', { ...initialQueryParams.defaultParams }, ['limit', 'offset']);
-
 const JobExplorer = ({ location: { search }, history }) => {
   const [preflightError, setPreFlightError] = useState(null);
-  const location = useLocation();
-  const { pathname } = useLocation();
-console.log('QS_CONFIG', QS_CONFIG)
-  // params from toolbar/searchbar
-  const query = location.search !== '' ? parseParams(QS_CONFIG, location.search) : initialQueryParams
-  const { queryParams, setFromPagination, setFromToolbar, dispatch } = useQueryParams(query);
-
-  // params from url/querystring
-  const [urlstring, setUrlstring] = useState(encodeQueryString(queryParams))
+  const { queryParams, setFromPagination, setFromToolbar, dispatch } =
+    useQueryParams(initialQueryParams);
 
   const {
     result: {
@@ -91,14 +80,14 @@ console.log('QS_CONFIG', QS_CONFIG)
     setOptions(optionsResponse);
   }, [dataResponse, optionsResponse]);
 
-  // const updateURL = () => {
-  //   const { jobExplorer } = Paths;
-  //   const search = stringify(queryParams, { arrayFormat: 'bracket' });
-  //   history.replace({
-  //     pathname: jobExplorer,
-  //     search,
-  //   });
-  // };
+  const updateURL = () => {
+    const { jobExplorer } = Paths;
+    const search = stringify(queryParams, { arrayFormat: 'bracket' });
+    history.replace({
+      pathname: jobExplorer,
+      search,
+    });
+  };
 
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
@@ -122,18 +111,11 @@ console.log('QS_CONFIG', QS_CONFIG)
     });
   }, []);
 
-  // useEffect(() => {
-  //   fetchEndpoints();
-  //   updateURL();
-  // }, [queryParams, fetchEndpoints]);
-
   useEffect(() => {
-    setUrlstring(encodeQueryString(queryParams))
-    //updateURL();
-    history.push(`${pathname}?${urlstring}`)
     fetchEndpoints();
-  }, [queryParams]);
-console.log('queryParams', queryParams)
+    updateURL();
+  }, [queryParams, fetchEndpoints]);
+
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
@@ -162,8 +144,8 @@ console.log('queryParams', queryParams)
                   <Pagination
                     count={meta?.count}
                     params={{
-                      limit: parseInt(queryParams.limit),
-                      offset: parseInt(queryParams.offest),
+                      limit: queryParams.limit,
+                      offset: queryParams.offset,
                     }}
                     setPagination={setFromPagination}
                     isCompact
@@ -178,8 +160,8 @@ console.log('queryParams', queryParams)
               <Pagination
                 count={meta?.count}
                 params={{
-                  limit: parseInt(queryParams.limit),
-                  offset: parseInt(queryParams.offset),
+                  limit: queryParams.limit,
+                  offset: queryParams.offset,
                 }}
                 setPagination={setFromPagination}
                 variant={PaginationVariant.bottom}

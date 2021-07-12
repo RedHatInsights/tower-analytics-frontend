@@ -1,4 +1,5 @@
 import moment from 'moment';
+import {parse, stringify} from "query-string";
 
 /*
  * isNumeric - return true if input is a real number
@@ -136,4 +137,22 @@ export function formatJobDetailsURL(baseURL, jobId) {
   const subDirectory1 = 'job';
   const subDirectory2 = 'details';
   return `${baseURL}/#/${subDirectory1}/${jobId}/${subDirectory2}/`;
+}
+
+export const qsToObject = (qs) => {
+  return parse(qs, {
+    arrayFormat: 'bracket',
+    skipEmptyString: false,
+    skipNull: false,
+    parseBooleans: true,
+    parseNumbers: true,
+  })
+}
+
+export const qsToString = (qs) => {
+  return stringify(qs, {
+    arrayFormat: 'bracket',
+    skipNull: false,
+    skipEmptyString: false
+  })
 }

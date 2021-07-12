@@ -30,10 +30,9 @@ import { preflightRequest, readROI, readROIOptions } from '../../Api/';
 
 // Imports from utilities
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import {encodeQueryString, getQSConfig, parseParams} from '../../Utilities/qs';
 import { roi as roiConst } from '../../Utilities/constants';
 import useRedirect from '../../Utilities/useRedirect';
-import { calculateDelta, convertSecondsToHours } from '../../Utilities/helpers';
+import {calculateDelta, convertSecondsToHours, qsToObject, qsToString} from '../../Utilities/helpers';
 
 // Chart
 import TopTemplatesSavings from '../../Charts/ROITopTemplates';
@@ -75,8 +74,6 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
 const computeTotalSavings = (data) =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
-const QS_CONFIG = getQSConfig('roiConst', { ...roiConst.defaultParams }, ['limit', 'offset']);
-
 const AutomationCalculator = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
   const [costManual, setCostManual] = useState('50');
@@ -84,11 +81,12 @@ const AutomationCalculator = ({ history }) => {
   const location = useLocation();
   const { pathname } = useLocation();
 
-  const query = location.search !== '' ? parseParams(QS_CONFIG, location.search) : QS_CONFIG.defaultParams
+  // params from toolbar/searchbar
+  const query = location.search ? qsToObject(location.search) : roiConst.defaultParams
   const { queryParams, setFromToolbar } = useQueryParams(query);
 
   // params from url/querystring
-  const [urlstring, setUrlstring] = useState(encodeQueryString(queryParams))
+  const [urlstring, setUrlstring] = useState(queryParams)
 
   const {
     result: { preflight },
@@ -174,14 +172,10 @@ const AutomationCalculator = ({ history }) => {
   /**
    * Get data from API depending on the queryParam.
    */
-  // useEffect(() => {
-  //   setDataInApi();
-  // }, [queryParams]);
-
   useEffect(() => {
-
-    setUrlstring(encodeQueryString(queryParams))
-    history.push(`${pathname}?${urlstring}`)
+    const search = qsToString(queryParams);
+    setUrlstring(search)
+    history.push(`${pathname}?${search}`)
     setDataInApi();
   }, [queryParams, urlstring]);
 
