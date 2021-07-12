@@ -24,7 +24,7 @@ import ApiErrorState from '../../Components/ApiErrorState';
 import FilterableToolbar from '../../Components/Toolbar/';
 
 // Imports from API
-import { preflightRequest, readROI, readROIOptions } from '../../Api';
+import { preflightRequest, readROI, readROIOptions } from '../../Api/';
 
 // Imports from utilities
 import { useQueryParams } from '../../Utilities/useQueryParams';

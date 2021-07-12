@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoData from '../../Components/NoData';
-import { preflightRequest, readClusters, readNotifications } from '../../Api';
+import { preflightRequest, readClusters, readNotifications } from '../../Api/';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';

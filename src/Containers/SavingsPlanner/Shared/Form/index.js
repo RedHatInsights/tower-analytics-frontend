@@ -15,7 +15,7 @@ import { Paths } from '../../../../paths';
 import useApi from '../../../../Utilities/useApi';
 import usePlanData from '../usePlanData';
 
-import { createPlan, updatePlan } from '../../../../Api';
+import { createPlan, updatePlan } from '../../../../Api/';
 
 import AlertModal from '../../../../Components/AlertModal/AlertModal';
 import ErrorDetail from '../../../../Components/ErrorDetail/ErrorDetail';

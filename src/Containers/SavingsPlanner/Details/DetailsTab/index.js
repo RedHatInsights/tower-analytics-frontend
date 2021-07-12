@@ -26,7 +26,7 @@ import {
   relatedResourceDeleteRequests,
   getRelatedResourceDeleteCounts,
 } from '../../../../Utilities/getRelatedResourceDeleteDetails';
-import { deletePlan, readPlan } from '../../../../Api';
+import { deletePlan, readPlan } from '../../../../Api/';
 import useRequest, {
   useDismissableError,
 } from '../../../../Utilities/useRequest';
@@ -132,7 +132,7 @@ const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
 
   const { request: deletePlans, error: deleteError } = useRequest(
     useCallback(async () => {
-      await deletePlan({ params: { id: id } });
+      await deletePlan({ id });
       history.push(`/savings-planner`);
     }, [id, history])
   );

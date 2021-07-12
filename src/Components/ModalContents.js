@@ -11,7 +11,7 @@ import { Paths } from '../paths';
 import { stringify } from 'query-string';
 import useApi from '../Utilities/useApi';
 import { formatDateTime, formatJobType } from '../Utilities/helpers';
-import { readJobExplorer } from '../Api';
+import { readJobExplorer } from '../Api/';
 
 import { Button, Modal } from '@patternfly/react-core';
 import {

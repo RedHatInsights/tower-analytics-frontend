@@ -2,7 +2,7 @@ import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
-import { readPlan } from '../../Api';
+import { readPlan } from '../../Api/';
 import ToolbarDeleteButton from './ToolbarDeleteButton';
 jest.mock('../../Api');
 

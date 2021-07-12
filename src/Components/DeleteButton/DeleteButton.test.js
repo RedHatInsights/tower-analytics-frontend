@@ -1,10 +1,10 @@
-import { readPlan } from '../../Api';
+import { readPlan } from '../../Api/';
 import { act } from 'react-dom/test-utils';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import DeleteButton from './DeleteButton';
 
 import mockResponses from '../../Utilities/__fixtures__/';
-import * as api from '../../Api';
+import * as api from '../../Api/';
 jest.mock('../../Api');
 
 describe('<DeleteButton />', () => {

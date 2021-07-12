@@ -19,7 +19,7 @@ import { NotAuthorized } from '@redhat-cloud-services/frontend-components/NotAut
 
 import Breadcrumbs from '../../../Components/Breadcrumbs';
 
-import { preflightRequest, readPlan, readPlanOptions } from '../../../Api';
+import { preflightRequest, readPlan, readPlanOptions } from '../../../Api/';
 
 import useApi from '../../../Utilities/useApi';
 
