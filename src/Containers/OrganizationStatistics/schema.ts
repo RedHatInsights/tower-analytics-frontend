@@ -34,8 +34,6 @@ const schema = (params: Params): ChartSchemaElement[] => ([
         top: 0,
         right: 100
       },
-      // Remove when calculation in the chart builder is good.
-      domainPadding: 20 * 5 / 2,
       themeColor: ChartThemeColor.multiOrdered
     },
     xAxis: {
@@ -66,10 +64,6 @@ const schema = (params: Params): ChartSchemaElement[] => ([
     id: 3100,
     kind: ChartKind.group,
     parent: 3000,
-    props: {
-      // Remove when calculation in the chart builder is good.
-      offset: 20,
-    },
     template: {
       id: 0,
       kind: ChartKind.simple,
@@ -78,8 +72,6 @@ const schema = (params: Params): ChartSchemaElement[] => ([
       props: {
         x: 'created_date',
         y: params.sort_options,
-        // Remove when calculation in the chart builder is good.
-        barWidth: 20,
       },
       tooltip: {
         standalone: true
