@@ -5,7 +5,7 @@ import './App.scss';
 import packageJson from '../package.json';
 
 const App = () => {
-  const history = useHistory;
+  const history = useHistory();
   useEffect(() => {
     insights.chrome.init();
     insights.chrome.identifyApp('automation-analytics');
