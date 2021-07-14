@@ -11,6 +11,9 @@ const perPageOptions = [
 ];
 
 type SetPagination = (offset: number, limit?: number) => void;
+type ApiParams = Record<string, string|boolean|number|string[]|number[]>;
+type HandleSearch = (offset: number, limit: number, qsConfig?: ApiParams, history?: ApiParams) => void;
+
 
 interface Props {
   count?: number;
@@ -19,11 +22,17 @@ interface Props {
     limit: number;
   };
   setPagination: SetPagination;
+  qsConfig: ApiParams;
+  history: ApiParams;
+  handleSearch: HandleSearch;
   [x: string]: unknown;
 }
 
 const Pagination: FunctionComponent<Props> = ({
   count = 0,
+  handleSearch,
+  history,
+  qsConfig,
   params,
   setPagination,
   ...props
@@ -41,9 +50,11 @@ const Pagination: FunctionComponent<Props> = ({
       page={currentPage}
       onPerPageSelect={(_event: unknown, perPage: number, page: number) => {
         setPagination(returnOffsetVal(page), perPage);
+        handleSearch(returnOffsetVal(page), perPage, qsConfig, history);
       }}
       onSetPage={(_event: unknown, page: number) => {
         setPagination(returnOffsetVal(page));
+        handleSearch(returnOffsetVal(page), page, qsConfig, history);
       }}
       {...props}
     />
@@ -52,6 +63,9 @@ const Pagination: FunctionComponent<Props> = ({
 
 Pagination.propTypes = {
   count: PropTypes.number,
+  handleSearch: PropTypes.func.isRequired,
+  history: PropTypes.any,
+  qsConfig: PropTypes.any,
   params: PropTypes.exact({
     offset: PropTypes.number.isRequired,
     limit: PropTypes.number.isRequired,

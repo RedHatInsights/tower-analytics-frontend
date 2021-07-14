@@ -26,7 +26,7 @@ import NoResults from '../../../../../../Components/NoResults';
 import ApiErrorState from '../../../../../../Components/ApiErrorState';
 import Pagination from '../../../../../../Components/Pagination';
 
-import {notAuthorizedParams} from '../../../../../../Utilities/constants';
+import { notAuthorizedParams } from '../../../../../../Utilities/constants';
 import { useQueryParams } from '../../../../../../Utilities/useQueryParams';
 import { getQSConfig } from '../../../../../../Utilities/qs';
 
@@ -40,7 +40,8 @@ import FilterableToolbar from '../../../../../../Components/Toolbar/';
 
 import { actions } from '../../../constants';
 import useRequest from "../../../../../../Utilities/useRequest";
-import {qsToObject, qsToString} from "../../../../../../Utilities/helpers";
+import { handleSearch } from "../../../../../../Utilities/helpers";
+import { getQSConfig } from "../../../../../../Utilities/qs";
 
 const ListFooter = styled.div`
   display: flex;
@@ -60,7 +61,6 @@ const initialQueryParams = {
 const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, ['limit', 'offset']);
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
-  const { pathname } = useLocation();
   const history = useHistory();
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(qsConfig);
@@ -166,6 +166,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
               hideSortOptions
               categories={options}
               filters={queryParams}
+              qsConfig={qsConfig}
               setFilters={setFromToolbar}
               pagination={
                 <Pagination
@@ -174,15 +175,18 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
                     limit: queryParams.limit,
                     offset: queryParams.offset,
                   }}
+                  handleSearch={handleSearch}
+                  qsConfig={qsConfig}
+                  history={history}
                   setPagination={setFromPagination}
                   isCompact
                 />
               }
             />
             {error && <ApiErrorState message={error.error} />}
-            {isLoading && <LoadingState />}
-            {isSuccess && templates.length <= 0 && <NoResults />}
-            {isSuccess && templates.length > 0 && (
+            {templatesIsLoading && <LoadingState />}
+            {templatesIsSuccess && templates.length <= 0 && <NoResults />}
+            {templatesIsSuccess && templates.length > 0 && (
               <TableComposable
                 aria-label="Template link table"
                 variant="compact"
@@ -240,6 +244,9 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
                   limit: queryParams.limit,
                   offset: queryParams.offset,
                 }}
+                handleSearch={handleSearch}
+                qsConfig={qsConfig}
+                history={history}
                 setPagination={setFromPagination}
                 variant={PaginationVariant.bottom}
               />

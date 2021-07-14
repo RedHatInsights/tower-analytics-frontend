@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import useRequest from "../../Utilities/useRequest";
-import {qsToObject, qsToString} from "../../Utilities/helpers";
-import { useHistory, useLocation } from "react-router-dom";
+import { handleSearch } from "../../Utilities/helpers";
 
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
@@ -31,60 +30,56 @@ import { Card, CardBody, PaginationVariant } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
 import FilterableToolbar from '../../Components/Toolbar/';
+import { getQSConfig } from "../../Utilities/qs";
 
 const initialQueryParams = {
   ...jobExplorer.defaultParams,
   attributes: jobExplorer.attributes,
 };
+const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, ['limit', 'offset']);
 
 const JobExplorer = ({ location: { search } }) => {
   const [preflightError, setPreFlightError] = useState(null);
-  const history = useHistory();
-  const location = useLocation();
-  const {pathname} = useLocation();
 
-  let query;
-  if (search !== '') {
-    query = qsToObject(search)
-  } else if (location.search !== '') {
-    query = qsToObject(location.search)
-  } else {
-    query = initialQueryParams
-  }
-  const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(query);
-
-  // params from url/querystring
-  const [urlstring, setUrlstring] = useState(queryParams)
+  const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(qsConfig);
 
   const {
-    result: {
-      data,
-      meta,
-      options
-    },
+    result: { options },
     error,
     isLoading,
     isSuccess,
-    request: fetchEndpoints,
+    request: fetchOptions,
   } = useRequest(
     useCallback(async () => {
       await preflightRequest().catch((error) => {
         setPreFlightError({ preflightError: error });
       });
+      const response = await readJobExplorerOptions({ params: queryParams })
+      return { options: response };
+    }, [queryParams]),
+    {
+      options: {}
+    }
+  );
 
-      const [response, optionsResponse] = await Promise.all([
-        readJobExplorer({ params: queryParams }),
-        readJobExplorerOptions({ params: queryParams }),
-      ]);
+    const {
+    result: {
+      data,
+      meta
+    },
+    error: dataError,
+    isLoading: dataIsLoading,
+    isSuccess: dataIsSuccess,
+    request: fetchEndpoints,
+  } = useRequest(
+    useCallback(async () => {
+      const response = await readJobExplorer({ params: queryParams })
       return {
         data: response.items,
-        meta: response.meta,
-        options: optionsResponse
+        meta: response.meta
       };
-    }, [location]),
-    {
-      items: [], options: {}
-    }
+    }, [queryParams]),
+    { items: [], dataError, dataIsLoading, dataIsSuccess }
   );
 
   useEffect(() => {
@@ -96,11 +91,9 @@ const JobExplorer = ({ location: { search } }) => {
   }, []);
 
   useEffect(() => {
-    const search = qsToString(queryParams);
-    setUrlstring(search)
-    history.push(`${pathname}?${search}`)
+    fetchOptions();
     fetchEndpoints();
-  }, [queryParams, urlstring]);
+  }, [queryParams]);
 
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
@@ -125,6 +118,7 @@ const JobExplorer = ({ location: { search } }) => {
               <FilterableToolbar
                 categories={options}
                 filters={queryParams}
+                qsConfig={qsConfig}
                 setFilters={setFromToolbar}
                 pagination={
                   <Pagination
@@ -133,6 +127,9 @@ const JobExplorer = ({ location: { search } }) => {
                       limit: parseInt(queryParams.limit),
                       offset: parseInt(queryParams.offset),
                     }}
+                    handleSearch={handleSearch}
+                    qsConfig={qsConfig}
+                    history={history}
                     setPagination={setFromPagination}
                     isCompact
                   />
@@ -149,6 +146,9 @@ const JobExplorer = ({ location: { search } }) => {
                   limit: parseInt(queryParams.limit),
                   offset: parseInt(queryParams.offset),
                 }}
+                handleSearch={handleSearch}
+                qsConfig={qsConfig}
+                history={history}
                 setPagination={setFromPagination}
                 variant={PaginationVariant.bottom}
               />

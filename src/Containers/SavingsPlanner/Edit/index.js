@@ -23,7 +23,7 @@ const Edit = ({ data }) => {
       return {
         data: response
       };
-    }, [location]),
+    }, []),
     {
       options: {}
     }

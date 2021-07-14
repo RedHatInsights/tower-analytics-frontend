@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
@@ -29,7 +29,8 @@ import {
 
 import NotificationsList from '../../Components/NotificationsList';
 import Pagination from '../../Components/Pagination';
-import { qsToObject, qsToString } from "../../Utilities/helpers";
+import { getQSConfig } from "../../Utilities/qs";
+import { handleSearch } from "../../Utilities/helpers";
 
 const CardTitle = styled(PFCardTitle)`
   display: flex;
@@ -100,7 +101,11 @@ const initialQueryParams = {
   offset: 0,
 };
 
+// takes json and returns
+const qsConfig = getQSConfig('notifications', { ...initialQueryParams }, ['limit', 'offset']);
+
 const Notifications = () => {
+  const history = useHistory();
   const [preflightError, setPreFlightError] = useState(null);
   const [notificationsData, setNotificationsData] = useState([]);
   const [clusterOptions, setClusterOptions] = useState([]);
@@ -109,16 +114,8 @@ const Notifications = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [meta, setMeta] = useState({});
 
-  const history = useHistory();
-  const location = useLocation();
-  const { pathname } = useLocation();
-
   // params from toolbar/searchbar
-  const query = location.search !== '' ? qsToObject(location.search) : initialQueryParams
-  const { queryParams, setId, setFromPagination, setSeverity } = useQueryParams(query);
-
-  // params from url/querystring
-  const [urlstring, setUrlstring] = useState(queryParams)
+  const { queryParams, setId, setFromPagination, setSeverity } = useQueryParams(qsConfig);
 
   useEffect(() => {
     if (firstRender) {
@@ -139,10 +136,7 @@ const Notifications = () => {
     };
 
     update();
-    const search = qsToString(queryParams);
-    setUrlstring(search)
-    history.push(`${pathname}?${search}`)
-  }, [queryParams, urlstring]);
+  }, [queryParams]);
 
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'notifications', secondaryNav: true });
@@ -180,7 +174,7 @@ const Notifications = () => {
 
     initializeWithPreflight();
     return () => (ignore = true);
-  }, [location]);
+  }, [queryParams]);
 
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
@@ -244,6 +238,9 @@ const Notifications = () => {
                 </DropdownGroup>
                 <Pagination
                   count={meta?.count}
+                  handleSearch={handleSearch}
+                  qsConfig={qsConfig}
+                  history={history}
                   params={{
                     limit: queryParams.limit,
                     offset: queryParams.offset,
@@ -266,6 +263,9 @@ const Notifications = () => {
                 )}
                 <Pagination
                   count={meta?.count}
+                  handleSearch={handleSearch}
+                  history={history}
+                  qsConfig={qsConfig}
                   params={{
                     limit: queryParams.limit,
                     offset: queryParams.offset,

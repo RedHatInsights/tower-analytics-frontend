@@ -31,7 +31,8 @@ import useSelected from '../../../Utilities/useSelected';
 import useRequest, { useDeleteItems } from "../../../Utilities/useRequest";
 import ErrorDetail from '../../../Components/ErrorDetail';
 import AlertModal from '../../../Components/AlertModal';
-import {qsToObject, qsToString} from "../../../Utilities/helpers";
+import { getQSConfig } from "../../../Utilities/qs";
+import { handleSearch } from "../../../Utilities/helpers";
 
 const PageContainer = styled.div`
   display: flex;
@@ -46,61 +47,57 @@ const Footer = styled.div`
 const FlexMain = styled(Main)`
   flex-grow: 1;
 `;
+const qsConfig = getQSConfig('savings-planner', { ...savingsPlanner.defaultParams }, ['limit', 'offset']);
 
 const List = () => {
   const history = useHistory();
-  const location = useLocation();
   const { pathname } = useLocation();
 
   // params from toolbar/searchbar
-  const query = location.search ? qsToObject(location.search) : savingsPlanner.defaultParams
-  const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(query);
-
-  // params from url/querystring
-  const [urlstring, setUrlstring] = useState(queryParams)
+  const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(qsConfig);
 
   const [preflightError, setPreFlightError] = useState(null);
 
   const {
-    result: {
-      dataResponse,
-      rbac,
-      total_count,
-      optionsResponse
-    },
+    result: { options },
     error,
     isLoading,
     isSuccess,
-    request: fetchEndpoints,
+    request: fetchOptions,
   } = useRequest(
     useCallback(async () => {
       await preflightRequest().catch((error) => {
         setPreFlightError({ preflightError: error });
       });
-
-      const [response, optionsResponse] = await Promise.all([
-        readPlans({ params: queryParams }),
-        readPlanOptions()
-      ]);
-      return {
-        dataResponse: response.items,
-        rbac: response.rbac,
-        total_count: response.meta.total_count,
-        optionsResponse: optionsResponse
-      };
-    }, [location]),
-    {
-      items: [], optionsResponse: {}
-    }
+      const response = await readPlanOptions()
+      return { options: response };
+    }, [queryParams]),
+    { options: {} }
   );
 
-  const [options, setOptions] = useState(optionsResponse);
-  const [data, setData] = useState(dataResponse);
-
-  useEffect(() => {
-    setData(dataResponse);
-    setOptions(optionsResponse);
-  }, [dataResponse, optionsResponse]);
+  const {
+    result: {
+      data,
+      rbac,
+      total_count
+    },
+    error: itemsError,
+    isLoading: itemsIsLoading,
+    isSuccess: itemsIsSuccess,
+    request: fetchEndpoints,
+  } = useRequest(
+    useCallback(async () => {
+      const response = await readPlans({ params: queryParams })
+      return {
+        data: response.items,
+        rbac: response.rbac,
+        total_count: response.meta.total_count,
+      };
+    }, [queryParams]),
+    {
+      data: [], itemsError, itemsIsSuccess, itemsIsLoading
+    }
+  );
 
   const combinedOptions = {
     ...options,
@@ -108,14 +105,12 @@ const List = () => {
   };
 
   useEffect(() => {
-    const search = qsToString(queryParams);
-    setUrlstring(search)
-    history.push(`${pathname}?${search}`)
+    fetchOptions()
     fetchEndpoints()
-  }, [queryParams, urlstring]);
+  }, [queryParams]);
 
   const canWrite =
-    isSuccess &&
+    itemsIsSuccess &&
     (rbac?.perms?.write === true ||
       rbac?.perms?.all === true);
 
@@ -152,9 +147,9 @@ const List = () => {
 
     if (error) return <ApiErrorState message={error.error} />;
 
-    if (isLoading || deleteLoading) return <LoadingState />;
+    if (itemsIsLoading || deleteLoading) return <LoadingState />;
 
-    if (isSuccess && data?.length === 0 && !(isLoading || deleteLoading))
+    if (itemsIsSuccess && data.length === 0 && !(itemsIsLoading || deleteLoading))
       return (
         <EmptyList
           label={'Add plan'}
@@ -169,7 +164,7 @@ const List = () => {
         />
       );
 
-    if (isSuccess && !(isLoading || deleteLoading))
+    if (itemsIsSuccess && !(itemsIsLoading || deleteLoading))
       return (
         <Gallery
           hasGutter
@@ -181,11 +176,11 @@ const List = () => {
             '2xl': '307px',
           }}
         >
-          {isSuccess &&
-            data?.map((datum) => (
+          {isSuccess && itemsIsSuccess &&
+            data.map((datum) => (
               <PlanCard
                 key={datum.id}
-                isSuccess={isSuccess}
+                isSuccess={itemsIsSuccess}
                 selected={selected}
                 plan={datum}
                 handleSelect={handleSelect}
@@ -206,6 +201,7 @@ const List = () => {
         <FilterableToolbar
           categories={combinedOptions}
           filters={queryParams}
+          qsConfig={qsConfig}
           setFilters={setFromToolbar}
           additionalControls={[
             ...(canWrite
@@ -224,7 +220,7 @@ const List = () => {
                   </Button>,
                 ]
               : []),
-            canWrite && isSuccess && data?.length > 0 && (
+            canWrite && isSuccess && data.length > 0 && (
               <ToolbarDeleteButton
                 key="delete-plan-button"
                 onDelete={handleDelete}
@@ -234,13 +230,16 @@ const List = () => {
             ),
           ]}
           pagination={
-            isSuccess && data?.length > 0 ? (
+            itemsIsSuccess && data.length > 0 ? (
               <Pagination
                 count={total_count}
                 params={{
                   limit: parseInt(queryParams.limit),
                   offset: parseInt(queryParams.offset),
                 }}
+                handleSearch={handleSearch}
+                qsConfig={qsConfig}
+                history={history}
                 setPagination={setFromPagination}
                 isCompact
               />
@@ -251,7 +250,7 @@ const List = () => {
         />
       </PageHeader>
       <FlexMain>{renderContent()}</FlexMain>
-      {data?.length > 0 && !(isLoading || deleteLoading) && (
+      {data.length > 0 && !(itemsIsLoading || deleteLoading) && (
         <Footer>
           <Pagination
             count={total_count}
@@ -259,6 +258,9 @@ const List = () => {
               limit: parseInt(queryParams.limit),
               offset: parseInt(queryParams.offset),
             }}
+            handleSearch={handleSearch}
+            qsConfig={qsConfig}
+            history={history}
             setPagination={setFromPagination}
             variant={PaginationVariant.bottom}
           />

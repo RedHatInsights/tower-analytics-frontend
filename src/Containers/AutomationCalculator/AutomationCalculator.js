@@ -32,7 +32,7 @@ import { preflightRequest, readROI, readROIOptions } from '../../Api/';
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import { roi as roiConst } from '../../Utilities/constants';
 import useRedirect from '../../Utilities/useRedirect';
-import {calculateDelta, convertSecondsToHours, qsToObject, qsToString} from '../../Utilities/helpers';
+import { calculateDelta, convertSecondsToHours } from '../../Utilities/helpers';
 
 // Chart
 import TopTemplatesSavings from '../../Charts/ROITopTemplates';
@@ -44,6 +44,7 @@ import CalculationCost from './CalculationCost';
 import AutomationFormula from './AutomationFormula';
 import TopTemplates from './TopTemplates';
 import useRequest from "../../Utilities/useRequest";
+import { getQSConfig } from "../../Utilities/qs";
 
 const mapApi = ({ items = [] }) =>
   items.map((el) => ({
@@ -74,19 +75,16 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
 const computeTotalSavings = (data) =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
+const qsConfig = getQSConfig('clusters', { ...roiConst.defaultParams }, ['limit', 'offset']);
+
 const AutomationCalculator = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
   const [costManual, setCostManual] = useState('50');
   const [costAutomation, setCostAutomation] = useState('20');
-  const location = useLocation();
-  const { pathname } = useLocation();
 
   // params from toolbar/searchbar
-  const query = location.search ? qsToObject(location.search) : roiConst.defaultParams
-  const { queryParams, setFromToolbar } = useQueryParams(query);
-
-  // params from url/querystring
-  const [urlstring, setUrlstring] = useState(queryParams)
+  const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
+  const setDataInApi = (data) => updateDeltaCost(mapApi(data), costAutomation, costManual)
 
   const {
     result: { preflight },
@@ -110,7 +108,7 @@ const AutomationCalculator = ({ history }) => {
     useCallback(async () => {
       const options = await readROIOptions({ params: queryParams })
       return { options: options };
-    }, []),
+    }, [queryParams]),
     { options: {}, optionsError,  optionsIsLoading }
   );
 
@@ -118,15 +116,15 @@ const AutomationCalculator = ({ history }) => {
     result: { data },
     error: apiError,
     isLoading: apiIsLoading,
-    request: setDataInApi,
+    request: fetchEndpoint,
   } = useRequest(
     useCallback(async () => {
       const response = await readROI({ params: queryParams})
       return { data: response };
-    }, [location, queryParams]),
+    }, [queryParams]),
     { data: [], apiError,  apiIsLoading }
   );
-  const api = updateDeltaCost(mapApi(data), costAutomation, costManual)
+  const api = setDataInApi(data); //updateDeltaCost(mapApi(data), costAutomation, costManual)
 
   /**
    * Modifies one elements avgRunTime in the unfilteredData
@@ -173,11 +171,9 @@ const AutomationCalculator = ({ history }) => {
    * Get data from API depending on the queryParam.
    */
   useEffect(() => {
-    const search = qsToString(queryParams);
-    setUrlstring(search)
-    history.push(`${pathname}?${search}`)
-    setDataInApi();
-  }, [queryParams, urlstring]);
+    setOptions();
+    fetchEndpoint();
+  }, [queryParams]);
 
   /**
    * Function to redirect to the job explorer page
@@ -274,6 +270,7 @@ const AutomationCalculator = ({ history }) => {
         <FilterableToolbar
           categories={options}
           filters={queryParams}
+          qsConfig={qsConfig}
           setFilters={setFromToolbar}
         />
       </PageHeader>
