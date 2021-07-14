@@ -3,7 +3,7 @@ import {
   relatedResourceDeleteRequests,
 } from './getRelatedResourceDeleteDetails';
 import mockResponses from './__fixtures__/';
-import * as api from '../Api';
+import * as api from '../Api/';
 jest.mock('../Api');
 
 describe('delete details', () => {

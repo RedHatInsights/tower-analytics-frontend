@@ -16,7 +16,7 @@ import {
   preflightRequest,
   readJobExplorer,
   readJobExplorerOptions,
-} from '../../Api';
+} from '../../Api/';
 import { jobExplorer } from '../../Utilities/constants';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';

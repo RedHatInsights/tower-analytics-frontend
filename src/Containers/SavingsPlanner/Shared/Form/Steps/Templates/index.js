@@ -35,7 +35,7 @@ import {
   preflightRequest,
   readJobExplorer,
   readJobExplorerOptions,
-} from '../../../../../../Api';
+} from '../../../../../../Api/';
 
 import FilterableToolbar from '../../../../../../Components/Toolbar/';
 

@@ -17,7 +17,7 @@ import {
   readJobExplorer,
   readHostExplorer,
   readOrgOptions,
-} from '../../Api';
+} from '../../Api/';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';

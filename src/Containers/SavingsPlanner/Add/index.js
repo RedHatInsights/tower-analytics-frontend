@@ -13,7 +13,7 @@ import Breadcrumbs from '../../../Components/Breadcrumbs';
 
 import useApi from '../../../Utilities/useApi';
 
-import { readPlanOptions } from '../../../Api';
+import { readPlanOptions } from '../../../Api/';
 
 import Form from '../Shared/Form';
 
