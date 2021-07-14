@@ -1,21 +1,22 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import ChartBuilder from 'react-json-chart-builder';
 import schema, { customFunctions } from './schema';
 
 import { Card, CardBody, CardFooter, PaginationVariant } from '@patternfly/react-core';
-import { TableComposable, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import { TableComposable, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
 import Pagination from '../../Components/Pagination';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
-import { readJobExplorer } from '../../Api';
+import { readJobExplorer, readJobExplorerOptions } from '../../Api';
 import useApi from '../../Utilities/useApi';
 import { formatTotalTime } from '../../Utilities/helpers';
 
 import { global_disabled_color_300 } from '@patternfly/react-tokens';
 import ApiStatusWrapper from '../../Components/ApiStatusWrapper';
+import FilterableToolbar from '../../Components/Toolbar/Toolbar';
 
 const perPageOptions = [
   { title: '4', value: 4 }
@@ -41,16 +42,9 @@ const defaultParams = {
   sort_order: 'desc',
 }
 
-export const attrPairs: { key: string, name: string }[] = [
-  { key: 'id', name: 'ID' },
-  { key: 'name', name: 'Template name' },
-  { key: 'host_count', name: 'Host count' },
-  { key: 'failed_host_count', name: 'Host failed count' },
-  { key: 'unreachable_host_count', name: 'Host unreachable count' },
-  { key: 'elapsed', name: 'Job elapsed time' },
-  { key: 'failed_count', name: 'Job failed count' },
-  { key: 'successful_count', name: 'Jobs successful count' },
-  { key: 'total_count', name: 'Jobs total count' }
+const extraAttr: { key: string, value: string }[] = [
+  { key: 'id', value: 'ID' },
+  { key: 'name', value: 'Template name' },
 ];
 
 const isOther = (item: Record<string, string | number>, key: string) => (key === 'id' && item[key] === -1);
@@ -78,13 +72,29 @@ const Report: FunctionComponent<Record<string, never>> = () => {
     apiStatus,
     setData,
   ] = useApi({ meta: { legend: [], count: 0 }, dates: [] });
+  const [options, setOptions] = useApi({});
   const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(
     defaultParams
+  );
+  const [attrPairs, setAttrPairs] = useState(extraAttr);
+  const chartSchema = schema(
+    attrPairs.find(({ key }) => key === queryParams.sort_options)?.value || 'Label Y',
+    queryParams.sort_options
   );
 
   useEffect(() => {
     setData(readJobExplorer({ params: queryParams }));
+    setOptions(readJobExplorerOptions({ params: queryParams }));
   }, [queryParams]);
+
+  useEffect(() => {
+    if(options.isSuccess) {
+      setAttrPairs([
+        ...extraAttr,
+        ...options.data?.sort_options
+      ]);
+    }
+  }, [options]);
 
   const onSort = (_event: any, index: number, direction: 'asc' | 'desc') => {
     setFromToolbar('sort_order', direction);
@@ -92,9 +102,11 @@ const Report: FunctionComponent<Record<string, never>> = () => {
   };
 
   const getSorParams = (currKey: string) => {
-    const blaclistKeys = ['id', 'name'];
+    if (!options.isSuccess) return {};
 
-    if (blaclistKeys.includes(currKey))
+    const whitelistKeys = options?.data?.sort_options?.map(({ key }: { key: string }) => key);
+
+    if (!whitelistKeys.includes(currKey))
       return {};
 
     return {
@@ -113,24 +125,32 @@ const Report: FunctionComponent<Record<string, never>> = () => {
     <ApiStatusWrapper api={apiStatus}>
       <Card>
         <CardBody>
-          <Pagination
-            count={apiStatus.data.meta.count}
-            perPageOptions={perPageOptions}
-            params={{
-              limit: queryParams.limit,
-              offset: queryParams.offset,
-            }}
-            setPagination={setFromPagination}
+          <FilterableToolbar
+            categories={options.data}
+            filters={queryParams}
+            setFilters={setFromToolbar}
+            pagination={
+              <Pagination
+                count={apiStatus.data.meta.count}
+                perPageOptions={perPageOptions}
+                params={{
+                  limit: queryParams.limit,
+                  offset: queryParams.offset,
+                }}
+                setPagination={setFromPagination}
+                isCompact
+              />
+            }
           />
-          <ChartBuilder schema={schema(queryParams)} functions={customFunctions(apiStatus.data)} />
-          <TableComposable aria-label="Report Table">
+          <ChartBuilder schema={chartSchema} functions={customFunctions(apiStatus.data)} />
+          <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
             <Thead>
               <Tr>
-                {attrPairs.map(({ key, name }) => (
+                {attrPairs.map(({ key, value }) => (
                   <Th
                     key={key}
                     {...getSorParams(key)}
-                  >{name}</Th>
+                  >{value}</Th>
                 ))}
               </Tr>
             </Thead>

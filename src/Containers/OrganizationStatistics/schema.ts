@@ -10,19 +10,12 @@ import {
   ApiReturnType
 } from 'react-json-chart-builder';
 
-import { attrPairs } from './Report';
-
 export const customFunctions = (data: ApiReturnType) => ({
   ...functions,
   fetchFnc: () => new Promise<ApiReturnType>((resolve) => { resolve(data); })
 });
 
-interface Params {
-  sort_options: string,
-  [x: string]: unknown
-}
-
-const schema = (params: Params): ChartSchemaElement[] => ([
+const schema = (label: string, y: string): ChartSchemaElement[] => ([
   {
     id: 3000,
     kind: ChartKind.wrapper,
@@ -31,7 +24,7 @@ const schema = (params: Params): ChartSchemaElement[] => ([
     props: {
       height: 400,
       padding: {
-        top: 0,
+        top: 10,
         right: 100
       },
       themeColor: ChartThemeColor.multiOrdered
@@ -43,7 +36,7 @@ const schema = (params: Params): ChartSchemaElement[] => ([
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label: attrPairs.find(({ key }) => key === params.sort_options)?.name || 'Y axis',
+      label,
       style: {
         axisLabel: {
           padding: 50
@@ -71,7 +64,7 @@ const schema = (params: Params): ChartSchemaElement[] => ([
       parent: 0,
       props: {
         x: 'created_date',
-        y: params.sort_options,
+        y,
       },
       tooltip: {
         standalone: true
