@@ -150,32 +150,35 @@ const OrganizationStatistics = ({ history }) => {
     result: { preflight },
     error: preflightError,
     isLoading: preflightIsLoading,
+    isSuccess: preflightIsSuccess,
     request: setPreflight,
   } = useRequest(
     useCallback(async () => {
       const preflight = await preflightRequest()
       return { preflight: preflight };
     }, []),
-    { preflight: {}, preflightError, preflightIsLoading }
+    { preflight: {}, preflightError, preflightIsLoading, preflightIsSuccess }
   );
 
   const {
     result: { jobs },
     error: jobsError,
     isLoading: jobsIsLoading,
+    isSuccess: jobsIsSuccess,
     request: setJobs,
   } = useRequest(
     useCallback(async () => {
       const jobs = await readJobExplorer({ params: jobRunsByOrgParams })
       return { jobs: jobs };
     }, [location]),
-    { jobs: [], jobsError,  jobsIsLoading }
+    { jobs: [], jobsError,  jobsIsLoading, jobsIsSuccess }
   );
 
   const {
     result: { orgs },
     error: orgsError,
     isLoading: orgsIsLoading,
+    isSuccess: orgsIsSuccess,
     request: setOrgs,
   } = useRequest(
     useCallback(async (tabIndex = 0) => {
@@ -187,20 +190,21 @@ const OrganizationStatistics = ({ history }) => {
       }
       return { orgs: orgs };
     }, [location]),
-    { orgs: [], orgsError,  orgsIsLoading }
+    { orgs: [], orgsError,  orgsIsLoading, orgsIsSuccess }
   );
 
   const {
     result: { options },
     error: optionsError,
     isLoading: optionsIsLoading,
+    isSuccess: optionsIsSuccess,
     request: setOptions,
   } = useRequest(
     useCallback(async () => {
       const options = await readOrgOptions({ params: queryParams })
       return { options: options };
     }, [location]),
-    { options: {}, optionsError, optionsIsLoading }
+    { options: {}, optionsError, optionsIsLoading, optionsIsSuccess }
   );
 
   const {
@@ -209,6 +213,7 @@ const OrganizationStatistics = ({ history }) => {
     },
     error: tasksError,
     isLoading: tasksIsLoading,
+    isSuccess: tasksIsSuccess,
     request: setTasks,
   } = useRequest(
     useCallback(async () => {
@@ -216,7 +221,7 @@ const OrganizationStatistics = ({ history }) => {
       return {
         tasks: tasks }
     }, [location]),
-    { tasks: [], tasksError, tasksIsLoading }
+    { tasks: [], tasksError, tasksIsLoading, tasksIsSuccess }
   );
 
   useEffect(() => {
@@ -281,7 +286,7 @@ const OrganizationStatistics = ({ history }) => {
     setPreflight();
   }, []);
 
-  if (preflight?.error?.status === 403) {
+  if (preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 
@@ -300,8 +305,8 @@ const OrganizationStatistics = ({ history }) => {
               <CardBody>
                 {orgsIsLoading && <LoadingState />}
                 {orgsError && <ApiErrorState message={orgsError.error} />}
-                {orgs?.dates?.length <= 0 && <NoData />}
-                {orgs?.dates?.length > 0 && (
+                {orgsIsSuccess && orgs.dates?.length <= 0 && <NoData />}
+                {orgsIsSuccess && orgs.dates?.length > 0 && (
                   <GroupedBarChart
                     margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
                     id="d3-grouped-bar-chart-root"
@@ -328,13 +333,13 @@ const OrganizationStatistics = ({ history }) => {
               <Divider />
               <CardBody>
                 {jobsIsLoading && <LoadingState />}
-                {jobsError && <ApiErrorState message={jobs.error.error} />}
-                {jobs?.items?.length <= 0 && <NoData />}
-                {jobs?.items?.length > 0 && (
+                {jobsError && <ApiErrorState message={jobsError.error} />}
+                {jobsIsSuccess && jobs.items?.length <= 0 && <NoData />}
+                {jobsIsSuccess && jobs.items?.length > 0 && (
                   <PieChart
                     margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                     id="d3-donut-1-chart-root"
-                    data={jobs?.items}
+                    data={pieChartMapper(jobs.items, 'total_count')}
                     colorFunc={colorFunc}
                   />
                 )}
@@ -349,13 +354,13 @@ const OrganizationStatistics = ({ history }) => {
               <Divider />
               <CardBody>
                 {tasksIsLoading && <LoadingState />}
-                {tasksError && <ApiErrorState message={tasks.error.error} />}
-                {tasks?.items?.length <= 0 && <NoData />}
-                {tasks?.items?.length > 0 && (
+                {tasksError && <ApiErrorState message={tasksError.error} />}
+                {tasksIsSuccess && tasks.items?.length <= 0 && <NoData />}
+                {tasksIsSuccess && tasks.items?.length > 0 && (
                   <PieChart
                     margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
                     id="d3-donut-2-chart-root"
-                    data={tasks.items}
+                    data={pieChartMapper(tasks.items, 'host_task_count')}
                     colorFunc={colorFunc}
                   />
                 )}

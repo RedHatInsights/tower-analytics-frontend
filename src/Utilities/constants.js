@@ -19,6 +19,7 @@ export const jobExplorer = {
     cluster_id: [],
     template_id: [],
     inventory_id: [],
+    sort_by: 'created:desc',
     sort_options: 'created',
     sort_order: 'desc',
     only_root_workflows_and_standalone_jobs: false,

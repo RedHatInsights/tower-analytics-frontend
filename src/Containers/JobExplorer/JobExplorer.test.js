@@ -12,6 +12,18 @@ import { jobExplorer as constants } from '../../Utilities/constants';
 
 fetchMock.config.overwriteRoutes = true;
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => ({
+    push: jest.fn(),
+  }),
+  useLocation: () => ({
+    push: jest.fn(),
+    pathname: 'some_path',
+    search: ''
+  }),
+}));
+
 const jobExplorerUrl = 'path:/api/tower-analytics/v1/job_explorer/';
 const dummyData = (size, count = 0) => ({
   items: [...Array(size).keys()].map((i) => ({
@@ -76,7 +88,7 @@ describe('Containers/JobExplorer', () => {
 
   it('should render without any errors', async () => {
     await act(async () => {
-      wrapper = mountPage(JobExplorer);
+      wrapper = mountPage(JobExplorer, {history: jest.fn()});
     });
     wrapper.update();
 
@@ -120,7 +132,7 @@ describe('Containers/JobExplorer', () => {
   });
 
   it('should render with empty response', async () => {
-    fetchMock.post({ url: jobExplorerUrl }, {});
+    fetchMock.post({ url: jobExplorerUrl }, {items:[]});
 
     await act(async () => {
       wrapper = mountPage(JobExplorer);
@@ -141,7 +153,6 @@ describe('Containers/JobExplorer', () => {
 
   it('should send the custom query params', async () => {
     const queryParams = {
-      ...defaultQueryParams,
       template_id: [1, 2],
     };
 
@@ -157,7 +168,6 @@ describe('Containers/JobExplorer', () => {
     });
     wrapper.update();
     const [, { body }] = inspectCall(jobExplorerUrl, 'POST');
-
     expect(JSON.parse(body)).toEqual(queryParams);
   });
 

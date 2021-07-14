@@ -251,7 +251,7 @@ const AutomationCalculator = ({ history }) => {
     </Stack>
   );
 
-  if (preflightError?.error?.status === 403) {
+  if (preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 

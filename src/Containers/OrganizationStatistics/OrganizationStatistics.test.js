@@ -8,6 +8,17 @@ import {
   preflight403,
 } from '../../Utilities/tests/helpers';
 import fetchMock from 'fetch-mock-jest';
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => ({
+    push: jest.fn(),
+  }),
+  useLocation: () => ({
+    push: jest.fn(),
+    pathname: 'some_path',
+    search: ''
+  }),
+}));
 import OrganizationStatistics from './OrganizationStatistics';
 
 const chartRoots = [
@@ -147,6 +158,7 @@ describe('Containers/OrganizationStatistics', () => {
   });
 
   it('should render with data', async () => {
+    fetchMock.post({ url: jobExplorerUrl, overwriteRoutes: true }, { });
     await act(async () => {
       wrapper = mountPage(OrganizationStatistics);
     });
@@ -192,7 +204,7 @@ describe('Containers/OrganizationStatistics', () => {
   });
 
   it('should render with empty response', async () => {
-    fetchMock.post({ url: jobExplorerUrl, overwriteRoutes: true }, {});
+    fetchMock.post({ url: jobExplorerUrl, overwriteRoutes: true }, { items: [] });
 
     await act(async () => {
       wrapper = mountPage(OrganizationStatistics);
@@ -218,6 +230,7 @@ describe('Containers/OrganizationStatistics', () => {
     await act(async () => {
       wrapper = mountPage(OrganizationStatistics);
     });
+
     wrapper.update();
 
     const tabs = wrapper.find('.pf-c-tabs__link');
