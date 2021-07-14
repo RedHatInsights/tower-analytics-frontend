@@ -91,7 +91,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
       ]);
       return {
         relatedJobs: relatedJobs.items,
-        stats: stats.items
+        stats: stats.items[0]
       };
     }, []),
     {

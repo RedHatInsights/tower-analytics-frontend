@@ -7,6 +7,17 @@ import {
   preflight403,
 } from '../../Utilities/tests/helpers';
 import fetchMock from 'fetch-mock-jest';
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => ({
+    push: jest.fn(),
+  }),
+  useLocation: () => ({
+    push: jest.fn(),
+    pathname: 'some_path',
+    search: ''
+  }),
+}));
 import AutomationCalculator from './AutomationCalculator';
 import TotalSavings from './TotalSavings';
 fetchMock.config.overwriteRoutes = true;

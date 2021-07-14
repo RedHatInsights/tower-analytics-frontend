@@ -7,6 +7,17 @@ import {
   preflight403,
 } from '../../Utilities/tests/helpers';
 import fetchMock from 'fetch-mock-jest';
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => ({
+    push: jest.fn(),
+  }),
+  useLocation: () => ({
+    push: jest.fn(),
+    pathname: 'some_path',
+    search: ''
+  }),
+}));
 import Notifications from './Notifications.js';
 
 const notificationsUrl = 'path:/api/tower-analytics/v0/notifications/';

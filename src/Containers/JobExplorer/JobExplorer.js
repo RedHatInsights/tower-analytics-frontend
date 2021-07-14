@@ -1,10 +1,10 @@
 import React, {useState, useEffect, useCallback} from 'react';
 import PropTypes from 'prop-types';
-import { parse, stringify } from 'query-string';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import useRequest from "../../Utilities/useRequest";
-import { Paths } from '../../paths';
+import {qsToObject, qsToString} from "../../Utilities/helpers";
+import { useHistory, useLocation } from "react-router-dom";
 
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
@@ -37,16 +37,30 @@ const initialQueryParams = {
   attributes: jobExplorer.attributes,
 };
 
-const JobExplorer = ({ location: { search }, history }) => {
+const JobExplorer = ({ location: { search } }) => {
   const [preflightError, setPreFlightError] = useState(null);
-  const { queryParams, setFromPagination, setFromToolbar, dispatch } =
-    useQueryParams(initialQueryParams);
+  const history = useHistory();
+  const location = useLocation();
+  const {pathname} = useLocation();
+
+  let query;
+  if (search !== '') {
+    query = qsToObject(search)
+  } else if (location.search !== '') {
+    query = qsToObject(location.search)
+  } else {
+    query = initialQueryParams
+  }
+  const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(query);
+
+  // params from url/querystring
+  const [urlstring, setUrlstring] = useState(queryParams)
 
   const {
     result: {
-      dataResponse,
+      data,
       meta,
-      optionsResponse
+      options
     },
     error,
     isLoading,
@@ -63,32 +77,15 @@ const JobExplorer = ({ location: { search }, history }) => {
         readJobExplorerOptions({ params: queryParams }),
       ]);
       return {
-        dataResponse: response.items,
+        data: response.items,
         meta: response.meta,
-        optionsResponse: optionsResponse
+        options: optionsResponse
       };
     }, [location]),
     {
-      items: [], optionsResponse: {}
+      items: [], options: {}
     }
   );
-
-  const [options, setOptions] = useState(optionsResponse);
-  const [data, setData] = useState(dataResponse);
-
-  useEffect(() => {
-    setData(dataResponse);
-    setOptions(optionsResponse);
-  }, [dataResponse, optionsResponse]);
-
-  const updateURL = () => {
-    const { jobExplorer } = Paths;
-    const search = stringify(queryParams, { arrayFormat: 'bracket' });
-    history.replace({
-      pathname: jobExplorer,
-      search,
-    });
-  };
 
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
@@ -96,26 +93,14 @@ const JobExplorer = ({ location: { search }, history }) => {
     preflightRequest().catch((error) => {
       setPreFlightError({ preflightError: error });
     });
-
-    const initialSearchParams = parse(search, {
-      arrayFormat: 'bracket',
-      parseBooleans: true,
-      parseNumbers: true,
-    });
-
-    dispatch({
-      type: 'REINITIALIZE',
-      value: {
-        ...initialQueryParams,
-        ...initialSearchParams,
-      },
-    });
   }, []);
 
   useEffect(() => {
+    const search = qsToString(queryParams);
+    setUrlstring(search)
+    history.push(`${pathname}?${search}`)
     fetchEndpoints();
-    updateURL();
-  }, [queryParams, fetchEndpoints]);
+  }, [queryParams, urlstring]);
 
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
@@ -145,8 +130,8 @@ const JobExplorer = ({ location: { search }, history }) => {
                   <Pagination
                     count={meta?.count}
                     params={{
-                      limit: queryParams.limit,
-                      offset: queryParams.offset,
+                      limit: parseInt(queryParams.limit),
+                      offset: parseInt(queryParams.offset),
                     }}
                     setPagination={setFromPagination}
                     isCompact
@@ -161,8 +146,8 @@ const JobExplorer = ({ location: { search }, history }) => {
               <Pagination
                 count={meta?.count}
                 params={{
-                  limit: queryParams.limit,
-                  offset: queryParams.offset,
+                  limit: parseInt(queryParams.limit),
+                  offset: parseInt(queryParams.offset),
                 }}
                 setPagination={setFromPagination}
                 variant={PaginationVariant.bottom}

@@ -1,4 +1,15 @@
 import FilterableToolbar from './Toolbar';
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => ({
+    push: jest.fn(),
+  }),
+  useLocation: () => ({
+    push: jest.fn(),
+    pathname: 'some_path',
+    search: ''
+  }),
+}));
 
 const mockCategories = {
   status: [],
