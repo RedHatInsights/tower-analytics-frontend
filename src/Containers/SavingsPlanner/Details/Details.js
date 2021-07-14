@@ -42,15 +42,11 @@ const Details = () => {
   const queryParams = { id: [selectedId] };
 
   const {
-    result: {
-      rbac,
-      plans,
-      options
-    },
+    result: { options },
     error,
     isLoading,
     isSuccess,
-    request: fetchEndpoints,
+    request: fetchOptions,
   } = useRequest(
     useCallback(async () => {
       setSelectedId(id);
@@ -58,24 +54,40 @@ const Details = () => {
         setPreFlightError({ preflightError: error });
       });
 
-      const [response, options] = await Promise.all([
-        readPlan({ params: queryParams }),
-        readPlanOptions()
-      ]);
+      const response = await readPlanOptions()
+      return { options: response };
+    }, []),
+    { options: {} }
+  );
+
+  const {
+    result: {
+      rbac,
+      plans
+    },
+    error: plansError,
+    isLoading: plansIsLoading,
+    isSuccess: plansIsSuccess,
+    request: fetchEndpoints,
+  } = useRequest(
+    useCallback(async () => {
+      setSelectedId(id);
+      await preflightRequest().catch((error) => {
+        setPreFlightError({ preflightError: error });
+      });
+      const response = await readPlan({ params: queryParams })
       return {
         plans: response.items,
-        rbac: response.rbac,
-        options: options
+        rbac: response.rbac
       };
-    }, [location]),
-    {
-      plans: []
-    }
+    }, []),
+    { plans: [], rbac: [], plansError, plansIsLoading, plansIsSuccess }
   );
 
   useEffect(() => {
+    fetchOptions();
     fetchEndpoints();
-  }, [fetchEndpoints]);
+  }, [queryParams]);
 
   const canWrite =
     isSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
@@ -99,7 +111,7 @@ const Details = () => {
   ];
 
   const breadcrumbUrl = `/savings-planner/${selectedId}`;
-  const breadcrumbsItems = isSuccess
+  const breadcrumbsItems = plansIsSuccess
     ? [
         { title: 'Savings Planner', navigate: '/savings-planner' },
         { title: plans[0].name, navigate: breadcrumbUrl },
@@ -115,7 +127,7 @@ const Details = () => {
           <ApiErrorState message={error.error} />
         </>
       )}
-      {isSuccess && (
+      {plansIsSuccess && (
         <>
           <PageHeader>
             <Breadcrumbs items={breadcrumbsItems} />

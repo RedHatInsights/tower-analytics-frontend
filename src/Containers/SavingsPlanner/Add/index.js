@@ -31,7 +31,7 @@ const Add = () => {
       return {
         data: response
       };
-    }, [location]),
+    }, []),
     {
       options: {}
     }

@@ -6,7 +6,7 @@ import {useLocation} from 'react-router-dom';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import useRedirect from '../../Utilities/useRedirect';
-import {formatDate as dateForJobExplorer, qsToObject, qsToString} from '../../Utilities/helpers';
+import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
 
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
@@ -26,7 +26,7 @@ import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
-import {notAuthorizedParams} from '../../Utilities/constants';
+import { notAuthorizedParams } from '../../Utilities/constants';
 
 import {
   Card,
@@ -51,6 +51,7 @@ import { organizationStatistics as constants } from '../../Utilities/constants';
 import { pfmulti } from '../../Utilities/colors';
 import { scaleOrdinal } from 'd3';
 import useRequest from "../../Utilities/useRequest";
+import {getQSConfig} from "../../Utilities/qs";
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
@@ -131,20 +132,14 @@ const chartMapper = [
     tooltip: HostsTooltip,
   },
 ];
+const qsConfig = getQSConfig('organization-statistics', { ...constants.defaultParams }, ['limit', 'offset']);
 
 const OrganizationStatistics = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
   const [activeTabKey, setActiveTabKey] = useState(0);
 
-  const location = useLocation();
-  const { pathname } = useLocation();
-
   // params from toolbar/searchbar
-  const query = location.search !== '' ? qsToObject(location.search) : constants.defaultParams
-  const { queryParams, setFromToolbar } = useQueryParams(query);
-
-  // params from url/querystring
-  const [urlstring, setUrlstring] = useState(queryParams)
+  const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
 
   const {
     result: { preflight },
@@ -170,7 +165,7 @@ const OrganizationStatistics = ({ history }) => {
     useCallback(async () => {
       const jobs = await readJobExplorer({ params: jobRunsByOrgParams })
       return { jobs: jobs };
-    }, [location]),
+    }, [queryParams]),
     { jobs: [], jobsError,  jobsIsLoading, jobsIsSuccess }
   );
 
@@ -189,7 +184,7 @@ const OrganizationStatistics = ({ history }) => {
         orgs = await readHostExplorer({ params: hostAcrossOrgParams })
       }
       return { orgs: orgs };
-    }, [location]),
+    }, [queryParams]),
     { orgs: [], orgsError,  orgsIsLoading, orgsIsSuccess }
   );
 
@@ -203,7 +198,7 @@ const OrganizationStatistics = ({ history }) => {
     useCallback(async () => {
       const options = await readOrgOptions({ params: queryParams })
       return { options: options };
-    }, [location]),
+    }, [queryParams]),
     { options: {}, optionsError, optionsIsLoading, optionsIsSuccess }
   );
 
@@ -220,27 +215,20 @@ const OrganizationStatistics = ({ history }) => {
       const tasks = await readJobExplorer({ params: jobEventsByOrgParams });
       return {
         tasks: tasks }
-    }, [location]),
+    }, [queryParams]),
     { tasks: [], tasksError, tasksIsLoading, tasksIsSuccess }
   );
 
   useEffect(() => {
     setOrgs(activeTabKey);
-
-    const search = qsToString(queryParams);
-    setUrlstring(search)
-    history.push(`${pathname}?${search}`)
-  }, [queryParams, activeTabKey, urlstring]);
+  }, [activeTabKey]);
 
   useEffect(() => {
+    setOrgs()
     setTasks()
     setOptions()
     setJobs()
-
-    const search = qsToString(queryParams);
-    setUrlstring(search)
-    history.push(`${pathname}?${search}`)
-  }, [queryParams, urlstring]);
+  }, [queryParams]);
 
   const jobEventsByOrgParams = {
     ...queryParams,
@@ -381,6 +369,7 @@ const OrganizationStatistics = ({ history }) => {
           categories={options}
           filters={queryParams}
           setFilters={setFromToolbar}
+          qsConfig={qsConfig}
         />
       </PageHeader>
       <Main>{renderContent()}</Main>

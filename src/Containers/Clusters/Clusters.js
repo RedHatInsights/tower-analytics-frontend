@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useCallback} from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
@@ -39,7 +38,7 @@ import ApiErrorState from '../../Components/ApiErrorState';
 
 import { clusters } from '../../Utilities/constants';
 import useRequest from "../../Utilities/useRequest";
-import {qsToObject, qsToString} from "../../Utilities/helpers";
+import { getQSConfig } from "../../Utilities/qs";
 
 const initialTopTemplateParams = {
   group_by: 'template',
@@ -63,50 +62,85 @@ const initialModuleParams = {
   limit: 10,
 };
 
+// takes json and returns
+const qsConfig = getQSConfig('clusters', { ...clusters.defaultParams }, ['limit', 'offset']);
+
 const Clusters = () => {
   const [preflightError, setPreFlightError] = useState(null);
-  const history = useHistory();
-  const location = useLocation();
-  const { pathname } = useLocation();
 
   // params from toolbar/searchbar
-  const query = location.search !== '' ? qsToObject(location.search) : clusters.defaultParams
-  const { queryParams, setFromToolbar } = useQueryParams(query);
-
-  // params from url/querystring
-  const [urlstring, setUrlstring] = useState(queryParams)
-
+  const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
   const {
-    result: {
-      chartData,
-      modules,
-      options,
-      templates,
-      workflows
-    },
+    result: { options },
     error,
     isLoading,
     isSuccess,
-    request: fetchEndpoints,
+    request: fetchOptions,
   } = useRequest(
     useCallback(async () => {
-      const [chartData, modules, options, templates, workflows] = await Promise.all([
-        readJobExplorer({ params: queryParams }),
-        readEventExplorer({ params: topModuleParams }),
-        readClustersOptions({ params: optionsQueryParams }),
-        readJobExplorer({ params: topTemplatesParams }),
-        readJobExplorer({ params: topWorkflowParams })
-      ]);
-      return {
-        chartData: chartData.items,
-        modules: modules.items,
-        options: options,
-        templates: templates.items,
-        workflows: workflows.items
-      };
-    }, [location]),
+      const options = await readClustersOptions({ params: optionsQueryParams })
+      return { options };
+    }, [queryParams]),
+    { options: {} }
+  );
+
+  const {
+    result: { chartData },
+    error: chartDataError,
+    isLoading: chartDataIsLoading,
+    isSuccess: chartDataIsSuccess,
+    request: fetchChartData,
+  } = useRequest(
+    useCallback(async () => {
+      const chartData = await readJobExplorer({ params: queryParams })
+      return { chartData: chartData.items };
+    }, [queryParams]),
     {
-      chartData: [], modules: [], options: {}, templates: [], workflows: []
+      chartData: [], chartDataError, chartDataIsLoading, chartDataIsSuccess
+    }
+  );
+
+  const {
+    result: { modules },
+    error: modulesError,
+    isLoading: modulesIsLoading,
+    isSuccess: modulesIsSuccess,
+    request: fetchModules,
+  } = useRequest(
+    useCallback(async () => {
+      const modules = await readEventExplorer({ params: topModuleParams })
+      return { modules: modules.items };
+    }, [queryParams]),
+    { modules: [], modulesError, modulesIsLoading, modulesIsSuccess }
+  );
+
+  const {
+    result: { templates },
+    error: templatesError,
+    isLoading: templatesIsLoading,
+    isSuccess: templatesIsSuccess,
+    request: fetchTemplates,
+  } = useRequest(
+    useCallback(async () => {
+      const templates = await readJobExplorer({ params: topTemplatesParams })
+      return { templates: templates.items };
+    }, [queryParams]),
+    { templates: [], templatesError, templatesIsLoading, templatesIsSuccess }
+  );
+
+  const {
+    result: { workflows },
+    error: workflowsError,
+    isLoading: workflowsIsLoading,
+    isSuccess: workflowsIsSuccess,
+    request: fetchWorkflows,
+  } = useRequest(
+    useCallback(async () => {
+      const workflows = await readJobExplorer({ params: topWorkflowParams })
+      return { workflows: workflows.items };
+    }, [queryParams]),
+    {
+      workflows: [], workflowsError, workflowsIsLoading, workflowsIsSuccess
     }
   );
 
@@ -114,15 +148,15 @@ const Clusters = () => {
     attributes: jobExplorer.attributes,
   };
 
-  const { queryParams: optionsQueryParams } =
-    useQueryParams(initialOptionsParams);
+  const optionsQueryParams = useQueryParams(initialOptionsParams);
 
   useEffect(() => {
-    const search = qsToString(queryParams);
-    setUrlstring(search)
-    history.push(`${pathname}?${search}`)
-    fetchEndpoints()
-  }, [queryParams, urlstring]);
+    fetchOptions();
+    fetchChartData();
+    fetchModules();
+    fetchTemplates();
+    fetchWorkflows();
+  }, [queryParams]);
 
   const {
     cluster_id,
@@ -192,8 +226,8 @@ const Clusters = () => {
               <h2>Job status</h2>
             </CardTitle>
             <CardBody>
-              {isLoading && <LoadingState />}
-              {queryParams.cluster_id?.length <= 0 && isSuccess && (
+              {chartDataIsLoading && <LoadingState />}
+              {(!queryParams.cluster_id || queryParams.cluster_id?.length <= 0) && chartDataIsSuccess && (
                 <BarChart
                   margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
                   id="d3-bar-chart-root"
@@ -201,7 +235,7 @@ const Clusters = () => {
                   queryParams={queryParams}
                 />
               )}
-              {queryParams.cluster_id?.length > 0 && isSuccess && (
+              {queryParams.cluster_id?.length > 0 && chartDataIsSuccess && (
                 <LineChart
                   margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
                   id="d3-line-chart-root"
@@ -216,7 +250,7 @@ const Clusters = () => {
           <TemplatesList
             qp={queryParams}
             templates={workflows}
-            isLoading={isLoading}
+            isLoading={workflowsIsLoading}
             title={'Top workflows'}
             jobType={'workflowjob'}
           />
@@ -225,13 +259,13 @@ const Clusters = () => {
           <TemplatesList
             qp={queryParams}
             templates={templates}
-            isLoading={isLoading}
+            isLoading={templatesIsLoading}
             title={'Top templates'}
             jobType={'job'}
           />
         </GridItem>
         <GridItem span={4}>
-          <ModulesList modules={modules} isLoading={isLoading} />
+          <ModulesList modules={modules} isLoading={modulesIsLoading} />
         </GridItem>
       </Grid>
     );
@@ -243,6 +277,7 @@ const Clusters = () => {
         <PageHeaderTitle title={'Clusters'} />
         <FilterableToolbar
           categories={options}
+          qsConfig={qsConfig}
           filters={queryParams}
           setFilters={setFromToolbar}
         />

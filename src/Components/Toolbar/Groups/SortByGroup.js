@@ -5,18 +5,24 @@ import { SortAmountDownIcon, SortAmountUpIcon } from '@patternfly/react-icons';
 
 import ToolbarInput from './ToolbarInput';
 
-const SortByGroup = ({ filters, setFilters, sort_options }) => (
+const SortByGroup = ({ filters, handleSearch, setFilters, sort_options }) => (
   <ToolbarGroup variant="filter-group">
     <ToolbarInput
       categoryKey="sort_options"
       value={filters.sort_options}
       selectOptions={sort_options}
-      setValue={(value) => setFilters('sort_options', value)}
+      setValue={(value) => {
+          setFilters('sort_options', value);
+          handleSearch('sort_options', value);
+        }
+      }
     />
     <Button
       variant="control"
-      onClick={() =>
-        setFilters('sort_order', filters.sort_order === 'asc' ? 'desc' : 'asc')
+      onClick={() => {
+          setFilters('sort_order', filters.sort_order === 'asc' ? 'desc' : 'asc');
+          handleSearch('sort_order', filters.sort_order === 'asc' ? 'desc' : 'asc');
+        }
       }
     >
       {filters.sort_order === 'asc' && <SortAmountUpIcon />}
@@ -27,6 +33,7 @@ const SortByGroup = ({ filters, setFilters, sort_options }) => (
 
 SortByGroup.propTypes = {
   filters: PropTypes.object.isRequired,
+  handleSearch: PropTypes.func.isRequired,
   setFilters: PropTypes.func.isRequired,
   sort_options: PropTypes.array.isRequired,
 };

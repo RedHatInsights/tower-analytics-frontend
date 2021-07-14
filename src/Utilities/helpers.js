@@ -1,5 +1,6 @@
 import moment from 'moment';
 import {parse, stringify} from "query-string";
+import {encodeNonDefaultQueryString, mergeParams, parseQueryString, removeParams, replaceParams} from "./qs";
 
 /*
  * isNumeric - return true if input is a real number
@@ -139,20 +140,31 @@ export function formatJobDetailsURL(baseURL, jobId) {
   return `${baseURL}/#/${subDirectory1}/${jobId}/${subDirectory2}/`;
 }
 
-export const qsToObject = (qs) => {
-  return parse(qs, {
-    arrayFormat: 'bracket',
-    skipEmptyString: false,
-    skipNull: false,
-    parseBooleans: true,
-    parseNumbers: true,
-  })
+// export const handleSearch = (key, value, qsConfig, history) => {
+//   let params = parseQueryString(qsConfig, history.location.search);
+//   params = mergeParams(params, { [key]: value });
+//   //params = replaceParams(params, { page: 1 });
+//   if (value === '' || value.length === 0)
+//     params = removeParams(qsConfig, params, {[key]: params[key]});
+//   pushHistoryState(params, qsConfig);
+// }
+
+export const handleSearch = (key, value, qsConfig, history) => {
+  let params = parseQueryString(qsConfig, history.location.search);
+  params = replaceParams(params, { [key]: value });
+  params = mergeParams(params, { [key]: value });
+  if (value === '' || value.length === 0)
+    params = removeParams(qsConfig, params, {[key]: params[key]});
+  pushHistoryState(params, qsConfig, history);
 }
 
-export const qsToString = (qs) => {
-  return stringify(qs, {
-    arrayFormat: 'bracket',
-    skipNull: false,
-    skipEmptyString: false
-  })
+export const pushHistoryState = (params, qsConfig, history) => {
+  const { pathname } = history.location;
+  const nonNamespacedParams = parseQueryString({}, history.location.search);
+  const encodedParams = encodeNonDefaultQueryString(
+    qsConfig,
+    params,
+    nonNamespacedParams
+  );
+  history.push(encodedParams ? `${pathname}?${encodedParams}` : pathname);
 }

@@ -1,3 +1,5 @@
+import {arrayOf, shape, string} from "prop-types";
+
 export const jobExplorer = {
   attributes: [
     'id',
@@ -105,3 +107,18 @@ export const notAuthorizedParams = {
   description:
     'User does not have privileges to perform this action. Contact your organization adminstrator(s) for more information.',
 };
+
+export const arrayFields = [
+  'automation_status',
+  'attributes',
+  'cluster_id',
+  'category',
+  'frequency_period',
+  'host_id',
+  'host_status',
+  'inventory_id',
+  'job_type',
+  'status',
+  'org_id',
+  'template_id',
+]
