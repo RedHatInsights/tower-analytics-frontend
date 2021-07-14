@@ -18,17 +18,19 @@ describe('SavingsPlanner/Shared/Form/Templates', () => {
   beforeEach(() => {
     api.preflightRequest.mockResolvedValue(mockResponses.preflightRequest200);
     api.readJobExplorer.mockResolvedValue({
-      data: {
-        items: [
-          {
-            id: 345,
-            name: 'test_template_name_0',
-          },
-        ],
-      },
-      response: { msg: 'Success' },
-      url: '/api/tower-analytics/v1/job_explorer/',
+      meta: {},
+      items: [
+        {
+          id: 345,
+          name: 'test_template_name_0',
+        },
+        {
+          id: 1,
+          name: 'test_template_name_2',
+        },
+      ],
     });
+    api.readJobExplorerOptions.mockResolvedValue(mockResponses.readJobExplorer);
   });
 
   test('has rendered preflight/authorization error component', async () => {
@@ -73,17 +75,17 @@ describe('SavingsPlanner/Shared/Form/Templates', () => {
     expect(screen.getByText('No results found')).toBeTruthy();
   });
 
-  test.skip('has rendered Templates component with data and is clickable', async () => {
+  test('has rendered Templates component with data and is clickable', async () => {
     await act(async () => {
       renderPageWithProps(Templates, defaultProps);
     });
 
-    expect(screen.getByText('test_template_name_0')).toBeTruthy();
+    expect(screen.getByText('Link a template to this plan:')).toBeTruthy();
 
-    // fireEvent.click(screen.getByLabelText('Select row 2'));
-    // expect(mockDispatch).toHaveBeenCallWith({
-    //   type: 'SET_TEMPLATE_ID',
-    //   value: 345,
-    // });
+    expect(screen.getByText('test_template_name_0')).toBeTruthy();
+    expect(screen.getByText('test_template_name_2')).toBeTruthy();
+
+    fireEvent.click(screen.getByTestId('radio-345'));
+    fireEvent.click(screen.getByTestId('radio-1'));
   });
 });

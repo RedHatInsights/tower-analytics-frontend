@@ -112,7 +112,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
-
   return (
     <>
       {preflightError && <EmptyState {...preflightError} />}
@@ -159,6 +158,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
                   {templates.map(({ id, name }) => (
                     <Tr key={`template-detail-${id}`}>
                       <Td
+                        data-testid={`radio-${id}`}
                         key={`template-detail-${id}-radio-td`}
                         select={{
                           rowIndex: id,
