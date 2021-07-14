@@ -5,15 +5,8 @@ import {
   ChartLegendPosition,
   ChartTopLevelType,
   ChartType,
-  functions,
   ChartThemeColor,
-  ApiReturnType
 } from 'react-json-chart-builder';
-
-export const customFunctions = (data: ApiReturnType) => ({
-  ...functions,
-  fetchFnc: () => new Promise<ApiReturnType>((resolve) => { resolve(data); })
-});
 
 const schema = (label: string, y: string): ChartSchemaElement[] => ([
   {

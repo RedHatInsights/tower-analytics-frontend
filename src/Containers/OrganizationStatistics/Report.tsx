@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
-import ChartBuilder from 'react-json-chart-builder';
-import schema, { customFunctions } from './schema';
+import ChartBuilder, { ApiReturnType, functions } from 'react-json-chart-builder';
+import schema from './schema';
 
 import { Card, CardBody, CardFooter, PaginationVariant } from '@patternfly/react-core';
 import { TableComposable, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
@@ -17,6 +17,12 @@ import { formatTotalTime } from '../../Utilities/helpers';
 import { global_disabled_color_300 } from '@patternfly/react-tokens';
 import ApiStatusWrapper from '../../Components/ApiStatusWrapper';
 import FilterableToolbar from '../../Components/Toolbar/Toolbar';
+import currencyFormatter from '../../Utilities/currencyFormatter';
+
+const customFunctions = (data: ApiReturnType) => ({
+  ...functions,
+  fetchFnc: () => new Promise<ApiReturnType>((resolve) => { resolve(data); })
+});
 
 const perPageOptions = [
   { title: '4', value: 4 }
@@ -42,19 +48,15 @@ const defaultParams = {
   sort_order: 'desc',
 }
 
-const extraAttr: { key: string, value: string }[] = [
-  { key: 'id', value: 'ID' },
-  { key: 'name', value: 'Template name' },
-];
+const timeFields: string[] = ['elapsed'];
+const costFields: string[] = [];
 
 const isOther = (item: Record<string, string | number>, key: string) => (key === 'id' && item[key] === -1);
 
-const getText = (item: Record<string, string | number>, key: string) => {
-  if (isOther(item, key)) {
-    return '-'
-  } else if (key === "elapsed") {
-    return formatTotalTime(item[key])
-  }
+const getText = (item: Record<string, string | number>, key: string): string => {
+  if (isOther(item, key)) return '-';
+  if (timeFields.includes(key)) return formatTotalTime(item[key]);
+  if (costFields.includes(key)) return currencyFormatter(+item[key]);
   return `${item[key]}`;
 }
 
@@ -68,15 +70,20 @@ const getOthersStyle = (item: Record<string, string | number>, key: string) => {
 }
 
 const Report: FunctionComponent<Record<string, never>> = () => {
-  const [
-    apiStatus,
-    setData,
-  ] = useApi({ meta: { legend: [], count: 0 }, dates: [] });
+  const extraAttr: { key: string, value: string }[] = [
+    { key: 'id', value: 'ID' },
+    { key: 'name', value: 'Template name' },
+  ];
+
+  const [apiStatus, setData] = useApi({});
   const [options, setOptions] = useApi({});
+
   const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(
     defaultParams
   );
+
   const [attrPairs, setAttrPairs] = useState(extraAttr);
+
   const chartSchema = schema(
     attrPairs.find(({ key }) => key === queryParams.sort_options)?.value || 'Label Y',
     queryParams.sort_options
@@ -102,10 +109,10 @@ const Report: FunctionComponent<Record<string, never>> = () => {
   };
 
   const getSorParams = (currKey: string) => {
-    if (!options.isSuccess) return {};
+    if (!options.isSuccess)
+      return {};
 
     const whitelistKeys = options?.data?.sort_options?.map(({ key }: { key: string }) => key);
-
     if (!whitelistKeys.includes(currKey))
       return {};
 
@@ -131,7 +138,7 @@ const Report: FunctionComponent<Record<string, never>> = () => {
             setFilters={setFromToolbar}
             pagination={
               <Pagination
-                count={apiStatus.data.meta.count}
+                count={apiStatus.data?.meta?.count}
                 perPageOptions={perPageOptions}
                 params={{
                   limit: queryParams.limit,
@@ -155,7 +162,7 @@ const Report: FunctionComponent<Record<string, never>> = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {apiStatus.data.meta.legend.map((item: Record<string, string | number>) => (
+              {apiStatus.data?.meta?.legend.map((item: Record<string, string | number>) => (
                 <Tr key={item.id} style={getOthersStyle(item, 'id')}>
                   {attrPairs.map(({ key }) => (
                     <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
@@ -167,7 +174,7 @@ const Report: FunctionComponent<Record<string, never>> = () => {
         </CardBody>
         <CardFooter>
           <Pagination
-            count={apiStatus.data.meta.count}
+            count={apiStatus.data?.meta?.count}
             perPageOptions={perPageOptions}
             params={{
               limit: queryParams.limit,

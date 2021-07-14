@@ -5,15 +5,16 @@ import LoadingState from './LoadingState';
 import NoData from './NoData';
 
 const ApiStatusWrapper = ({ api, children }) => {
-  if (api.isLoading) return <LoadingState />;
+  if (!api || api.isLoading) return <LoadingState />;
   if (api.error) return <ApiErrorState message={api.error.error} />;
 
   if (api.isSuccess) {
     if (Array.isArray(api.data) && api.data.length === 0) return <NoData />;
     if (Object.keys(api.data).length === 0) return <NoData />;
+    return children;
   }
 
-  return children;
+  return '';
 };
 
 ApiStatusWrapper.propTypes = {
