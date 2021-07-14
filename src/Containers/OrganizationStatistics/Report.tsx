@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 
 import ChartBuilder, { ApiReturnType, functions } from 'react-json-chart-builder';
-import schema from './schema';
 
 import { Card, CardBody, CardFooter, PaginationVariant } from '@patternfly/react-core';
 import { TableComposable, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
@@ -10,7 +9,6 @@ import Pagination from '../../Components/Pagination';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
-import { readJobExplorer, readJobExplorerOptions } from '../../Api';
 import useApi from '../../Utilities/useApi';
 import { formatTotalTime } from '../../Utilities/helpers';
 
@@ -18,6 +16,14 @@ import { global_disabled_color_300 } from '@patternfly/react-tokens';
 import ApiStatusWrapper from '../../Components/ApiStatusWrapper';
 import FilterableToolbar from '../../Components/Toolbar/Toolbar';
 import currencyFormatter from '../../Utilities/currencyFormatter';
+
+import {
+  ApiFunctionType,
+  ApiParamsType,
+  AttributesType,
+  ReportGeneratorParams,
+  SchemaFnc
+} from './types';
 
 const customFunctions = (data: ApiReturnType) => ({
   ...functions,
@@ -27,26 +33,6 @@ const customFunctions = (data: ApiReturnType) => ({
 const perPageOptions = [
   { title: '4', value: 4 }
 ];
-
-const defaultParams = {
-  limit: 4,
-  offset: 0,
-  attributes: [
-    'failed_count',
-    'successful_count',
-    'canceled_count',
-    'total_count',
-    'failed_host_count',
-    'unreachable_host_count',
-    'host_count',
-    'elapsed',
-  ],
-  group_by: 'template',
-  group_by_time: true,
-  granularity: 'monthly',
-  sort_options: 'total_count',
-  sort_order: 'desc',
-}
 
 const timeFields: string[] = ['elapsed'];
 const costFields: string[] = [];
@@ -69,35 +55,36 @@ const getOthersStyle = (item: Record<string, string | number>, key: string) => {
   return {};
 }
 
-const Report: FunctionComponent<Record<string, never>> = () => {
-  const extraAttr: { key: string, value: string }[] = [
-    { key: 'id', value: 'ID' },
-    { key: 'name', value: 'Template name' },
-  ];
-
-  const [apiStatus, setData] = useApi({});
+const Report: FunctionComponent<ReportGeneratorParams> = ({
+  defaultParams,
+  extraAttributes,
+  readData,
+  readOptions,
+  schemaFnc
+}) => {
+  const [api, setData] = useApi({});
   const [options, setOptions] = useApi({});
 
   const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(
     defaultParams
   );
 
-  const [attrPairs, setAttrPairs] = useState(extraAttr);
+  const [attrPairs, setAttrPairs] = useState(extraAttributes);
 
-  const chartSchema = schema(
+  const chartSchema = schemaFnc(
     attrPairs.find(({ key }) => key === queryParams.sort_options)?.value || 'Label Y',
     queryParams.sort_options
   );
 
   useEffect(() => {
-    setData(readJobExplorer({ params: queryParams }));
-    setOptions(readJobExplorerOptions({ params: queryParams }));
+    setData(readData({ params: queryParams }));
+    setOptions(readOptions({ params: queryParams }));
   }, [queryParams]);
 
   useEffect(() => {
     if(options.isSuccess) {
       setAttrPairs([
-        ...extraAttr,
+        ...extraAttributes,
         ...options.data?.sort_options
       ]);
     }
@@ -129,7 +116,7 @@ const Report: FunctionComponent<Record<string, never>> = () => {
   };
 
   return (
-    <ApiStatusWrapper api={apiStatus}>
+    <ApiStatusWrapper api={api}>
       <Card>
         <CardBody>
           <FilterableToolbar
@@ -138,7 +125,7 @@ const Report: FunctionComponent<Record<string, never>> = () => {
             setFilters={setFromToolbar}
             pagination={
               <Pagination
-                count={apiStatus.data?.meta?.count}
+                count={api.data?.meta?.count}
                 perPageOptions={perPageOptions}
                 params={{
                   limit: queryParams.limit,
@@ -149,7 +136,7 @@ const Report: FunctionComponent<Record<string, never>> = () => {
               />
             }
           />
-          <ChartBuilder schema={chartSchema} functions={customFunctions(apiStatus.data)} />
+          <ChartBuilder schema={chartSchema} functions={customFunctions(api.data)} />
           <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
             <Thead>
               <Tr>
@@ -162,7 +149,7 @@ const Report: FunctionComponent<Record<string, never>> = () => {
               </Tr>
             </Thead>
             <Tbody>
-              {apiStatus.data?.meta?.legend.map((item: Record<string, string | number>) => (
+              {api.data?.meta?.legend.map((item: Record<string, string | number>) => (
                 <Tr key={item.id} style={getOthersStyle(item, 'id')}>
                   {attrPairs.map(({ key }) => (
                     <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
@@ -174,7 +161,7 @@ const Report: FunctionComponent<Record<string, never>> = () => {
         </CardBody>
         <CardFooter>
           <Pagination
-            count={apiStatus.data?.meta?.count}
+            count={api.data?.meta?.count}
             perPageOptions={perPageOptions}
             params={{
               limit: queryParams.limit,
