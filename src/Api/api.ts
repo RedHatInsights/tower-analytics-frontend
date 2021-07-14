@@ -32,6 +32,8 @@ export const orgOptionsEndpoint =
 export const clustersOptionsEndpoint =
   '/api/tower-analytics/v1/dashboard_clusters_options/';
 export const planOptionsEndpoint = '/api/tower-analytics/v1/plan_options/';
+const hostExplorerOptionsEndpoint =
+  '/api/tower-analytics/v1/host_explorer_options/';
 
 const featuresEndpoint = '/api/featureflags/v0';
 
@@ -51,6 +53,7 @@ export const preflightRequest = (): Promise<Response> =>
 export const readJobExplorer = (
   params: ParamsWithPagination
 ): Promise<ApiJson> => postWithPagination(jobExplorerEndpoint, params);
+
 export const readJobExplorerOptions = (params: Params): Promise<ApiJson> =>
   post(jobExplorerOptionsEndpoint, params);
 
@@ -60,29 +63,40 @@ export const readEventExplorer = (
 
 export const readROI = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(ROIEndpoint, params);
+
 export const readROIOptions = (params: Params): Promise<ApiJson> =>
   post(ROITemplatesOptionsEndpoint, params);
 
 export const readHostExplorer = (
   params: ParamsWithPagination
 ): Promise<ApiJson> => postWithPagination(hostExplorerEndpoint, params);
+
 export const readOrgOptions = (params: Params): Promise<ApiJson> =>
   post(orgOptionsEndpoint, params);
 
+export const readHostExplorerOptions = (params: Params): Promise<ApiJson> =>
+  post(hostExplorerOptionsEndpoint, params);
+
 export const readPlans = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(plansEndpoint, params);
+
 export const createPlan = (params: Params): Promise<ApiJson> =>
   post(planEndpoint, params);
+
 export const readPlan = (id: number): Promise<ApiJson> =>
   get(`${planEndpoint}${id}/`);
+
 export const deletePlan = ({ id }: DeleteParams): Promise<ApiJson> =>
   deleteById(planEndpoint, id);
+
 export const updatePlan = (id: string, params: Params): Promise<ApiJson> =>
   updateById(planEndpoint, id, params);
+
 export const readPlanOptions = (params: Params = {}): Promise<ApiJson> =>
   get(planOptionsEndpoint, params);
 
 export const readClusters = (): Promise<ApiJson> => get(clustersEndpoint);
+
 export const readClustersOptions = (params: Params): Promise<ApiJson> =>
   post(clustersOptionsEndpoint, params);
 

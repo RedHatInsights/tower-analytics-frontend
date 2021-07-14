@@ -7,10 +7,40 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
+import { readJobExplorer, readJobExplorerOptions } from '../../Api';
+import {
+  AttributesType,
+  ReportGeneratorParams
+} from './types';
 
-const schema = (label: string, y: string): ChartSchemaElement[] => ([
+const defaultParams = {
+  limit: 4,
+  offset: 0,
+  attributes: [
+    'failed_count',
+    'successful_count',
+    'canceled_count',
+    'total_count',
+    'failed_host_count',
+    'unreachable_host_count',
+    'host_count',
+    'elapsed',
+  ],
+  group_by: 'template',
+  group_by_time: true,
+  granularity: 'monthly',
+  sort_options: 'total_count',
+  sort_order: 'desc',
+}
+
+const extraAttributes: AttributesType = [
+  { key: 'id', value: 'ID' },
+  { key: 'name', value: 'Template name' },
+];
+
+const schemaFnc = (label: string, y: string): ChartSchemaElement[] => ([
   {
-    id: 3000,
+    id: 1,
     kind: ChartKind.wrapper,
     type: ChartTopLevelType.chart,
     parent: null,
@@ -47,9 +77,9 @@ const schema = (label: string, y: string): ChartSchemaElement[] => ([
     }
   },
   {
-    id: 3100,
+    id: 2,
     kind: ChartKind.group,
-    parent: 3000,
+    parent: 1,
     template: {
       id: 0,
       kind: ChartKind.simple,
@@ -66,4 +96,12 @@ const schema = (label: string, y: string): ChartSchemaElement[] => ([
   }
 ]);
 
-export default schema;
+const reportParams: ReportGeneratorParams = {
+  defaultParams,
+  extraAttributes,
+  readData: readJobExplorer,
+  readOptions: readJobExplorerOptions,
+  schemaFnc 
+};
+
+export default reportParams;

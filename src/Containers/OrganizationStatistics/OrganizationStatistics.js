@@ -50,6 +50,9 @@ import Report from './Report';
 import ApiErrorState from './ApiErrorState';
 import LoadingState from './LoadingState';
 import NoData from './NoData';
+import reportPlaybookRunRate from './reportPlaybookRunRate';
+import reportChangesMade from './reportChangesMade';
+import reportAffectedHostsByPlaybook from './reportAffectedHostsByPlaybook';
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
@@ -339,7 +342,13 @@ const OrganizationStatistics = ({ history }) => {
             </Card>
           </GridItem>
           <GridItem>
-            <Report />
+            <Report {...reportPlaybookRunRate} />
+          </GridItem>
+          <GridItem>
+            <Report {...reportChangesMade} />
+          </GridItem>
+          <GridItem>
+            <Report {...reportAffectedHostsByPlaybook} />
           </GridItem>
         </Grid>
       );
