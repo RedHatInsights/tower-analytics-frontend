@@ -1,21 +1,23 @@
 import '@testing-library/jest-dom';
 import Add from '.';
-import { act } from 'react-dom/test-utils';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { renderPage } from '../../../Utilities/tests/helpers.reactTestingLib';
 import mockResponses from '../../../Utilities/__fixtures__/';
 import * as api from '../../../Api';
 jest.mock('../../../Api');
 
 describe('SavingsPlanner/Add', () => {
-  beforeEach(() => {
-    api.preflightRequest.mockResolvedValue(mockResponses.preflightRequest200);
-    api.readPlanOptions.mockResolvedValue(mockResponses.readPlansOptions);
+  afterEach(() => {
+    jest.clearAllMocks();
   });
 
   test('can see the Add component', async () => {
-    await act(async () => {
-      renderPage(Add);
+    api.preflightRequest.mockResolvedValue(mockResponses.preflightRequest200);
+    api.readPlanOptions.mockResolvedValue(mockResponses.readPlansOptions);
+    renderPage(Add);
+
+    await waitFor(() => {
+      return expect(api.readPlanOptions).toHaveBeenCalledTimes(1);
     });
 
     expect(screen.getByText('Savings Planner')).toBeTruthy();
@@ -28,14 +30,13 @@ describe('SavingsPlanner/Add', () => {
 
   test('redirects upon 403', async () => {
     api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest403);
-    api.readPlanOptions.mockResolvedValue({
-      data: { meta: { rbac: { perms: { all: false } } } },
-      isSuccess: true,
-    });
-    var wrapper;
+    api.readPlanOptions.mockResolvedValue(
+      mockResponses.readPlansOptionsRBACFalse
+    );
+    let wrapper = renderPage(Add);
 
-    await act(async () => {
-      wrapper = renderPage(Add);
+    await waitFor(() => {
+      return expect(api.readPlanOptions).toHaveBeenCalledTimes(1);
     });
 
     expect(wrapper.container).toBeEmptyDOMElement();

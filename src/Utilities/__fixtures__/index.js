@@ -7,6 +7,8 @@ import readEventExplorer from './readEventExplorer';
 import readJobExplorer from './readJobExplorer';
 import readPlans from './readPlans';
 import readPlansOptions from './readPlansOptions';
+import readPlansOptionsRBACFalse from './readPlansOptionsRBACFalse';
+import readTemplateJobExplorer from './readTemplateJobExplorer';
 
 export default {
   preflightRequest200,
@@ -18,4 +20,6 @@ export default {
   readJobExplorer,
   readPlans,
   readPlansOptions,
+  readPlansOptionsRBACFalse,
+  readTemplateJobExplorer,
 };
