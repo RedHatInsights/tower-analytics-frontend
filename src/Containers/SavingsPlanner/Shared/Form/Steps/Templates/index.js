@@ -58,31 +58,7 @@ const initialQueryParams = {
 };
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
-  const [sortDirection, setSortDirection] = useState(
-    initialQueryParams.sort_order
-  );
   const columnIndex = 1;
-
-  const onSort = () => {
-    setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-  };
-  useEffect(() => {
-    queryParamsDispatch({
-      type: 'SET_SORT_ORDER',
-      value: { sort_order: sortDirection },
-    });
-  }, [sortDirection]);
-
-  const sortParams = {
-    sort: {
-      sortBy: {
-        index: columnIndex,
-        direction: sortDirection,
-      },
-      onSort,
-      columnIndex,
-    },
-  };
 
   const { pathname, hash, search } = useLocation();
   const history = useHistory();
@@ -105,6 +81,26 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     setFromToolbar,
     dispatch: queryParamsDispatch,
   } = useQueryParams(initialQueryParams);
+
+  const onSort = () => {
+    queryParamsDispatch({
+      type: 'SET_SORT_ORDER',
+      value: {
+        sort_order: queryParams.sort_order === 'asc' ? 'desc' : 'asc',
+      },
+    });
+  };
+
+  const sortParams = {
+    sort: {
+      sortBy: {
+        index: columnIndex,
+        direction: queryParams.sort_order,
+      },
+      onSort,
+      columnIndex,
+    },
+  };
 
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
