@@ -18,11 +18,11 @@ const defaultParams = {
   search: '',
 };
 
-export const renderPage = (Component, { search } = defaultParams) =>
+export const renderPage = (Component, { search } = defaultParams, props = {}) =>
   render(
     <Provider store={store}>
       <MemoryRouter>
-        <Component location={{ search }} />
+        <Component location={{ search }} {...props} />
       </MemoryRouter>
     </Provider>
   );
