@@ -4,8 +4,8 @@ import { Card, CardBody, CardTitle, Title } from '@patternfly/react-core';
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
 import hoursFormatter from '../../../../../Utilities/hoursFormatter';
 interface Props {
-  value?: number,
-  isMoney?: boolean
+  value?: number;
+  isMoney?: boolean;
 }
 
 const TotalSavings: FunctionComponent<Props> = ({
@@ -20,9 +20,7 @@ const TotalSavings: FunctionComponent<Props> = ({
         size="4xl"
         style={{ color: isMoney ? '#81C46B' : '#0063CF' }}
       >
-        {isMoney
-          ? `${currencyFormatter(value)}`
-          : `${hoursFormatter(value)}`}
+        {isMoney ? `${currencyFormatter(value)}` : `${hoursFormatter(value)}`}
       </Title>
     </CardBody>
   </Card>

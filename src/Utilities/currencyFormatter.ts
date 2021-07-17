@@ -5,5 +5,5 @@ const currencyFormatter = (n: number): string => {
   });
 
   return formatter.format(n); /* $2,500.00 */
-}
+};
 export default currencyFormatter;
