@@ -58,8 +58,6 @@ const initialQueryParams = {
 };
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
-  const columnIndex = 1;
-
   const { pathname, hash, search } = useLocation();
   const history = useHistory();
 
