@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import PropTypes from 'prop-types';
 import { DatePicker } from '@patternfly/react-core';
 import { optionsForCategories } from '../../constants';
 
-const DateInput = ({
+interface Props {
+  categoryKey: string;
+  value?: string;
+  setValue?: (value: string) => void;
+  otherProps?: {
+    [x: string]: unknown;
+  };
+}
+
+const DateInput: FunctionComponent<Props> = ({
   categoryKey,
   value = '',
-  setValue = () => {},
+  setValue = () => ({}),
   otherProps = {},
 }) => {
   const options = optionsForCategories[categoryKey];
@@ -24,7 +33,7 @@ DateInput.propTypes = {
   categoryKey: PropTypes.string.isRequired,
   value: PropTypes.string,
   setValue: PropTypes.func.isRequired,
-  otherProps: PropTypes.object,
+  otherProps: PropTypes.any,
 };
 
 export default DateInput;

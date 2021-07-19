@@ -1,4 +1,14 @@
-export const optionsForCategories = {
+export interface OptionsForCategories {
+  [key: string]: {
+    type: string;
+    name: string;
+    hasChips: boolean;
+    isSingle?: boolean;
+    placeholder?: string;
+  };
+}
+
+export const optionsForCategories: OptionsForCategories = {
   status: {
     type: 'select',
     isSingle: false,
