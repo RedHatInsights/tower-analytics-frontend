@@ -5,6 +5,9 @@ const {
   defaultServices,
 } = require('@redhat-cloud-services/frontend-components-config-utilities/standalone');
 
+defaultServices.config.path =
+  'https://github.com/redallen/cloud-services-config#tower-analytics-dev';
+
 const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
   debug: true,
