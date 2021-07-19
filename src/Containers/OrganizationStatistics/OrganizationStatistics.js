@@ -1,8 +1,6 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-
-import {useLocation} from 'react-router-dom';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import useRedirect from '../../Utilities/useRedirect';
@@ -50,8 +48,8 @@ import { organizationStatistics as constants } from '../../Utilities/constants';
 // For chart colors
 import { pfmulti } from '../../Utilities/colors';
 import { scaleOrdinal } from 'd3';
-import useRequest from "../../Utilities/useRequest";
-import {getQSConfig} from "../../Utilities/qs";
+import useRequest from '../../Utilities/useRequest';
+import { getQSConfig } from '../../Utilities/qs';
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
@@ -60,30 +58,30 @@ const Divider = styled('hr')`
 const colorFunc = scaleOrdinal(pfmulti);
 
 const orgsChartMapper = (data = [], meta, attrName) => {
-    const dates = data.map(({ date, items }) => ({
+  const dates = data.map(({ date, items }) => ({
+    date,
+    items: items.map(({ id, [attrName]: value, name }) => ({
+      id,
       date,
-      items: items.map(({ id, [attrName]: value, name }) => ({
-        id,
-        date,
-        value,
-        name: name || 'No organization',
-      })),
-    }))
-    meta.legend.map((el) => ({
-      ...el,
-      name: el.name || 'No organization',
-    }))
-    return dates;
-  };
+      value,
+      name: name || 'No organization',
+    })),
+  }));
+  meta.legend.map((el) => ({
+    ...el,
+    name: el.name || 'No organization',
+  }));
+  return dates;
+};
 
 const pieChartMapper = (items = [], attrName) => {
-  const data = items.map(({id, [attrName]: count, name}) => ({
+  const data = items.map(({ id, [attrName]: count, name }) => ({
     id,
     count,
     name: name || 'No organization',
-  }))
+  }));
   return data;
-}
+};
 
 const redirectToJobExplorer =
   (toJobExplorer, queryParams) =>
@@ -132,7 +130,11 @@ const chartMapper = [
     tooltip: HostsTooltip,
   },
 ];
-const qsConfig = getQSConfig('organization-statistics', { ...constants.defaultParams }, ['limit', 'offset']);
+const qsConfig = getQSConfig(
+  'organization-statistics',
+  { ...constants.defaultParams },
+  ['limit', 'offset']
+);
 
 const OrganizationStatistics = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
@@ -142,14 +144,13 @@ const OrganizationStatistics = ({ history }) => {
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
 
   const {
-    result: { preflight },
     error: preflightError,
     isLoading: preflightIsLoading,
     isSuccess: preflightIsSuccess,
     request: setPreflight,
   } = useRequest(
     useCallback(async () => {
-      const preflight = await preflightRequest()
+      const preflight = await preflightRequest();
       return { preflight: preflight };
     }, []),
     { preflight: {}, preflightError, preflightIsLoading, preflightIsSuccess }
@@ -163,10 +164,10 @@ const OrganizationStatistics = ({ history }) => {
     request: setJobs,
   } = useRequest(
     useCallback(async () => {
-      const jobs = await readJobExplorer({ params: jobRunsByOrgParams })
+      const jobs = await readJobExplorer({ params: jobRunsByOrgParams });
       return { jobs: jobs };
     }, [queryParams]),
-    { jobs: [], jobsError,  jobsIsLoading, jobsIsSuccess }
+    { jobs: [], jobsError, jobsIsLoading, jobsIsSuccess }
   );
 
   const {
@@ -176,16 +177,19 @@ const OrganizationStatistics = ({ history }) => {
     isSuccess: orgsIsSuccess,
     request: setOrgs,
   } = useRequest(
-    useCallback(async (tabIndex = 0) => {
-      let orgs;
-      if(tabIndex === 0) {
-        orgs = await readJobExplorer({ params: jobsByDateAndOrgParams })
-      } else {
-        orgs = await readHostExplorer({ params: hostAcrossOrgParams })
-      }
-      return { orgs: orgs };
-    }, [queryParams]),
-    { orgs: [], orgsError,  orgsIsLoading, orgsIsSuccess }
+    useCallback(
+      async (tabIndex = 0) => {
+        let orgs;
+        if (tabIndex === 0) {
+          orgs = await readJobExplorer({ params: jobsByDateAndOrgParams });
+        } else {
+          orgs = await readHostExplorer({ params: hostAcrossOrgParams });
+        }
+        return { orgs: orgs };
+      },
+      [queryParams]
+    ),
+    { orgs: [], orgsError, orgsIsLoading, orgsIsSuccess }
   );
 
   const {
@@ -196,16 +200,14 @@ const OrganizationStatistics = ({ history }) => {
     request: setOptions,
   } = useRequest(
     useCallback(async () => {
-      const options = await readOrgOptions({ params: queryParams })
+      const options = await readOrgOptions({ params: queryParams });
       return { options: options };
     }, [queryParams]),
     { options: {}, optionsError, optionsIsLoading, optionsIsSuccess }
   );
 
   const {
-    result: {
-      tasks
-    },
+    result: { tasks },
     error: tasksError,
     isLoading: tasksIsLoading,
     isSuccess: tasksIsSuccess,
@@ -214,7 +216,8 @@ const OrganizationStatistics = ({ history }) => {
     useCallback(async () => {
       const tasks = await readJobExplorer({ params: jobEventsByOrgParams });
       return {
-        tasks: tasks }
+        tasks: tasks,
+      };
     }, [queryParams]),
     { tasks: [], tasksError, tasksIsLoading, tasksIsSuccess }
   );
@@ -224,10 +227,10 @@ const OrganizationStatistics = ({ history }) => {
   }, [activeTabKey]);
 
   useEffect(() => {
-    setOrgs()
-    setTasks()
-    setOptions()
-    setJobs()
+    setOrgs();
+    setTasks();
+    setOptions();
+    setJobs();
   }, [queryParams]);
 
   const jobEventsByOrgParams = {
@@ -298,7 +301,11 @@ const OrganizationStatistics = ({ history }) => {
                   <GroupedBarChart
                     margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
                     id="d3-grouped-bar-chart-root"
-                    data={orgsChartMapper(orgs.dates, orgs.meta, chartMapper[activeTabKey].attr)}
+                    data={orgsChartMapper(
+                      orgs.dates,
+                      orgs.meta,
+                      chartMapper[activeTabKey].attr
+                    )}
                     legend={orgs.meta.legend}
                     history={history}
                     colorFunc={colorFunc}

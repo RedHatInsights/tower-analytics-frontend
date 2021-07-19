@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Redirect, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
@@ -6,26 +6,24 @@ import { readPlanOptions } from '../../../Api/';
 import { Paths } from '../../../paths';
 
 import Form from '../Shared/Form';
-import useRequest from "../../../Utilities/useRequest";
+import useRequest from '../../../Utilities/useRequest';
 
 const Edit = ({ data }) => {
   const { id } = useParams();
 
   const {
     result: options,
-    error,
-    isLoading,
     isSuccess,
     request: fetchPlanOptions,
   } = useRequest(
     useCallback(async () => {
-      const response = await readPlanOptions()
+      const response = await readPlanOptions();
       return {
-        data: response
+        data: response,
       };
     }, []),
     {
-      options: {}
+      options: {},
     }
   );
 

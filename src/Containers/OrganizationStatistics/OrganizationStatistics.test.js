@@ -1,7 +1,5 @@
 import { act } from 'react-dom/test-utils';
 import {
-  history,
-  location,
   mountPage,
   preflight200,
   preflight400,
@@ -16,7 +14,7 @@ jest.mock('react-router-dom', () => ({
   useLocation: () => ({
     push: jest.fn(),
     pathname: 'some_path',
-    search: ''
+    search: '',
   }),
 }));
 import OrganizationStatistics from './OrganizationStatistics';
@@ -158,7 +156,7 @@ describe('Containers/OrganizationStatistics', () => {
   });
 
   it('should render with data', async () => {
-    fetchMock.post({ url: jobExplorerUrl, overwriteRoutes: true }, { });
+    fetchMock.post({ url: jobExplorerUrl, overwriteRoutes: true }, {});
     await act(async () => {
       wrapper = mountPage(OrganizationStatistics);
     });
@@ -204,7 +202,10 @@ describe('Containers/OrganizationStatistics', () => {
   });
 
   it('should render with empty response', async () => {
-    fetchMock.post({ url: jobExplorerUrl, overwriteRoutes: true }, { items: [] });
+    fetchMock.post(
+      { url: jobExplorerUrl, overwriteRoutes: true },
+      { items: [] }
+    );
 
     await act(async () => {
       wrapper = mountPage(OrganizationStatistics);

@@ -1,5 +1,3 @@
-import {arrayOf, shape, string} from "prop-types";
-
 export const jobExplorer = {
   attributes: [
     'id',
@@ -99,7 +97,7 @@ export const savingsPlanner = {
     sort_options: 'modified',
     sort_order: 'desc',
     sort_by: 'modified:desc',
-  }
+  },
 };
 
 export const notAuthorizedParams = {
@@ -121,4 +119,4 @@ export const arrayFields = [
   'status',
   'org_id',
   'template_id',
-]
+];

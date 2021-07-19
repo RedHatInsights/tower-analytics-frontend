@@ -16,8 +16,14 @@ import {
   SortByGroup,
   SettingsPanel,
 } from './Groups/';
-import {useHistory} from "react-router-dom";
-import {encodeNonDefaultQueryString, parseQueryString, mergeParams, removeParams, replaceParams} from "../../Utilities/qs";
+import { useHistory } from 'react-router-dom';
+import {
+  encodeNonDefaultQueryString,
+  parseQueryString,
+  mergeParams,
+  removeParams,
+  replaceParams,
+} from '../../Utilities/qs';
 
 const FilterableToolbar = ({
   categories,
@@ -32,7 +38,7 @@ const FilterableToolbar = ({
 }) => {
   const [settingsExpanded, setSettingsExpanded] = useState(false);
   const { quick_date_range, sort_options, ...restCategories } = categories;
-  const history = useHistory()
+  const history = useHistory();
 
   // Filter out elements which are not in the option object.
   const filterCategories = Object.keys(restCategories)
@@ -47,9 +53,9 @@ const FilterableToolbar = ({
     params = replaceParams(params, { [key]: value });
     params = mergeParams(params, { [key]: value });
     if (value === '' || value.length === 0)
-      params = removeParams(qsConfig, params, {[key]: params[key]});
+      params = removeParams(qsConfig, params, { [key]: params[key] });
     pushHistoryState(params, qsConfig);
-  }
+  };
 
   const handleRemoveAll = (qsConfig) => {
     // remove everything in oldParams except for page_size and order_by
@@ -57,8 +63,11 @@ const FilterableToolbar = ({
     const oldParamsClone = { ...oldParams };
     delete oldParamsClone.limit;
     delete oldParamsClone.sort_by;
-    pushHistoryState(removeParams(qsConfig, oldParams, oldParamsClone), qsConfig);
-  }
+    pushHistoryState(
+      removeParams(qsConfig, oldParams, oldParamsClone),
+      qsConfig
+    );
+  };
 
   const pushHistoryState = (params, qsConfig) => {
     const { pathname } = history.location;
@@ -69,7 +78,7 @@ const FilterableToolbar = ({
       nonNamespacedParams
     );
     history.push(encodedParams ? `${pathname}?${encodedParams}` : pathname);
-  }
+  };
 
   return (
     <>

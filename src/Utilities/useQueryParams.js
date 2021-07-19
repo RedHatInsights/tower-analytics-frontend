@@ -1,9 +1,9 @@
 import { useReducer } from 'react';
 import moment from 'moment';
-import { useHistory } from "react-router-dom";
+import { useHistory } from 'react-router-dom';
 
 import { formatDate } from '../Utilities/helpers';
-import { parseQueryString} from "./qs";
+import { parseQueryString } from './qs';
 
 export const useQueryParams = (initial) => {
   const history = useHistory();
@@ -16,7 +16,10 @@ export const useQueryParams = (initial) => {
       }),
   };
 
-  const initialWithCalculatedParams = history !== 'undefined' && history?.location ? parseQueryString(initialParams, history.location.search) : initialParams;
+  const initialWithCalculatedParams =
+    history !== 'undefined' && history?.location
+      ? parseQueryString(initialParams, history.location.search)
+      : initialParams;
   const paramsReducer = (state, { type, value }) => {
     switch (type) {
       /* v0 api reducers */

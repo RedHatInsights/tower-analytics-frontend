@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useLocation, useParams, Redirect } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ import {
 } from '@patternfly/react-core';
 
 import { Paths } from '../../../../paths';
-import useRequest from "../../../../Utilities/useRequest";
+import useRequest from '../../../../Utilities/useRequest';
 import usePlanData from '../usePlanData';
 
 import { createPlan, updatePlan } from '../../../../Api/';
@@ -26,7 +26,6 @@ import Templates from './Steps/Templates';
 const Form = ({ title, options, data = {} }) => {
   const history = useHistory();
   const { hash, pathname } = useLocation();
-  const { id } = useParams()
   const [startStep, setStartStep] = useState(null);
 
   const {
@@ -40,19 +39,19 @@ const Form = ({ title, options, data = {} }) => {
           data = await updatePlan({
             id: id,
             params: requestPayload,
-          })
+          });
         } else {
           data = await createPlan({
             params: requestPayload,
-          })
+          });
         }
       }
       return {
-        data
+        data,
       };
     }, []),
     {
-      apiResponse: data
+      apiResponse: data,
     }
   );
 
@@ -158,7 +157,7 @@ const Form = ({ title, options, data = {} }) => {
   };
 
   const onSave = () => {
-    setData(requestPayload, data?.id)
+    setData(requestPayload, data?.id);
   };
 
   const onClose = () => {
@@ -175,7 +174,7 @@ const Form = ({ title, options, data = {} }) => {
 
   const reset = () => {
     setData();
-  }
+  };
 
   return (
     <>

@@ -1,9 +1,9 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import useRequest from "../../Utilities/useRequest";
-import { handleSearch } from "../../Utilities/helpers";
+import useRequest from '../../Utilities/useRequest';
+import { handleSearch } from '../../Utilities/helpers';
 
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
@@ -30,18 +30,22 @@ import { Card, CardBody, PaginationVariant } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
 import FilterableToolbar from '../../Components/Toolbar/';
-import { getQSConfig } from "../../Utilities/qs";
+import { getQSConfig } from '../../Utilities/qs';
 
 const initialQueryParams = {
   ...jobExplorer.defaultParams,
   attributes: jobExplorer.attributes,
 };
-const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, ['limit', 'offset']);
+const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
+  'limit',
+  'offset',
+]);
 
-const JobExplorer = ({ location: { search } }) => {
+const JobExplorer = () => {
   const [preflightError, setPreFlightError] = useState(null);
 
-  const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(qsConfig);
+  const { queryParams, setFromPagination, setFromToolbar } =
+    useQueryParams(qsConfig);
 
   const {
     result: { options },
@@ -54,29 +58,26 @@ const JobExplorer = ({ location: { search } }) => {
       await preflightRequest().catch((error) => {
         setPreFlightError({ preflightError: error });
       });
-      const response = await readJobExplorerOptions({ params: queryParams })
+      const response = await readJobExplorerOptions({ params: queryParams });
       return { options: response };
     }, [queryParams]),
     {
-      options: {}
+      options: {},
     }
   );
 
-    const {
-    result: {
-      data,
-      meta
-    },
+  const {
+    result: { data, meta },
     error: dataError,
     isLoading: dataIsLoading,
     isSuccess: dataIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
-      const response = await readJobExplorer({ params: queryParams })
+      const response = await readJobExplorer({ params: queryParams });
       return {
         data: response.items,
-        meta: response.meta
+        meta: response.meta,
       };
     }, [queryParams]),
     { items: [], dataError, dataIsLoading, dataIsSuccess }

@@ -28,11 +28,11 @@ import { notAuthorizedParams } from '../../../Utilities/constants';
 
 import ToolbarDeleteButton from '../../../Components/Toolbar/ToolbarDeleteButton';
 import useSelected from '../../../Utilities/useSelected';
-import useRequest, { useDeleteItems } from "../../../Utilities/useRequest";
+import useRequest, { useDeleteItems } from '../../../Utilities/useRequest';
 import ErrorDetail from '../../../Components/ErrorDetail';
 import AlertModal from '../../../Components/AlertModal';
-import { getQSConfig } from "../../../Utilities/qs";
-import { handleSearch } from "../../../Utilities/helpers";
+import { getQSConfig } from '../../../Utilities/qs';
+import { handleSearch } from '../../../Utilities/helpers';
 
 const PageContainer = styled.div`
   display: flex;
@@ -47,21 +47,25 @@ const Footer = styled.div`
 const FlexMain = styled(Main)`
   flex-grow: 1;
 `;
-const qsConfig = getQSConfig('savings-planner', { ...savingsPlanner.defaultParams }, ['limit', 'offset']);
+const qsConfig = getQSConfig(
+  'savings-planner',
+  { ...savingsPlanner.defaultParams },
+  ['limit', 'offset']
+);
 
 const List = () => {
   const history = useHistory();
   const { pathname } = useLocation();
 
   // params from toolbar/searchbar
-  const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(qsConfig);
+  const { queryParams, setFromPagination, setFromToolbar } =
+    useQueryParams(qsConfig);
 
   const [preflightError, setPreFlightError] = useState(null);
 
   const {
     result: { options },
     error,
-    isLoading,
     isSuccess,
     request: fetchOptions,
   } = useRequest(
@@ -69,25 +73,21 @@ const List = () => {
       await preflightRequest().catch((error) => {
         setPreFlightError({ preflightError: error });
       });
-      const response = await readPlanOptions()
+      const response = await readPlanOptions();
       return { options: response };
     }, [queryParams]),
     { options: {} }
   );
 
   const {
-    result: {
-      data,
-      rbac,
-      total_count
-    },
+    result: { data, rbac, total_count },
     error: itemsError,
     isLoading: itemsIsLoading,
     isSuccess: itemsIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
-      const response = await readPlans({ params: queryParams })
+      const response = await readPlans({ params: queryParams });
       return {
         data: response.items,
         rbac: response.rbac,
@@ -95,7 +95,10 @@ const List = () => {
       };
     }, [queryParams]),
     {
-      data: [], itemsError, itemsIsSuccess, itemsIsLoading
+      data: [],
+      itemsError,
+      itemsIsSuccess,
+      itemsIsLoading,
     }
   );
 
@@ -105,14 +108,13 @@ const List = () => {
   };
 
   useEffect(() => {
-    fetchOptions()
-    fetchEndpoints()
+    fetchOptions();
+    fetchEndpoints();
   }, [queryParams]);
 
   const canWrite =
     itemsIsSuccess &&
-    (rbac?.perms?.write === true ||
-      rbac?.perms?.all === true);
+    (rbac?.perms?.write === true || rbac?.perms?.all === true);
 
   const { selected, isAllSelected, handleSelect, setSelected } =
     useSelected(data);
@@ -149,7 +151,11 @@ const List = () => {
 
     if (itemsIsLoading || deleteLoading) return <LoadingState />;
 
-    if (itemsIsSuccess && data.length === 0 && !(itemsIsLoading || deleteLoading))
+    if (
+      itemsIsSuccess &&
+      data.length === 0 &&
+      !(itemsIsLoading || deleteLoading)
+    )
       return (
         <EmptyList
           label={'Add plan'}
@@ -176,7 +182,8 @@ const List = () => {
             '2xl': '307px',
           }}
         >
-          {isSuccess && itemsIsSuccess &&
+          {isSuccess &&
+            itemsIsSuccess &&
             data.map((datum) => (
               <PlanCard
                 key={datum.id}

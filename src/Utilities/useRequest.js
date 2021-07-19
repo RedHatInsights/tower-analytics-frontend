@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
 import useIsMounted from './useIsMounted';
-import Pagination from "../Components/Pagination";
 
 /*
  * The useRequest hook accepts a request function and returns an object with
@@ -52,7 +51,7 @@ export const useRequest = (makeRequest, initialValue) => {
     ),
     setValue: setResult,
   };
-}
+};
 
 /*
  * Provides controls for "dismissing" an error message
@@ -78,7 +77,7 @@ export const useDismissableError = (error) => {
       setShowError(false);
     },
   };
-}
+};
 
 /*
  * Hook to assist with deletion of items from a paginated item list. The page
@@ -114,6 +113,6 @@ export const useDeleteItems = (
     deletionError: error,
     clearDeletionError: dismissError,
   };
-}
+};
 
 export default useRequest;

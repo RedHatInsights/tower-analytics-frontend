@@ -1,6 +1,6 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
@@ -39,9 +39,9 @@ import {
 import FilterableToolbar from '../../../../../../Components/Toolbar/';
 
 import { actions } from '../../../constants';
-import useRequest from "../../../../../../Utilities/useRequest";
-import { handleSearch } from "../../../../../../Utilities/helpers";
-import { getQSConfig } from "../../../../../../Utilities/qs";
+import useRequest from '../../../../../../Utilities/useRequest';
+import { handleSearch } from '../../../../../../Utilities/helpers';
+import { getQSConfig } from '../../../../../../Utilities/qs';
 
 const ListFooter = styled.div`
   display: flex;

@@ -11,9 +11,16 @@ const perPageOptions = [
 ];
 
 type SetPagination = (offset: number, limit?: number) => void;
-type ApiParams = Record<string, string|boolean|number|string[]|number[]>;
-type HandleSearch = (offset: number, limit: number, qsConfig?: ApiParams, history?: ApiParams) => void;
-
+type ApiParams = Record<
+  string,
+  string | boolean | number | string[] | number[]
+>;
+type HandleSearch = (
+  offset: number,
+  limit: number,
+  qsConfig?: ApiParams,
+  history?: ApiParams
+) => void;
 
 interface Props {
   count?: number;

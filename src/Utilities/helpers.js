@@ -1,6 +1,11 @@
 import moment from 'moment';
-import {parse, stringify} from "query-string";
-import {encodeNonDefaultQueryString, mergeParams, parseQueryString, removeParams, replaceParams} from "./qs";
+import {
+  encodeNonDefaultQueryString,
+  mergeParams,
+  parseQueryString,
+  removeParams,
+  replaceParams,
+} from './qs';
 
 /*
  * isNumeric - return true if input is a real number
@@ -154,9 +159,9 @@ export const handleSearch = (key, value, qsConfig, history) => {
   params = replaceParams(params, { [key]: value });
   params = mergeParams(params, { [key]: value });
   if (value === '' || value.length === 0)
-    params = removeParams(qsConfig, params, {[key]: params[key]});
+    params = removeParams(qsConfig, params, { [key]: params[key] });
   pushHistoryState(params, qsConfig, history);
-}
+};
 
 export const pushHistoryState = (params, qsConfig, history) => {
   const { pathname } = history.location;
@@ -167,4 +172,4 @@ export const pushHistoryState = (params, qsConfig, history) => {
     nonNamespacedParams
   );
   history.push(encodedParams ? `${pathname}?${encodedParams}` : pathname);
-}
+};
