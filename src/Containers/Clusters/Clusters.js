@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
@@ -11,7 +11,7 @@ import {
   readEventExplorer,
 } from '../../Api/';
 
-import {jobExplorer} from '../../Utilities/constants';
+import { jobExplorer } from '../../Utilities/constants';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
@@ -37,8 +37,8 @@ import FilterableToolbar from '../../Components/Toolbar';
 import ApiErrorState from '../../Components/ApiErrorState';
 
 import { clusters } from '../../Utilities/constants';
-import useRequest from "../../Utilities/useRequest";
-import { getQSConfig } from "../../Utilities/qs";
+import useRequest from '../../Utilities/useRequest';
+import { getQSConfig } from '../../Utilities/qs';
 
 const initialTopTemplateParams = {
   group_by: 'template',
@@ -63,7 +63,10 @@ const initialModuleParams = {
 };
 
 // takes json and returns
-const qsConfig = getQSConfig('clusters', { ...clusters.defaultParams }, ['limit', 'offset']);
+const qsConfig = getQSConfig('clusters', { ...clusters.defaultParams }, [
+  'limit',
+  'offset',
+]);
 
 const Clusters = () => {
   const [preflightError, setPreFlightError] = useState(null);
@@ -73,12 +76,10 @@ const Clusters = () => {
   const {
     result: { options },
     error,
-    isLoading,
-    isSuccess,
     request: fetchOptions,
   } = useRequest(
     useCallback(async () => {
-      const options = await readClustersOptions({ params: optionsQueryParams })
+      const options = await readClustersOptions({ params: optionsQueryParams });
       return { options };
     }, [queryParams]),
     { options: {} }
@@ -92,11 +93,14 @@ const Clusters = () => {
     request: fetchChartData,
   } = useRequest(
     useCallback(async () => {
-      const chartData = await readJobExplorer({ params: queryParams })
+      const chartData = await readJobExplorer({ params: queryParams });
       return { chartData: chartData.items };
     }, [queryParams]),
     {
-      chartData: [], chartDataError, chartDataIsLoading, chartDataIsSuccess
+      chartData: [],
+      chartDataError,
+      chartDataIsLoading,
+      chartDataIsSuccess,
     }
   );
 
@@ -108,7 +112,7 @@ const Clusters = () => {
     request: fetchModules,
   } = useRequest(
     useCallback(async () => {
-      const modules = await readEventExplorer({ params: topModuleParams })
+      const modules = await readEventExplorer({ params: topModuleParams });
       return { modules: modules.items };
     }, [queryParams]),
     { modules: [], modulesError, modulesIsLoading, modulesIsSuccess }
@@ -122,7 +126,7 @@ const Clusters = () => {
     request: fetchTemplates,
   } = useRequest(
     useCallback(async () => {
-      const templates = await readJobExplorer({ params: topTemplatesParams })
+      const templates = await readJobExplorer({ params: topTemplatesParams });
       return { templates: templates.items };
     }, [queryParams]),
     { templates: [], templatesError, templatesIsLoading, templatesIsSuccess }
@@ -136,11 +140,14 @@ const Clusters = () => {
     request: fetchWorkflows,
   } = useRequest(
     useCallback(async () => {
-      const workflows = await readJobExplorer({ params: topWorkflowParams })
+      const workflows = await readJobExplorer({ params: topWorkflowParams });
       return { workflows: workflows.items };
     }, [queryParams]),
     {
-      workflows: [], workflowsError, workflowsIsLoading, workflowsIsSuccess
+      workflows: [],
+      workflowsError,
+      workflowsIsLoading,
+      workflowsIsSuccess,
     }
   );
 
@@ -227,14 +234,16 @@ const Clusters = () => {
             </CardTitle>
             <CardBody>
               {chartDataIsLoading && <LoadingState />}
-              {(!queryParams.cluster_id || queryParams.cluster_id?.length <= 0) && chartDataIsSuccess && (
-                <BarChart
-                  margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                  id="d3-bar-chart-root"
-                  data={chartData}
-                  queryParams={queryParams}
-                />
-              )}
+              {(!queryParams.cluster_id ||
+                queryParams.cluster_id?.length <= 0) &&
+                chartDataIsSuccess && (
+                  <BarChart
+                    margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
+                    id="d3-bar-chart-root"
+                    data={chartData}
+                    queryParams={queryParams}
+                  />
+                )}
               {queryParams.cluster_id?.length > 0 && chartDataIsSuccess && (
                 <LineChart
                   margin={{ top: 20, right: 20, bottom: 50, left: 70 }}

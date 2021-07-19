@@ -46,7 +46,7 @@ function stringToObject(config, qs) {
   const params = {};
   qs.replace(/^\?/, '')
     .split('&')
-    .map(s => s.split('='))
+    .map((s) => s.split('='))
     .forEach(([nsKey, rawValue]) => {
       if (!nsKey || !namespaceMatches(config.namespace, nsKey)) {
         return;
@@ -74,13 +74,15 @@ const namespaceMatches = (namespace, fieldname) => {
 };
 
 function parseValue(config, key, rawValue, qs) {
-  const searchParams = new URLSearchParams(qs)
-  if (config.integerFields && config.integerFields.some(v => v === key)) {
+  const searchParams = new URLSearchParams(qs);
+  if (config.integerFields && config.integerFields.some((v) => v === key)) {
     return parseInt(rawValue, 10);
-  } else if (arrayFields && arrayFields.some(v => v === key)) {
-    const nsKey = `${config.namespace}.${key}`
-    const output = searchParams.getAll(nsKey).filter((x, i, a) => a.indexOf(x) === i)
-    searchParams.delete[nsKey]
+  } else if (arrayFields && arrayFields.some((v) => v === key)) {
+    const nsKey = `${config.namespace}.${key}`;
+    const output = searchParams
+      .getAll(nsKey)
+      .filter((x, i, a) => a.indexOf(x) === i);
+    searchParams.delete[nsKey];
     return output;
   }
   // TODO: parse dateFields into date format?
@@ -101,13 +103,13 @@ export { addDefaultsToObject as _addDefaultsToObject };
  * @param {object} query param object
  * @return {string} url query string
  */
-export const encodeQueryString = params => {
+export const encodeQueryString = (params) => {
   if (!params) return '';
 
   return Object.keys(params)
     .sort()
-    .filter(key => params[key] !== null)
-    .map(key => [key, params[key]])
+    .filter((key) => params[key] !== null)
+    .map((key) => [key, params[key]])
     .map(([key, value]) => encodeValue(key, value))
     .join('&');
 };
@@ -115,7 +117,7 @@ export const encodeQueryString = params => {
 function encodeValue(key, value) {
   if (Array.isArray(value)) {
     return value
-      .map(val => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`)
+      .map((val) => `${encodeURIComponent(key)}=${encodeURIComponent(val)}`)
       .join('&');
   }
   return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
@@ -152,7 +154,7 @@ const namespaceParams = (namespace, params) => {
   if (!namespace) return params;
 
   const namespaced = {};
-  Object.keys(params).forEach(key => {
+  Object.keys(params).forEach((key) => {
     namespaced[`${namespace}.${key}`] = params[key];
   });
 
@@ -170,7 +172,7 @@ export function removeParams(config, oldParams, paramsToRemove) {
   const updated = {
     ...config.defaultParams,
   };
-  Object.keys(oldParams).forEach(key => {
+  Object.keys(oldParams).forEach((key) => {
     const value = removeParam(oldParams[key], paramsToRemove[key]);
     if (value !== null) {
       updated[key] = value;
@@ -206,10 +208,10 @@ function removeParam(oldVal, deleteVal) {
  */
 export function mergeParams(oldParams, newParams) {
   const merged = {};
-  Object.keys(oldParams).forEach(key => {
+  Object.keys(oldParams).forEach((key) => {
     merged[key] = mergeParam(oldParams[key], newParams[key]);
   });
-  Object.keys(newParams).forEach(key => {
+  Object.keys(newParams).forEach((key) => {
     if (!merged[key]) {
       merged[key] = newParams[key];
     }

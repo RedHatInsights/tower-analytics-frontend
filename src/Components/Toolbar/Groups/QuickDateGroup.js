@@ -11,10 +11,9 @@ const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => (
       value={filters.quick_date_range}
       selectOptions={values}
       setValue={(value) => {
-          setFilters('quick_date_range', value);
-          handleSearch('quick_date_range', value);
-        }
-      }
+        setFilters('quick_date_range', value);
+        handleSearch('quick_date_range', value);
+      }}
     />
     {filters.quick_date_range && filters.quick_date_range.includes('custom') && (
       <>
@@ -22,19 +21,17 @@ const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => (
           categoryKey="start_date"
           value={filters.start_date}
           setValue={(e) => {
-              setFilters('start_date', e);
-              handleSearch('start_date', e);
-            }
-          }
+            setFilters('start_date', e);
+            handleSearch('start_date', e);
+          }}
         />
         <ToolbarInput
           categoryKey="end_date"
           value={filters.end_date}
           setValue={(e) => {
-              setFilters('end_date', e);
-              handleSearch('end_date', e);
-            }
-          }
+            setFilters('end_date', e);
+            handleSearch('end_date', e);
+          }}
         />
       </>
     )}

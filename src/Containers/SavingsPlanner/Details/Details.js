@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useLocation, Route, Switch } from 'react-router-dom';
 import { CaretLeftIcon } from '@patternfly/react-icons';
 import { Card } from '@patternfly/react-core';
@@ -22,7 +22,7 @@ import Breadcrumbs from '../../../Components/Breadcrumbs';
 import { preflightRequest, readPlan, readPlanOptions } from '../../../Api/';
 
 import SavingsPlanEdit from '../Edit';
-import useRequest from "../../../Utilities/useRequest";
+import useRequest from '../../../Utilities/useRequest';
 
 const Details = () => {
   const { id } = useParams();
@@ -44,7 +44,6 @@ const Details = () => {
   const {
     result: { options },
     error,
-    isLoading,
     isSuccess,
     request: fetchOptions,
   } = useRequest(
@@ -54,17 +53,14 @@ const Details = () => {
         setPreFlightError({ preflightError: error });
       });
 
-      const response = await readPlanOptions()
+      const response = await readPlanOptions();
       return { options: response };
     }, []),
     { options: {} }
   );
 
   const {
-    result: {
-      rbac,
-      plans
-    },
+    result: { rbac, plans },
     error: plansError,
     isLoading: plansIsLoading,
     isSuccess: plansIsSuccess,
@@ -75,10 +71,10 @@ const Details = () => {
       await preflightRequest().catch((error) => {
         setPreFlightError({ preflightError: error });
       });
-      const response = await readPlan({ params: queryParams })
+      const response = await readPlan({ params: queryParams });
       return {
         plans: response.items,
-        rbac: response.rbac
+        rbac: response.rbac,
       };
     }, []),
     { plans: [], rbac: [], plansError, plansIsLoading, plansIsSuccess }

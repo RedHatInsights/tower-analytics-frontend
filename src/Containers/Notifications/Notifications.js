@@ -29,8 +29,8 @@ import {
 
 import NotificationsList from '../../Components/NotificationsList';
 import Pagination from '../../Components/Pagination';
-import { getQSConfig } from "../../Utilities/qs";
-import { handleSearch } from "../../Utilities/helpers";
+import { getQSConfig } from '../../Utilities/qs';
+import { handleSearch } from '../../Utilities/helpers';
 
 const CardTitle = styled(PFCardTitle)`
   display: flex;
@@ -102,7 +102,10 @@ const initialQueryParams = {
 };
 
 // takes json and returns
-const qsConfig = getQSConfig('notifications', { ...initialQueryParams }, ['limit', 'offset']);
+const qsConfig = getQSConfig('notifications', { ...initialQueryParams }, [
+  'limit',
+  'offset',
+]);
 
 const Notifications = () => {
   const history = useHistory();
@@ -115,7 +118,8 @@ const Notifications = () => {
   const [meta, setMeta] = useState({});
 
   // params from toolbar/searchbar
-  const { queryParams, setId, setFromPagination, setSeverity } = useQueryParams(qsConfig);
+  const { queryParams, setId, setFromPagination, setSeverity } =
+    useQueryParams(qsConfig);
 
   useEffect(() => {
     if (firstRender) {

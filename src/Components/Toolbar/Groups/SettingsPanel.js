@@ -38,7 +38,7 @@ const SettingsPanel = ({
         isChecked={filters.only_root_workflows_and_standalone_jobs}
         onChange={(val) => {
           setFilters('only_root_workflows_and_standalone_jobs', val);
-          handleSearch('only_root_workflows_and_standalone_jobs', val)
+          handleSearch('only_root_workflows_and_standalone_jobs', val);
         }}
       />
       <Tooltip

@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { Card, CardBody } from '@patternfly/react-core';
@@ -16,24 +16,22 @@ import { readPlanOptions } from '../../../Api/';
 import Form from '../Shared/Form';
 
 import { Paths } from '../../../paths';
-import useRequest from "../../../Utilities/useRequest";
+import useRequest from '../../../Utilities/useRequest';
 
 const Add = () => {
   const {
     result: options,
-    error,
-    isLoading,
     isSuccess,
     request: fetchPlanOptions,
   } = useRequest(
     useCallback(async () => {
-      const response = await readPlanOptions()
+      const response = await readPlanOptions();
       return {
-        data: response
+        data: response,
       };
     }, []),
     {
-      options: {}
+      options: {},
     }
   );
 

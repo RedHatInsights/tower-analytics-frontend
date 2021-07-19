@@ -1,6 +1,5 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useLocation } from 'react-router-dom';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
@@ -43,8 +42,8 @@ import TotalSavings from './TotalSavings';
 import CalculationCost from './CalculationCost';
 import AutomationFormula from './AutomationFormula';
 import TopTemplates from './TopTemplates';
-import useRequest from "../../Utilities/useRequest";
-import { getQSConfig } from "../../Utilities/qs";
+import useRequest from '../../Utilities/useRequest';
+import { getQSConfig } from '../../Utilities/qs';
 
 const mapApi = ({ items = [] }) =>
   items.map((el) => ({
@@ -75,7 +74,10 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
 const computeTotalSavings = (data) =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
-const qsConfig = getQSConfig('clusters', { ...roiConst.defaultParams }, ['limit', 'offset']);
+const qsConfig = getQSConfig('clusters', { ...roiConst.defaultParams }, [
+  'limit',
+  'offset',
+]);
 
 const AutomationCalculator = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
@@ -84,16 +86,16 @@ const AutomationCalculator = ({ history }) => {
 
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
-  const setDataInApi = (data) => updateDeltaCost(mapApi(data), costAutomation, costManual)
+  const setDataInApi = (data) =>
+    updateDeltaCost(mapApi(data), costAutomation, costManual);
 
   const {
-    result: { preflight },
     error: preflightError,
     isLoading: preflightIsLoading,
     request: setPreflight,
   } = useRequest(
     useCallback(async () => {
-      const preflight = await preflightRequest()
+      const preflight = await preflightRequest();
       return { preflight: preflight };
     }, []),
     { preflight: {}, preflightError, preflightIsLoading }
@@ -106,10 +108,10 @@ const AutomationCalculator = ({ history }) => {
     request: setOptions,
   } = useRequest(
     useCallback(async () => {
-      const options = await readROIOptions({ params: queryParams })
+      const options = await readROIOptions({ params: queryParams });
       return { options: options };
     }, [queryParams]),
-    { options: {}, optionsError,  optionsIsLoading }
+    { options: {}, optionsError, optionsIsLoading }
   );
 
   const {
@@ -119,10 +121,10 @@ const AutomationCalculator = ({ history }) => {
     request: fetchEndpoint,
   } = useRequest(
     useCallback(async () => {
-      const response = await readROI({ params: queryParams})
+      const response = await readROI({ params: queryParams });
       return { data: response };
     }, [queryParams]),
-    { data: [], apiError,  apiIsLoading }
+    { data: [], apiError, apiIsLoading }
   );
   const api = setDataInApi(data); //updateDeltaCost(mapApi(data), costAutomation, costManual)
 
@@ -218,9 +220,7 @@ const AutomationCalculator = ({ history }) => {
   const renderRight = () => (
     <Stack hasGutter>
       <StackItem>
-        <TotalSavings
-          totalSavings={computeTotalSavings(filterDisabled(api))}
-        />
+        <TotalSavings totalSavings={computeTotalSavings(filterDisabled(api))} />
       </StackItem>
       <StackItem>
         <Stack>

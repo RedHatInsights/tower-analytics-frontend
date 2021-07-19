@@ -20,7 +20,7 @@ jest.mock('react-router-dom', () => ({
   useLocation: () => ({
     push: jest.fn(),
     pathname: 'some_path',
-    search: ''
+    search: '',
   }),
 }));
 
@@ -88,7 +88,7 @@ describe('Containers/JobExplorer', () => {
 
   it('should render without any errors', async () => {
     await act(async () => {
-      wrapper = mountPage(JobExplorer, {history: jest.fn()});
+      wrapper = mountPage(JobExplorer, { history: jest.fn() });
     });
     wrapper.update();
 
@@ -132,7 +132,7 @@ describe('Containers/JobExplorer', () => {
   });
 
   it('should render with empty response', async () => {
-    fetchMock.post({ url: jobExplorerUrl }, {items:[]});
+    fetchMock.post({ url: jobExplorerUrl }, { items: [] });
 
     await act(async () => {
       wrapper = mountPage(JobExplorer);

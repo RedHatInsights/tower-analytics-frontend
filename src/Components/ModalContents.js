@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -40,7 +40,7 @@ import {
   Th,
   Td,
 } from '@patternfly/react-table';
-import useRequest from "../Utilities/useRequest";
+import useRequest from '../Utilities/useRequest';
 
 const ActionContainer = styled.div`
   display: flex;
@@ -75,10 +75,7 @@ const formatTotalTime = (elapsed) =>
 
 const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
   const {
-    result: {
-      relatedJobs,
-      stats
-    },
+    result: { relatedJobs, stats },
     error,
     isLoading,
     isSuccess,
@@ -87,20 +84,21 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     useCallback(async () => {
       const [stats, relatedJobs] = await Promise.all([
         readJobExplorer({ params: agreggateTemplateParams }),
-        readJobExplorer({ params: relatedTemplateJobsParams })
+        readJobExplorer({ params: relatedTemplateJobsParams }),
       ]);
       return {
         relatedJobs: relatedJobs.items,
-        stats: stats.items[0]
+        stats: stats.items[0],
       };
     }, []),
     {
-      stats: {}, relatedJobs: {}
+      stats: {},
+      relatedJobs: {},
     }
   );
 
   useEffect(() => {
-    fetchEndpoints()
+    fetchEndpoints();
   }, [selectedId, fetchEndpoints]);
 
   let history = useHistory();
