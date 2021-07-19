@@ -1,27 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { InputGroup, TextInput } from '@patternfly/react-core';
+import { DatePicker } from '@patternfly/react-core';
 import { optionsForCategories } from '../../constants';
 
-const Date = ({ categoryKey, value = '', setValue = () => {} }) => {
+const DateInput = ({
+  categoryKey,
+  value = '',
+  setValue = () => {},
+  otherProps = {},
+}) => {
   const options = optionsForCategories[categoryKey];
-
   return (
-    <InputGroup>
-      <TextInput
-        type="date"
-        aria-label={options.name}
-        value={value}
-        onChange={setValue}
-      />
-    </InputGroup>
+    <DatePicker
+      aria-label={options.name}
+      value={value}
+      onChange={setValue}
+      {...otherProps}
+    />
   );
 };
 
-Date.propTypes = {
+DateInput.propTypes = {
   categoryKey: PropTypes.string.isRequired,
   value: PropTypes.string,
   setValue: PropTypes.func.isRequired,
+  otherProps: PropTypes.object,
 };
 
-export default Date;
+export default DateInput;
