@@ -82,23 +82,19 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     dispatch: queryParamsDispatch,
   } = useQueryParams(initialQueryParams);
 
-  const onSort = () => {
+  const onSort = (_ev, _idx, dir) => {
     queryParamsDispatch({
       type: 'SET_SORT_ORDER',
-      value: {
-        sort_order: queryParams.sort_order === 'asc' ? 'desc' : 'asc',
-      },
+      value: { sort_order: dir },
     });
   };
 
   const sortParams = {
     sort: {
       sortBy: {
-        index: columnIndex,
         direction: queryParams.sort_order,
       },
       onSort,
-      columnIndex,
     },
   };
 
