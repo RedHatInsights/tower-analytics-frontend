@@ -6,6 +6,9 @@ export type ApiFunctionType = (options: { params: AttributesType }) => Promise<u
 export type SchemaFnc = (label: string, y: string) => ChartSchemaElement[];
 
 export interface ReportGeneratorParams {
+  name: string,
+  description: string,
+  categories: Array<string>,
   defaultParams: ApiParamsType;
   extraAttributes: AttributesType;
   readData: ApiFunctionType;

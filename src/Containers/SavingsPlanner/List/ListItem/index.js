@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import styled from 'styled-components';
+import { stringify } from 'query-string';
+import { useHistory, Link, useRouteMatch } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import {
@@ -16,12 +18,7 @@ import {
   KebabToggle,
   Label,
 } from '@patternfly/react-core';
-
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
-import styled from 'styled-components';
-import { stringify } from 'query-string';
-
-import { Link, useRouteMatch } from 'react-router-dom';
 
 import { Paths } from '../../../../paths';
 

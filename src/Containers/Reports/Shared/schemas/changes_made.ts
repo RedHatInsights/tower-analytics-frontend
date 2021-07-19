@@ -7,11 +7,17 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import { readJobExplorer, readJobExplorerOptions } from '../../Api';
+import { readJobExplorer, readJobExplorerOptions } from '../../../../Api';
 import {
   AttributesType,
   ReportGeneratorParams
-} from './types';
+} from '../types';
+
+const name = "Changes made";
+
+const description = "This is the report that shows the changes made to a host";
+
+const categories = ['Opertaions', 'Business'];
 
 const defaultParams = {
   limit: 4,
@@ -97,6 +103,9 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => ([
 ]);
 
 const reportParams: ReportGeneratorParams = {
+  name,
+  description,
+  categories,
   defaultParams,
   extraAttributes,
   readData: readJobExplorer,
