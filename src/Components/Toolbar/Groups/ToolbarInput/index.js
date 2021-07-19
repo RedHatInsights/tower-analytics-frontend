@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Select from './Select';
-import Date from './Date';
+import DateInput from './Date';
 import Text from './Text';
 import { optionsForCategories } from '../../constants';
 
 const components = {
   select: Select,
-  date: Date,
+  date: DateInput,
   text: Text,
 };
 
@@ -17,6 +17,7 @@ const ToolbarInput = ({
   selectOptions,
   isVisible = true,
   setValue,
+  ...otherProps
 }) => {
   const options = optionsForCategories[categoryKey];
   const SelectedInput = components[options.type];
@@ -40,6 +41,7 @@ const ToolbarInput = ({
       selectOptions={selectOptions}
       isVisible={isVisible}
       setValue={setValue}
+      otherProps={otherProps}
     />
   );
 };
