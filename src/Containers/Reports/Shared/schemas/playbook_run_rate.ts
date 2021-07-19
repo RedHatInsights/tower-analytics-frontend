@@ -7,28 +7,35 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import { readHostExplorer, readHostExplorerOptions } from '../../Api';
+import { readJobExplorer, readJobExplorerOptions } from '../../../../Api';
 import {
   AttributesType,
   ReportGeneratorParams
-} from './types';
+} from '../types';
+
+const name = "Playbook run rate";
+
+const description = "This is the report for showing the run rate affects based on the playbook";
+
+const categories = ['Opertaions'];
 
 const defaultParams = {
   limit: 4,
   offset: 0,
   attributes: [
-    'host_count',
-    'ok_host_count',
+    'failed_count',
+    'successful_count',
+    'canceled_count',
+    'total_count',
     'failed_host_count',
     'unreachable_host_count',
-    'changed_host_count',
-    'skipped_host_count',
-    'total_unique_host_count'
+    'host_count',
+    'elapsed',
   ],
   group_by: 'template',
   group_by_time: true,
   granularity: 'monthly',
-  sort_options: 'total_unique_host_count',
+  sort_options: 'total_count',
   sort_order: 'desc',
 }
 
@@ -96,11 +103,14 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => ([
 ]);
 
 const reportParams: ReportGeneratorParams = {
+  name,
+  description,
+  categories,
   defaultParams,
   extraAttributes,
-  readData: readHostExplorer,
-  readOptions: readHostExplorerOptions,
-  schemaFnc
+  readData: readJobExplorer,
+  readOptions: readJobExplorerOptions,
+  schemaFnc 
 };
 
 export default reportParams;

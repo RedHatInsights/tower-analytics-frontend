@@ -46,13 +46,9 @@ import { scaleOrdinal } from 'd3';
 import useRequest from '../../Utilities/useRequest';
 import { getQSConfig } from '../../Utilities/qs';
 
-import Report from './Report';
 import ApiErrorState from './ApiErrorState';
 import LoadingState from './LoadingState';
 import NoData from './NoData';
-import reportPlaybookRunRate from './reportPlaybookRunRate';
-import reportChangesMade from './reportChangesMade';
-import reportAffectedHostsByPlaybook from './reportAffectedHostsByPlaybook';
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
@@ -340,15 +336,6 @@ const OrganizationStatistics = ({ history }) => {
                 )}
               </CardBody>
             </Card>
-          </GridItem>
-          <GridItem>
-            <Report {...reportPlaybookRunRate} />
-          </GridItem>
-          <GridItem>
-            <Report {...reportChangesMade} />
-          </GridItem>
-          <GridItem>
-            <Report {...reportAffectedHostsByPlaybook} />
           </GridItem>
         </Grid>
       );
