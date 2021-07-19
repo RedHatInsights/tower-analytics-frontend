@@ -52,6 +52,9 @@ const initialQueryParams = {
   limit: 10,
   group_by_time: false,
   offset: 0,
+  sort_options: 'name',
+  sort_order: 'asc',
+  sort_by: 'name:asc',
 };
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
@@ -77,6 +80,22 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     dispatch: queryParamsDispatch,
   } = useQueryParams(initialQueryParams);
 
+  const onSort = (_ev, _idx, dir) => {
+    queryParamsDispatch({
+      type: 'SET_SORT_ORDER',
+      value: { sort_order: dir },
+    });
+  };
+
+  const sortParams = {
+    sort: {
+      sortBy: {
+        direction: queryParams.sort_order,
+      },
+      onSort,
+    },
+  };
+
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
 
@@ -98,7 +117,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
       },
     });
   }, []);
-
   useEffect(() => {
     setData(readJobExplorer({ params: queryParams }));
     setOptions(readJobExplorerOptions({ params: queryParams }));
@@ -151,7 +169,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
                 <Thead>
                   <Tr>
                     <Th />
-                    <Th key="template-name-column-header">Name</Th>
+                    <Th {...sortParams}>Name</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
