@@ -5,17 +5,17 @@ import ChartBuilder, { ApiReturnType, functions } from 'react-json-chart-builder
 import { Card, CardBody, CardFooter, PaginationVariant } from '@patternfly/react-core';
 import { TableComposable, TableVariant, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 
-import Pagination from '../../Components/Pagination';
+import Pagination from '../../../Components/Pagination';
 
-import { useQueryParams } from '../../Utilities/useQueryParams';
+import { useQueryParams } from '../../../Utilities/useQueryParams';
 
-import useApi from '../../Utilities/useApi';
-import { formatTotalTime } from '../../Utilities/helpers';
+import useApi from '../../../Utilities/useApi';
+import { formatTotalTime } from '../../../Utilities/helpers';
 
 import { global_disabled_color_300 } from '@patternfly/react-tokens';
-import ApiStatusWrapper from '../../Components/ApiStatusWrapper';
-import FilterableToolbar from '../../Components/Toolbar/Toolbar';
-import currencyFormatter from '../../Utilities/currencyFormatter';
+import ApiStatusWrapper from '../../../Components/ApiStatusWrapper';
+import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
+import currencyFormatter from '../../../Utilities/currencyFormatter';
 
 import {
   ApiFunctionType,
@@ -23,7 +23,7 @@ import {
   AttributesType,
   ReportGeneratorParams,
   SchemaFnc
-} from './types';
+} from '../Shared/types';
 
 const customFunctions = (data: ApiReturnType) => ({
   ...functions,
