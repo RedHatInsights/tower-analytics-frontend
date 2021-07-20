@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import React, { FunctionComponent } from 'react';
+import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { Card, Title as PFTitle } from '@patternfly/react-core';
 import Main from '@redhat-cloud-services/frontend-components/Main';
@@ -12,7 +12,6 @@ import {
 import Breadcrumbs from '../../../Components/Breadcrumbs';
 
 import Report from './Report';
-
 import { getReport } from '../Shared/schemas';
 
 const Title = styled(PFTitle)`
@@ -21,15 +20,9 @@ const Title = styled(PFTitle)`
   }
 `;
 
-const Details = () => {
-  const { id } = useParams();
-  const { state: locationState } = useLocation();
-  const [selectedId, setSelectedId] = useState(id);
-  useEffect(() => {
-    setSelectedId(id);
-  }, [locationState]);
-
-  const { name, description, ...reportParams } = getReport(+selectedId);
+const Details: FunctionComponent<Record<string, never>> = () => {
+  const { id } = useParams<{ id: string }>();
+  const { name, description, report } = getReport(+id);
 
   const breadcrumbsItems = [{ title: 'Reports', navigate: '/reports' }];
 
@@ -43,9 +36,7 @@ const Details = () => {
         </Title>
       </PageHeader>
       <Main>
-        <Card>
-          <Report {...reportParams} />
-        </Card>
+        <Card>{report && <Report {...report} />}</Card>
       </Main>
     </>
   );
