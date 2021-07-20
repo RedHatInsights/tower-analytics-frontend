@@ -1,7 +1,7 @@
 /**
  * Returns queryset config with defaults, if needed
  * @param {string} namespace for appending to url querystring
- * @param {object} default params that are not handled with search (page, page_size and order_by)
+ * @param {object} default params that are not handled with search (offset, limit and order_by)
  * @param {array} params that are number fields
  * @return {object} query param object
  */
@@ -9,7 +9,7 @@ import { arrayFields } from './constants';
 
 export function getQSConfig(
   namespace,
-  defaultParams = { page: 1, page_size: 5, sort_by: 'name' },
+  defaultParams = { offset: 1, limit: 5, sort_by: 'name' },
   integerFields = ['offset', 'limit'],
   dateFields = ['modified', 'created']
 ) {

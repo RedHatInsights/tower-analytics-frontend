@@ -218,11 +218,11 @@ const Clusters = () => {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 
+  if (preflightError?.preflightError) return <EmptyState {...preflightError} />;
+
+  if (error) return <ApiErrorState message={error.error} />;
+
   const renderContent = () => {
-    if (preflightError) return <EmptyState {...preflightError} />;
-
-    if (error) return <ApiErrorState message={error.error} />;
-
     // Warning: we are not checking if ALL the api succeed
     // this can cause an unsurfaced error when only some of them fails
     return (

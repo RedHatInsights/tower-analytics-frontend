@@ -9,6 +9,8 @@ import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
 import ApiErrorState from '../../Components/ApiErrorState';
 import Pagination from '../../Components/Pagination';
+import { Paths } from '../../paths';
+import { parse, stringify } from 'query-string';
 
 import {
   preflightRequest,
@@ -40,7 +42,7 @@ const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
   'offset',
 ]);
 
-const JobExplorer = () => {
+const JobExplorer = ({ location: { search }, history }) => {
   const [preflightError, setPreFlightError] = useState(null);
 
   const { queryParams, setFromPagination, setFromToolbar } =
@@ -49,14 +51,9 @@ const JobExplorer = () => {
   const {
     result: { options },
     error,
-    isLoading,
-    isSuccess,
     request: fetchOptions,
   } = useRequest(
     useCallback(async () => {
-      await preflightRequest().catch((error) => {
-        setPreFlightError({ preflightError: error });
-      });
       const response = await readJobExplorerOptions({ params: queryParams });
       return { options: response };
     }, [queryParams]),
@@ -82,6 +79,31 @@ const JobExplorer = () => {
     { items: [], dataError, dataIsLoading, dataIsSuccess }
   );
 
+  const initialSearchParams = parse(search, {
+    arrayFormat: 'bracket',
+    parseBooleans: true,
+    parseNumbers: true,
+  });
+
+  useEffect(() => {
+    history.replace({
+      pathname: jobExplorer,
+      initialSearchParams,
+    });
+  }, []);
+
+  const updateURL = () => {
+    const { jobExplorer } = Paths;
+    const search = stringify(
+      { ...initialQueryParams, ...initialSearchParams },
+      { arrayFormat: 'bracket' }
+    );
+    history.replace({
+      pathname: jobExplorer,
+      search,
+    });
+  };
+
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
 
@@ -93,23 +115,20 @@ const JobExplorer = () => {
   useEffect(() => {
     fetchOptions();
     fetchEndpoints();
+    updateURL();
   }, [queryParams]);
 
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
+  if (preflightError?.preflightError) return <EmptyState {...preflightError} />;
+  if (error) return <ApiErrorState message={error.error} />;
 
   return (
     <React.Fragment>
       <PageHeader>
         <PageHeaderTitle title={'Job Explorer'} />
       </PageHeader>
-
-      {preflightError && (
-        <Main>
-          <EmptyState {...preflightError} />
-        </Main>
-      )}
 
       {!preflightError && (
         <Main>
@@ -134,10 +153,11 @@ const JobExplorer = () => {
                 }
                 hasSettings
               />
-              {error && <ApiErrorState message={error.error} />}
-              {isLoading && <LoadingState />}
-              {isSuccess && data.length <= 0 && <NoResults />}
-              {isSuccess && data.length > 0 && <JobExplorerList jobs={data} />}
+              {dataIsLoading && <LoadingState />}
+              {dataIsSuccess && data.length <= 0 && <NoResults />}
+              {dataIsSuccess && data.length > 0 && (
+                <JobExplorerList jobs={data} />
+              )}
               <Pagination
                 count={meta?.count}
                 params={{

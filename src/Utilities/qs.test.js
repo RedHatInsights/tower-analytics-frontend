@@ -17,12 +17,12 @@ describe('qs (qs.js)', () => {
         [null, ''],
         [{}, ''],
         [
-          { order_by: 'name', page: 1, page_size: 5 },
-          'order_by=name&page=1&page_size=5',
+          { order_by: 'name', offset: 1, limit: 5 },
+          'limit=5&offset=1&order_by=name',
         ],
         [
-          { '-order_by': 'name', page: '1', page_size: 5 },
-          '-order_by=name&page=1&page_size=5',
+          { '-order_by': 'name', offset: '1', limit: 5 },
+          '-order_by=name&limit=5&offset=1',
         ],
       ].forEach(([params, expectedQueryString]) => {
         const actualQueryString = encodeQueryString(params);
@@ -34,7 +34,7 @@ describe('qs (qs.js)', () => {
     test('encodeQueryString omits null values', () => {
       const vals = {
         order_by: 'name',
-        page: null,
+        offset: null,
       };
       expect(encodeQueryString(vals)).toEqual('order_by=name');
     });
@@ -50,23 +50,23 @@ describe('qs (qs.js)', () => {
   describe('encodeNonDefaultQueryString', () => {
     const config = {
       namespace: null,
-      defaultParams: { page: 1, page_size: 5, order_by: 'name' },
-      integerFields: ['page'],
+      defaultParams: { offset: 1, limit: 5, order_by: 'name' },
+      integerFields: ['offset'],
     };
 
     test('should return the expected queryString', () => {
       [
         [null, ''],
         [{}, ''],
-        [{ order_by: 'name', page: 1, page_size: 5 }, ''],
-        [{ order_by: '-name', page: 1, page_size: 5 }, 'order_by=-name'],
+        [{ order_by: 'name', offset: 1, limit: 5 }, ''],
+        [{ order_by: '-name', offset: 1, limit: 5 }, 'order_by=-name'],
         [
-          { order_by: '-name', page: 3, page_size: 10 },
-          'order_by=-name&page=3&page_size=10',
+          { order_by: '-name', offset: 3, limit: 10 },
+          'limit=10&offset=3&order_by=-name',
         ],
         [
-          { order_by: '-name', page: 3, page_size: 10, foo: 'bar' },
-          'foo=bar&order_by=-name&page=3&page_size=10',
+          { order_by: '-name', offset: 3, limit: 10, foo: 'bar' },
+          'foo=bar&limit=10&offset=3&order_by=-name',
         ],
       ].forEach(([params, expectedQueryString]) => {
         const actualQueryString = encodeNonDefaultQueryString(config, params);
@@ -77,7 +77,7 @@ describe('qs (qs.js)', () => {
     test('should omit null values', () => {
       const vals = {
         order_by: 'foo',
-        page: null,
+        offset: null,
       };
       expect(encodeNonDefaultQueryString(config, vals)).toEqual('order_by=foo');
     });
@@ -85,10 +85,10 @@ describe('qs (qs.js)', () => {
     test('should namespace encoded params', () => {
       const conf = {
         namespace: 'item',
-        defaultParams: { page: 1 },
+        defaultParams: { offset: 1 },
       };
       const params = {
-        page: 1,
+        offset: 1,
         foo: 'bar',
       };
       expect(encodeNonDefaultQueryString(conf, params)).toEqual('item.foo=bar');
@@ -114,8 +114,8 @@ describe('qs (qs.js)', () => {
     test('should get default QS config object', () => {
       expect(getQSConfig('organization')).toEqual({
         namespace: 'organization',
-        defaultParams: { page: 1, page_size: 5, order_by: 'name' },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 5, sort_by: 'name' },
+        integerFields: ['offset', 'limit'],
         dateFields: ['modified', 'created'],
       });
     });
@@ -123,13 +123,14 @@ describe('qs (qs.js)', () => {
     test('should set order_by in defaultParams if it is not passed', () => {
       expect(
         getQSConfig('organization', {
-          page: 1,
-          page_size: 5,
+          offset: 1,
+          limit: 5,
+          sort_by: 'name',
         })
       ).toEqual({
         namespace: 'organization',
-        defaultParams: { page: 1, page_size: 5, order_by: 'name' },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 5, sort_by: 'name' },
+        integerFields: ['offset', 'limit'],
         dateFields: ['modified', 'created'],
       });
     });
@@ -140,13 +141,14 @@ describe('qs (qs.js)', () => {
 
     test('should build configured QS config object', () => {
       const defaults = {
-        page: 1,
-        page_size: 15,
+        offset: 1,
+        limit: 15,
+        sort_by: 'name',
       };
       expect(getQSConfig('inventory', defaults)).toEqual({
         namespace: 'inventory',
-        defaultParams: { page: 1, page_size: 15, order_by: 'name' },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15, sort_by: 'name' },
+        integerFields: ['offset', 'limit'],
         dateFields: ['modified', 'created'],
       });
     });
@@ -156,27 +158,27 @@ describe('qs (qs.js)', () => {
     test('should get query params', () => {
       const config = {
         namespace: 'item',
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
-      const query = '?item.baz=bar&item.page=3';
+      const query = '?item.baz=bar&item.offset=3';
       expect(parseQueryString(config, query)).toEqual({
         baz: 'bar',
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
     test('should return namespaced defaults if empty query string passed', () => {
       const config = {
         namespace: 'foo',
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
       const query = '';
       expect(parseQueryString(config, query)).toEqual({
-        page: 1,
-        page_size: 15,
+        offset: 1,
+        limit: 15,
       });
     });
 
@@ -184,7 +186,7 @@ describe('qs (qs.js)', () => {
       const config = {
         namespace: 'item',
         defaultParams: {},
-        integerFields: ['page', 'foo'],
+        integerFields: ['offset', 'foo'],
       };
       const query = '?item.foo=4&item.bar=5';
       expect(parseQueryString(config, query)).toEqual({
@@ -197,7 +199,7 @@ describe('qs (qs.js)', () => {
       const config = {
         namespace: 'item',
         defaultParams: {},
-        integerFields: ['page'],
+        integerFields: ['offset'],
       };
       const query = '?item.foo=bar%20baz';
       expect(parseQueryString(config, query)).toEqual({
@@ -209,7 +211,7 @@ describe('qs (qs.js)', () => {
       const config = {
         namespace: 'item',
         defaultParams: {},
-        integerFields: ['page'],
+        integerFields: ['offset'],
       };
       const query = '?item.foo%20bar=baz';
       expect(parseQueryString(config, query)).toEqual({
@@ -220,70 +222,70 @@ describe('qs (qs.js)', () => {
     test('should get namespaced query params', () => {
       const config = {
         namespace: 'inventory',
-        defaultParams: { page: 1, page_size: 5 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 5 },
+        integerFields: ['offset', 'limit'],
       };
-      const query = '?inventory.page=2&inventory.order_by=name&other=15';
+      const query = '?inventory.offset=2&inventory.order_by=name&other=15';
       expect(parseQueryString(config, query)).toEqual({
-        page: 2,
+        offset: 2,
         order_by: 'name',
-        page_size: 5,
+        limit: 5,
       });
     });
 
     test('should exclude other namespaced query params', () => {
       const config = {
         namespace: 'inventory',
-        defaultParams: { page: 1, page_size: 5 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 5 },
+        integerFields: ['offset', 'limit'],
       };
-      const query = '?inventory.page=2&inventory.order_by=name&foo.other=15';
+      const query = '?inventory.offset=2&inventory.order_by=name&foo.other=15';
       expect(parseQueryString(config, query)).toEqual({
-        page: 2,
+        offset: 2,
         order_by: 'name',
-        page_size: 5,
+        limit: 5,
       });
     });
 
     test('should exclude other namespaced default query params', () => {
       const config = {
         namespace: 'inventory',
-        defaultParams: { page: 1, page_size: 5 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 5 },
+        integerFields: ['offset', 'limit'],
       };
-      const query = '?foo.page=2&inventory.order_by=name&foo.other=15';
+      const query = '?foo.offset=2&inventory.order_by=name&foo.other=15';
       expect(parseQueryString(config, query)).toEqual({
-        page: 1,
+        offset: 1,
         order_by: 'name',
-        page_size: 5,
+        limit: 5,
       });
     });
 
     test('should add duplicate non-default params as array', () => {
       const config = {
         namespace: 'item',
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
-      const query = '?item.baz=bar&item.baz=boo&item.page=3';
+      const query = '?item.baz=bar&item.baz=boo&item.offset=3';
       expect(parseQueryString(config, query)).toEqual({
         baz: ['bar', 'boo'],
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
     test('should add duplicate namespaced non-default params as array', () => {
       const config = {
         namespace: 'bee',
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
-      const query = '?bee.baz=bar&bee.baz=boo&bee.page=3';
+      const query = '?bee.baz=bar&bee.baz=boo&bee.offset=3';
       expect(parseQueryString(config, query)).toEqual({
         baz: ['bar', 'boo'],
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
@@ -300,27 +302,27 @@ describe('qs (qs.js)', () => {
     test('should handle non-namespaced params', () => {
       const config = {
         namespace: null,
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
-      const query = '?item.baz=bar&page=3';
+      const query = '?item.baz=bar&offset=3';
       expect(parseQueryString(config, query)).toEqual({
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
     test('should parse empty string values', () => {
       const config = {
         namespace: 'bee',
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
       const query = '?bee.baz=bar&bee.or__source=';
       expect(parseQueryString(config, query)).toEqual({
         baz: 'bar',
-        page: 1,
-        page_size: 15,
+        offset: 1,
+        limit: 15,
         or__source: '',
       });
     });
@@ -330,235 +332,235 @@ describe('qs (qs.js)', () => {
     test('should remove query params', () => {
       const config = {
         namespace: null,
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
-      const oldParams = { baz: 'bar', page: 3, bag: 'boom', page_size: 15 };
+      const oldParams = { baz: 'bar', offset: 3, bag: 'boom', limit: 15 };
       const toRemove = { bag: 'boom' };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
         baz: 'bar',
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
     test('should remove query params with duplicates (array -> string)', () => {
       const config = {
         namespace: null,
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
-      const oldParams = { baz: ['bar', 'bang'], page: 3, page_size: 15 };
+      const oldParams = { baz: ['bar', 'bang'], offset: 3, limit: 15 };
       const toRemove = { baz: 'bar' };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
         baz: 'bang',
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
     test('should remove query params with duplicates (array -> smaller array)', () => {
       const config = {
         namespace: null,
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
       const oldParams = {
         baz: ['bar', 'bang', 'bust'],
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       };
       const toRemove = { baz: 'bar' };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
         baz: ['bang', 'bust'],
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
     test('should remove multiple values from query params (array -> smaller array)', () => {
       const config = {
         namespace: null,
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
       const oldParams = {
         baz: ['bar', 'bang', 'bust'],
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       };
       const toRemove = { baz: ['bang', 'bar'] };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
         baz: 'bust',
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
     test('should reset query params that have default keys back to default values', () => {
       const config = {
         namespace: null,
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
-      const oldParams = { baz: ['bar', 'bang'], page: 3, page_size: 15 };
-      const toRemove = { page: 3 };
+      const oldParams = { baz: ['bar', 'bang'], offset: 3, limit: 15 };
+      const toRemove = { offset: 3 };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
         baz: ['bar', 'bang'],
-        page: 1,
-        page_size: 15,
+        offset: 1,
+        limit: 15,
       });
     });
 
     test('should remove multiple params', () => {
       const config = {
         namespace: null,
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
       const oldParams = {
         baz: ['bar', 'bang', 'bust'],
         pat: 'pal',
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       };
       const toRemove = { baz: 'bust', pat: 'pal' };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
         baz: ['bar', 'bang'],
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
     test('should remove namespaced query params', () => {
       const config = {
         namespace: 'item',
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
-      const oldParams = { baz: 'bar', page: 3, page_size: 15 };
+      const oldParams = { baz: 'bar', offset: 3, limit: 15 };
       const toRemove = { baz: 'bar' };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
     test('should not include other namespaced query params when removing', () => {
       const config = {
         namespace: 'item',
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
-      const oldParams = { baz: 'bar', page: 1, page_size: 15 };
+      const oldParams = { baz: 'bar', offset: 1, limit: 15 };
       const toRemove = { baz: 'bar' };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
-        page: 1,
-        page_size: 15,
+        offset: 1,
+        limit: 15,
       });
     });
 
     test('should remove namespaced query params with duplicates (array -> string)', () => {
       const config = {
         namespace: 'item',
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
-      const oldParams = { baz: ['bar', 'bang'], page: 3, page_size: 15 };
+      const oldParams = { baz: ['bar', 'bang'], offset: 3, limit: 15 };
       const toRemove = { baz: 'bar' };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
         baz: 'bang',
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
     test('should remove namespaced query params with duplicates (array -> smaller array)', () => {
       const config = {
         namespace: 'item',
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
       const oldParams = {
         baz: ['bar', 'bang', 'bust'],
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       };
       const toRemove = { baz: 'bar' };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
         baz: ['bang', 'bust'],
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
     test('should reset namespaced query params that have default keys back to default values', () => {
       const config = {
         namespace: 'item',
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
-      const oldParams = { baz: ['bar', 'bang'], page: 3, page_size: 15 };
-      const toRemove = { page: 3 };
+      const oldParams = { baz: ['bar', 'bang'], offset: 3, limit: 15 };
+      const toRemove = { offset: 3 };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
         baz: ['bar', 'bang'],
-        page: 1,
-        page_size: 15,
+        offset: 1,
+        limit: 15,
       });
     });
 
     test('should retain long array values', () => {
       const config = {
         namespace: 'item',
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
       const oldParams = {
         baz: ['one', 'two', 'three'],
-        page: 3,
+        offset: 3,
         bag: 'boom',
-        page_size: 15,
+        limit: 15,
       };
       const toRemove = { bag: 'boom' };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
         baz: ['one', 'two', 'three'],
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
     test('should remove multiple namespaced params', () => {
       const config = {
         namespace: 'item',
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
       const oldParams = {
         baz: ['bar', 'bang', 'bust'],
         pat: 'pal',
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       };
       const toRemove = { baz: 'bust', pat: 'pal' };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
         baz: ['bar', 'bang'],
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
 
     test('should retain empty string', () => {
       const config = {
         namespace: null,
-        defaultParams: { page: 1, page_size: 15 },
-        integerFields: ['page', 'page_size'],
+        defaultParams: { offset: 1, limit: 15 },
+        integerFields: ['offset', 'limit'],
       };
-      const oldParams = { baz: '', page: 3, bag: 'boom', page_size: 15 };
+      const oldParams = { baz: '', offset: 3, bag: 'boom', limit: 15 };
       const toRemove = { bag: 'boom' };
       expect(removeParams(config, oldParams, toRemove)).toEqual({
         baz: '',
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
   });
@@ -591,10 +593,10 @@ describe('qs (qs.js)', () => {
     test('should convert numbers to correct type', () => {
       const config = {
         namespace: 'unit',
-        integerFields: ['page'],
+        integerFields: ['offset'],
       };
-      expect(_stringToObject(config, '?unit.page=3')).toEqual({
-        page: 3,
+      expect(_stringToObject(config, '?unit.offset=3')).toEqual({
+        offset: 3,
       });
     });
   });
@@ -602,37 +604,37 @@ describe('qs (qs.js)', () => {
   describe('_addDefaultsToObject', () => {
     test('should add missing default values', () => {
       const config = {
-        defaultParams: { page: 1, page_size: 5, order_by: 'name' },
+        defaultParams: { offset: 1, limit: 5, order_by: 'name' },
       };
       expect(_addDefaultsToObject(config, {})).toEqual({
-        page: 1,
-        page_size: 5,
+        offset: 1,
+        limit: 5,
         order_by: 'name',
       });
     });
 
     test('should not override existing params', () => {
       const config = {
-        defaultParams: { page: 1, page_size: 5, order_by: 'name' },
+        defaultParams: { offset: 1, limit: 5, order_by: 'name' },
       };
       const params = {
-        page: 2,
+        offset: 2,
         order_by: 'date_created',
       };
       expect(_addDefaultsToObject(config, params)).toEqual({
-        page: 2,
-        page_size: 5,
+        offset: 2,
+        limit: 5,
         order_by: 'date_created',
       });
     });
 
     test('should handle missing defaultParams', () => {
       const params = {
-        page: 2,
+        offset: 2,
         order_by: 'date_created',
       };
       expect(_addDefaultsToObject({}, params)).toEqual({
-        page: 2,
+        offset: 2,
         order_by: 'date_created',
       });
     });
@@ -751,13 +753,13 @@ describe('qs (qs.js)', () => {
     });
 
     it('should add multiple params', () => {
-      const oldParams = { baz: ['bar', 'bang'], page: 3, page_size: 15 };
+      const oldParams = { baz: ['bar', 'bang'], offset: 3, limit: 15 };
       const newParams = { baz: 'bust', pat: 'pal' };
       expect(mergeParams(oldParams, newParams)).toEqual({
         baz: ['bar', 'bang', 'bust'],
         pat: 'pal',
-        page: 3,
-        page_size: 15,
+        offset: 3,
+        limit: 15,
       });
     });
   });

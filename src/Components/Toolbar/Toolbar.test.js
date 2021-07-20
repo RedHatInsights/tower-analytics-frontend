@@ -21,6 +21,26 @@ const mockCategories = {
   sort_options: [],
 };
 
+const mockConfig = {
+  defaultParams: {
+    status: ['successful', 'failed'],
+    quick_date_range: 'last_30_days',
+    job_type: ['workflowjob', 'job'],
+    org_id: [],
+    cluster_id: [],
+    template_id: [],
+    inventory_id: [],
+    sort_by: 'created:desc',
+    sort_options: 'created',
+    sort_order: 'desc',
+    only_root_workflows_and_standalone_jobs: false,
+    limit: 5,
+    offset: 0,
+  },
+  namespace: 'foo',
+  integerFields: ['limit', 'offset'],
+};
+
 const mockFilters = { status: null, quick_date_range: null };
 
 describe('Components/Toolbar/FilterableToolbar', () => {
@@ -30,6 +50,7 @@ describe('Components/Toolbar/FilterableToolbar', () => {
         <FilterableToolbar
           categories={mockCategories}
           filters={mockFilters}
+          qsConfig={mockConfig}
           setFilters={() => {}}
         />
       );
@@ -40,6 +61,7 @@ describe('Components/Toolbar/FilterableToolbar', () => {
         <FilterableToolbar
           categories={mockCategories}
           filters={mockFilters}
+          qsConfig={mockConfig}
           setFilters={() => {}}
         />
       );
@@ -55,6 +77,7 @@ describe('Components/Toolbar/FilterableToolbar', () => {
         <FilterableToolbar
           categories={mockCategories}
           filters={mockFilters}
+          qsConfig={mockConfig}
           setFilters={() => {}}
           hasSettings
         />
@@ -68,6 +91,7 @@ describe('Components/Toolbar/FilterableToolbar', () => {
         <FilterableToolbar
           categories={mockCategories}
           filters={mockFilters}
+          qsConfig={mockConfig}
           setFilters={() => {}}
           pagination={mockPagination}
         />
@@ -87,6 +111,7 @@ describe('Components/Toolbar/FilterableToolbar', () => {
         <FilterableToolbar
           categories={mockCategories}
           filters={mockFilters}
+          qsConfig={mockConfig}
           setFilters={() => {}}
         />
       );
@@ -98,6 +123,7 @@ describe('Components/Toolbar/FilterableToolbar', () => {
         <FilterableToolbar
           categories={mockCategories}
           filters={mockFilters}
+          qsConfig={mockConfig}
           setFilters={() => {}}
         />
       );

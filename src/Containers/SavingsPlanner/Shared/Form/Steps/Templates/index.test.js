@@ -56,15 +56,15 @@ describe('SavingsPlanner/Shared/Form/Templates', () => {
 
   test('has rendered NoResults page component', async () => {
     api.readJobExplorer.mockResolvedValue({
-      data: {
-        items: [],
-      },
-      response: { msg: 'Success' },
+      items: [],
+      meta: { count: 0 },
+      isSuccess: true,
+      response: { msg: 'Success', status: 200 },
       url: '/api/tower-analytics/v1/job_explorer/',
     });
     renderPage(Templates, undefined, defaultProps);
 
-    await waitFor(() => expect(api.readJobExplorer).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(api.readJobExplorer).toHaveBeenCalledTimes(1));
 
     expect(screen.getByText('No results found')).toBeTruthy();
   });
@@ -72,7 +72,7 @@ describe('SavingsPlanner/Shared/Form/Templates', () => {
   test('has rendered Templates component with data and is clickable', async () => {
     renderPage(Templates, undefined, defaultProps);
 
-    await waitFor(() => expect(api.readJobExplorer).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(api.readJobExplorer).toHaveBeenCalledTimes(1));
 
     expect(screen.getByText('Link a template to this plan:')).toBeTruthy();
 
