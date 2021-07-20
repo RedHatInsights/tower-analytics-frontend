@@ -4,7 +4,8 @@ const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
   debug: true,
   https: true,
-  skipChrome2: true,
+  sassPrefix: '.automation-analytics, .automationAnalytics',
+  useCloud: true,
   ...(process.env.BETA && { deployment: 'beta/apps' }),
 });
 
