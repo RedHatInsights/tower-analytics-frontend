@@ -32,7 +32,6 @@ import useRequest, { useDeleteItems } from '../../../Utilities/useRequest';
 import ErrorDetail from '../../../Components/ErrorDetail';
 import AlertModal from '../../../Components/AlertModal';
 import { getQSConfig } from '../../../Utilities/qs';
-import { handleSearch } from '../../../Utilities/helpers';
 
 const PageContainer = styled.div`
   display: flex;
@@ -244,9 +243,7 @@ const List = () => {
                   limit: parseInt(queryParams.limit),
                   offset: parseInt(queryParams.offset),
                 }}
-                handleSearch={handleSearch}
                 qsConfig={qsConfig}
-                history={history}
                 setPagination={setFromPagination}
                 isCompact
               />
@@ -265,9 +262,7 @@ const List = () => {
               limit: parseInt(queryParams.limit),
               offset: parseInt(queryParams.offset),
             }}
-            handleSearch={handleSearch}
             qsConfig={qsConfig}
-            history={history}
             setPagination={setFromPagination}
             variant={PaginationVariant.bottom}
           />

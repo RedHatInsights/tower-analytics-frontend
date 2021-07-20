@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
@@ -30,7 +29,6 @@ import {
 import NotificationsList from '../../Components/NotificationsList';
 import Pagination from '../../Components/Pagination';
 import { getQSConfig } from '../../Utilities/qs';
-import { handleSearch } from '../../Utilities/helpers';
 
 const CardTitle = styled(PFCardTitle)`
   display: flex;
@@ -108,7 +106,6 @@ const qsConfig = getQSConfig('notifications', { ...initialQueryParams }, [
 ]);
 
 const Notifications = () => {
-  const history = useHistory();
   const [preflightError, setPreFlightError] = useState(null);
   const [notificationsData, setNotificationsData] = useState([]);
   const [clusterOptions, setClusterOptions] = useState([]);
@@ -242,9 +239,7 @@ const Notifications = () => {
                 </DropdownGroup>
                 <Pagination
                   count={meta?.count}
-                  handleSearch={handleSearch}
                   qsConfig={qsConfig}
-                  history={history}
                   params={{
                     limit: queryParams.limit,
                     offset: queryParams.offset,
@@ -267,8 +262,6 @@ const Notifications = () => {
                 )}
                 <Pagination
                   count={meta?.count}
-                  handleSearch={handleSearch}
-                  history={history}
                   qsConfig={qsConfig}
                   params={{
                     limit: queryParams.limit,

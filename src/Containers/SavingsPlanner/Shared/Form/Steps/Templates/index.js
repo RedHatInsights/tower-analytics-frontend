@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
@@ -40,7 +39,6 @@ import FilterableToolbar from '../../../../../../Components/Toolbar/';
 
 import { actions } from '../../../constants';
 import useRequest from '../../../../../../Utilities/useRequest';
-import { handleSearch } from '../../../../../../Utilities/helpers';
 import { getQSConfig } from '../../../../../../Utilities/qs';
 
 const ListFooter = styled.div`
@@ -175,9 +173,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
                     limit: queryParams.limit,
                     offset: queryParams.offset,
                   }}
-                  handleSearch={handleSearch}
                   qsConfig={qsConfig}
-                  history={history}
                   setPagination={setFromPagination}
                   isCompact
                 />
@@ -244,9 +240,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
                   limit: queryParams.limit,
                   offset: queryParams.offset,
                 }}
-                handleSearch={handleSearch}
                 qsConfig={qsConfig}
-                history={history}
                 setPagination={setFromPagination}
                 variant={PaginationVariant.bottom}
               />

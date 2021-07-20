@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import useRequest from '../../Utilities/useRequest';
-import { handleSearch } from '../../Utilities/helpers';
 
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
@@ -128,9 +127,7 @@ const JobExplorer = () => {
                       limit: parseInt(queryParams.limit),
                       offset: parseInt(queryParams.offset),
                     }}
-                    handleSearch={handleSearch}
                     qsConfig={qsConfig}
-                    history={history}
                     setPagination={setFromPagination}
                     isCompact
                   />
@@ -147,9 +144,7 @@ const JobExplorer = () => {
                   limit: parseInt(queryParams.limit),
                   offset: parseInt(queryParams.offset),
                 }}
-                handleSearch={handleSearch}
                 qsConfig={qsConfig}
-                history={history}
                 setPagination={setFromPagination}
                 variant={PaginationVariant.bottom}
               />
