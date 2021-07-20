@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory, useLocation, useParams, Redirect } from 'react-router-dom';
+import { useHistory, useLocation, Redirect } from 'react-router-dom';
 
 import {
   Button,
