@@ -20,7 +20,6 @@ describe('<Clusters />', () => {
     await act(async () => {
       renderPage(Clusters);
     });
-    expect(screen.getAllByText(/Clusters/i));
     expect(screen.getByText('Not authorized'));
   });
 
@@ -29,7 +28,6 @@ describe('<Clusters />', () => {
     await act(async () => {
       renderPage(Clusters);
     });
-    expect(screen.getAllByText(/Clusters/i));
     expect(
       screen.getByText('Something went wrong, please try reloading the page')
     );

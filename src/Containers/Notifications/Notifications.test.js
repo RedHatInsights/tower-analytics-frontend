@@ -11,6 +11,7 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useHistory: () => ({
     push: jest.fn(),
+    location: jest.fn(),
   }),
   useLocation: () => ({
     push: jest.fn(),
@@ -144,7 +145,7 @@ describe('Containers/Notifications', () => {
     expect(wrapper.text()).toEqual(expect.stringContaining('No Data'));
   });
 
-  it('should render the right amouth of data rows', async () => {
+  it('should render the right amount of data rows', async () => {
     await act(async () => {
       wrapper = mountPage(Notifications);
     });

@@ -45,7 +45,7 @@ const Pagination: FunctionComponent<Props> = ({
   const returnOffsetVal = (page: number) => (page - 1) * limit;
   const history = useHistory();
 
-  const pushHistoryState = (params: string | string) => {
+  const pushHistoryState = (params: {}) => {
     const { pathname, search } = history.location;
     const nonNamespacedParams = parseQueryString({}, search);
     const encodedParams = encodeNonDefaultQueryString(
@@ -61,7 +61,6 @@ const Pagination: FunctionComponent<Props> = ({
     pageNumber: number
   ) => {
     const oldParams = parseQueryString(qsConfig, history.location.search);
-    // @ts-ignore
     pushHistoryState(replaceParams(oldParams, { limit: pageNumber }));
   };
 
@@ -70,7 +69,6 @@ const Pagination: FunctionComponent<Props> = ({
     page: number
   ) => {
     const oldParams = parseQueryString(qsConfig, history.location.search);
-    // @ts-ignore
     pushHistoryState(replaceParams(oldParams, { offset: page }));
   };
 

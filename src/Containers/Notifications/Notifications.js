@@ -95,15 +95,18 @@ function formatClusterName(data) {
 }
 
 const initialQueryParams = {
-  limit: 5,
-  offset: 0,
+  defaultParams: {
+    limit: 5,
+    offset: 0,
+  },
 };
 
 // takes json and returns
-const qsConfig = getQSConfig('notifications', { ...initialQueryParams }, [
-  'limit',
-  'offset',
-]);
+const qsConfig = getQSConfig(
+  'notifications',
+  { ...initialQueryParams.defaultParams },
+  ['limit', 'offset']
+);
 
 const Notifications = () => {
   const [preflightError, setPreFlightError] = useState(null);

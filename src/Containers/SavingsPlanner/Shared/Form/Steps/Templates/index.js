@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { parse, stringify } from 'query-string';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import {
   Button,
@@ -39,7 +41,6 @@ import FilterableToolbar from '../../../../../../Components/Toolbar/';
 
 import { actions } from '../../../constants';
 import useRequest from '../../../../../../Utilities/useRequest';
-import { getQSConfig } from '../../../../../../Utilities/qs';
 
 const ListFooter = styled.div`
   display: flex;
@@ -56,12 +57,20 @@ const initialQueryParams = {
   sort_order: 'asc',
   sort_by: 'name:asc',
 };
-const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, ['limit', 'offset']);
+const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
+  'limit',
+  'offset',
+]);
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
+  const { pathname, hash, search } = useLocation();
   const history = useHistory();
-  const { queryParams, setFromPagination, setFromToolbar } =
-    useQueryParams(qsConfig);
+  const {
+    queryParams,
+    setFromPagination,
+    setFromToolbar,
+    dispatch: queryParamsDispatch,
+  } = useQueryParams(qsConfig);
 
   const [preflightError, setPreFlightError] = useState(null);
 
@@ -125,17 +134,20 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     });
   }, []);
 
-    const initialSearchParams = parse(search, {
-      arrayFormat: 'bracket',
-      parseBooleans: true,
-      parseNumbers: true,
-    });
+  const initialSearchParams = parse(search, {
+    arrayFormat: 'bracket',
+    parseBooleans: true,
+    parseNumbers: true,
+  });
 
   useEffect(() => {
     history.replace({
       pathname,
       hash,
-      search: stringify({...initialQueryParams, ...initialSearchParams}, { arrayFormat: 'bracket' }),
+      search: stringify(
+        { ...initialQueryParams, ...initialSearchParams },
+        { arrayFormat: 'bracket' }
+      ),
     });
   }, []);
 
@@ -143,8 +155,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     fetchOptions();
     fetchEndpoints();
   }, [queryParams]);
-
-
 
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
