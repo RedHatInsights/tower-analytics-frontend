@@ -7,19 +7,21 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import { readJobExplorer, readJobExplorerOptions } from '../../../../Api';
 import {
-  AttributesType,
-  ReportGeneratorParams
-} from '../types';
+  readJobExplorer,
+  readJobExplorerOptions,
+  Params,
+} from '../../../../Api';
+import { AttributesType, ReportPageParams } from '../types';
 
-const name = "Playbook run rate";
+const name = 'Playbook run rate';
 
-const description = "This is the report for showing the run rate affects based on the playbook";
+const description =
+  'This is the report for showing the run rate affects based on the playbook';
 
 const categories = ['Opertaions'];
 
-const defaultParams = {
+const defaultParams: Params = {
   limit: 4,
   offset: 0,
   attributes: [
@@ -37,14 +39,14 @@ const defaultParams = {
   granularity: 'monthly',
   sort_options: 'total_count',
   sort_order: 'desc',
-}
+};
 
 const extraAttributes: AttributesType = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Template name' },
 ];
 
-const schemaFnc = (label: string, y: string): ChartSchemaElement[] => ([
+const schemaFnc = (label: string, y: string): ChartSchemaElement[] => [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -54,13 +56,13 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => ([
       height: 400,
       padding: {
         top: 10,
-        right: 100
+        right: 100,
       },
-      themeColor: ChartThemeColor.multiOrdered
+      themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
       label: 'Date',
-      tickFormat: 'formatDateAsDayMonth'
+      tickFormat: 'formatDateAsDayMonth',
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
@@ -68,19 +70,19 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => ([
       label,
       style: {
         axisLabel: {
-          padding: 50
-        }
-      }
+          padding: 50,
+        },
+      },
     },
     api: {
       url: '',
-      params: {}
+      params: {},
     },
     legend: {
       interactive: true,
       orientation: ChartLegendOrientation.vertical,
-      position: ChartLegendPosition.right
-    }
+      position: ChartLegendPosition.right,
+    },
   },
   {
     id: 2,
@@ -96,21 +98,23 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => ([
         y,
       },
       tooltip: {
-        standalone: true
-      }
-    }
-  }
-]);
+        standalone: true,
+      },
+    },
+  },
+];
 
-const reportParams: ReportGeneratorParams = {
+const reportParams: ReportPageParams = {
   name,
   description,
   categories,
-  defaultParams,
-  extraAttributes,
-  readData: readJobExplorer,
-  readOptions: readJobExplorerOptions,
-  schemaFnc 
+  report: {
+    defaultParams,
+    extraAttributes,
+    readData: readJobExplorer,
+    readOptions: readJobExplorerOptions,
+    schemaFnc,
+  },
 };
 
 export default reportParams;

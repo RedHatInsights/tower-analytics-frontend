@@ -8,14 +8,12 @@ import {
   ChartThemeColor,
 } from 'react-json-chart-builder';
 import { readHostExplorer, readHostExplorerOptions } from '../../../../Api';
-import {
-  AttributesType,
-  ReportGeneratorParams
-} from '../types';
+import { AttributesType, ReportPageParams } from '../types';
 
-const name = "Affected hosts by playbook";
+const name = 'Affected hosts by playbook';
 
-const description = "This is the report for showing the hosts affected by playbook runs";
+const description =
+  'This is the report for showing the hosts affected by playbook runs';
 
 const categories = ['Operations'];
 
@@ -29,21 +27,21 @@ const defaultParams = {
     'unreachable_host_count',
     'changed_host_count',
     'skipped_host_count',
-    'total_unique_host_count'
+    'total_unique_host_count',
   ],
   group_by: 'template',
   group_by_time: true,
   granularity: 'monthly',
   sort_options: 'total_unique_host_count',
   sort_order: 'desc',
-}
+};
 
 const extraAttributes: AttributesType = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Template name' },
 ];
 
-const schemaFnc = (label: string, y: string): ChartSchemaElement[] => ([
+const schemaFnc = (label: string, y: string): ChartSchemaElement[] => [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -53,13 +51,13 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => ([
       height: 400,
       padding: {
         top: 10,
-        right: 100
+        right: 100,
       },
-      themeColor: ChartThemeColor.multiOrdered
+      themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
       label: 'Date',
-      tickFormat: 'formatDateAsDayMonth'
+      tickFormat: 'formatDateAsDayMonth',
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
@@ -67,19 +65,19 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => ([
       label,
       style: {
         axisLabel: {
-          padding: 50
-        }
-      }
+          padding: 50,
+        },
+      },
     },
     api: {
       url: '',
-      params: {}
+      params: {},
     },
     legend: {
       interactive: true,
       orientation: ChartLegendOrientation.vertical,
-      position: ChartLegendPosition.right
-    }
+      position: ChartLegendPosition.right,
+    },
   },
   {
     id: 2,
@@ -95,21 +93,23 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => ([
         y,
       },
       tooltip: {
-        standalone: true
-      }
-    }
-  }
-]);
+        standalone: true,
+      },
+    },
+  },
+];
 
-const reportParams: ReportGeneratorParams = {
+const reportParams: ReportPageParams = {
   name,
   description,
   categories,
-  defaultParams,
-  extraAttributes,
-  readData: readHostExplorer,
-  readOptions: readHostExplorerOptions,
-  schemaFnc,
+  report: {
+    defaultParams,
+    extraAttributes,
+    readData: readHostExplorer,
+    readOptions: readHostExplorerOptions,
+    schemaFnc,
+  },
 };
 
 export default reportParams;
