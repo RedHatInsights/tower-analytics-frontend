@@ -1,17 +1,25 @@
-import { ChartSchemaElement } from "react-json-chart-builder";
+import { ChartSchemaElement } from 'react-json-chart-builder';
+import {
+  ApiJson,
+  ReadParams,
+  Params,
+  ReadParamsWithPagination,
+} from '../../../Api';
 
-export type AttributesType = { key: string, value: string }[];
-export type ApiParamsType = Record<string, string | number | string[] | number[] | boolean>;
-export type ApiFunctionType = (options: { params: AttributesType }) => Promise<unknown>;
+export type AttributesType = { key: string; value: string }[];
 export type SchemaFnc = (label: string, y: string) => ChartSchemaElement[];
 
 export interface ReportGeneratorParams {
-  name: string,
-  description: string,
-  categories: Array<string>,
-  defaultParams: ApiParamsType;
+  defaultParams: Params;
   extraAttributes: AttributesType;
-  readData: ApiFunctionType;
-  readOptions: ApiFunctionType;
+  readData: (options: ReadParamsWithPagination) => Promise<ApiJson>;
+  readOptions: (options: ReadParams) => Promise<ApiJson>;
   schemaFnc: SchemaFnc;
-};
+}
+
+export interface ReportPageParams {
+  name: string;
+  description: string;
+  categories: string[];
+  report?: ReportGeneratorParams;
+}
