@@ -19,16 +19,9 @@ const App = () => {
       appNav();
     };
   }, []);
-  /**
-   * Remove automation-analytics class once main.yml has module config
-   */
 
   return (
-    <div
-      className="automation-analytics"
-      id="automation-analytics-application"
-      version={packageJson.version}
-    >
+    <div id="automation-analytics-application" version={packageJson.version}>
       <Routes />
     </div>
   );
