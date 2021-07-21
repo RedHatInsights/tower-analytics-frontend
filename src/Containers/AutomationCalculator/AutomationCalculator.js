@@ -86,8 +86,6 @@ const AutomationCalculator = ({ history }) => {
 
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
-  const setDataInApi = (data) =>
-    updateDeltaCost(mapApi(data), costAutomation, costManual);
 
   const {
     error: preflightError,
@@ -115,18 +113,20 @@ const AutomationCalculator = ({ history }) => {
   );
 
   const {
-    result: { data },
+    result: { data: api },
     error: apiError,
     isLoading: apiIsLoading,
     request: fetchEndpoint,
+    setValue,
   } = useRequest(
     useCallback(async () => {
       const response = await readROI({ params: queryParams });
-      return { data: response };
+      return {
+        data: updateDeltaCost(mapApi(response), costAutomation, costManual),
+      };
     }, [queryParams]),
     { data: [], apiError, apiIsLoading }
   );
-  const api = setDataInApi(data); //updateDeltaCost(mapApi(data), costAutomation, costManual)
 
   /**
    * Modifies one elements avgRunTime in the unfilteredData
@@ -148,13 +148,13 @@ const AutomationCalculator = ({ history }) => {
       }
     });
 
-    setDataInApi(updatedData);
+    setValue({ data: updatedData });
   };
 
   const setEnabled = (id) => (value) => {
-    setDataInApi(
-      api.map((el) => (el.id === id ? { ...el, enabled: value } : el))
-    );
+    setValue({
+      data: api.map((el) => (el.id === id ? { ...el, enabled: value } : el)),
+    });
   };
 
   useEffect(() => {
@@ -166,7 +166,7 @@ const AutomationCalculator = ({ history }) => {
    * Recalculates the delta and costs in the data after the cost is changed.
    */
   useEffect(() => {
-    setDataInApi(updateDeltaCost(api, costAutomation, costManual));
+    setValue({ data: updateDeltaCost(api, costAutomation, costManual) });
   }, [costAutomation, costManual]);
 
   /**
