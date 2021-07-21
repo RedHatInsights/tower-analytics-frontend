@@ -4,10 +4,18 @@ import { SplitItem, ToolbarGroup, Split } from '@patternfly/react-core';
 
 import ToolbarInput from './ToolbarInput/';
 
+import { today } from '../../../Utilities/helpers';
+
 const getDateByDays = (days, format = true) => {
   const date = new Date();
   date.setDate(date.getDate() + days);
+  date.setHours(0, 0, 0, 0);
   return format ? date.toISOString().split(/T/)[0] : date;
+};
+
+const strToDate = (date) => {
+  const nums = date.split('-');
+  return new Date(nums[0], nums[1] - 1, nums[2]);
 };
 
 const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => {
@@ -34,8 +42,8 @@ const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => {
               }}
               validators={[
                 (date) =>
-                  date >= new Date(endDate + 'T00:00:00Z')
-                    ? 'Must be before end date'
+                  typeof endDate === 'string' && date > strToDate(endDate)
+                    ? 'Must not be after end date'
                     : '',
               ]}
             />
@@ -51,9 +59,11 @@ const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => {
               }}
               validators={[
                 (date) =>
-                  date <= new Date(startDate + 'T00:00:00Z')
-                    ? 'Must be after start date'
+                  typeof startDate === 'string' && date < strToDate(startDate)
+                    ? 'Must not be before start date'
                     : '',
+
+                (date) => (date > today() ? 'Must not be after today' : ''),
               ]}
             />
           </SplitItem>
