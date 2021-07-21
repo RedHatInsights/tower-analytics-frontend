@@ -2,7 +2,7 @@ import {
   getRelatedResourceDeleteCounts,
   relatedResourceDeleteRequests,
 } from './getRelatedResourceDeleteDetails';
-import mockResponses from './__fixtures__/';
+import mockResponses from '../__tests__/fixtures/';
 import * as api from '../Api/';
 jest.mock('../Api');
 

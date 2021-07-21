@@ -1,8 +1,8 @@
 import '@testing-library/jest-dom';
 import Add from '.';
 import { screen, waitFor } from '@testing-library/react';
-import { renderPage } from '../../../Utilities/tests/helpers.reactTestingLib';
-import mockResponses from '../../../Utilities/__fixtures__/';
+import { renderPage } from '../../../__tests__/helpers.reactTestingLib';
+import mockResponses from '../../../__tests__/fixtures/';
 import * as api from '../../../Api';
 jest.mock('../../../Api');
 
