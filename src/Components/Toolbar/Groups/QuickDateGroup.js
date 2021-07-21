@@ -34,7 +34,9 @@ const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => {
               }}
               validators={[
                 (date) =>
-                  date > new Date(endDate) ? 'Must be before end date' : '',
+                  date >= new Date(endDate + 'T00:00:00Z')
+                    ? 'Must be before end date'
+                    : '',
               ]}
             />
           </SplitItem>
@@ -49,7 +51,9 @@ const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => {
               }}
               validators={[
                 (date) =>
-                  date < new Date(startDate) ? 'Must be after start date' : '',
+                  date <= new Date(startDate + 'T00:00:00Z')
+                    ? 'Must be after start date'
+                    : '',
               ]}
             />
           </SplitItem>
