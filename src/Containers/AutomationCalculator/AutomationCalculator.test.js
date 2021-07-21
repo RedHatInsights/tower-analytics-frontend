@@ -214,7 +214,7 @@ describe('Containers/AutomationCalculator', () => {
     );
   });
 
-  xit('should recompute total savings correctly after changed average runtime', async () => {
+  it('should recompute total savings correctly after changed average runtime', async () => {
     await act(async () => {
       wrapper = mountPage(AutomationCalculator);
     });
