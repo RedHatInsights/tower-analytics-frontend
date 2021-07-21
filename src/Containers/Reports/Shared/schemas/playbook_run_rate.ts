@@ -19,7 +19,7 @@ const name = 'Playbook run rate';
 const description =
   'This is the report for showing the run rate affects based on the playbook';
 
-const categories = ['Opertaions'];
+const categories = ['Operations'];
 
 const defaultParams: Params = {
   limit: 4,
