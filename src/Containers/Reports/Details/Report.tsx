@@ -89,11 +89,19 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(defaultParams);
 
-  const [attrPairs, setAttrPairs] = useState(extraAttributes);
+  const [attrPairs, setAttrPairs] = useState<Array<any>>([]);
+  useEffect(() => {
+    if(options.isSuccess) {
+      setAttrPairs([
+        ...options.data?.sort_options
+      ]);
+    }
+  }, [options]);
+
+  const combinedAttrPairs = [ ...extraAttributes, ...attrPairs ];
 
   const chartSchema = schemaFnc(
-    attrPairs.find(({ key }) => key === queryParams.sort_options)?.value ||
-      'Label Y',
+    combinedAttrPairs.find(({ key }) => key === queryParams.sort_options)?.value || 'Label Y',
     queryParams.sort_options as string
   );
 
@@ -102,11 +110,6 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
     setOptions(readOptions({ params: queryParams }));
   }, [queryParams]);
 
-  useEffect(() => {
-    if (options.isSuccess) {
-      setAttrPairs([...extraAttributes, ...options.data?.sort_options]);
-    }
-  }, [options]);
 
   const onSort = (
     _event: unknown,
@@ -114,7 +117,7 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
     direction: 'asc' | 'desc'
   ) => {
     setFromToolbar('sort_order', direction);
-    setFromToolbar('sort_options', attrPairs[index]?.key);
+    setFromToolbar('sort_options', combinedAttrPairs[index]?.key);
   };
 
   const getSorParams = (currKey: string) => {
@@ -128,16 +131,13 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
     return {
       sort: {
         sortBy: {
-          index:
-            attrPairs.findIndex(
-              ({ key }) => key === queryParams.sort_options
-            ) || 0,
-          direction: queryParams.sort_order || 'none',
+          index: combinedAttrPairs.findIndex(({ key }) => key === queryParams.sort_options) || 0,
+          direction: queryParams.sort_order || 'none'
         },
         onSort,
-        columnIndex: attrPairs.findIndex(({ key }) => key === currKey),
-      },
-    };
+        columnIndex: combinedAttrPairs.findIndex(({ key }) => key === currKey)
+      }
+    }
   };
 
   return (
@@ -171,23 +171,22 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
           >
             <Thead>
               <Tr>
-                {attrPairs.map(({ key, value }) => (
-                  <Th key={key} {...getSorParams(key)}>
-                    {value}
-                  </Th>
+                {combinedAttrPairs.map(({ key, value }) => (
+                  <Th
+                    key={key}
+                    {...getSorParams(key)}
+                  >{value}</Th>
                 ))}
               </Tr>
             </Thead>
             <Tbody>
-              {api.data?.meta?.legend.map(
-                (item: Record<string, string | number>) => (
-                  <Tr key={item.id} style={getOthersStyle(item, 'id')}>
-                    {attrPairs.map(({ key }) => (
-                      <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
-                    ))}
-                  </Tr>
-                )
-              )}
+              {api.data?.meta?.legend.map((item: Record<string, string | number>) => (
+                <Tr key={item.id} style={getOthersStyle(item, 'id')}>
+                  {combinedAttrPairs.map(({ key }) => (
+                    <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
+                  ))}
+                </Tr>
+              ))}
             </Tbody>
           </TableComposable>
         </CardBody>
