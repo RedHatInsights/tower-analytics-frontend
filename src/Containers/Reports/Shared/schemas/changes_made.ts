@@ -14,7 +14,7 @@ const name = 'Changes made';
 
 const description = 'This is the report that shows the changes made to a host';
 
-const categories = ['Opertaions', 'Business'];
+const categories = ['Operations'];
 
 const defaultParams = {
   limit: 4,
