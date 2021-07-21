@@ -76,6 +76,12 @@ export function calculateDelta(a, b) {
   return b - a;
 }
 
+export function today() {
+  const d = new Date();
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
 export function convertMinsToMs(mins) {
   if (!parseInt(mins)) {
     return 0;
