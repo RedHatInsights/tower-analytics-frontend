@@ -28,8 +28,9 @@
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
     "collectCoverageFrom": [
-      "src/**/*.js",
-      "!src/**/stories/*"
+      "src/**/*{.js,.ts,.tsx}",
+      "!src/__tests__/**/*",
+      "!src/**/types.ts"
     ],
     "setupFiles": [
       "<rootDir>/config/setupTests.js"
@@ -37,6 +38,9 @@
     "roots": [
       "<rootDir>/src/"
     ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/src/__tests__/"
+    ],        
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy"
     },
