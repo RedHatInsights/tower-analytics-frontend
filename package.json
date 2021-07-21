@@ -94,16 +94,13 @@
     "webpack-cli": "^4.6.0"
   },
   "scripts": {
-    "proxy:fullstack": "SPANDX_CONFIG=./profiles/local-frontend-and-api.js bash ../insights-proxy/scripts/run.sh & npx http-server ./config -p 8889",
-    "proxy:local": "SPANDX_CONFIG=./profiles/local-frontend.js bash ../insights-proxy/scripts/run.sh",
     "test": "jest --verbose",
     "test:watch": "jest --coverage=false --watch",
     "integration": "cypress open",
     "integration:headless": "cypress run --browser=chrome",
     "lint": "(eslint config src) && (stylelint 'src/**/*.scss' --config .stylelintrc.json)",
-    "lint:js:fix": "eslint config src --fix",
-    "start": "NODE_ENV=development webpack serve --config config/dev.webpack.config.js",
-    "start:beta": "BETA=true NODE_ENV=development webpack serve --config config/dev.webpack.config.js",
+    "lint:fix": "eslint config src --fix",
+    "start": "BETA=true NODE_ENV=development webpack serve --config config/dev.webpack.config.js",
     "start:container": "NODE_ENV=development webpack serve --config config/dev.webpack.config.js --host 0.0.0.0",
     "build:prod": "NODE_ENV=production webpack --config config/prod.webpack.config.js",
     "deploy": "npm-run-all build:prod lint test",
