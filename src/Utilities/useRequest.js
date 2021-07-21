@@ -8,21 +8,24 @@ import useIsMounted from './useIsMounted';
  *   result: the value returned from the request function (once invoked)
  *   isLoading: boolean state indicating whether the request is in active/in flight
  *   error: any caught error resulting from the request
+ *   success: once request is completed and there were no errors
  *   setValue: setter to explicitly set the result value
  *
  * The hook also accepts an optional second parameter which is a default
  * value to set as result before the first time the request is made.
  */
-export default function useRequest(makeRequest, initialValue) {
+export const useRequest = (makeRequest, initialValue) => {
   const [result, setResult] = useState(initialValue);
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
   const isMounted = useIsMounted();
 
   return {
     result,
     error,
     isLoading,
+    isSuccess,
     request: useCallback(
       async (...args) => {
         setIsLoading(true);
@@ -31,6 +34,7 @@ export default function useRequest(makeRequest, initialValue) {
           if (isMounted.current) {
             setResult(response);
             setError(null);
+            setIsSuccess(true);
           }
         } catch (err) {
           if (isMounted.current) {
@@ -47,7 +51,7 @@ export default function useRequest(makeRequest, initialValue) {
     ),
     setValue: setResult,
   };
-}
+};
 
 /*
  * Provides controls for "dismissing" an error message
@@ -58,7 +62,7 @@ export default function useRequest(makeRequest, initialValue) {
  *   until the dismissError function is called, at which point the returned
  *   error will be set to null on the subsequent render.
  */
-export function useDismissableError(error) {
+export const useDismissableError = (error) => {
   const [showError, setShowError] = useState(false);
 
   useEffect(() => {
@@ -73,7 +77,7 @@ export function useDismissableError(error) {
       setShowError(false);
     },
   };
-}
+};
 
 /*
  * Hook to assist with deletion of items from a paginated item list. The page
@@ -85,10 +89,10 @@ export function useDismissableError(error) {
  *   and an object with structure { qsConfig, allItemsSelected, fetchItems }
  * Returns: { isLoading, deleteItems, deletionError, clearDeletionError }
  */
-export function useDeleteItems(
+export const useDeleteItems = (
   makeRequest,
   { qsConfig = null, fetchItems = null } = {}
-) {
+) => {
   const {
     error: requestError,
     isLoading,
@@ -109,4 +113,6 @@ export function useDeleteItems(
     deletionError: error,
     clearDeletionError: dismissError,
   };
-}
+};
+
+export default useRequest;

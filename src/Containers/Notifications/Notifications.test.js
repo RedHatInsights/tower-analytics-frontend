@@ -7,6 +7,18 @@ import {
   preflight403,
 } from '../../Utilities/tests/helpers';
 import fetchMock from 'fetch-mock-jest';
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => ({
+    push: jest.fn(),
+    location: jest.fn(),
+  }),
+  useLocation: () => ({
+    push: jest.fn(),
+    pathname: 'some_path',
+    search: '',
+  }),
+}));
 import Notifications from './Notifications.js';
 
 const notificationsUrl = 'path:/api/tower-analytics/v0/notifications/';
@@ -133,7 +145,7 @@ describe('Containers/Notifications', () => {
     expect(wrapper.text()).toEqual(expect.stringContaining('No Data'));
   });
 
-  it('should render the right amouth of data rows', async () => {
+  it('should render the right amount of data rows', async () => {
     await act(async () => {
       wrapper = mountPage(Notifications);
     });

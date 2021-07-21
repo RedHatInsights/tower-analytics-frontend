@@ -1,24 +1,38 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Redirect, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
-import useApi from '../../../Utilities/useApi';
 
 import { readPlanOptions } from '../../../Api/';
 import { Paths } from '../../../paths';
 
 import Form from '../Shared/Form';
+import useRequest from '../../../Utilities/useRequest';
 
 const Edit = ({ data }) => {
-  const [options, setOptions] = useApi({});
   const { id } = useParams();
 
+  const {
+    result: options,
+    isSuccess,
+    request: fetchPlanOptions,
+  } = useRequest(
+    useCallback(async () => {
+      const response = await readPlanOptions();
+      return {
+        data: response,
+      };
+    }, []),
+    {
+      options: {},
+    }
+  );
+
   useEffect(() => {
-    setOptions(readPlanOptions());
-  }, []);
+    fetchPlanOptions();
+  }, [fetchPlanOptions]);
 
   const canWrite =
-    options.isSuccess &&
+    isSuccess &&
     (options.data?.meta?.rbac?.perms?.write === true ||
       options.data?.meta?.rbac?.perms?.all === true);
 
@@ -28,7 +42,7 @@ const Edit = ({ data }) => {
     </>
   );
 
-  if (options.isSuccess) {
+  if (isSuccess) {
     return canWrite ? (
       showEdit()
     ) : (

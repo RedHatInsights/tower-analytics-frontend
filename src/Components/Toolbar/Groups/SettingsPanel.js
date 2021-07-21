@@ -13,6 +13,7 @@ import { QuestionCircleIcon, TimesIcon } from '@patternfly/react-icons';
 /* TODO: For future work: make settings more modular for different pages */
 const SettingsPanel = ({
   filters,
+  handleSearch,
   setFilters,
   settingsExpanded,
   setSettingsExpanded,
@@ -37,6 +38,7 @@ const SettingsPanel = ({
         isChecked={filters.only_root_workflows_and_standalone_jobs}
         onChange={(val) => {
           setFilters('only_root_workflows_and_standalone_jobs', val);
+          handleSearch('only_root_workflows_and_standalone_jobs', val);
         }}
       />
       <Tooltip
@@ -57,6 +59,7 @@ const SettingsPanel = ({
 
 SettingsPanel.propTypes = {
   filters: PropTypes.object.isRequired,
+  handleSearch: PropTypes.func.isRequired,
   setFilters: PropTypes.func.isRequired,
   settingsExpanded: PropTypes.bool.isRequired,
   setSettingsExpanded: PropTypes.func.isRequired,

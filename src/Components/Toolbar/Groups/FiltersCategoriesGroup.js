@@ -6,7 +6,12 @@ import CategoryDropdown from './CategoryDropdown';
 import ToolbarInput from './ToolbarInput/';
 import { optionsForCategories } from '../constants';
 
-const FilterCategoriesGroup = ({ filterCategories, filters, setFilters }) => {
+const FilterCategoriesGroup = ({
+  filterCategories,
+  filters,
+  handleSearch,
+  setFilters,
+}) => {
   const [currentCategory, setCurrentCategory] = useState(
     Object.keys(filterCategories)[0]
   );
@@ -28,7 +33,10 @@ const FilterCategoriesGroup = ({ filterCategories, filters, setFilters }) => {
           value={filters[key]}
           selectOptions={filterCategories[key]}
           isVisible={currentCategory === key}
-          setValue={(value) => setFilters(key, value)}
+          setValue={(value) => {
+            setFilters(key, value);
+            handleSearch(key, value);
+          }}
         />
       ))}
     </ToolbarGroup>
@@ -38,6 +46,7 @@ const FilterCategoriesGroup = ({ filterCategories, filters, setFilters }) => {
 FilterCategoriesGroup.propTypes = {
   filterCategories: PropTypes.object.isRequired,
   filters: PropTypes.object.isRequired,
+  handleSearch: PropTypes.func.isRequired,
   setFilters: PropTypes.func.isRequired,
 };
 

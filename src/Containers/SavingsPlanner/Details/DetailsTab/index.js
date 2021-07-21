@@ -97,7 +97,7 @@ const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
   };
 
   const renderOptionsBasedValue = (key, val) => {
-    const fromOptionsValue = (options.data[key] || []).find(
+    const fromOptionsValue = (options[key] || []).find(
       ({ key: apiValue }) => apiValue === val
     );
     return (fromOptionsValue || {}).value;

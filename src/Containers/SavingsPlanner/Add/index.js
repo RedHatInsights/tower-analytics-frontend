@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { Card, CardBody } from '@patternfly/react-core';
@@ -11,21 +11,36 @@ import {
 
 import Breadcrumbs from '../../../Components/Breadcrumbs';
 
-import useApi from '../../../Utilities/useApi';
-
 import { readPlanOptions } from '../../../Api/';
 
 import Form from '../Shared/Form';
 
 import { Paths } from '../../../paths';
+import useRequest from '../../../Utilities/useRequest';
 
 const Add = () => {
-  const [options, setOptions] = useApi({});
+  const {
+    result: options,
+    isSuccess,
+    request: fetchPlanOptions,
+  } = useRequest(
+    useCallback(async () => {
+      const response = await readPlanOptions();
+      return {
+        data: response,
+      };
+    }, []),
+    {
+      options: {},
+    }
+  );
+
   useEffect(() => {
-    setOptions(readPlanOptions());
-  }, []);
+    fetchPlanOptions();
+  }, [fetchPlanOptions]);
+
   const canWrite =
-    options.isSuccess &&
+    isSuccess &&
     (options.data?.meta?.rbac?.perms?.write === true ||
       options.data?.meta?.rbac?.perms?.all === true);
   const title = 'Create new plan';
@@ -47,7 +62,7 @@ const Add = () => {
       </Main>
     </>
   );
-  if (options.isSuccess) {
+  if (isSuccess) {
     return canWrite ? showAdd() : <Redirect to={Paths.savingsPlanner} />;
   }
   return null;

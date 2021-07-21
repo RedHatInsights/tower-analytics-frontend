@@ -1,16 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { parse, stringify } from 'query-string';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import useApi from '../../Utilities/useApi';
-import { Paths } from '../../paths';
+import useRequest from '../../Utilities/useRequest';
 
 import LoadingState from '../../Components/LoadingState';
 import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
 import ApiErrorState from '../../Components/ApiErrorState';
 import Pagination from '../../Components/Pagination';
+import { Paths } from '../../paths';
+import { parse, stringify } from 'query-string';
 
 import {
   preflightRequest,
@@ -31,31 +31,73 @@ import { Card, CardBody, PaginationVariant } from '@patternfly/react-core';
 
 import JobExplorerList from '../../Components/JobExplorerList';
 import FilterableToolbar from '../../Components/Toolbar/';
+import { getQSConfig } from '../../Utilities/qs';
 
 const initialQueryParams = {
   ...jobExplorer.defaultParams,
   attributes: jobExplorer.attributes,
 };
+const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
+  'limit',
+  'offset',
+]);
 
 const JobExplorer = ({ location: { search }, history }) => {
   const [preflightError, setPreFlightError] = useState(null);
-  const [
-    {
-      isLoading,
-      isSuccess,
-      error,
-      data: { meta = {}, items: data = [] },
-    },
-    setData,
-  ] = useApi({ meta: {}, items: [] });
-  const [options, setOptions] = useApi({});
 
-  const { queryParams, setFromPagination, setFromToolbar, dispatch } =
-    useQueryParams(initialQueryParams);
+  const { queryParams, setFromPagination, setFromToolbar } =
+    useQueryParams(qsConfig);
+
+  const {
+    result: { options },
+    error,
+    request: fetchOptions,
+  } = useRequest(
+    useCallback(async () => {
+      const response = await readJobExplorerOptions({ params: queryParams });
+      return { options: response };
+    }, [queryParams]),
+    {
+      options: {},
+    }
+  );
+
+  const {
+    result: { data, meta },
+    error: dataError,
+    isLoading: dataIsLoading,
+    isSuccess: dataIsSuccess,
+    request: fetchEndpoints,
+  } = useRequest(
+    useCallback(async () => {
+      const response = await readJobExplorer({ params: queryParams });
+      return {
+        data: response.items,
+        meta: response.meta,
+      };
+    }, [queryParams]),
+    { items: [], dataError, dataIsLoading, dataIsSuccess }
+  );
+
+  const initialSearchParams = parse(search, {
+    arrayFormat: 'bracket',
+    parseBooleans: true,
+    parseNumbers: true,
+  });
+
+  useEffect(() => {
+    history.replace({
+      pathname: jobExplorer,
+      initialSearchParams,
+    });
+  }, []);
 
   const updateURL = () => {
     const { jobExplorer } = Paths;
-    const search = stringify(queryParams, { arrayFormat: 'bracket' });
+    const search = stringify(
+      { ...initialQueryParams, ...initialSearchParams },
+      { arrayFormat: 'bracket' }
+    );
     history.replace({
       pathname: jobExplorer,
       search,
@@ -68,31 +110,19 @@ const JobExplorer = ({ location: { search }, history }) => {
     preflightRequest().catch((error) => {
       setPreFlightError({ preflightError: error });
     });
-
-    const initialSearchParams = parse(search, {
-      arrayFormat: 'bracket',
-      parseBooleans: true,
-      parseNumbers: true,
-    });
-
-    dispatch({
-      type: 'REINITIALIZE',
-      value: {
-        ...initialQueryParams,
-        ...initialSearchParams,
-      },
-    });
   }, []);
 
   useEffect(() => {
-    setData(readJobExplorer({ params: queryParams }));
-    setOptions(readJobExplorerOptions({ params: queryParams }));
+    fetchOptions();
+    fetchEndpoints();
     updateURL();
   }, [queryParams]);
 
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
+  if (preflightError?.preflightError) return <EmptyState {...preflightError} />;
+  if (error) return <ApiErrorState message={error.error} />;
 
   return (
     <React.Fragment>
@@ -100,43 +130,41 @@ const JobExplorer = ({ location: { search }, history }) => {
         <PageHeaderTitle title={'Job Explorer'} />
       </PageHeader>
 
-      {preflightError && (
-        <Main>
-          <EmptyState {...preflightError} />
-        </Main>
-      )}
-
       {!preflightError && (
         <Main>
           <Card>
             <CardBody>
               <FilterableToolbar
-                categories={options.data}
+                categories={options}
                 filters={queryParams}
+                qsConfig={qsConfig}
                 setFilters={setFromToolbar}
                 pagination={
                   <Pagination
                     count={meta?.count}
                     params={{
-                      limit: queryParams.limit,
-                      offset: queryParams.offset,
+                      limit: parseInt(queryParams.limit),
+                      offset: parseInt(queryParams.offset),
                     }}
+                    qsConfig={qsConfig}
                     setPagination={setFromPagination}
                     isCompact
                   />
                 }
                 hasSettings
               />
-              {error && <ApiErrorState message={error.error} />}
-              {isLoading && <LoadingState />}
-              {isSuccess && data.length <= 0 && <NoResults />}
-              {isSuccess && data.length > 0 && <JobExplorerList jobs={data} />}
+              {dataIsLoading && <LoadingState />}
+              {dataIsSuccess && data.length <= 0 && <NoResults />}
+              {dataIsSuccess && data.length > 0 && (
+                <JobExplorerList jobs={data} />
+              )}
               <Pagination
                 count={meta?.count}
                 params={{
-                  limit: queryParams.limit,
-                  offset: queryParams.offset,
+                  limit: parseInt(queryParams.limit),
+                  offset: parseInt(queryParams.offset),
                 }}
+                qsConfig={qsConfig}
                 setPagination={setFromPagination}
                 variant={PaginationVariant.bottom}
               />

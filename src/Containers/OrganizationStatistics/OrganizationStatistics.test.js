@@ -6,6 +6,17 @@ import {
   preflight403,
 } from '../../Utilities/tests/helpers';
 import fetchMock from 'fetch-mock-jest';
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => ({
+    push: jest.fn(),
+  }),
+  useLocation: () => ({
+    push: jest.fn(),
+    pathname: 'some_path',
+    search: '',
+  }),
+}));
 import OrganizationStatistics from './OrganizationStatistics';
 
 const chartRoots = [
@@ -16,6 +27,7 @@ const chartRoots = [
 
 const jobExplorerUrl = 'path:/api/tower-analytics/v1/job_explorer/';
 const dummyOrgData = (size) => ({
+  meta: { count: size, legend: [] },
   dates: [...Array(size).keys()].map((el) => ({
     items: [...Array(size).keys()].map((i) => ({
       id: i - 1,
@@ -36,6 +48,7 @@ const dummyPieData = (size) => ({
 
 const hostExplorerUrl = 'path:/api/tower-analytics/v1/host_explorer/';
 const dummyHostsData = (size) => ({
+  meta: { count: size, legend: [] },
   dates: [...Array(size).keys()].map((el) => ({
     items: [...Array(size).keys()].map((i) => ({
       id: i - 1,
@@ -63,7 +76,6 @@ const jobExplorerOptions = {
 };
 
 const defaultQueryParams = {
-  group_by: 'org',
   quick_date_range: 'last_30_days',
   limit: 5,
   offset: 0,
@@ -145,6 +157,7 @@ describe('Containers/OrganizationStatistics', () => {
   });
 
   it('should render with data', async () => {
+    fetchMock.post({ url: jobExplorerUrl, overwriteRoutes: true }, {});
     await act(async () => {
       wrapper = mountPage(OrganizationStatistics);
     });
@@ -190,7 +203,10 @@ describe('Containers/OrganizationStatistics', () => {
   });
 
   it('should render with empty response', async () => {
-    fetchMock.post({ url: jobExplorerUrl, overwriteRoutes: true }, {});
+    fetchMock.post(
+      { url: jobExplorerUrl, overwriteRoutes: true },
+      { items: [] }
+    );
 
     await act(async () => {
       wrapper = mountPage(OrganizationStatistics);
@@ -205,17 +221,27 @@ describe('Containers/OrganizationStatistics', () => {
     });
     wrapper.update();
 
-    const { sort_by, attributes, granularity, include_others, ...rest } =
-      lastCallBody(jobExplorerUrl);
+    const {
+      sort_by,
+      attributes,
+      granularity,
+      include_others,
+      group_by,
+      dateFields,
+      integerFields,
+      namespace,
+      ...rest
+    } = lastCallBody(jobExplorerUrl);
 
     expect(sort_by.split(':')[1]).toBe('desc');
-    expect(rest).toEqual(defaultQueryParams);
+    expect(rest.defaultParams).toEqual(defaultQueryParams);
   });
 
   it('should handle the tab switching correctly', async () => {
     await act(async () => {
       wrapper = mountPage(OrganizationStatistics);
     });
+
     wrapper.update();
 
     const tabs = wrapper.find('.pf-c-tabs__link');
@@ -234,13 +260,15 @@ describe('Containers/OrganizationStatistics', () => {
         granularity,
         group_by,
         group_by_time,
+        dateFields,
+        integerFields,
+        namespace,
         ...rest
       } = lastCallBody(hostExplorerUrl);
-      expect(rest).toEqual(defaultHostsQueryParams);
+      expect(rest.defaultParams).toEqual(defaultHostsQueryParams);
     };
 
     checkHostsCall();
-
     // Click on the orgs tab
     await act(async () => {
       tabs.at(0).simulate('click');
@@ -249,9 +277,18 @@ describe('Containers/OrganizationStatistics', () => {
 
     // Wait for the calls for the orgs options and orgs data
     const checkOrgsCall = () => {
-      const { sort_by, attributes, granularity, group_by_time, ...rest } =
-        lastCallBody(jobExplorerUrl);
-      expect(rest).toEqual(defaultQueryParams);
+      const {
+        sort_by,
+        attributes,
+        granularity,
+        group_by_time,
+        group_by,
+        dateFields,
+        integerFields,
+        namespace,
+        ...rest
+      } = lastCallBody(jobExplorerUrl);
+      expect(rest.defaultParams).toEqual(defaultQueryParams);
     };
 
     checkOrgsCall();

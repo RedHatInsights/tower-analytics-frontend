@@ -19,6 +19,7 @@ export const jobExplorer = {
     cluster_id: [],
     template_id: [],
     inventory_id: [],
+    sort_by: 'created:desc',
     sort_options: 'created',
     sort_order: 'desc',
     only_root_workflows_and_standalone_jobs: false,
@@ -95,6 +96,7 @@ export const savingsPlanner = {
     offset: 0,
     sort_options: 'modified',
     sort_order: 'desc',
+    sort_by: 'modified:desc',
   },
 };
 
@@ -103,3 +105,18 @@ export const notAuthorizedParams = {
   description:
     'User does not have privileges to perform this action. Contact your organization adminstrator(s) for more information.',
 };
+
+export const arrayFields = [
+  'automation_status',
+  'attributes',
+  'cluster_id',
+  'category',
+  'frequency_period',
+  'host_id',
+  'host_status',
+  'inventory_id',
+  'job_type',
+  'status',
+  'org_id',
+  'template_id',
+];

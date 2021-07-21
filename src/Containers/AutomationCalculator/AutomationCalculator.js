@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
+
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import {
@@ -28,7 +29,6 @@ import { preflightRequest, readROI, readROIOptions } from '../../Api/';
 
 // Imports from utilities
 import { useQueryParams } from '../../Utilities/useQueryParams';
-import useApi from '../../Utilities/useApi';
 import { roi as roiConst } from '../../Utilities/constants';
 import useRedirect from '../../Utilities/useRedirect';
 import { calculateDelta, convertSecondsToHours } from '../../Utilities/helpers';
@@ -42,6 +42,8 @@ import TotalSavings from './TotalSavings';
 import CalculationCost from './CalculationCost';
 import AutomationFormula from './AutomationFormula';
 import TopTemplates from './TopTemplates';
+import useRequest from '../../Utilities/useRequest';
+import { getQSConfig } from '../../Utilities/qs';
 
 const mapApi = ({ items = [] }) =>
   items.map((el) => ({
@@ -72,19 +74,58 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
 const computeTotalSavings = (data) =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
+const qsConfig = getQSConfig('clusters', { ...roiConst.defaultParams }, [
+  'limit',
+  'offset',
+]);
+
 const AutomationCalculator = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
   const [costManual, setCostManual] = useState('50');
   const [costAutomation, setCostAutomation] = useState('20');
 
-  const [preflight, setPreflight] = useApi(null);
-  const [options, setOptions] = useApi({});
-  const [api, fetchApi, setDataInApi] = useApi([], (data) =>
-    updateDeltaCost(mapApi(data), costAutomation, costManual)
+  // params from toolbar/searchbar
+  const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
+
+  const {
+    error: preflightError,
+    isLoading: preflightIsLoading,
+    request: setPreflight,
+  } = useRequest(
+    useCallback(async () => {
+      const preflight = await preflightRequest();
+      return { preflight: preflight };
+    }, []),
+    { preflight: {}, preflightError, preflightIsLoading }
   );
 
-  const { queryParams, setFromToolbar } = useQueryParams(
-    roiConst.defaultParams
+  const {
+    result: { options },
+    error: optionsError,
+    isLoading: optionsIsLoading,
+    request: setOptions,
+  } = useRequest(
+    useCallback(async () => {
+      const options = await readROIOptions({ params: queryParams });
+      return { options: options };
+    }, [queryParams]),
+    { options: {}, optionsError, optionsIsLoading }
+  );
+
+  const {
+    result: { data: api },
+    error: apiError,
+    isLoading: apiIsLoading,
+    request: fetchEndpoint,
+    setValue,
+  } = useRequest(
+    useCallback(async () => {
+      const response = await readROI({ params: queryParams });
+      return {
+        data: updateDeltaCost(mapApi(response), costAutomation, costManual),
+      };
+    }, [queryParams]),
+    { data: [], apiError, apiIsLoading }
   );
 
   /**
@@ -93,7 +134,7 @@ const AutomationCalculator = ({ history }) => {
    * Used in top templates.
    */
   const setDataRunTime = (seconds, id) => {
-    const updatedData = api.data.map((el) => {
+    const updatedData = api.map((el) => {
       if (el.id === id) {
         el.avgRunTime = seconds;
         const updatedDelta = updateDeltaCost(
@@ -107,32 +148,33 @@ const AutomationCalculator = ({ history }) => {
       }
     });
 
-    setDataInApi(updatedData);
+    setValue({ data: updatedData });
   };
 
   const setEnabled = (id) => (value) => {
-    setDataInApi(
-      api.data.map((el) => (el.id === id ? { ...el, enabled: value } : el))
-    );
+    setValue({
+      data: api.map((el) => (el.id === id ? { ...el, enabled: value } : el)),
+    });
   };
 
   useEffect(() => {
-    setPreflight(preflightRequest());
-    setOptions(readROIOptions({ params: queryParams }));
+    setPreflight();
+    setOptions();
   }, []);
 
   /**
    * Recalculates the delta and costs in the data after the cost is changed.
    */
   useEffect(() => {
-    setDataInApi(updateDeltaCost(api.data, costAutomation, costManual));
+    setValue({ data: updateDeltaCost(api, costAutomation, costManual) });
   }, [costAutomation, costManual]);
 
   /**
    * Get data from API depending on the queryParam.
    */
   useEffect(() => {
-    fetchApi(readROI({ params: queryParams }));
+    setOptions();
+    fetchEndpoint();
   }, [queryParams]);
 
   /**
@@ -153,15 +195,15 @@ const AutomationCalculator = ({ history }) => {
         <Card>
           <BorderedCardTitle>Automation savings</BorderedCardTitle>
           <CardBody>
-            {api.isLoading && <LoadingState />}
-            {api.error && <ApiErrorState message={api.error.error} />}
-            {api.isSuccess && api.data.length <= 0 && <NoData />}
-            {api.isSuccess && api.data.length > 0 && (
+            {apiIsLoading && <LoadingState />}
+            {apiError && <ApiErrorState message={apiError.error} />}
+            {api.length <= 0 && <NoData />}
+            {api.length > 0 && (
               <React.Fragment>
                 <TopTemplatesSavings
                   margin={{ top: 20, right: 20, bottom: 20, left: 70 }}
                   id="d3-roi-chart-root"
-                  data={filterDisabled(api.data)}
+                  data={filterDisabled(api)}
                 />
                 <p style={{ textAlign: 'center' }}>Templates</p>
               </React.Fragment>
@@ -178,9 +220,7 @@ const AutomationCalculator = ({ history }) => {
   const renderRight = () => (
     <Stack hasGutter>
       <StackItem>
-        <TotalSavings
-          totalSavings={computeTotalSavings(filterDisabled(api.data))}
-        />
+        <TotalSavings totalSavings={computeTotalSavings(filterDisabled(api))} />
       </StackItem>
       <StackItem>
         <Stack>
@@ -195,9 +235,9 @@ const AutomationCalculator = ({ history }) => {
           <StackItem style={{ overflow: 'auto', maxHeight: '48vh' }}>
             <TopTemplates
               redirectToJobExplorer={redirectToJobExplorer}
-              data={api.data}
+              data={api}
               setDataRunTime={setDataRunTime}
-              setUnfilteredData={api.data}
+              setUnfilteredData={api}
               setEnabled={setEnabled}
               sortBy={queryParams.sort_by}
             />
@@ -207,13 +247,13 @@ const AutomationCalculator = ({ history }) => {
     </Stack>
   );
 
-  if (preflight?.error?.status === 403) {
+  if (preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 
   const renderContents = () => {
-    if (preflight.error) return <EmptyState preflightError={preflight.error} />;
-    else if (preflight.isSuccess)
+    if (preflightError) return <EmptyState preflightError={preflightError} />;
+    else if (api)
       return (
         <Grid hasGutter className="automation-wrapper">
           <GridItem span={9}>{renderLeft()}</GridItem>
@@ -228,8 +268,9 @@ const AutomationCalculator = ({ history }) => {
       <PageHeader>
         <PageHeaderTitle title={'Automation Calculator'} />
         <FilterableToolbar
-          categories={options.data}
+          categories={options}
           filters={queryParams}
+          qsConfig={qsConfig}
           setFilters={setFromToolbar}
         />
       </PageHeader>

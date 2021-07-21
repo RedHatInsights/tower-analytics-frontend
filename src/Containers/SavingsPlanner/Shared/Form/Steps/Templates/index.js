@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { parse, stringify } from 'query-string';
 import { useHistory, useLocation } from 'react-router-dom';
-import styled from 'styled-components';
 
 import {
   Button,
@@ -29,7 +29,7 @@ import Pagination from '../../../../../../Components/Pagination';
 
 import { notAuthorizedParams } from '../../../../../../Utilities/constants';
 import { useQueryParams } from '../../../../../../Utilities/useQueryParams';
-import useApi from '../../../../../../Utilities/useApi';
+import { getQSConfig } from '../../../../../../Utilities/qs';
 
 import {
   preflightRequest,
@@ -40,6 +40,7 @@ import {
 import FilterableToolbar from '../../../../../../Components/Toolbar/';
 
 import { actions } from '../../../constants';
+import useRequest from '../../../../../../Utilities/useRequest';
 
 const ListFooter = styled.div`
   display: flex;
@@ -56,29 +57,58 @@ const initialQueryParams = {
   sort_order: 'asc',
   sort_by: 'name:asc',
 };
+const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
+  'limit',
+  'offset',
+]);
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
   const { pathname, hash, search } = useLocation();
   const history = useHistory();
-
-  const [preflightError, setPreFlightError] = useState(null);
-  const [
-    {
-      isLoading,
-      isSuccess,
-      error,
-      data: { meta = {}, items: templates = [] },
-    },
-    setData,
-  ] = useApi({ meta: {}, items: [] });
-  const [options, setOptions] = useApi({});
-
   const {
     queryParams,
     setFromPagination,
     setFromToolbar,
     dispatch: queryParamsDispatch,
-  } = useQueryParams(initialQueryParams);
+  } = useQueryParams(qsConfig);
+
+  const [preflightError, setPreFlightError] = useState(null);
+
+  const {
+    result: { options },
+    error,
+    isSuccess,
+    request: fetchOptions,
+  } = useRequest(
+    useCallback(async () => {
+      const response = await readJobExplorerOptions({ params: queryParams });
+      return { options: response };
+    }, [queryParams]),
+    { options: {} }
+  );
+
+  const {
+    result: { templates, count },
+    error: templatesIsError,
+    isLoading: templatesIsLoading,
+    isSuccess: templatesIsSuccess,
+    request: fetchEndpoints,
+  } = useRequest(
+    useCallback(async () => {
+      const response = await readJobExplorer({ params: queryParams });
+      return {
+        templates: response.items,
+        count: response.meta.count,
+      };
+    }, [queryParams]),
+    {
+      templates: [],
+      count: 0,
+      templatesIsError,
+      templatesIsLoading,
+      templatesIsSuccess,
+    }
+  );
 
   const onSort = (_ev, _idx, dir) => {
     queryParamsDispatch({
@@ -97,34 +127,33 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
   };
 
   useEffect(() => {
-    insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
+    insights.chrome.appNavClick({ id: 'savings-planner', secondaryNav: true });
 
     preflightRequest().catch((error) => {
       setPreFlightError({ preflightError: error });
     });
-
-    const initialSearchParams = parse(search, {
-      arrayFormat: 'bracket',
-      parseBooleans: true,
-      parseNumbers: true,
-    });
-
-    queryParamsDispatch({
-      type: 'REINITIALIZE',
-      value: {
-        ...initialQueryParams,
-        ...initialSearchParams,
-      },
-    });
   }, []);
+
+  const initialSearchParams = parse(search, {
+    arrayFormat: 'bracket',
+    parseBooleans: true,
+    parseNumbers: true,
+  });
+
   useEffect(() => {
-    setData(readJobExplorer({ params: queryParams }));
-    setOptions(readJobExplorerOptions({ params: queryParams }));
     history.replace({
       pathname,
       hash,
-      search: stringify(queryParams, { arrayFormat: 'bracket' }),
+      search: stringify(
+        { ...initialQueryParams, ...initialSearchParams },
+        { arrayFormat: 'bracket' }
+      ),
     });
+  }, []);
+
+  useEffect(() => {
+    fetchOptions();
+    fetchEndpoints();
   }, [queryParams]);
 
   if (preflightError?.preflightError?.status === 403) {
@@ -134,7 +163,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     <>
       {preflightError && <EmptyState {...preflightError} />}
 
-      {!preflightError && (
+      {isSuccess && (
         <Form>
           <FormGroup
             label="Link a template to this plan:"
@@ -143,25 +172,27 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
             <FilterableToolbar
               hideQuickDateRange
               hideSortOptions
-              categories={options.data}
+              categories={options}
               filters={queryParams}
+              qsConfig={qsConfig}
               setFilters={setFromToolbar}
               pagination={
                 <Pagination
-                  count={meta?.count}
+                  count={count}
                   params={{
                     limit: queryParams.limit,
                     offset: queryParams.offset,
                   }}
+                  qsConfig={qsConfig}
                   setPagination={setFromPagination}
                   isCompact
                 />
               }
             />
             {error && <ApiErrorState message={error.error} />}
-            {isLoading && <LoadingState />}
-            {isSuccess && templates.length <= 0 && <NoResults />}
-            {isSuccess && templates.length > 0 && (
+            {templatesIsLoading && <LoadingState />}
+            {templatesIsSuccess && templates.length <= 0 && <NoResults />}
+            {templatesIsSuccess && templates.length > 0 && (
               <TableComposable
                 aria-label="Template link table"
                 variant="compact"
@@ -214,11 +245,12 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
                 )}
               </div>
               <Pagination
-                count={meta?.count}
+                count={count}
                 params={{
                   limit: queryParams.limit,
                   offset: queryParams.offset,
                 }}
+                qsConfig={qsConfig}
                 setPagination={setFromPagination}
                 variant={PaginationVariant.bottom}
               />

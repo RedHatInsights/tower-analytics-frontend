@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
@@ -12,7 +12,6 @@ import {
 } from '../../Api/';
 
 import { jobExplorer } from '../../Utilities/constants';
-import useApi from '../../Utilities/useApi';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
@@ -38,6 +37,8 @@ import FilterableToolbar from '../../Components/Toolbar';
 import ApiErrorState from '../../Components/ApiErrorState';
 
 import { clusters } from '../../Utilities/constants';
+import useRequest from '../../Utilities/useRequest';
+import { getQSConfig } from '../../Utilities/qs';
 
 const initialTopTemplateParams = {
   group_by: 'template',
@@ -61,49 +62,108 @@ const initialModuleParams = {
   limit: 10,
 };
 
+// takes json and returns
+const qsConfig = getQSConfig('clusters', { ...clusters.defaultParams }, [
+  'limit',
+  'offset',
+]);
+
 const Clusters = () => {
   const [preflightError, setPreFlightError] = useState(null);
 
-  const { queryParams, setFromToolbar } = useQueryParams({
-    ...clusters.defaultParams,
-  });
+  // params from toolbar/searchbar
+  const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
+  const {
+    result: { options },
+    error,
+    request: fetchOptions,
+  } = useRequest(
+    useCallback(async () => {
+      const options = await readClustersOptions({ params: optionsQueryParams });
+      return { options };
+    }, [queryParams]),
+    { options: {} }
+  );
 
-  const [
+  const {
+    result: { chartData },
+    error: chartDataError,
+    isLoading: chartDataIsLoading,
+    isSuccess: chartDataIsSuccess,
+    request: fetchChartData,
+  } = useRequest(
+    useCallback(async () => {
+      const chartData = await readJobExplorer({ params: queryParams });
+      return { chartData: chartData.items };
+    }, [queryParams]),
     {
-      isLoading,
-      isSuccess,
-      error,
-      data: { items: chartData = [] },
-    },
-    setData,
-  ] = useApi({ items: [] });
+      chartData: [],
+      chartDataError,
+      chartDataIsLoading,
+      chartDataIsSuccess,
+    }
+  );
 
-  const [
+  const {
+    result: { modules },
+    error: modulesError,
+    isLoading: modulesIsLoading,
+    isSuccess: modulesIsSuccess,
+    request: fetchModules,
+  } = useRequest(
+    useCallback(async () => {
+      const modules = await readEventExplorer({ params: topModuleParams });
+      return { modules: modules.items };
+    }, [queryParams]),
+    { modules: [], modulesError, modulesIsLoading, modulesIsSuccess }
+  );
+
+  const {
+    result: { templates },
+    error: templatesError,
+    isLoading: templatesIsLoading,
+    isSuccess: templatesIsSuccess,
+    request: fetchTemplates,
+  } = useRequest(
+    useCallback(async () => {
+      const templates = await readJobExplorer({ params: topTemplatesParams });
+      return { templates: templates.items };
+    }, [queryParams]),
+    { templates: [], templatesError, templatesIsLoading, templatesIsSuccess }
+  );
+
+  const {
+    result: { workflows },
+    error: workflowsError,
+    isLoading: workflowsIsLoading,
+    isSuccess: workflowsIsSuccess,
+    request: fetchWorkflows,
+  } = useRequest(
+    useCallback(async () => {
+      const workflows = await readJobExplorer({ params: topWorkflowParams });
+      return { workflows: workflows.items };
+    }, [queryParams]),
     {
-      data: { items: templates = [] },
-    },
-    setTemplates,
-  ] = useApi({ items: [] });
-  const [
-    {
-      data: { items: workflows = [] },
-    },
-    setWorkflows,
-  ] = useApi({ items: [] });
-  const [
-    {
-      data: { items: modules = [] },
-    },
-    setModules,
-  ] = useApi({ items: [] });
-  const [{ data: options = [] }, setOptions] = useApi({});
+      workflows: [],
+      workflowsError,
+      workflowsIsLoading,
+      workflowsIsSuccess,
+    }
+  );
 
   const initialOptionsParams = {
     attributes: jobExplorer.attributes,
   };
 
-  const { queryParams: optionsQueryParams } =
-    useQueryParams(initialOptionsParams);
+  const optionsQueryParams = useQueryParams(initialOptionsParams);
+
+  useEffect(() => {
+    fetchOptions();
+    fetchChartData();
+    fetchModules();
+    fetchTemplates();
+    fetchWorkflows();
+  }, [queryParams]);
 
   const {
     cluster_id,
@@ -149,32 +209,20 @@ const Clusters = () => {
       await preflightRequest().catch((error) => {
         setPreFlightError({ preflightError: error });
       });
-      setOptions(readClustersOptions({ params: optionsQueryParams }));
     }
 
     initializeWithPreflight();
   }, []);
 
-  // Get and update the data
-  useEffect(() => {
-    const fetchEndpoints = () => {
-      setData(readJobExplorer({ params: queryParams }));
-      setTemplates(readJobExplorer({ params: topTemplatesParams }));
-      setWorkflows(readJobExplorer({ params: topWorkflowParams }));
-      setModules(readEventExplorer({ params: topModuleParams }));
-    };
-    fetchEndpoints();
-  }, [queryParams]);
-
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 
+  if (preflightError?.preflightError) return <EmptyState {...preflightError} />;
+
+  if (error) return <ApiErrorState message={error.error} />;
+
   const renderContent = () => {
-    if (preflightError) return <EmptyState {...preflightError} />;
-
-    if (error) return <ApiErrorState message={error.error} />;
-
     // Warning: we are not checking if ALL the api succeed
     // this can cause an unsurfaced error when only some of them fails
     return (
@@ -185,16 +233,18 @@ const Clusters = () => {
               <h2>Job status</h2>
             </CardTitle>
             <CardBody>
-              {isLoading && <LoadingState />}
-              {queryParams.cluster_id.length <= 0 && isSuccess && (
-                <BarChart
-                  margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                  id="d3-bar-chart-root"
-                  data={chartData}
-                  queryParams={queryParams}
-                />
-              )}
-              {queryParams.cluster_id.length > 0 && isSuccess && (
+              {chartDataIsLoading && <LoadingState />}
+              {(!queryParams.cluster_id ||
+                queryParams.cluster_id?.length <= 0) &&
+                chartDataIsSuccess && (
+                  <BarChart
+                    margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
+                    id="d3-bar-chart-root"
+                    data={chartData}
+                    queryParams={queryParams}
+                  />
+                )}
+              {queryParams.cluster_id?.length > 0 && chartDataIsSuccess && (
                 <LineChart
                   margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
                   id="d3-line-chart-root"
@@ -209,7 +259,7 @@ const Clusters = () => {
           <TemplatesList
             qp={queryParams}
             templates={workflows}
-            isLoading={isLoading}
+            isLoading={workflowsIsLoading}
             title={'Top workflows'}
             jobType={'workflowjob'}
           />
@@ -218,13 +268,13 @@ const Clusters = () => {
           <TemplatesList
             qp={queryParams}
             templates={templates}
-            isLoading={isLoading}
+            isLoading={templatesIsLoading}
             title={'Top templates'}
             jobType={'job'}
           />
         </GridItem>
         <GridItem span={4}>
-          <ModulesList modules={modules} isLoading={isLoading} />
+          <ModulesList modules={modules} isLoading={modulesIsLoading} />
         </GridItem>
       </Grid>
     );
@@ -236,6 +286,7 @@ const Clusters = () => {
         <PageHeaderTitle title={'Clusters'} />
         <FilterableToolbar
           categories={options}
+          qsConfig={qsConfig}
           filters={queryParams}
           setFilters={setFromToolbar}
         />

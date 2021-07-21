@@ -28,6 +28,7 @@ import {
 
 import NotificationsList from '../../Components/NotificationsList';
 import Pagination from '../../Components/Pagination';
+import { getQSConfig } from '../../Utilities/qs';
 
 const CardTitle = styled(PFCardTitle)`
   display: flex;
@@ -94,9 +95,18 @@ function formatClusterName(data) {
 }
 
 const initialQueryParams = {
-  limit: 5,
-  offset: 0,
+  defaultParams: {
+    limit: 5,
+    offset: 0,
+  },
 };
+
+// takes json and returns
+const qsConfig = getQSConfig(
+  'notifications',
+  { ...initialQueryParams.defaultParams },
+  ['limit', 'offset']
+);
 
 const Notifications = () => {
   const [preflightError, setPreFlightError] = useState(null);
@@ -106,8 +116,10 @@ const Notifications = () => {
   const [firstRender, setFirstRender] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [meta, setMeta] = useState({});
+
+  // params from toolbar/searchbar
   const { queryParams, setId, setFromPagination, setSeverity } =
-    useQueryParams(initialQueryParams);
+    useQueryParams(qsConfig);
 
   useEffect(() => {
     if (firstRender) {
@@ -166,7 +178,7 @@ const Notifications = () => {
 
     initializeWithPreflight();
     return () => (ignore = true);
-  }, []);
+  }, [queryParams]);
 
   if (preflightError?.preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
@@ -230,6 +242,7 @@ const Notifications = () => {
                 </DropdownGroup>
                 <Pagination
                   count={meta?.count}
+                  qsConfig={qsConfig}
                   params={{
                     limit: queryParams.limit,
                     offset: queryParams.offset,
@@ -252,6 +265,7 @@ const Notifications = () => {
                 )}
                 <Pagination
                   count={meta?.count}
+                  qsConfig={qsConfig}
                   params={{
                     limit: queryParams.limit,
                     offset: queryParams.offset,

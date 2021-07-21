@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -9,7 +9,6 @@ import Breakdown from '../Components/Breakdown';
 import JobStatus from '../Components/JobStatus';
 import { Paths } from '../paths';
 import { stringify } from 'query-string';
-import useApi from '../Utilities/useApi';
 import { formatDateTime, formatJobType } from '../Utilities/helpers';
 import { readJobExplorer } from '../Api/';
 
@@ -41,6 +40,7 @@ import {
   Th,
   Td,
 } from '@patternfly/react-table';
+import useRequest from '../Utilities/useRequest';
 
 const ActionContainer = styled.div`
   display: flex;
@@ -74,25 +74,32 @@ const formatTotalTime = (elapsed) =>
   new Date(elapsed * 1000).toISOString().substr(11, 8);
 
 const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
-  const [
+  const {
+    result: { relatedJobs, stats },
+    error,
+    isLoading,
+    isSuccess,
+    request: fetchEndpoints,
+  } = useRequest(
+    useCallback(async () => {
+      const [stats, relatedJobs] = await Promise.all([
+        readJobExplorer({ params: agreggateTemplateParams }),
+        readJobExplorer({ params: relatedTemplateJobsParams }),
+      ]);
+      return {
+        relatedJobs: relatedJobs.items,
+        stats: stats.items[0],
+      };
+    }, []),
     {
-      isLoading,
-      isSuccess,
-      error,
-      data: { items: relatedJobs = [] },
-    },
-    setRelatedJobs,
-    setSynchJobs,
-  ] = useApi({ items: [] });
-  const [
-    {
-      data: {
-        items: [stats = 0],
-      },
-    },
-    setStats,
-    setSynchStats,
-  ] = useApi({ items: [] });
+      stats: {},
+      relatedJobs: {},
+    }
+  );
+
+  useEffect(() => {
+    fetchEndpoints();
+  }, [selectedId, fetchEndpoints]);
 
   let history = useHistory();
 
@@ -168,11 +175,6 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     job_type: [jobType],
   };
 
-  useEffect(() => {
-    setStats(readJobExplorer({ params: agreggateTemplateParams }));
-    setRelatedJobs(readJobExplorer({ params: relatedTemplateJobsParams }));
-  }, [selectedId]);
-
   const tableCols = ['Id/Name', 'Status', 'Cluster', 'Finished', 'Total time'];
 
   const categoryCount = stats
@@ -199,7 +201,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     waiting: global_palette_light_green_200.value,
   };
 
-  const descriptionStats = [
+  const descriptionStats = stats && [
     {
       label: 'Number of runs',
       id: 'total-runs',
@@ -240,8 +242,6 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
 
   const cleanup = () => {
     handleModal(false);
-    setSynchStats({ items: [] });
-    setSynchJobs({ items: [] });
   };
 
   return (
