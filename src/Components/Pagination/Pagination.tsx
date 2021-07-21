@@ -4,7 +4,6 @@ import { Pagination as PFPagination } from '@patternfly/react-core';
 import {
   encodeNonDefaultQueryString,
   parseQueryString,
-  replaceParams,
 } from '../../Utilities/qs';
 import { useHistory } from 'react-router-dom';
 
@@ -45,7 +44,7 @@ const Pagination: FunctionComponent<Props> = ({
   const returnOffsetVal = (page: number) => (page - 1) * limit;
   const history = useHistory();
 
-  const pushHistoryState = (params: {}) => {
+  const pushHistoryState = (params: Record<string, number> = {}) => {
     const { pathname, search } = history.location;
     const nonNamespacedParams = parseQueryString({}, search);
     const encodedParams = encodeNonDefaultQueryString(
@@ -57,19 +56,19 @@ const Pagination: FunctionComponent<Props> = ({
   };
 
   const handleSetPage = (
-    event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+    _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
     pageNumber: number
   ) => {
     const oldParams = parseQueryString(qsConfig, history.location.search);
-    pushHistoryState(replaceParams(oldParams, { limit: pageNumber }));
+    pushHistoryState({ ...oldParams, limit: pageNumber });
   };
 
   const handleSetPageSize = (
-    event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
+    _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
     page: number
   ) => {
     const oldParams = parseQueryString(qsConfig, history.location.search);
-    pushHistoryState(replaceParams(oldParams, { offset: page }));
+    pushHistoryState({ ...oldParams, offset: page });
   };
 
   return (
