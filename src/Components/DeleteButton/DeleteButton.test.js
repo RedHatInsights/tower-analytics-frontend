@@ -3,7 +3,7 @@ import { act } from 'react-dom/test-utils';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import DeleteButton from './DeleteButton';
 
-import mockResponses from '../../Utilities/__fixtures__/';
+import mockResponses from '../../__tests__/fixtures/';
 import * as api from '../../Api/';
 jest.mock('../../Api');
 
