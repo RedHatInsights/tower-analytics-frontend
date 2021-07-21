@@ -5,7 +5,7 @@ import {
   preflight200,
   preflight400,
   preflight403,
-} from '../../Utilities/tests/helpers';
+} from '../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),

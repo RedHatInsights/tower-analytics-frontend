@@ -1,9 +1,9 @@
 import { act } from 'react-dom/test-utils';
 import { screen } from '@testing-library/react';
-import { renderPage } from '../../Utilities/tests/helpers.reactTestingLib';
+import { renderPage } from '../../__tests__/helpers.reactTestingLib';
 import Clusters from './Clusters';
 
-import mockResponses from '../../Utilities/__fixtures__/';
+import mockResponses from '../../__tests__/fixtures/';
 import * as api from '../../Api/';
 jest.mock('../../Api');
 
