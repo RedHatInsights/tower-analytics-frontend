@@ -8,9 +8,12 @@ import {
   Select,
   SelectOption,
   TextInput,
+  NumberInput,
 } from '@patternfly/react-core';
 
 import { actions } from '../../../constants';
+
+import { isPositiveNum } from '../../../../../../Utilities/helpers';
 
 const Details = ({ options, formData, dispatch }) => {
   const { name, category, description, manual_time, hosts, frequency_period } =
@@ -117,18 +120,36 @@ const Details = ({ options, formData, dispatch }) => {
             label="How many hosts do you plan to run this on?"
             fieldId="hosts-field"
           >
-            <TextInput
-              type="number"
-              placeholder="Enter number of hosts"
+            <NumberInput
+              inputAriaLabel="Number of hosts"
+              widthChars={8}
+              onChange={(event) => {
+                if (
+                  isPositiveNum(event.target.value) ||
+                  event.target.value.length === 0
+                ) {
+                  dispatch({
+                    type: actions.SET_HOSTS,
+                    value: parseInt(event.target.value),
+                  });
+                }
+              }}
+              onMinus={() =>
+                dispatch({
+                  type: actions.SET_HOSTS,
+                  value: isPositiveNum(hosts) ? hosts - 1 : 0,
+                })
+              }
+              onPlus={() =>
+                dispatch({
+                  type: actions.SET_HOSTS,
+                  value: isPositiveNum(hosts) ? hosts + 1 : 1,
+                })
+              }
               id="hosts-field"
               name="hosts"
               value={hosts}
-              onChange={(newHosts) =>
-                dispatch({
-                  type: actions.SET_HOSTS,
-                  value: newHosts,
-                })
-              }
+              min={0}
             />
           </FormGroup>
           <FormGroup
