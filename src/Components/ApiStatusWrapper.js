@@ -4,13 +4,13 @@ import ApiErrorState from './ApiErrorState';
 import LoadingState from './LoadingState';
 import NoData from './NoData';
 
-const ApiStatusWrapper = ({ api, children }) => {
-  if (!api || api.isLoading) return <LoadingState />;
-  if (api.error) return <ApiErrorState message={api.error.error} />;
+const ApiStatusWrapper = ({ api, children, apiError, apiIsSuccess, apiIsLoading }) => {
+  if (!api || apiIsLoading) return <LoadingState />;
+  if (apiError) return <ApiErrorState message={apiError.error} />;
 
-  if (api.isSuccess) {
-    if (Array.isArray(api.result) && api.result.length === 0) return <NoData />;
-    if (Object.keys(api.result).length === 0) return <NoData />;
+  if (apiIsSuccess) {
+    if (Array.isArray(api) && api.length === 0) return <NoData />;
+    if (Object.keys(api).length === 0) return <NoData />;
     return children;
   }
 
@@ -19,6 +19,9 @@ const ApiStatusWrapper = ({ api, children }) => {
 
 ApiStatusWrapper.propTypes = {
   api: PropTypes.object.isRequired,
+  apiError: PropTypes.any.isRequired,
+  apiIsSuccess: PropTypes.bool.isRequired,
+  apiIsLoading: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired,
 };
 
