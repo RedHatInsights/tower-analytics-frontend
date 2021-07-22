@@ -45,8 +45,12 @@ const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
 const JobExplorer = ({ location: { search }, history }) => {
   const [preflightError, setPreFlightError] = useState(null);
 
-  const { queryParams, setFromPagination, setFromToolbar } =
-    useQueryParams(qsConfig);
+  const {
+    queryParams,
+    setFromPagination,
+    setFromToolbar,
+    dispatch: queryParamsDispatch,
+  } = useQueryParams(qsConfig);
 
   const {
     result: { options },
@@ -156,7 +160,11 @@ const JobExplorer = ({ location: { search }, history }) => {
               {dataIsLoading && <LoadingState />}
               {dataIsSuccess && data.length <= 0 && <NoResults />}
               {dataIsSuccess && data.length > 0 && (
-                <JobExplorerList jobs={data} />
+                <JobExplorerList
+                  jobs={data}
+                  queryParams={queryParams}
+                  queryParamsDispatch={queryParamsDispatch}
+                />
               )}
               <Pagination
                 count={meta?.count}
