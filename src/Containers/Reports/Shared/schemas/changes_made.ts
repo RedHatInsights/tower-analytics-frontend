@@ -8,13 +8,15 @@ import {
   ChartThemeColor,
 } from 'react-json-chart-builder';
 import { readJobExplorer, readJobExplorerOptions } from '../../../../Api';
+import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
-const name = 'Changes made';
+const name = 'Count of changes made by Template';
 
-const description = 'This is the report that shows the changes made to a host';
+const description =
+  'The total count of changes made by a each template over specified time period (default 24hrs)';
 
-const categories = ['Operations'];
+const categories = [CATEGORIES.operations];
 
 const defaultParams = {
   limit: 4,
