@@ -18,6 +18,8 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
   DescriptionListDescription,
+  Flex,
+  FlexItem,
 } from '@patternfly/react-core';
 
 const JobExplorerListRow = ({ job }) => {
@@ -83,6 +85,21 @@ const JobExplorerListRow = ({ job }) => {
       <Tr isExpanded={expanded}>
         <Td colSpan={6}>
           <ExpandableRowContent>
+            <Flex>
+              <FlexItem>
+                <strong>Host status</strong>
+              </FlexItem>
+              <FlexItem align={{ default: 'alignRight' }}>
+                <strong>Tasks</strong>
+                {'  '}
+                {job?.host_task_count ? job.host_task_count : 0}
+              </FlexItem>
+              <FlexItem>
+                <strong>Hosts</strong>
+                {'  '}
+                {job?.host_count ? job.host_count : 0}
+              </FlexItem>
+            </Flex>
             <Breakdown
               categoryCount={categoryCount}
               categoryColor={categoryColor}

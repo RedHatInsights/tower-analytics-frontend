@@ -28,6 +28,7 @@ const Label = styled.div`
   padding-left: 2rem;
   display: flex;
   align-items: center;
+  margin-bottom: 1.5rem;
 `;
 
 const Square = styled.div`
