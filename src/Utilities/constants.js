@@ -10,6 +10,13 @@ export const jobExplorer = {
     'cluster_name',
     'org_name',
     'most_failed_tasks',
+    'host_count',
+    'host_task_count',
+    'failed_host_count',
+    'unreachable_host_count',
+    'changed_host_count',
+    'ok_host_count',
+    'skipped_host_count',
   ],
   defaultParams: {
     status: ['successful', 'failed'],
