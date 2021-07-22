@@ -1,8 +1,14 @@
+/* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import PropTypes from 'prop-types';
 
 import ChartBuilder, {
@@ -30,7 +36,7 @@ import Pagination from '../../../Components/Pagination';
 
 import { useQueryParams } from '../../../Utilities/useQueryParams';
 
-import useApi from '../../../Utilities/useApi';
+import useRequest from '../../../Utilities/useRequest';
 import { formatTotalTime } from '../../../Utilities/helpers';
 
 import { global_disabled_color_300 } from '@patternfly/react-tokens';
@@ -38,8 +44,9 @@ import ApiStatusWrapper from '../../../Components/ApiStatusWrapper';
 import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
 import currencyFormatter from '../../../Utilities/currencyFormatter';
 
-import { ReportGeneratorParams } from '../Shared/types';
+import { AttributesType, ReportGeneratorParams } from '../Shared/types';
 import { ApiJson } from '../../../Api';
+import { getQSConfig } from '../../../Utilities/qs';
 
 const customFunctions = (data: ApiReturnType) => ({
   ...functions,
@@ -83,33 +90,51 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
   readOptions,
   schemaFnc,
 }) => {
-  const [api, setData] = useApi({} as ApiJson);
-  const [options, setOptions] = useApi({} as ApiJson);
+  // This is stupid here, could not find better workaround for the need of qs.
+  // Also QS missing types is a big pain in the ass, should do next.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const qsConfig = getQSConfig('non-unique-report', defaultParams as any, [
+    'limit',
+    'offset',
+  ]);
 
   const { queryParams, setFromPagination, setFromToolbar } =
-    useQueryParams(defaultParams);
+    useQueryParams(qsConfig);
 
-  const [attrPairs, setAttrPairs] = useState<Array<any>>([]);
+  const { request: setData, ...api } = useRequest(
+    useCallback(async () => {
+      const result = await readData({ params: queryParams });
+      return result;
+    }, [queryParams]),
+    {} as ApiJson
+  );
+  const { request: setOptions, ...options } = useRequest(
+    useCallback(async () => {
+      const result = await readOptions({ params: queryParams });
+      return result;
+    }, [queryParams]),
+    {} as ApiJson
+  );
+
+  const [attrPairs, setAttrPairs] = useState<AttributesType>([]);
   useEffect(() => {
-    if(options.isSuccess) {
-      setAttrPairs([
-        ...options.data?.sort_options
-      ]);
+    if (options.isSuccess) {
+      setAttrPairs([...options.result?.sort_options]);
     }
   }, [options]);
 
-  const combinedAttrPairs = [ ...extraAttributes, ...attrPairs ];
+  const combinedAttrPairs = [...extraAttributes, ...attrPairs];
 
   const chartSchema = schemaFnc(
-    combinedAttrPairs.find(({ key }) => key === queryParams.sort_options)?.value || 'Label Y',
+    combinedAttrPairs.find(({ key }) => key === queryParams.sort_options)
+      ?.value || 'Label Y',
     queryParams.sort_options as string
   );
 
   useEffect(() => {
-    setData(readData({ params: queryParams }));
-    setOptions(readOptions({ params: queryParams }));
+    setData();
+    setOptions();
   }, [queryParams]);
-
 
   const onSort = (
     _event: unknown,
@@ -123,7 +148,7 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
   const getSorParams = (currKey: string) => {
     if (!options.isSuccess) return {};
 
-    const whitelistKeys = options?.data?.sort_options?.map(
+    const whitelistKeys = options?.result?.sort_options?.map(
       ({ key }: { key: string }) => key
     );
     if (!whitelistKeys.includes(currKey)) return {};
@@ -131,31 +156,38 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
     return {
       sort: {
         sortBy: {
-          index: combinedAttrPairs.findIndex(({ key }) => key === queryParams.sort_options) || 0,
-          direction: queryParams.sort_order || 'none'
+          index:
+            combinedAttrPairs.findIndex(
+              ({ key }) => key === queryParams.sort_options
+            ) || 0,
+          direction: queryParams.sort_order || 'none',
         },
         onSort,
-        columnIndex: combinedAttrPairs.findIndex(({ key }) => key === currKey)
-      }
-    }
+        columnIndex: combinedAttrPairs.findIndex(({ key }) => key === currKey),
+      },
+    };
   };
+
+  console.log(api.result);
 
   return (
     <ApiStatusWrapper api={api}>
       <Card>
         <CardBody>
           <FilterableToolbar
-            categories={options.data}
+            categories={options.result}
             filters={queryParams}
+            qsConfig={qsConfig.defaultParams}
             setFilters={setFromToolbar}
             pagination={
               <Pagination
-                count={api.data?.meta?.count}
+                count={api.result?.meta?.count}
                 perPageOptions={perPageOptions}
                 params={{
                   limit: queryParams.limit,
                   offset: queryParams.offset,
                 }}
+                qsConfig={qsConfig.defaultParams}
                 setPagination={setFromPagination}
                 isCompact
               />
@@ -163,7 +195,7 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
           />
           <ChartBuilder
             schema={chartSchema}
-            functions={customFunctions(api.data)}
+            functions={customFunctions(api.result)}
           />
           <TableComposable
             aria-label="Report Table"
@@ -172,32 +204,34 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
             <Thead>
               <Tr>
                 {combinedAttrPairs.map(({ key, value }) => (
-                  <Th
-                    key={key}
-                    {...getSorParams(key)}
-                  >{value}</Th>
+                  <Th key={key} {...getSorParams(key)}>
+                    {value}
+                  </Th>
                 ))}
               </Tr>
             </Thead>
             <Tbody>
-              {api.data?.meta?.legend.map((item: Record<string, string | number>) => (
-                <Tr key={item.id} style={getOthersStyle(item, 'id')}>
-                  {combinedAttrPairs.map(({ key }) => (
-                    <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
-                  ))}
-                </Tr>
-              ))}
+              {api.result?.meta?.legend.map(
+                (item: Record<string, string | number>) => (
+                  <Tr key={item.id} style={getOthersStyle(item, 'id')}>
+                    {combinedAttrPairs.map(({ key }) => (
+                      <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
+                    ))}
+                  </Tr>
+                )
+              )}
             </Tbody>
           </TableComposable>
         </CardBody>
         <CardFooter>
           <Pagination
-            count={api.data?.meta?.count}
+            count={api.result?.meta?.count}
             perPageOptions={perPageOptions}
             params={{
               limit: queryParams.limit,
               offset: queryParams.offset,
             }}
+            qsConfig={qsConfig.defaultParams}
             setPagination={setFromPagination}
             variant={PaginationVariant.bottom}
           />
