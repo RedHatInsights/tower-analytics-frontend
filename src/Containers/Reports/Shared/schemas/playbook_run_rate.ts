@@ -12,14 +12,15 @@ import {
   readJobExplorerOptions,
   Params,
 } from '../../../../Api';
+import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
-const name = 'Playbook run rate';
+const name = 'Job Template run rate';
 
 const description =
-  'This is the report for showing the run rate affects based on the playbook';
+  'The number of times a job template runs in a specified time period (default 24hrs)';
 
-const categories = ['Operations'];
+const categories = [CATEGORIES.operations];
 
 const defaultParams: Params = {
   limit: 4,

@@ -8,14 +8,15 @@ import {
   ChartThemeColor,
 } from 'react-json-chart-builder';
 import { readHostExplorer, readHostExplorerOptions } from '../../../../Api';
+import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
-const name = 'Affected hosts by playbook';
+const name = 'Hosts changed by job template';
 
 const description =
-  'This is the report for showing the hosts affected by playbook runs';
+  'The number of times a job template runs in a specified time period (default 24hrs)';
 
-const categories = ['Operations'];
+const categories = [CATEGORIES.operations];
 
 const defaultParams = {
   limit: 4,
