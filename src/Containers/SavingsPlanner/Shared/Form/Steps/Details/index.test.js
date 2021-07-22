@@ -205,16 +205,13 @@ describe('SavingsPlanner/Shared/Form/Steps/Details', () => {
         dispatch={mockDispatch}
       />
     );
-    fireEvent.input(
-      screen.getByRole('spinbutton', {
-        name: 'How many hosts do you plan to run this on?',
-      }),
-      { target: { value: 4 } }
-    );
+    fireEvent.input(screen.getByLabelText('Number of hosts'), {
+      target: { value: 4 },
+    });
 
     expect(mockDispatch).toHaveBeenCalledWith({
       type: 'SET_HOSTS',
-      value: '4',
+      value: 4,
     });
   });
 });
