@@ -9,8 +9,8 @@ const ApiStatusWrapper = ({ api, children }) => {
   if (api.error) return <ApiErrorState message={api.error.error} />;
 
   if (api.isSuccess) {
-    if (Array.isArray(api.data) && api.data.length === 0) return <NoData />;
-    if (Object.keys(api.data).length === 0) return <NoData />;
+    if (Array.isArray(api.result) && api.result.length === 0) return <NoData />;
+    if (Object.keys(api.result).length === 0) return <NoData />;
     return children;
   }
 
