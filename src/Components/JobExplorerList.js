@@ -7,6 +7,7 @@ import JobExplorerListRow from './JobExplorerListRow';
 const cols = ['Id/Name', 'Status', 'Cluster', 'Organization', 'Type'];
 
 const JobExplorerList = ({ jobs }) => {
+  console.log(jobs);
   return (
     <TableComposable aria-label="Job Explorer Table" variant="compact">
       <Thead>
