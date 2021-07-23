@@ -74,33 +74,15 @@ const formatTotalTime = (elapsed) =>
   new Date(elapsed * 1000).toISOString().substr(11, 8);
 
 const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
-  const {
-    result: { relatedJobs, stats },
-    error,
-    isLoading,
-    isSuccess,
-    request: fetchEndpoints,
-  } = useRequest(
-    useCallback(async () => {
-      const [stats, relatedJobs] = await Promise.all([
-        readJobExplorer({ params: agreggateTemplateParams }),
-        readJobExplorer({ params: relatedTemplateJobsParams }),
-      ]);
-      return {
-        relatedJobs: relatedJobs.items,
-        stats: stats.items[0],
-      };
-    }, []),
-    {
-      stats: {},
-      relatedJobs: {},
-    }
+  const { result: stats, request: fetchStats, ...statsApi } = useRequest(
+    useCallback(() => readJobExplorer({ params: agreggateTemplateParams }), [selectedId]),
+    {}
   );
 
-  useEffect(() => {
-    fetchEndpoints();
-  }, [selectedId, fetchEndpoints]);
-
+  const { result: relatedJobs, request: fetchJobs, ...jobsApi } = useRequest(
+    useCallback(() => readJobExplorer({ params: relatedTemplateJobsParams }), [selectedId]),
+    {}
+  );
   let history = useHistory();
 
   const redirectToJobExplorer = () => {
@@ -175,6 +157,11 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     job_type: [jobType],
   };
 
+  useEffect(() => {
+    fetchJobs();
+    fetchStats();
+  }, [selectedId]);
+
   const tableCols = ['Id/Name', 'Status', 'Cluster', 'Finished', 'Total time'];
 
   const categoryCount = stats
@@ -248,14 +235,14 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     <Modal
       aria-label="modal"
       variant={ModalVariant.medium}
-      title={stats.name ? stats.name : 'No template name'}
+      title={statsApi.isSuccess && stats.items[0].name ? stats.items[0].name : 'No template name'}
       isOpen={isOpen}
       onClose={cleanup}
     >
-      {isLoading && <LoadingState />}
-      {error && <ApiErrorState message={error.error} />}
-      {isSuccess && relatedJobs.length <= 0 && <NoResults />}
-      {isSuccess && relatedJobs.length > 0 && (
+      {jobsApi.isLoading && <LoadingState />}
+      {jobsApi.error && <ApiErrorState message={jobsApi.error.error} />}
+      {jobsApi.isSuccess && relatedJobs.items.length <= 0 && <NoResults />}
+      {jobsApi.isSuccess && relatedJobs.items.length > 0 && (
         <>
           {categoryCount && (
             <Breakdown
@@ -293,7 +280,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
               </Tr>
             </Thead>
             <Tbody>
-              {relatedJobs.map((job, idx) => (
+              {relatedJobs.items.map((job, idx) => (
                 <Tr key={`job-detail-${idx}`}>
                   <Td>{`${job.id.id} - ${job.id.template_name}`}</Td>
                   <Td>
