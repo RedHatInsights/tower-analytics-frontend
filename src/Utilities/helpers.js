@@ -23,6 +23,10 @@ export function trimStr(str) {
   return str.toString().replace(/['"]+/g, '');
 }
 
+export function formatTotalTime(elapsed) {
+  return new Date(elapsed * 1000).toISOString().substr(11, 8);
+}
+
 export function formatDateTime(dateTime) {
   return moment(new Date(dateTime).toISOString()).format('M/D/YYYY h:mm:ssa');
 }
