@@ -34,7 +34,7 @@ const defaultParams = {
   group_by: 'template',
   group_by_time: true,
   granularity: 'monthly',
-  sort_options: 'host_task_changed_count',
+  sort_options: 'changed_host_count',
   sort_order: 'desc',
 };
 
