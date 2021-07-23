@@ -58,12 +58,17 @@ const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => {
                 handleSearch('end_date', e);
               }}
               validators={[
-                (date) =>
-                  typeof startDate === 'string' && date < strToDate(startDate)
-                    ? 'Must not be before start date'
-                    : '',
-
-                (date) => (date > today() ? 'Must not be after today' : ''),
+                (date) => {
+                  if (
+                    typeof startDate === 'string' &&
+                    date < strToDate(startDate)
+                  ) {
+                    return 'Must not be before start date';
+                  } else if (date > today()) {
+                    return 'Must not be after today';
+                  }
+                  return '';
+                },
               ]}
             />
           </SplitItem>
