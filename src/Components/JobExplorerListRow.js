@@ -20,7 +20,83 @@ import {
   DescriptionListDescription,
   Flex,
   FlexItem,
+  Grid,
+  GridItem,
+  Button,
 } from '@patternfly/react-core';
+
+const renderFailedTaskBar = (failed_tasks) => {
+  const [more, setMore] = useState(false);
+  const categoryColor = {
+    passed: global_palette_green_300.value,
+    unreachable: global_palette_black_850.value,
+    failed: global_palette_red_100.value,
+  };
+
+  if (failed_tasks != null) {
+    return (
+      <>
+        <p>
+          <strong>Top failed tasks</strong>
+        </p>
+        <Grid hasGutter>
+          {failed_tasks
+            .slice(0, more ? failed_tasks.length : 2)
+            .map((task, idx) => {
+              const categoryCount = {
+                passed: task?.passed_host_count ? task.passed_host_count : 0,
+                failed: task?.failed_host_count ? task.failed_host_count : 0,
+                unreachable: task?.unreachable_host_count
+                  ? task.unreachable_host_count
+                  : 0,
+              };
+
+              return (
+                <GridItem lg={6} md={12} key={`most-failed-${idx}`}>
+                  <Flex>
+                    <FlexItem>
+                      <strong>Task name </strong> {task?.task_name}
+                    </FlexItem>
+
+                    <FlexItem align={{ default: 'alignRight' }}>
+                      <strong>Module name </strong> {task?.module_name}
+                    </FlexItem>
+                  </Flex>
+                  <Breakdown
+                    categoryCount={categoryCount}
+                    categoryColor={categoryColor}
+                    showPercent
+                  />
+                </GridItem>
+              );
+            })}
+        </Grid>
+        {failed_tasks?.length && failed_tasks.length > 2 ? (
+          <>
+            <Flex>
+              <FlexItem align={{ default: 'alignRight' }}>
+                <Button
+                  variant="secondary"
+                  onClick={() => {
+                    setMore(!more);
+                  }}
+                  fullWidth={{ default: 'fullWidth' }}
+                >
+                  {more ? 'Show less' : 'Show more'}
+                </Button>
+              </FlexItem>
+            </Flex>
+            <br></br>
+          </>
+        ) : (
+          <React.Fragment />
+        )}
+      </>
+    );
+  }
+
+  return <React.Fragment />;
+};
 
 const JobExplorerListRow = ({ job }) => {
   const [expanded, setExpanded] = useState(false);
@@ -61,7 +137,12 @@ const JobExplorerListRow = ({ job }) => {
       label: 'Finished',
       value: job.created ? formatDateTime(job.finished) : 'Unavailable',
     },
+    {
+      label: 'Tasks',
+      value: job.host_task_count ? job.host_task_count : 0,
+    },
   ];
+
   return (
     <>
       <Tr>
@@ -90,11 +171,6 @@ const JobExplorerListRow = ({ job }) => {
                 <strong>Host status</strong>
               </FlexItem>
               <FlexItem align={{ default: 'alignRight' }}>
-                <strong>Tasks</strong>
-                {'  '}
-                {job?.host_task_count ? job.host_task_count : 0}
-              </FlexItem>
-              <FlexItem>
                 <strong>Hosts</strong>
                 {'  '}
                 {job?.host_count ? job.host_count : 0}
@@ -105,6 +181,7 @@ const JobExplorerListRow = ({ job }) => {
               categoryColor={categoryColor}
               showPercent
             />
+            {renderFailedTaskBar(job.most_failed_tasks)}
             <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
               {expandedInfo.map(({ label, value }) => (
                 <DescriptionListGroup key={label}>
