@@ -172,8 +172,7 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
                 limit: queryParams.limit,
                 offset: queryParams.offset,
               }}
-              // @ts-ignore
-              qsConfig={qsConfig}
+              qsConfig={qsConfig.defaultParams}
               setPagination={setFromPagination}
               isCompact
             />
@@ -219,8 +218,7 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
             limit: queryParams.limit,
             offset: queryParams.offset,
           }}
-          // @ts-ignore
-          qsConfig={qsConfig}
+          qsConfig={qsConfig.defaultParams}
           setPagination={setFromPagination}
           variant={PaginationVariant.bottom}
         />
