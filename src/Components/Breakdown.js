@@ -128,4 +128,8 @@ Breakdown.propTypes = {
   showPercent: PropTypes.bool,
 };
 
+Breakdown.defaultProps = {
+  showPercent: false,
+};
+
 export default Breakdown;
