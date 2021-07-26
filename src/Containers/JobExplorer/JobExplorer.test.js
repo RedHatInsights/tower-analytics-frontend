@@ -5,7 +5,7 @@ import {
   preflight200,
   preflight400,
   preflight403,
-} from '../../Utilities/tests/helpers';
+} from '../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 import JobExplorer from './JobExplorer';
 import { jobExplorer } from '../../Utilities/constants';
