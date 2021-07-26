@@ -39,7 +39,7 @@ export const clustersOptionsEndpoint =
   '/api/tower-analytics/v1/dashboard_clusters_options/';
 export const planOptionsEndpoint = '/api/tower-analytics/v1/plan_options/';
 
-const featuresEndpoint = '/api/featureflags/';
+const featuresEndpoint = '/api/featureflags/v0';
 
 export const getFeatures = async (): Promise<ApiFeatureFlagReturnType> => {
   try {

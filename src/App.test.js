@@ -1,6 +1,6 @@
 import App from './App.js';
 import { Router } from 'react-router-dom';
-import { mountPage } from './Utilities/tests/helpers';
+import { mountPage } from './__tests__/helpers';
 import packageJson from '../package.json';
 
 describe('App', () => {
