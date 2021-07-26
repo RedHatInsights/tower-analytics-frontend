@@ -34,6 +34,27 @@ const categoryColor = {
   skipped: global_palette_blue_300.value,
 };
 
+const renderMoreButton = (showMore, setShowMore) => {
+  return (
+    <>
+      <Flex>
+        <FlexItem align={{ default: 'alignRight' }}>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              setShowMore(!showMore);
+            }}
+            fullWidth={{ default: 'fullWidth' }}
+          >
+            {showMore ? 'Show less' : 'Show more'}
+          </Button>
+        </FlexItem>
+      </Flex>
+      <br></br>
+    </>
+  );
+};
+
 const renderFailedTaskBar = (failed_tasks) => {
   const [showMore, setShowMore] = useState(false);
 
@@ -43,6 +64,7 @@ const renderFailedTaskBar = (failed_tasks) => {
         <p>
           <strong>Top failed tasks</strong>
         </p>
+
         <Grid hasGutter>
           {failed_tasks
             .slice(0, showMore ? failed_tasks.length : 2)
@@ -73,24 +95,10 @@ const renderFailedTaskBar = (failed_tasks) => {
               );
             })}
         </Grid>
-        {failed_tasks.length > 2 ? (
-          <>
-            <Flex>
-              <FlexItem align={{ default: 'alignRight' }}>
-                <Button
-                  variant="secondary"
-                  onClick={() => {
-                    setShowMore(!showMore);
-                  }}
-                  fullWidth={{ default: 'fullWidth' }}
-                >
-                  {showMore ? 'Show less' : 'Show more'}
-                </Button>
-              </FlexItem>
-            </Flex>
-            <br></br>
-          </>
-        ) : null}
+
+        {failed_tasks.length > 2
+          ? renderMoreButton(showMore, setShowMore)
+          : null}
       </>
     );
   }
