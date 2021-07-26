@@ -5,14 +5,15 @@ import { TableComposable, Thead, Tbody, Tr, Th } from '@patternfly/react-table';
 import JobExplorerListRow from './JobExplorerListRow';
 
 const cols = ['Id/Name', 'Status', 'Cluster', 'Organization', 'Type'];
+const sortableCols = ['Id/Name', 'Status', 'Type'];
 
 const sortMap = {
-  'Id/Name': 'id',
-  Status: 'status',
-  Type: 'job_type',
+  0: 'id',
+  1: 'status',
+  4: 'job_type',
 };
 
-const idxSortMap = {
+const reverseSortMap = {
   id: 0,
   status: 1,
   job_type: 4,
@@ -23,8 +24,8 @@ const JobExplorerList = ({ jobs, queryParams, queryParamsDispatch }) => {
   const [sortDir, setSortDir] = useState('none');
 
   useEffect(() => {
-    if (queryParams?.sort_options in idxSortMap) {
-      setSortIdx(idxSortMap[queryParams.sort_options]);
+    if (queryParams?.sort_options in reverseSortMap) {
+      setSortIdx(reverseSortMap[queryParams.sort_options]);
       setSortDir(
         queryParams?.sort_order &&
           (queryParams.sort_order === 'desc' ||
@@ -43,7 +44,7 @@ const JobExplorerList = ({ jobs, queryParams, queryParamsDispatch }) => {
       setSortIdx(idx);
       queryParamsDispatch({
         type: 'SET_SORT_OPTIONS',
-        value: { sort_options: sortMap[cols[idx]] },
+        value: { sort_options: sortMap[idx] },
       });
     }
 
@@ -62,19 +63,18 @@ const JobExplorerList = ({ jobs, queryParams, queryParamsDispatch }) => {
         <Tr>
           <Th />
           {cols.map((head, idx) => {
-            const params =
-              head in sortMap
-                ? {
-                    sort: {
-                      sortBy: {
-                        index: sortIdx,
-                        direction: sortDir,
-                      },
-                      onSort,
-                      columnIndex: idx,
+            const params = sortableCols.includes(head)
+              ? {
+                  sort: {
+                    sortBy: {
+                      index: sortIdx,
+                      direction: sortDir,
                     },
-                  }
-                : {};
+                    onSort,
+                    columnIndex: idx,
+                  },
+                }
+              : {};
             return (
               <Th key={`col-${idx}`} {...params}>
                 {head}
