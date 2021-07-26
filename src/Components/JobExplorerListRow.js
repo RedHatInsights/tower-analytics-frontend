@@ -177,7 +177,7 @@ const JobExplorerListRow = ({ job }) => {
               categoryColor={categoryColor}
               showPercent
             />
-            {renderFailedTaskBar(job.most_failed_tasks, categoryColor)}
+            {renderFailedTaskBar(job.most_failed_tasks)}
 
             <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
               {expandedInfo.map(({ label, value }) => (
