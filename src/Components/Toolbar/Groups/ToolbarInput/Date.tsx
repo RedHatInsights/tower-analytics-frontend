@@ -24,6 +24,9 @@ const DateInput: FunctionComponent<Props> = ({
       aria-label={options.name}
       value={value}
       onChange={setValue}
+      inputProps={{
+        isReadOnly: true,
+      }}
       {...otherProps}
     />
   );
