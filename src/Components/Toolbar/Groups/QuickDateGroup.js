@@ -7,9 +7,7 @@ import ToolbarInput from './ToolbarInput/';
 import { today } from '../../../Utilities/helpers';
 
 const getDateByDays = (days, format = true) => {
-  const date = new Date();
-  date.setDate(date.getDate() + days);
-  date.setHours(0, 0, 0, 0);
+  const date = today(days);
   return format ? date.toISOString().split(/T/)[0] : date;
 };
 
@@ -64,9 +62,12 @@ const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => {
                     date < strToDate(startDate)
                   ) {
                     return 'Must not be before start date';
-                  } else if (date > today()) {
+                  }
+
+                  if (date > today()) {
                     return 'Must not be after today';
                   }
+
                   return '';
                 },
               ]}

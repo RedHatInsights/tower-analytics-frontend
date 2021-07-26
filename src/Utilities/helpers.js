@@ -76,10 +76,11 @@ export function calculateDelta(a, b) {
   return b - a;
 }
 
-export function today() {
-  const d = new Date();
-  d.setHours(0, 0, 0, 0);
-  return d;
+export function today(days = 0) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  date.setHours(0, 0, 0, 0);
+  return date;
 }
 
 export function convertMinsToMs(mins) {
