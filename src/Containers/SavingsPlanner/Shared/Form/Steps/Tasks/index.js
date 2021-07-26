@@ -69,8 +69,8 @@ const Tasks = ({ tasks, dispatch }) => {
   };
 
   const onDragFinish = (newItemOrder) => {
-    setLiveText('Dragging finsihed');
-    setTasks([...newItemOrder]);
+    setLiveText('Dragging finished');
+    setTasks(newItemOrder.map((val) => val.split('-').slice(0, -1).join('-')));
   };
 
   const appendTask = () => {
@@ -88,8 +88,8 @@ const Tasks = ({ tasks, dispatch }) => {
     }
   };
 
-  const removeTask = (task) => {
-    setTasks(tasks.filter((t) => t !== task));
+  const removeTask = (index) => {
+    setTasks(tasks.filter((t, idx) => idx !== index));
   };
 
   return (
@@ -134,12 +134,12 @@ const Tasks = ({ tasks, dispatch }) => {
             onDragStart={onDragStart}
             onDragMove={onDragMove}
             onDragCancel={onDragCancel}
-            itemOrder={tasks}
+            itemOrder={tasks.map((val, idx) => `${val}-${idx}`)}
           >
             {tasks.map((task, index) => (
               <DataListItem
                 aria-labelledby={`cell-${index + 1}`}
-                id={task}
+                id={`${task}-${index}`}
                 key={index + 1}
               >
                 <TaskRow>
@@ -162,7 +162,7 @@ const Tasks = ({ tasks, dispatch }) => {
                   />
                   <DeleteTaskActionSection aria-label="Actions">
                     <TaskDeleteButton
-                      onClick={() => removeTask(task)}
+                      onClick={() => removeTask(index)}
                       variant="plain"
                       aria-label="Delete"
                     >
