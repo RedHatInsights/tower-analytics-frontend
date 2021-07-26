@@ -5,9 +5,6 @@ const {
   defaultServices,
 } = require('@redhat-cloud-services/frontend-components-config-utilities/standalone');
 
-defaultServices.config.path =
-  'https://github.com/redallen/cloud-services-config#tower-analytics-dev';
-
 const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
   debug: true,
@@ -20,6 +17,12 @@ const { config: webpackConfig, plugins } = config({
       target: 'http://localhost:8004',
     },
     rbac,
+    registry: [
+      ({ app }) =>
+        app.get('(/beta)?/config/main.yml', (_req, res) =>
+          res.sendFile(resolve(__dirname, './main.yml'))
+        ),
+    ],
     ...defaultServices,
   },
   appUrl: ['/beta/ansible/insights/', '/ansible/insights/'],
