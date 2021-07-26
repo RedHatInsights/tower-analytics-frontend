@@ -25,13 +25,17 @@ import {
   Button,
 } from '@patternfly/react-core';
 
+const categoryColor = {
+  ok: global_palette_green_300.value,
+  passed: global_palette_green_300.value,
+  unreachable: global_palette_black_850.value,
+  changed: global_palette_gold_300.value,
+  failed: global_palette_red_100.value,
+  skipped: global_palette_blue_300.value,
+};
+
 const renderFailedTaskBar = (failed_tasks) => {
-  const [more, setMore] = useState(false);
-  const categoryColor = {
-    passed: global_palette_green_300.value,
-    unreachable: global_palette_black_850.value,
-    failed: global_palette_red_100.value,
-  };
+  const [showMore, setShowMore] = useState(false);
 
   if (failed_tasks != null) {
     return (
@@ -41,14 +45,12 @@ const renderFailedTaskBar = (failed_tasks) => {
         </p>
         <Grid hasGutter>
           {failed_tasks
-            .slice(0, more ? failed_tasks.length : 2)
+            .slice(0, showMore ? failed_tasks.length : 2)
             .map((task, idx) => {
               const categoryCount = {
-                passed: task?.passed_host_count ? task.passed_host_count : 0,
-                failed: task?.failed_host_count ? task.failed_host_count : 0,
-                unreachable: task?.unreachable_host_count
-                  ? task.unreachable_host_count
-                  : 0,
+                passed: task?.passed_host_count ?? 0,
+                failed: task?.failed_host_count ?? 0,
+                unreachable: task?.unreachable_host_count ?? 0,
               };
 
               return (
@@ -71,31 +73,27 @@ const renderFailedTaskBar = (failed_tasks) => {
               );
             })}
         </Grid>
-        {failed_tasks?.length && failed_tasks.length > 2 ? (
+        {failed_tasks.length > 2 ? (
           <>
             <Flex>
               <FlexItem align={{ default: 'alignRight' }}>
                 <Button
                   variant="secondary"
                   onClick={() => {
-                    setMore(!more);
+                    setShowMore(!showMore);
                   }}
                   fullWidth={{ default: 'fullWidth' }}
                 >
-                  {more ? 'Show less' : 'Show more'}
+                  {showMore ? 'Show less' : 'Show more'}
                 </Button>
               </FlexItem>
             </Flex>
             <br></br>
           </>
-        ) : (
-          <React.Fragment />
-        )}
+        ) : null}
       </>
     );
   }
-
-  return <React.Fragment />;
 };
 
 const JobExplorerListRow = ({ job }) => {
@@ -106,23 +104,13 @@ const JobExplorerListRow = ({ job }) => {
 
   const categoryCount = job
     ? {
-        ok: job?.ok_host_count ? job.ok_host_count : 0,
-        skipped: job?.skipped_host_count ? job.skipped_host_count : 0,
-        changed: job?.changed_host_count ? job.changed_host_count : 0,
-        failed: job?.failed_host_count ? job.failed_host_count : 0,
-        unreachable: job?.unreachable_host_count
-          ? job.unreachable_host_count
-          : 0,
+        ok: job?.ok_host_count ?? 0,
+        skipped: job?.skipped_host_count ?? 0,
+        changed: job?.changed_host_count ?? 0,
+        failed: job?.failed_host_count ?? 0,
+        unreachable: job?.unreachable_host_count ?? 0,
       }
     : null;
-
-  const categoryColor = {
-    ok: global_palette_green_300.value,
-    unreachable: global_palette_black_850.value,
-    changed: global_palette_gold_300.value,
-    failed: global_palette_red_100.value,
-    skipped: global_palette_blue_300.value,
-  };
 
   const expandedInfo = [
     {
@@ -139,7 +127,7 @@ const JobExplorerListRow = ({ job }) => {
     },
     {
       label: 'Tasks',
-      value: job.host_task_count ? job.host_task_count : 0,
+      value: job.host_task_count ?? 0,
     },
   ];
 
@@ -157,11 +145,11 @@ const JobExplorerListRow = ({ job }) => {
           href={job.id.tower_link}
         >{`${job.id.id} - ${job.id.template_name}`}</Td>
         <Td>
-          <JobStatus status={job.status} />
+          <JobStatus status={job?.status} />
         </Td>
-        <Td>{job.cluster_name}</Td>
-        <Td>{job.org_name}</Td>
-        <Td>{formatJobType(job.job_type)}</Td>
+        <Td>{job?.cluster_name}</Td>
+        <Td>{job?.org_name}</Td>
+        <Td>{formatJobType(job?.job_type)}</Td>
       </Tr>
       <Tr isExpanded={expanded}>
         <Td colSpan={6}>
@@ -173,7 +161,7 @@ const JobExplorerListRow = ({ job }) => {
               <FlexItem align={{ default: 'alignRight' }}>
                 <strong>Hosts</strong>
                 {'  '}
-                {job?.host_count ? job.host_count : 0}
+                {job?.host_count ?? 0}
               </FlexItem>
             </Flex>
             <Breakdown
@@ -181,7 +169,8 @@ const JobExplorerListRow = ({ job }) => {
               categoryColor={categoryColor}
               showPercent
             />
-            {renderFailedTaskBar(job.most_failed_tasks)}
+            {renderFailedTaskBar(job.most_failed_tasks, categoryColor)}
+
             <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
               {expandedInfo.map(({ label, value }) => (
                 <DescriptionListGroup key={label}>
