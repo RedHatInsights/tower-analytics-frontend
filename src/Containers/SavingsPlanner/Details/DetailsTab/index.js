@@ -73,9 +73,9 @@ const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
   const redirectToJobExplorer = (templateId) => {
     const { jobExplorer } = Paths;
     const initialQueryParams = {
-      quick_date_range: 'last_30_days',
-      status: ['failed', 'successful'],
-      template_id: [templateId],
+      'job-explorer.quick_date_range': 'last_30_days',
+      'job-explorer.status': ['failed', 'successful'],
+      'job-explorer.template_id': templateId,
     };
     const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
     history.push({

@@ -102,8 +102,8 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
   const redirectToJobExplorer = () => {
     const { jobExplorer } = Paths;
     const initialQueryParams = {
-      template_id: [selectedId],
-      status: [
+      'job-explorer.template_id': selectedId,
+      'job-explorer.status': [
         'successful',
         'failed',
         'new',
@@ -113,8 +113,8 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
         'canceled',
         'running',
       ],
-      job_type: [jobType],
-      quick_date_range: 'last_30_days',
+      'job-explorer.job_type': [jobType],
+      'job-explorer.quick_date_range': 'last_30_days',
     };
 
     const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });

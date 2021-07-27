@@ -95,10 +95,10 @@ const redirectToJobExplorer =
     const formattedDate = dateForJobExplorer(date);
     const initialQueryParams = {
       ...rest,
-      quick_date_range: 'custom',
-      start_date: formattedDate,
-      end_date: formattedDate,
-      status: [
+      'job-explorer.quick_date_range': 'custom',
+      'job-explorer.start_date': formattedDate,
+      'job-explorer.end_date': formattedDate,
+      'job-explorer.status': [
         'successful',
         'failed',
         'new',
@@ -108,7 +108,7 @@ const redirectToJobExplorer =
         'canceled',
         'running',
       ],
-      org_id: [id],
+      'job-explorer.org_id': [id],
     };
 
     toJobExplorer(initialQueryParams);
