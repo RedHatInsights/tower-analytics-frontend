@@ -75,32 +75,28 @@ const formatTotalTime = (elapsed) =>
 
 const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
   const {
-    result: { relatedJobs, stats },
-    error,
-    isLoading,
-    isSuccess,
-    request: fetchEndpoints,
+    result: stats,
+    request: fetchStats,
+    ...statsApi
   } = useRequest(
-    useCallback(async () => {
-      const [stats, relatedJobs] = await Promise.all([
-        readJobExplorer({ params: agreggateTemplateParams }),
-        readJobExplorer({ params: relatedTemplateJobsParams }),
-      ]);
-      return {
-        relatedJobs: relatedJobs.items,
-        stats: stats.items[0],
-      };
-    }, []),
-    {
-      stats: {},
-      relatedJobs: {},
-    }
+    useCallback(
+      () => readJobExplorer({ params: agreggateTemplateParams }),
+      [selectedId]
+    ),
+    {}
   );
 
-  useEffect(() => {
-    fetchEndpoints();
-  }, [selectedId, fetchEndpoints]);
-
+  const {
+    result: relatedJobs,
+    request: fetchJobs,
+    ...jobsApi
+  } = useRequest(
+    useCallback(
+      () => readJobExplorer({ params: relatedTemplateJobsParams }),
+      [selectedId]
+    ),
+    {}
+  );
   let history = useHistory();
 
   const redirectToJobExplorer = () => {
@@ -175,18 +171,23 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     job_type: [jobType],
   };
 
-  const tableCols = ['Id/Name', 'Status', 'Cluster', 'Finished', 'Total time'];
+  useEffect(() => {
+    fetchJobs();
+    fetchStats();
+  }, [selectedId]);
 
-  const categoryCount = stats
+  const tableCols = ['Id/Name', 'Status', 'Cluster', 'Finished', 'Total time'];
+  const statsData = (statsApi.isSuccess && stats?.items[0]) ?? null;
+  const categoryCount = statsData
     ? {
-        success: stats.successful_count,
-        cancelled: stats.canceled_count,
-        error: stats.error_count,
-        failed: stats.failed_count,
-        new: stats.new_count,
-        pending: stats.pending_count,
-        running: stats.running_count,
-        waiting: stats.waiting_count,
+        success: statsData.successful_count,
+        cancelled: statsData.canceled_count,
+        error: statsData.error_count,
+        failed: statsData.failed_count,
+        new: statsData.new_count,
+        pending: statsData.pending_count,
+        running: statsData.running_count,
+        waiting: statsData.waiting_count,
       }
     : null;
 
@@ -201,22 +202,24 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     waiting: global_palette_light_green_200.value,
   };
 
-  const descriptionStats = stats && [
+  const descriptionStats = statsData && [
     {
       label: 'Number of runs',
       id: 'total-runs',
-      value: stats.total_count ? stats.total_count : 'Unavailable',
+      value: statsData.total_count ?? 'Unavailable',
     },
     {
       label: 'Total time',
       id: 'total-time',
-      value: stats.elapsed ? formatTotalTime(stats.elapsed) : 'Unavailable',
+      value: statsData.elapsed
+        ? formatTotalTime(statsData.elapsed)
+        : 'Unavailable',
     },
     {
       label: 'Average time',
       id: 'avg-time',
-      value: stats.elapsed
-        ? formatAvgRun(stats.elapsed, stats.total_count)
+      value: statsData.elapsed
+        ? formatAvgRun(statsData.elapsed, statsData.total_count)
         : 'Unavailable',
     },
     {
@@ -227,15 +230,15 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     {
       label: 'Success rate',
       id: 'success-rate',
-      value: !isNaN(stats.successful_count)
-        ? formatSuccessRate(stats.successful_count, stats.total_count)
+      value: !isNaN(statsData.successful_count)
+        ? formatSuccessRate(statsData.successful_count, statsData.total_count)
         : 'Unavailable',
     },
     {
       label: 'Most failed task',
       id: 'most-failed',
-      value: stats.most_failed_tasks
-        ? formatTopFailedTask(stats.most_failed_tasks)
+      value: statsData.most_failed_tasks
+        ? formatTopFailedTask(statsData.most_failed_tasks)
         : 'Unavailable',
     },
   ];
@@ -248,66 +251,79 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     <Modal
       aria-label="modal"
       variant={ModalVariant.medium}
-      title={stats.name ? stats.name : 'No template name'}
+      title={
+        jobsApi.isSuccess &&
+        statsApi.isSuccess &&
+        stats?.items?.length > 0 &&
+        (stats?.items[0]?.name ?? 'No template name')
+      }
       isOpen={isOpen}
       onClose={cleanup}
     >
-      {isLoading && <LoadingState />}
-      {error && <ApiErrorState message={error.error} />}
-      {isSuccess && relatedJobs.length <= 0 && <NoResults />}
-      {isSuccess && relatedJobs.length > 0 && (
-        <>
-          {categoryCount && (
-            <Breakdown
-              categoryCount={categoryCount}
-              categoryColor={categoryColor}
-            />
-          )}
-
-          <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
-            {descriptionStats.map(({ label, id, value }) => (
-              <DescriptionListGroup className={id} key={label}>
-                <DescriptionListTerm>{label}</DescriptionListTerm>
-                <DescriptionListDescription>{value}</DescriptionListDescription>
-              </DescriptionListGroup>
-            ))}
-          </DescriptionList>
-
-          <Divider
-            component="div"
-            style={{ marginTop: '2rem', marginBottom: '1.5rem' }}
-          />
-          <p>
-            <strong>Last 5 jobs</strong>
-          </p>
-
-          <TableComposable
-            aria-label="Template information table"
-            variant="compact"
-          >
-            <Thead>
-              <Tr>
-                {tableCols.map((heading, idx) => (
-                  <Th key={idx}>{heading}</Th>
-                ))}
-              </Tr>
-            </Thead>
-            <Tbody>
-              {relatedJobs.map((job, idx) => (
-                <Tr key={`job-detail-${idx}`}>
-                  <Td>{`${job.id.id} - ${job.id.template_name}`}</Td>
-                  <Td>
-                    <JobStatus status={job.status} />
-                  </Td>
-                  <Td>{job.cluster_name}</Td>
-                  <Td>{formatDateTime(job.finished)}</Td>
-                  <Td>{formatTotalTime(job.elapsed)}</Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </TableComposable>
-        </>
+      {(statsApi.isLoading || jobsApi.isLoading) && <LoadingState />}
+      {(statsApi.error || jobsApi.error) && (
+        <ApiErrorState message={jobsApi.error.error} />
       )}
+      {statsApi.isSuccess &&
+        jobsApi.isSuccess &&
+        relatedJobs?.items?.length <= 0 && <NoResults />}
+      {statsApi.isSuccess &&
+        jobsApi.isSuccess &&
+        relatedJobs?.items?.length > 0 && (
+          <>
+            {categoryCount && (
+              <Breakdown
+                categoryCount={categoryCount}
+                categoryColor={categoryColor}
+              />
+            )}
+
+            <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
+              {descriptionStats.map(({ label, id, value }) => (
+                <DescriptionListGroup className={id} key={label}>
+                  <DescriptionListTerm>{label}</DescriptionListTerm>
+                  <DescriptionListDescription>
+                    {value}
+                  </DescriptionListDescription>
+                </DescriptionListGroup>
+              ))}
+            </DescriptionList>
+
+            <Divider
+              component="div"
+              style={{ marginTop: '2rem', marginBottom: '1.5rem' }}
+            />
+            <p>
+              <strong>Last 5 jobs</strong>
+            </p>
+
+            <TableComposable
+              aria-label="Template information table"
+              variant="compact"
+            >
+              <Thead>
+                <Tr>
+                  {tableCols.map((heading, idx) => (
+                    <Th key={idx}>{heading}</Th>
+                  ))}
+                </Tr>
+              </Thead>
+              <Tbody>
+                {relatedJobs.items.map((job, idx) => (
+                  <Tr key={`job-detail-${idx}`}>
+                    <Td>{`${job.id.id} - ${job.id.template_name}`}</Td>
+                    <Td>
+                      <JobStatus status={job.status} />
+                    </Td>
+                    <Td>{job.cluster_name}</Td>
+                    <Td>{formatDateTime(job.finished)}</Td>
+                    <Td>{formatTotalTime(job.elapsed)}</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </TableComposable>
+          </>
+        )}
 
       <ActionContainer>
         <Button
