@@ -28,6 +28,7 @@ const Label = styled.div`
   padding-left: 2rem;
   display: flex;
   align-items: center;
+  margin-bottom: 1.5rem;
 `;
 
 const Square = styled.div`
@@ -42,18 +43,18 @@ function title(str) {
   return str[0].toUpperCase() + str.slice(1).toLowerCase();
 }
 
-const Breakdown = ({ categoryCount = {}, categoryColor }) => {
+const Breakdown = ({ categoryCount, categoryColor, showPercent = false }) => {
   const totalCount = Object.values(categoryCount).reduce(
     (accumulated, currentVal) => accumulated + currentVal
   );
 
   const sortedCategories = Object.keys(categoryCount)
     .filter((category) => categoryCount[category] > 0)
-    .sort((category) => {
-      if (categoryCount[category] < categoryCount[category]) {
+    .sort((a, b) => {
+      if (categoryCount[a] < categoryCount[b]) {
         return 1; // Normally should be -1, but we want descending order
       }
-      if (categoryCount[category] > categoryCount[category]) {
+      if (categoryCount[a] > categoryCount[b]) {
         return -1;
       }
       return 0;
@@ -104,10 +105,16 @@ const Breakdown = ({ categoryCount = {}, categoryColor }) => {
         })}
       </BarContainer>
       <LabelsContainer>
-        {sortedCategories.map(({ name, color }) => (
+        {sortedCategories.map(({ name, barSpacing, color }) => (
           <Label key={`label-${name}`}>
             <Square style={{ backgroundColor: color }} />
-            <p>{title(name)}</p>
+            {showPercent ? (
+              <p>
+                {title(name)} {Math.round(barSpacing * 100)}%
+              </p>
+            ) : (
+              <p>{title(name)}</p>
+            )}
           </Label>
         ))}
       </LabelsContainer>
@@ -116,8 +123,9 @@ const Breakdown = ({ categoryCount = {}, categoryColor }) => {
 };
 
 Breakdown.propTypes = {
-  categoryColor: PropTypes.object,
-  categoryCount: PropTypes.object,
+  categoryColor: PropTypes.object.isRequired,
+  categoryCount: PropTypes.object.isRequired,
+  showPercent: PropTypes.bool,
 };
 
 export default Breakdown;
