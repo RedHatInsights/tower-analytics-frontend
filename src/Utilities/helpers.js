@@ -19,6 +19,10 @@ export function isNumeric(val) {
   return false;
 }
 
+export function isPositiveNum(val) {
+  return /^\d+$/.test(val);
+}
+
 export function trimStr(str) {
   return str.toString().replace(/['"]+/g, '');
 }
