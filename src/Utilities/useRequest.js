@@ -28,6 +28,7 @@ export const useRequest = (makeRequest, initialValue) => {
     isSuccess,
     request: useCallback(
       async (...args) => {
+        setIsSuccess(false);
         setIsLoading(true);
         try {
           const response = await makeRequest(...args);

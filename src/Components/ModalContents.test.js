@@ -61,7 +61,7 @@ describe('Components/ModalContents', () => {
         url: jobExplorerUrl,
         repeat: 1,
       },
-      mockStats
+      mockRelatedJobs
     );
     fetchMock.post(
       {
@@ -69,7 +69,7 @@ describe('Components/ModalContents', () => {
         overwriteRoutes: false,
         repeat: 1,
       },
-      mockRelatedJobs
+      mockStats
     );
   });
 
@@ -110,7 +110,7 @@ describe('Components/ModalContents', () => {
     wrapper.update();
     const modalHeader = wrapper.find('ModalBoxTitle');
     const title = modalHeader.find('h1');
-    expect(title.text()).toEqual(mockRelatedJobs.items[0].id.template_name);
+    expect(title.text()).toEqual(mockStats.items[0].name);
   });
   it('should display the the correct number of total jobs ran', async () => {
     await act(async () => {

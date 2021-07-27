@@ -80,6 +80,13 @@ export function calculateDelta(a, b) {
   return b - a;
 }
 
+export function today(days = 0) {
+  const date = new Date();
+  date.setDate(date.getDate() + days);
+  date.setHours(0, 0, 0, 0);
+  return date;
+}
+
 export function convertMinsToMs(mins) {
   if (!parseInt(mins)) {
     return 0;
