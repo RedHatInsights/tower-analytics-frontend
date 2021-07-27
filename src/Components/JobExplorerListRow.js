@@ -8,7 +8,7 @@ import JobStatus from './JobStatus';
 import Breakdown from './Breakdown';
 import {
   global_palette_green_300,
-  global_palette_black_850,
+  global_palette_black_400,
   global_palette_gold_300,
   global_palette_red_100,
   global_palette_blue_300,
@@ -28,7 +28,7 @@ import {
 const categoryColor = {
   ok: global_palette_green_300.value,
   passed: global_palette_green_300.value,
-  unreachable: global_palette_black_850.value,
+  unreachable: global_palette_black_400.value,
   changed: global_palette_gold_300.value,
   failed: global_palette_red_100.value,
   skipped: global_palette_blue_300.value,
@@ -36,22 +36,19 @@ const categoryColor = {
 
 const renderMoreButton = (showMore, setShowMore) => {
   return (
-    <>
-      <Flex>
-        <FlexItem align={{ default: 'alignRight' }}>
-          <Button
-            variant="secondary"
-            onClick={() => {
-              setShowMore(!showMore);
-            }}
-            fullWidth={{ default: 'fullWidth' }}
-          >
-            {showMore ? 'Show less' : 'Show more'}
-          </Button>
-        </FlexItem>
-      </Flex>
-      <br></br>
-    </>
+    <Flex className="pf-u-mb-md">
+      <FlexItem align={{ default: 'alignRight' }}>
+        <Button
+          variant="secondary"
+          onClick={() => {
+            setShowMore(!showMore);
+          }}
+          fullWidth={{ default: 'fullWidth' }}
+        >
+          {showMore ? 'Show less' : 'Show more'}
+        </Button>
+      </FlexItem>
+    </Flex>
   );
 };
 

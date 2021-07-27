@@ -43,7 +43,7 @@ function title(str) {
   return str[0].toUpperCase() + str.slice(1).toLowerCase();
 }
 
-const Breakdown = ({ categoryCount, categoryColor, showPercent }) => {
+const Breakdown = ({ categoryCount, categoryColor, showPercent = false }) => {
   const totalCount = Object.values(categoryCount).reduce(
     (accumulated, currentVal) => accumulated + currentVal
   );
@@ -126,10 +126,6 @@ Breakdown.propTypes = {
   categoryColor: PropTypes.object.isRequired,
   categoryCount: PropTypes.object.isRequired,
   showPercent: PropTypes.bool,
-};
-
-Breakdown.defaultProps = {
-  showPercent: false,
 };
 
 export default Breakdown;
