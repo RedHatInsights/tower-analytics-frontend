@@ -183,8 +183,8 @@ const AutomationCalculator = ({ history }) => {
    */
   const redirectToJobExplorer = (templateId) => {
     const initialQueryParams = {
-      quick_date_range: 'last_30_days',
-      template_id: [templateId],
+      'job-explorer.quick_date_range': 'last_30_days',
+      'job-explorer.template_id': templateId,
     };
     toJobExplorer(initialQueryParams);
   };
