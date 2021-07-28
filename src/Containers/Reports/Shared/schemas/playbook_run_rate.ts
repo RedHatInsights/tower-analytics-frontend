@@ -23,7 +23,7 @@ const description =
 const categories = [CATEGORIES.operations];
 
 const defaultParams: Params = {
-  limit: 4,
+  limit: 6,
   offset: 0,
   attributes: [
     'failed_count',

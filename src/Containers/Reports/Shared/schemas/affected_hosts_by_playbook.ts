@@ -19,7 +19,7 @@ const description =
 const categories = [CATEGORIES.operations];
 
 const defaultParams = {
-  limit: 4,
+  limit: 6,
   offset: 0,
   attributes: [
     'host_count',
