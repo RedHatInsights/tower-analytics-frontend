@@ -115,8 +115,7 @@ const List = () => {
     itemsIsSuccess &&
     (rbac?.perms?.write === true || rbac?.perms?.all === true);
 
-  const { selected, isAllSelected, handleSelect, setSelected } =
-    useSelected(data);
+  const { selected, handleSelect, setSelected } = useSelected(data);
 
   const {
     isLoading: deleteLoading,
@@ -126,16 +125,12 @@ const List = () => {
   } = useDeleteItems(
     useCallback(async () => {
       return Promise.all(selected.map((plan) => deletePlan({ id: plan.id })));
-    }, [selected]),
-    {
-      qsConfig: queryParams,
-      allItemsSelected: isAllSelected,
-      fetchItems: fetchEndpoints,
-    }
+    }, [selected])
   );
 
   const handleDelete = async () => {
-    await deleteItems();
+    deleteItems();
+    fetchEndpoints();
     setSelected([]);
   };
 

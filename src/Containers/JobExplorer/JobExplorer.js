@@ -68,7 +68,6 @@ const JobExplorer = ({ location: { search }, history }) => {
 
   const {
     result: { data, meta },
-    error: dataError,
     isLoading: dataIsLoading,
     isSuccess: dataIsSuccess,
     request: fetchEndpoints,
@@ -80,7 +79,7 @@ const JobExplorer = ({ location: { search }, history }) => {
         meta: response.meta,
       };
     }, [queryParams]),
-    { items: [], dataError, dataIsLoading, dataIsSuccess }
+    { items: [] }
   );
 
   const initialSearchParams = parse(search, {
