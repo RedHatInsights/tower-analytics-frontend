@@ -71,7 +71,7 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => [
       label,
       style: {
         axisLabel: {
-          padding: 50,
+          padding: 60,
         },
       },
     },
