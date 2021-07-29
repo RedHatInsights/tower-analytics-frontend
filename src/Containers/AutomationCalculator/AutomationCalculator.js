@@ -87,45 +87,27 @@ const AutomationCalculator = ({ history }) => {
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
 
-  const {
-    error: preflightError,
-    isLoading: preflightIsLoading,
-    request: setPreflight,
-  } = useRequest(
-    useCallback(async () => {
-      const preflight = await preflightRequest();
-      return { preflight: preflight };
-    }, []),
-    { preflight: {}, preflightError, preflightIsLoading }
+  const { error: preflightError, request: setPreflight } = useRequest(
+    useCallback(() => preflightRequest(), [])
+  );
+
+  const { result: options, request: setOptions } = useRequest(
+    useCallback(() => readROIOptions(queryParams), [queryParams]),
+    {}
   );
 
   const {
-    result: { options },
-    error: optionsError,
-    isLoading: optionsIsLoading,
-    request: setOptions,
-  } = useRequest(
-    useCallback(async () => {
-      const options = await readROIOptions({ params: queryParams });
-      return { options: options };
-    }, [queryParams]),
-    { options: {}, optionsError, optionsIsLoading }
-  );
-
-  const {
-    result: { data: api },
+    result: api,
     error: apiError,
     isLoading: apiIsLoading,
     request: fetchEndpoint,
     setValue,
   } = useRequest(
     useCallback(async () => {
-      const response = await readROI({ params: queryParams });
-      return {
-        data: updateDeltaCost(mapApi(response), costAutomation, costManual),
-      };
+      const response = await readROI(queryParams);
+      return updateDeltaCost(mapApi(response), costAutomation, costManual);
     }, [queryParams]),
-    { data: [], apiError, apiIsLoading }
+    []
   );
 
   /**
@@ -148,13 +130,11 @@ const AutomationCalculator = ({ history }) => {
       }
     });
 
-    setValue({ data: updatedData });
+    setValue(updatedData);
   };
 
   const setEnabled = (id) => (value) => {
-    setValue({
-      data: api.map((el) => (el.id === id ? { ...el, enabled: value } : el)),
-    });
+    setValue(api.map((el) => (el.id === id ? { ...el, enabled: value } : el)));
   };
 
   useEffect(() => {
@@ -166,7 +146,7 @@ const AutomationCalculator = ({ history }) => {
    * Recalculates the delta and costs in the data after the cost is changed.
    */
   useEffect(() => {
-    setValue({ data: updateDeltaCost(api, costAutomation, costManual) });
+    setValue(updateDeltaCost(api, costAutomation, costManual));
   }, [costAutomation, costManual]);
 
   /**

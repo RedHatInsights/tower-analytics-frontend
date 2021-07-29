@@ -16,15 +16,8 @@ const Edit = ({ data }) => {
     isSuccess,
     request: fetchPlanOptions,
   } = useRequest(
-    useCallback(async () => {
-      const response = await readPlanOptions();
-      return {
-        data: response,
-      };
-    }, []),
-    {
-      options: {},
-    }
+    useCallback(() => readPlanOptions(), []),
+    {}
   );
 
   useEffect(() => {
@@ -33,8 +26,8 @@ const Edit = ({ data }) => {
 
   const canWrite =
     isSuccess &&
-    (options.data?.meta?.rbac?.perms?.write === true ||
-      options.data?.meta?.rbac?.perms?.all === true);
+    (options?.meta?.rbac?.perms?.write === true ||
+      options?.meta?.rbac?.perms?.all === true);
 
   const showEdit = () => (
     <>

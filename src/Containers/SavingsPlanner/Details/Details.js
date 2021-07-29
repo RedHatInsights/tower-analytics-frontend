@@ -42,42 +42,41 @@ const Details = () => {
   const queryParams = { id: [selectedId] };
 
   const {
-    result: { options },
+    result: options,
     error,
     isSuccess,
     request: fetchOptions,
   } = useRequest(
     useCallback(async () => {
+      // TODO Move this out of here
       setSelectedId(id);
       await preflightRequest().catch((error) => {
         setPreFlightError({ preflightError: error });
       });
 
-      const response = await readPlanOptions();
-      return { options: response };
+      return readPlanOptions();
     }, []),
-    { options: {} }
+    {}
   );
 
   const {
     result: { rbac, plans },
-    error: plansError,
-    isLoading: plansIsLoading,
     isSuccess: plansIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
+      // TODO Move this out of here
       setSelectedId(id);
       await preflightRequest().catch((error) => {
         setPreFlightError({ preflightError: error });
       });
-      const response = await readPlan({ params: queryParams });
+      const response = await readPlan(queryParams);
       return {
         plans: response.items,
         rbac: response.rbac,
       };
     }, []),
-    { plans: [], rbac: [], plansError, plansIsLoading, plansIsSuccess }
+    { plans: [], rbac: [] }
   );
 
   useEffect(() => {
