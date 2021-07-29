@@ -26,9 +26,9 @@ export async function getRelatedResourceDeleteCounts(requests) {
 }
 
 export const relatedResourceDeleteRequests = {
-  savingsPlan: (selected, readRecordApi) => [
+  savingsPlan: (record, readRecordApi) => [
     {
-      request: async () => readRecordApi({ id: [selected.id] }),
+      request: async () => readRecordApi(record.id),
       label: 'Plan',
     },
   ],

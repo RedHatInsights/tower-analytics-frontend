@@ -46,12 +46,12 @@ const Details = () => {
   } = useRequest(() => readPlanOptions(), {});
 
   const {
-    result: { rbac, items: plans },
-    isSuccess: plansIsSuccess,
+    result: { rbac, plan },
+    isSuccess: planIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
-    useCallback(() => readPlan(queryParams), [id]),
-    { items: [], rbac: [] }
+    useCallback((id) => readPlan(id), []),
+    { plan: {}, rbac: [] }
   );
 
   useEffect(() => {
@@ -60,11 +60,11 @@ const Details = () => {
   }, []);
 
   useEffect(() => {
-    fetchEndpoints();
+    fetchEndpoints(id);
   }, [id]);
 
   const canWrite =
-    plansIsSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
+    planIsSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
 
   const tabsArray = [
     {
@@ -86,10 +86,10 @@ const Details = () => {
   ];
 
   const breadcrumbUrl = `/savings-planner/${id}`;
-  const breadcrumbsItems = plansIsSuccess
+  const breadcrumbsItems = planIsSuccess
     ? [
         { title: 'Savings Planner', navigate: '/savings-planner' },
-        { title: plans[0].name, navigate: breadcrumbUrl },
+        { title: plan.name, navigate: breadcrumbUrl },
       ]
     : [];
 
@@ -104,7 +104,7 @@ const Details = () => {
           <ApiErrorState message={error.error} />
         </>
       )}
-      {plansIsSuccess /* Todo this does not chaeck if plan is actually an array */ && (
+      {planIsSuccess /* Todo this does not chaeck if plan is actually an array */ && (
         <>
           <PageHeader>
             <Breadcrumbs items={breadcrumbsItems} />
@@ -116,14 +116,14 @@ const Details = () => {
                 <Route path="/savings-planner/:id/statistics">
                   <StatisticsTab
                     tabsArray={tabsArray}
-                    data={plans[0]}
+                    data={plan}
                     queryParams={queryParams}
                   />
                 </Route>
                 {!onEdit && (
                   <Route path="/savings-planner/:id/details">
                     <DetailsTab
-                      plans={plans}
+                      plans={[plan]}
                       tabsArray={tabsArray}
                       canWrite={canWrite}
                       options={options}
@@ -131,11 +131,11 @@ const Details = () => {
                   </Route>
                 )}
                 <Route path="/savings-planner/:id/edit">
-                  <SavingsPlanEdit data={plans[0]} />
+                  <SavingsPlanEdit data={plan} />
                 </Route>
                 <Route path="/savings-planner/:id">
                   <DetailsTab
-                    plans={plans}
+                    plans={[plan]}
                     tabsArray={tabsArray}
                     canWrite={canWrite}
                     options={options}

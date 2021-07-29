@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
@@ -22,11 +22,7 @@ import {
   ListItem,
 } from '@patternfly/react-core';
 import CardActionsRow from '../../../../Components/CardActionsRow';
-import {
-  relatedResourceDeleteRequests,
-  getRelatedResourceDeleteCounts,
-} from '../../../../Utilities/getRelatedResourceDeleteDetails';
-import { deletePlan, readPlan } from '../../../../Api/';
+import { deletePlan } from '../../../../Api/';
 import useRequest, {
   useDismissableError,
 } from '../../../../Utilities/useRequest';
@@ -137,31 +133,7 @@ const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
     }, [id, history])
   );
 
-  const {
-    result: isDeleteDisabled,
-    error: deleteDetailsError,
-    request: fetchDeleteDetails,
-  } = useRequest(
-    useCallback(async () => {
-      const { results: deleteDetails, error } =
-        await getRelatedResourceDeleteCounts(
-          relatedResourceDeleteRequests.savingsPlan(plans[0], readPlan)
-        );
-      if (error) {
-        throw new Error(error);
-      }
-
-      return !!deleteDetails;
-    }, [plans]),
-    false
-  );
-
-  useEffect(() => {
-    fetchDeleteDetails();
-  }, [fetchDeleteDetails]);
-  const { error, dismissError } = useDismissableError(
-    deleteError || deleteDetailsError
-  );
+  const { error, dismissError } = useDismissableError(deleteError);
 
   return (
     <>
@@ -220,9 +192,6 @@ const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
                   name={name}
                   modalTitle={'Delete Plan'}
                   onConfirm={deletePlans}
-                  disabledTooltip={
-                    isDeleteDisabled && 'This plan cannot be deleted'
-                  }
                 >
                   {'Delete'}
                 </DeleteButton>
