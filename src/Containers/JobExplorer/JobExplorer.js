@@ -9,8 +9,6 @@ import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
 import ApiErrorState from '../../Components/ApiErrorState';
 import Pagination from '../../Components/Pagination';
-import { Paths } from '../../paths';
-import { parse, stringify } from 'query-string';
 
 import {
   preflightRequest,
@@ -42,7 +40,7 @@ const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
   'offset',
 ]);
 
-const JobExplorer = ({ location: { search }, history }) => {
+const JobExplorer = () => {
   const [preflightError, setPreFlightError] = useState(null);
 
   const {
@@ -71,31 +69,6 @@ const JobExplorer = ({ location: { search }, history }) => {
     { items: [], meta: {} }
   );
 
-  const initialSearchParams = parse(search, {
-    arrayFormat: 'bracket',
-    parseBooleans: true,
-    parseNumbers: true,
-  });
-
-  useEffect(() => {
-    history.replace({
-      pathname: jobExplorer,
-      initialSearchParams,
-    });
-  }, []);
-
-  const updateURL = () => {
-    const { jobExplorer } = Paths;
-    const search = stringify(
-      { ...initialQueryParams, ...initialSearchParams },
-      { arrayFormat: 'bracket' }
-    );
-    history.replace({
-      pathname: jobExplorer,
-      search,
-    });
-  };
-
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
 
@@ -107,7 +80,6 @@ const JobExplorer = ({ location: { search }, history }) => {
   useEffect(() => {
     fetchOptions();
     fetchEndpoints();
-    updateURL();
   }, [queryParams]);
 
   if (preflightError?.preflightError?.status === 403) {
