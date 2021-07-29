@@ -29,30 +29,27 @@ const Form = ({ title, options, data = {} }) => {
   const [startStep, setStartStep] = useState(null);
 
   const {
-    result: { data: apiResponse },
+    result: apiResponse,
     error,
     request: setData,
   } = useRequest(
-    useCallback(async (requestPayload, id) => {
-      if (typeof requestPayload !== 'undefined') {
-        if (id) {
-          data = await updatePlan({
+    useCallback((requestPayload, id) => {
+      if (requestPayload) {
+        if (id)
+          return updatePlan({
             id: id,
             params: requestPayload,
           });
-        } else {
-          data = await createPlan({
-            params: requestPayload,
-          });
-        }
+
+        return createPlan({
+          params: requestPayload,
+        });
       }
-      return {
-        data,
-      };
+
+      // TODO this is very shitty should be a promise
+      return {};
     }, []),
-    {
-      apiResponse: data,
-    }
+    data
   );
 
   const { formData, requestPayload, dispatch } = usePlanData(data);

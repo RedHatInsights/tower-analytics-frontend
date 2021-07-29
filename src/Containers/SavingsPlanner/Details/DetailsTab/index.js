@@ -138,7 +138,7 @@ const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
   );
 
   const {
-    result: { isDeleteDisabled },
+    result: isDeleteDisabled,
     error: deleteDetailsError,
     request: fetchDeleteDetails,
   } = useRequest(
@@ -150,12 +150,10 @@ const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
       if (error) {
         throw new Error(error);
       }
-      if (deleteDetails) {
-        return { isDeleteDisabled: true };
-      }
-      return { isDeleteDisabled: false };
-    }, [plans[0]]),
-    { isDeleteDisabled: false }
+
+      return !!deleteDetails;
+    }, [plans]),
+    false
   );
 
   useEffect(() => {

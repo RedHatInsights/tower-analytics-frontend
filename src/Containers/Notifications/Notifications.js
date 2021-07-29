@@ -127,7 +127,7 @@ const Notifications = () => {
     }
 
     const getData = () => {
-      return readNotifications({ params: queryParams });
+      return readNotifications(queryParams);
     };
 
     const update = () => {
@@ -148,7 +148,7 @@ const Notifications = () => {
     let ignore = false;
     const fetchEndpoints = () => {
       return Promise.all(
-        [readClusters(), readNotifications({ params: queryParams })].map((p) =>
+        [readClusters(), readNotifications(queryParams)].map((p) =>
           p.catch(() => [])
         )
       );

@@ -79,10 +79,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     request: fetchStats,
     ...statsApi
   } = useRequest(
-    useCallback(
-      () => readJobExplorer({ params: agreggateTemplateParams }),
-      [selectedId]
-    ),
+    useCallback(() => readJobExplorer(agreggateTemplateParams), [selectedId]),
     {}
   );
 
@@ -91,10 +88,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     request: fetchJobs,
     ...jobsApi
   } = useRequest(
-    useCallback(
-      () => readJobExplorer({ params: relatedTemplateJobsParams }),
-      [selectedId]
-    ),
+    useCallback(() => readJobExplorer(relatedTemplateJobsParams), [selectedId]),
     {}
   );
   let history = useHistory();

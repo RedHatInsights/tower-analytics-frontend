@@ -53,33 +53,22 @@ const JobExplorer = ({ location: { search }, history }) => {
   } = useQueryParams(qsConfig);
 
   const {
-    result: { options },
+    result: options,
     error,
     request: fetchOptions,
   } = useRequest(
-    useCallback(async () => {
-      const response = await readJobExplorerOptions({ params: queryParams });
-      return { options: response };
-    }, [queryParams]),
-    {
-      options: {},
-    }
+    useCallback(() => readJobExplorerOptions(queryParams), [queryParams]),
+    {}
   );
 
   const {
-    result: { data, meta },
+    result: { items: data, meta },
     isLoading: dataIsLoading,
     isSuccess: dataIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
-    useCallback(async () => {
-      const response = await readJobExplorer({ params: queryParams });
-      return {
-        data: response.items,
-        meta: response.meta,
-      };
-    }, [queryParams]),
-    { items: [] }
+    useCallback(() => readJobExplorer(queryParams), [queryParams]),
+    { items: [], meta: {} }
   );
 
   const initialSearchParams = parse(search, {

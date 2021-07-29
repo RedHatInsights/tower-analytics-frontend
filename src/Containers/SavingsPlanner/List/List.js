@@ -63,30 +63,29 @@ const List = () => {
   const [preflightError, setPreFlightError] = useState(null);
 
   const {
-    result: { options },
+    result: options,
     error,
     isSuccess,
     request: fetchOptions,
   } = useRequest(
     useCallback(async () => {
+      // TODO Move this out of here
       await preflightRequest().catch((error) => {
         setPreFlightError({ preflightError: error });
       });
-      const response = await readPlanOptions();
-      return { options: response };
+      return readPlanOptions();
     }, [queryParams]),
-    { options: {} }
+    {}
   );
 
   const {
     result: { data, rbac, total_count },
-    error: itemsError,
     isLoading: itemsIsLoading,
     isSuccess: itemsIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
-      const response = await readPlans({ params: queryParams });
+      const response = await readPlans(queryParams);
       return {
         data: response.items,
         rbac: response.rbac,
@@ -95,9 +94,8 @@ const List = () => {
     }, [queryParams]),
     {
       data: [],
-      itemsError,
-      itemsIsSuccess,
-      itemsIsLoading,
+      rbac: {},
+      total_count: 0,
     }
   );
 

@@ -75,39 +75,29 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
   const [preflightError, setPreFlightError] = useState(null);
 
   const {
-    result: { options },
+    result: options,
     error,
     isSuccess,
     request: fetchOptions,
   } = useRequest(
-    useCallback(async () => {
-      const response = await readJobExplorerOptions({ params: queryParams });
-      return { options: response };
-    }, [queryParams]),
-    { options: {} }
+    useCallback(() => readJobExplorerOptions(queryParams), [queryParams]),
+    {}
   );
 
   const {
     result: { templates, count },
-    error: templatesIsError,
     isLoading: templatesIsLoading,
     isSuccess: templatesIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
-      const response = await readJobExplorer({ params: queryParams });
+      const response = await readJobExplorer(queryParams);
       return {
         templates: response.items,
         count: response.meta.count,
       };
     }, [queryParams]),
-    {
-      templates: [],
-      count: 0,
-      templatesIsError,
-      templatesIsLoading,
-      templatesIsSuccess,
-    }
+    { templates: [], count: 0 }
   );
 
   const onSort = (_ev, _idx, dir) => {
