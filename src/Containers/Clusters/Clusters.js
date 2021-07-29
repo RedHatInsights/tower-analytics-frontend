@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
@@ -69,7 +69,9 @@ const qsConfig = getQSConfig('clusters', { ...clusters.defaultParams }, [
 ]);
 
 const Clusters = () => {
-  const [preflightError, setPreFlightError] = useState(null);
+  const { error: preflightError, request: setPreflight } = useRequest(
+    useCallback(() => preflightRequest(), [])
+  );
 
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
@@ -138,6 +140,7 @@ const Clusters = () => {
   const optionsQueryParams = useQueryParams(initialOptionsParams);
 
   useEffect(() => {
+    setPreflight();
     fetchOptions();
     fetchChartData();
     fetchModules();
@@ -184,21 +187,11 @@ const Clusters = () => {
     ...initialModuleParams,
   };
 
-  useEffect(() => {
-    async function initializeWithPreflight() {
-      await preflightRequest().catch((error) => {
-        setPreFlightError({ preflightError: error });
-      });
-    }
-
-    initializeWithPreflight();
-  }, []);
-
-  if (preflightError?.preflightError?.status === 403) {
+  if (preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 
-  if (preflightError?.preflightError) return <EmptyState {...preflightError} />;
+  if (preflightError) return <EmptyState preflightError={preflightError} />;
 
   if (error) return <ApiErrorState message={error.error} />;
 

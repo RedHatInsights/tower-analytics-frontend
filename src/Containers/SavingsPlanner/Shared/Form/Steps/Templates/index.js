@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { parse, stringify } from 'query-string';
@@ -72,7 +72,9 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     dispatch: queryParamsDispatch,
   } = useQueryParams(qsConfig);
 
-  const [preflightError, setPreFlightError] = useState(null);
+  const { error: preflightError, request: setPreflight } = useRequest(
+    useCallback(() => preflightRequest(), [])
+  );
 
   const {
     result: options,
@@ -118,10 +120,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
 
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'savings-planner', secondaryNav: true });
-
-    preflightRequest().catch((error) => {
-      setPreFlightError({ preflightError: error });
-    });
+    setPreflight();
   }, []);
 
   const initialSearchParams = parse(search, {
@@ -146,12 +145,12 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     fetchEndpoints();
   }, [queryParams]);
 
-  if (preflightError?.preflightError?.status === 403) {
+  if (preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
   return (
     <>
-      {preflightError && <EmptyState {...preflightError} />}
+      {preflightError && <EmptyState preflightError={preflightError} />}
 
       {isSuccess && (
         <Form>
