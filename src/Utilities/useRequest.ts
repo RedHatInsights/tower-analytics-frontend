@@ -1,6 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
 import useIsMounted from './useIsMounted';
 
+type ErrorType = unknown; // TODO: When the error format is evident, use that instead of `unknown`
+
 /*
  * The useRequest hook accepts a request function and returns an object with
  * five values:
@@ -8,49 +10,69 @@ import useIsMounted from './useIsMounted';
  *   result: the value returned from the request function (once invoked)
  *   isLoading: boolean state indicating whether the request is in active/in flight
  *   error: any caught error resulting from the request
- *   success: once request is completed and there were no errors
+ *   isSuccess: once request is completed and there were no errors
  *   setValue: setter to explicitly set the result value
  *
  * The hook also accepts an optional second parameter which is a default
  * value to set as result before the first time the request is made.
  */
-export const useRequest = (makeRequest, initialValue) => {
-  const [result, setResult] = useState(initialValue);
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+interface UseRequestVariables<T> {
+  result: T;
+  error: ErrorType;
+  isLoading: boolean;
+  isSuccess: boolean;
+}
+
+interface UseRequestReturn<T> extends UseRequestVariables<T> {
+  request: () => Promise<void>;
+  setValue: (value: T) => void;
+}
+
+export const useRequest = <T>(
+  makeRequest: () => Promise<T>,
+  initialValue: T
+): UseRequestReturn<T> => {
+  const [variables, setVariables] = useState<UseRequestVariables<T>>({
+    result: initialValue,
+    error: null,
+    isLoading: false,
+    isSuccess: false,
+  });
   const isMounted = useIsMounted();
 
   return {
-    result,
-    error,
-    isLoading,
-    isSuccess,
+    ...variables,
     request: useCallback(
       async (...args) => {
-        setIsSuccess(false);
-        setIsLoading(true);
+        setVariables({
+          ...variables,
+          isSuccess: false,
+          isLoading: true,
+        });
         try {
           const response = await makeRequest(...args);
           if (isMounted.current) {
-            setResult(response);
-            setError(null);
-            setIsSuccess(true);
+            setVariables({
+              isLoading: false,
+              result: response,
+              error: null,
+              isSuccess: true,
+            });
           }
-        } catch (err) {
+        } catch (error: unknown) {
           if (isMounted.current) {
-            setError(err);
-            setResult(initialValue);
-          }
-        } finally {
-          if (isMounted.current) {
-            setIsLoading(false);
+            setVariables({
+              isSuccess: false,
+              isLoading: false,
+              error,
+              result: initialValue,
+            });
           }
         }
       },
       [makeRequest]
     ),
-    setValue: setResult,
+    setValue: (value: T) => setVariables({ ...variables, result: value }),
   };
 };
 
@@ -63,7 +85,14 @@ export const useRequest = (makeRequest, initialValue) => {
  *   until the dismissError function is called, at which point the returned
  *   error will be set to null on the subsequent render.
  */
-export const useDismissableError = (error) => {
+interface UseDismissableErrorReturn {
+  error: ErrorType;
+  dismissError: () => void;
+}
+
+export const useDismissableError = (
+  error: ErrorType
+): UseDismissableErrorReturn => {
   const [showError, setShowError] = useState(false);
 
   useEffect(() => {
@@ -81,36 +110,32 @@ export const useDismissableError = (error) => {
 };
 
 /*
- * Hook to assist with deletion of items from a paginated item list. The page
- * url will be navigated back one page on a paginated list if needed to prevent
- * the UI from re-loading an empty set and displaying a "No items found"
- * message.
+ * Hook to assist with deletion of items from a paginated item list.
  *
  * Params: a callback function that will be invoked in order to delete items,
  *   and an object with structure { qsConfig, allItemsSelected, fetchItems }
  * Returns: { isLoading, deleteItems, deletionError, clearDeletionError }
  */
+interface UseDeleteItemsReturn {
+  isLoading: boolean;
+  deleteItems: () => Promise<void>;
+  deletionError: ErrorType;
+  clearDeletionError: () => void;
+}
+
 export const useDeleteItems = (
-  makeRequest,
-  { qsConfig = null, fetchItems = null } = {}
-) => {
+  makeRequest: () => Promise<void>
+): UseDeleteItemsReturn => {
   const {
     error: requestError,
     isLoading,
     request,
   } = useRequest(makeRequest, null);
   const { error, dismissError } = useDismissableError(requestError);
-  const deleteItems = async () => {
-    await request();
-    if (!qsConfig) {
-      return;
-    }
-    fetchItems();
-  };
 
   return {
     isLoading,
-    deleteItems,
+    deleteItems: request,
     deletionError: error,
     clearDeletionError: dismissError,
   };
