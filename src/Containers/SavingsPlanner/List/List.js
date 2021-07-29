@@ -129,9 +129,9 @@ const List = () => {
   );
 
   const handleDelete = async () => {
-    deleteItems();
-    fetchEndpoints();
+    await deleteItems();
     setSelected([]);
+    fetchEndpoints();
   };
 
   if (preflightError?.preflightError?.status === 403) {
