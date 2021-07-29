@@ -19,15 +19,12 @@ import {
   Td,
 } from '@patternfly/react-table';
 
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
-
 import LoadingState from '../../../../../../Components/LoadingState';
 import EmptyState from '../../../../../../Components/EmptyState';
 import NoResults from '../../../../../../Components/NoResults';
 import ApiErrorState from '../../../../../../Components/ApiErrorState';
 import Pagination from '../../../../../../Components/Pagination';
 
-import { notAuthorizedParams } from '../../../../../../Utilities/constants';
 import { useQueryParams } from '../../../../../../Utilities/useQueryParams';
 import { getQSConfig } from '../../../../../../Utilities/qs';
 
@@ -145,9 +142,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     fetchEndpoints();
   }, [queryParams]);
 
-  if (preflightError?.status === 403) {
-    return <NotAuthorized {...notAuthorizedParams} />;
-  }
   return (
     <>
       {preflightError && <EmptyState preflightError={preflightError} />}

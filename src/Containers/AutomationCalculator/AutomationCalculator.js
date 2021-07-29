@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import {
   PageHeader,
   PageHeaderTitle,
@@ -15,7 +14,6 @@ import {
   Stack,
   StackItem,
 } from '@patternfly/react-core';
-import { notAuthorizedParams } from '../../Utilities/constants';
 
 // Imports from custom components
 import LoadingState from '../../Components/LoadingState';
@@ -226,10 +224,6 @@ const AutomationCalculator = ({ history }) => {
       </StackItem>
     </Stack>
   );
-
-  if (preflightError?.status === 403) {
-    return <NotAuthorized {...notAuthorizedParams} />;
-  }
 
   const renderContents = () => {
     if (preflightError) return <EmptyState preflightError={preflightError} />;
