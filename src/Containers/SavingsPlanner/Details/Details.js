@@ -23,29 +23,25 @@ import useRequest from '../../../Utilities/useRequest';
 
 const Details = () => {
   const { id } = useParams();
+  const location = useLocation();
+
   const queryParams = { id: [id] };
-
-  const { state: locationState } = useLocation();
-
-  const { error: preflightError, request: setPreflight } = useRequest(
-    useCallback(() => preflightRequest(), [])
-  );
+  const onEdit = !!location.state?.reload;
 
   let pageTitle = 'Details';
-  let onEdit = false;
-  if (locationState?.reload) {
-    onEdit = true;
-  }
   if (location.pathname.indexOf('/statistics') !== -1) {
     pageTitle = 'Statistics';
   } else if (location.pathname.indexOf('/edit') !== -1) {
     pageTitle = 'Edit plan';
   }
 
+  const { error: preflightError, request: setPreflight } = useRequest(
+    useCallback(() => preflightRequest(), [])
+  );
+
   const {
     result: options,
     error,
-    isSuccess,
     request: fetchOptions,
   } = useRequest(() => readPlanOptions(), {});
 
@@ -54,7 +50,7 @@ const Details = () => {
     isSuccess: plansIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
-    useCallback(() => readPlan(queryParams), [queryParams]),
+    useCallback(() => readPlan(queryParams), [id]),
     { items: [], rbac: [] }
   );
 
@@ -65,10 +61,11 @@ const Details = () => {
 
   useEffect(() => {
     fetchEndpoints();
-  }, [queryParams]);
+  }, [id]);
 
   const canWrite =
-    isSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
+    plansIsSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
+
   const tabsArray = [
     {
       id: 0,

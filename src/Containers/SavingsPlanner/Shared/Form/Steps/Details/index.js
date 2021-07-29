@@ -25,7 +25,7 @@ const Details = ({ options, formData, dispatch }) => {
 
   return (
     <Form>
-      {options?.data && (
+      {options && (
         <Grid hasGutter md={6}>
           <FormGroup
             label="What do you want to automate?"

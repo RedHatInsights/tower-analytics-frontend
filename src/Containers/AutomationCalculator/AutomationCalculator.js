@@ -30,6 +30,8 @@ import { useQueryParams } from '../../Utilities/useQueryParams';
 import { roi as roiConst } from '../../Utilities/constants';
 import useRedirect from '../../Utilities/useRedirect';
 import { calculateDelta, convertSecondsToHours } from '../../Utilities/helpers';
+import useRequest from '../../Utilities/useRequest';
+import { getQSConfig } from '../../Utilities/qs';
 
 // Chart
 import TopTemplatesSavings from '../../Charts/ROITopTemplates';
@@ -40,8 +42,6 @@ import TotalSavings from './TotalSavings';
 import CalculationCost from './CalculationCost';
 import AutomationFormula from './AutomationFormula';
 import TopTemplates from './TopTemplates';
-import useRequest from '../../Utilities/useRequest';
-import { getQSConfig } from '../../Utilities/qs';
 
 const mapApi = ({ items = [] }) =>
   items.map((el) => ({
