@@ -18,12 +18,10 @@ import {
 import { jobExplorer } from '../../Utilities/constants';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { notAuthorizedParams } from '../../Utilities/constants';
 
 import { Card, CardBody, PaginationVariant } from '@patternfly/react-core';
 
@@ -81,9 +79,6 @@ const JobExplorer = () => {
     fetchEndpoints();
   }, [queryParams]);
 
-  if (preflightError?.status === 403) {
-    return <NotAuthorized {...notAuthorizedParams} />;
-  }
   if (preflightError) return <EmptyState preflightError={preflightError} />;
   if (error) return <ApiErrorState message={error.error} />;
 

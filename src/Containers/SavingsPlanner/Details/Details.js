@@ -1,21 +1,18 @@
 import React, { useEffect, useCallback } from 'react';
 import { useParams, useLocation, Route, Switch } from 'react-router-dom';
 import { CaretLeftIcon } from '@patternfly/react-icons';
-import { Card } from '@patternfly/react-core';
+import { Card, EmptyState } from '@patternfly/react-core';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 
 import DetailsTab from './DetailsTab';
 import StatisticsTab from './StatisticsTab';
 import SavingsPlanner from '../List';
 import ApiErrorState from '../../../Components/ApiErrorState';
-import { notAuthorizedParams } from '../../../Utilities/constants';
 
 import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
-
-import { NotAuthorized } from '@redhat-cloud-services/frontend-components/NotAuthorized';
 
 import Breadcrumbs from '../../../Components/Breadcrumbs';
 
@@ -98,9 +95,11 @@ const Details = () => {
         { title: plans[0].name, navigate: breadcrumbUrl },
       ]
     : [];
-  if (preflightError?.status === 403) {
-    return <NotAuthorized {...notAuthorizedParams} />;
+
+  if (preflightError) {
+    return <EmptyState preflightError={preflightError} />;
   }
+
   return (
     <>
       {error && (

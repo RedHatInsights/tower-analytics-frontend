@@ -6,7 +6,6 @@ import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
 
 import {
@@ -24,7 +23,6 @@ import Pagination from '../../../Components/Pagination';
 import PlanCard from './ListItem';
 import { useQueryParams } from '../../../Utilities/useQueryParams';
 import { savingsPlanner } from '../../../Utilities/constants';
-import { notAuthorizedParams } from '../../../Utilities/constants';
 
 import ToolbarDeleteButton from '../../../Components/Toolbar/ToolbarDeleteButton';
 import useSelected from '../../../Utilities/useSelected';
@@ -131,10 +129,6 @@ const List = () => {
     setSelected([]);
     fetchEndpoints();
   };
-
-  if (preflightError?.status === 403) {
-    return <NotAuthorized {...notAuthorizedParams} />;
-  }
 
   const renderContent = () => {
     if (preflightError) return <EmptyState preflightError={preflightError} />;

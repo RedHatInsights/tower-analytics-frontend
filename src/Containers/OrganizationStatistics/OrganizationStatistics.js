@@ -19,12 +19,10 @@ import {
 } from '../../Api/';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { notAuthorizedParams } from '../../Utilities/constants';
 
 import {
   Card,
@@ -256,10 +254,6 @@ const OrganizationStatistics = ({ history }) => {
     setOptions();
     setJobs();
   }, [queryParams]);
-
-  if (preflightError?.status === 403) {
-    return <NotAuthorized {...notAuthorizedParams} />;
-  }
 
   const renderContent = () => {
     if (preflightError) return <EmptyState preflightError={preflightError} />;
