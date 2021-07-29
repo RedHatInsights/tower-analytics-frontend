@@ -60,6 +60,12 @@ const initialModuleParams = {
   limit: 10,
 };
 
+const initialOptionsParams = {
+  attributes: jobExplorer.attributes,
+};
+
+const optionsQueryParams = useQueryParams(initialOptionsParams);
+
 // takes json and returns
 const qsConfig = getQSConfig('clusters', { ...clusters.defaultParams }, [
   'limit',
@@ -78,7 +84,10 @@ const Clusters = () => {
     error,
     request: fetchOptions,
   } = useRequest(
-    useCallback(() => readClustersOptions(optionsQueryParams), [queryParams]),
+    useCallback(
+      () => readClustersOptions(optionsQueryParams),
+      [optionsQueryParams]
+    ),
     {}
   );
 
@@ -130,12 +139,6 @@ const Clusters = () => {
     }, [queryParams]),
     []
   );
-
-  const initialOptionsParams = {
-    attributes: jobExplorer.attributes,
-  };
-
-  const optionsQueryParams = useQueryParams(initialOptionsParams);
 
   useEffect(() => {
     setPreflight();

@@ -155,7 +155,7 @@ const Notifications = () => {
     async function initializeWithPreflight() {
       setIsLoading(true);
       await preflightRequest().catch((error) => {
-        setPreFlightError({ preflightError: error });
+        setPreFlightError(error);
       });
       fetchEndpoints().then(
         ([

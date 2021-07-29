@@ -6,6 +6,7 @@ import readClusterOptions from './readClusterOptions';
 import readEventExplorer from './readEventExplorer';
 import readJobExplorer from './readJobExplorer';
 import readPlans from './readPlans';
+import readPlan from './readPlan';
 import readPlansOptions from './readPlansOptions';
 import readPlansOptionsRBACFalse from './readPlansOptionsRBACFalse';
 import readTemplateJobExplorer from './readTemplateJobExplorer';
@@ -19,6 +20,7 @@ export default {
   readEventExplorer,
   readJobExplorer,
   readPlans,
+  readPlan,
   readPlansOptions,
   readPlansOptionsRBACFalse,
   readTemplateJobExplorer,
