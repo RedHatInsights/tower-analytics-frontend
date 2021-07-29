@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory, useLocation } from 'react-router-dom';
 import Main from '@redhat-cloud-services/frontend-components/Main';
@@ -60,7 +60,9 @@ const List = () => {
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(qsConfig);
 
-  const [preflightError, setPreFlightError] = useState(null);
+  const { error: preflightError, request: setPreflight } = useRequest(
+    useCallback(() => preflightRequest(), [])
+  );
 
   const {
     result: options,
@@ -68,13 +70,7 @@ const List = () => {
     isSuccess,
     request: fetchOptions,
   } = useRequest(
-    useCallback(async () => {
-      // TODO Move this out of here
-      await preflightRequest().catch((error) => {
-        setPreFlightError({ preflightError: error });
-      });
-      return readPlanOptions();
-    }, [queryParams]),
+    useCallback(() => readPlanOptions(), [queryParams]),
     {}
   );
 
@@ -105,6 +101,10 @@ const List = () => {
   };
 
   useEffect(() => {
+    setPreflight();
+  }, []);
+
+  useEffect(() => {
     fetchOptions();
     fetchEndpoints();
   }, [queryParams]);
@@ -132,12 +132,12 @@ const List = () => {
     fetchEndpoints();
   };
 
-  if (preflightError?.preflightError?.status === 403) {
+  if (preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
 
   const renderContent = () => {
-    if (preflightError) return <EmptyState {...preflightError} />;
+    if (preflightError) return <EmptyState preflightError={preflightError} />;
 
     if (error) return <ApiErrorState message={error.error} />;
 

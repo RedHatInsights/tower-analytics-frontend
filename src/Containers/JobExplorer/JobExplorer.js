@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
@@ -41,7 +41,9 @@ const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
 ]);
 
 const JobExplorer = () => {
-  const [preflightError, setPreFlightError] = useState(null);
+  const { error: preflightError, request: setPreflight } = useRequest(
+    useCallback(() => preflightRequest(), [])
+  );
 
   const {
     queryParams,
@@ -71,10 +73,7 @@ const JobExplorer = () => {
 
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
-
-    preflightRequest().catch((error) => {
-      setPreFlightError({ preflightError: error });
-    });
+    setPreflight();
   }, []);
 
   useEffect(() => {
@@ -82,10 +81,10 @@ const JobExplorer = () => {
     fetchEndpoints();
   }, [queryParams]);
 
-  if (preflightError?.preflightError?.status === 403) {
+  if (preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
-  if (preflightError?.preflightError) return <EmptyState {...preflightError} />;
+  if (preflightError) return <EmptyState preflightError={preflightError} />;
   if (error) return <ApiErrorState message={error.error} />;
 
   return (

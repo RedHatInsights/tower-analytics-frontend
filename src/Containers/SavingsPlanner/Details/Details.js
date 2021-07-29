@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { useParams, useLocation, Route, Switch } from 'react-router-dom';
 import { CaretLeftIcon } from '@patternfly/react-icons';
 import { Card } from '@patternfly/react-core';
@@ -26,8 +26,14 @@ import useRequest from '../../../Utilities/useRequest';
 
 const Details = () => {
   const { id } = useParams();
+  const queryParams = { id: [id] };
+
   const { state: locationState } = useLocation();
-  const [preflightError, setPreFlightError] = useState(null);
+
+  const { error: preflightError, request: setPreflight } = useRequest(
+    useCallback(() => preflightRequest(), [])
+  );
+
   let pageTitle = 'Details';
   let onEdit = false;
   if (locationState?.reload) {
@@ -38,49 +44,29 @@ const Details = () => {
   } else if (location.pathname.indexOf('/edit') !== -1) {
     pageTitle = 'Edit plan';
   }
-  const [selectedId, setSelectedId] = useState(id);
-  const queryParams = { id: [selectedId] };
 
   const {
     result: options,
     error,
     isSuccess,
     request: fetchOptions,
-  } = useRequest(
-    useCallback(async () => {
-      // TODO Move this out of here
-      setSelectedId(id);
-      await preflightRequest().catch((error) => {
-        setPreFlightError({ preflightError: error });
-      });
-
-      return readPlanOptions();
-    }, []),
-    {}
-  );
+  } = useRequest(() => readPlanOptions(), {});
 
   const {
-    result: { rbac, plans },
+    result: { rbac, items: plans },
     isSuccess: plansIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
-    useCallback(async () => {
-      // TODO Move this out of here
-      setSelectedId(id);
-      await preflightRequest().catch((error) => {
-        setPreFlightError({ preflightError: error });
-      });
-      const response = await readPlan(queryParams);
-      return {
-        plans: response.items,
-        rbac: response.rbac,
-      };
-    }, []),
-    { plans: [], rbac: [] }
+    useCallback(() => readPlan(queryParams), [queryParams]),
+    { items: [], rbac: [] }
   );
 
   useEffect(() => {
     fetchOptions();
+    setPreflight();
+  }, []);
+
+  useEffect(() => {
     fetchEndpoints();
   }, [queryParams]);
 
@@ -97,22 +83,22 @@ const Details = () => {
       ),
       link: `/savings-planner`,
     },
-    { id: 1, name: 'Details', link: `/savings-planner/${selectedId}/details` },
+    { id: 1, name: 'Details', link: `/savings-planner/${id}/details` },
     {
       id: 2,
       name: 'Statistics',
-      link: `/savings-planner/${selectedId}/statistics`,
+      link: `/savings-planner/${id}/statistics`,
     },
   ];
 
-  const breadcrumbUrl = `/savings-planner/${selectedId}`;
+  const breadcrumbUrl = `/savings-planner/${id}`;
   const breadcrumbsItems = plansIsSuccess
     ? [
         { title: 'Savings Planner', navigate: '/savings-planner' },
         { title: plans[0].name, navigate: breadcrumbUrl },
       ]
     : [];
-  if (preflightError?.preflightError?.status === 403) {
+  if (preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
   }
   return (
@@ -122,7 +108,7 @@ const Details = () => {
           <ApiErrorState message={error.error} />
         </>
       )}
-      {plansIsSuccess && (
+      {plansIsSuccess /* Todo this does not chaeck if plan is actually an array */ && (
         <>
           <PageHeader>
             <Breadcrumbs items={breadcrumbsItems} />

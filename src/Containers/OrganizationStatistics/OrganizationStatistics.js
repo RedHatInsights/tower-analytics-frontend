@@ -202,17 +202,6 @@ const OrganizationStatistics = ({ history }) => {
     []
   );
 
-  useEffect(() => {
-    setOrgs(activeTabKey);
-  }, [activeTabKey]);
-
-  useEffect(() => {
-    setOrgs();
-    setTasks();
-    setOptions();
-    setJobs();
-  }, [queryParams]);
-
   const jobEventsByOrgParams = {
     ...queryParams,
     attributes: ['host_task_count'],
@@ -256,6 +245,17 @@ const OrganizationStatistics = ({ history }) => {
     });
     setPreflight();
   }, []);
+
+  useEffect(() => {
+    setOrgs(activeTabKey);
+  }, [activeTabKey]);
+
+  useEffect(() => {
+    setOrgs();
+    setTasks();
+    setOptions();
+    setJobs();
+  }, [queryParams]);
 
   if (preflightError?.status === 403) {
     return <NotAuthorized {...notAuthorizedParams} />;
