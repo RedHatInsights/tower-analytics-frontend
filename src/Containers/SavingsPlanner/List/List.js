@@ -119,9 +119,13 @@ const List = () => {
     deleteItems: deleteItems,
     clearDeletionError,
   } = useDeleteItems(
-    useCallback(async () => {
-      return Promise.all(selected.map((plan) => deletePlan({ id: plan.id })));
-    }, [selected])
+    useCallback(() =>
+      Promise.all(
+        selected.map((plan) => deletePlan({ id: plan.id })),
+        [selected]
+      )
+    ),
+    {}
   );
 
   const handleDelete = async () => {
