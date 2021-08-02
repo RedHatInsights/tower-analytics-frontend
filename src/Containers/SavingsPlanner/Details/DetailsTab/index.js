@@ -48,7 +48,7 @@ const Divider = styled(PFDivider)`
   padding-top: 24px;
 `;
 
-const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
+const DetailsTab = ({ tabsArray, plan, canWrite, options }) => {
   const { pathname } = useLocation();
   const history = useHistory();
   const {
@@ -64,7 +64,7 @@ const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
     tasks,
     template_details,
     template_id,
-  } = plans[0];
+  } = plan;
 
   const redirectToJobExplorer = (templateId) => {
     const { jobExplorer } = Paths;
@@ -137,7 +137,7 @@ const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
 
   return (
     <>
-      {plans && (
+      {plan && (
         <>
           <CardBody>
             <RoutedTabs tabsArray={tabsArray} />
@@ -215,7 +215,7 @@ const DetailsTab = ({ tabsArray, plans, canWrite, options }) => {
 };
 
 DetailsTab.propTypes = {
-  plans: PropTypes.array,
+  plan: PropTypes.object,
   tabsArray: PropTypes.array,
   canWrite: PropTypes.bool.isRequired,
   options: PropTypes.object.isRequired,

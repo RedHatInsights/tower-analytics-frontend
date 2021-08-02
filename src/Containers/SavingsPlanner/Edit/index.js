@@ -29,20 +29,17 @@ const Edit = ({ data }) => {
     (options?.meta?.rbac?.perms?.write === true ||
       options?.meta?.rbac?.perms?.all === true);
 
-  const showEdit = () => (
-    <>
-      <Form title="Edit plan" options={options} data={data} />
-    </>
-  );
+  const renderContent = () => {
+    if (!isSuccess) return null;
 
-  if (isSuccess) {
     return canWrite ? (
-      showEdit()
+      <Form title="Edit plan" options={options} data={data} />
     ) : (
       <Redirect to={`${Paths.savingsPlanner}/${id}`} />
     );
-  }
-  return null;
+  };
+
+  return renderContent();
 };
 
 Edit.propTypes = {

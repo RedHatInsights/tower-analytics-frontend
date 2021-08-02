@@ -1,12 +1,17 @@
 import React, { useEffect, useCallback } from 'react';
-import { useParams, useLocation, Route, Switch } from 'react-router-dom';
+import {
+  useHistory,
+  useParams,
+  useLocation,
+  Route,
+  Switch,
+} from 'react-router-dom';
 import { CaretLeftIcon } from '@patternfly/react-icons';
 import { Card, EmptyState } from '@patternfly/react-core';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 
 import DetailsTab from './DetailsTab';
 import StatisticsTab from './StatisticsTab';
-import SavingsPlanner from '../List';
 import ApiErrorState from '../../../Components/ApiErrorState';
 
 import {
@@ -24,9 +29,9 @@ import useRequest from '../../../Utilities/useRequest';
 const Details = () => {
   const { id } = useParams();
   const location = useLocation();
+  const history = useHistory();
 
   const queryParams = { id: [id] };
-  const onEdit = !!location.state?.reload;
 
   let pageTitle = 'Details';
   if (location.pathname.indexOf('/statistics') !== -1) {
@@ -50,17 +55,23 @@ const Details = () => {
     isSuccess: planIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
-    useCallback((id) => readPlan(id), []),
+    useCallback(() => readPlan(id), [id]),
     { plan: {}, rbac: [] }
   );
 
   useEffect(() => {
     fetchOptions();
     setPreflight();
+
+    const unlisten = history.listen(({ pathname }) => {
+      if (!pathname.includes('/edit')) fetchEndpoints();
+    });
+
+    return unlisten;
   }, []);
 
   useEffect(() => {
-    fetchEndpoints(id);
+    fetchEndpoints();
   }, [id]);
 
   const canWrite =
@@ -99,12 +110,8 @@ const Details = () => {
 
   return (
     <>
-      {error && (
-        <>
-          <ApiErrorState message={error.error} />
-        </>
-      )}
-      {planIsSuccess /* Todo this does not chaeck if plan is actually an array */ && (
+      {error && <ApiErrorState message={error.error} />}
+      {planIsSuccess && (
         <>
           <PageHeader>
             <Breadcrumbs items={breadcrumbsItems} />
@@ -113,36 +120,29 @@ const Details = () => {
           <Main>
             <Card>
               <Switch>
-                <Route path="/savings-planner/:id/statistics">
+                <Route exact path="/savings-planner/:id/edit">
+                  <SavingsPlanEdit data={plan} />
+                </Route>
+                <Route exact path="/savings-planner/:id/statistics">
                   <StatisticsTab
                     tabsArray={tabsArray}
-                    data={plan}
+                    plan={plan}
                     queryParams={queryParams}
                   />
                 </Route>
-                {!onEdit && (
-                  <Route path="/savings-planner/:id/details">
-                    <DetailsTab
-                      plans={[plan]}
-                      tabsArray={tabsArray}
-                      canWrite={canWrite}
-                      options={options}
-                    />
-                  </Route>
-                )}
-                <Route path="/savings-planner/:id/edit">
-                  <SavingsPlanEdit data={plan} />
-                </Route>
-                <Route path="/savings-planner/:id">
+                <Route
+                  exact
+                  path={[
+                    '/savings-planner/:id',
+                    '/savings-planner/:id/details',
+                  ]}
+                >
                   <DetailsTab
-                    plans={[plan]}
+                    plan={plan}
                     tabsArray={tabsArray}
                     canWrite={canWrite}
                     options={options}
                   />
-                </Route>
-                <Route exact path="/savings-planner">
-                  <SavingsPlanner />
                 </Route>
               </Switch>
             </Card>
