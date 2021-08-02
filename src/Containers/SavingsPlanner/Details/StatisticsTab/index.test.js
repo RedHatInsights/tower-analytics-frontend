@@ -42,7 +42,7 @@ describe('SavingsPlanner/Details/StatisticsTab', () => {
   it('should render successfully', async () => {
     render(
       <MemoryRouter>
-        <StatisticsTab tabsArray={tabs} data={data} />
+        <StatisticsTab tabsArray={tabs} plan={data} />
       </MemoryRouter>
     );
     await waitFor(() => screen.getByText('Money'));
