@@ -64,8 +64,6 @@ const initialOptionsParams = {
   attributes: jobExplorer.attributes,
 };
 
-const optionsQueryParams = useQueryParams(initialOptionsParams);
-
 // takes json and returns
 const qsConfig = getQSConfig('clusters', { ...clusters.defaultParams }, [
   'limit',
@@ -78,6 +76,7 @@ const Clusters = () => {
   );
 
   // params from toolbar/searchbar
+  const optionsQueryParams = useQueryParams(initialOptionsParams);
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
   const {
     result: options,

@@ -59,7 +59,7 @@ interface Props {
     link: string;
     name: React.ReactNode;
   }[];
-  data: Data;
+  plan: Data;
 }
 
 const yearLabels: Record<string, string> = {
@@ -101,7 +101,7 @@ const constants = (isMoney: boolean) => ({
   },
 });
 
-const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
+const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
   const [isMoney, setIsMoney] = useState(true);
 
   const customTooltipFormatting = (datum: Record<string, string>) =>
@@ -249,7 +249,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
       ...functions,
       fetchFnc: () =>
         new Promise((resolve) => {
-          resolve(getChartData(data));
+          resolve(getChartData(plan));
         }),
     },
   };
@@ -273,7 +273,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
             />
           </ToggleGroup>
         </CardActions>
-        <CardTitle>{data.name}</CardTitle>
+        <CardTitle>{plan.name}</CardTitle>
       </CardHeader>
       <CardBody>
         <ChartRenderer
@@ -286,7 +286,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
 
   const renderRight = () => (
     <>
-      <TotalSavings value={computeTotalSavings(data)} isMoney={isMoney} />
+      <TotalSavings value={computeTotalSavings(plan)} isMoney={isMoney} />
       <Card isPlain>
         <CardBody>
           <List isPlain>
@@ -326,7 +326,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, data }) => {
 StatisticsTab.propTypes = {
   /* eslint-disable-next-line */
   /* @ts-ignore: Validation error */
-  data: PropTypes.object.isRequired,
+  plan: PropTypes.object.isRequired,
   tabsArray: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.number.isRequired,

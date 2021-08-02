@@ -46,7 +46,7 @@ const Form = ({ title, options, data = {} }) => {
         });
       }
 
-      // TODO this is very shitty should be a promise
+      // TODO this should be a promise
       return {};
     }, []),
     data
