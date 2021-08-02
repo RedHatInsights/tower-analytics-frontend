@@ -37,31 +37,28 @@ const tabs = [
   { name: 'Graph', link: '/savings-planner/19/statistics', id: 2 },
 ];
 
-const dummyData = [
-  {
-    id: 1,
-    automation_status: 'successful',
-    category: 'foo',
-    description: 'foo bar',
-    frequency_period: 'monthly',
-    hosts: 20,
-    manual_time: 60,
-    modified: '2020-11-16T10:15:07.223669',
-    name: 'Foo',
-    tasks: [],
-    template_details: { id: 1, name: 'template foo' },
-    template_id: 1,
-  },
-];
+const dummyData = {
+  id: 1,
+  automation_status: { status: 'successful' },
+  category: 'foo',
+  description: 'foo bar',
+  frequency_period: 'monthly',
+  hosts: 20,
+  manual_time: 60,
+  modified: '2020-11-16T10:15:07.223669',
+  name: 'Foo',
+  tasks: [],
+  template_details: { id: 1, name: 'template foo' },
+  template_id: 1,
+};
 
-let wrapper;
 it('should render successfully', () => {
-  wrapper = mount(
+  const wrapper = mount(
     <DetailsTab
       tabsArray={tabs}
-      plans={dummyData}
+      plan={dummyData}
       canWrite={true}
-      options={{ data: {} }}
+      options={{}}
     />
   );
   wrapper.update();
