@@ -39,7 +39,14 @@ export const authenticatedFetch = (
   endpoint: RequestInfo,
   options = {}
 ): Promise<Response> =>
-  window.insights.chrome.auth.getUser().then(() => fetch(endpoint, options));
+  window.insights.chrome.auth.getUser().then(() =>
+    fetch(endpoint, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+  );
 
 export const get = (
   endpoint: string,
