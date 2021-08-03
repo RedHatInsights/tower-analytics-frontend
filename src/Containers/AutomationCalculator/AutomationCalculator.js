@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import {
   PageHeader,
   PageHeaderTitle,
@@ -15,7 +14,6 @@ import {
   Stack,
   StackItem,
 } from '@patternfly/react-core';
-import { notAuthorizedParams } from '../../Utilities/constants';
 
 // Imports from custom components
 import LoadingState from '../../Components/LoadingState';
@@ -32,6 +30,8 @@ import { useQueryParams } from '../../Utilities/useQueryParams';
 import { roi as roiConst } from '../../Utilities/constants';
 import useRedirect from '../../Utilities/useRedirect';
 import { calculateDelta, convertSecondsToHours } from '../../Utilities/helpers';
+import useRequest from '../../Utilities/useRequest';
+import { getQSConfig } from '../../Utilities/qs';
 
 // Chart
 import TopTemplatesSavings from '../../Charts/ROITopTemplates';
@@ -42,8 +42,6 @@ import TotalSavings from './TotalSavings';
 import CalculationCost from './CalculationCost';
 import AutomationFormula from './AutomationFormula';
 import TopTemplates from './TopTemplates';
-import useRequest from '../../Utilities/useRequest';
-import { getQSConfig } from '../../Utilities/qs';
 
 const mapApi = ({ items = [] }) =>
   items.map((el) => ({
@@ -87,45 +85,27 @@ const AutomationCalculator = ({ history }) => {
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
 
-  const {
-    error: preflightError,
-    isLoading: preflightIsLoading,
-    request: setPreflight,
-  } = useRequest(
-    useCallback(async () => {
-      const preflight = await preflightRequest();
-      return { preflight: preflight };
-    }, []),
-    { preflight: {}, preflightError, preflightIsLoading }
+  const { error: preflightError, request: setPreflight } = useRequest(
+    useCallback(() => preflightRequest(), [])
+  );
+
+  const { result: options, request: setOptions } = useRequest(
+    useCallback(() => readROIOptions(queryParams), [queryParams]),
+    {}
   );
 
   const {
-    result: { options },
-    error: optionsError,
-    isLoading: optionsIsLoading,
-    request: setOptions,
-  } = useRequest(
-    useCallback(async () => {
-      const options = await readROIOptions({ params: queryParams });
-      return { options: options };
-    }, [queryParams]),
-    { options: {}, optionsError, optionsIsLoading }
-  );
-
-  const {
-    result: { data: api },
+    result: api,
     error: apiError,
     isLoading: apiIsLoading,
     request: fetchEndpoint,
     setValue,
   } = useRequest(
     useCallback(async () => {
-      const response = await readROI({ params: queryParams });
-      return {
-        data: updateDeltaCost(mapApi(response), costAutomation, costManual),
-      };
+      const response = await readROI(queryParams);
+      return updateDeltaCost(mapApi(response), costAutomation, costManual);
     }, [queryParams]),
-    { data: [], apiError, apiIsLoading }
+    []
   );
 
   /**
@@ -148,13 +128,11 @@ const AutomationCalculator = ({ history }) => {
       }
     });
 
-    setValue({ data: updatedData });
+    setValue(updatedData);
   };
 
   const setEnabled = (id) => (value) => {
-    setValue({
-      data: api.map((el) => (el.id === id ? { ...el, enabled: value } : el)),
-    });
+    setValue(api.map((el) => (el.id === id ? { ...el, enabled: value } : el)));
   };
 
   useEffect(() => {
@@ -166,7 +144,7 @@ const AutomationCalculator = ({ history }) => {
    * Recalculates the delta and costs in the data after the cost is changed.
    */
   useEffect(() => {
-    setValue({ data: updateDeltaCost(api, costAutomation, costManual) });
+    setValue(updateDeltaCost(api, costAutomation, costManual));
   }, [costAutomation, costManual]);
 
   /**
@@ -246,10 +224,6 @@ const AutomationCalculator = ({ history }) => {
       </StackItem>
     </Stack>
   );
-
-  if (preflightError?.status === 403) {
-    return <NotAuthorized {...notAuthorizedParams} />;
-  }
 
   const renderContents = () => {
     if (preflightError) return <EmptyState preflightError={preflightError} />;

@@ -9,12 +9,10 @@ import NoData from '../../Components/NoData';
 import { preflightRequest, readClusters, readNotifications } from '../../Api/';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { notAuthorizedParams } from '../../Utilities/constants';
 
 import {
   Card,
@@ -127,7 +125,7 @@ const Notifications = () => {
     }
 
     const getData = () => {
-      return readNotifications({ params: queryParams });
+      return readNotifications(queryParams);
     };
 
     const update = () => {
@@ -148,7 +146,7 @@ const Notifications = () => {
     let ignore = false;
     const fetchEndpoints = () => {
       return Promise.all(
-        [readClusters(), readNotifications({ params: queryParams })].map((p) =>
+        [readClusters(), readNotifications(queryParams)].map((p) =>
           p.catch(() => [])
         )
       );
@@ -157,7 +155,7 @@ const Notifications = () => {
     async function initializeWithPreflight() {
       setIsLoading(true);
       await preflightRequest().catch((error) => {
-        setPreFlightError({ preflightError: error });
+        setPreFlightError(error);
       });
       fetchEndpoints().then(
         ([
@@ -180,104 +178,95 @@ const Notifications = () => {
     return () => (ignore = true);
   }, [queryParams]);
 
-  if (preflightError?.preflightError?.status === 403) {
-    return <NotAuthorized {...notAuthorizedParams} />;
-  }
+  if (preflightError) return <EmptyState preflightError={preflightError} />;
 
   return (
     <React.Fragment>
       <PageHeader>
         <PageHeaderTitle title={'Notifications'} />
       </PageHeader>
-      {preflightError && (
+      <>
         <Main>
-          <EmptyState {...preflightError} />
-        </Main>
-      )}
-      {!preflightError && (
-        <>
-          <Main>
-            <Card>
-              <CardTitle>
-                <DropdownGroup>
-                  <FormSelect
-                    name="selectedCluster"
-                    value={selectedCluster}
-                    onChange={(value) => {
-                      setSelectedCluster(value);
-                      setId(value);
-                      setFromPagination(0);
-                    }}
-                    aria-label="Select Cluster"
-                  >
-                    {clusterOptions.map(({ value, label, disabled }, index) => (
+          <Card>
+            <CardTitle>
+              <DropdownGroup>
+                <FormSelect
+                  name="selectedCluster"
+                  value={selectedCluster}
+                  onChange={(value) => {
+                    setSelectedCluster(value);
+                    setId(value);
+                    setFromPagination(0);
+                  }}
+                  aria-label="Select Cluster"
+                >
+                  {clusterOptions.map(({ value, label, disabled }, index) => (
+                    <FormSelectOption
+                      isDisabled={disabled}
+                      key={index}
+                      value={value}
+                      label={label}
+                    />
+                  ))}
+                </FormSelect>
+                <FormSelect
+                  name="selectedNotification"
+                  value={queryParams.severity || ''}
+                  onChange={(value) => {
+                    setSeverity(value);
+                    setFromPagination(0);
+                  }}
+                  aria-label="Select Notification Type"
+                >
+                  {notificationOptions.map(
+                    ({ disabled, value, label }, index) => (
                       <FormSelectOption
                         isDisabled={disabled}
                         key={index}
                         value={value}
                         label={label}
                       />
-                    ))}
-                  </FormSelect>
-                  <FormSelect
-                    name="selectedNotification"
-                    value={queryParams.severity || ''}
-                    onChange={(value) => {
-                      setSeverity(value);
-                      setFromPagination(0);
-                    }}
-                    aria-label="Select Notification Type"
-                  >
-                    {notificationOptions.map(
-                      ({ disabled, value, label }, index) => (
-                        <FormSelectOption
-                          isDisabled={disabled}
-                          key={index}
-                          value={value}
-                          label={label}
-                        />
-                      )
-                    )}
-                  </FormSelect>
-                </DropdownGroup>
-                <Pagination
-                  count={meta?.count}
-                  qsConfig={qsConfig}
-                  params={{
-                    limit: queryParams.limit,
-                    offset: queryParams.offset,
-                  }}
-                  setPagination={setFromPagination}
-                  isCompact
-                />
-              </CardTitle>
-              <CardBody>
-                {isLoading && <LoadingState />}
-                {!isLoading && notificationsData.length <= 0 && <NoData />}
-                {!isLoading && notificationsData.length > 0 && (
-                  <NotificationDrawer>
-                    <NotificationsList
-                      filterBy={queryParams.severity || ''}
-                      options={notificationOptions}
-                      notifications={notificationsData}
-                    />
-                  </NotificationDrawer>
-                )}
-                <Pagination
-                  count={meta?.count}
-                  qsConfig={qsConfig}
-                  params={{
-                    limit: queryParams.limit,
-                    offset: queryParams.offset,
-                  }}
-                  setPagination={setFromPagination}
-                  variant={PaginationVariant.bottom}
-                />
-              </CardBody>
-            </Card>
-          </Main>
-        </>
-      )}
+                    )
+                  )}
+                </FormSelect>
+              </DropdownGroup>
+              <Pagination
+                count={meta?.count}
+                qsConfig={qsConfig}
+                params={{
+                  limit: queryParams.limit,
+                  offset: queryParams.offset,
+                }}
+                setPagination={setFromPagination}
+                isCompact
+              />
+            </CardTitle>
+            <CardBody>
+              {isLoading && <LoadingState />}
+              {!isLoading && notificationsData.length <= 0 && <NoData />}
+              {!isLoading && notificationsData.length > 0 && (
+                <NotificationDrawer>
+                  <NotificationsList
+                    filterBy={queryParams.severity || ''}
+                    options={notificationOptions}
+                    notifications={notificationsData}
+                  />
+                </NotificationDrawer>
+              )}
+              <Pagination
+                count={meta?.count}
+                qsConfig={qsConfig}
+                params={{
+                  limit: queryParams.limit,
+                  offset: queryParams.offset,
+                }}
+                setPagination={setFromPagination}
+                variant={PaginationVariant.bottom}
+              />
+            </CardBody>
+          </Card>
+        </Main>
+      </>
     </React.Fragment>
   );
 };

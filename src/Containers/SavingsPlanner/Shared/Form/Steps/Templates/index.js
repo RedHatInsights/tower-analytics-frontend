@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { parse, stringify } from 'query-string';
@@ -19,15 +19,12 @@ import {
   Td,
 } from '@patternfly/react-table';
 
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
-
 import LoadingState from '../../../../../../Components/LoadingState';
 import EmptyState from '../../../../../../Components/EmptyState';
 import NoResults from '../../../../../../Components/NoResults';
 import ApiErrorState from '../../../../../../Components/ApiErrorState';
 import Pagination from '../../../../../../Components/Pagination';
 
-import { notAuthorizedParams } from '../../../../../../Utilities/constants';
 import { useQueryParams } from '../../../../../../Utilities/useQueryParams';
 import { getQSConfig } from '../../../../../../Utilities/qs';
 
@@ -72,42 +69,34 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     dispatch: queryParamsDispatch,
   } = useQueryParams(qsConfig);
 
-  const [preflightError, setPreFlightError] = useState(null);
+  const { error: preflightError, request: setPreflight } = useRequest(
+    useCallback(() => preflightRequest(), [])
+  );
 
   const {
-    result: { options },
+    result: options,
     error,
     isSuccess,
     request: fetchOptions,
   } = useRequest(
-    useCallback(async () => {
-      const response = await readJobExplorerOptions({ params: queryParams });
-      return { options: response };
-    }, [queryParams]),
-    { options: {} }
+    useCallback(() => readJobExplorerOptions(queryParams), [queryParams]),
+    {}
   );
 
   const {
     result: { templates, count },
-    error: templatesIsError,
     isLoading: templatesIsLoading,
     isSuccess: templatesIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
-      const response = await readJobExplorer({ params: queryParams });
+      const response = await readJobExplorer(queryParams);
       return {
         templates: response.items,
         count: response.meta.count,
       };
     }, [queryParams]),
-    {
-      templates: [],
-      count: 0,
-      templatesIsError,
-      templatesIsLoading,
-      templatesIsSuccess,
-    }
+    { templates: [], count: 0 }
   );
 
   const onSort = (_ev, _idx, dir) => {
@@ -128,10 +117,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
 
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'savings-planner', secondaryNav: true });
-
-    preflightRequest().catch((error) => {
-      setPreFlightError({ preflightError: error });
-    });
+    setPreflight();
   }, []);
 
   const initialSearchParams = parse(search, {
@@ -156,12 +142,9 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     fetchEndpoints();
   }, [queryParams]);
 
-  if (preflightError?.preflightError?.status === 403) {
-    return <NotAuthorized {...notAuthorizedParams} />;
-  }
   return (
     <>
-      {preflightError && <EmptyState {...preflightError} />}
+      {preflightError && <EmptyState preflightError={preflightError} />}
 
       {isSuccess && (
         <Form>

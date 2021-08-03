@@ -16,10 +16,6 @@ describe('delete details', () => {
     getRelatedResourceDeleteCounts(
       relatedResourceDeleteRequests.savingsPlan({ id: 1 }, plan)
     );
-    expect(plan).toBeCalledWith({
-      params: {
-        id: [1],
-      },
-    });
+    expect(plan).toBeCalledWith(1);
   });
 });

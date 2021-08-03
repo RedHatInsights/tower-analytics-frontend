@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
@@ -9,8 +9,6 @@ import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
 import ApiErrorState from '../../Components/ApiErrorState';
 import Pagination from '../../Components/Pagination';
-import { Paths } from '../../paths';
-import { parse, stringify } from 'query-string';
 
 import {
   preflightRequest,
@@ -20,12 +18,10 @@ import {
 import { jobExplorer } from '../../Utilities/constants';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { notAuthorizedParams } from '../../Utilities/constants';
 
 import { Card, CardBody, PaginationVariant } from '@patternfly/react-core';
 
@@ -42,8 +38,10 @@ const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
   'offset',
 ]);
 
-const JobExplorer = ({ location: { search }, history }) => {
-  const [preflightError, setPreFlightError] = useState(null);
+const JobExplorer = () => {
+  const { error: preflightError, request: setPreflight } = useRequest(
+    useCallback(() => preflightRequest(), [])
+  );
 
   const {
     queryParams,
@@ -53,78 +51,35 @@ const JobExplorer = ({ location: { search }, history }) => {
   } = useQueryParams(qsConfig);
 
   const {
-    result: { options },
+    result: options,
     error,
     request: fetchOptions,
   } = useRequest(
-    useCallback(async () => {
-      const response = await readJobExplorerOptions({ params: queryParams });
-      return { options: response };
-    }, [queryParams]),
-    {
-      options: {},
-    }
+    useCallback(() => readJobExplorerOptions(queryParams), [queryParams]),
+    {}
   );
 
   const {
-    result: { data, meta },
+    result: { items: data, meta },
     isLoading: dataIsLoading,
     isSuccess: dataIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
-    useCallback(async () => {
-      const response = await readJobExplorer({ params: queryParams });
-      return {
-        data: response.items,
-        meta: response.meta,
-      };
-    }, [queryParams]),
-    { items: [] }
+    useCallback(() => readJobExplorer(queryParams), [queryParams]),
+    { items: [], meta: {} }
   );
-
-  const initialSearchParams = parse(search, {
-    arrayFormat: 'bracket',
-    parseBooleans: true,
-    parseNumbers: true,
-  });
-
-  useEffect(() => {
-    history.replace({
-      pathname: jobExplorer,
-      initialSearchParams,
-    });
-  }, []);
-
-  const updateURL = () => {
-    const { jobExplorer } = Paths;
-    const search = stringify(
-      { ...initialQueryParams, ...initialSearchParams },
-      { arrayFormat: 'bracket' }
-    );
-    history.replace({
-      pathname: jobExplorer,
-      search,
-    });
-  };
 
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
-
-    preflightRequest().catch((error) => {
-      setPreFlightError({ preflightError: error });
-    });
+    setPreflight();
   }, []);
 
   useEffect(() => {
     fetchOptions();
     fetchEndpoints();
-    updateURL();
   }, [queryParams]);
 
-  if (preflightError?.preflightError?.status === 403) {
-    return <NotAuthorized {...notAuthorizedParams} />;
-  }
-  if (preflightError?.preflightError) return <EmptyState {...preflightError} />;
+  if (preflightError) return <EmptyState preflightError={preflightError} />;
   if (error) return <ApiErrorState message={error.error} />;
 
   return (

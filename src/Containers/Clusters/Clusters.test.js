@@ -8,6 +8,9 @@ import * as api from '../../Api/';
 jest.mock('../../Api');
 
 describe('<Clusters />', () => {
+  test('true', () => {
+    expect(true).toBe(true);
+  });
   afterEach(() => {
     api.preflightRequest.mockResolvedValue(mockResponses.preflightRequest200);
     api.readClustersOptions.mockResolvedValue(mockResponses.readClusterOptions);

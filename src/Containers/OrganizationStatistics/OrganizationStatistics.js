@@ -19,12 +19,10 @@ import {
 } from '../../Api/';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { notAuthorizedParams } from '../../Utilities/constants';
 
 import {
   Card,
@@ -143,35 +141,26 @@ const OrganizationStatistics = ({ history }) => {
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
 
-  const {
-    error: preflightError,
-    isLoading: preflightIsLoading,
-    isSuccess: preflightIsSuccess,
-    request: setPreflight,
-  } = useRequest(
-    useCallback(async () => {
-      const preflight = await preflightRequest();
-      return { preflight: preflight };
-    }, []),
-    { preflight: {}, preflightError, preflightIsLoading, preflightIsSuccess }
+  const { error: preflightError, request: setPreflight } = useRequest(
+    useCallback(() => preflightRequest(), [])
   );
 
   const {
-    result: { jobs },
+    result: jobs,
     error: jobsError,
     isLoading: jobsIsLoading,
     isSuccess: jobsIsSuccess,
     request: setJobs,
   } = useRequest(
-    useCallback(async () => {
-      const jobs = await readJobExplorer({ params: jobRunsByOrgParams });
-      return { jobs: jobs };
-    }, [queryParams]),
-    { jobs: [], jobsError, jobsIsLoading, jobsIsSuccess }
+    useCallback(
+      async () => readJobExplorer(jobRunsByOrgParams),
+      [jobRunsByOrgParams]
+    ),
+    []
   );
 
   const {
-    result: { orgs },
+    result: orgs,
     error: orgsError,
     isLoading: orgsIsLoading,
     isSuccess: orgsIsSuccess,
@@ -181,57 +170,35 @@ const OrganizationStatistics = ({ history }) => {
       async (tabIndex = 0) => {
         let orgs;
         if (tabIndex === 0) {
-          orgs = await readJobExplorer({ params: jobsByDateAndOrgParams });
+          orgs = await readJobExplorer(jobsByDateAndOrgParams);
         } else {
-          orgs = await readHostExplorer({ params: hostAcrossOrgParams });
+          orgs = await readHostExplorer(hostAcrossOrgParams);
         }
-        return { orgs: orgs };
+        return orgs;
       },
-      [queryParams]
+      [hostAcrossOrgParams, jobsByDateAndOrgParams]
     ),
-    { orgs: [], orgsError, orgsIsLoading, orgsIsSuccess }
+    []
+  );
+
+  const { result: options, request: setOptions } = useRequest(
+    useCallback(() => readOrgOptions(queryParams), [queryParams]),
+    {}
   );
 
   const {
-    result: { options },
-    error: optionsError,
-    isLoading: optionsIsLoading,
-    isSuccess: optionsIsSuccess,
-    request: setOptions,
-  } = useRequest(
-    useCallback(async () => {
-      const options = await readOrgOptions({ params: queryParams });
-      return { options: options };
-    }, [queryParams]),
-    { options: {}, optionsError, optionsIsLoading, optionsIsSuccess }
-  );
-
-  const {
-    result: { tasks },
+    result: tasks,
     error: tasksError,
     isLoading: tasksIsLoading,
     isSuccess: tasksIsSuccess,
     request: setTasks,
   } = useRequest(
-    useCallback(async () => {
-      const tasks = await readJobExplorer({ params: jobEventsByOrgParams });
-      return {
-        tasks: tasks,
-      };
-    }, [queryParams]),
-    { tasks: [], tasksError, tasksIsLoading, tasksIsSuccess }
+    useCallback(
+      async () => readJobExplorer(jobEventsByOrgParams),
+      [jobEventsByOrgParams]
+    ),
+    []
   );
-
-  useEffect(() => {
-    setOrgs(activeTabKey);
-  }, [activeTabKey]);
-
-  useEffect(() => {
-    setOrgs();
-    setTasks();
-    setOptions();
-    setJobs();
-  }, [queryParams]);
 
   const jobEventsByOrgParams = {
     ...queryParams,
@@ -277,9 +244,16 @@ const OrganizationStatistics = ({ history }) => {
     setPreflight();
   }, []);
 
-  if (preflightError?.status === 403) {
-    return <NotAuthorized {...notAuthorizedParams} />;
-  }
+  useEffect(() => {
+    setOrgs(activeTabKey);
+  }, [activeTabKey]);
+
+  useEffect(() => {
+    setOrgs();
+    setTasks();
+    setOptions();
+    setJobs();
+  }, [queryParams]);
 
   const renderContent = () => {
     if (preflightError) return <EmptyState preflightError={preflightError} />;

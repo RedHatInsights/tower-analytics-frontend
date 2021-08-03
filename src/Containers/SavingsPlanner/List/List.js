@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 import { useHistory, useLocation } from 'react-router-dom';
 import Main from '@redhat-cloud-services/frontend-components/Main';
@@ -6,7 +6,6 @@ import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
-import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
 import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
 
 import {
@@ -24,7 +23,6 @@ import Pagination from '../../../Components/Pagination';
 import PlanCard from './ListItem';
 import { useQueryParams } from '../../../Utilities/useQueryParams';
 import { savingsPlanner } from '../../../Utilities/constants';
-import { notAuthorizedParams } from '../../../Utilities/constants';
 
 import ToolbarDeleteButton from '../../../Components/Toolbar/ToolbarDeleteButton';
 import useSelected from '../../../Utilities/useSelected';
@@ -60,33 +58,28 @@ const List = () => {
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(qsConfig);
 
-  const [preflightError, setPreFlightError] = useState(null);
+  const { error: preflightError, request: setPreflight } = useRequest(
+    useCallback(() => preflightRequest(), [])
+  );
 
   const {
-    result: { options },
+    result: options,
     error,
     isSuccess,
     request: fetchOptions,
   } = useRequest(
-    useCallback(async () => {
-      await preflightRequest().catch((error) => {
-        setPreFlightError({ preflightError: error });
-      });
-      const response = await readPlanOptions();
-      return { options: response };
-    }, [queryParams]),
-    { options: {} }
+    useCallback(() => readPlanOptions(), [queryParams]),
+    {}
   );
 
   const {
     result: { data, rbac, total_count },
-    error: itemsError,
     isLoading: itemsIsLoading,
     isSuccess: itemsIsSuccess,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
-      const response = await readPlans({ params: queryParams });
+      const response = await readPlans(queryParams);
       return {
         data: response.items,
         rbac: response.rbac,
@@ -95,9 +88,8 @@ const List = () => {
     }, [queryParams]),
     {
       data: [],
-      itemsError,
-      itemsIsSuccess,
-      itemsIsLoading,
+      rbac: {},
+      total_count: 0,
     }
   );
 
@@ -105,6 +97,10 @@ const List = () => {
     ...options,
     name: [{ key: 'name', value: null }],
   };
+
+  useEffect(() => {
+    setPreflight();
+  }, []);
 
   useEffect(() => {
     fetchOptions();
@@ -123,9 +119,13 @@ const List = () => {
     deleteItems: deleteItems,
     clearDeletionError,
   } = useDeleteItems(
-    useCallback(async () => {
-      return Promise.all(selected.map((plan) => deletePlan({ id: plan.id })));
-    }, [selected])
+    useCallback(() =>
+      Promise.all(
+        selected.map((plan) => deletePlan({ id: plan.id })),
+        [selected]
+      )
+    ),
+    {}
   );
 
   const handleDelete = async () => {
@@ -134,12 +134,8 @@ const List = () => {
     fetchEndpoints();
   };
 
-  if (preflightError?.preflightError?.status === 403) {
-    return <NotAuthorized {...notAuthorizedParams} />;
-  }
-
   const renderContent = () => {
-    if (preflightError) return <EmptyState {...preflightError} />;
+    if (preflightError) return <EmptyState preflightError={preflightError} />;
 
     if (error) return <ApiErrorState message={error.error} />;
 

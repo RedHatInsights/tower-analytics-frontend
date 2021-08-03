@@ -8,8 +8,8 @@ import {
   authenticatedFetch,
 } from './methods';
 import {
-  ReadParams,
-  ReadParamsWithPagination,
+  Params,
+  ParamsWithPagination,
   DeleteParams,
   UpdateParams,
   ApiJson,
@@ -54,54 +54,45 @@ export const getFeatures = async (): Promise<ApiFeatureFlagReturnType> => {
 export const preflightRequest = (): Promise<Response> =>
   authenticatedFetch(preflightEndpoint);
 
-export const readJobExplorer = ({
-  params,
-}: ReadParamsWithPagination): Promise<ApiJson> =>
-  postWithPagination(jobExplorerEndpoint, params);
-export const readJobExplorerOptions = ({
-  params,
-}: ReadParams): Promise<ApiJson> => post(jobExplorerOptionsEndpoint, params);
+export const readJobExplorer = (
+  params: ParamsWithPagination
+): Promise<ApiJson> => postWithPagination(jobExplorerEndpoint, params);
+export const readJobExplorerOptions = (params: Params): Promise<ApiJson> =>
+  post(jobExplorerOptionsEndpoint, params);
 
-export const readEventExplorer = ({
-  params,
-}: ReadParamsWithPagination): Promise<ApiJson> =>
-  postWithPagination(eventExplorerEndpoint, params);
+export const readEventExplorer = (
+  params: ParamsWithPagination
+): Promise<ApiJson> => postWithPagination(eventExplorerEndpoint, params);
 
-export const readROI = ({
-  params,
-}: ReadParamsWithPagination): Promise<ApiJson> =>
+export const readROI = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(ROIEndpoint, params);
-export const readROIOptions = ({ params }: ReadParams): Promise<ApiJson> =>
+export const readROIOptions = (params: Params): Promise<ApiJson> =>
   post(ROITemplatesOptionsEndpoint, params);
 
-export const readHostExplorer = ({
-  params,
-}: ReadParamsWithPagination): Promise<ApiJson> =>
-  postWithPagination(hostExplorerEndpoint, params);
-export const readOrgOptions = ({ params }: ReadParams): Promise<ApiJson> =>
+export const readHostExplorer = (
+  params: ParamsWithPagination
+): Promise<ApiJson> => postWithPagination(hostExplorerEndpoint, params);
+export const readOrgOptions = (params: Params): Promise<ApiJson> =>
   post(orgOptionsEndpoint, params);
 
-export const readPlans = ({
-  params,
-}: ReadParamsWithPagination): Promise<ApiJson> =>
+export const readPlans = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(plansEndpoint, params);
-export const createPlan = ({ params }: ReadParams): Promise<ApiJson> =>
+export const createPlan = (params: Params): Promise<ApiJson> =>
   post(planEndpoint, params);
-export const readPlan = ({ params }: ReadParams): Promise<ApiJson> =>
-  post(plansEndpoint, params);
+export const readPlan = (id: number): Promise<ApiJson> =>
+  get(`${planEndpoint}${id}/`);
 export const deletePlan = ({ id }: DeleteParams): Promise<ApiJson> =>
   deleteById(planEndpoint, id);
 export const updatePlan = ({
   id,
   params = {},
 }: UpdateParams): Promise<ApiJson> => updateById(planEndpoint, id, params);
-export const readPlanOptions = (
-  { params }: ReadParams = { params: {} }
-): Promise<ApiJson> => get(planOptionsEndpoint, params);
+export const readPlanOptions = (params: Params = {}): Promise<ApiJson> =>
+  get(planOptionsEndpoint, params);
 
 export const readClusters = (): Promise<ApiJson> => get(clustersEndpoint);
-export const readClustersOptions = ({ params }: ReadParams): Promise<ApiJson> =>
+export const readClustersOptions = (params: Params): Promise<ApiJson> =>
   post(clustersOptionsEndpoint, params);
 
-export const readNotifications = ({ params }: ReadParams): Promise<ApiJson> =>
+export const readNotifications = (params: Params): Promise<ApiJson> =>
   get(notificationsEndpoint, params);

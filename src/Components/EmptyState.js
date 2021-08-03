@@ -9,6 +9,8 @@ import {
   EmptyStateBody,
 } from '@patternfly/react-core';
 import { WrenchIcon } from '@patternfly/react-icons';
+import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
+import { notAuthorizedParams } from '../Utilities/constants';
 
 const DefaultEmptyState = ({ preflightError: error }) => (
   <EmptyState variant={EmptyStateVariant.full}>
@@ -41,6 +43,7 @@ const DefaultEmptyState = ({ preflightError: error }) => (
         </EmptyStateBody>
       </>
     )}
+    {error.status === 403 && <NotAuthorized {...notAuthorizedParams} />}
     {!error.status && (
       <>
         <Title headingLevel="h5" size="lg">
