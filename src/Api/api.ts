@@ -7,13 +7,7 @@ import {
   updateById,
   authenticatedFetch,
 } from './methods';
-import {
-  Params,
-  ParamsWithPagination,
-  DeleteParams,
-  UpdateParams,
-  ApiJson,
-} from './types';
+import { Params, ParamsWithPagination, DeleteParams, ApiJson } from './types';
 
 /* v0 endpoints */
 export const clustersEndpoint = `/api/tower-analytics/v0/clusters/`;
@@ -83,10 +77,8 @@ export const readPlan = (id: number): Promise<ApiJson> =>
   get(`${planEndpoint}${id}/`);
 export const deletePlan = ({ id }: DeleteParams): Promise<ApiJson> =>
   deleteById(planEndpoint, id);
-export const updatePlan = ({
-  id,
-  params = {},
-}: UpdateParams): Promise<ApiJson> => updateById(planEndpoint, id, params);
+export const updatePlan = (id: string, params: Params): Promise<ApiJson> =>
+  updateById(planEndpoint, id, params);
 export const readPlanOptions = (params: Params = {}): Promise<ApiJson> =>
   get(planOptionsEndpoint, params);
 
