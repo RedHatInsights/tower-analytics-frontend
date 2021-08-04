@@ -3,6 +3,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-call */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import React, {
   FunctionComponent,
   useCallback,
@@ -10,6 +12,7 @@ import React, {
   useState,
 } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 
 import ChartBuilder, {
   ApiReturnType,
@@ -18,7 +21,7 @@ import ChartBuilder, {
 
 import {
   Card,
-  CardBody,
+  CardBody as PFCardBody,
   CardFooter,
   PaginationVariant,
 } from '@patternfly/react-core';
@@ -29,7 +32,7 @@ import {
   Td,
   Th,
   Thead,
-  Tr,
+  Tr as PFTr,
 } from '@patternfly/react-table';
 
 import Pagination from '../../../Components/Pagination';
@@ -46,6 +49,19 @@ import currencyFormatter from '../../../Utilities/currencyFormatter';
 
 import { AttributesType, ReportGeneratorParams } from '../Shared/types';
 import { getQSConfig } from '../../../Utilities/qs';
+
+const CardBody = styled(PFCardBody)`
+  & .pf-c-toolbar,
+  & .pf-c-toolbar__content {
+    padding: 0;
+  }
+`;
+
+const Tr = styled(PFTr)`
+  & td:first-child {
+    width: 50px;
+  }
+`;
 
 const customFunctions = (data: ApiReturnType) => ({
   ...functions,
@@ -104,12 +120,12 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
     useQueryParams(qsConfig);
 
   const { request: setData, ...dataApi } = useRequest(
-    useCallback(() => readData({ params: queryParams }), [queryParams]),
+    useCallback(() => readData(queryParams), [queryParams]),
     {}
   );
 
   const { result: options, request: setOptions } = useRequest(
-    useCallback(() => readOptions({ params: queryParams }), [queryParams]),
+    useCallback(() => readOptions(queryParams), [queryParams]),
     []
   );
 
@@ -186,7 +202,9 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
         <ApiStatusWrapper api={dataApi}>
           <ChartBuilder
             schema={chartSchema}
-            functions={customFunctions(dataApi.result)}
+            functions={customFunctions(
+              dataApi.result as unknown as ApiReturnType
+            )}
           />
           <TableComposable
             aria-label="Report Table"

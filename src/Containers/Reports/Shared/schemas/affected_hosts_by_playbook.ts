@@ -14,22 +14,14 @@ import { AttributesType, ReportPageParams } from '../types';
 const name = 'Hosts changed by job template';
 
 const description =
-  'The number of times a job template runs in a specified time period (default 24hrs)';
+  'The number of hosts changed by a job template in a specified time window.\n\nYou can use this report to find discrepancies in the host change rate at a particular time, helping you drill down to when and why hosts were unreachable at a particular time.';
 
-const categories = [CATEGORIES.operations];
+const categories = [CATEGORIES.executive];
 
 const defaultParams = {
   limit: 6,
   offset: 0,
-  attributes: [
-    'host_count',
-    'ok_host_count',
-    'failed_host_count',
-    'unreachable_host_count',
-    'changed_host_count',
-    'skipped_host_count',
-    'total_unique_host_count',
-  ],
+  attributes: ['total_unique_host_count', 'total_unique_host_changed_count'],
   group_by: 'template',
   group_by_time: true,
   granularity: 'monthly',
@@ -66,7 +58,7 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => [
       label,
       style: {
         axisLabel: {
-          padding: 60,
+          padding: 55,
         },
       },
     },
