@@ -35,15 +35,7 @@ const Form = ({ title, options, data = {} }) => {
   } = useRequest(
     useCallback((requestPayload, id) => {
       if (requestPayload) {
-        if (id)
-          return updatePlan({
-            id: id,
-            params: requestPayload,
-          });
-
-        return createPlan({
-          params: requestPayload,
-        });
+        return id ? updatePlan(id, requestPayload) : createPlan(requestPayload);
       }
 
       // TODO this should be a promise
