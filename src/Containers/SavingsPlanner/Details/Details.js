@@ -7,7 +7,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import { CaretLeftIcon } from '@patternfly/react-icons';
-import { Card, EmptyState } from '@patternfly/react-core';
+import { Card } from '@patternfly/react-core';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 
 import DetailsTab from './DetailsTab';
@@ -21,7 +21,7 @@ import {
 
 import Breadcrumbs from '../../../Components/Breadcrumbs';
 
-import { preflightRequest, readPlan, readPlanOptions } from '../../../Api/';
+import { readPlan, readPlanOptions } from '../../../Api/';
 
 import SavingsPlanEdit from '../Edit';
 import useRequest from '../../../Utilities/useRequest';
@@ -40,10 +40,6 @@ const Details = () => {
     pageTitle = 'Edit plan';
   }
 
-  const { error: preflightError, request: setPreflight } = useRequest(
-    useCallback(() => preflightRequest(), [])
-  );
-
   const {
     result: options,
     error,
@@ -61,7 +57,6 @@ const Details = () => {
 
   useEffect(() => {
     fetchOptions();
-    setPreflight();
 
     const unlisten = history.listen(({ pathname }) => {
       if (!pathname.includes('/edit')) fetchEndpoints();
@@ -103,10 +98,6 @@ const Details = () => {
         { title: plan.name, navigate: breadcrumbUrl },
       ]
     : [];
-
-  if (preflightError) {
-    return <EmptyState preflightError={preflightError} />;
-  }
 
   return (
     <>
