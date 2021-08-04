@@ -15,26 +15,17 @@ import {
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
-const name = 'Job Template run rate';
+const name = 'Job template run rate';
 
 const description =
-  'The number of times a job template runs in a specified time period (default 24hrs)';
+  'The number of times a job template has ran in a specified time window.\n\nYou can use this report to be able to tell which playbooks are running most frequently, allowing you to see which groups in your organization are running Ansible the most.';
 
-const categories = [CATEGORIES.operations];
+const categories = [CATEGORIES.executive];
 
 const defaultParams: Params = {
   limit: 6,
   offset: 0,
-  attributes: [
-    'failed_count',
-    'successful_count',
-    'canceled_count',
-    'total_count',
-    'failed_host_count',
-    'unreachable_host_count',
-    'host_count',
-    'elapsed',
-  ],
+  attributes: ['failed_count', 'successful_count', 'total_count'],
   group_by: 'template',
   group_by_time: true,
   granularity: 'monthly',
@@ -71,7 +62,7 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => [
       label,
       style: {
         axisLabel: {
-          padding: 60,
+          padding: 55,
         },
       },
     },

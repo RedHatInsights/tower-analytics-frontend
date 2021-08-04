@@ -11,25 +11,21 @@ import { readJobExplorer, readJobExplorerOptions } from '../../../../Api';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
-const name = 'Count of changes made by Template';
+const name = 'Changes made by job template';
 
 const description =
-  'The total count of changes made by a each template over specified time period (default 24hrs)';
+  'The total count of changes made by each job template in a specified time window.\n\nYou can use this report to ensure the correct number of changes are made per hostname, as well as see which job templates are doing the most changes to your infrastructure.';
 
-const categories = [CATEGORIES.operations];
+const categories = [CATEGORIES.executive];
 
 const defaultParams = {
   limit: 6,
   offset: 0,
   attributes: [
     'host_count',
-    'failed_host_count',
     'changed_host_count',
-    'host_task_changed_count',
     'host_task_count',
-    'host_task_failed_count',
-    'host_task_ok_count',
-    'host_task_unreachable_count',
+    'host_task_changed_count',
   ],
   group_by: 'template',
   group_by_time: true,
@@ -67,7 +63,7 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => [
       label,
       style: {
         axisLabel: {
-          padding: 60,
+          padding: 55,
         },
       },
     },

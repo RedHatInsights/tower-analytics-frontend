@@ -21,6 +21,7 @@ const Small = styled.small`
   display: block;
   margin-bottom: 10px;
   color: #6a6e73;
+  white-space: pre-line;
 `;
 
 const Label = styled(PFLabel)`
