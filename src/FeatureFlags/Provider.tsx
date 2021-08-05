@@ -1,7 +1,7 @@
 import React, { useState, useEffect, FunctionComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from './Context';
-import { getFeatures } from '../Api';
+import { getFeatures } from '../Api/';
 import { ApiFeatureFlagReturnType, FeatureFlagType } from './types';
 
 interface Props {
