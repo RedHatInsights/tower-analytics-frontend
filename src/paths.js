@@ -7,4 +7,6 @@ export const Paths = {
   savingsPlanner: '/savings-planner',
   savingsPlan: '/savings-planner/:id',
   savingsPlanAdd: '/savings-planner/add',
+  reports: '/reports',
+  report: '/reports/:id',
 };
