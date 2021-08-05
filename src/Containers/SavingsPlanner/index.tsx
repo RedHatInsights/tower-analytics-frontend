@@ -10,7 +10,9 @@ export const paths = {
   get: `${Paths.savingsPlanner}`,
   add: `${Paths.savingsPlanner}/add`,
   edit: `${Paths.savingsPlanner}/:id/edit`,
+  getEdit: (id: number): string => `${Paths.savingsPlanner}/${id}/edit`,
   details: `${Paths.savingsPlanner}/:id`,
+  getDetails: (id: number): string => `${Paths.savingsPlanner}/${id}`,
 };
 
 const SavingsPlanner: FunctionComponent<Record<string, never>> = () => {
