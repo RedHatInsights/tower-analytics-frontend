@@ -24,12 +24,3 @@ export async function getRelatedResourceDeleteCounts(requests) {
     error,
   };
 }
-
-export const relatedResourceDeleteRequests = {
-  savingsPlan: (record, readRecordApi) => [
-    {
-      request: async () => readRecordApi(record.id),
-      label: 'Plan',
-    },
-  ],
-};
