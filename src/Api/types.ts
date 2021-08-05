@@ -14,4 +14,3 @@ export interface ParamsWithPagination {
 
 export type ReadParams = { params: Params };
 export type ReadParamsWithPagination = { params: ParamsWithPagination };
-export type DeleteParams = { id: string };
