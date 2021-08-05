@@ -13,6 +13,7 @@ import Main from '@redhat-cloud-services/frontend-components/Main';
 import DetailsTab from './DetailsTab';
 import StatisticsTab from './StatisticsTab';
 import ApiErrorState from '../../../Components/ApiErrorState';
+import { paths as savingsPaths } from '../index';
 
 import {
   PageHeader,
@@ -81,21 +82,20 @@ const Details = () => {
           {'Back to Plans'}
         </>
       ),
-      link: `/savings-planner`,
+      link: savingsPaths.get,
     },
-    { id: 1, name: 'Details', link: `/savings-planner/${id}/details` },
+    { id: 1, name: 'Details', link: savingsPaths.getDetails(id) },
     {
       id: 2,
       name: 'Statistics',
-      link: `/savings-planner/${id}/statistics`,
+      link: `${savingsPaths.getDetails(id)}/statistics`,
     },
   ];
 
-  const breadcrumbUrl = `/savings-planner/${id}`;
   const breadcrumbsItems = planIsSuccess
     ? [
-        { title: 'Savings Planner', navigate: '/savings-planner' },
-        { title: plan.name, navigate: breadcrumbUrl },
+        { title: 'Savings Planner', navigate: savingsPaths.get },
+        { title: plan.name, navigate: savingsPaths.getDetails(id) },
       ]
     : [];
 
@@ -121,13 +121,7 @@ const Details = () => {
                     queryParams={queryParams}
                   />
                 </Route>
-                <Route
-                  exact
-                  path={[
-                    '/savings-planner/:id',
-                    '/savings-planner/:id/details',
-                  ]}
-                >
+                <Route exact path={savingsPaths.details}>
                   <DetailsTab
                     plan={plan}
                     tabsArray={tabsArray}

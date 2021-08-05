@@ -18,15 +18,7 @@ const components = {
   jobExplorer: asyncComponent(() =>
     import('./Containers/JobExplorer/JobExplorer')
   ),
-  savingsPlanner: asyncComponent(() =>
-    import('./Containers/SavingsPlanner/List')
-  ),
-  savingsPlan: asyncComponent(() =>
-    import('./Containers/SavingsPlanner/Details')
-  ),
-  savingsPlanAdd: asyncComponent(() =>
-    import('./Containers/SavingsPlanner/Add')
-  ),
+  savingsPlanner: asyncComponent(() => import('./Containers/SavingsPlanner/')),
   reports: asyncComponent(() => import('./Containers/Reports/List')),
   report: asyncComponent(() => import('./Containers/Reports/Details')),
 };
