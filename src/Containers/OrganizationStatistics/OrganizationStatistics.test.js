@@ -1,10 +1,5 @@
 import { act } from 'react-dom/test-utils';
-import {
-  mountPage,
-  preflight200,
-  preflight400,
-  preflight403,
-} from '../../__tests__/helpers';
+import { mountPage } from '../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -115,7 +110,6 @@ describe('Containers/OrganizationStatistics', () => {
       document.body.appendChild(d3Container);
     });
 
-    fetchMock.get({ ...preflight200 });
     fetchMock.post(
       {
         url: jobExplorerUrl,
@@ -165,27 +159,6 @@ describe('Containers/OrganizationStatistics', () => {
 
     expect(wrapper.text()).not.toEqual(expect.stringContaining('*No Data*'));
     expect(wrapper.text()).not.toEqual(expect.stringContaining('*Loading*'));
-  });
-
-  it('should render preflight error', async () => {
-    fetchMock.get({ ...preflight400, overwriteRoutes: true });
-    await act(async () => {
-      wrapper = mountPage(OrganizationStatistics);
-    });
-    wrapper.update();
-    expect(wrapper.text()).toEqual(expect.stringContaining('Not authorized'));
-  });
-
-  it('should render RBAC Access error', async () => {
-    fetchMock.get({ ...preflight403, overwriteRoutes: true });
-    await act(async () => {
-      wrapper = mountPage(OrganizationStatistics);
-    });
-    wrapper.update();
-
-    expect(wrapper.text()).toEqual(
-      expect.stringContaining('RBAC Access Denied')
-    );
   });
 
   it('should render api error', async () => {
@@ -292,30 +265,5 @@ describe('Containers/OrganizationStatistics', () => {
     };
 
     checkOrgsCall();
-  });
-
-  xit('shoud redirect to the job explorer page with the correct params', async () => {
-    // This test is not possible to run, since the d3 is not rendering
-    // in enzyme.
-    await act(async () => {
-      wrapper = mountPage(OrganizationStatistics);
-    });
-    wrapper.update();
-
-    // Click on a bar which is not an other
-    // Wait last call to be to JobExplorer page
-  });
-
-  xit('should not redirect to job explorer clicking on the hosts chart', async () => {
-    // This test is not possible to run, since the d3 is not rendering
-    // in enzyme.
-    await act(async () => {
-      wrapper = mountPage(OrganizationStatistics);
-    });
-    wrapper.update();
-
-    // Click on the hosts chart
-    // Click on the bar
-    // Await no new call
   });
 });

@@ -20,7 +20,6 @@ import {
 } from '@patternfly/react-table';
 
 import LoadingState from '../../../../../../Components/LoadingState';
-import EmptyState from '../../../../../../Components/EmptyState';
 import NoResults from '../../../../../../Components/NoResults';
 import ApiErrorState from '../../../../../../Components/ApiErrorState';
 import Pagination from '../../../../../../Components/Pagination';
@@ -29,7 +28,6 @@ import { useQueryParams } from '../../../../../../Utilities/useQueryParams';
 import { getQSConfig } from '../../../../../../Utilities/qs';
 
 import {
-  preflightRequest,
   readJobExplorer,
   readJobExplorerOptions,
 } from '../../../../../../Api/';
@@ -68,10 +66,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     setFromToolbar,
     dispatch: queryParamsDispatch,
   } = useQueryParams(qsConfig);
-
-  const { error: preflightError, request: setPreflight } = useRequest(
-    useCallback(() => preflightRequest(), [])
-  );
 
   const {
     result: options,
@@ -117,7 +111,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
 
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'savings-planner', secondaryNav: true });
-    setPreflight();
   }, []);
 
   const initialSearchParams = parse(search, {
@@ -142,107 +135,98 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     fetchEndpoints();
   }, [queryParams]);
 
-  return (
-    <>
-      {preflightError && <EmptyState preflightError={preflightError} />}
-
-      {isSuccess && (
-        <Form>
-          <FormGroup
-            label="Link a template to this plan:"
-            fieldId="template-link-field"
-          >
-            <FilterableToolbar
-              hideQuickDateRange
-              hideSortOptions
-              categories={options}
-              filters={queryParams}
+  return isSuccess ? (
+    <Form>
+      <FormGroup
+        label="Link a template to this plan:"
+        fieldId="template-link-field"
+      >
+        <FilterableToolbar
+          hideQuickDateRange
+          hideSortOptions
+          categories={options}
+          filters={queryParams}
+          qsConfig={qsConfig}
+          setFilters={setFromToolbar}
+          pagination={
+            <Pagination
+              count={count}
+              params={{
+                limit: queryParams.limit,
+                offset: queryParams.offset,
+              }}
               qsConfig={qsConfig}
-              setFilters={setFromToolbar}
-              pagination={
-                <Pagination
-                  count={count}
-                  params={{
-                    limit: queryParams.limit,
-                    offset: queryParams.offset,
-                  }}
-                  qsConfig={qsConfig}
-                  setPagination={setFromPagination}
-                  isCompact
-                />
-              }
+              setPagination={setFromPagination}
+              isCompact
             />
-            {error && <ApiErrorState message={error.error} />}
-            {templatesIsLoading && <LoadingState />}
-            {templatesIsSuccess && templates.length <= 0 && <NoResults />}
-            {templatesIsSuccess && templates.length > 0 && (
-              <TableComposable
-                aria-label="Template link table"
-                variant="compact"
-              >
-                <Thead>
-                  <Tr>
-                    <Th />
-                    <Th {...sortParams}>Name</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {templates.map(({ id, name }) => (
-                    <Tr key={`template-detail-${id}`}>
-                      <Td
-                        data-testid={`radio-${id}`}
-                        key={`template-detail-${id}-radio-td`}
-                        select={{
-                          rowIndex: id,
-                          onSelect: (event, isSelected, value) =>
-                            formDispatch({
-                              type: actions.SET_TEMPLATE_ID,
-                              value,
-                            }),
-                          isSelected: template_id === id,
-                          variant: 'radio',
-                        }}
-                      />
-                      <Td>{name}</Td>
-                    </Tr>
-                  ))}
-                </Tbody>
-              </TableComposable>
-            )}
-            <ListFooter>
-              <div>
-                {template_id !== -2 && (
-                  <Button
-                    key="clear-selection-button"
-                    variant="link"
-                    aria-label="Clear selection"
-                    onClick={() => {
-                      formDispatch({
-                        type: actions.SET_TEMPLATE_ID,
-                        value: -2,
-                      });
+          }
+        />
+        {error && <ApiErrorState message={error.error} />}
+        {templatesIsLoading && <LoadingState />}
+        {templatesIsSuccess && templates.length <= 0 && <NoResults />}
+        {templatesIsSuccess && templates.length > 0 && (
+          <TableComposable aria-label="Template link table" variant="compact">
+            <Thead>
+              <Tr>
+                <Th />
+                <Th {...sortParams}>Name</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              {templates.map(({ id, name }) => (
+                <Tr key={`template-detail-${id}`}>
+                  <Td
+                    data-testid={`radio-${id}`}
+                    key={`template-detail-${id}-radio-td`}
+                    select={{
+                      rowIndex: id,
+                      onSelect: (event, isSelected, value) =>
+                        formDispatch({
+                          type: actions.SET_TEMPLATE_ID,
+                          value,
+                        }),
+                      isSelected: template_id === id,
+                      variant: 'radio',
                     }}
-                  >
-                    Clear selection
-                  </Button>
-                )}
-              </div>
-              <Pagination
-                count={count}
-                params={{
-                  limit: queryParams.limit,
-                  offset: queryParams.offset,
+                  />
+                  <Td>{name}</Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </TableComposable>
+        )}
+        <ListFooter>
+          <div>
+            {template_id !== -2 && (
+              <Button
+                key="clear-selection-button"
+                variant="link"
+                aria-label="Clear selection"
+                onClick={() => {
+                  formDispatch({
+                    type: actions.SET_TEMPLATE_ID,
+                    value: -2,
+                  });
                 }}
-                qsConfig={qsConfig}
-                setPagination={setFromPagination}
-                variant={PaginationVariant.bottom}
-              />
-            </ListFooter>
-          </FormGroup>
-        </Form>
-      )}
-    </>
-  );
+              >
+                Clear selection
+              </Button>
+            )}
+          </div>
+          <Pagination
+            count={count}
+            params={{
+              limit: queryParams.limit,
+              offset: queryParams.offset,
+            }}
+            qsConfig={qsConfig}
+            setPagination={setFromPagination}
+            variant={PaginationVariant.bottom}
+          />
+        </ListFooter>
+      </FormGroup>
+    </Form>
+  ) : null;
 };
 
 Templates.propTypes = {

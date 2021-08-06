@@ -6,14 +6,7 @@ import { useQueryParams } from '../../Utilities/useQueryParams';
 import useRedirect from '../../Utilities/useRedirect';
 import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
 
-import EmptyState from '../../Components/EmptyState';
-
-import {
-  preflightRequest,
-  readJobExplorer,
-  readHostExplorer,
-  readOrgOptions,
-} from '../../Api/';
+import { readJobExplorer, readHostExplorer, readOrgOptions } from '../../Api/';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
@@ -142,10 +135,6 @@ const OrganizationStatistics = ({ history }) => {
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
 
-  const { error: preflightError, request: setPreflight } = useRequest(
-    useCallback(() => preflightRequest(), [])
-  );
-
   const {
     result: jobs,
     error: jobsError,
@@ -242,7 +231,6 @@ const OrganizationStatistics = ({ history }) => {
       id: 'organization-statistics',
       secondaryNav: true,
     });
-    setPreflight();
   }, []);
 
   useEffect(() => {
@@ -256,92 +244,85 @@ const OrganizationStatistics = ({ history }) => {
     setJobs();
   }, [queryParams]);
 
-  const renderContent = () => {
-    if (preflightError) return <EmptyState preflightError={preflightError} />;
-
-    if (!preflightError)
-      return (
-        <Grid hasGutter>
-          <GridItem span={12}>
-            <Card>
-              <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
-                <Tab eventKey={0} title={'Jobs'} />
-                <Tab eventKey={1} title={'Hosts'} />
-              </Tabs>
-              <CardBody>
-                {orgsIsLoading && <LoadingState />}
-                {orgsError && <ApiErrorState message={orgsError.error} />}
-                {orgsIsSuccess && orgs.dates?.length <= 0 && <NoData />}
-                {orgsIsSuccess && orgs.dates?.length > 0 && (
-                  <GroupedBarChart
-                    margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
-                    id="d3-grouped-bar-chart-root"
-                    data={orgsChartMapper(
-                      orgs.dates,
-                      orgs.meta,
-                      chartMapper[activeTabKey].attr
-                    )}
-                    legend={orgs.meta.legend}
-                    history={history}
-                    colorFunc={colorFunc}
-                    yLabel={chartMapper[activeTabKey].label}
-                    onClick={chartMapper[activeTabKey].onClick(
-                      toJobExplorer,
-                      queryParams
-                    )}
-                    TooltipClass={chartMapper[activeTabKey].tooltip}
-                  />
+  const renderContent = () => (
+    <Grid hasGutter>
+      <GridItem span={12}>
+        <Card>
+          <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
+            <Tab eventKey={0} title={'Jobs'} />
+            <Tab eventKey={1} title={'Hosts'} />
+          </Tabs>
+          <CardBody>
+            {orgsIsLoading && <LoadingState />}
+            {orgsError && <ApiErrorState message={orgsError.error} />}
+            {orgsIsSuccess && orgs.dates?.length <= 0 && <NoData />}
+            {orgsIsSuccess && orgs.dates?.length > 0 && (
+              <GroupedBarChart
+                margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
+                id="d3-grouped-bar-chart-root"
+                data={orgsChartMapper(
+                  orgs.dates,
+                  orgs.meta,
+                  chartMapper[activeTabKey].attr
                 )}
-              </CardBody>
-            </Card>
-          </GridItem>
-          <GridItem span={6}>
-            <Card>
-              <CardTitle>
-                <h2>Job Runs by Organization</h2>
-              </CardTitle>
-              <Divider />
-              <CardBody>
-                {jobsIsLoading && <LoadingState />}
-                {jobsError && <ApiErrorState message={jobsError.error} />}
-                {jobsIsSuccess && jobs.items?.length <= 0 && <NoData />}
-                {jobsIsSuccess && jobs.items?.length > 0 && (
-                  <PieChart
-                    margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
-                    id="d3-donut-1-chart-root"
-                    data={pieChartMapper(jobs.items, 'total_count')}
-                    colorFunc={colorFunc}
-                  />
+                legend={orgs.meta.legend}
+                history={history}
+                colorFunc={colorFunc}
+                yLabel={chartMapper[activeTabKey].label}
+                onClick={chartMapper[activeTabKey].onClick(
+                  toJobExplorer,
+                  queryParams
                 )}
-              </CardBody>
-            </Card>
-          </GridItem>
-          <GridItem span={6}>
-            <Card>
-              <CardTitle>
-                <h2>Usage by Organization (Tasks)</h2>
-              </CardTitle>
-              <Divider />
-              <CardBody>
-                {tasksIsLoading && <LoadingState />}
-                {tasksError && <ApiErrorState message={tasksError.error} />}
-                {tasksIsSuccess && tasks.items?.length <= 0 && <NoData />}
-                {tasksIsSuccess && tasks.items?.length > 0 && (
-                  <PieChart
-                    margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
-                    id="d3-donut-2-chart-root"
-                    data={pieChartMapper(tasks.items, 'host_task_count')}
-                    colorFunc={colorFunc}
-                  />
-                )}
-              </CardBody>
-            </Card>
-          </GridItem>
-        </Grid>
-      );
-
-    return '';
-  };
+                TooltipClass={chartMapper[activeTabKey].tooltip}
+              />
+            )}
+          </CardBody>
+        </Card>
+      </GridItem>
+      <GridItem span={6}>
+        <Card>
+          <CardTitle>
+            <h2>Job Runs by Organization</h2>
+          </CardTitle>
+          <Divider />
+          <CardBody>
+            {jobsIsLoading && <LoadingState />}
+            {jobsError && <ApiErrorState message={jobsError.error} />}
+            {jobsIsSuccess && jobs.items?.length <= 0 && <NoData />}
+            {jobsIsSuccess && jobs.items?.length > 0 && (
+              <PieChart
+                margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
+                id="d3-donut-1-chart-root"
+                data={pieChartMapper(jobs.items, 'total_count')}
+                colorFunc={colorFunc}
+              />
+            )}
+          </CardBody>
+        </Card>
+      </GridItem>
+      <GridItem span={6}>
+        <Card>
+          <CardTitle>
+            <h2>Usage by Organization (Tasks)</h2>
+          </CardTitle>
+          <Divider />
+          <CardBody>
+            {tasksIsLoading && <LoadingState />}
+            {tasksError && <ApiErrorState message={tasksError.error} />}
+            {tasksIsSuccess && tasks.items?.length <= 0 && <NoData />}
+            {tasksIsSuccess && tasks.items?.length > 0 && (
+              <PieChart
+                margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
+                id="d3-donut-2-chart-root"
+                data={pieChartMapper(tasks.items, 'host_task_count')}
+                colorFunc={colorFunc}
+              />
+            )}
+          </CardBody>
+        </Card>
+      </GridItem>
+    </Grid>
+  );
 
   return (
     <>
