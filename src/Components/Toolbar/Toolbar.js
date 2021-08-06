@@ -48,6 +48,17 @@ const FilterableToolbar = ({
       return obj;
     }, {});
 
+  const pushHistoryState = (params, qsConfig) => {
+    const { pathname } = history.location;
+    const nonNamespacedParams = parseQueryString({}, history.location.search);
+    const encodedParams = encodeNonDefaultQueryString(
+      qsConfig,
+      params,
+      nonNamespacedParams
+    );
+    history.push(encodedParams ? `${pathname}?${encodedParams}` : pathname);
+  };
+
   const handleSearch = (key, value) => {
     let params = parseQueryString(qsConfig, history.location.search);
     params = replaceParams(params, { [key]: value });
@@ -67,17 +78,6 @@ const FilterableToolbar = ({
       removeParams(qsConfig, oldParams, oldParamsClone),
       qsConfig
     );
-  };
-
-  const pushHistoryState = (params, qsConfig) => {
-    const { pathname } = history.location;
-    const nonNamespacedParams = parseQueryString({}, history.location.search);
-    const encodedParams = encodeNonDefaultQueryString(
-      qsConfig,
-      params,
-      nonNamespacedParams
-    );
-    history.push(encodedParams ? `${pathname}?${encodedParams}` : pathname);
   };
 
   return (
