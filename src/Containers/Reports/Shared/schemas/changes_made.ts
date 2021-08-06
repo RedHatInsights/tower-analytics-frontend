@@ -51,6 +51,9 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => [
         top: 10,
         right: 100,
       },
+      domainPadding: {
+        y: 25,
+      },
       themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
@@ -76,6 +79,7 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => [
       orientation: ChartLegendOrientation.vertical,
       position: ChartLegendPosition.right,
     },
+    tooltip: {},
   },
   {
     id: 2,
@@ -84,7 +88,7 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => [
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: ChartType.bar,
+      type: ChartType.line,
       parent: 0,
       props: {
         x: 'created_date',
