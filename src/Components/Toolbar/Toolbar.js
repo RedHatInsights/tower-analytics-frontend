@@ -33,8 +33,6 @@ const FilterableToolbar = ({
   pagination = null,
   hasSettings = false,
   additionalControls = [],
-  hideQuickDateRange = false,
-  hideSortOptions = false,
 }) => {
   const [settingsExpanded, setSettingsExpanded] = useState(false);
   const { quick_date_range, sort_options, ...restCategories } = categories;
@@ -102,7 +100,7 @@ const FilterableToolbar = ({
               handleSearch={handleSearch}
             />
           )}
-          {!hideQuickDateRange && quick_date_range && (
+          {quick_date_range && (
             <QuickDateGroup
               filters={filters}
               setFilters={setFilters}
@@ -110,7 +108,7 @@ const FilterableToolbar = ({
               handleSearch={handleSearch}
             />
           )}
-          {!hideSortOptions && sort_options && (
+          {sort_options && (
             <SortByGroup
               filters={filters}
               setFilters={setFilters}
@@ -168,8 +166,6 @@ FilterableToolbar.propTypes = {
   pagination: PropTypes.object,
   hasSettings: PropTypes.bool,
   additionalControls: PropTypes.array,
-  hideSortOptions: PropTypes.bool,
-  hideQuickDateRange: PropTypes.bool,
 };
 
 export default FilterableToolbar;
