@@ -13,6 +13,7 @@ import Breadcrumbs from '../../../Components/Breadcrumbs';
 
 import Report from './Report';
 import { getReport } from '../Shared/schemas';
+import { paths } from '../';
 
 const Description = styled.p`
   max-width: 70em;
@@ -23,7 +24,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
   const { id } = useParams<{ id: string }>();
   const { name, description, report } = getReport(+id);
 
-  const breadcrumbsItems = [{ title: 'Reports', navigate: '/reports' }];
+  const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
 
   return (
     <>

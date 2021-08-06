@@ -19,8 +19,7 @@ const components = {
     import('./Containers/JobExplorer/JobExplorer')
   ),
   savingsPlanner: asyncComponent(() => import('./Containers/SavingsPlanner/')),
-  reports: asyncComponent(() => import('./Containers/Reports/List')),
-  report: asyncComponent(() => import('./Containers/Reports/Details')),
+  reports: asyncComponent(() => import('./Containers/Reports/')),
 };
 
 const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {

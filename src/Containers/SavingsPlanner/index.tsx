@@ -15,7 +15,7 @@ export const paths = {
   getDetails: (id: number): string => `${Paths.savingsPlanner}/${id}`,
 };
 
-const SavingsPlanner: FunctionComponent<Record<string, never>> = () => {
+const SavingsPlannerRouter: FunctionComponent<Record<string, never>> = () => {
   return (
     <Switch>
       <Route exact path={paths.get}>
@@ -31,4 +31,4 @@ const SavingsPlanner: FunctionComponent<Record<string, never>> = () => {
   );
 };
 
-export default SavingsPlanner;
+export default SavingsPlannerRouter;
