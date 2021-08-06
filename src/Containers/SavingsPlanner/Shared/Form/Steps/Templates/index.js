@@ -108,10 +108,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     },
   };
 
-  useEffect(() => {
-    insights.chrome.appNavClick({ id: 'savings-planner', secondaryNav: true });
-  }, []);
-
   const initialSearchParams = parse(search, {
     arrayFormat: 'bracket',
     parseBooleans: true,
