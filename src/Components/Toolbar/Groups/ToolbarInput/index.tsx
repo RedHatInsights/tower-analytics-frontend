@@ -1,17 +1,30 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { FunctionComponent } from 'react';
 import Select from './Select';
 import DateInput from './Date';
 import Text from './Text';
 import { optionsForCategories } from '../../constants';
+import { AttributeType, SetValue } from './types';
+import { SelectOptionProps } from '@patternfly/react-core';
 
-const components = {
+interface ComponentMapper {
+  [x: string]: React.ComponentType<any>;
+}
+
+const components: ComponentMapper = {
   select: Select,
   date: DateInput,
   text: Text,
 };
 
-const ToolbarInput = ({
+interface Props {
+  categoryKey: string;
+  value?: AttributeType;
+  selectOptions?: SelectOptionProps[];
+  isVisible?: boolean;
+  setValue: SetValue;
+}
+
+const ToolbarInput: FunctionComponent<Props> = ({
   categoryKey,
   value,
   selectOptions,
@@ -42,20 +55,6 @@ const ToolbarInput = ({
       otherProps={otherProps}
     />
   );
-};
-
-ToolbarInput.propTypes = {
-  categoryKey: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-    PropTypes.arrayOf(
-      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    ),
-  ]),
-  selectOptions: PropTypes.array,
-  isVisible: PropTypes.bool,
-  setValue: PropTypes.func.isRequired,
 };
 
 export default ToolbarInput;
