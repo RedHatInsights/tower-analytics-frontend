@@ -1,16 +1,19 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { FunctionComponent, useState } from 'react';
 import {
   Tooltip,
   ToolbarFilter,
   Select as PFSelect,
   SelectOption,
   SelectVariant,
+  ToolbarChip,
+  SelectOptionObject,
 } from '@patternfly/react-core';
 
 import { handleCheckboxChips, handleSingleChips } from './helpers';
 import { optionsForCategories } from '../../constants';
 import styled from 'styled-components';
+
+import { AttributeType, SelectOptionProps, SetValue } from './types';
 
 const OptionSpan = styled('span')`
   display: block;
@@ -19,7 +22,15 @@ const OptionSpan = styled('span')`
   max-width: 300px;
 `;
 
-const renderValues = (values) =>
+interface Props {
+  categoryKey: string;
+  value: AttributeType;
+  selectOptions: SelectOptionProps[];
+  isVisible?: boolean;
+  setValue: SetValue;
+}
+
+const renderValues = (values: SelectOptionProps[]) =>
   values &&
   values.map(({ key, value, description }) => (
     <SelectOption key={key} value={key} description={description}>
@@ -29,7 +40,7 @@ const renderValues = (values) =>
     </SelectOption>
   ));
 
-const Select = ({
+const Select: FunctionComponent<Props> = ({
   categoryKey,
   value,
   selectOptions,
@@ -39,50 +50,43 @@ const Select = ({
   const [expanded, setExpanded] = useState(false);
   const options = optionsForCategories[categoryKey];
 
-  const onDelete = (_, valueToDelete) => {
-    const single = optionsForCategories[categoryKey].isSingle;
-
-    if (single) {
-      setValue(null);
-    } else {
+  const onDelete = (chip: string) => {
+    if (Array.isArray(value)) {
       const keyToDelete = selectOptions.find(
-        ({ value }) => value === valueToDelete
-      ).key;
+        ({ value }) => value === chip
+      )?.key;
+
       const filteredArr = value.filter((value) => value !== keyToDelete);
       setValue(filteredArr);
+    } else {
+      setValue(null);
     }
   };
 
-  const onFilter = (_, textInput) => {
-    if (textInput === '') {
-      return renderValues(selectOptions);
-    } else {
-      return renderValues(
-        selectOptions.filter(({ value }) =>
-          value.toLowerCase().includes(textInput.toLowerCase())
-        )
-      );
-    }
+  const onFilter = (_: unknown, textInput: string) => {
+    if (textInput === '') return renderValues(selectOptions);
+    return renderValues(
+      selectOptions.filter(({ value }) =>
+        value.toString().toLowerCase().includes(textInput.toLowerCase())
+      )
+    );
   };
 
-  const handleChips = () => {
-    if (options.isSingle) {
-      return handleSingleChips(value, selectOptions);
-    } else {
-      return handleCheckboxChips(value, selectOptions);
-    }
+  const handleChips = (): string[] => {
+    if (Array.isArray(value)) return handleCheckboxChips(value, selectOptions);
+    return handleSingleChips(value, selectOptions);
   };
 
-  const onSelect = (_, selection) => {
-    if (options.isSingle) {
-      setValue(selection);
-      setExpanded(false);
-    } else {
+  const onSelect = (selection: string) => {
+    if (Array.isArray(value)) {
       setValue(
         !value.includes(selection)
           ? [...value, selection]
           : value.filter((value) => value !== selection)
       );
+    } else {
+      setValue(selection);
+      setExpanded(false);
     }
   };
 
@@ -93,15 +97,21 @@ const Select = ({
       showToolbarItem={isVisible}
       chips={options.hasChips ? handleChips() : []}
       categoryName={options.name}
-      deleteChip={options.hasChips ? onDelete : null}
+      deleteChip={
+        options.hasChips
+          ? (_: unknown, chip: ToolbarChip | string) => onDelete(chip as string)
+          : undefined
+      }
     >
       <PFSelect
         variant={
-          options.isSingle ? SelectVariant.single : SelectVariant.checkbox
+          Array.isArray(value) ? SelectVariant.checkbox : SelectVariant.single
         }
         aria-label={options.name}
         onToggle={() => setExpanded(!expanded)}
-        onSelect={onSelect}
+        onSelect={(_: unknown, value: SelectOptionObject | string) =>
+          onSelect(value as string)
+        }
         selections={value}
         isOpen={expanded}
         hasInlineFilter
@@ -113,20 +123,6 @@ const Select = ({
       </PFSelect>
     </ToolbarFilter>
   );
-};
-
-Select.propTypes = {
-  categoryKey: PropTypes.string.isRequired,
-  value: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-    PropTypes.arrayOf(
-      PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-    ),
-  ]).isRequired,
-  selectOptions: PropTypes.array,
-  isVisible: PropTypes.bool,
-  setValue: PropTypes.func.isRequired,
 };
 
 export default Select;
