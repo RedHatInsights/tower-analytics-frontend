@@ -15,7 +15,6 @@ const defaultProps = {
 
 describe('SavingsPlanner/Shared/Form/Templates', () => {
   beforeEach(() => {
-    api.preflightRequest.mockResolvedValue(mockResponses.preflightRequest200);
     api.readJobExplorer.mockResolvedValue(
       mockResponses.readTemplateJobExplorer
     );
@@ -23,35 +22,6 @@ describe('SavingsPlanner/Shared/Form/Templates', () => {
   });
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  test('has rendered preflight/authorization error component', async () => {
-    api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest401);
-    renderPage(Templates, undefined, defaultProps);
-
-    await waitFor(() => expect(api.preflightRequest).toHaveBeenCalledTimes(1));
-
-    expect(screen.getByText('Not authorized')).toBeTruthy();
-  });
-
-  test('has rendered Empty page component', async () => {
-    api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest404);
-    renderPage(Templates, undefined, defaultProps);
-
-    await waitFor(() => expect(api.preflightRequest).toHaveBeenCalledTimes(1));
-
-    expect(
-      screen.getByText('Something went wrong, please try reloading the page')
-    ).toBeTruthy();
-  });
-
-  test('has rendered RBAC Access error component', async () => {
-    api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest403);
-    renderPage(Templates, undefined, defaultProps);
-
-    await waitFor(() => expect(api.preflightRequest).toHaveBeenCalledTimes(1));
-
-    expect(screen.getByText('RBAC Access Denied')).toBeTruthy();
   });
 
   test('has rendered NoResults page component', async () => {
