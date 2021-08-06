@@ -27,10 +27,8 @@ const ToolbarInput = ({
       return value;
     } else if (options.type !== 'select') {
       return '';
-    } else if (options.isSingle) {
-      return '';
     } else {
-      return [];
+      return undefined;
     }
   };
 
