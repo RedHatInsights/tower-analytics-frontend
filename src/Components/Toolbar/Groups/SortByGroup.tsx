@@ -1,23 +1,45 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { ToolbarGroup, Button } from '@patternfly/react-core';
+import React, { FunctionComponent } from 'react';
+import {
+  ToolbarGroup,
+  Button,
+  SelectOptionProps,
+  ButtonVariant,
+} from '@patternfly/react-core';
 import { SortAmountDownIcon, SortAmountUpIcon } from '@patternfly/react-icons';
 
 import ToolbarInput from './ToolbarInput';
+import { SetValues } from './types';
+import { AttributeType } from './ToolbarInput/types';
 
-const SortByGroup = ({ filters, handleSearch, setFilters, sort_options }) => (
+interface Props {
+  filters: {
+    sort_options: string;
+    sort_order: 'asc' | 'desc';
+    [x: string]: AttributeType;
+  };
+  handleSearch: SetValues;
+  setFilters: SetValues;
+  sort_options: SelectOptionProps[];
+}
+
+const SortByGroup: FunctionComponent<Props> = ({
+  filters,
+  handleSearch,
+  setFilters,
+  sort_options,
+}) => (
   <ToolbarGroup variant="filter-group">
     <ToolbarInput
       categoryKey="sort_options"
       value={filters.sort_options}
       selectOptions={sort_options}
       setValue={(value) => {
-        setFilters('sort_options', value);
-        handleSearch('sort_options', value);
+        setFilters('sort_options', value as string);
+        handleSearch('sort_options', value as string);
       }}
     />
     <Button
-      variant="control"
+      variant={ButtonVariant.control}
       onClick={() => {
         setFilters('sort_order', filters.sort_order === 'asc' ? 'desc' : 'asc');
         handleSearch(
@@ -31,12 +53,5 @@ const SortByGroup = ({ filters, handleSearch, setFilters, sort_options }) => (
     </Button>
   </ToolbarGroup>
 );
-
-SortByGroup.propTypes = {
-  filters: PropTypes.object.isRequired,
-  handleSearch: PropTypes.func.isRequired,
-  setFilters: PropTypes.func.isRequired,
-  sort_options: PropTypes.array.isRequired,
-};
 
 export default SortByGroup;
