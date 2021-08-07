@@ -10,7 +10,7 @@ import {
 import { SearchIcon } from '@patternfly/react-icons';
 import { optionsForCategories } from '../../constants';
 
-import { SetValue } from './types';
+import { SetValue } from '../../types';
 
 interface Props {
   categoryKey: string;

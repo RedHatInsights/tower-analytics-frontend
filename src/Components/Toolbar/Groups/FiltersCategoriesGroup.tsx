@@ -4,8 +4,7 @@ import { SelectOptionProps, ToolbarGroup } from '@patternfly/react-core';
 import CategoryDropdown from './CategoryDropdown';
 import ToolbarInput from './ToolbarInput';
 import { optionsForCategories } from '../constants';
-import { AttributeType } from './ToolbarInput/types';
-import { SetValues } from './types';
+import { SetValues, AttributeType } from '../types';
 
 interface Props {
   filterCategories: Record<string, SelectOptionProps[]>;

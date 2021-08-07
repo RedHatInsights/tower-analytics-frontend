@@ -13,7 +13,7 @@ import { handleCheckboxChips, handleSingleChips } from './helpers';
 import { optionsForCategories } from '../../constants';
 import styled from 'styled-components';
 
-import { AttributeType, SelectOptionProps, SetValue } from './types';
+import { AttributeType, SelectOptionProps, SetValue } from '../../types';
 
 const OptionSpan = styled('span')`
   display: block;

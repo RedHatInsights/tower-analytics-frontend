@@ -8,8 +8,7 @@ import {
 import { SortAmountDownIcon, SortAmountUpIcon } from '@patternfly/react-icons';
 
 import ToolbarInput from './ToolbarInput';
-import { SetValues } from './types';
-import { AttributeType } from './ToolbarInput/types';
+import { SetValues, AttributeType } from '../types';
 
 interface Props {
   filters: {

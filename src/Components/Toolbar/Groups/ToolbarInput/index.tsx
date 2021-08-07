@@ -3,9 +3,11 @@ import Select from './Select';
 import DateInput from './Date';
 import Text from './Text';
 import { optionsForCategories } from '../../constants';
-import { AttributeType, SetValue } from './types';
+import { AttributeType, SetValue } from '../../types';
 import { SelectOptionProps } from '@patternfly/react-core';
 
+// Todo: unify the interfaces better so we don't have to use any
+// and avoid accidentall wronglt passed props
 interface ComponentMapper {
   [x: string]: React.ComponentType<any>;
 }

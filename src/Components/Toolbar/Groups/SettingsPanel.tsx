@@ -8,8 +8,7 @@ import {
   CardHeader,
 } from '@patternfly/react-core';
 import { QuestionCircleIcon, TimesIcon } from '@patternfly/react-icons';
-import { AttributeType } from './ToolbarInput/types';
-import { SetValues } from './types';
+import { SetValues, AttributeType } from '../types';
 
 interface Props {
   filters: {
