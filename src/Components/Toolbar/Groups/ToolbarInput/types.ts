@@ -1,4 +1,4 @@
-export type AttributeType = string | string[];
+export type AttributeType = string | string[] | number | number[] | boolean;
 
 export interface SelectOptionProps {
   value: string;

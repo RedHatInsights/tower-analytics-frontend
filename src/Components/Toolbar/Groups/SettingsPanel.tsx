@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { FunctionComponent } from 'react';
 import { Button, Tooltip, Switch } from '@patternfly/react-core';
 import {
   Card,
@@ -9,9 +8,22 @@ import {
   CardHeader,
 } from '@patternfly/react-core';
 import { QuestionCircleIcon, TimesIcon } from '@patternfly/react-icons';
+import { AttributeType } from './ToolbarInput/types';
+import { SetValues } from './types';
+
+interface Props {
+  filters: {
+    only_root_workflows_and_standalone_jobs: boolean;
+    [x: string]: AttributeType | boolean;
+  };
+  handleSearch: SetValues;
+  setFilters: SetValues;
+  settingsExpanded: boolean;
+  setSettingsExpanded: (expanded: boolean) => void;
+}
 
 /* TODO: For future work: make settings more modular for different pages */
-const SettingsPanel = ({
+const SettingsPanel: FunctionComponent<Props> = ({
   filters,
   handleSearch,
   setFilters,
@@ -36,9 +48,9 @@ const SettingsPanel = ({
         label="Ignore nested workflows and jobs"
         labelOff="Ignore nested workflows and jobs"
         isChecked={filters.only_root_workflows_and_standalone_jobs}
-        onChange={(val) => {
-          setFilters('only_root_workflows_and_standalone_jobs', val);
-          handleSearch('only_root_workflows_and_standalone_jobs', val);
+        onChange={(value) => {
+          setFilters('only_root_workflows_and_standalone_jobs', value);
+          handleSearch('only_root_workflows_and_standalone_jobs', value);
         }}
       />
       <Tooltip
@@ -56,13 +68,5 @@ const SettingsPanel = ({
     </CardBody>
   </Card>
 );
-
-SettingsPanel.propTypes = {
-  filters: PropTypes.object.isRequired,
-  handleSearch: PropTypes.func.isRequired,
-  setFilters: PropTypes.func.isRequired,
-  settingsExpanded: PropTypes.bool.isRequired,
-  setSettingsExpanded: PropTypes.func.isRequired,
-};
 
 export default SettingsPanel;
