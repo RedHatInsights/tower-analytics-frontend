@@ -56,7 +56,8 @@ const Select: FunctionComponent<Props> = ({
         ({ value }) => value === chip
       )?.key;
 
-      const filteredArr = value.filter((value) => value !== keyToDelete);
+      const stringValues: string[] = value.map((i) => i.toString());
+      const filteredArr = stringValues.filter((item) => item !== keyToDelete);
       setValue(filteredArr);
     } else {
       setValue(null);
@@ -73,16 +74,21 @@ const Select: FunctionComponent<Props> = ({
   };
 
   const handleChips = (): string[] => {
-    if (Array.isArray(value)) return handleCheckboxChips(value, selectOptions);
-    return handleSingleChips(value, selectOptions);
+    if (Array.isArray(value))
+      return handleCheckboxChips(
+        value.map((i) => i.toString()),
+        selectOptions
+      );
+    return handleSingleChips(value.toString(), selectOptions);
   };
 
   const onSelect = (selection: string) => {
     if (Array.isArray(value)) {
+      const stringValues: string[] = value.map((i) => i.toString());
       setValue(
-        !value.includes(selection)
-          ? [...value, selection]
-          : value.filter((value) => value !== selection)
+        !stringValues.includes(selection)
+          ? [...stringValues, selection]
+          : stringValues.filter((item) => item !== selection)
       );
     } else {
       setValue(selection);

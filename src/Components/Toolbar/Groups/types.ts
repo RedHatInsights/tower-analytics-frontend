@@ -1,1 +1,3 @@
-export type SetValues = (type: string, value: string | string[]) => void;
+import { AttributeType } from './ToolbarInput/types';
+
+export type SetValues = (type: string, value: AttributeType | null) => void;
