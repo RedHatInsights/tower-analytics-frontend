@@ -22,6 +22,7 @@ interface Props {
   selectOptions?: SelectOptionProps[];
   isVisible?: boolean;
   setValue: SetValue;
+  [x: string]: any;
 }
 
 const ToolbarInput: FunctionComponent<Props> = ({
