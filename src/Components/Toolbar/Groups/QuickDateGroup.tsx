@@ -1,24 +1,46 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import PropTypes from 'prop-types';
-import { SplitItem, ToolbarGroup, Split } from '@patternfly/react-core';
+import {
+  SplitItem,
+  ToolbarGroup,
+  Split,
+  SelectOptionProps,
+} from '@patternfly/react-core';
 
-import ToolbarInput from './ToolbarInput/';
+import ToolbarInput from './ToolbarInput';
 
 import { today } from '../../../Utilities/helpers';
+import { AttributeType } from './ToolbarInput/types';
+import { SetValues } from './types';
 
-const getDateByDays = (days, format = true) => {
-  const date = today(days);
-  return format ? date.toISOString().split(/T/)[0] : date;
-};
+const getDateByDays = (days: number): string =>
+  today(days).toISOString().split(/T/)[0];
 
-const strToDate = (date) => {
+const strToDate = (date: string): Date => {
   const nums = date.split('-');
-  return new Date(nums[0], nums[1] - 1, nums[2]);
+  return new Date(+nums[0], +nums[1] - 1, +nums[2]);
 };
 
-const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => {
-  const endDate = filters.end_date || getDateByDays(0, true);
-  const startDate = filters.start_date || getDateByDays(-30, true);
+interface Props {
+  filters: {
+    quick_date_range: string;
+    start_date: string;
+    end_date: string;
+    [x: string]: AttributeType;
+  };
+  handleSearch: SetValues;
+  setFilters: SetValues;
+  values: SelectOptionProps[];
+}
+
+const QuickDateGroup: FunctionComponent<Props> = ({
+  filters,
+  handleSearch,
+  setFilters,
+  values,
+}) => {
+  const endDate = filters.end_date || getDateByDays(0);
+  const startDate = filters.start_date || getDateByDays(-30);
 
   return (
     <ToolbarGroup variant="filter-group">
@@ -28,7 +50,7 @@ const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => {
         selectOptions={values}
         setValue={(value) => setFilters('quick_date_range', value)}
       />
-      {filters.quick_date_range && filters.quick_date_range.includes('custom') && (
+      {filters.quick_date_range === 'custom' && (
         <Split hasGutter>
           <SplitItem>
             <ToolbarInput
@@ -39,10 +61,8 @@ const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => {
                 handleSearch('start_date', e);
               }}
               validators={[
-                (date) =>
-                  typeof endDate === 'string' && date > strToDate(endDate)
-                    ? 'Must not be after end date'
-                    : '',
+                (date: Date) =>
+                  date > strToDate(endDate) ? 'Must not be after end date' : '',
               ]}
             />
           </SplitItem>
@@ -56,18 +76,10 @@ const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => {
                 handleSearch('end_date', e);
               }}
               validators={[
-                (date) => {
-                  if (
-                    typeof startDate === 'string' &&
-                    date < strToDate(startDate)
-                  ) {
+                (date: Date) => {
+                  if (date < strToDate(startDate))
                     return 'Must not be before start date';
-                  }
-
-                  if (date > today()) {
-                    return 'Must not be after today';
-                  }
-
+                  if (date > today()) return 'Must not be after today';
                   return '';
                 },
               ]}
@@ -77,13 +89,6 @@ const QuickDateGroup = ({ filters, handleSearch, setFilters, values }) => {
       )}
     </ToolbarGroup>
   );
-};
-
-QuickDateGroup.propTypes = {
-  filters: PropTypes.object.isRequired,
-  handleSearch: PropTypes.func.isRequired,
-  setFilters: PropTypes.func.isRequired,
-  values: PropTypes.array.isRequired,
 };
 
 export default QuickDateGroup;
