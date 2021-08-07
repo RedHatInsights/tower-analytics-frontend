@@ -33,23 +33,21 @@ import FormulaDescription from './FormulaDescription';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
 import hoursFormatter from '../../../../Utilities/hoursFormatter';
 
-type DataYearsSeries = Record<string, number>;
-
 // This should model the return type somewhere next to the Api.js where the call is made.
 // This is just a basic mockup of the exact data for TS to work.
 interface Data {
   name: string;
   projections: {
-    time_stats: {
-      cumulative_time_net_benefits: DataYearsSeries;
-      total_hours_saved: DataYearsSeries;
-      total_hours_spent_risk_adjusted: DataYearsSeries;
-    };
-    monetary_stats: {
-      cumulative_net_benefits: DataYearsSeries;
-      total_benefits: DataYearsSeries;
-      total_costs: DataYearsSeries;
-    };
+    series_stats: {
+      year: string;
+      cumulative_time_net_benefits: number;
+      total_hours_saved: number;
+      total_hours_spent_risk_adjusted: number;
+
+      cumulative_net_benefits: number;
+      total_benefits: number;
+      total_costs: number;
+    }[];
   };
 }
 
@@ -62,29 +60,18 @@ interface Props {
   plan: Data;
 }
 
-const yearLabels: Record<string, string> = {
-  initial: 'Initial',
-  year1: 'Year 1',
-  year2: 'Year 2',
-  year3: 'Year 3',
+const yearLabels: Record<string, number> = {
+  initial: 0,
+  year1: 1,
+  year2: 2,
+  year3: 3,
 };
 
-const getChartData = (data: Data): NonGroupedApi => {
-  const statsData = Object.keys(yearLabels).map((year) => ({
-    year: yearLabels[year],
-    total_costs: +data.projections.monetary_stats.total_costs[year] * -1,
-    total_benefits: +data.projections.monetary_stats.total_benefits[year],
-    cumulative_net_benefits:
-      +data.projections.monetary_stats.cumulative_net_benefits[year],
-    total_hours_spent_risk_adjusted:
-      +data.projections.time_stats.total_hours_spent_risk_adjusted[year] * -1,
-    total_hours_saved: +data.projections.time_stats.total_hours_saved[year],
-    cumulative_time_net_benefits:
-      +data.projections.time_stats.cumulative_time_net_benefits[year],
-  }));
-
-  return { items: statsData, type: ApiType.nonGrouped, response_type: '' };
-};
+const getChartData = (data: Data): NonGroupedApi => ({
+  items: data.projections.series_stats,
+  type: ApiType.nonGrouped,
+  response_type: '',
+});
 
 const constants = (isMoney: boolean) => ({
   cost: {
@@ -109,8 +96,9 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
 
   const computeTotalSavings = (d: Data): number =>
     isMoney
-      ? d.projections.monetary_stats.cumulative_net_benefits.year3
-      : d.projections.time_stats.cumulative_time_net_benefits.year3;
+      ? d.projections.series_stats[yearLabels.year3].cumulative_net_benefits
+      : d.projections.series_stats[yearLabels.year3]
+          .cumulative_time_net_benefits;
 
   const barChartData: ChartSchema = {
     charts: [
