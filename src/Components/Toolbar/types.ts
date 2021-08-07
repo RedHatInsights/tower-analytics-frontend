@@ -7,3 +7,4 @@ export interface SelectOptionProps {
 }
 
 export type SetValue = (value: AttributeType | null) => void;
+export type SetValues = (type: string, value: AttributeType | null) => void;

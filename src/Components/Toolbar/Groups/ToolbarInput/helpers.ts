@@ -1,4 +1,4 @@
-import { SelectOptionProps } from './types';
+import { SelectOptionProps } from '../../types';
 
 /**
  * Get comparator values if their key is in the item list

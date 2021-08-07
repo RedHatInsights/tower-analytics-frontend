@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react';
-import PropTypes from 'prop-types';
 import {
   SplitItem,
   ToolbarGroup,
@@ -10,8 +9,7 @@ import {
 import ToolbarInput from './ToolbarInput';
 
 import { today } from '../../../Utilities/helpers';
-import { AttributeType } from './ToolbarInput/types';
-import { SetValues } from './types';
+import { SetValues, AttributeType } from '../types';
 
 const getDateByDays = (days: number): string =>
   today(days).toISOString().split(/T/)[0];
