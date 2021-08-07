@@ -18,11 +18,7 @@ import {
   ToggleOffIcon,
 } from '@patternfly/react-icons';
 
-import {
-  convertSecondsToMins,
-  convertMinsToSeconds,
-  capitalize,
-} from '../../Utilities/helpers';
+import { capitalize } from '../../Utilities/helpers';
 
 import currencyFormatter from '../../Utilities/currencyFormatter';
 
@@ -139,10 +135,8 @@ const TopTemplates = ({
                   id={d.id}
                   type="number"
                   aria-label="time run manually"
-                  value={convertSecondsToMins(d.avgRunTime)}
-                  onChange={(minutes) =>
-                    setDataRunTime(convertMinsToSeconds(minutes), d.id)
-                  }
+                  value={d.avgRunTime / 60}
+                  onChange={(minutes) => setDataRunTime(minutes * 60, d.id)}
                 />
                 <InputGroupText>min</InputGroupText>
               </InputGroup>
