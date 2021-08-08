@@ -11,10 +11,7 @@ import { QuestionCircleIcon, TimesIcon } from '@patternfly/react-icons';
 import { SetValues, AttributeType } from '../types';
 
 interface Props {
-  filters: {
-    only_root_workflows_and_standalone_jobs: boolean;
-    [x: string]: AttributeType | boolean;
-  };
+  filters: Record<string, AttributeType>;
   setFilters: SetValues;
   settingsExpanded: boolean;
   setSettingsExpanded: (expanded: boolean) => void;
@@ -44,7 +41,7 @@ const SettingsPanel: FunctionComponent<Props> = ({
         id="showRootWorkflowJobs"
         label="Ignore nested workflows and jobs"
         labelOff="Ignore nested workflows and jobs"
-        isChecked={filters.only_root_workflows_and_standalone_jobs}
+        isChecked={!!filters.only_root_workflows_and_standalone_jobs}
         onChange={(value) =>
           setFilters('only_root_workflows_and_standalone_jobs', value)
         }

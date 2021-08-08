@@ -276,7 +276,7 @@ export const handleSearch = (key, value, qsConfig, history) => {
     pushHistoryState(removeParams(qsConfig, oldParams, oldParamsClone));
   };
 
-  if (key === null && value === null) {
+  if (!key && !value) {
     handleRemoveAll();
   } else {
     let params = parseQueryString(qsConfig, history.location.search);

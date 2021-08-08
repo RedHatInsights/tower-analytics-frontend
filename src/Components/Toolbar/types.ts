@@ -1,4 +1,11 @@
-export type AttributeType = string | string[] | number | number[] | boolean;
+import { SelectOptionObject } from '@patternfly/react-core';
+
+export type AttributeType =
+  | string
+  | string[]
+  | SelectOptionObject
+  | SelectOptionObject[]
+  | boolean;
 
 export interface SelectOptionProps {
   value: string;
@@ -6,5 +13,12 @@ export interface SelectOptionProps {
   key: string;
 }
 
-export type SetValue = (value: AttributeType | null) => void;
-export type SetValues = (type: string, value: AttributeType | null) => void;
+export type SetValue = (value: AttributeType | undefined) => void;
+export type SetValues = (
+  type: string | undefined,
+  value: AttributeType | undefined
+) => void;
+export type ApiOptionsType = Record<
+  string,
+  { key: string; value: AttributeType }[]
+>;

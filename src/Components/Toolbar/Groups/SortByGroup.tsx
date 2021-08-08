@@ -11,11 +11,7 @@ import ToolbarInput from './ToolbarInput';
 import { SetValues, AttributeType } from '../types';
 
 interface Props {
-  filters: {
-    sort_options: string;
-    sort_order: 'asc' | 'desc';
-    [x: string]: AttributeType;
-  };
+  filters: Record<string, AttributeType>;
   setFilters: SetValues;
   sort_options: SelectOptionProps[];
 }
