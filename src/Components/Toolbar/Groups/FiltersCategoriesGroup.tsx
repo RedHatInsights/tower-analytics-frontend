@@ -9,14 +9,12 @@ import { SetValues, AttributeType } from '../types';
 interface Props {
   filterCategories: Record<string, SelectOptionProps[]>;
   filters: Record<string, AttributeType>;
-  handleSearch: SetValues;
   setFilters: SetValues;
 }
 
 const FilterCategoriesGroup: FunctionComponent<Props> = ({
   filterCategories,
   filters,
-  handleSearch,
   setFilters,
 }) => {
   const [currentCategory, setCurrentCategory] = useState(
@@ -40,10 +38,7 @@ const FilterCategoriesGroup: FunctionComponent<Props> = ({
           value={filters[key]}
           selectOptions={filterCategories[key]}
           isVisible={currentCategory === key}
-          setValue={(value) => {
-            setFilters(key, value);
-            handleSearch(key, value);
-          }}
+          setValue={(value) => setFilters(key, value)}
         />
       ))}
     </ToolbarGroup>

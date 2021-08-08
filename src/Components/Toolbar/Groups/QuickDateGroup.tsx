@@ -26,14 +26,12 @@ interface Props {
     end_date: string;
     [x: string]: AttributeType;
   };
-  handleSearch: SetValues;
   setFilters: SetValues;
   values: SelectOptionProps[];
 }
 
 const QuickDateGroup: FunctionComponent<Props> = ({
   filters,
-  handleSearch,
   setFilters,
   values,
 }) => {
@@ -54,10 +52,7 @@ const QuickDateGroup: FunctionComponent<Props> = ({
             <ToolbarInput
               categoryKey="start_date"
               value={startDate}
-              setValue={(e) => {
-                setFilters('start_date', e);
-                handleSearch('start_date', e);
-              }}
+              setValue={(e) => setFilters('start_date', e)}
               validators={[
                 (date: Date) =>
                   date > strToDate(endDate) ? 'Must not be after end date' : '',
@@ -69,10 +64,7 @@ const QuickDateGroup: FunctionComponent<Props> = ({
             <ToolbarInput
               categoryKey="end_date"
               value={endDate}
-              setValue={(e) => {
-                setFilters('end_date', e);
-                handleSearch('end_date', e);
-              }}
+              setValue={(e) => setFilters('end_date', e)}
               validators={[
                 (date: Date) => {
                   if (date < strToDate(startDate))

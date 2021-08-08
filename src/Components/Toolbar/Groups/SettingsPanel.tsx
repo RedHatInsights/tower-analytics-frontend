@@ -15,7 +15,6 @@ interface Props {
     only_root_workflows_and_standalone_jobs: boolean;
     [x: string]: AttributeType | boolean;
   };
-  handleSearch: SetValues;
   setFilters: SetValues;
   settingsExpanded: boolean;
   setSettingsExpanded: (expanded: boolean) => void;
@@ -24,7 +23,6 @@ interface Props {
 /* TODO: For future work: make settings more modular for different pages */
 const SettingsPanel: FunctionComponent<Props> = ({
   filters,
-  handleSearch,
   setFilters,
   settingsExpanded,
   setSettingsExpanded,
@@ -47,10 +45,9 @@ const SettingsPanel: FunctionComponent<Props> = ({
         label="Ignore nested workflows and jobs"
         labelOff="Ignore nested workflows and jobs"
         isChecked={filters.only_root_workflows_and_standalone_jobs}
-        onChange={(value) => {
-          setFilters('only_root_workflows_and_standalone_jobs', value);
-          handleSearch('only_root_workflows_and_standalone_jobs', value);
-        }}
+        onChange={(value) =>
+          setFilters('only_root_workflows_and_standalone_jobs', value)
+        }
       />
       <Tooltip
         position={'top'}
