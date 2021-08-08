@@ -1,3 +1,5 @@
+// TODO: The component converts all types to string.
+// It should be able to use the correct type in the future for example number and number[].
 import React, { FunctionComponent, useState } from 'react';
 import {
   Tooltip,
@@ -43,12 +45,19 @@ const renderValues = (values: SelectOptionProps[]) =>
 const Select: FunctionComponent<Props> = ({
   categoryKey,
   value,
-  selectOptions,
+  selectOptions: nonTypedSelectOptions,
   isVisible = true,
   setValue,
 }) => {
   const [expanded, setExpanded] = useState(false);
   const options = optionsForCategories[categoryKey];
+  const selectOptions = nonTypedSelectOptions.map(
+    ({ key, value, description }) => ({
+      key: key?.toString(),
+      value: value?.toString(),
+      description: description?.toString(),
+    })
+  );
 
   const onDelete = (chip: string) => {
     if (Array.isArray(value)) {
@@ -60,7 +69,7 @@ const Select: FunctionComponent<Props> = ({
       const filteredArr = stringValues.filter((item) => item !== keyToDelete);
       setValue(filteredArr);
     } else {
-      setValue(null);
+      setValue(undefined);
     }
   };
 
@@ -82,13 +91,13 @@ const Select: FunctionComponent<Props> = ({
     return handleSingleChips(value.toString(), selectOptions);
   };
 
-  const onSelect = (selection: string) => {
+  const onSelect = (_: unknown, selection: SelectOptionObject | string) => {
     if (Array.isArray(value)) {
       const stringValues: string[] = value.map((i) => i.toString());
       setValue(
-        !stringValues.includes(selection)
+        !stringValues.includes(selection.toString())
           ? [...stringValues, selection]
-          : stringValues.filter((item) => item !== selection)
+          : stringValues.filter((item) => item !== selection.toString())
       );
     } else {
       setValue(selection);
@@ -115,9 +124,7 @@ const Select: FunctionComponent<Props> = ({
         }
         aria-label={options.name}
         onToggle={() => setExpanded(!expanded)}
-        onSelect={(_: unknown, value: SelectOptionObject | string) =>
-          onSelect(value as string)
-        }
+        onSelect={onSelect}
         selections={value}
         isOpen={expanded}
         hasInlineFilter
