@@ -253,3 +253,37 @@ export function replaceParams(oldParams, newParams) {
     ...newParams,
   };
 }
+
+// From the toolbar
+export const handleSearch = (key, value, qsConfig, history) => {
+  const pushHistoryState = (params) => {
+    const { pathname } = history.location;
+    const nonNamespacedParams = parseQueryString({}, history.location.search);
+    const encodedParams = encodeNonDefaultQueryString(
+      qsConfig,
+      params,
+      nonNamespacedParams
+    );
+    history.push(encodedParams ? `${pathname}?${encodedParams}` : pathname);
+  };
+
+  const handleRemoveAll = () => {
+    // remove everything in oldParams except for page_size and order_by
+    const oldParams = parseQueryString(qsConfig, history.location.search);
+    const oldParamsClone = { ...oldParams };
+    delete oldParamsClone.limit;
+    delete oldParamsClone.sort_by;
+    pushHistoryState(removeParams(qsConfig, oldParams, oldParamsClone));
+  };
+
+  if (key === null && value === null) {
+    handleRemoveAll();
+  } else {
+    let params = parseQueryString(qsConfig, history.location.search);
+    params = replaceParams(params, { [key]: value });
+    params = mergeParams(params, { [key]: value });
+    if (value === '' || value.length === 0)
+      params = removeParams(qsConfig, params, { [key]: params[key] });
+    pushHistoryState(params);
+  }
+};

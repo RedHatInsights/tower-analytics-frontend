@@ -16,14 +16,12 @@ interface Props {
     sort_order: 'asc' | 'desc';
     [x: string]: AttributeType;
   };
-  handleSearch: SetValues;
   setFilters: SetValues;
   sort_options: SelectOptionProps[];
 }
 
 const SortByGroup: FunctionComponent<Props> = ({
   filters,
-  handleSearch,
   setFilters,
   sort_options,
 }) => (
@@ -32,20 +30,13 @@ const SortByGroup: FunctionComponent<Props> = ({
       categoryKey="sort_options"
       value={filters.sort_options}
       selectOptions={sort_options}
-      setValue={(value) => {
-        setFilters('sort_options', value as string);
-        handleSearch('sort_options', value as string);
-      }}
+      setValue={(value) => setFilters('sort_options', value as string)}
     />
     <Button
       variant={ButtonVariant.control}
-      onClick={() => {
-        setFilters('sort_order', filters.sort_order === 'asc' ? 'desc' : 'asc');
-        handleSearch(
-          'sort_order',
-          filters.sort_order === 'asc' ? 'desc' : 'asc'
-        );
-      }}
+      onClick={() =>
+        setFilters('sort_order', filters.sort_order === 'asc' ? 'desc' : 'asc')
+      }
     >
       {filters.sort_order === 'asc' && <SortAmountUpIcon />}
       {filters.sort_order === 'desc' && <SortAmountDownIcon />}
