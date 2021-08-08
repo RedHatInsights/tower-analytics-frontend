@@ -20,12 +20,7 @@ const strToDate = (date: string): Date => {
 };
 
 interface Props {
-  filters: {
-    quick_date_range: string;
-    start_date: string;
-    end_date: string;
-    [x: string]: AttributeType;
-  };
+  filters: Record<string, AttributeType>;
   setFilters: SetValues;
   values: SelectOptionProps[];
 }
@@ -35,8 +30,8 @@ const QuickDateGroup: FunctionComponent<Props> = ({
   setFilters,
   values,
 }) => {
-  const endDate = filters.end_date || getDateByDays(0);
-  const startDate = filters.start_date || getDateByDays(-30);
+  const endDate = (filters.end_date as string) || getDateByDays(0);
+  const startDate = (filters.start_date as string) || getDateByDays(-30);
 
   return (
     <ToolbarGroup variant="filter-group">

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { FunctionComponent, useState } from 'react';
 import {
   Toolbar,
   ToolbarContent,
@@ -17,11 +16,26 @@ import {
   QuickDateGroup,
   SortByGroup,
   SettingsPanel,
-} from './Groups/';
+} from './Groups';
 import { useHistory } from 'react-router-dom';
 import { handleSearch } from '../../Utilities/qs';
+import { ApiOptionsType, AttributeType, SetValues } from './types';
 
-const FilterableToolbar = ({
+interface Props {
+  categories: ApiOptionsType;
+  // Todo: update to use the QueryParams type after known
+  filters: Record<string, AttributeType>;
+  qsConfig: {
+    namespace: string;
+    [x: string]: any;
+  }; // TODO: Update the type when figured out what is going on in qs.
+  setFilters: SetValues;
+  pagination: FunctionComponent;
+  hasSettings: boolean;
+  additionalControls: FunctionComponent[];
+}
+
+const FilterableToolbar: FunctionComponent<Props> = ({
   categories,
   filters,
   qsConfig,
@@ -37,21 +51,25 @@ const FilterableToolbar = ({
   // Filter out elements which are not in the option object.
   const filterCategories = Object.keys(restCategories)
     .filter((key) => Object.keys(optionsForCategories).includes(key))
-    .reduce((obj, key) => {
+    .reduce((obj: ApiOptionsType, key) => {
       obj[key] = restCategories[key];
       return obj;
     }, {});
 
-  const setFilters = (key, value) => {
+  const setFilters = (
+    key: string | undefined,
+    value: AttributeType | undefined
+  ) => {
     setQueryParams(key, value);
-    // Todo: this is temporary solution.
+    // Todo: this is temporary solution This call probably will not be here.
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     handleSearch(key, value, qsConfig, history);
   };
 
   return (
     <Toolbar
       id={`${qsConfig.namespace}-filterable-toolbar-with-chip-groups`}
-      clearAllFilters={() => setFilters(null, null)}
+      clearAllFilters={() => setFilters(undefined, undefined)}
       collapseListedFiltersBreakpoint="xl"
     >
       <ToolbarContent>
@@ -117,16 +135,6 @@ const FilterableToolbar = ({
       )}
     </Toolbar>
   );
-};
-
-FilterableToolbar.propTypes = {
-  categories: PropTypes.object.isRequired,
-  qsConfig: PropTypes.object.isRequired,
-  filters: PropTypes.object.isRequired,
-  setFilters: PropTypes.func.isRequired,
-  pagination: PropTypes.object,
-  hasSettings: PropTypes.bool,
-  additionalControls: PropTypes.array,
 };
 
 export default FilterableToolbar;
