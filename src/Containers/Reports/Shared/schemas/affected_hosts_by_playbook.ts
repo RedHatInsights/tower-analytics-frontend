@@ -6,7 +6,6 @@ import {
   ChartTopLevelType,
   ChartType,
   ChartThemeColor,
-  ChartTooltipType,
 } from 'react-json-chart-builder';
 import { readHostExplorer, readHostExplorerOptions } from '../../../../Api';
 import { CATEGORIES } from '../constants';

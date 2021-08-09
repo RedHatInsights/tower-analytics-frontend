@@ -43,6 +43,7 @@ export const useQueryParams = (initial) => {
         return isNaN(value)
           ? { ...state, offset: 0 } // Defaults back to 0
           : { ...state, offset: parseInt(value) };
+      case 'SET_GRANULARITY':
       case 'SET_ATTRIBUTES':
       case 'SET_JOB_TYPE':
       case 'SET_STATUS':
@@ -107,6 +108,7 @@ export const useQueryParams = (initial) => {
     name: 'SET_NAME',
     only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS',
     inventory_id: 'SET_INVENTORY',
+    granularity: 'SET_GRANULARITY',
   };
 
   return {
