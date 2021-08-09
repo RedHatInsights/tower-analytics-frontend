@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import {
   Title,
   EmptyState,
@@ -8,7 +8,7 @@ import {
 } from '@patternfly/react-core';
 import { SearchIcon } from '@patternfly/react-icons';
 
-const NoResults = () => {
+const NoResults: FunctionComponent<Record<string, never>> = () => {
   return (
     <EmptyState variant={EmptyStateVariant.full}>
       <EmptyStateIcon icon={SearchIcon} />

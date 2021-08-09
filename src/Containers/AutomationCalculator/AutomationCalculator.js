@@ -16,9 +16,9 @@ import {
 } from '@patternfly/react-core';
 
 // Imports from custom components
-import LoadingState from '../../Components/LoadingState';
-import NoData from '../../Components/NoData';
-import ApiErrorState from '../../Components/ApiErrorState';
+import LoadingState from '../../Components/ApiStatus/LoadingState';
+import NoData from '../../Components/ApiStatus/NoData';
+import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import FilterableToolbar from '../../Components/Toolbar/';
 
 // Imports from API

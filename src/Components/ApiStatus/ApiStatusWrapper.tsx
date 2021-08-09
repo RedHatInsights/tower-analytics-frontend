@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react';
-import PropTypes from 'prop-types';
 import ApiErrorState from './ApiErrorState';
 import LoadingState from './LoadingState';
 import NoData from './NoData';
@@ -26,11 +25,6 @@ const ApiStatusWrapper: FunctionComponent<Props> = ({ api, children }) => {
   }
 
   return null;
-};
-
-ApiStatusWrapper.propTypes = {
-  api: PropTypes.any.isRequired,
-  children: PropTypes.node.isRequired,
 };
 
 export default ApiStatusWrapper;

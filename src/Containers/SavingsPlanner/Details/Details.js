@@ -12,7 +12,7 @@ import Main from '@redhat-cloud-services/frontend-components/Main';
 
 import DetailsTab from './DetailsTab';
 import StatisticsTab from './StatisticsTab';
-import ApiErrorState from '../../../Components/ApiErrorState';
+import ApiErrorState from '../../../Components/ApiStatus/ApiErrorState';
 import { paths as savingsPaths } from '../index';
 
 import {

@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { useQueryParams } from '../../Utilities/useQueryParams';
 import useRequest from '../../Utilities/useRequest';
 
-import LoadingState from '../../Components/LoadingState';
-import NoResults from '../../Components/NoResults';
-import ApiErrorState from '../../Components/ApiErrorState';
+import LoadingState from '../../Components/ApiStatus/LoadingState';
+import NoResults from '../../Components/ApiStatus/NoResults';
+import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import Pagination from '../../Components/Pagination';
 
 import { readJobExplorer, readJobExplorerOptions } from '../../Api/';

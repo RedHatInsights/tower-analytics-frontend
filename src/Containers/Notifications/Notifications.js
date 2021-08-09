@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
 import styled from 'styled-components';
-import LoadingState from '../../Components/LoadingState';
-import NoData from '../../Components/NoData';
+import LoadingState from '../../Components/ApiStatus/LoadingState';
+import NoData from '../../Components/ApiStatus/NoData';
 import { readClusters, readNotifications } from '../../Api/';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
