@@ -136,7 +136,8 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     ],
     group_by_time: false,
     limit: 5,
-    sort_by: 'created:desc',
+    sort_options: 'created',
+    sort_oder: 'desc',
     quick_date_range: qp.quick_date_range
       ? qp.quick_date_range
       : 'last_30_days',

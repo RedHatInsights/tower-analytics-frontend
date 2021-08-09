@@ -50,7 +50,6 @@ const initialQueryParams = {
   offset: 0,
   sort_options: 'name',
   sort_order: 'asc',
-  sort_by: 'name:asc',
 };
 const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
   'limit',
