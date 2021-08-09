@@ -11,11 +11,11 @@ import {
 import { Params, ParamsWithPagination, ApiJson } from './types';
 
 /* v0 endpoints */
-export const clustersEndpoint = `/api/tower-analytics/v0/clusters/`;
 export const notificationsEndpoint = `/api/tower-analytics/v0/notifications/`;
 export const preflightEndpoint = `/api/tower-analytics/v0/authorized/`;
 
 /* v1 endpoints */
+export const clustersEndpoint = `/api/tower-analytics/v1/clusters/`;
 export const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
 export const hostExplorerEndpoint = '/api/tower-analytics/v1/host_explorer/';
 export const eventExplorerEndpoint = '/api/tower-analytics/v1/event_explorer/';

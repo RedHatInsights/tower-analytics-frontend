@@ -14,33 +14,6 @@ describe.skip('SavingsPlanner/List', () => {
     api.readPlans.mockResolvedValue(mockResponses.readPlans);
   });
 
-  it('has rendered preflight/authorization error component', async () => {
-    api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest401);
-    renderPage(List);
-    await waitFor(() => screen.getAllByText(/Savings Planner/i));
-    expect(screen.getByText('Not authorized'));
-  });
-
-  it('has rendered Empty page component', async () => {
-    api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest404);
-    await act(async () => {
-      renderPage(List);
-    });
-    expect(screen.getAllByText(/Savings Planner/i));
-    expect(
-      screen.getByText('Something went wrong, please try reloading the page')
-    );
-  });
-
-  it('has rendered RBAC Access error component', async () => {
-    api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest403);
-    await act(async () => {
-      renderPage(List);
-    });
-    expect(screen.queryByText(/Savings Planner/i)).toBeNull();
-    expect(screen.getByText('RBAC Access Denied'));
-  });
-
   it('user can see a empty list message with add plan button', async () => {
     api.readPlans.mockResolvedValue({ items: [] });
     await act(async () => {
