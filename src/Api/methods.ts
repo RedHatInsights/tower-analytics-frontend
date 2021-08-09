@@ -75,13 +75,14 @@ export const postWithPagination = (
   endpoint: string,
   params: ParamsWithPagination = {}
 ): Promise<ApiJson> => {
-  const { limit, offset, sort_by } = params;
+  const { limit, offset, sort_options, sort_order } = params;
 
   const url = new URL(endpoint, window.location.origin);
   url.search = stringify({
     limit,
     offset,
-    sort_by,
+    sort_by:
+      sort_options && sort_order ? `${sort_options}:${sort_order}` : undefined,
   });
 
   return authenticatedFetch(url.toString(), {

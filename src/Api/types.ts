@@ -7,7 +7,8 @@ export type ApiJson = Record<string, unknown>;
 export interface ParamsWithPagination {
   limit?: string | number;
   offset?: string | number;
-  sort_by?: string;
+  sort_options?: string;
+  sort_order?: 'asc' | 'desc';
   [x: string]: string | number | string[] | number[] | boolean | undefined;
 }
 
