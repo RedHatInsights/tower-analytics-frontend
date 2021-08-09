@@ -23,7 +23,7 @@ import {
   NotificationDrawer,
 } from '@patternfly/react-core';
 
-import NotificationsList from '../../Components/NotificationsList';
+import NotificationsList from './NotificationsList';
 import Pagination from '../../Components/Pagination';
 import { getQSConfig } from '../../Utilities/qs';
 

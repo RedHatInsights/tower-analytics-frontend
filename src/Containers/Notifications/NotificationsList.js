@@ -11,8 +11,8 @@ import {
 } from '@patternfly/react-core';
 
 import { ExternalLinkAltIcon as PFExternalLinkAltIcon } from '@patternfly/react-icons';
-import LoadingState from './ApiStatus/LoadingState';
-import { capitalize } from '../Utilities/helpers';
+import LoadingState from '../../Components/ApiStatus/LoadingState';
+import { capitalize } from '../../Utilities/helpers';
 
 const ExternalLinkAltIcon = styled(PFExternalLinkAltIcon)`
   margin-left: 7px;
