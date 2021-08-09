@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import LoadingState from './ApiStatus/LoadingState';
-import NoData from './ApiStatus/NoData';
+import LoadingState from '../../Components/ApiStatus/LoadingState';
+import NoData from '../../Components/ApiStatus/NoData';
 
 import {
   DataList,

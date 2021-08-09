@@ -27,8 +27,8 @@ import {
 
 import BarChart from '../../Charts/BarChart';
 import LineChart from '../../Charts/LineChart';
-import ModulesList from '../../Components/ModulesList';
-import TemplatesList from '../../Components/TemplatesList';
+import ModulesList from './ModulesList';
+import TemplatesList from './TemplatesList';
 import FilterableToolbar from '../../Components/Toolbar';
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 
