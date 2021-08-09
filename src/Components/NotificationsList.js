@@ -11,7 +11,7 @@ import {
 } from '@patternfly/react-core';
 
 import { ExternalLinkAltIcon as PFExternalLinkAltIcon } from '@patternfly/react-icons';
-import LoadingState from '../Components/LoadingState';
+import LoadingState from './ApiStatus/LoadingState';
 import { capitalize } from '../Utilities/helpers';
 
 const ExternalLinkAltIcon = styled(PFExternalLinkAltIcon)`
@@ -21,10 +21,8 @@ const ExternalLinkAltIcon = styled(PFExternalLinkAltIcon)`
 `;
 
 const NotificationDrawerListItem = styled(PFNotificationDrawerListItem)`
-  border-top: 1px solid var(--pf-global--BorderColor--light-100
-    );
-  border-bottom::nth-child(odd): 1px solid var(--pf-global--BorderColor--light-100
-    );
+  border-top: 1px solid var(--pf-global--BorderColor--light-100);
+  border-bottom::nth-child(odd): 1px solid var(--pf-global--BorderColor--light-100);
   box-shadow: none;
   &:focus {
     outline: none;

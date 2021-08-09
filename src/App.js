@@ -6,7 +6,7 @@ import packageJson from '../package.json';
 
 import { useRequest } from './Utilities/useRequest';
 import { preflightRequest } from './Api/';
-import AuthorizationErrorPage from './Components/ApiSatus/AuthorizationErrorPage';
+import AuthorizationErrorPage from './Components/ApiStatus/AuthorizationErrorPage';
 
 const App = () => {
   const history = useHistory();
