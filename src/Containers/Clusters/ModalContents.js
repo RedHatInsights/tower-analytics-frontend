@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import NoResults from '../../Components/ApiStatus/NoResults';
-import Breakdown from '../../Components/Breakdown';
+import Breakdown from '../../Charts/Breakdown';
 import JobStatus from '../../Components/JobStatus';
 import { Paths } from '../../paths';
 import { stringify } from 'query-string';
