@@ -20,7 +20,7 @@ import {
 
 import { Card, CardBody, PaginationVariant } from '@patternfly/react-core';
 
-import JobExplorerList from '../../Components/JobExplorerList';
+import JobExplorerList from './JobExplorerList';
 import FilterableToolbar from '../../Components/Toolbar/';
 import { getQSConfig } from '../../Utilities/qs';
 
