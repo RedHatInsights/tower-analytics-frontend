@@ -12,37 +12,9 @@ describe('<Clusters />', () => {
     expect(true).toBe(true);
   });
   afterEach(() => {
-    api.preflightRequest.mockResolvedValue(mockResponses.preflightRequest200);
     api.readClustersOptions.mockResolvedValue(mockResponses.readClusterOptions);
     api.readJobExplorer.mockResolvedValue(mockResponses.readJobExplorer);
     api.readEventExplorer.mockResolvedValue(mockResponses.readEventExplorer);
-  });
-
-  test('has rendered preflight/authorization error component', async () => {
-    api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest401);
-    await act(async () => {
-      renderPage(Clusters);
-    });
-    expect(screen.getByText('Not authorized'));
-  });
-
-  test('has rendered Empty page component', async () => {
-    api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest404);
-    await act(async () => {
-      renderPage(Clusters);
-    });
-    expect(
-      screen.getByText('Something went wrong, please try reloading the page')
-    );
-  });
-
-  test('has rendered RBAC Access error component', async () => {
-    api.preflightRequest.mockRejectedValue(mockResponses.preflightRequest403);
-    await act(async () => {
-      renderPage(Clusters);
-    });
-    expect(screen.queryByText(/Clusters/i)).toBeNull();
-    expect(screen.getByText('RBAC Access Denied'));
   });
 
   test('has rendered Clusters component with data', async () => {

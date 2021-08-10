@@ -1,11 +1,6 @@
 import { act } from 'react-dom/test-utils';
 import { parse } from 'query-string';
-import {
-  mountPage,
-  preflight200,
-  preflight400,
-  preflight403,
-} from '../../__tests__/helpers';
+import { mountPage } from '../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -44,26 +39,6 @@ const clusterDummyData = (size = 20) => ({
   })),
 });
 
-// const defaultQueryParams = {
-//     attributes: [
-//         'id',
-//         'status',
-//         'job_type',
-//         'started',
-//         'finished',
-//         'elapsed',
-//         'created',
-//         'cluster_name',
-//         'org_name',
-//         'most_failed_tasks'
-//     ],
-//     status: [ 'successful', 'failed' ],
-//     quickDateRange: 'last_30_days',
-//     jobType: [ 'workflowjob', 'job' ],
-//     sortBy: 'created:desc',
-//     limit: 5
-// };
-
 const lastCallBody = (url) => parse(fetchMock.lastCall(url)[0].split('?')[1]);
 
 const getPagination = (wrapper) => wrapper.find('.pf-c-options-menu');
@@ -74,7 +49,6 @@ describe('Containers/Notifications', () => {
   let wrapper;
 
   beforeEach(() => {
-    fetchMock.get({ ...preflight200 });
     fetchMock.get({ url: clusterUrl }, { ...clusterDummyData() });
     fetchMock.get({ url: notificationsUrl }, { ...notificationsDummyData() });
   });
@@ -91,47 +65,6 @@ describe('Containers/Notifications', () => {
     wrapper.update();
 
     expect(wrapper).toBeTruthy();
-  });
-
-  it('should render preflight error', async () => {
-    fetchMock.get({ ...preflight400, overwriteRoutes: true });
-    await act(async () => {
-      wrapper = mountPage(Notifications);
-    });
-    wrapper.update();
-
-    expect(wrapper.text()).toEqual(expect.stringContaining('Not authorized'));
-  });
-
-  it('should render RBAC Access error', async () => {
-    fetchMock.get({ ...preflight403, overwriteRoutes: true });
-    await act(async () => {
-      wrapper = mountPage(Notifications);
-    });
-    wrapper.update();
-
-    expect(wrapper.text()).toEqual(
-      expect.stringContaining('RBAC Access Denied')
-    );
-  });
-
-  xit('should render api error', async () => {
-    fetchMock.get({
-      url: notificationsUrl,
-      overwriteRoutes: true,
-      response: { throws: { error: 'General Error' }, status: 400 },
-    });
-
-    await act(async () => {
-      wrapper = mountPage(Notifications);
-    });
-    wrapper.update();
-
-    expect(wrapper.text()).toEqual(
-      expect.stringContaining('RBAC Access Denied')
-    );
-    // RBAC access denied displayed
-    expect(wrapper.find('a')).toHaveLength(1);
   });
 
   it('should render with empty response', async () => {

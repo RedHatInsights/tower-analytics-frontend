@@ -4,64 +4,36 @@ import React from 'react';
 import asyncComponent from './Utilities/asyncComponent';
 import { Paths } from './paths';
 
-const Clusters = asyncComponent(() =>
-  import(
-    /* webpackChunkName: "automation_analytics" */
-    './Containers/Clusters/Clusters'
-  )
-);
-const OrganizationStatistics = asyncComponent(() =>
-  import(
-    /* webpackChunkName: "automation_analytics" */
-    './Containers/OrganizationStatistics/OrganizationStatistics'
-  )
-);
-const Notifications = asyncComponent(() =>
-  import(
-    /* webpackChunkName: "automation_analytics" */
-    './Containers/Notifications/Notifications'
-  )
-);
-const AutomationCalculator = asyncComponent(() =>
-  import(
-    /* webpackChunkName: "automation_analytics" */
-    './Containers/AutomationCalculator/AutomationCalculator'
-  )
-);
-
-const JobExplorer = asyncComponent(() =>
-  import(
-    /* webpackChunkName: "automation_analytics" */
-    './Containers/JobExplorer/JobExplorer'
-  )
-);
-
-const SavingsPlanAdd = asyncComponent(() =>
-  import(
-    /* webpackChunkName: "automation_analytics" */
-    './Containers/SavingsPlanner/Add'
-  )
-);
-
-const SavingsPlanner = asyncComponent(() =>
-  import(
-    /* webpackChunkName: "automation_analytics" */
-    './Containers/SavingsPlanner/List'
-  )
-);
-
-const SavingsPlan = asyncComponent(() =>
-  import(
-    /* webpackChunkName: "automation_analytics" */
-    './Containers/SavingsPlanner/Details'
-  )
-);
+const components = {
+  clusters: asyncComponent(() => import('./Containers/Clusters/Clusters')),
+  organizationStatistics: asyncComponent(() =>
+    import('./Containers/OrganizationStatistics/OrganizationStatistics')
+  ),
+  notifications: asyncComponent(() =>
+    import('./Containers/Notifications/Notifications')
+  ),
+  automationCalculator: asyncComponent(() =>
+    import('./Containers/AutomationCalculator/AutomationCalculator')
+  ),
+  jobExplorer: asyncComponent(() =>
+    import('./Containers/JobExplorer/JobExplorer')
+  ),
+  savingsPlanner: asyncComponent(() => import('./Containers/SavingsPlanner/')),
+  reports: asyncComponent(() => import('./Containers/Reports/')),
+};
 
 const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {
-  const root = document.getElementById('root');
-  root.removeAttribute('class');
-  root.classList.add(`page__${rootClass}`, 'pf-c-page__main');
-  root.setAttribute('role', 'main');
+  /*
+   * We are not using page based scss/css rules as we prefer styled components
+   * therefore we don't need to add the classto the root element.
+   *
+   * Leving here for possible future usage.
+   */
+
+  // const root = document.getElementById('root');
+  // root.removeAttribute('class');
+  // root.classList.add(`page__${rootClass}`, 'pf-c-page__main');
+  // root.setAttribute('role', 'main');
 
   return <Route {...rest} component={Component} />;
 };
@@ -76,47 +48,17 @@ export const Routes = () => {
 
   return (
     <Switch>
+      {/* Catch urls with the trailing slash and remove it */}
       <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
-      <InsightsRoute
-        path={Paths.clusters}
-        component={Clusters}
-        rootClass="clusters"
-      />
-      <InsightsRoute
-        path={Paths.organizationStatistics}
-        component={OrganizationStatistics}
-        rootClass="organizationStatistics"
-      />
-      <InsightsRoute
-        path={Paths.notifications}
-        component={Notifications}
-        rootClass="notifications"
-      />
-      <InsightsRoute
-        path={Paths.automationCalculator}
-        component={AutomationCalculator}
-        rootClass="automationCalculator"
-      />
-      <InsightsRoute
-        path={Paths.jobExplorer}
-        component={JobExplorer}
-        rootClass="jobExplorer"
-      />
-      <InsightsRoute
-        path={Paths.savingsPlanAdd}
-        component={SavingsPlanAdd}
-        rootClass="SavingsPlanAdd"
-      />
-      <InsightsRoute
-        path={Paths.savingsPlan}
-        component={SavingsPlan}
-        rootClass="SavingsPlan"
-      />
-      <InsightsRoute
-        path={Paths.savingsPlanner}
-        component={SavingsPlanner}
-        rootClass="SavingsPlanner"
-      />
+      {/* Render the valid routes */}
+      {Object.keys(components).map((key) => (
+        <InsightsRoute
+          key={key}
+          path={Paths[key]}
+          component={components[key]}
+          rootClass={key}
+        />
+      ))}
       {/* Finally, catch all unmatched routes and redirect to Clusters page */}
       <Route>
         <Redirect to={Paths.clusters} />

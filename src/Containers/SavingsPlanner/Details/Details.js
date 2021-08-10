@@ -7,12 +7,13 @@ import {
   Switch,
 } from 'react-router-dom';
 import { CaretLeftIcon } from '@patternfly/react-icons';
-import { Card, EmptyState } from '@patternfly/react-core';
+import { Card } from '@patternfly/react-core';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 
 import DetailsTab from './DetailsTab';
 import StatisticsTab from './StatisticsTab';
 import ApiErrorState from '../../../Components/ApiErrorState';
+import { paths as savingsPaths } from '../index';
 
 import {
   PageHeader,
@@ -21,7 +22,7 @@ import {
 
 import Breadcrumbs from '../../../Components/Breadcrumbs';
 
-import { preflightRequest, readPlan, readPlanOptions } from '../../../Api/';
+import { readPlan, readPlanOptions } from '../../../Api/';
 
 import SavingsPlanEdit from '../Edit';
 import useRequest from '../../../Utilities/useRequest';
@@ -40,10 +41,6 @@ const Details = () => {
     pageTitle = 'Edit plan';
   }
 
-  const { error: preflightError, request: setPreflight } = useRequest(
-    useCallback(() => preflightRequest(), [])
-  );
-
   const {
     result: options,
     error,
@@ -61,7 +58,6 @@ const Details = () => {
 
   useEffect(() => {
     fetchOptions();
-    setPreflight();
 
     const unlisten = history.listen(({ pathname }) => {
       if (!pathname.includes('/edit')) fetchEndpoints();
@@ -86,27 +82,22 @@ const Details = () => {
           {'Back to Plans'}
         </>
       ),
-      link: `/savings-planner`,
+      link: savingsPaths.get,
     },
-    { id: 1, name: 'Details', link: `/savings-planner/${id}/details` },
+    { id: 1, name: 'Details', link: savingsPaths.getDetails(id) },
     {
       id: 2,
       name: 'Statistics',
-      link: `/savings-planner/${id}/statistics`,
+      link: `${savingsPaths.getDetails(id)}/statistics`,
     },
   ];
 
-  const breadcrumbUrl = `/savings-planner/${id}`;
   const breadcrumbsItems = planIsSuccess
     ? [
-        { title: 'Savings Planner', navigate: '/savings-planner' },
-        { title: plan.name, navigate: breadcrumbUrl },
+        { title: 'Savings Planner', navigate: savingsPaths.get },
+        { title: plan.name, navigate: savingsPaths.getDetails(id) },
       ]
     : [];
-
-  if (preflightError) {
-    return <EmptyState preflightError={preflightError} />;
-  }
 
   return (
     <>
@@ -130,13 +121,7 @@ const Details = () => {
                     queryParams={queryParams}
                   />
                 </Route>
-                <Route
-                  exact
-                  path={[
-                    '/savings-planner/:id',
-                    '/savings-planner/:id/details',
-                  ]}
-                >
+                <Route exact path={savingsPaths.details}>
                   <DetailsTab
                     plan={plan}
                     tabsArray={tabsArray}

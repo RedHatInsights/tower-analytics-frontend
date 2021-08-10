@@ -4,9 +4,8 @@ import { useQueryParams } from '../../Utilities/useQueryParams';
 
 import styled from 'styled-components';
 import LoadingState from '../../Components/LoadingState';
-import EmptyState from '../../Components/EmptyState';
 import NoData from '../../Components/NoData';
-import { preflightRequest, readClusters, readNotifications } from '../../Api/';
+import { readClusters, readNotifications } from '../../Api/';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
@@ -107,7 +106,6 @@ const qsConfig = getQSConfig(
 );
 
 const Notifications = () => {
-  const [preflightError, setPreFlightError] = useState(null);
   const [notificationsData, setNotificationsData] = useState([]);
   const [clusterOptions, setClusterOptions] = useState([]);
   const [selectedCluster, setSelectedCluster] = useState('');
@@ -154,9 +152,6 @@ const Notifications = () => {
 
     async function initializeWithPreflight() {
       setIsLoading(true);
-      await preflightRequest().catch((error) => {
-        setPreFlightError(error);
-      });
       fetchEndpoints().then(
         ([
           { templates: clustersData = [] },
@@ -177,8 +172,6 @@ const Notifications = () => {
     initializeWithPreflight();
     return () => (ignore = true);
   }, [queryParams]);
-
-  if (preflightError) return <EmptyState preflightError={preflightError} />;
 
   return (
     <React.Fragment>
