@@ -8,16 +8,10 @@ import {
 } from '@redhat-cloud-services/frontend-components/PageHeader';
 import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
 
-import {
-  deletePlan,
-  preflightRequest,
-  readPlanOptions,
-  readPlans,
-} from '../../../Api/';
+import { deletePlans, readPlanOptions, readPlans } from '../../../Api/';
 import FilterableToolbar from '../../../Components/Toolbar';
 import ApiErrorState from '../../../Components/ApiErrorState';
 import LoadingState from '../../../Components/LoadingState';
-import EmptyState from '../../../Components/EmptyState';
 import EmptyList from '../../../Components/EmptyList';
 import Pagination from '../../../Components/Pagination';
 import PlanCard from './ListItem';
@@ -58,10 +52,6 @@ const List = () => {
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(qsConfig);
 
-  const { error: preflightError, request: setPreflight } = useRequest(
-    useCallback(() => preflightRequest(), [])
-  );
-
   const {
     result: options,
     error,
@@ -99,10 +89,6 @@ const List = () => {
   };
 
   useEffect(() => {
-    setPreflight();
-  }, []);
-
-  useEffect(() => {
     fetchOptions();
     fetchEndpoints();
   }, [queryParams]);
@@ -118,29 +104,17 @@ const List = () => {
     deletionError,
     deleteItems: deleteItems,
     clearDeletionError,
-  } = useDeleteItems(
-    useCallback(() =>
-      Promise.all(
-        selected.map((plan) => deletePlan({ id: plan.id })),
-        [selected]
-      )
-    ),
-    {}
-  );
+  } = useDeleteItems(deletePlans, null);
 
   const handleDelete = async () => {
-    await deleteItems();
+    await deleteItems(selected.map(({ id }) => id));
     setSelected([]);
     fetchEndpoints();
   };
 
   const renderContent = () => {
-    if (preflightError) return <EmptyState preflightError={preflightError} />;
-
     if (error) return <ApiErrorState message={error.error} />;
-
     if (itemsIsLoading || deleteLoading) return <LoadingState />;
-
     if (
       itemsIsSuccess &&
       data.length === 0 &&
@@ -188,7 +162,7 @@ const List = () => {
         </Gallery>
       );
 
-    return <></>;
+    return null;
   };
 
   return (
@@ -231,16 +205,14 @@ const List = () => {
               <Pagination
                 count={count}
                 params={{
-                  limit: parseInt(queryParams.limit),
-                  offset: parseInt(queryParams.offset),
+                  limit: +queryParams.limit,
+                  offset: +queryParams.offset,
                 }}
                 qsConfig={qsConfig}
                 setPagination={setFromPagination}
                 isCompact
               />
-            ) : (
-              <div></div>
-            )
+            ) : null
           }
         />
       </PageHeader>

@@ -18,12 +18,11 @@ import {
 // Imports from custom components
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
-import EmptyState from '../../Components/EmptyState';
 import ApiErrorState from '../../Components/ApiErrorState';
 import FilterableToolbar from '../../Components/Toolbar/';
 
 // Imports from API
-import { preflightRequest, readROI, readROIOptions } from '../../Api/';
+import { readROI, readROIOptions } from '../../Api/';
 
 // Imports from utilities
 import { useQueryParams } from '../../Utilities/useQueryParams';
@@ -85,10 +84,6 @@ const AutomationCalculator = ({ history }) => {
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
 
-  const { error: preflightError, request: setPreflight } = useRequest(
-    useCallback(() => preflightRequest(), [])
-  );
-
   const { result: options, request: setOptions } = useRequest(
     useCallback(() => readROIOptions(queryParams), [queryParams]),
     {}
@@ -137,7 +132,6 @@ const AutomationCalculator = ({ history }) => {
   };
 
   useEffect(() => {
-    setPreflight();
     setOptions();
   }, []);
 
@@ -211,7 +205,7 @@ const AutomationCalculator = ({ history }) => {
               setDataRunTime={setDataRunTime}
               setUnfilteredData={api}
               setEnabled={setEnabled}
-              sortBy={queryParams.sort_by}
+              sortBy={`${queryParams.sort_options}:${queryParams.sort_order}`}
             />
           </StackItem>
         </Stack>
@@ -220,7 +214,6 @@ const AutomationCalculator = ({ history }) => {
   );
 
   const renderContents = () => {
-    if (preflightError) return <EmptyState preflightError={preflightError} />;
     if (apiIsLoading) return <LoadingState />;
     if (apiError) return <ApiErrorState message={apiError.error} />;
     if (apiIsSuccess && api.length <= 0) return <NoData />;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -12,6 +12,8 @@ import {
   CardFooter,
   Label as PFLabel,
 } from '@patternfly/react-core';
+
+import { paths } from '../../';
 
 const CardTitle = styled(PFCardTitle)`
   word-break: break-word;
@@ -28,29 +30,23 @@ const Label = styled(PFLabel)`
   margin-right: 10px;
 `;
 
-const ListItem = ({ report }) => {
-  const { id, description, name, categories } = report;
-
-  const match = useRouteMatch();
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardHeaderMain>
-          <CardTitle>
-            <Link to={`${match.url}/${id}`}>{name}</Link>
-          </CardTitle>
-        </CardHeaderMain>
-      </CardHeader>
-      <CardBody>{description ? <Small>{description}</Small> : null}</CardBody>
-      <CardFooter>
-        {categories.map((category, idx) => (
-          <Label key={idx}>{category}</Label>
-        ))}
-      </CardFooter>
-    </Card>
-  );
-};
+const ListItem = ({ report: { id, description, name, categories } }) => (
+  <Card>
+    <CardHeader>
+      <CardHeaderMain>
+        <CardTitle>
+          <Link to={paths.getDetails(id)}>{name}</Link>
+        </CardTitle>
+      </CardHeaderMain>
+    </CardHeader>
+    <CardBody>{description ? <Small>{description}</Small> : null}</CardBody>
+    <CardFooter>
+      {categories.map((category, idx) => (
+        <Label key={idx}>{category}</Label>
+      ))}
+    </CardFooter>
+  </Card>
+);
 
 ListItem.propTypes = {
   report: PropTypes.object,

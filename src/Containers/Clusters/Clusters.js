@@ -3,9 +3,7 @@ import React, { useEffect, useCallback } from 'react';
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
 import LoadingState from '../../Components/LoadingState';
-import EmptyState from '../../Components/EmptyState';
 import {
-  preflightRequest,
   readClustersOptions,
   readJobExplorer,
   readEventExplorer,
@@ -56,7 +54,8 @@ const initialTopWorkflowParams = {
 
 const initialModuleParams = {
   group_by: 'module',
-  sort_by: 'host_task_count:desc',
+  sort_options: 'host_task_count',
+  sort_oder: 'desc',
   limit: 10,
 };
 
@@ -71,10 +70,6 @@ const qsConfig = getQSConfig('clusters', { ...clusters.defaultParams }, [
 ]);
 
 const Clusters = () => {
-  const { error: preflightError, request: setPreflight } = useRequest(
-    useCallback(() => preflightRequest(), [])
-  );
-
   // params from toolbar/searchbar
   const optionsQueryParams = useQueryParams(initialOptionsParams);
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
@@ -140,7 +135,6 @@ const Clusters = () => {
   );
 
   useEffect(() => {
-    setPreflight();
     fetchOptions();
     fetchChartData();
     fetchModules();
@@ -186,8 +180,6 @@ const Clusters = () => {
     end_date,
     ...initialModuleParams,
   };
-
-  if (preflightError) return <EmptyState preflightError={preflightError} />;
 
   if (error) return <ApiErrorState message={error.error} />;
 

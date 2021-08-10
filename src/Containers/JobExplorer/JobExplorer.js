@@ -5,16 +5,11 @@ import { useQueryParams } from '../../Utilities/useQueryParams';
 import useRequest from '../../Utilities/useRequest';
 
 import LoadingState from '../../Components/LoadingState';
-import EmptyState from '../../Components/EmptyState';
 import NoResults from '../../Components/NoResults';
 import ApiErrorState from '../../Components/ApiErrorState';
 import Pagination from '../../Components/Pagination';
 
-import {
-  preflightRequest,
-  readJobExplorer,
-  readJobExplorerOptions,
-} from '../../Api/';
+import { readJobExplorer, readJobExplorerOptions } from '../../Api/';
 import { jobExplorer } from '../../Utilities/constants';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
@@ -39,10 +34,6 @@ const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
 ]);
 
 const JobExplorer = () => {
-  const { error: preflightError, request: setPreflight } = useRequest(
-    useCallback(() => preflightRequest(), [])
-  );
-
   const {
     queryParams,
     setFromPagination,
@@ -71,7 +62,6 @@ const JobExplorer = () => {
 
   useEffect(() => {
     insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
-    setPreflight();
   }, []);
 
   useEffect(() => {
@@ -79,7 +69,6 @@ const JobExplorer = () => {
     fetchEndpoints();
   }, [queryParams]);
 
-  if (preflightError) return <EmptyState preflightError={preflightError} />;
   if (error) return <ApiErrorState message={error.error} />;
 
   return (
@@ -87,53 +76,50 @@ const JobExplorer = () => {
       <PageHeader>
         <PageHeaderTitle title={'Job Explorer'} />
       </PageHeader>
-
-      {!preflightError && (
-        <Main>
-          <Card>
-            <CardBody>
-              <FilterableToolbar
-                categories={options}
-                filters={queryParams}
-                qsConfig={qsConfig}
-                setFilters={setFromToolbar}
-                pagination={
-                  <Pagination
-                    count={meta?.count}
-                    params={{
-                      limit: parseInt(queryParams.limit),
-                      offset: parseInt(queryParams.offset),
-                    }}
-                    qsConfig={qsConfig}
-                    setPagination={setFromPagination}
-                    isCompact
-                  />
-                }
-                hasSettings
-              />
-              {dataIsLoading && <LoadingState />}
-              {dataIsSuccess && data.length <= 0 && <NoResults />}
-              {dataIsSuccess && data.length > 0 && (
-                <JobExplorerList
-                  jobs={data}
-                  queryParams={queryParams}
-                  queryParamsDispatch={queryParamsDispatch}
+      <Main>
+        <Card>
+          <CardBody>
+            <FilterableToolbar
+              categories={options}
+              filters={queryParams}
+              qsConfig={qsConfig}
+              setFilters={setFromToolbar}
+              pagination={
+                <Pagination
+                  count={meta?.count}
+                  params={{
+                    limit: parseInt(queryParams.limit),
+                    offset: parseInt(queryParams.offset),
+                  }}
+                  qsConfig={qsConfig}
+                  setPagination={setFromPagination}
+                  isCompact
                 />
-              )}
-              <Pagination
-                count={meta?.count}
-                params={{
-                  limit: parseInt(queryParams.limit),
-                  offset: parseInt(queryParams.offset),
-                }}
-                qsConfig={qsConfig}
-                setPagination={setFromPagination}
-                variant={PaginationVariant.bottom}
+              }
+              hasSettings
+            />
+            {dataIsLoading && <LoadingState />}
+            {dataIsSuccess && data.length <= 0 && <NoResults />}
+            {dataIsSuccess && data.length > 0 && (
+              <JobExplorerList
+                jobs={data}
+                queryParams={queryParams}
+                queryParamsDispatch={queryParamsDispatch}
               />
-            </CardBody>
-          </Card>
-        </Main>
-      )}
+            )}
+            <Pagination
+              count={meta?.count}
+              params={{
+                limit: parseInt(queryParams.limit),
+                offset: parseInt(queryParams.offset),
+              }}
+              qsConfig={qsConfig}
+              setPagination={setFromPagination}
+              variant={PaginationVariant.bottom}
+            />
+          </CardBody>
+        </Card>
+      </Main>
     </React.Fragment>
   );
 };
