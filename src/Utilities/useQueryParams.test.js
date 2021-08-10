@@ -40,7 +40,6 @@ describe('Utilities/useQueryParams', () => {
   it('returns expected initial values as queryParams, as well as computed sort_by value (if applicable)', () => {
     expect(page.queryParams).toEqual({
       ...initialValues,
-      sort_by: 'count:asc',
     });
     const noSortOrderInitialValues = {
       foo: '1',
@@ -70,7 +69,6 @@ describe('Utilities/useQueryParams', () => {
     });
     expect(page.queryParams).toEqual({
       ...initialValues,
-      sort_by: 'count:asc',
       id: 1,
     });
   });
@@ -82,7 +80,6 @@ describe('Utilities/useQueryParams', () => {
     expect(page.queryParams).toEqual({
       foo: '1',
       bar: 2,
-      sort_by: 'count:asc',
       sort_options: 'count',
       sort_order: 'asc',
     });
@@ -95,7 +92,6 @@ describe('Utilities/useQueryParams', () => {
     });
     expect(page.queryParams).toEqual({
       ...initialValues,
-      sort_by: 'count:asc',
       endDate: currentDate,
     });
   });
@@ -107,7 +103,6 @@ describe('Utilities/useQueryParams', () => {
     });
     expect(page.queryParams).toEqual({
       ...initialValues,
-      sort_by: 'count:asc',
       startDate: currentDate,
     });
   });
@@ -121,7 +116,6 @@ describe('Utilities/useQueryParams', () => {
     });
     expect(page.queryParams).toEqual({
       ...initialValues,
-      sort_by: 'count:asc',
       startDate: expected,
     });
   });

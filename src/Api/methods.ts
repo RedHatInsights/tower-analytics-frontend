@@ -75,13 +75,14 @@ export const postWithPagination = (
   endpoint: string,
   params: ParamsWithPagination = {}
 ): Promise<ApiJson> => {
-  const { limit, offset, sort_by } = params;
+  const { limit, offset, sort_options, sort_order } = params;
 
   const url = new URL(endpoint, window.location.origin);
   url.search = stringify({
     limit,
     offset,
-    sort_by,
+    sort_by:
+      sort_options && sort_order ? `${sort_options}:${sort_order}` : undefined,
   });
 
   return authenticatedFetch(url.toString(), {
@@ -90,10 +91,21 @@ export const postWithPagination = (
   }).then(handleResponse);
 };
 
-export const deleteById = (endpoint: string, id: string): Promise<ApiJson> => {
-  const url = new URL(endpoint + id, window.location.origin);
+export const deleteById = (endpoint: string, id: number): Promise<ApiJson> => {
+  const url = new URL(`${endpoint}${id}`, window.location.origin);
   return authenticatedFetch(url.toString(), {
     method: 'DELETE',
+  }).then(handleResponse);
+};
+
+export const deleteByIds = (
+  endpoint: string,
+  ids: number[]
+): Promise<ApiJson> => {
+  const url = new URL(endpoint, window.location.origin);
+  return authenticatedFetch(url.toString(), {
+    method: 'DELETE',
+    body: JSON.stringify(ids),
   }).then(handleResponse);
 };
 

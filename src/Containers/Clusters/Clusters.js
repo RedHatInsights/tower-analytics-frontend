@@ -54,7 +54,8 @@ const initialTopWorkflowParams = {
 
 const initialModuleParams = {
   group_by: 'module',
-  sort_by: 'host_task_count:desc',
+  sort_options: 'host_task_count',
+  sort_oder: 'desc',
   limit: 10,
 };
 

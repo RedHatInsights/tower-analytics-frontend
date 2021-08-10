@@ -83,7 +83,7 @@ const redirectToJobExplorer =
       return;
     }
 
-    const { sort_by, ...rest } = queryParams;
+    const { sort_options, sort_order, ...rest } = queryParams;
     const formattedDate = dateForJobExplorer(date);
     const initialQueryParams = {
       ...rest,
@@ -195,7 +195,8 @@ const OrganizationStatistics = ({ history }) => {
     attributes: ['host_task_count'],
     group_by: 'org',
     include_others: true,
-    sort_by: `host_task_count:desc`,
+    sort_options: 'host_task_count',
+    sort_order: 'desc',
   };
 
   const jobRunsByOrgParams = {
@@ -203,7 +204,8 @@ const OrganizationStatistics = ({ history }) => {
     attributes: ['total_count'],
     group_by: 'org',
     include_others: true,
-    sort_by: `total_count:desc`,
+    sort_options: 'total_count',
+    sort_order: 'desc',
   };
 
   const jobsByDateAndOrgParams = {
@@ -211,7 +213,8 @@ const OrganizationStatistics = ({ history }) => {
     attributes: ['total_count'],
     group_by: 'org',
     group_by_time: true,
-    sort_by: `total_count:desc`,
+    sort_options: 'total_count',
+    sort_order: 'desc',
   };
 
   const hostAcrossOrgParams = {
@@ -219,19 +222,13 @@ const OrganizationStatistics = ({ history }) => {
     attributes: ['total_unique_host_count'],
     group_by: 'org',
     group_by_time: true,
-    sort_by: `host_task_count:desc`,
+    sort_options: 'host_task_count',
+    sort_order: 'desc',
   };
 
   const handleTabClick = (_, tabIndex) => {
     setActiveTabKey(tabIndex);
   };
-
-  useEffect(() => {
-    insights.chrome.appNavClick({
-      id: 'organization-statistics',
-      secondaryNav: true,
-    });
-  }, []);
 
   useEffect(() => {
     setOrgs(activeTabKey);

@@ -8,7 +8,7 @@ import {
 } from '@redhat-cloud-services/frontend-components/PageHeader';
 import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
 
-import { deletePlan, readPlanOptions, readPlans } from '../../../Api/';
+import { deletePlans, readPlanOptions, readPlans } from '../../../Api/';
 import FilterableToolbar from '../../../Components/Toolbar';
 import ApiErrorState from '../../../Components/ApiErrorState';
 import LoadingState from '../../../Components/LoadingState';
@@ -104,18 +104,10 @@ const List = () => {
     deletionError,
     deleteItems: deleteItems,
     clearDeletionError,
-  } = useDeleteItems(
-    useCallback(() =>
-      Promise.all(
-        selected.map((plan) => deletePlan({ id: plan.id })),
-        [selected]
-      )
-    ),
-    {}
-  );
+  } = useDeleteItems(deletePlans, null);
 
   const handleDelete = async () => {
-    await deleteItems();
+    await deleteItems(selected.map(({ id }) => id));
     setSelected([]);
     fetchEndpoints();
   };
@@ -213,8 +205,8 @@ const List = () => {
               <Pagination
                 count={total_count}
                 params={{
-                  limit: parseInt(queryParams.limit),
-                  offset: parseInt(queryParams.offset),
+                  limit: +queryParams.limit,
+                  offset: +queryParams.offset,
                 }}
                 qsConfig={qsConfig}
                 setPagination={setFromPagination}
