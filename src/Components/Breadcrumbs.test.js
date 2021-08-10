@@ -1,13 +1,18 @@
 import { act } from 'react-dom/test-utils';
 import { mount } from 'enzyme';
 import Breadcrumbs from './Breadcrumbs';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('Components/Breadcrumbs', () => {
   let wrapper;
 
   it('should render without any errors', async () => {
     await act(async () => {
-      wrapper = mount(<Breadcrumbs />);
+      wrapper = mount(
+        <MemoryRouter>
+          <Breadcrumbs />
+        </MemoryRouter>
+      );
     });
     wrapper.update();
 
@@ -17,12 +22,14 @@ describe('Components/Breadcrumbs', () => {
   it('should render a breadcrumb when passed items prop', async () => {
     await act(async () => {
       wrapper = mount(
-        <Breadcrumbs
-          items={[
-            { title: 'Foo', navigate: '/foo' },
-            { title: 'Bar', navigate: '/bar' },
-          ]}
-        />
+        <MemoryRouter>
+          <Breadcrumbs
+            items={[
+              { title: 'Foo', navigate: '/foo' },
+              { title: 'Bar', navigate: '/bar' },
+            ]}
+          />
+        </MemoryRouter>
       );
     });
     wrapper.update();
@@ -33,17 +40,17 @@ describe('Components/Breadcrumbs', () => {
     window.history.pushState({}, 'beta', '/beta/ansible/automation-analytics');
     await act(async () => {
       wrapper = mount(
-        <Breadcrumbs
-          items={[
-            { title: 'Foo', navigate: '/foo' },
-            { title: 'Bar', navigate: '/bar' },
-          ]}
-        />
+        <MemoryRouter>
+          <Breadcrumbs
+            items={[
+              { title: 'Foo', navigate: '/foo' },
+              { title: 'Bar', navigate: '/bar' },
+            ]}
+          />
+        </MemoryRouter>
       );
     });
     wrapper.update();
-    expect(wrapper.find('BreadcrumbItem a').at(0).props().href).toBe(
-      '/beta/ansible/automation-analytics/foo'
-    );
+    expect(wrapper.find('BreadcrumbItem a').at(0).props().href).toBe('/foo');
   });
 });

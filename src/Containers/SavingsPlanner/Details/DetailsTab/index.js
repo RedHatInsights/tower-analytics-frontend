@@ -128,7 +128,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite, options }) => {
 
   const { request: deletePlans, error: deleteError } = useRequest(
     useCallback(async () => {
-      await deletePlan({ id });
+      await deletePlan(id);
       history.push(`/savings-planner`);
     }, [id, history])
   );
