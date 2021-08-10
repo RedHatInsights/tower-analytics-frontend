@@ -71,7 +71,8 @@ const FilterableToolbar = ({
     const oldParams = parseQueryString(qsConfig, history.location.search);
     const oldParamsClone = { ...oldParams };
     delete oldParamsClone.limit;
-    delete oldParamsClone.sort_by;
+    delete oldParamsClone.sort_options;
+    delete oldParamsClone.sort_order;
     pushHistoryState(
       removeParams(qsConfig, oldParams, oldParamsClone),
       qsConfig

@@ -114,7 +114,7 @@ describe('qs (qs.js)', () => {
     test('should get default QS config object', () => {
       expect(getQSConfig('organization')).toEqual({
         namespace: 'organization',
-        defaultParams: { offset: 1, limit: 5, sort_by: 'name' },
+        defaultParams: { offset: 1, limit: 5, sort_options: 'name' },
         integerFields: ['offset', 'limit'],
         dateFields: ['modified', 'created'],
       });
@@ -125,11 +125,11 @@ describe('qs (qs.js)', () => {
         getQSConfig('organization', {
           offset: 1,
           limit: 5,
-          sort_by: 'name',
+          sort_options: 'name',
         })
       ).toEqual({
         namespace: 'organization',
-        defaultParams: { offset: 1, limit: 5, sort_by: 'name' },
+        defaultParams: { offset: 1, limit: 5, sort_options: 'name' },
         integerFields: ['offset', 'limit'],
         dateFields: ['modified', 'created'],
       });
@@ -143,11 +143,11 @@ describe('qs (qs.js)', () => {
       const defaults = {
         offset: 1,
         limit: 15,
-        sort_by: 'name',
+        sort_options: 'name',
       };
       expect(getQSConfig('inventory', defaults)).toEqual({
         namespace: 'inventory',
-        defaultParams: { offset: 1, limit: 15, sort_by: 'name' },
+        defaultParams: { offset: 1, limit: 15, sort_options: 'name' },
         integerFields: ['offset', 'limit'],
         dateFields: ['modified', 'created'],
       });

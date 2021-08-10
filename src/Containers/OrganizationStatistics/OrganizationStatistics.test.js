@@ -195,7 +195,7 @@ describe('Containers/OrganizationStatistics', () => {
     wrapper.update();
 
     const {
-      sort_by,
+      sort_order,
       attributes,
       granularity,
       include_others,
@@ -206,7 +206,7 @@ describe('Containers/OrganizationStatistics', () => {
       ...rest
     } = lastCallBody(jobExplorerUrl);
 
-    expect(sort_by.split(':')[1]).toBe('desc');
+    expect(sort_order).toBe('desc');
     expect(rest.defaultParams).toEqual(defaultQueryParams);
   });
 
@@ -228,7 +228,6 @@ describe('Containers/OrganizationStatistics', () => {
     // Wait for the call to hosts options and hosts data
     const checkHostsCall = () => {
       const {
-        sort_by,
         attributes,
         granularity,
         group_by,
@@ -251,7 +250,6 @@ describe('Containers/OrganizationStatistics', () => {
     // Wait for the calls for the orgs options and orgs data
     const checkOrgsCall = () => {
       const {
-        sort_by,
         attributes,
         granularity,
         group_by_time,
