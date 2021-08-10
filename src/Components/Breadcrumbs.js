@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 import {
   Breadcrumb,
@@ -7,16 +8,13 @@ import {
   BreadcrumbHeading,
 } from '@patternfly/react-core';
 
-import getBaseName from '../Utilities/getBaseName';
-
 const Breadcrumbs = ({ items = [], current = null }) => {
   return (
     <Breadcrumb>
       {items.map(({ title, navigate }) => {
-        const basePathNavigate = getBaseName() + navigate;
         return (
-          <BreadcrumbItem key={title} to={basePathNavigate}>
-            {title}
+          <BreadcrumbItem key={title}>
+            <Link to={navigate}>{title}</Link>
           </BreadcrumbItem>
         );
       })}
