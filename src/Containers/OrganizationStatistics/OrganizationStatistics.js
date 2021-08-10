@@ -231,13 +231,6 @@ const OrganizationStatistics = ({ history }) => {
   };
 
   useEffect(() => {
-    insights.chrome.appNavClick({
-      id: 'organization-statistics',
-      secondaryNav: true,
-    });
-  }, []);
-
-  useEffect(() => {
     setOrgs(activeTabKey);
   }, [activeTabKey]);
 

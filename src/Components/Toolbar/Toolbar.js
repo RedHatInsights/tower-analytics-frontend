@@ -33,8 +33,6 @@ const FilterableToolbar = ({
   pagination = null,
   hasSettings = false,
   additionalControls = [],
-  hideQuickDateRange = false,
-  hideSortOptions = false,
 }) => {
   const [settingsExpanded, setSettingsExpanded] = useState(false);
   const { quick_date_range, sort_options, ...restCategories } = categories;
@@ -47,6 +45,17 @@ const FilterableToolbar = ({
       obj[key] = restCategories[key];
       return obj;
     }, {});
+
+  const pushHistoryState = (params, qsConfig) => {
+    const { pathname } = history.location;
+    const nonNamespacedParams = parseQueryString({}, history.location.search);
+    const encodedParams = encodeNonDefaultQueryString(
+      qsConfig,
+      params,
+      nonNamespacedParams
+    );
+    history.push(encodedParams ? `${pathname}?${encodedParams}` : pathname);
+  };
 
   const handleSearch = (key, value) => {
     let params = parseQueryString(qsConfig, history.location.search);
@@ -68,17 +77,6 @@ const FilterableToolbar = ({
       removeParams(qsConfig, oldParams, oldParamsClone),
       qsConfig
     );
-  };
-
-  const pushHistoryState = (params, qsConfig) => {
-    const { pathname } = history.location;
-    const nonNamespacedParams = parseQueryString({}, history.location.search);
-    const encodedParams = encodeNonDefaultQueryString(
-      qsConfig,
-      params,
-      nonNamespacedParams
-    );
-    history.push(encodedParams ? `${pathname}?${encodedParams}` : pathname);
   };
 
   return (
@@ -103,7 +101,7 @@ const FilterableToolbar = ({
               handleSearch={handleSearch}
             />
           )}
-          {!hideQuickDateRange && quick_date_range && (
+          {quick_date_range && (
             <QuickDateGroup
               filters={filters}
               setFilters={setFilters}
@@ -111,7 +109,7 @@ const FilterableToolbar = ({
               handleSearch={handleSearch}
             />
           )}
-          {!hideSortOptions && sort_options && (
+          {sort_options && (
             <SortByGroup
               filters={filters}
               setFilters={setFilters}
@@ -169,8 +167,6 @@ FilterableToolbar.propTypes = {
   pagination: PropTypes.object,
   hasSettings: PropTypes.bool,
   additionalControls: PropTypes.array,
-  hideSortOptions: PropTypes.bool,
-  hideQuickDateRange: PropTypes.bool,
 };
 
 export default FilterableToolbar;
