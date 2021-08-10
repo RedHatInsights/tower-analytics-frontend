@@ -61,10 +61,6 @@ const JobExplorer = () => {
   );
 
   useEffect(() => {
-    insights.chrome.appNavClick({ id: 'job-explorer', secondaryNav: true });
-  }, []);
-
-  useEffect(() => {
     fetchOptions();
     fetchEndpoints();
   }, [queryParams]);

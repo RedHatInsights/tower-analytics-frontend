@@ -71,10 +71,11 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     error,
     isSuccess,
     request: fetchOptions,
-  } = useRequest(
-    useCallback(() => readJobExplorerOptions(queryParams), [queryParams]),
-    {}
-  );
+  } = useRequest(async (qp) => {
+    const { quick_date_range, sort_options, ...rest } =
+      await readJobExplorerOptions(qp);
+    return rest;
+  }, {});
 
   const {
     result: { templates, count },
@@ -108,10 +109,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     },
   };
 
-  useEffect(() => {
-    insights.chrome.appNavClick({ id: 'savings-planner', secondaryNav: true });
-  }, []);
-
   const initialSearchParams = parse(search, {
     arrayFormat: 'bracket',
     parseBooleans: true,
@@ -141,8 +138,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
         fieldId="template-link-field"
       >
         <FilterableToolbar
-          hideQuickDateRange
-          hideSortOptions
           categories={options}
           filters={queryParams}
           qsConfig={qsConfig}
