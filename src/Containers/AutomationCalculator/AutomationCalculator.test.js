@@ -1,11 +1,5 @@
 import { act } from 'react-dom/test-utils';
-import {
-  history,
-  mountPage,
-  preflight200,
-  preflight400,
-  preflight403,
-} from '../../__tests__/helpers';
+import { history, mountPage } from '../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -80,7 +74,6 @@ describe('Containers/AutomationCalculator', () => {
     d3Container.setAttribute('id', 'd3-roi-chart-root');
     document.body.appendChild(d3Container);
 
-    fetchMock.get({ ...preflight200 });
     fetchMock.post({ url: jobExplorerUrl }, { ...dummyRoiData });
     fetchMock.post({ url: jobExplorerOptionsUrl }, { ...jobExplorerOptions });
   });
@@ -101,28 +94,6 @@ describe('Containers/AutomationCalculator', () => {
     expect(wrapper).toBeTruthy();
     // Has 3 links in the list --> 3 data points
     expect(wrapper.find('a')).toHaveLength(3);
-  });
-
-  it('should render preflight error', async () => {
-    fetchMock.get({ ...preflight400 });
-    await act(async () => {
-      wrapper = mountPage(AutomationCalculator);
-    });
-    wrapper.update();
-
-    expect(wrapper.text()).toEqual(expect.stringContaining('Not authorized'));
-  });
-
-  it('should render RBAC Access error', async () => {
-    fetchMock.get({ ...preflight403 });
-    await act(async () => {
-      wrapper = mountPage(AutomationCalculator);
-    });
-    wrapper.update();
-
-    expect(wrapper.text()).toEqual(
-      expect.stringContaining('RBAC Access Denied')
-    );
   });
 
   it('should render api error', async () => {

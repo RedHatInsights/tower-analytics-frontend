@@ -54,3 +54,5 @@ automation-analytics:
         title: Job explorer
       - id: savings-planner
         title: Savings Planner
+      - id: reports
+        title: Reports

@@ -7,7 +7,7 @@ import {
 } from '../../Utilities/qs';
 import { useHistory } from 'react-router-dom';
 
-const perPageOptions = [
+const defaultPerPageOptions = [
   { title: '5', value: 5 },
   { title: '10', value: 10 },
   { title: '15', value: 15 },
@@ -23,6 +23,7 @@ type ApiParams = Record<
 
 interface Props {
   count?: number;
+  perPageOptions?: { title: string; value: number }[];
   params: {
     offset: number;
     limit: number;
@@ -35,6 +36,7 @@ interface Props {
 const Pagination: FunctionComponent<Props> = ({
   count = 0,
   qsConfig,
+  perPageOptions = null,
   params,
   setPagination,
   ...props
@@ -75,7 +77,7 @@ const Pagination: FunctionComponent<Props> = ({
     <PFPagination
       itemCount={count}
       widgetId="aa-pagination"
-      perPageOptions={perPageOptions}
+      perPageOptions={perPageOptions ?? defaultPerPageOptions}
       perPage={limit}
       page={currentPage}
       onPerPageSelect={(event, perPage: number, page: number) => {
@@ -99,6 +101,12 @@ Pagination.propTypes = {
     limit: PropTypes.number.isRequired,
   }).isRequired,
   setPagination: PropTypes.func.isRequired,
+  perPageOptions: PropTypes.arrayOf(
+    PropTypes.exact({
+      title: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired,
+    }).isRequired
+  ),
 };
 
 export default Pagination;

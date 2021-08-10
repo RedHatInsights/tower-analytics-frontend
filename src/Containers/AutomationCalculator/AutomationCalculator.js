@@ -18,12 +18,11 @@ import {
 // Imports from custom components
 import LoadingState from '../../Components/LoadingState';
 import NoData from '../../Components/NoData';
-import EmptyState from '../../Components/EmptyState';
 import ApiErrorState from '../../Components/ApiErrorState';
 import FilterableToolbar from '../../Components/Toolbar/';
 
 // Imports from API
-import { preflightRequest, readROI, readROIOptions } from '../../Api/';
+import { readROI, readROIOptions } from '../../Api/';
 
 // Imports from utilities
 import { useQueryParams } from '../../Utilities/useQueryParams';
@@ -85,10 +84,6 @@ const AutomationCalculator = ({ history }) => {
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
 
-  const { error: preflightError, request: setPreflight } = useRequest(
-    useCallback(() => preflightRequest(), [])
-  );
-
   const { result: options, request: setOptions } = useRequest(
     useCallback(() => readROIOptions(queryParams), [queryParams]),
     {}
@@ -98,6 +93,7 @@ const AutomationCalculator = ({ history }) => {
     result: api,
     error: apiError,
     isLoading: apiIsLoading,
+    isSuccess: apiIsSuccess,
     request: fetchEndpoint,
     setValue,
   } = useRequest(
@@ -136,7 +132,6 @@ const AutomationCalculator = ({ history }) => {
   };
 
   useEffect(() => {
-    setPreflight();
     setOptions();
   }, []);
 
@@ -173,19 +168,12 @@ const AutomationCalculator = ({ history }) => {
         <Card>
           <BorderedCardTitle>Automation savings</BorderedCardTitle>
           <CardBody>
-            {apiIsLoading && <LoadingState />}
-            {apiError && <ApiErrorState message={apiError.error} />}
-            {api.length <= 0 && <NoData />}
-            {api.length > 0 && (
-              <React.Fragment>
-                <TopTemplatesSavings
-                  margin={{ top: 20, right: 20, bottom: 20, left: 70 }}
-                  id="d3-roi-chart-root"
-                  data={filterDisabled(api)}
-                />
-                <p style={{ textAlign: 'center' }}>Templates</p>
-              </React.Fragment>
-            )}
+            <TopTemplatesSavings
+              margin={{ top: 20, right: 20, bottom: 20, left: 70 }}
+              id="d3-roi-chart-root"
+              data={filterDisabled(api)}
+            />
+            <p style={{ textAlign: 'center' }}>Templates</p>
           </CardBody>
         </Card>
       </StackItem>
@@ -226,15 +214,18 @@ const AutomationCalculator = ({ history }) => {
   );
 
   const renderContents = () => {
-    if (preflightError) return <EmptyState preflightError={preflightError} />;
-    else if (api)
+    if (apiIsLoading) return <LoadingState />;
+    if (apiError) return <ApiErrorState message={apiError.error} />;
+    if (apiIsSuccess && api.length <= 0) return <NoData />;
+    if (apiIsSuccess && api.length > 0)
       return (
         <Grid hasGutter className="automation-wrapper">
           <GridItem span={9}>{renderLeft()}</GridItem>
           <GridItem span={3}>{renderRight()}</GridItem>
         </Grid>
       );
-    else return <></>;
+
+    return null;
   };
 
   return (
