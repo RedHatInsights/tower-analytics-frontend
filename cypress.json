@@ -9,10 +9,10 @@
       "runMode": 2,
       "openMode": 0
       },
-    "baseUrl": "https://prod.foo.redhat.com:8443",
+    "baseUrl": "http://localhost:1337/beta/ansible/insights",
     "env": {
         "appid":"#automation-analytics-application",
-        "USERNAME": "bob",
-        "PASSWORD": "redhat1234"
+        "USERNAME": "admin",
+        "PASSWORD": "admin"
     }
 }
