@@ -9,17 +9,14 @@ import { arrayFields } from './constants';
 
 export function getQSConfig(
   namespace,
-  defaultParams = { offset: 1, limit: 5, sort_by: 'name' },
+  defaultParams = { offset: 1, limit: 5, sort_options: 'name' },
   integerFields = ['offset', 'limit'],
   dateFields = ['modified', 'created']
 ) {
   if (!namespace) {
     throw new Error('a QS namespace is required');
   }
-  // if order_by isn't passed, default to name
-  // if (!defaultParams.sort_by) {
-  //   defaultParams.sort_by = 'name:desc';
-  // }
+
   return {
     namespace,
     defaultParams,
