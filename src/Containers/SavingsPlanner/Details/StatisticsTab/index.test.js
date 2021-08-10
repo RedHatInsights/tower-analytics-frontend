@@ -10,31 +10,44 @@ const tabs = [
 const data = {
   name: 'Name',
   projections: {
-    time_stats: {
-      cumulative_time_net_benefits: {
-        initial: 1,
-        year1: 2,
-        year2: 3,
-        year3: 4,
+    series_stats: [
+      {
+        year: 'initial',
+        cumulative_time_net_benefits: 1,
+        total_hours_saved: 1,
+        total_hours_spent_risk_adjusted: 1,
+        cumulative_net_benefits: 1,
+        total_benefits: 1,
+        total_costs: 1,
       },
-      total_hours_saved: { initial: 1, year1: 2, year2: 3, year3: 4 },
-      total_hours_spent_risk_adjusted: {
-        initial: 1,
-        year1: 2,
-        year2: 3,
-        year3: 4,
+      {
+        year: 'year1',
+        cumulative_time_net_benefits: 2,
+        total_hours_saved: 2,
+        total_hours_spent_risk_adjusted: 2,
+        cumulative_net_benefits: 2,
+        total_benefits: 2,
+        total_costs: 2,
       },
-    },
-    monetary_stats: {
-      cumulative_net_benefits: {
-        initial: 1,
-        year1: 2,
-        year2: 3,
-        year3: 4,
+      {
+        year: 'year2',
+        cumulative_time_net_benefits: 3,
+        total_hours_saved: 3,
+        total_hours_spent_risk_adjusted: 3,
+        cumulative_net_benefits: 3,
+        total_benefits: 3,
+        total_costs: 3,
       },
-      total_benefits: { initial: 1, year1: 2, year2: 3, year3: 4 },
-      total_costs: { initial: 1, year1: 2, year2: 3, year3: 4 },
-    },
+      {
+        year: 'year3',
+        cumulative_time_net_benefits: 4,
+        total_hours_saved: 4,
+        total_hours_spent_risk_adjusted: 4,
+        cumulative_net_benefits: 4,
+        total_benefits: 4,
+        total_costs: 4,
+      },
+    ],
   },
 };
 
