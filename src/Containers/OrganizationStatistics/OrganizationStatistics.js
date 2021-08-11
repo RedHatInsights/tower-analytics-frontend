@@ -135,6 +135,61 @@ const OrganizationStatistics = ({ history }) => {
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
 
+  const {
+    result: jobs,
+    error: jobsError,
+    isLoading: jobsIsLoading,
+    isSuccess: jobsIsSuccess,
+    request: setJobs,
+  } = useRequest(
+    useCallback(
+      async () => readJobExplorer(jobRunsByOrgParams),
+      [jobRunsByOrgParams]
+    ),
+    []
+  );
+
+  const {
+    result: orgs,
+    error: orgsError,
+    isLoading: orgsIsLoading,
+    isSuccess: orgsIsSuccess,
+    request: setOrgs,
+  } = useRequest(
+    useCallback(
+      async (tabIndex = 0) => {
+        let orgs;
+        if (tabIndex === 0) {
+          orgs = await readJobExplorer(jobsByDateAndOrgParams);
+        } else {
+          orgs = await readHostExplorer(hostAcrossOrgParams);
+        }
+        return orgs;
+      },
+      [hostAcrossOrgParams, jobsByDateAndOrgParams]
+    ),
+    []
+  );
+
+  const { result: options, request: setOptions } = useRequest(
+    useCallback(() => readOrgOptions(queryParams), [queryParams]),
+    {}
+  );
+
+  const {
+    result: tasks,
+    error: tasksError,
+    isLoading: tasksIsLoading,
+    isSuccess: tasksIsSuccess,
+    request: setTasks,
+  } = useRequest(
+    useCallback(
+      async () => readJobExplorer(jobEventsByOrgParams),
+      [jobEventsByOrgParams]
+    ),
+    []
+  );
+
   const jobEventsByOrgParams = {
     ...queryParams,
     attributes: ['host_task_count'],
@@ -171,61 +226,6 @@ const OrganizationStatistics = ({ history }) => {
     sort_order: 'desc',
   };
 
-  const {
-    result: jobs,
-    error: jobsError,
-    isLoading: jobsIsLoading,
-    isSuccess: jobsIsSuccess,
-    request: setJobs,
-  } = useRequest(
-    useCallback(
-      async () => readJobExplorer(jobRunsByOrgParams),
-      [jobRunsByOrgParams]
-    ),
-    []
-  );
-
-  const { result: options, request: setOptions } = useRequest(
-    useCallback(() => readOrgOptions(queryParams), [queryParams]),
-    {}
-  );
-
-  const {
-    result: orgs,
-    error: orgsError,
-    isLoading: orgsIsLoading,
-    isSuccess: orgsIsSuccess,
-    request: setOrgs,
-  } = useRequest(
-    useCallback(
-      async (tabIndex = 0) => {
-        let orgs;
-        if (tabIndex === 0) {
-          orgs = await readJobExplorer(jobsByDateAndOrgParams);
-        } else {
-          orgs = await readHostExplorer(hostAcrossOrgParams);
-        }
-        return orgs;
-      },
-      [hostAcrossOrgParams, jobsByDateAndOrgParams]
-    ),
-    []
-  );
-
-  const {
-    result: tasks,
-    error: tasksError,
-    isLoading: tasksIsLoading,
-    isSuccess: tasksIsSuccess,
-    request: setTasks,
-  } = useRequest(
-    useCallback(
-      async () => readJobExplorer(jobEventsByOrgParams),
-      [jobEventsByOrgParams]
-    ),
-    []
-  );
-
   const handleTabClick = (_, tabIndex) => {
     setActiveTabKey(tabIndex);
   };
@@ -235,7 +235,7 @@ const OrganizationStatistics = ({ history }) => {
   }, [activeTabKey]);
 
   useEffect(() => {
-    setOrgs(activeTabKey);
+    setOrgs();
     setTasks();
     setOptions();
     setJobs();
