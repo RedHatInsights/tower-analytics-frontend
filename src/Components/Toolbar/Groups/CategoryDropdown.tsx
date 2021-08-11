@@ -1,10 +1,23 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { ToolbarItem, Select, SelectOption } from '@patternfly/react-core';
+import React, { FunctionComponent, useState } from 'react';
+import {
+  ToolbarItem,
+  Select,
+  SelectOption,
+  SelectVariant,
+} from '@patternfly/react-core';
 
-const CategoryDropdown = ({
+interface Props {
+  selected: string;
+  setSelected: (value: string) => void;
+  categories: {
+    key: string;
+    name: string;
+  }[];
+}
+
+const CategoryDropdown: FunctionComponent<Props> = ({
   selected,
-  setSelected = () => {},
+  setSelected = () => null,
   categories = [],
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -13,11 +26,11 @@ const CategoryDropdown = ({
     <ToolbarItem>
       <Select
         isOpen={isExpanded}
-        variant={'single'}
+        variant={SelectVariant.single}
         aria-label={'Categories'}
         onToggle={() => setIsExpanded(!isExpanded)}
-        onSelect={(_event, selection) => {
-          setSelected(selection);
+        onSelect={(_, selection) => {
+          setSelected(selection as string);
           setIsExpanded(false);
         }}
         selections={selected}
@@ -31,12 +44,6 @@ const CategoryDropdown = ({
       </Select>
     </ToolbarItem>
   );
-};
-
-CategoryDropdown.propTypes = {
-  categories: PropTypes.array,
-  selected: PropTypes.string,
-  setSelected: PropTypes.func,
 };
 
 export default CategoryDropdown;

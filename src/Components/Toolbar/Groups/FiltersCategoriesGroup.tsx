@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import { ToolbarGroup } from '@patternfly/react-core';
+import React, { FunctionComponent, useState } from 'react';
+import { SelectOptionProps, ToolbarGroup } from '@patternfly/react-core';
 
 import CategoryDropdown from './CategoryDropdown';
-import ToolbarInput from './ToolbarInput/';
+import ToolbarInput from './ToolbarInput';
 import { optionsForCategories } from '../constants';
+import { SetValues, AttributeType } from '../types';
 
-const FilterCategoriesGroup = ({
+interface Props {
+  filterCategories: Record<string, SelectOptionProps[]>;
+  filters: Record<string, AttributeType>;
+  setFilters: SetValues;
+}
+
+const FilterCategoriesGroup: FunctionComponent<Props> = ({
   filterCategories,
   filters,
-  handleSearch,
   setFilters,
 }) => {
   const [currentCategory, setCurrentCategory] = useState(
@@ -33,21 +38,11 @@ const FilterCategoriesGroup = ({
           value={filters[key]}
           selectOptions={filterCategories[key]}
           isVisible={currentCategory === key}
-          setValue={(value) => {
-            setFilters(key, value);
-            handleSearch(key, value);
-          }}
+          setValue={(value) => setFilters(key, value)}
         />
       ))}
     </ToolbarGroup>
   );
-};
-
-FilterCategoriesGroup.propTypes = {
-  filterCategories: PropTypes.object.isRequired,
-  filters: PropTypes.object.isRequired,
-  handleSearch: PropTypes.func.isRequired,
-  setFilters: PropTypes.func.isRequired,
 };
 
 export default FilterCategoriesGroup;
