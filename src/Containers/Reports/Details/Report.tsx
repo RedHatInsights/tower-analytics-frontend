@@ -126,7 +126,7 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
 
   const { result: options, request: setOptions } = useRequest(
     useCallback(() => readOptions(queryParams), [queryParams]),
-    []
+    {}
   );
 
   const [attrPairs, setAttrPairs] = useState<AttributesType>([]);

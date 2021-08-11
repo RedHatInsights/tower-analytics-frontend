@@ -32,6 +32,12 @@ const defaultParams = {
   granularity: 'monthly',
   sort_options: 'changed_host_count',
   sort_order: 'desc',
+  cluster_id: [],
+  inventory_id: [],
+  job_type: [],
+  org_id: [],
+  status: [],
+  template_id: [],
 };
 
 const extraAttributes: AttributesType = [
