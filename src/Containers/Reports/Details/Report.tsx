@@ -129,6 +129,7 @@ const renderData = (dataApi, chartSchema, attrPairs, getSorParams) => {
             (item: Record<string, string | number>) => (
               <Tr key={item.id} style={getOthersStyle(item, 'id')}>
                 {attrPairs.map(({ key }) => (
+                  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
                   <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
                 ))}
               </Tr>
