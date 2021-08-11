@@ -1,27 +1,35 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-
+import React, { FunctionComponent } from 'react';
 import {
   Title,
   EmptyState,
   EmptyStateIcon,
   EmptyStateBody,
   Button,
+  EmptyStateVariant,
+  ButtonVariant,
 } from '@patternfly/react-core';
 import { AddCircleOIcon, SearchIcon } from '@patternfly/react-icons';
 import { useHistory } from 'react-router-dom';
 
-const EmptyList = ({
+interface Props {
+  label?: string;
+  title?: string;
+  message?: string;
+  canAdd?: boolean;
+  path?: string;
+}
+
+const EmptyList: FunctionComponent<Props> = ({
   label = '',
   title = 'No items found.',
   message = '',
   canAdd = false,
-  path,
+  path = undefined,
 }) => {
   const history = useHistory();
 
   return (
-    <EmptyState variant="full">
+    <EmptyState variant={EmptyStateVariant.full}>
       <EmptyStateIcon icon={canAdd ? AddCircleOIcon : SearchIcon} />
       <Title size="lg" headingLevel="h3">
         {title}
@@ -30,12 +38,14 @@ const EmptyList = ({
       {canAdd && (
         <Button
           key="add-item-button"
-          variant="primary"
+          variant={ButtonVariant.primary}
           aria-label={label}
           onClick={() => {
-            history.push({
-              pathname: path,
-            });
+            if (path) {
+              history.push({
+                pathname: path,
+              });
+            }
           }}
         >
           {label}
@@ -43,14 +53,6 @@ const EmptyList = ({
       )}
     </EmptyState>
   );
-};
-
-EmptyList.propTypes = {
-  canAdd: PropTypes.bool,
-  label: PropTypes.string,
-  message: PropTypes.string,
-  title: PropTypes.string,
-  path: PropTypes.string.isRequired,
 };
 
 export default EmptyList;

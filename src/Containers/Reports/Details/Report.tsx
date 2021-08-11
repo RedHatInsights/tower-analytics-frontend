@@ -43,7 +43,7 @@ import useRequest from '../../../Utilities/useRequest';
 import { formatTotalTime } from '../../../Utilities/helpers';
 
 import { global_disabled_color_300 } from '@patternfly/react-tokens';
-import ApiStatusWrapper from '../../../Components/ApiStatusWrapper';
+import ApiStatusWrapper from '../../../Components/ApiStatus/ApiStatusWrapper';
 import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
 import currencyFormatter from '../../../Utilities/currencyFormatter';
 

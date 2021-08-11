@@ -10,8 +10,8 @@ import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
 
 import { deletePlans, readPlanOptions, readPlans } from '../../../Api/';
 import FilterableToolbar from '../../../Components/Toolbar';
-import ApiErrorState from '../../../Components/ApiErrorState';
-import LoadingState from '../../../Components/LoadingState';
+import ApiErrorState from '../../../Components/ApiStatus/ApiErrorState';
+import LoadingState from '../../../Components/ApiStatus/LoadingState';
 import EmptyList from '../../../Components/EmptyList';
 import Pagination from '../../../Components/Pagination';
 import PlanCard from './ListItem';

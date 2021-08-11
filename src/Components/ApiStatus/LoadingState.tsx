@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import {
   Title,
   EmptyState,
@@ -8,7 +8,7 @@ import {
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons';
 
-const DefaultLoadingState = () => (
+const LoadingState: FunctionComponent<Record<string, never>> = () => (
   <EmptyState variant={EmptyStateVariant.full}>
     <EmptyStateIcon icon={CubesIcon} />
     <Title headingLevel="h5" size="lg">
@@ -18,4 +18,4 @@ const DefaultLoadingState = () => (
   </EmptyState>
 );
 
-export default DefaultLoadingState;
+export default LoadingState;

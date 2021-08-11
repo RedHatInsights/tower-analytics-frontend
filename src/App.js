@@ -6,7 +6,7 @@ import packageJson from '../package.json';
 
 import { useRequest } from './Utilities/useRequest';
 import { preflightRequest } from './Api/';
-import EmptyState from './Components/EmptyState';
+import AuthorizationErrorPage from './Components/ApiStatus/AuthorizationErrorPage';
 
 const App = () => {
   const history = useHistory();
@@ -32,7 +32,7 @@ const App = () => {
   }, []);
 
   const renderContent = () => {
-    if (error) return <EmptyState preflightError={error} />;
+    if (error) return <AuthorizationErrorPage error={error} />;
     return <Routes />;
   };
 

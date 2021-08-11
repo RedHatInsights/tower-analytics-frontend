@@ -1,8 +1,7 @@
 import React from 'react';
-import { shallow } from 'enzyme';
 import ApiErrorState from './ApiErrorState';
 
-describe('Components/JobStatus', () => {
+describe('Components/ApiStatus/ApiErrorState', () => {
   let wrapper;
   const msg = 'API Error Description...';
 

@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 import { Tr, Td, ExpandableRowContent } from '@patternfly/react-table';
 
-import { formatDateTime, formatJobType } from '../Utilities/helpers';
-import JobStatus from './JobStatus';
-import Breakdown from './Breakdown';
+import { formatDateTime, formatJobType } from '../../Utilities/helpers';
+import JobStatus from '../../Components/JobStatus';
+import Breakdown from '../../Charts/Breakdown';
 import {
   global_palette_green_300,
   global_palette_black_400,

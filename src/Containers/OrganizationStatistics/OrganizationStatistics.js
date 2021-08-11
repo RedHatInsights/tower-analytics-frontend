@@ -39,9 +39,9 @@ import { scaleOrdinal } from 'd3';
 import useRequest from '../../Utilities/useRequest';
 import { getQSConfig } from '../../Utilities/qs';
 
-import ApiErrorState from '../../Components/ApiErrorState';
-import LoadingState from '../../Components/LoadingState';
-import NoData from '../../Components/NoData';
+import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
+import LoadingState from '../../Components/ApiStatus/LoadingState';
+import NoData from '../../Components/ApiStatus/NoData';
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
