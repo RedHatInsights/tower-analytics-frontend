@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { FunctionComponent } from 'react';
 import { Label } from '@patternfly/react-core';
 import {
   CheckCircleIcon,
@@ -9,9 +8,21 @@ import {
   ExclamationTriangleIcon,
 } from '@patternfly/react-icons';
 
-const JobStatus = ({ status }) => {
-  const capitalized = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+import { capitalize } from '../Utilities/helpers';
 
+interface Props {
+  status:
+    | 'successful'
+    | 'failed'
+    | 'running'
+    | 'pending'
+    | 'error'
+    | 'canceled'
+    | 'new'
+    | 'waiting';
+}
+
+const JobStatus: FunctionComponent<Props> = ({ status }) => {
   const getColor = () => {
     switch (status) {
       case 'successful':
@@ -49,22 +60,9 @@ const JobStatus = ({ status }) => {
 
   return (
     <Label variant="outline" color={getColor()} icon={getIcon()}>
-      {capitalized(status)}
+      {capitalize(status)}
     </Label>
   );
-};
-
-JobStatus.propTypes = {
-  status: PropTypes.oneOf([
-    'successful',
-    'failed',
-    'error',
-    'running',
-    'new',
-    'waiting',
-    'pending',
-    'canceled',
-  ]),
 };
 
 export default JobStatus;

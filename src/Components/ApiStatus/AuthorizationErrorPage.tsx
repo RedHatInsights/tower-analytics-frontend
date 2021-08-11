@@ -1,5 +1,4 @@
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { FunctionComponent } from 'react';
 import {
   Button,
   Title,
@@ -7,12 +6,23 @@ import {
   EmptyStateVariant,
   EmptyStateIcon,
   EmptyStateBody,
+  ButtonVariant,
 } from '@patternfly/react-core';
 import { WrenchIcon } from '@patternfly/react-icons';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
-import { notAuthorizedParams } from '../Utilities/constants';
+import { notAuthorizedParams } from '../../Utilities/constants';
 
-const DefaultEmptyState = ({ preflightError: error }) => (
+interface Props {
+  error: {
+    status: number;
+    // TODO; Get this later form the api file
+    error: string | Record<string, any>;
+  };
+}
+
+const AuthorizationErrorPage: FunctionComponent<Props> = ({ error }) => (
   <EmptyState variant={EmptyStateVariant.full}>
     <EmptyStateIcon icon={WrenchIcon} />
     {error.status === 404 && (
@@ -49,7 +59,10 @@ const DefaultEmptyState = ({ preflightError: error }) => (
         <Title headingLevel="h5" size="lg">
           Something went wrong, please try reloading the page
         </Title>
-        <Button variant="primary" onClick={() => window.location.reload()}>
+        <Button
+          variant={ButtonVariant.primary}
+          onClick={() => window.location.reload()}
+        >
           Reload
         </Button>
       </>
@@ -57,8 +70,4 @@ const DefaultEmptyState = ({ preflightError: error }) => (
   </EmptyState>
 );
 
-DefaultEmptyState.propTypes = {
-  preflightError: PropTypes.object,
-};
-
-export default DefaultEmptyState;
+export default AuthorizationErrorPage;
