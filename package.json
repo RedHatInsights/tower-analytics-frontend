@@ -22,7 +22,8 @@
     "react-router-dom": "^5.2.0",
     "redux": "^4.1.0",
     "redux-logger": "^3.0.6",
-    "redux-promise-middleware": "^6.1.2"
+    "redux-promise-middleware": "^6.1.2",
+    "url-parse": "^1.5.3"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
@@ -58,8 +59,8 @@
     "@babel/preset-react": "^7.13.13",
     "@babel/preset-typescript": "^7.13.0",
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^1.1.0",
-    "@testing-library/jest-dom": "^5.14.1",
     "@redhat-cloud-services/frontend-components-config": "^4.3.3",
+    "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.6",
     "@testing-library/react-hooks": "^5.1.2",
     "@testing-library/user-event": "^13.1.8",
