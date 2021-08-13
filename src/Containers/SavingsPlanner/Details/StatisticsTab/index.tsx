@@ -73,7 +73,6 @@ interface OldData {
 }
 
 const dataConversion = (data: any): Data => {
-  console.log(data);
   if ('series_stats' in data.projections) {
     return data;
   }
