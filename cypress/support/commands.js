@@ -49,6 +49,7 @@ Cypress.Commands.add('loginFlow', () => {
   cy.visit('/');
 
   cy.getUsername().then((uname) => cy.get('#username').type(`${uname}`));
+  cy.get('#login-show-step2').click()
   cy.getPassword().then((password) =>
     cy.get('#password').type(`${password}{enter}`, { log: false })
   );
