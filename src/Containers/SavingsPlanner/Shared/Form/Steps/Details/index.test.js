@@ -15,85 +15,83 @@ describe('SavingsPlanner/Shared/Form/Steps/Details', () => {
     template_id: -2,
   };
   const mockOptions = {
-    data: {
-      template_id: [
-        {
-          key: -2,
-          value: 'None',
-        },
-        {
-          key: 1,
-          value: 'template_name_2',
-        },
-      ],
-      automation_status: [
-        {
-          key: 'none',
-          value: 'None',
-        },
-        {
-          key: 'successful',
-          value: 'Successful',
-        },
-        {
-          key: 'failed',
-          value: 'Failed',
-        },
-      ],
-      category: [
-        {
-          key: 'system',
-          value: 'System',
-        },
-        {
-          key: 'development',
-          value: 'Development',
-        },
-      ],
-      platforms: [
-        {
-          key: 'el',
-          value: 'EL',
-        },
-        {
-          key: 'ubuntu',
-          value: 'Ubuntu',
-        },
-      ],
-      frequency_period: [
-        {
-          key: 'daily',
-          value: 'Daily',
-        },
-        {
-          key: 'weekly',
-          value: 'Weekly',
-        },
-      ],
-      manual_time: [
-        {
-          key: 60,
-          value: '1 hour (or less)',
-        },
-        {
-          key: 120,
-          value: '2 hours',
-        },
-      ],
-      sort_options: [
-        {
-          key: 'name',
-          value: 'Name',
-        },
-        {
-          key: 'hosts',
-          value: 'No. of hosts',
-        },
-      ],
-      meta: {
-        rbac: {
-          enabled: false,
-        },
+    template_id: [
+      {
+        key: -2,
+        value: 'None',
+      },
+      {
+        key: 1,
+        value: 'template_name_2',
+      },
+    ],
+    automation_status: [
+      {
+        key: 'none',
+        value: 'None',
+      },
+      {
+        key: 'successful',
+        value: 'Successful',
+      },
+      {
+        key: 'failed',
+        value: 'Failed',
+      },
+    ],
+    category: [
+      {
+        key: 'system',
+        value: 'System',
+      },
+      {
+        key: 'development',
+        value: 'Development',
+      },
+    ],
+    platforms: [
+      {
+        key: 'el',
+        value: 'EL',
+      },
+      {
+        key: 'ubuntu',
+        value: 'Ubuntu',
+      },
+    ],
+    frequency_period: [
+      {
+        key: 'daily',
+        value: 'Daily',
+      },
+      {
+        key: 'weekly',
+        value: 'Weekly',
+      },
+    ],
+    manual_time: [
+      {
+        key: 60,
+        value: '1 hour (or less)',
+      },
+      {
+        key: 120,
+        value: '2 hours',
+      },
+    ],
+    sort_options: [
+      {
+        key: 'name',
+        value: 'Name',
+      },
+      {
+        key: 'hosts',
+        value: 'No. of hosts',
+      },
+    ],
+    meta: {
+      rbac: {
+        enabled: false,
       },
     },
   };
