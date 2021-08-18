@@ -44,6 +44,32 @@ export const useQueryParams = (initial) => {
           ? { ...state, offset: 0 } // Defaults back to 0
           : { ...state, offset: parseInt(value) };
       case 'SET_GRANULARITY':
+        switch (value.granularity) {
+          case 'daily':
+            return {
+              ...state,
+              ...value,
+              quick_date_range: 'last_30_days',
+            };
+          case 'monthly':
+            return {
+              ...state,
+              ...value,
+              quick_date_range: 'last_6_months',
+            };
+          case 'yearly':
+            return {
+              ...state,
+              ...value,
+              quick_date_range: 'last_6_years',
+            };
+          default:
+            return {
+              ...state,
+              granularity: 'daily',
+              quick_date_range: 'last_30_days',
+            };
+        }
       case 'SET_ATTRIBUTES':
       case 'SET_JOB_TYPE':
       case 'SET_STATUS':
@@ -59,16 +85,10 @@ export const useQueryParams = (initial) => {
       case 'SET_SORT_OPTIONS':
       case 'SET_SORT_ORDER':
         return { ...state, ...value };
-      case 'SET_QUICK_DATE_RANGE': {
-        let newState = { ...state };
-        if (value !== 'custom') {
-          newState = { ...newState, start_date: null, end_date: null };
-        }
-
-        newState = { ...newState, ...value };
-        return newState;
-      }
-
+      case 'SET_QUICK_DATE_RANGE':
+        return value !== 'custom'
+          ? { ...state, start_date: null, end_date: null }
+          : { ...state, ...value };
       case 'SET_START_DATE':
       case 'SET_END_DATE': {
         let newValues = {};
