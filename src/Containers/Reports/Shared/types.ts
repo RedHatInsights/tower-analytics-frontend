@@ -2,7 +2,11 @@ import { ChartSchemaElement } from 'react-json-chart-builder';
 import { ApiJson, Params, ParamsWithPagination } from '../../../Api';
 
 export type AttributesType = { key: string; value: string }[];
-export type SchemaFnc = (label: string, y: string) => ChartSchemaElement[];
+export type SchemaFnc = (
+  label: string,
+  y: string,
+  xTickFormat: string
+) => ChartSchemaElement[];
 
 export interface ReportGeneratorParams {
   defaultParams: Params;

@@ -46,7 +46,11 @@ const extraAttributes: AttributesType = [
   { key: 'name', value: 'Template name' },
 ];
 
-const schemaFnc = (label: string, y: string): ChartSchemaElement[] => [
+const schemaFnc = (
+  label: string,
+  y: string,
+  xTickFormat: string
+): ChartSchemaElement[] => [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -65,7 +69,7 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => [
     },
     xAxis: {
       label: 'Date',
-      tickFormat: 'formatDateAsDayMonth',
+      tickFormat: xTickFormat,
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
