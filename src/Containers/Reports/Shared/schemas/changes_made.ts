@@ -30,6 +30,7 @@ const defaultParams = {
   group_by: 'template',
   group_by_time: true,
   granularity: 'monthly',
+  quick_date_range: 'last_6_months',
   sort_options: 'changed_host_count',
   sort_order: 'desc',
   cluster_id: [],

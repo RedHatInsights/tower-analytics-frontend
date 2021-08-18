@@ -4,6 +4,7 @@ import {
   ToolbarGroup,
   Split,
   SelectOptionProps,
+  ToolbarGroupVariant,
 } from '@patternfly/react-core';
 
 import ToolbarInput from './ToolbarInput';
@@ -22,7 +23,10 @@ const strToDate = (date: string): Date => {
 interface Props {
   filters: Record<string, AttributeType>;
   setFilters: SetValues;
-  values: SelectOptionProps[];
+  values: {
+    quick_date_range: SelectOptionProps[];
+    granularity: SelectOptionProps[];
+  };
 }
 
 const QuickDateGroup: FunctionComponent<Props> = ({
@@ -34,11 +38,19 @@ const QuickDateGroup: FunctionComponent<Props> = ({
   const startDate = (filters.start_date as string) || getDateByDays(-30);
 
   return (
-    <ToolbarGroup variant="filter-group">
+    <ToolbarGroup variant={ToolbarGroupVariant['filter-group']}>
+      {values.granularity && (
+        <ToolbarInput
+          categoryKey="granularity"
+          value={filters.granularity}
+          selectOptions={values.granularity}
+          setValue={(value) => setFilters('granularity', value)}
+        />
+      )}
       <ToolbarInput
         categoryKey="quick_date_range"
         value={filters.quick_date_range}
-        selectOptions={values}
+        selectOptions={values.quick_date_range}
         setValue={(value) => setFilters('quick_date_range', value)}
       />
       {filters.quick_date_range === 'custom' && (
