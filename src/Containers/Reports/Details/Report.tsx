@@ -66,6 +66,13 @@ const Tr = styled(PFTr)`
 
 const customFunctions = (data: ApiReturnType) => ({
   ...functions,
+  axisFormat: {
+    ...functions.axisFormat,
+    formatAsYear: (tick: string) =>
+      Intl.DateTimeFormat('en', { year: 'numeric' }).format(new Date(tick)),
+    formatAsMonth: (tick: string) =>
+      Intl.DateTimeFormat('en', { month: 'long' }).format(new Date(tick)),
+  },
   fetchFnc: () =>
     new Promise<ApiReturnType>((resolve) => {
       resolve(data);
@@ -102,6 +109,12 @@ const getOthersStyle = (item: Record<string, string | number>, key: string) => {
     };
   }
   return {};
+};
+
+const getDateFormatByGranularity = (granularity: string): string => {
+  if (granularity === 'yearly') return 'formatAsYear';
+  if (granularity === 'monthly') return 'formatAsMonth';
+  if (granularity === 'daily') return 'formatDateAsDayMonth';
 };
 
 const renderData = (dataApi, chartSchema, attrPairs, getSorParams) => {
@@ -177,7 +190,8 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
   const chartSchema = schemaFnc(
     attrPairs.find(({ key }) => key === queryParams.sort_options)?.value ||
       'Label Y',
-    queryParams.sort_options as string
+    queryParams.sort_options as string,
+    getDateFormatByGranularity(queryParams.granularity)
   );
 
   useEffect(() => {
