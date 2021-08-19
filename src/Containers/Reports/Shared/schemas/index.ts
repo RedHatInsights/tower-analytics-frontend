@@ -1,12 +1,16 @@
 import { ReportPageParams } from '../types';
-import affected_hosts_by_playbook from './affected_hosts_by_playbook';
-import changes_made from './changes_made';
-import playbook_run_rate from './playbook_run_rate';
+import affectedHostsByPlaybook from './affectedHostsByPlaybook';
+import changesMade from './changesMade';
+import playbookRunRate from './playbookRunRate';
+import hostsByOrganization from './hostsByOrganizations';
+import jobsTasksByOrganization from './jobsTasksByOrganization';
 
 const reports = [
-  affected_hosts_by_playbook,
-  changes_made,
-  playbook_run_rate,
+  affectedHostsByPlaybook,
+  changesMade,
+  playbookRunRate,
+  hostsByOrganization,
+  jobsTasksByOrganization,
 ].map((report, id) => ({ id: id + 1, ...report }));
 
 const defaultReport: ReportPageParams = {
