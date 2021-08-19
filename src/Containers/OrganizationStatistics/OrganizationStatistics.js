@@ -14,6 +14,7 @@ import {
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
 
+import { Link } from 'react-router-dom';
 import {
   Card,
   CardBody,
@@ -22,6 +23,9 @@ import {
   Tab,
   Grid,
   GridItem,
+  Alert,
+  AlertVariant,
+  AlertActionLink,
 } from '@patternfly/react-core';
 
 import {
@@ -32,6 +36,7 @@ import {
 import PieChart from '../../Charts/PieChart';
 import FilterableToolbar from '../../Components/Toolbar/';
 import { organizationStatistics as constants } from '../../Utilities/constants';
+import { paths as reportPaths } from '../Reports/';
 
 // For chart colors
 import { pfmulti } from '../../Charts/Utilities/colors';
@@ -241,8 +246,35 @@ const OrganizationStatistics = ({ history }) => {
     setJobs();
   }, [queryParams]);
 
+  const renderDeprecationWarning = () => (
+    <Alert
+      variant={AlertVariant.warning}
+      title="Organization statistic page deprecation."
+      actionLinks={
+        <>
+          <AlertActionLink>
+            <Link to={reportPaths.getDetails(4)}>
+              Host by organization report
+            </Link>
+          </AlertActionLink>
+          <AlertActionLink>
+            <Link to={reportPaths.getDetails(5)}>
+              Jobs/Tasks by organization report
+            </Link>
+          </AlertActionLink>
+        </>
+      }
+    >
+      The organization statistics page is being converted to reports.
+      <br />
+      Check out the new reports with the same infomration by following the links
+      below.
+    </Alert>
+  );
+
   const renderContent = () => (
     <Grid hasGutter>
+      <GridItem span={12}>{renderDeprecationWarning()}</GridItem>
       <GridItem span={12}>
         <Card>
           <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>
