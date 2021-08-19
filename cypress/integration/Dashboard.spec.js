@@ -449,6 +449,68 @@ describe('Dashboard page drilldown tests', () => {
     cy.screenshot(screenshotFilename);
   });
 
-  // will fail due to bug: https://issues.redhat.com/browse/AA-534 and https://issues.redhat.com/browse/AA-535
-  it('Can navigate to job explorer from top workflows modal', () => {});
+  it('Query parameters are stored in the URL to enable refresh', () => {
+    // Add more once fixtures are implemented - other filters are content-dependent.
+    cy.get('[data-cy="quick_date_range"]').click();
+    cy.contains('Past 2 weeks').click();
+    cy.url().should('include', 'quick_date_range=last_2_weeks');
+  });
+
+  // it('Can filter by organization', () => {
+  //     cy.get(toolBarCatSelector).first().contains('Filter by').click();
+  //     cy.get('button[class="pf-c-select__menu-item"]').contains('Organization').click();
+  //     cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by organization').parent().parent().click();
+  //     cy.get('div[class="pf-c-select__menu"]').find('span').contains('No organization').siblings('input').click();
+  //     const screenshotFilename = 'clusters_filter_by_org.png';
+  //     cy.screenshot(screenshotFilename);
+  // });
+
+  // it('Can filter by a preset date range', () => {
+  //     cy.get('div[data-cy="quick_date_range"]').click();
+  //     cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+  //     const screenshotFilename = 'clusters_filter_by_quickDateRange.png';
+  //     cy.screenshot(screenshotFilename);
+  // });
+
+  // it('Can filter by a custom date range', () => {
+  //     const today = moment(new Date().toISOString()).format('YYYY-MM-DD');
+  //     const oneWeekAgo = moment(new Date().toISOString()).subtract(1, 'week').format('YYYY-MM-DD');
+
+  //     cy.get('div[data-cy="quick_date_range"]').click();
+  //     cy.get('.pf-c-select__menu-item').contains('Custom').click();
+  //     cy.get('#startDate').then(input => setDate(input[0], oneWeekAgo));
+  //     cy.get('#endDate').then(input => setDate(input[0], today));
+  //     const screenshotFilename = 'clusters_filter_by_customDateRange';
+  //     cy.screenshot(screenshotFilename);
+  // });
+
+  // it('Can filter by cluster', () => {
+  //     cy.get(toolBarCatSelector).first().click();
+  //     cy.get('button[class="pf-c-select__menu-item"]').contains('Cluster').click();
+  //     cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by cluster').parent().parent().click();
+  //     cy.get('div[class="pf-c-select__menu"]').find('span').first().siblings('input').click();
+  //     cy.get('#d3-line-chart-root > svg').then(chartElem => {
+  //         expect(chartElem).to.have.length(1);
+  //     });
+  //     const screenshotFilename = 'clusters_filter_by_cluster.png';
+  //     cy.screenshot(screenshotFilename);
+  // });
+
+  // it('Can filter by job type', () => {
+  //     cy.get(toolBarCatSelector).first().click();
+  //     cy.get('button[class="pf-c-select__menu-item"]').contains('Job').click();
+  //     cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by job type').parent().parent().click();
+  //     cy.get('div[class="pf-c-select__menu"]').find('span').contains('Workflow job').siblings('input').click();
+  //     const screenshotFilename = 'clusters_filter_by_jobType.png';
+  //     cy.screenshot(screenshotFilename);
+  // });
+
+  // it('Can filter by template', () => {
+  //     cy.get(toolBarCatSelector).first().click();
+  //     cy.get('button[class="pf-c-select__menu-item"]').contains('Template').click();
+  //     cy.get('button[id^="pf-select-toggle-id-"]').contains('Filter by template').parent().parent().click();
+  //     cy.get('div[class="pf-c-select__menu"]').find('span').first().siblings('input').click();
+  //     const screenshotFilename = 'clusters_filter_by_template.png';
+  //     cy.screenshot(screenshotFilename);
+  // });
 });
