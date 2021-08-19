@@ -80,6 +80,13 @@ describe('Dashboard page smoketests', () => {
     );
   });
 
+  it('Query parameters are stored in the URL to enable refresh', () => {
+    // Add more once fixtures are implemented - other filters are content-dependent.
+    cy.get('[data-cy="quick_date_range"]').click();
+    cy.contains('Past 2 weeks').click();
+    cy.url().should('include', 'quick_date_range=last_2_weeks');
+  });
+
   // it('Can filter by organization', () => {
   //     cy.get(toolBarCatSelector).first().contains('Filter by').click();
   //     cy.get('button[class="pf-c-select__menu-item"]').contains('Organization').click();
