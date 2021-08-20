@@ -449,6 +449,10 @@ describe('Dashboard page drilldown tests', () => {
     cy.screenshot(screenshotFilename);
   });
 
-  // will fail due to bug: https://issues.redhat.com/browse/AA-534 and https://issues.redhat.com/browse/AA-535
-  it('Can navigate to job explorer from top workflows modal', () => {});
+  it('Query parameters are stored in the URL to enable refresh', () => {
+    // Add more once fixtures are implemented - other filters are content-dependent.
+    cy.get('[data-cy="quick_date_range"]').click();
+    cy.contains('Past 2 weeks').click();
+    cy.url().should('include', 'quick_date_range=last_2_weeks');
+  });
 });

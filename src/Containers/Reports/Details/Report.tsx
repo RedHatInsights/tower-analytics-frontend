@@ -43,12 +43,13 @@ import useRequest from '../../../Utilities/useRequest';
 import { formatTotalTime } from '../../../Utilities/helpers';
 
 import { global_disabled_color_300 } from '@patternfly/react-tokens';
-import ApiStatusWrapper from '../../../Components/ApiStatusWrapper';
+import ApiStatusWrapper from '../../../Components/ApiStatus/ApiStatusWrapper';
 import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
 import currencyFormatter from '../../../Utilities/currencyFormatter';
 
 import { AttributesType, ReportGeneratorParams } from '../Shared/types';
 import { getQSConfig } from '../../../Utilities/qs';
+import EmptyList from '../../../Components/EmptyList';
 
 const CardBody = styled(PFCardBody)`
   & .pf-c-toolbar,
@@ -103,6 +104,43 @@ const getOthersStyle = (item: Record<string, string | number>, key: string) => {
   return {};
 };
 
+const renderData = (dataApi, chartSchema, attrPairs, getSorParams) => {
+  if (dataApi.isSuccess && dataApi.result.meta?.count === 0)
+    return <EmptyList />;
+
+  return (
+    <>
+      <ChartBuilder
+        schema={chartSchema}
+        functions={customFunctions(dataApi.result as unknown as ApiReturnType)}
+      />
+      <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
+        <Thead>
+          <Tr>
+            {attrPairs.map(({ key, value }) => (
+              <Th key={key} {...getSorParams(key)}>
+                {value}
+              </Th>
+            ))}
+          </Tr>
+        </Thead>
+        <Tbody>
+          {dataApi.result.meta?.legend.map(
+            (item: Record<string, string | number>) => (
+              <Tr key={item.id} style={getOthersStyle(item, 'id')}>
+                {attrPairs.map(({ key }) => (
+                  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+                  <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
+                ))}
+              </Tr>
+            )
+          )}
+        </Tbody>
+      </TableComposable>
+    </>
+  );
+};
+
 const Report: FunctionComponent<ReportGeneratorParams> = ({
   defaultParams,
   extraAttributes,
@@ -126,7 +164,7 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
 
   const { result: options, request: setOptions } = useRequest(
     useCallback(() => readOptions(queryParams), [queryParams]),
-    []
+    {}
   );
 
   const [attrPairs, setAttrPairs] = useState<AttributesType>([]);
@@ -200,37 +238,7 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
           }
         />
         <ApiStatusWrapper api={dataApi}>
-          <ChartBuilder
-            schema={chartSchema}
-            functions={customFunctions(
-              dataApi.result as unknown as ApiReturnType
-            )}
-          />
-          <TableComposable
-            aria-label="Report Table"
-            variant={TableVariant.compact}
-          >
-            <Thead>
-              <Tr>
-                {attrPairs.map(({ key, value }) => (
-                  <Th key={key} {...getSorParams(key)}>
-                    {value}
-                  </Th>
-                ))}
-              </Tr>
-            </Thead>
-            <Tbody>
-              {dataApi.result.meta?.legend.map(
-                (item: Record<string, string | number>) => (
-                  <Tr key={item.id} style={getOthersStyle(item, 'id')}>
-                    {attrPairs.map(({ key }) => (
-                      <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
-                    ))}
-                  </Tr>
-                )
-              )}
-            </Tbody>
-          </TableComposable>
+          {renderData(dataApi, chartSchema, attrPairs, getSorParams)}
         </ApiStatusWrapper>
       </CardBody>
       <CardFooter>

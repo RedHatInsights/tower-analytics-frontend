@@ -2,7 +2,7 @@ import React, { useEffect, useCallback } from 'react';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
-import LoadingState from '../../Components/LoadingState';
+import LoadingState from '../../Components/ApiStatus/LoadingState';
 import {
   readClustersOptions,
   readJobExplorer,
@@ -27,10 +27,10 @@ import {
 
 import BarChart from '../../Charts/BarChart';
 import LineChart from '../../Charts/LineChart';
-import ModulesList from '../../Components/ModulesList';
-import TemplatesList from '../../Components/TemplatesList';
+import ModulesList from './ModulesList';
+import TemplatesList from './TemplatesList';
 import FilterableToolbar from '../../Components/Toolbar';
-import ApiErrorState from '../../Components/ApiErrorState';
+import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 
 import { clusters } from '../../Utilities/constants';
 import useRequest from '../../Utilities/useRequest';
@@ -54,7 +54,8 @@ const initialTopWorkflowParams = {
 
 const initialModuleParams = {
   group_by: 'module',
-  sort_by: 'host_task_count:desc',
+  sort_options: 'host_task_count',
+  sort_oder: 'desc',
   limit: 10,
 };
 

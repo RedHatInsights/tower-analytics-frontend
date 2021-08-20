@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { trimStr } from '../Utilities/helpers';
+import { trimStr } from '../../Utilities/helpers';
 import styled from 'styled-components';
-import LoadingState from '../Components/LoadingState';
-import NoData from '../Components/NoData';
+import LoadingState from '../../Components/ApiStatus/LoadingState';
+import NoData from '../../Components/ApiStatus/NoData';
 
 import {
   DataList,

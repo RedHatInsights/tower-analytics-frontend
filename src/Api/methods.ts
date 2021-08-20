@@ -13,27 +13,16 @@ declare global {
   }
 }
 
-const handleResponse = (response: Response): Promise<ApiJson> => {
-  return response.json().then((json: ApiJson) => {
-    if (response.ok) {
-      return json;
-    }
+const handleResponse = (response: Response): Promise<ApiJson> =>
+  response.json().then((json: ApiJson) => {
+    if (response.ok) return Promise.resolve(json);
 
-    if (response.status === 404 || response.status === 401) {
-      return Promise.reject({
-        status: response.status,
-        message: json,
-      });
-    } else if (response.status === 403) {
-      return Promise.reject({
-        status: response.status,
-        error: 'RBAC access denied',
-      });
-    } else {
-      return Promise.reject(json);
-    }
+    const error = response.status === 403 ? 'RBAC access denied' : json;
+    return Promise.reject({
+      status: response.status,
+      error,
+    });
   });
-};
 
 export const authenticatedFetch = (
   endpoint: RequestInfo,
@@ -75,13 +64,14 @@ export const postWithPagination = (
   endpoint: string,
   params: ParamsWithPagination = {}
 ): Promise<ApiJson> => {
-  const { limit, offset, sort_by } = params;
+  const { limit, offset, sort_options, sort_order } = params;
 
   const url = new URL(endpoint, window.location.origin);
   url.search = stringify({
     limit,
     offset,
-    sort_by,
+    sort_by:
+      sort_options && sort_order ? `${sort_options}:${sort_order}` : undefined,
   });
 
   return authenticatedFetch(url.toString(), {

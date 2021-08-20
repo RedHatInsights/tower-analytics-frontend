@@ -8,18 +8,10 @@ import { parseQueryString } from './qs';
 export const useQueryParams = (initial) => {
   const history = useHistory();
 
-  const initialParams = {
-    ...initial,
-    ...(initial.sort_options &&
-      initial.sort_order && {
-        sort_by: `${initial.sort_options}:${initial.sort_order}`,
-      }),
-  };
-
   const initialWithCalculatedParams =
     history !== 'undefined' && history?.location
-      ? parseQueryString(initialParams, history.location.search)
-      : initialParams;
+      ? parseQueryString(initial, history.location.search)
+      : initial;
   const paramsReducer = (state, { type, value }) => {
     switch (type) {
       /* v0 api reducers */
@@ -63,6 +55,8 @@ export const useQueryParams = (initial) => {
       case 'SET_NAME':
       case 'SET_ROOT_WORKFLOWS_AND_JOBS':
       case 'SET_INVENTORY':
+      case 'SET_SORT_OPTIONS':
+      case 'SET_SORT_ORDER':
         return { ...state, ...value };
       case 'SET_QUICK_DATE_RANGE': {
         let newState = { ...state };
@@ -81,26 +75,6 @@ export const useQueryParams = (initial) => {
           newValues[key] = formatDate(value);
         });
         return { ...state, ...newValues };
-      }
-
-      case 'SET_SORT_OPTIONS': {
-        return {
-          ...state,
-          sort_options: value.sort_options,
-          ...(state.sort_order && {
-            sort_by: `${value.sort_options}:${state.sort_order}`,
-          }), // Update sort by
-        };
-      }
-
-      case 'SET_SORT_ORDER': {
-        return {
-          ...state,
-          sort_order: value.sort_order,
-          ...(state.sort_options && {
-            sort_by: `${state.sort_options}:${value.sort_order}`,
-          }), // Update sort by
-        };
       }
 
       case 'REINITIALIZE':

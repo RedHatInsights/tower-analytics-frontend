@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FunctionComponent } from 'react';
 import PropTypes from 'prop-types';
 import {
   ToolbarFilter,
@@ -10,7 +10,21 @@ import {
 import { SearchIcon } from '@patternfly/react-icons';
 import { optionsForCategories } from '../../constants';
 
-const Text = ({ categoryKey, isVisible = true, value = '', setValue }) => {
+import { SetValue } from '../../types';
+
+interface Props {
+  categoryKey: string;
+  isVisible?: boolean;
+  value?: string;
+  setValue: SetValue;
+}
+
+const Text: FunctionComponent<Props> = ({
+  categoryKey,
+  isVisible = true,
+  value = '',
+  setValue,
+}) => {
   const [searchVal, setSearchVal] = useState(value);
   const options = optionsForCategories[categoryKey];
 
@@ -33,7 +47,7 @@ const Text = ({ categoryKey, isVisible = true, value = '', setValue }) => {
       showToolbarItem={isVisible}
       chips={options.hasChips ? handleChips() : []}
       categoryName={options.name}
-      deleteChip={options.hasChips ? onDelete : null}
+      deleteChip={options.hasChips ? onDelete : undefined}
     >
       <InputGroup>
         <TextInput

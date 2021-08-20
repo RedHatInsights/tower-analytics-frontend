@@ -10,8 +10,8 @@ import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
 
 import { deletePlans, readPlanOptions, readPlans } from '../../../Api/';
 import FilterableToolbar from '../../../Components/Toolbar';
-import ApiErrorState from '../../../Components/ApiErrorState';
-import LoadingState from '../../../Components/LoadingState';
+import ApiErrorState from '../../../Components/ApiStatus/ApiErrorState';
+import LoadingState from '../../../Components/ApiStatus/LoadingState';
 import EmptyList from '../../../Components/EmptyList';
 import Pagination from '../../../Components/Pagination';
 import PlanCard from './ListItem';
@@ -63,7 +63,7 @@ const List = () => {
   );
 
   const {
-    result: { data, rbac, total_count },
+    result: { data, rbac, count },
     isLoading: itemsIsLoading,
     isSuccess: itemsIsSuccess,
     request: fetchEndpoints,
@@ -73,13 +73,13 @@ const List = () => {
       return {
         data: response.items,
         rbac: response.rbac,
-        total_count: response.meta.total_count,
+        count: response.meta.count,
       };
     }, [queryParams]),
     {
       data: [],
       rbac: {},
-      total_count: 0,
+      count: 0,
     }
   );
 
@@ -203,7 +203,7 @@ const List = () => {
           pagination={
             itemsIsSuccess && data.length > 0 ? (
               <Pagination
-                count={total_count}
+                count={count}
                 params={{
                   limit: +queryParams.limit,
                   offset: +queryParams.offset,
@@ -220,7 +220,7 @@ const List = () => {
       {data.length > 0 && !(itemsIsLoading || deleteLoading) && (
         <Footer>
           <Pagination
-            count={total_count}
+            count={count}
             params={{
               limit: parseInt(queryParams.limit),
               offset: parseInt(queryParams.offset),

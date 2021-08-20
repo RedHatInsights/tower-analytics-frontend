@@ -64,7 +64,7 @@ const Details = ({ options, formData, dispatch }) => {
               }}
               selections={category}
             >
-              {(options.data?.category || []).map(({ key, value }) => (
+              {(options?.category || []).map(({ key, value }) => (
                 <SelectOption key={key} value={key}>
                   {value}
                 </SelectOption>
@@ -109,7 +109,7 @@ const Details = ({ options, formData, dispatch }) => {
               }}
               selections={manual_time}
             >
-              {(options.data?.manual_time || []).map(({ key, value }) => (
+              {(options?.manual_time || []).map(({ key, value }) => (
                 <SelectOption key={key} value={key}>
                   {value}
                 </SelectOption>
@@ -174,7 +174,7 @@ const Details = ({ options, formData, dispatch }) => {
               }}
               selections={frequency_period}
             >
-              {(options.data?.frequency_period || []).map(({ key, value }) => (
+              {(options?.frequency_period || []).map(({ key, value }) => (
                 <SelectOption key={key} value={key}>
                   {value}
                 </SelectOption>

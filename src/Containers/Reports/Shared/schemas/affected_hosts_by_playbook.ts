@@ -6,6 +6,7 @@ import {
   ChartTopLevelType,
   ChartType,
   ChartThemeColor,
+  ChartTooltipType,
 } from 'react-json-chart-builder';
 import { readHostExplorer, readHostExplorerOptions } from '../../../../Api';
 import { CATEGORIES } from '../constants';
@@ -27,6 +28,12 @@ const defaultParams = {
   granularity: 'monthly',
   sort_options: 'total_unique_host_count',
   sort_order: 'desc',
+  cluster_id: [],
+  inventory_id: [],
+  job_type: [],
+  org_id: [],
+  status: [],
+  template_id: [],
 };
 
 const extraAttributes: AttributesType = [
@@ -74,7 +81,13 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => [
       orientation: ChartLegendOrientation.vertical,
       position: ChartLegendPosition.right,
     },
-    tooltip: {},
+    tooltip: {
+      mouseFollow: true,
+      stickToAxis: 'x',
+      cursor: true,
+      customFnc: (datum: Record<string, string | number>) =>
+        `${datum.name}: ${datum.y}`,
+    },
   },
   {
     id: 2,
@@ -88,9 +101,6 @@ const schemaFnc = (label: string, y: string): ChartSchemaElement[] => [
       props: {
         x: 'created_date',
         y,
-      },
-      tooltip: {
-        standalone: true,
       },
     },
   },

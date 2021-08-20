@@ -8,22 +8,17 @@ Automation Analytics provides data analytics for Ansible Tower that provides vis
 
 ### Developing locally
 
-Have [insights-proxy](https://github.com/RedHatInsights/insights-proxy) installed in a sibling folder to this folder.
 1. `npm ci` - install dependencies from the lockfile
-2. `npm run proxy:local`
-3. `npm run start:beta` - starts webpack bundler and serves the files with webpack dev server
-
-### Developing locally fullstack
-
-The same as previous, but you need to run the backend as well.
-- Then change the `npm run proxy:local` to `npm run proxy:fullstack`
+2. get the backend running: [automation analytics backend](https://gitlab.cee.redhat.com/automation-analytics/automation-analytics-backend)
+3. `npm start` - starts standalone: webpack serves the files alongside with insights, rbac and keycloak.
+4. Go to `http://localhost:1337/beta/ansible/insights` and use the admin/admin credentials to login.
 
 ### Testing
 
 - `npm run lint` - runs eslint
 - `npm run test` - runs jest
 - `npm run test:watch` - runs jest in watch mode
-- `npm run verify` will run linters and tests
+- `npm run verify` - will run linters and tests
 
 ## Deploying
 

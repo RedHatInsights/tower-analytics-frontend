@@ -9,17 +9,14 @@ import { arrayFields } from './constants';
 
 export function getQSConfig(
   namespace,
-  defaultParams = { offset: 1, limit: 5, sort_by: 'name' },
+  defaultParams = { offset: 1, limit: 5, sort_options: 'name' },
   integerFields = ['offset', 'limit'],
   dateFields = ['modified', 'created']
 ) {
   if (!namespace) {
     throw new Error('a QS namespace is required');
   }
-  // if order_by isn't passed, default to name
-  // if (!defaultParams.sort_by) {
-  //   defaultParams.sort_by = 'name:desc';
-  // }
+
   return {
     namespace,
     defaultParams,
@@ -256,3 +253,37 @@ export function replaceParams(oldParams, newParams) {
     ...newParams,
   };
 }
+
+// From the toolbar
+export const handleSearch = (key, value, qsConfig, history) => {
+  const pushHistoryState = (params) => {
+    const { pathname } = history.location;
+    const nonNamespacedParams = parseQueryString({}, history.location.search);
+    const encodedParams = encodeNonDefaultQueryString(
+      qsConfig,
+      params,
+      nonNamespacedParams
+    );
+    history.push(encodedParams ? `${pathname}?${encodedParams}` : pathname);
+  };
+
+  const handleRemoveAll = () => {
+    // remove everything in oldParams except for page_size and order_by
+    const oldParams = parseQueryString(qsConfig, history.location.search);
+    const oldParamsClone = { ...oldParams };
+    delete oldParamsClone.limit;
+    delete oldParamsClone.sort_by;
+    pushHistoryState(removeParams(qsConfig, oldParams, oldParamsClone));
+  };
+
+  if (!key && !value) {
+    handleRemoveAll();
+  } else {
+    let params = parseQueryString(qsConfig, history.location.search);
+    params = replaceParams(params, { [key]: value });
+    params = mergeParams(params, { [key]: value });
+    if (value === '' || value.length === 0)
+      params = removeParams(qsConfig, params, { [key]: params[key] });
+    pushHistoryState(params);
+  }
+};

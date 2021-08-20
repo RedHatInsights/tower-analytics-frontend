@@ -2,19 +2,19 @@ import React, { useCallback, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import LoadingState from '../Components/LoadingState';
-import ApiErrorState from '../Components/ApiErrorState';
-import NoResults from './NoResults';
-import Breakdown from '../Components/Breakdown';
-import JobStatus from '../Components/JobStatus';
-import { Paths } from '../paths';
+import LoadingState from '../../Components/ApiStatus/LoadingState';
+import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
+import NoResults from '../../Components/ApiStatus/NoResults';
+import Breakdown from '../../Charts/Breakdown';
+import JobStatus from '../../Components/JobStatus';
+import { Paths } from '../../paths';
 import { stringify } from 'query-string';
 import {
   formatDateTime,
   formatJobType,
   formatTotalTime,
-} from '../Utilities/helpers';
-import { readJobExplorer } from '../Api';
+} from '../../Utilities/helpers';
+import { readJobExplorer } from '../../Api';
 
 import { Button, Modal, ModalVariant } from '@patternfly/react-core';
 import {
@@ -44,7 +44,7 @@ import {
   Th,
   Td,
 } from '@patternfly/react-table';
-import useRequest from '../Utilities/useRequest';
+import useRequest from '../../Utilities/useRequest';
 
 const ActionContainer = styled.div`
   display: flex;
@@ -136,7 +136,8 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     ],
     group_by_time: false,
     limit: 5,
-    sort_by: 'created:desc',
+    sort_options: 'created',
+    sort_oder: 'desc',
     quick_date_range: qp.quick_date_range
       ? qp.quick_date_range
       : 'last_30_days',

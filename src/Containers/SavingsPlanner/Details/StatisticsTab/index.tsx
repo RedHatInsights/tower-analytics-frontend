@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import React, { FunctionComponent, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -40,6 +43,22 @@ type DataYearsSeries = Record<string, number>;
 interface Data {
   name: string;
   projections: {
+    series_stats: {
+      year: string;
+      cumulative_time_net_benefits: number;
+      total_hours_saved: number;
+      total_hours_spent_risk_adjusted: number;
+
+      cumulative_net_benefits: number;
+      total_benefits: number;
+      total_costs: number;
+    }[];
+  };
+}
+
+interface OldData {
+  name: string;
+  projections: {
     time_stats: {
       cumulative_time_net_benefits: DataYearsSeries;
       total_hours_saved: DataYearsSeries;
@@ -53,37 +72,65 @@ interface Data {
   };
 }
 
+const dataConversion = (data: any): Data => {
+  if ('series_stats' in data.projections) {
+    return data;
+  }
+
+  const yearConversion: Record<string, string> = {
+    initial: 'Initial',
+    year1: 'Year 1',
+    year2: 'Year 2',
+    year3: 'Year 3',
+  };
+
+  const seriesStats = Object.keys(yearConversion).map((year) => ({
+    year: yearConversion[year],
+    total_costs: +data.projections.monetary_stats.total_costs[year],
+    total_benefits: +data.projections.monetary_stats.total_benefits[year],
+    cumulative_net_benefits:
+      +data.projections.monetary_stats.cumulative_net_benefits[year],
+    total_hours_spent_risk_adjusted:
+      +data.projections.time_stats.total_hours_spent_risk_adjusted[year],
+    total_hours_saved: +data.projections.time_stats.total_hours_saved[year],
+    cumulative_time_net_benefits:
+      +data.projections.time_stats.cumulative_time_net_benefits[year],
+  }));
+
+  return {
+    ...data,
+    projections: { ...data.projections, series_stats: seriesStats },
+  };
+};
+
 interface Props {
   tabsArray: {
     id: number;
     link: string;
     name: React.ReactNode;
   }[];
-  plan: Data;
+  plan: Data | OldData;
 }
 
-const yearLabels: Record<string, string> = {
-  initial: 'Initial',
-  year1: 'Year 1',
-  year2: 'Year 2',
-  year3: 'Year 3',
+const yearLabels: Record<string, number> = {
+  initial: 0,
+  year1: 1,
+  year2: 2,
+  year3: 3,
 };
 
 const getChartData = (data: Data): NonGroupedApi => {
-  const statsData = Object.keys(yearLabels).map((year) => ({
-    year: yearLabels[year],
-    total_costs: +data.projections.monetary_stats.total_costs[year] * -1,
-    total_benefits: +data.projections.monetary_stats.total_benefits[year],
-    cumulative_net_benefits:
-      +data.projections.monetary_stats.cumulative_net_benefits[year],
-    total_hours_spent_risk_adjusted:
-      +data.projections.time_stats.total_hours_spent_risk_adjusted[year] * -1,
-    total_hours_saved: +data.projections.time_stats.total_hours_saved[year],
-    cumulative_time_net_benefits:
-      +data.projections.time_stats.cumulative_time_net_benefits[year],
+  const output = data.projections.series_stats.map((d) => ({
+    ...d,
+    total_costs: d.total_costs * -1,
+    total_hours_spent_risk_adjusted: d.total_hours_spent_risk_adjusted * -1,
   }));
 
-  return { items: statsData, type: ApiType.nonGrouped, response_type: '' };
+  return {
+    items: output,
+    type: ApiType.nonGrouped,
+    response_type: '',
+  };
 };
 
 const constants = (isMoney: boolean) => ({
@@ -102,6 +149,8 @@ const constants = (isMoney: boolean) => ({
 });
 
 const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
+  const statsPlan = dataConversion(plan);
+
   const [isMoney, setIsMoney] = useState(true);
 
   const customTooltipFormatting = (datum: Record<string, string>) =>
@@ -109,8 +158,9 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
 
   const computeTotalSavings = (d: Data): number =>
     isMoney
-      ? d.projections.monetary_stats.cumulative_net_benefits.year3
-      : d.projections.time_stats.cumulative_time_net_benefits.year3;
+      ? d.projections.series_stats[yearLabels.year3].cumulative_net_benefits
+      : d.projections.series_stats[yearLabels.year3]
+          .cumulative_time_net_benefits;
 
   const barChartData: ChartSchema = {
     charts: [
@@ -249,7 +299,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
       ...functions,
       fetchFnc: () =>
         new Promise((resolve) => {
-          resolve(getChartData(plan));
+          resolve(getChartData(statsPlan));
         }),
     },
   };
@@ -273,7 +323,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
             />
           </ToggleGroup>
         </CardActions>
-        <CardTitle>{plan.name}</CardTitle>
+        <CardTitle>{statsPlan.name}</CardTitle>
       </CardHeader>
       <CardBody>
         <ChartRenderer
@@ -286,7 +336,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
 
   const renderRight = () => (
     <>
-      <TotalSavings value={computeTotalSavings(plan)} isMoney={isMoney} />
+      <TotalSavings value={computeTotalSavings(statsPlan)} isMoney={isMoney} />
       <Card isPlain>
         <CardBody>
           <List isPlain>

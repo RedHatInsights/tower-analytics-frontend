@@ -17,8 +17,11 @@ const mockCategories = {
   org_id: [],
   cluster_id: [],
   template_id: [],
-  quick_date_range: [],
-  sort_options: [],
+  quick_date_range: [{ key: 'year', value: 'Yearly' }],
+  sort_options: [
+    { key: 'id', value: 'ID' },
+    { key: 'status', value: 'Status' },
+  ],
 };
 
 const mockConfig = {
@@ -30,7 +33,6 @@ const mockConfig = {
     cluster_id: [],
     template_id: [],
     inventory_id: [],
-    sort_by: 'created:desc',
     sort_options: 'created',
     sort_order: 'desc',
     only_root_workflows_and_standalone_jobs: false,
@@ -41,7 +43,7 @@ const mockConfig = {
   integerFields: ['limit', 'offset'],
 };
 
-const mockFilters = { status: null, quick_date_range: null };
+const mockFilters = { ...mockConfig.defaultParams };
 
 describe('Components/Toolbar/FilterableToolbar', () => {
   describe('General Toolbar', () => {
@@ -100,6 +102,7 @@ describe('Components/Toolbar/FilterableToolbar', () => {
       expect(pagination.length).toBe(1);
     });
   });
+
   describe('Category filters', () => {
     it('should render the correct number of categories you pass it', () => {
       const mockCategories = {
@@ -118,6 +121,7 @@ describe('Components/Toolbar/FilterableToolbar', () => {
       const filterItem = wrapper.find('ToolbarInput');
       expect(filterItem.length).toEqual(Object.keys(mockCategories).length);
     });
+
     it('should filter out quick_date_range and sort_options params', () => {
       let wrapper = mount(
         <FilterableToolbar

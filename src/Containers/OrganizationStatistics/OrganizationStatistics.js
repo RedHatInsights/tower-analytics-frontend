@@ -39,9 +39,9 @@ import { scaleOrdinal } from 'd3';
 import useRequest from '../../Utilities/useRequest';
 import { getQSConfig } from '../../Utilities/qs';
 
-import ApiErrorState from '../../Components/ApiErrorState';
-import LoadingState from '../../Components/LoadingState';
-import NoData from '../../Components/NoData';
+import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
+import LoadingState from '../../Components/ApiStatus/LoadingState';
+import NoData from '../../Components/ApiStatus/NoData';
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
@@ -83,7 +83,7 @@ const redirectToJobExplorer =
       return;
     }
 
-    const { sort_by, ...rest } = queryParams;
+    const { sort_options, sort_order, ...rest } = queryParams;
     const formattedDate = dateForJobExplorer(date);
     const initialQueryParams = {
       ...rest,
@@ -135,6 +135,42 @@ const OrganizationStatistics = ({ history }) => {
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
 
+  const jobEventsByOrgParams = {
+    ...queryParams,
+    attributes: ['host_task_count'],
+    group_by: 'org',
+    include_others: true,
+    sort_options: 'host_task_count',
+    sort_order: 'desc',
+  };
+
+  const jobRunsByOrgParams = {
+    ...queryParams,
+    attributes: ['total_count'],
+    group_by: 'org',
+    include_others: true,
+    sort_options: 'total_count',
+    sort_order: 'desc',
+  };
+
+  const jobsByDateAndOrgParams = {
+    ...queryParams,
+    attributes: ['total_count'],
+    group_by: 'org',
+    group_by_time: true,
+    sort_options: 'total_count',
+    sort_order: 'desc',
+  };
+
+  const hostAcrossOrgParams = {
+    ...queryParams,
+    attributes: ['total_unique_host_count'],
+    group_by: 'org',
+    group_by_time: true,
+    sort_options: 'host_task_count',
+    sort_order: 'desc',
+  };
+
   const {
     result: jobs,
     error: jobsError,
@@ -147,6 +183,11 @@ const OrganizationStatistics = ({ history }) => {
       [jobRunsByOrgParams]
     ),
     []
+  );
+
+  const { result: options, request: setOptions } = useRequest(
+    useCallback(() => readOrgOptions(queryParams), [queryParams]),
+    {}
   );
 
   const {
@@ -171,11 +212,6 @@ const OrganizationStatistics = ({ history }) => {
     []
   );
 
-  const { result: options, request: setOptions } = useRequest(
-    useCallback(() => readOrgOptions(queryParams), [queryParams]),
-    {}
-  );
-
   const {
     result: tasks,
     error: tasksError,
@@ -190,55 +226,16 @@ const OrganizationStatistics = ({ history }) => {
     []
   );
 
-  const jobEventsByOrgParams = {
-    ...queryParams,
-    attributes: ['host_task_count'],
-    group_by: 'org',
-    include_others: true,
-    sort_by: `host_task_count:desc`,
-  };
-
-  const jobRunsByOrgParams = {
-    ...queryParams,
-    attributes: ['total_count'],
-    group_by: 'org',
-    include_others: true,
-    sort_by: `total_count:desc`,
-  };
-
-  const jobsByDateAndOrgParams = {
-    ...queryParams,
-    attributes: ['total_count'],
-    group_by: 'org',
-    group_by_time: true,
-    sort_by: `total_count:desc`,
-  };
-
-  const hostAcrossOrgParams = {
-    ...queryParams,
-    attributes: ['total_unique_host_count'],
-    group_by: 'org',
-    group_by_time: true,
-    sort_by: `host_task_count:desc`,
-  };
-
   const handleTabClick = (_, tabIndex) => {
     setActiveTabKey(tabIndex);
   };
-
-  useEffect(() => {
-    insights.chrome.appNavClick({
-      id: 'organization-statistics',
-      secondaryNav: true,
-    });
-  }, []);
 
   useEffect(() => {
     setOrgs(activeTabKey);
   }, [activeTabKey]);
 
   useEffect(() => {
-    setOrgs();
+    setOrgs(activeTabKey);
     setTasks();
     setOptions();
     setJobs();

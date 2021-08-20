@@ -26,7 +26,7 @@ const GroupedBarChart = ({
 }) => {
   const colors = legend.map(({ id, name }) => {
     return {
-      name,
+      name: name ? name : 'No organization',
       value: props.colorFunc(id),
       id,
     };
