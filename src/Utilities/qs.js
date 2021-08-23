@@ -134,9 +134,8 @@ export const encodeNonDefaultQueryString = (
   nonNamespacedParams = {}
 ) => {
   if (!params) return '';
-  const paramsWithoutDefaults = removeParams({}, params, config.defaultParams);
   return encodeQueryString({
-    ...namespaceParams(config.namespace, paramsWithoutDefaults),
+    ...namespaceParams(config.namespace, params),
     ...nonNamespacedParams,
   });
 };
