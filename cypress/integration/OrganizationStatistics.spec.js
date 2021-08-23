@@ -62,6 +62,13 @@ describe('Organization statistics page smoketests', () => {
     cy.visit(orgsUrl);
   });
 
+  it('Query parameters are stored in the URL to enable refresh', () => {
+    // Add more once fixtures are implemented - other filters are content-dependent.
+    cy.get('[data-cy="quick_date_range"]').click();
+    cy.contains('Past 2 weeks').click();
+    cy.url().should('include', 'quick_date_range=last_2_weeks');
+  });
+
   it('can interact with the org stats page without breaking the UI', () => {
     fuzzOrgStatsPage();
   });
