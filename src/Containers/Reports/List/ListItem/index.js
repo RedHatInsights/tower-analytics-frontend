@@ -30,12 +30,12 @@ const Label = styled(PFLabel)`
   margin-right: 10px;
 `;
 
-const ListItem = ({ report: { id, description, name, categories } }) => (
+const ListItem = ({ report: { slug, description, name, categories } }) => (
   <Card>
     <CardHeader>
       <CardHeaderMain>
         <CardTitle>
-          <Link to={paths.getDetails(id)}>{name}</Link>
+          <Link to={paths.getDetails(slug)}>{name}</Link>
         </CardTitle>
       </CardHeaderMain>
     </CardHeader>

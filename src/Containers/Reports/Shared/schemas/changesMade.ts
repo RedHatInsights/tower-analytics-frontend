@@ -11,6 +11,8 @@ import { readJobExplorer, readJobExplorerOptions } from '../../../../Api';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
+const slug = 'changes_made_by_job_template';
+
 const name = 'Changes made by job template';
 
 const description =
@@ -116,6 +118,7 @@ const schemaFnc = (
 ];
 
 const reportParams: ReportPageParams = {
+  slug,
   name,
   description,
   categories,

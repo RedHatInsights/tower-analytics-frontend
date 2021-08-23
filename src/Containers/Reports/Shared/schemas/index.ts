@@ -11,15 +11,16 @@ const reports = [
   playbookRunRate,
   hostsByOrganization,
   jobsTasksByOrganization,
-].map((report, id) => ({ id: id + 1, ...report }));
+];
 
 const defaultReport: ReportPageParams = {
+  slug: 'unknown',
   name: 'Unknown',
   description: 'Unknown',
   categories: [] as string[],
 };
 
-export const getReport = (searchId: number): ReportPageParams =>
-  reports.find(({ id }) => id === searchId) ?? defaultReport;
+export const getReport = (searchSlug: string): ReportPageParams =>
+  reports.find(({ slug }) => slug === searchSlug) ?? defaultReport;
 
 export default reports;

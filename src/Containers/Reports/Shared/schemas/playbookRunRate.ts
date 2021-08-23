@@ -15,6 +15,8 @@ import {
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
+const slug = 'job_template_run_rate';
+
 const name = 'Job template run rate';
 
 const description =
@@ -115,6 +117,7 @@ const schemaFnc = (
 ];
 
 const reportParams: ReportPageParams = {
+  slug,
   name,
   description,
   categories,

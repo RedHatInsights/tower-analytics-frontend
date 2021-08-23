@@ -11,6 +11,8 @@ import { readHostExplorer, readHostExplorerOptions } from '../../../../Api';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
+const slug = 'hosts_changed_by_job_template';
+
 const name = 'Hosts changed by job template';
 
 const description =
@@ -111,6 +113,7 @@ const schemaFnc = (
 ];
 
 const reportParams: ReportPageParams = {
+  slug,
   name,
   description,
   categories,

@@ -253,12 +253,12 @@ const OrganizationStatistics = ({ history }) => {
       actionLinks={
         <>
           <AlertActionLink>
-            <Link to={reportPaths.getDetails(4)}>
+            <Link to={reportPaths.getDetails('hosts_by_organization')}>
               Host by organization report
             </Link>
           </AlertActionLink>
           <AlertActionLink>
-            <Link to={reportPaths.getDetails(5)}>
+            <Link to={reportPaths.getDetails('jobs_and_tasks_by_organization')}>
               Jobs/Tasks by organization report
             </Link>
           </AlertActionLink>
