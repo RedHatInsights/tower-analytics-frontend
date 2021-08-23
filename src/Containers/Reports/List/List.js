@@ -38,7 +38,7 @@ const List = () => {
           }}
         >
           {reports.map((report) => (
-            <ListItem key={report.id} report={report} />
+            <ListItem key={report.slug} report={report} />
           ))}
         </Gallery>
       </FlexMain>

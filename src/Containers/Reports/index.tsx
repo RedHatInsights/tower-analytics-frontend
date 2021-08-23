@@ -7,8 +7,8 @@ import List from './List';
 
 export const paths = {
   get: `${Paths.reports}`,
-  details: `${Paths.reports}/:id`,
-  getDetails: (id: number): string => `${Paths.reports}/${id}`,
+  details: `${Paths.reports}/:slug`,
+  getDetails: (slug: string): string => `${Paths.reports}/${slug}`,
 };
 
 const ReportsRouter: FunctionComponent<Record<string, never>> = () => {
