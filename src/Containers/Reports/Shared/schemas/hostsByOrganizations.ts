@@ -11,6 +11,8 @@ import { readHostExplorer, readHostExplorerOptions } from '../../../../Api';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
+const slug = 'hosts_by_organization';
+
 const name = 'Hosts by Organization';
 
 const description =
@@ -111,6 +113,7 @@ const schemaFnc = (
 ];
 
 const reportParams: ReportPageParams = {
+  slug,
   name,
   description,
   categories,
