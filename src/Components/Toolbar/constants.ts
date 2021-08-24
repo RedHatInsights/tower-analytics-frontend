@@ -89,4 +89,9 @@ export const optionsForCategories: OptionsForCategories = {
     name: 'Search by name',
     hasChips: true,
   },
+  granularity: {
+    type: 'select',
+    name: 'Granularity',
+    hasChips: false,
+  },
 };
