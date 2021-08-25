@@ -75,7 +75,8 @@ const ListItem = ({
   } = plan;
 
   const projectedSavings =
-    projections?.monetary_stats?.cumulative_net_benefits?.year3;
+    projections?.series_stats[projections.series_stats.length - 1]
+      .cumulative_net_benefits;
 
   const [isCardKebabOpen, setIsCardKebabOpen] = useState(false);
   const match = useRouteMatch();

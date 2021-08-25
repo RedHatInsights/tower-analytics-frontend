@@ -45,7 +45,8 @@ const FilterableToolbar: FunctionComponent<Props> = ({
   additionalControls = [],
 }) => {
   const [settingsExpanded, setSettingsExpanded] = useState(false);
-  const { quick_date_range, sort_options, ...restCategories } = categories;
+  const { quick_date_range, sort_options, granularity, ...restCategories } =
+    categories;
   const history = useHistory();
 
   // Filter out elements which are not in the option object.
@@ -83,10 +84,10 @@ const FilterableToolbar: FunctionComponent<Props> = ({
             setFilters={setFilters}
           />
         )}
-        {quick_date_range && (
+        {(quick_date_range || granularity) && (
           <QuickDateGroup
             filters={filters}
-            values={quick_date_range}
+            values={{ quick_date_range, granularity }}
             setFilters={setFilters}
           />
         )}

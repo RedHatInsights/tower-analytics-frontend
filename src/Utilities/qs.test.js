@@ -58,8 +58,14 @@ describe('qs (qs.js)', () => {
       [
         [null, ''],
         [{}, ''],
-        [{ order_by: 'name', offset: 1, limit: 5 }, ''],
-        [{ order_by: '-name', offset: 1, limit: 5 }, 'order_by=-name'],
+        [
+          { order_by: 'name', offset: 1, limit: 5 },
+          'limit=5&offset=1&order_by=name',
+        ],
+        [
+          { order_by: '-name', offset: 1, limit: 5 },
+          'limit=5&offset=1&order_by=-name',
+        ],
         [
           { order_by: '-name', offset: 3, limit: 10 },
           'limit=10&offset=3&order_by=-name',
@@ -91,7 +97,9 @@ describe('qs (qs.js)', () => {
         offset: 1,
         foo: 'bar',
       };
-      expect(encodeNonDefaultQueryString(conf, params)).toEqual('item.foo=bar');
+      expect(encodeNonDefaultQueryString(conf, params)).toEqual(
+        'item.foo=bar&item.offset=1'
+      );
     });
 
     test('should handle array values', () => {
@@ -105,7 +113,7 @@ describe('qs (qs.js)', () => {
         },
       };
       expect(encodeNonDefaultQueryString(conf, vals)).toEqual(
-        'bar=alpha&bar=beta'
+        'bar=alpha&bar=beta&foo=one&foo=two'
       );
     });
   });
