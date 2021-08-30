@@ -42,7 +42,6 @@ import reportPaths from '../Reports/paths';
 import { pfmulti } from '../../Charts/Utilities/colors';
 import { scaleOrdinal } from 'd3';
 import useRequest from '../../Utilities/useRequest';
-import { getQSConfig } from '../../Utilities/qs';
 
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
@@ -128,11 +127,6 @@ const chartMapper = [
     tooltip: HostsTooltip,
   },
 ];
-const qsConfig = getQSConfig(
-  'organization-statistics',
-  { ...constants.defaultParams },
-  ['limit', 'offset']
-);
 
 const OrganizationStatistics = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
@@ -140,7 +134,9 @@ const OrganizationStatistics = ({ history }) => {
   const orgReportsEnabled = useFeatureFlag(ValidFeatureFlags.orgReports);
 
   // params from toolbar/searchbar
-  const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
+  const { queryParams, setFromToolbar } = useQueryParams(
+    constants.defaultParams
+  );
 
   const jobEventsByOrgParams = {
     ...queryParams,
@@ -363,7 +359,6 @@ const OrganizationStatistics = ({ history }) => {
           categories={options}
           filters={queryParams}
           setFilters={setFromToolbar}
-          qsConfig={qsConfig}
         />
       </PageHeader>
       <Main>{renderContent()}</Main>

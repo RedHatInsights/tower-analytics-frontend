@@ -30,7 +30,6 @@ import { roi as roiConst } from '../../Utilities/constants';
 import useRedirect from '../../Utilities/useRedirect';
 import { calculateDelta, convertSecondsToHours } from '../../Utilities/helpers';
 import useRequest from '../../Utilities/useRequest';
-import { getQSConfig } from '../../Utilities/qs';
 
 // Chart
 import TopTemplatesSavings from '../../Charts/ROITopTemplates';
@@ -71,18 +70,15 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
 const computeTotalSavings = (data) =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
-const qsConfig = getQSConfig('clusters', { ...roiConst.defaultParams }, [
-  'limit',
-  'offset',
-]);
-
 const AutomationCalculator = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
   const [costManual, setCostManual] = useState('50');
   const [costAutomation, setCostAutomation] = useState('20');
 
   // params from toolbar/searchbar
-  const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
+  const { queryParams, setFromToolbar } = useQueryParams(
+    roiConst.defaultParams
+  );
 
   const { result: options, request: setOptions } = useRequest(
     useCallback(() => readROIOptions(queryParams), [queryParams]),
@@ -235,7 +231,6 @@ const AutomationCalculator = ({ history }) => {
         <FilterableToolbar
           categories={options}
           filters={queryParams}
-          qsConfig={qsConfig}
           setFilters={setFromToolbar}
         />
       </PageHeader>

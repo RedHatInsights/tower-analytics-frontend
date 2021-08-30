@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
 import { readClusters, readNotifications } from '../../Api/';
+import useRequest from '../../Utilities/useRequest';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
@@ -25,8 +26,6 @@ import {
 
 import NotificationsList from './NotificationsList';
 import Pagination from '../../Components/Pagination';
-import { getQSConfig } from '../../Utilities/qs';
-import useRequest from '../../Utilities/useRequest';
 
 const CardTitle = styled(PFCardTitle)`
   display: flex;
@@ -101,19 +100,6 @@ const initialQueryParams = {
   },
 };
 
-interface QsConfig {
-  namespace: string;
-  defaultParams: Record<string, any>;
-  integerFields: string[];
-  dateFields: string[];
-}
-
-const qsConfig = getQSConfig(
-  'notifications',
-  { ...initialQueryParams.defaultParams },
-  ['limit', 'offset']
-) as QsConfig;
-
 interface NotificationDataType {
   notifications: any[];
   meta: {
@@ -129,8 +115,9 @@ const Notifications: FC<Record<string, never>> = () => {
   const [selectedCluster, setSelectedCluster] = useState('');
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const { queryParams, setId, setFromPagination, setSeverity } =
-    useQueryParams(qsConfig);
+  const { queryParams, setId, setFromPagination, setSeverity } = useQueryParams(
+    initialQueryParams.defaultParams
+  );
 
   const { severity, limit, offset } = queryParams as Record<string, string>;
 
@@ -227,7 +214,6 @@ const Notifications: FC<Record<string, never>> = () => {
               </DropdownGroup>
               <Pagination
                 count={meta?.count}
-                qsConfig={qsConfig}
                 params={{
                   limit: +limit,
                   offset: +offset,
@@ -251,7 +237,6 @@ const Notifications: FC<Record<string, never>> = () => {
               )}
               <Pagination
                 count={meta?.count}
-                qsConfig={qsConfig}
                 params={{
                   limit: +limit,
                   offset: +offset,

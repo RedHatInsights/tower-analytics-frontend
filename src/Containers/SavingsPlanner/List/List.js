@@ -23,7 +23,6 @@ import useSelected from '../../../Utilities/useSelected';
 import useRequest, { useDeleteItems } from '../../../Utilities/useRequest';
 import ErrorDetail from '../../../Components/ErrorDetail';
 import AlertModal from '../../../Components/AlertModal';
-import { getQSConfig } from '../../../Utilities/qs';
 
 const PageContainer = styled.div`
   display: flex;
@@ -38,19 +37,15 @@ const Footer = styled.div`
 const FlexMain = styled(Main)`
   flex-grow: 1;
 `;
-const qsConfig = getQSConfig(
-  'savings-planner',
-  { ...savingsPlanner.defaultParams },
-  ['limit', 'offset']
-);
 
 const List = () => {
   const history = useHistory();
   const { pathname } = useLocation();
 
   // params from toolbar/searchbar
-  const { queryParams, setFromPagination, setFromToolbar } =
-    useQueryParams(qsConfig);
+  const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(
+    savingsPlanner.defaultParams
+  );
 
   const {
     result: options,
@@ -172,7 +167,6 @@ const List = () => {
         <FilterableToolbar
           categories={combinedOptions}
           filters={queryParams}
-          qsConfig={qsConfig}
           setFilters={setFromToolbar}
           additionalControls={[
             ...(canWrite
@@ -208,7 +202,6 @@ const List = () => {
                   limit: +queryParams.limit,
                   offset: +queryParams.offset,
                 }}
-                qsConfig={qsConfig}
                 setPagination={setFromPagination}
                 isCompact
               />
@@ -225,7 +218,6 @@ const List = () => {
               limit: parseInt(queryParams.limit),
               offset: parseInt(queryParams.offset),
             }}
-            qsConfig={qsConfig}
             setPagination={setFromPagination}
             variant={PaginationVariant.bottom}
           />

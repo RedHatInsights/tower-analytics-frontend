@@ -7,26 +7,26 @@ import {
 } from '@patternfly/react-tokens';
 
 export const jobExplorer = {
-  attributes: [
-    'id',
-    'status',
-    'job_type',
-    'started',
-    'finished',
-    'elapsed',
-    'created',
-    'cluster_name',
-    'org_name',
-    'most_failed_tasks',
-    'host_count',
-    'host_task_count',
-    'failed_host_count',
-    'unreachable_host_count',
-    'changed_host_count',
-    'ok_host_count',
-    'skipped_host_count',
-  ],
   defaultParams: {
+    attributes: [
+      'id',
+      'status',
+      'job_type',
+      'started',
+      'finished',
+      'elapsed',
+      'created',
+      'cluster_name',
+      'org_name',
+      'most_failed_tasks',
+      'host_count',
+      'host_task_count',
+      'failed_host_count',
+      'unreachable_host_count',
+      'changed_host_count',
+      'ok_host_count',
+      'skipped_host_count',
+    ],
     status: ['successful', 'failed'],
     quick_date_range: 'last_30_days',
     job_type: ['workflowjob', 'job'],
@@ -118,21 +118,6 @@ export const notAuthorizedParams = {
   description:
     'User does not have privileges to perform this action. Contact your organization adminstrator(s) for more information.',
 };
-
-export const arrayFields = [
-  'automation_status',
-  'attributes',
-  'cluster_id',
-  'category',
-  'frequency_period',
-  'host_id',
-  'host_status',
-  'inventory_id',
-  'job_type',
-  'status',
-  'org_id',
-  'template_id',
-];
 
 export const categoryColor = {
   ok: global_palette_green_300.value,

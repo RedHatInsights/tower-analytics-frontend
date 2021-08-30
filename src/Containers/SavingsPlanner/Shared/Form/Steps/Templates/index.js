@@ -25,7 +25,6 @@ import ApiErrorState from '../../../../../../Components/ApiStatus/ApiErrorState'
 import Pagination from '../../../../../../Components/Pagination';
 
 import { useQueryParams } from '../../../../../../Utilities/useQueryParams';
-import { getQSConfig } from '../../../../../../Utilities/qs';
 
 import {
   readJobExplorer,
@@ -58,10 +57,6 @@ const initialQueryParams = {
   status: [],
   template_id: [],
 };
-const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
-  'limit',
-  'offset',
-]);
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
   const { pathname, hash, search } = useLocation();
@@ -71,7 +66,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     setFromPagination,
     setFromToolbar,
     dispatch: queryParamsDispatch,
-  } = useQueryParams(qsConfig);
+  } = useQueryParams(initialQueryParams);
 
   const {
     result: options,
@@ -117,7 +112,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
   };
 
   const initialSearchParams = parse(search, {
-    arrayFormat: 'bracket',
     parseBooleans: true,
     parseNumbers: true,
   });
@@ -126,10 +120,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     history.replace({
       pathname,
       hash,
-      search: stringify(
-        { ...initialQueryParams, ...initialSearchParams },
-        { arrayFormat: 'bracket' }
-      ),
+      search: stringify({ ...initialQueryParams, ...initialSearchParams }),
     });
   }, []);
 
@@ -147,7 +138,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
         <FilterableToolbar
           categories={options}
           filters={queryParams}
-          qsConfig={qsConfig}
           setFilters={setFromToolbar}
           pagination={
             <Pagination
@@ -156,7 +146,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
                 limit: queryParams.limit,
                 offset: queryParams.offset,
               }}
-              qsConfig={qsConfig}
               setPagination={setFromPagination}
               isCompact
             />
@@ -220,7 +209,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
               limit: queryParams.limit,
               offset: queryParams.offset,
             }}
-            qsConfig={qsConfig}
             setPagination={setFromPagination}
             variant={PaginationVariant.bottom}
           />

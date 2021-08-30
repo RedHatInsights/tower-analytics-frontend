@@ -22,16 +22,6 @@ import { Card, CardBody, PaginationVariant } from '@patternfly/react-core';
 
 import JobExplorerList from './JobExplorerList';
 import FilterableToolbar from '../../Components/Toolbar/';
-import { getQSConfig } from '../../Utilities/qs';
-
-const initialQueryParams = {
-  ...jobExplorer.defaultParams,
-  attributes: jobExplorer.attributes,
-};
-const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
-  'limit',
-  'offset',
-]);
 
 const JobExplorer = () => {
   const {
@@ -39,7 +29,7 @@ const JobExplorer = () => {
     setFromPagination,
     setFromToolbar,
     dispatch: queryParamsDispatch,
-  } = useQueryParams(qsConfig);
+  } = useQueryParams(jobExplorer.defaultParams);
 
   const {
     result: options,
@@ -78,7 +68,6 @@ const JobExplorer = () => {
             <FilterableToolbar
               categories={options}
               filters={queryParams}
-              qsConfig={qsConfig}
               setFilters={setFromToolbar}
               pagination={
                 <Pagination
@@ -87,7 +76,6 @@ const JobExplorer = () => {
                     limit: parseInt(queryParams.limit),
                     offset: parseInt(queryParams.offset),
                   }}
-                  qsConfig={qsConfig}
                   setPagination={setFromPagination}
                   isCompact
                 />
@@ -109,7 +97,6 @@ const JobExplorer = () => {
                 limit: parseInt(queryParams.limit),
                 offset: parseInt(queryParams.offset),
               }}
-              qsConfig={qsConfig}
               setPagination={setFromPagination}
               variant={PaginationVariant.bottom}
             />

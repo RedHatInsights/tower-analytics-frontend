@@ -1,17 +1,25 @@
-import { useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 import moment from 'moment';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 
 import { formatDate } from '../Utilities/helpers';
-import { parseQueryString } from './qs';
+import { parse, stringify } from 'query-string';
 
 export const useQueryParams = (initial) => {
   const history = useHistory();
+  const location = useLocation();
 
-  const initialWithCalculatedParams =
-    history !== 'undefined' && history?.location
-      ? parseQueryString(initial, history.location.search)
-      : initial;
+  const initialWithCalculatedParams = location?.search
+    ? {
+        ...initial,
+        ...parse(location.search, {
+          parseNumbers: true,
+          parseBooleans: true,
+          arrayFormat: 'bracket',
+        }),
+      }
+    : initial;
+
   const paramsReducer = (state, { type, value }) => {
     switch (type) {
       /* v0 api reducers */
@@ -20,12 +28,12 @@ export const useQueryParams = (initial) => {
       case 'SET_ENDDATE':
         return { ...state, endDate: value };
       case 'SET_ID':
-        if (!parseInt(value)) {
+        if (isNaN(value)) {
           const { id: ignored, ...rest } = state;
           return rest;
         }
 
-        return { ...state, id: parseInt(value) };
+        return { ...state, id: +value };
       case 'SET_SEVERITY':
         if (value.severity === '') {
           const { severity: ignored, ...rest } = state;
@@ -38,11 +46,11 @@ export const useQueryParams = (initial) => {
       case 'SET_LIMIT':
         return isNaN(value)
           ? { ...state, limit: 5 } // Defaults back to 5
-          : { ...state, limit: parseInt(value) };
+          : { ...state, limit: +value };
       case 'SET_OFFSET':
         return isNaN(value)
           ? { ...state, offset: 0 } // Defaults back to 0
-          : { ...state, offset: parseInt(value) };
+          : { ...state, offset: +value };
       case 'SET_GRANULARITY':
         switch (value.granularity) {
           case 'daily':
@@ -101,7 +109,7 @@ export const useQueryParams = (initial) => {
       case 'REINITIALIZE':
         return { ...value };
       case 'RESET_FILTER':
-        return { ...initialWithCalculatedParams };
+        return { ...initial };
       default:
         throw new Error(`The query params reducer action (${type}) not found.`);
     }
@@ -110,6 +118,22 @@ export const useQueryParams = (initial) => {
   const [queryParams, dispatch] = useReducer(paramsReducer, {
     ...initialWithCalculatedParams,
   });
+
+  useEffect(() => {
+    if (JSON.stringify(queryParams) === JSON.stringify(initial)) {
+      // When the same as default params dont put anything in the url
+      // TODO: this is dangerous, when changing the default params some users can loose their bookmarks
+      history.push({
+        pathname: location.pathname,
+        search: null,
+      });
+    } else {
+      history.push({
+        pathname: location.pathname,
+        search: stringify(queryParams, { arrayFormat: 'bracket' }),
+      });
+    }
+  }, [queryParams]);
 
   const actionMapper = {
     status: 'SET_STATUS',

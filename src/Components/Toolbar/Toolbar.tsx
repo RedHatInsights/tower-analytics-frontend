@@ -18,18 +18,12 @@ import {
   SortByGroup,
   SettingsPanel,
 } from './Groups';
-import { useHistory } from 'react-router-dom';
-import { handleSearch } from '../../Utilities/qs';
 import { ApiOptionsType, AttributeType, SetValues } from './types';
 
 interface Props {
   categories: ApiOptionsType;
   // Todo: update to use the QueryParams type after known
   filters: Record<string, AttributeType>;
-  qsConfig: {
-    namespace: string;
-    [x: string]: any;
-  }; // TODO: Update the type when figured out what is going on in qs.
   setFilters: SetValues;
   pagination: FunctionComponent;
   hasSettings: boolean;
@@ -39,7 +33,6 @@ interface Props {
 const FilterableToolbar: FunctionComponent<Props> = ({
   categories,
   filters,
-  qsConfig,
   setFilters: setQueryParams,
   pagination = null,
   hasSettings = false,
@@ -48,7 +41,6 @@ const FilterableToolbar: FunctionComponent<Props> = ({
   const [settingsExpanded, setSettingsExpanded] = useState(false);
   const { quick_date_range, sort_options, granularity, ...restCategories } =
     categories;
-  const history = useHistory();
 
   // Filter out elements which are not in the option object.
   const filterCategories = Object.keys(restCategories)
@@ -63,15 +55,12 @@ const FilterableToolbar: FunctionComponent<Props> = ({
     value: AttributeType | undefined
   ) => {
     setQueryParams(key, value);
-    // Todo: this is temporary solution This call probably will not be here.
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    handleSearch(key, value, qsConfig, history);
   };
 
   return (
     <Toolbar
       className="pf-m-toggle-group-container"
-      id={`${qsConfig.namespace}-filterable-toolbar-with-chip-groups`}
+      id={`${'namespace' ?? ''}-filterable-toolbar-with-chip-groups`}
       clearAllFilters={() => setFilters(undefined, undefined)}
       collapseListedFiltersBreakpoint="xl"
     >
