@@ -17,15 +17,16 @@ const { config: webpackConfig, plugins } = config({
       target: 'http://localhost:8004',
     },
     rbac,
-    registry: [
-      ({ app }) =>
-        app.get('(/beta)?/config/main.yml', (_req, res) =>
-          res.sendFile(resolve(__dirname, './main.yml'))
-        ),
-    ],
     ...defaultServices,
   },
+  registry: [
+    ({ app }) =>
+      app.get('(/beta)?/config/chrome/ansible-navigation.json', (_req, res) =>
+        res.sendFile(resolve(__dirname, './ansible-navigation.json'))
+      ),
+  ],
   appUrl: ['/beta/ansible/insights/', '/ansible/insights/'],
+  proxyVerbose: true,
   ...(process.env.BETA && { deployment: 'beta/apps' }),
 });
 
