@@ -35,6 +35,15 @@ plugins.push(
     {
       root: resolve(__dirname, '../'),
       useFileHash: false,
+      exclude: [
+        '@patternfly/react-core',
+        '@patternfly/react-table',
+        '@patternfly/react-tokens',
+        '@patternfly/react-icons',
+        '@redhat-cloud-services/frontend-components',
+        '@redhat-cloud-services/frontend-components-utilities',
+        '@redhat-cloud-services/frontend-components-notifications',
+      ],
     }
   )
 );
