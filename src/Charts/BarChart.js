@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import initializeChart from './BaseChart';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
-import Tooltip from '../Utilities/Tooltip';
+import Tooltip from './Utilities/Tooltip';
 import { stringify } from 'query-string';
 import { Paths } from '../paths';
 import { formatDate } from '../Utilities/helpers';

@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 import styled from 'styled-components';
 
 import initializeChart from '.././BaseChart';
-import Legend from '../../Utilities/Legend';
+import Legend from '../Utilities/Legend';
 
 const Wrapper = styled.div`
   display: flex;
