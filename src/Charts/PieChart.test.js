@@ -1,4 +1,4 @@
-import { pfmulti } from '../Utilities/colors';
+import { pfmulti } from './Utilities/colors';
 import { scaleOrdinal } from 'd3';
 import PieChart from './PieChart.js';
 
