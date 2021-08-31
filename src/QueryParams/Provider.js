@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { Provider } from './Context';
-import { parseQueryParams, setQueryParams as setQsInUrl } from './helpers';
+import {
+  parseQueryParams,
+  setQueryParams as setQsInUrl,
+  DEFAULT_NAMESPACE,
+} from './helpers';
 
-const DEFAULT_NAMESPACE = 'default';
-
-const FeatureFlagProvider = ({ children }) => {
+const QueryParamsProvider = ({ children }) => {
   const history = useHistory();
 
   const [queryParams, setQueryParams] = useState({});
@@ -53,8 +55,8 @@ const FeatureFlagProvider = ({ children }) => {
   );
 };
 
-FeatureFlagProvider.propTypes = {
+QueryParamsProvider.propTypes = {
   children: PropTypes.node.isRequired,
 };
 
-export default FeatureFlagProvider;
+export default QueryParamsProvider;

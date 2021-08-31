@@ -1,5 +1,7 @@
 import { parse, stringify } from 'query-string';
 
+export const DEFAULT_NAMESPACE = 'default';
+
 export const removeNamespace = (obj) => {
   const keyValues = Object.keys(obj).map((key) => {
     const newKey = key.split('.')[1] || key;
