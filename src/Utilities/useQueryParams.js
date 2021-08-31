@@ -5,6 +5,21 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { formatDate } from '../Utilities/helpers';
 import { parse, stringify } from 'query-string';
 
+// const removeNamespace = (obj) => {
+//   const keyValues = Object.keys(obj).map((key) => {
+//     const newKey = key.split('.')[1] || key;
+//     return { [newKey]: obj[key] };
+//   });
+//   return Object.assign({}, ...keyValues);
+// };
+
+// const addNamespace = (obj, namespace) => {
+//   const keyValues = Object.keys(obj).map((key) => ({
+//     [`${namespace}.${key}`]: obj[key],
+//   }));
+//   return Object.assign({}, ...keyValues);
+// };
+
 export const useQueryParams = (initial) => {
   const history = useHistory();
   const location = useLocation();
