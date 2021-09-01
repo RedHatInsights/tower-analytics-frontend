@@ -29,7 +29,12 @@ interface Props {
     limit: number;
   };
   setPagination: SetPagination;
-  qsConfig: ApiParams;
+  qsConfig: {
+    namespace: string;
+    defaultParams: ApiParams;
+    integerFields: string[];
+    dateFields: string[];
+  };
   [x: string]: unknown;
 }
 

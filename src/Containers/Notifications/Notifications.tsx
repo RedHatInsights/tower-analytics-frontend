@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FC, useCallback } from 'react';
 
 import { useQueryParams } from '../../Utilities/useQueryParams';
 
@@ -26,6 +26,7 @@ import {
 import NotificationsList from './NotificationsList';
 import Pagination from '../../Components/Pagination';
 import { getQSConfig } from '../../Utilities/qs';
+import useRequest from '../../Utilities/useRequest';
 
 const CardTitle = styled(PFCardTitle)`
   display: flex;
@@ -71,108 +72,109 @@ const notificationOptions = [
   { value: '', label: 'View All', disabled: false },
 ];
 
-function formatClusterName(data) {
+const formatClusterName = (
+  data: any[]
+): { value: string; label: string; disabled: boolean }[] => {
   const defaultClusterOptions = [
     { value: 'please choose', label: 'Select cluster', disabled: true },
     { value: '', label: 'All Clusters', disabled: false },
-    { value: -1, label: 'Unassociated', disabled: false },
+    { value: '-1', label: 'Unassociated', disabled: false },
   ];
-  return data.reduce(
-    (formatted, { label, cluster_id: id, install_uuid: uuid }) => {
-      if (label.length === 0) {
-        formatted.push({ value: id, label: uuid, disabled: false });
-      } else {
-        formatted.push({ value: id, label, disabled: false });
-      }
 
-      return formatted;
-    },
-    defaultClusterOptions
+  const calcData = data.map(
+    ({ label, cluster_id: id, install_uuid: uuid }) => ({
+      value: id as string,
+      label: (label ?? uuid) as string,
+      disabled: false,
+    })
   );
-}
+
+  return [...defaultClusterOptions, ...calcData];
+};
 
 const initialQueryParams = {
   defaultParams: {
     limit: 5,
     offset: 0,
+    // This is not doing anything opn the v0 api
+    sort_options: 'created',
   },
 };
 
-// takes json and returns
+interface QsConfig {
+  namespace: string;
+  defaultParams: Record<string, any>;
+  integerFields: string[];
+  dateFields: string[];
+}
+
 const qsConfig = getQSConfig(
   'notifications',
   { ...initialQueryParams.defaultParams },
   ['limit', 'offset']
-);
+) as QsConfig;
 
-const Notifications = () => {
-  const [notificationsData, setNotificationsData] = useState([]);
-  const [clusterOptions, setClusterOptions] = useState([]);
+interface NotificationDataType {
+  notifications: any[];
+  meta: {
+    count: number;
+  };
+}
+
+interface ClusterDataType {
+  templates: any[];
+}
+
+const Notifications: FC<Record<string, never>> = () => {
   const [selectedCluster, setSelectedCluster] = useState('');
-  const [firstRender, setFirstRender] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
-  const [meta, setMeta] = useState({});
 
-  // params from toolbar/searchbar
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { queryParams, setId, setFromPagination, setSeverity } =
     useQueryParams(qsConfig);
 
+  const { severity, limit, offset } = queryParams as Record<string, string>;
+
+  const {
+    result: { notifications: notificationsData, meta },
+    error: notificationsError,
+    isLoading,
+    isSuccess,
+    request: fetchNotifications,
+  } = useRequest<NotificationDataType>(
+    useCallback(
+      () =>
+        readNotifications(
+          queryParams
+        ) as unknown as Promise<NotificationDataType>,
+      [queryParams]
+    ),
+    { notifications: [], meta: { count: 0 } }
+  );
+
+  const {
+    result: { templates: clustersData = [] },
+    error: clustersError,
+    request: fetchClusters,
+  } = useRequest<ClusterDataType>(
+    () => readClusters() as unknown as Promise<ClusterDataType>,
+    { templates: [] }
+  );
+
   useEffect(() => {
-    if (firstRender) {
-      return;
-    }
-
-    const getData = () => {
-      return readNotifications(queryParams);
-    };
-
-    const update = () => {
-      setIsLoading(true);
-      getData().then(({ notifications: notificationsData = [], meta }) => {
-        setNotificationsData(notificationsData);
-        setMeta(meta);
-        setIsLoading(false);
-      });
-    };
-
-    update();
-  }, [queryParams]);
+    // TODO: Update the useRequest hook to return function and not a promise!! @brum
+    fetchClusters()
+      .then(() => ({}))
+      .catch(() => ({}));
+  }, []);
 
   useEffect(() => {
-    let ignore = false;
-    const fetchEndpoints = () => {
-      return Promise.all(
-        [readClusters(), readNotifications(queryParams)].map((p) =>
-          p.catch(() => [])
-        )
-      );
-    };
-
-    async function initializeWithPreflight() {
-      setIsLoading(true);
-      fetchEndpoints().then(
-        ([
-          { templates: clustersData = [] },
-          { notifications: notificationsData = [], meta },
-        ]) => {
-          if (!ignore) {
-            const clusterOptions = formatClusterName(clustersData);
-            setClusterOptions(clusterOptions);
-            setNotificationsData(notificationsData);
-            setMeta(meta);
-            setFirstRender(false);
-            setIsLoading(false);
-          }
-        }
-      );
-    }
-
-    initializeWithPreflight();
-    return () => (ignore = true);
+    fetchNotifications()
+      .then(() => ({}))
+      .catch(() => ({}));
   }, [queryParams]);
 
   return (
-    <React.Fragment>
+    <>
       <PageHeader>
         <PageHeaderTitle title={'Notifications'} />
       </PageHeader>
@@ -191,18 +193,20 @@ const Notifications = () => {
                   }}
                   aria-label="Select Cluster"
                 >
-                  {clusterOptions.map(({ value, label, disabled }, index) => (
-                    <FormSelectOption
-                      isDisabled={disabled}
-                      key={index}
-                      value={value}
-                      label={label}
-                    />
-                  ))}
+                  {formatClusterName(clustersData).map(
+                    ({ value, label, disabled }, index) => (
+                      <FormSelectOption
+                        isDisabled={disabled}
+                        key={index}
+                        value={value}
+                        label={label}
+                      />
+                    )
+                  )}
                 </FormSelect>
                 <FormSelect
                   name="selectedNotification"
-                  value={queryParams.severity || ''}
+                  value={severity || ''}
                   onChange={(value) => {
                     setSeverity(value);
                     setFromPagination(0);
@@ -225,8 +229,8 @@ const Notifications = () => {
                 count={meta?.count}
                 qsConfig={qsConfig}
                 params={{
-                  limit: queryParams.limit,
-                  offset: queryParams.offset,
+                  limit: +limit,
+                  offset: +offset,
                 }}
                 setPagination={setFromPagination}
                 isCompact
@@ -234,12 +238,11 @@ const Notifications = () => {
             </CardTitle>
             <CardBody>
               {isLoading && <LoadingState />}
-              {!isLoading && notificationsData.length <= 0 && <NoData />}
-              {!isLoading && notificationsData.length > 0 && (
+              {isSuccess && notificationsData.length <= 0 && <NoData />}
+              {isSuccess && notificationsData.length > 0 && (
                 <NotificationDrawer>
                   <NotificationsList
-                    filterBy={queryParams.severity || ''}
-                    options={notificationOptions}
+                    filterBy={severity || ''}
                     notifications={notificationsData}
                   />
                 </NotificationDrawer>
@@ -248,8 +251,8 @@ const Notifications = () => {
                 count={meta?.count}
                 qsConfig={qsConfig}
                 params={{
-                  limit: queryParams.limit,
-                  offset: queryParams.offset,
+                  limit: +limit,
+                  offset: +offset,
                 }}
                 setPagination={setFromPagination}
                 variant={PaginationVariant.bottom}
@@ -258,7 +261,7 @@ const Notifications = () => {
           </Card>
         </Main>
       </>
-    </React.Fragment>
+    </>
   );
 };
 
