@@ -34,7 +34,7 @@ import FilterableToolbar from '../../Components/Toolbar/';
 import { organizationStatistics as constants } from '../../Utilities/constants';
 
 // For chart colors
-import { pfmulti } from '../../Utilities/colors';
+import { pfmulti } from '../../Charts/Utilities/colors';
 import { scaleOrdinal } from 'd3';
 import useRequest from '../../Utilities/useRequest';
 import { getQSConfig } from '../../Utilities/qs';

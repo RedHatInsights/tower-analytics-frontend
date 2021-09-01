@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import initializeChart from './BaseChart';
 import PropTypes from 'prop-types';
-import Tooltip from '../Utilities/Tooltip';
+import Tooltip from './Utilities/Tooltip';
 import { Paths } from '../paths';
 import { formatDate } from '../Utilities/helpers';
 import { stringify } from 'query-string';
