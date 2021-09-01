@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
-import { Provider } from './Context';
+import { QueryParamsProvider as Provider } from './Context';
 import {
   parseQueryParams,
   setQueryParams as setQsInUrl,
@@ -10,11 +10,11 @@ import {
 
 const QueryParamsProvider = ({ children }) => {
   const history = useHistory();
-
   const [queryParams, setQueryParams] = useState({});
-  const [initialStates, setInitialStates] = useState({});
 
   useEffect(() => {
+    setQueryParams(parseQueryParams(location.search));
+
     const unlisten = history.listen((location) => {
       setQueryParams(parseQueryParams(location.search));
     });
@@ -25,20 +25,17 @@ const QueryParamsProvider = ({ children }) => {
   }, []);
 
   const update = ({ newQueryParams, namespace = DEFAULT_NAMESPACE }) => {
-    setQsInUrl(namespace, newQueryParams, history);
+    const q = {
+      ...queryParams,
+      [namespace]: newQueryParams,
+    };
+
+    setQsInUrl(q, history);
   };
 
-  const initialize = ({ newInitialStates, namespace = DEFAULT_NAMESPACE }) => {
-    setInitialStates({
-      ...initialStates,
-      [namespace]: {
-        ...newInitialStates,
-      },
-    });
-  };
-
-  const reset = ({ namespace = DEFAULT_NAMESPACE }) => {
-    setQsInUrl(namespace, initialStates[namespace], history);
+  const initialize = ({ initialValues, namespace = DEFAULT_NAMESPACE }) => {
+    if (!(namespace in queryParams))
+      update({ newQueryParams: initialValues, namespace });
   };
 
   return (
@@ -47,7 +44,6 @@ const QueryParamsProvider = ({ children }) => {
         queryParams,
         update,
         initialize,
-        reset,
       }}
     >
       {children}

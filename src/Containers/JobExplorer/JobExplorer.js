@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
-import { useQueryParams } from '../../Utilities/useQueryParams';
+import { useQueryParams } from '../../QueryParams/useQueryParams';
 import useRequest from '../../Utilities/useRequest';
 
 import LoadingState from '../../Components/ApiStatus/LoadingState';
@@ -73,8 +73,8 @@ const JobExplorer = () => {
                 <Pagination
                   count={meta?.count}
                   params={{
-                    limit: parseInt(queryParams.limit),
-                    offset: parseInt(queryParams.offset),
+                    limit: +queryParams.limit,
+                    offset: +queryParams.offset,
                   }}
                   setPagination={setFromPagination}
                   isCompact
@@ -94,8 +94,8 @@ const JobExplorer = () => {
             <Pagination
               count={meta?.count}
               params={{
-                limit: parseInt(queryParams.limit),
-                offset: parseInt(queryParams.offset),
+                limit: +queryParams.limit,
+                offset: +queryParams.offset,
               }}
               setPagination={setFromPagination}
               variant={PaginationVariant.bottom}

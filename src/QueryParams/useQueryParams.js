@@ -1,6 +1,6 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import moment from 'moment';
-import { QueryParamsProvider } from './QueryParamsContext';
+import { QueryParamsContext } from './Context';
 
 import { formatDate } from '../Utilities/helpers';
 import { DEFAULT_NAMESPACE } from './helpers';
@@ -99,17 +99,18 @@ const paramsReducer = (state, { type, value }) => {
 };
 
 export const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
-  const { queryParams, update, initialize, reset } =
-    useContext(QueryParamsProvider);
+  const { queryParams, update, initialize } = useContext(QueryParamsContext);
 
-  initialize(namespace, initial);
+  useEffect(() => {
+    initialize({ initialValues: initial, namespace });
+  }, [queryParams]);
 
   const dispatch = (action) => {
     if (action.type === 'RESET_FILTER') {
-      reset(namespace);
+      update({ newQueryParams: initial, namespace });
     } else {
-      const newState = paramsReducer(queryParams[namespace], action);
-      update(newState, namespace);
+      const newQueryParams = paramsReducer(queryParams[namespace], action);
+      update({ newQueryParams, namespace });
     }
   };
 
@@ -134,7 +135,7 @@ export const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
   };
 
   return {
-    queryParams,
+    queryParams: queryParams[namespace] ?? initial,
     dispatch,
     setFromToolbar: (varName, value = null) => {
       if (!varName) {

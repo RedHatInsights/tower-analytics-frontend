@@ -1,4 +1,4 @@
 import { createContext } from 'react';
 
-export const QueryParamContext = createContext({});
-export const Provider = QueryParamContext.Provider;
+export const QueryParamsContext = createContext({});
+export const QueryParamsProvider = QueryParamsContext.Provider;

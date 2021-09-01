@@ -2,15 +2,21 @@ import { parse, stringify } from 'query-string';
 
 export const DEFAULT_NAMESPACE = 'default';
 
-export const removeNamespace = (obj) => {
-  const keyValues = Object.keys(obj).map((key) => {
-    const newKey = key.split('.')[1] || key;
-    return { [newKey]: obj[key] };
+const parseNamespace = (obj) => {
+  const retObj = {};
+  Object.keys(obj).map((key) => {
+    const namespace = key.split('.')[0];
+    const attributes = key.split('.')[1];
+
+    if (!(namespace in retObj)) retObj[namespace] = {};
+
+    retObj[namespace][attributes] = obj[key];
   });
-  return Object.assign({}, ...keyValues);
+
+  return retObj;
 };
 
-export const addNamespace = (obj, namespace) => {
+const stringifyNamespace = (obj, namespace) => {
   const keyValues = Object.keys(obj).map((key) => ({
     [`${namespace}.${key}`]: obj[key],
   }));
@@ -18,21 +24,23 @@ export const addNamespace = (obj, namespace) => {
 };
 
 export const parseQueryParams = (search) => {
-  return parse(search, {
+  const parsed = parse(search, {
     parseNumbers: true,
     parseBooleans: true,
-    arrayFormat: 'bracket',
+    arrayFormat: 'bracket-separator',
   });
+
+  return parseNamespace(parsed);
 };
 
-export const setQueryParams = (namespace, queryParams, history) => {
-  const newQueryParams = {
-    ...parseQueryParams(history.location.search),
-    [namespace]: queryParams,
-  };
+export const setQueryParams = (queryParams, history) => {
+  const namespacedObject = Object.keys(queryParams).reduce(
+    (acc, key) => ({ ...acc, ...stringifyNamespace(queryParams[key], key) }),
+    {}
+  );
 
   history.push({
     pathname: history.location.pathname,
-    search: stringify(newQueryParams, { arrayFormat: 'bracket' }),
+    search: stringify(namespacedObject, { arrayFormat: 'bracket-separator' }),
   });
 };
