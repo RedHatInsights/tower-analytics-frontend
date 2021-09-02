@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Button, Tooltip, Switch } from '@patternfly/react-core';
+import { Button, Switch, Popover } from '@patternfly/react-core';
 import {
   Card,
   CardTitle,
@@ -7,8 +7,20 @@ import {
   CardActions,
   CardHeader,
 } from '@patternfly/react-core';
-import { QuestionCircleIcon, TimesIcon } from '@patternfly/react-icons';
+import {
+  OutlinedQuestionCircleIcon as PFOutlinedQuestionCircleIcon,
+  TimesIcon,
+} from '@patternfly/react-icons';
 import { SetValues, AttributeType } from '../types';
+import styled from 'styled-components';
+
+const OutlinedQuestionCircleIcon = styled(PFOutlinedQuestionCircleIcon)`
+  color: #151515;
+`;
+
+const PopoverButton = styled(Button)`
+  vertical-align: middle;
+`;
 
 interface Props {
   filters: Record<string, AttributeType>;
@@ -46,18 +58,21 @@ const SettingsPanel: FunctionComponent<Props> = ({
           setFilters('only_root_workflows_and_standalone_jobs', value)
         }
       />
-      <Tooltip
-        position={'top'}
-        content={
-          <div>
-            {' '}
-            If enabled, nested workflows and jobs will not be included in the
-            overall totals. Enable this option to filter out duplicate entries.
-          </div>
-        }
-      >
-        <QuestionCircleIcon />
-      </Tooltip>
+      <PopoverButton variant="plain">
+        <Popover
+          aria-label="ignore nested workflow popover"
+          position={'top'}
+          bodyContent={
+            <div>
+              If enabled, nested workflows and jobs will not be included in the
+              overall totals. Enable this option to filter out duplicate
+              entries.
+            </div>
+          }
+        >
+          <OutlinedQuestionCircleIcon />
+        </Popover>
+      </PopoverButton>
     </CardBody>
   </Card>
 );
