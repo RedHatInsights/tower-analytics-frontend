@@ -1,6 +1,7 @@
 import React from 'react';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router';
 
 // Initialize the mocked store (we don't use it but it is initialized)
 const mockStore = configureStore();
@@ -18,7 +19,9 @@ const defaultParams = {
 export const mountPage = (Component, { search } = defaultParams) =>
   mount(
     <Provider store={store}>
-      <Component history={history} location={{ search }} />
+      <MemoryRouter>
+        <Component history={history} location={{ search }} />
+      </MemoryRouter>
     </Provider>
   );
 
