@@ -14,7 +14,7 @@ jest.mock('react-router-dom', () => ({
     search: '',
   }),
 }));
-import Notifications from './Notifications.js';
+import Notifications from './Notifications';
 
 const notificationsUrl = 'path:/api/tower-analytics/v0/notifications/';
 const notificationsDummyData = (size = 5, count = 0) => ({
@@ -68,7 +68,10 @@ describe('Containers/Notifications', () => {
   });
 
   it('should render with empty response', async () => {
-    fetchMock.get({ url: notificationsUrl, overwriteRoutes: true }, {});
+    fetchMock.get(
+      { url: notificationsUrl, overwriteRoutes: true },
+      { notifications: [], meta: {} }
+    );
 
     await act(async () => {
       wrapper = mountPage(Notifications);
@@ -133,6 +136,7 @@ describe('Containers/Notifications', () => {
     expect(lastCallBody(notificationsUrl)).toEqual({
       limit: '15',
       offset: '0',
+      sort_options: 'created',
     });
   });
 
@@ -157,6 +161,7 @@ describe('Containers/Notifications', () => {
     expect(lastCallBody(notificationsUrl)).toEqual({
       limit: '20',
       offset: '0',
+      sort_options: 'created',
     });
   });
 
@@ -187,6 +192,7 @@ describe('Containers/Notifications', () => {
     expect(lastCallBody(notificationsUrl)).toEqual({
       limit: '5',
       offset: '5',
+      sort_options: 'created',
     });
   });
 
@@ -217,6 +223,7 @@ describe('Containers/Notifications', () => {
     expect(lastCallBody(notificationsUrl)).toEqual({
       limit: '5',
       offset: '95',
+      sort_options: 'created',
     });
   });
 });
