@@ -68,8 +68,10 @@ describe('Containers/Notifications', () => {
   });
 
   it('should render with empty response', async () => {
-    fetchMock.get({ url: notificationsUrl, overwriteRoutes: true },
-                  { notifications: [], mete: {} });
+    fetchMock.get(
+      { url: notificationsUrl, overwriteRoutes: true },
+      { notifications: [], meta: {} }
+    );
 
     await act(async () => {
       wrapper = mountPage(Notifications);
