@@ -13,10 +13,10 @@ import { AttributesType, ReportPageParams } from '../types';
 
 const slug = 'hosts_by_organization';
 
-const name = 'Hosts by Organization';
+const name = 'Hosts by organization';
 
 const description =
-  'See how many Hosts have been touched grouped by Controller organization';
+  'The number of unique hosts, grouped by organizations from Ansible Controller.  You can use this report to find which organizations are managing the most hosts with Ansible automation.';
 
 const categories = [CATEGORIES.executive];
 
@@ -31,10 +31,10 @@ const defaultParams = {
   cluster_id: [],
   template_id: [],
   inventory_id: [],
-  attributes: ['total_unique_host_count', 'host_task_count'],
+  attributes: ['total_unique_host_count', 'total_unique_host_changed_count'],
   group_by: 'org',
   group_by_time: true,
-  sort_options: 'host_task_count',
+  sort_options: 'total_unique_host_count',
   sort_order: 'desc',
 };
 

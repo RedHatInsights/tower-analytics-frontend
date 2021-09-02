@@ -249,7 +249,7 @@ const OrganizationStatistics = ({ history }) => {
   const renderDeprecationWarning = () => (
     <Alert
       variant={AlertVariant.warning}
-      title="Organization statistic page deprecation."
+      title="The Organization statistic page will be deprecated in the future release."
       actionLinks={
         <>
           <AlertActionLink>
@@ -265,10 +265,8 @@ const OrganizationStatistics = ({ history }) => {
         </>
       }
     >
-      The organization statistics page is being converted to reports.
-      <br />
-      Check out the new reports with the same infomration by following the links
-      below.
+      The organization statistics page is being converted to reports. Please use
+      our new, more full-featured reports by following the links below.
     </Alert>
   );
 
