@@ -7,26 +7,32 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import { readHostExplorer, readHostExplorerOptions } from '../../../../Api';
+import {
+  readJobExplorer,
+  readJobExplorerOptions,
+  Params,
+} from '../../../../Api';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
-const name = 'Hosts changed by job template';
+const slug = 'job_template_run_rate';
+
+const name = 'Job template run rate';
 
 const description =
-  'The number of hosts changed by a job template in a specified time window.\n\nYou can use this report to find discrepancies in the host change rate at a particular time, helping you drill down to when and why hosts were unreachable at a particular time.';
+  'The number of times a job template has ran in a specified time window.\n\nYou can use this report to be able to tell which playbooks are running most frequently, allowing you to see which groups in your organization are running Ansible the most.';
 
 const categories = [CATEGORIES.executive];
 
-const defaultParams = {
+const defaultParams: Params = {
   limit: 6,
   offset: 0,
-  attributes: ['total_unique_host_count', 'total_unique_host_changed_count'],
+  attributes: ['failed_count', 'successful_count', 'total_count'],
   group_by: 'template',
   group_by_time: true,
   granularity: 'monthly',
   quick_date_range: 'last_6_months',
-  sort_options: 'total_unique_host_count',
+  sort_options: 'total_count',
   sort_order: 'desc',
   cluster_id: [],
   inventory_id: [],
@@ -111,14 +117,15 @@ const schemaFnc = (
 ];
 
 const reportParams: ReportPageParams = {
+  slug,
   name,
   description,
   categories,
   report: {
     defaultParams,
     extraAttributes,
-    readData: readHostExplorer,
-    readOptions: readHostExplorerOptions,
+    readData: readJobExplorer,
+    readOptions: readJobExplorerOptions,
     schemaFnc,
   },
 };

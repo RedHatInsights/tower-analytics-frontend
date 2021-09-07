@@ -21,8 +21,8 @@ const Description = styled.p`
 `;
 
 const Details: FunctionComponent<Record<string, never>> = () => {
-  const { id } = useParams<{ id: string }>();
-  const { name, description, report } = getReport(+id);
+  const { slug } = useParams<{ slug: string }>();
+  const { name, description, report } = getReport(slug);
 
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
 

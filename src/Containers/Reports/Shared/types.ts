@@ -17,6 +17,7 @@ export interface ReportGeneratorParams {
 }
 
 export interface ReportPageParams {
+  slug: string;
   name: string;
   description: string;
   categories: string[];
