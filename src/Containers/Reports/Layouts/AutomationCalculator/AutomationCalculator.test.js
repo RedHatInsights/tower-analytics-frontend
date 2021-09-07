@@ -178,7 +178,7 @@ describe('Containers/CustomReports/AutomationCalculator', () => {
   it('should render api error', async () => {
     fetchMock.post({
       url: jobExplorerUrl,
-      response: { throws: { error: 'General Error' }, status: 400 },
+      response: { throws: { error: 'General Error', status: 403 } },
     });
 
     await act(async () => {
@@ -199,9 +199,8 @@ describe('Containers/CustomReports/AutomationCalculator', () => {
     });
     wrapper.update();
 
-    expect(wrapper.text()).toEqual(expect.stringContaining('No Data'));
-    // No data displayed
-    expect(wrapper.find('input')).toHaveLength(0);
+    // No data displayed (just the toolbar inputs)
+    expect(wrapper.find('input')).toHaveLength(4);
   });
 
   xit('should call redirect to job expoler', async () => {
