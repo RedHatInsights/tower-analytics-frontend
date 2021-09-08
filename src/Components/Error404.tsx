@@ -19,8 +19,8 @@ interface Props {
 }
 
 const Error404: FunctionComponent<Props> = ({
-  title = "404: We've lost it.",
-  body = "Let's find you a new one.Try a new search or return home.",
+  title = '404: Page does not exist.',
+  body = "Let's find you a new one.",
   buttonText = 'Return to home page',
   link = Paths.clusters,
 }) => (
