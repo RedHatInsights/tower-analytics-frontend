@@ -8,9 +8,9 @@ import hostsByOrganization from './hostsByOrganizations';
 import jobsTasksByOrganization from './jobsTasksByOrganization';
 
 const defaultReport: ReportPageParams = {
-  slug: 'unknown',
-  name: 'Unknown',
-  description: 'Unknown',
+  slug: '',
+  name: '',
+  description: '',
   categories: [] as string[],
 };
 
