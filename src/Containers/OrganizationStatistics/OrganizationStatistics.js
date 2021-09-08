@@ -47,6 +47,7 @@ import { getQSConfig } from '../../Utilities/qs';
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
+import { useFeatureFlag, ValidFeatureFlags } from '../../FeatureFlags';
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
@@ -136,6 +137,7 @@ const qsConfig = getQSConfig(
 const OrganizationStatistics = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
   const [activeTabKey, setActiveTabKey] = useState(0);
+  const orgReportsEnabled = useFeatureFlag(ValidFeatureFlags.orgReports);
 
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
@@ -272,7 +274,9 @@ const OrganizationStatistics = ({ history }) => {
 
   const renderContent = () => (
     <Grid hasGutter>
-      <GridItem span={12}>{renderDeprecationWarning()}</GridItem>
+      {orgReportsEnabled && (
+        <GridItem span={12}>{renderDeprecationWarning()}</GridItem>
+      )}
       <GridItem span={12}>
         <Card>
           <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>

@@ -1,5 +1,9 @@
+export enum ValidFeatureFlags {
+  orgReports = 'orgReports',
+}
+
 export interface FeatureFlagType {
-  name: string;
+  name: ValidFeatureFlags;
   enabled: boolean;
 }
 

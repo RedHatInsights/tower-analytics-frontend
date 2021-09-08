@@ -4,7 +4,7 @@ import { Provider } from 'react-redux';
 import { init } from './store';
 import App from './App';
 import getBaseName from './Utilities/getBaseName';
-import FeatureFlagProvider from './FeatureFlags/Provider';
+import { Provider as FeatureFlagProvider } from './FeatureFlags/';
 
 const AutomationAnalytics = () => (
   <Provider store={init().getStore()}>

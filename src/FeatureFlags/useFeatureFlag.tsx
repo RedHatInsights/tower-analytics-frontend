@@ -1,8 +1,9 @@
 import { useContext } from 'react';
-import { FeatureFlagContext } from './Context';
+import Context from './Context';
+import { ValidFeatureFlags } from './types';
 
-const useFeatureFlag = (flag: string): boolean => {
-  const features = useContext(FeatureFlagContext);
+const useFeatureFlag = (flag: ValidFeatureFlags): boolean => {
+  const features = useContext(Context);
   const feature = features.find(({ name }) => name === flag);
   return !!feature && feature.enabled;
 };
