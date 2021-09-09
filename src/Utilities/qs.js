@@ -216,7 +216,7 @@ export function mergeParams(oldParams, newParams) {
 }
 
 function mergeParam(oldVal, newVal) {
-  if (!newVal && newVal !== '') {
+  if (!newVal && newVal !== '' && newVal !== 0) {
     return oldVal;
   }
   if (!oldVal && oldVal !== '') {
