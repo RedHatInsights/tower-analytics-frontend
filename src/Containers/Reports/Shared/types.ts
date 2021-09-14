@@ -10,7 +10,9 @@ export type SchemaFnc = (
 
 export interface ReportGeneratorParams {
   defaultParams: Params;
+  expandRows?: boolean;
   extraAttributes: AttributesType;
+  listAttributes?: Array<any>,
   readData: (options: ParamsWithPagination) => Promise<ApiJson>;
   readOptions: (options: Params) => Promise<ApiJson>;
   schemaFnc: SchemaFnc;
