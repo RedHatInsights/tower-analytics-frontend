@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
+import { useHistory } from 'react-router';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
@@ -25,7 +25,7 @@ import FilterableToolbar from '../../Components/Toolbar/';
 import { readROI, readROIOptions } from '../../Api/';
 
 // Imports from utilities
-import { useQueryParams } from '../../Utilities/useQueryParams';
+import { useQueryParams } from '../../QueryParams/useQueryParams';
 import { roi as roiConst } from '../../Utilities/constants';
 import useRedirect from '../../Utilities/useRedirect';
 import { calculateDelta, convertSecondsToHours } from '../../Utilities/helpers';
@@ -70,12 +70,12 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
 const computeTotalSavings = (data) =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
-const AutomationCalculator = ({ history }) => {
+const AutomationCalculator = () => {
+  const history = useHistory();
   const toJobExplorer = useRedirect(history, 'jobExplorer');
   const [costManual, setCostManual] = useState('50');
   const [costAutomation, setCostAutomation] = useState('20');
 
-  // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(
     roiConst.defaultParams
   );
@@ -237,10 +237,6 @@ const AutomationCalculator = ({ history }) => {
       <Main>{renderContents()}</Main>
     </>
   );
-};
-
-AutomationCalculator.propTypes = {
-  history: PropTypes.object,
 };
 
 export default AutomationCalculator;
