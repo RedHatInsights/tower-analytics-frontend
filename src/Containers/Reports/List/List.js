@@ -8,7 +8,7 @@ import {
 import { Gallery } from '@patternfly/react-core';
 
 import ListItem from './ListItem';
-import reports from '../Shared/schemas';
+import { getAllReports } from '../Shared/schemas';
 
 const PageContainer = styled.div`
   display: flex;
@@ -37,7 +37,7 @@ const List = () => {
             '2xl': '307px',
           }}
         >
-          {reports.map((report) => (
+          {getAllReports().map((report) => (
             <ListItem key={report.slug} report={report} />
           ))}
         </Gallery>

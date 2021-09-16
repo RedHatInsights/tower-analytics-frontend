@@ -14,6 +14,7 @@ import {
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
 
+import { Link } from 'react-router-dom';
 import {
   Card,
   CardBody,
@@ -22,6 +23,9 @@ import {
   Tab,
   Grid,
   GridItem,
+  Alert,
+  AlertVariant,
+  AlertActionLink,
 } from '@patternfly/react-core';
 
 import {
@@ -32,6 +36,7 @@ import {
 import PieChart from '../../Charts/PieChart';
 import FilterableToolbar from '../../Components/Toolbar/';
 import { organizationStatistics as constants } from '../../Utilities/constants';
+import { paths as reportPaths } from '../Reports/';
 
 // For chart colors
 import { pfmulti } from '../../Charts/Utilities/colors';
@@ -42,6 +47,7 @@ import { getQSConfig } from '../../Utilities/qs';
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
+import { useFeatureFlag, ValidFeatureFlags } from '../../FeatureFlags';
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
@@ -131,6 +137,7 @@ const qsConfig = getQSConfig(
 const OrganizationStatistics = ({ history }) => {
   const toJobExplorer = useRedirect(history, 'jobExplorer');
   const [activeTabKey, setActiveTabKey] = useState(0);
+  const orgReportsEnabled = useFeatureFlag(ValidFeatureFlags.orgReports);
 
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
@@ -241,8 +248,35 @@ const OrganizationStatistics = ({ history }) => {
     setJobs();
   }, [queryParams]);
 
+  const renderDeprecationWarning = () => (
+    <Alert
+      variant={AlertVariant.warning}
+      title="The Organization statistic page will be deprecated in the future release."
+      actionLinks={
+        <>
+          <AlertActionLink>
+            <Link to={reportPaths.getDetails('hosts_by_organization')}>
+              Host by organization report
+            </Link>
+          </AlertActionLink>
+          <AlertActionLink>
+            <Link to={reportPaths.getDetails('jobs_and_tasks_by_organization')}>
+              Jobs/Tasks by organization report
+            </Link>
+          </AlertActionLink>
+        </>
+      }
+    >
+      The organization statistics page is being converted to reports. Please use
+      our new, more full-featured reports by following the links below.
+    </Alert>
+  );
+
   const renderContent = () => (
     <Grid hasGutter>
+      {orgReportsEnabled && (
+        <GridItem span={12}>{renderDeprecationWarning()}</GridItem>
+      )}
       <GridItem span={12}>
         <Card>
           <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>

@@ -92,14 +92,20 @@ const costFields: string[] = [];
 const isOther = (item: Record<string, string | number>, key: string) =>
   key === 'id' && item[key] === -1;
 
+const isNoName = (item: Record<string, string | number>, key: string) =>
+  key === 'id' && item[key] === -2;
+
 const getText = (
   item: Record<string, string | number>,
   key: string
 ): string => {
+  if (isNoName(item, key)) return '-';
   if (isOther(item, key)) return '-';
   if (timeFields.includes(key)) return formatTotalTime(item[key]);
   if (costFields.includes(key)) return currencyFormatter(+item[key]);
-  return `${item[key]}`;
+  // TODO: Remove no name when api does not return empty values
+  // https://issues.redhat.com/browse/AA-691
+  return `${item[key]}` || 'No name';
 };
 
 const getOthersStyle = (item: Record<string, string | number>, key: string) => {
