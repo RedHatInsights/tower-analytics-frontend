@@ -1,6 +1,6 @@
 import React, { useState, useEffect, FC, useCallback } from 'react';
 
-import { useQueryParams } from '../../Utilities/useQueryParams';
+import { useQueryParams } from '../../QueryParams/useQueryParams';
 
 import styled from 'styled-components';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
