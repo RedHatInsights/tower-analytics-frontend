@@ -81,7 +81,7 @@ export const postWithPagination = (
 };
 
 export const deleteById = (endpoint: string, id: number): Promise<ApiJson> => {
-  const url = new URL(`${endpoint}${id}`, window.location.origin);
+  const url = new URL(`${endpoint}${id}/`, window.location.origin);
   return authenticatedFetch(url.toString(), {
     method: 'DELETE',
   }).then(handleResponse);
@@ -103,7 +103,7 @@ export const updateById = (
   id: string,
   params: Params = {}
 ): Promise<ApiJson> => {
-  const url = new URL(endpoint + id, window.location.origin);
+  const url = new URL(`${endpoint}${id}/`, window.location.origin);
   return authenticatedFetch(url.toString(), {
     method: 'PUT',
     body: JSON.stringify(params),
