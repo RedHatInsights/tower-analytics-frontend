@@ -251,7 +251,7 @@ const OrganizationStatistics = ({ history }) => {
   const renderDeprecationWarning = () => (
     <Alert
       variant={AlertVariant.warning}
-      title="The Organization statistic page will be deprecated in the future release."
+      title="The Organization statistics page will be deprecated in the future release."
       actionLinks={
         <>
           <AlertActionLink>
