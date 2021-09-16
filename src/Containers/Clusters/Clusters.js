@@ -1,7 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
 
-import { useQueryParams } from '../../Utilities/useQueryParams';
-
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import {
   readClustersOptions,
@@ -34,6 +32,7 @@ import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 
 import { clusters } from '../../Utilities/constants';
 import useRequest from '../../Utilities/useRequest';
+import { useQueryParams } from '../../QueryParams/useQueryParams';
 
 const initialTopTemplateParams = {
   group_by: 'template',
