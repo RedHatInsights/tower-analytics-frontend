@@ -24,7 +24,7 @@ import NoResults from '../../../../../../Components/ApiStatus/NoResults';
 import ApiErrorState from '../../../../../../Components/ApiStatus/ApiErrorState';
 import Pagination from '../../../../../../Components/Pagination';
 
-import { useQueryParams } from '../../../../../../Utilities/useQueryParams';
+import { useQueryParams } from '../../../../../../QueryParams/useQueryParams';
 
 import {
   readJobExplorer,

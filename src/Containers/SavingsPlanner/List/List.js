@@ -15,7 +15,7 @@ import LoadingState from '../../../Components/ApiStatus/LoadingState';
 import EmptyList from '../../../Components/EmptyList';
 import Pagination from '../../../Components/Pagination';
 import PlanCard from './ListItem';
-import { useQueryParams } from '../../../Utilities/useQueryParams';
+import { useQueryParams } from '../../../QueryParams/useQueryParams';
 import { savingsPlanner } from '../../../Utilities/constants';
 
 import ToolbarDeleteButton from '../../../Components/Toolbar/ToolbarDeleteButton';
