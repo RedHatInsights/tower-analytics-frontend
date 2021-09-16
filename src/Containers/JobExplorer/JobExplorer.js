@@ -1,5 +1,4 @@
 import React, { useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
 
 import { useQueryParams } from '../../QueryParams/useQueryParams';
 import useRequest from '../../Utilities/useRequest';
@@ -105,11 +104,6 @@ const JobExplorer = () => {
       </Main>
     </React.Fragment>
   );
-};
-
-JobExplorer.propTypes = {
-  location: PropTypes.object,
-  history: PropTypes.object,
 };
 
 export default JobExplorer;

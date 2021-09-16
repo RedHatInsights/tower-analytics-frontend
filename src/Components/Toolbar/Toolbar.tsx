@@ -60,7 +60,6 @@ const FilterableToolbar: FunctionComponent<Props> = ({
   return (
     <Toolbar
       className="pf-m-toggle-group-container"
-      id={`${'namespace' ?? ''}-filterable-toolbar-with-chip-groups`}
       clearAllFilters={() => setFilters(undefined, undefined)}
       collapseListedFiltersBreakpoint="xl"
     >
