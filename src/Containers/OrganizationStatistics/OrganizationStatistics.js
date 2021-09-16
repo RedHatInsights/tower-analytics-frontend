@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { useHistory } from 'react-router';
 
-import { useQueryParams } from '../../Utilities/useQueryParams';
+import { useQueryParams } from '../../QueryParams/useQueryParams';
 import useRedirect from '../../Utilities/useRedirect';
 import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
 
@@ -128,7 +128,8 @@ const chartMapper = [
   },
 ];
 
-const OrganizationStatistics = ({ history }) => {
+const OrganizationStatistics = () => {
+  const history = useHistory();
   const toJobExplorer = useRedirect(history, 'jobExplorer');
   const [activeTabKey, setActiveTabKey] = useState(0);
   const orgReportsEnabled = useFeatureFlag(ValidFeatureFlags.orgReports);
@@ -364,10 +365,6 @@ const OrganizationStatistics = ({ history }) => {
       <Main>{renderContent()}</Main>
     </>
   );
-};
-
-OrganizationStatistics.propTypes = {
-  history: PropTypes.object,
 };
 
 export default OrganizationStatistics;
