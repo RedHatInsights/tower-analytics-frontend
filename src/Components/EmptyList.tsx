@@ -26,7 +26,9 @@ const EmptyList: FunctionComponent<Props> = ({
   canAdd = false,
   path = undefined,
 }) => {
-  const redirect = useRedirect();
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  /* @ts-ignore */
+  const redirect = useRedirect() as undefined;
 
   return (
     <EmptyState variant={EmptyStateVariant.full}>
@@ -41,6 +43,8 @@ const EmptyList: FunctionComponent<Props> = ({
           variant={ButtonVariant.primary}
           aria-label={label}
           onClick={() => {
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            /* @ts-ignore */
             if (path) redirect(path);
           }}
         >

@@ -25,10 +25,8 @@ type TopLevelRedirectParams = (
 const redirectWithQueryParams: TopLevelRedirectParams =
   (history) =>
   (path, queryParams = undefined) => {
-    const search = queryParams
-      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-        (stringifyQueryParams(queryParams) as string)
-      : '';
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+    const search: string = queryParams ? stringifyQueryParams(queryParams) : '';
 
     history.push(`${path}${search ? '?' : ''}${search}`);
   };
