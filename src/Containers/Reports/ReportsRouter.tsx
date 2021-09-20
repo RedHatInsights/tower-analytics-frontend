@@ -1,15 +1,8 @@
 import React, { FunctionComponent } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import { Paths } from '../../paths';
-
 import Details from './Details';
 import List from './List';
-
-export const paths = {
-  get: `${Paths.reports}`,
-  details: `${Paths.reports}/:slug`,
-  getDetails: (slug: string): string => `${Paths.reports}/${slug}`,
-};
+import paths from './paths';
 
 const ReportsRouter: FunctionComponent<Record<string, never>> = () => {
   return (

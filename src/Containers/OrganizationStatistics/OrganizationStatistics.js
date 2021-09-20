@@ -36,7 +36,7 @@ import {
 import PieChart from '../../Charts/PieChart';
 import FilterableToolbar from '../../Components/Toolbar/';
 import { organizationStatistics as constants } from '../../Utilities/constants';
-import { paths as reportPaths } from '../Reports/';
+import reportPaths from '../Reports/paths';
 
 // For chart colors
 import { pfmulti } from '../../Charts/Utilities/colors';
