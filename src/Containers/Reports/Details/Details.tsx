@@ -14,7 +14,7 @@ import Breadcrumbs from '../../../Components/Breadcrumbs';
 
 import Report from './Report';
 import { getReport } from '../Shared/schemas';
-import { paths } from '../';
+import paths from '../paths';
 
 const Description = styled.p`
   max-width: 70em;

@@ -13,7 +13,7 @@ import {
   Label as PFLabel,
 } from '@patternfly/react-core';
 
-import { paths } from '../../';
+import paths from '../../paths';
 
 const CardTitle = styled(PFCardTitle)`
   word-break: break-word;
