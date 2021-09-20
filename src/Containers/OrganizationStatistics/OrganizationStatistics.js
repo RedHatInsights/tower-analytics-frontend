@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router';
 
-import { useQueryParams } from '../../QueryParams/useQueryParams';
+import { useQueryParams } from '../../QueryParams/';
 import useRedirect from '../../Utilities/useRedirect';
 import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
 

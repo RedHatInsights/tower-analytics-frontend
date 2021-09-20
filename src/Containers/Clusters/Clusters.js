@@ -32,7 +32,7 @@ import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 
 import { clusters } from '../../Utilities/constants';
 import useRequest from '../../Utilities/useRequest';
-import { useQueryParams } from '../../QueryParams/useQueryParams';
+import { useQueryParams } from '../../QueryParams/';
 
 const initialTopTemplateParams = {
   group_by: 'template',

@@ -25,7 +25,7 @@ import FilterableToolbar from '../../Components/Toolbar/';
 import { readROI, readROIOptions } from '../../Api/';
 
 // Imports from utilities
-import { useQueryParams } from '../../QueryParams/useQueryParams';
+import { useQueryParams } from '../../QueryParams/';
 import { roi as roiConst } from '../../Utilities/constants';
 import useRedirect from '../../Utilities/useRedirect';
 import { calculateDelta, convertSecondsToHours } from '../../Utilities/helpers';

@@ -98,7 +98,7 @@ const paramsReducer = (state, { type, value }) => {
   }
 };
 
-export const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
+const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
   const { queryParams, update, initialize } = useContext(QueryParamsContext);
 
   useEffect(() => {
@@ -179,3 +179,5 @@ export const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
     setStartDateAsString: (value) => dispatch({ type: 'SET_STARTDATE', value }),
   };
 };
+
+export default useQueryParams;

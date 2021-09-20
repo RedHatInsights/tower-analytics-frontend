@@ -22,7 +22,7 @@ import {
 
 import Pagination from '../../../Components/Pagination';
 
-import { useQueryParams } from '../../../QueryParams/useQueryParams';
+import { useQueryParams } from '../../../QueryParams/';
 
 import useRequest from '../../../Utilities/useRequest';
 
