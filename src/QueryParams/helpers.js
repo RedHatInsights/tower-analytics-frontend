@@ -33,14 +33,18 @@ export const parseQueryParams = (search) => {
   return parseNamespace(parsed);
 };
 
-export const setQueryParams = (queryParams, history) => {
+export const stringifyQueryParams = (queryParams) => {
   const namespacedObject = Object.keys(queryParams).reduce(
     (acc, key) => ({ ...acc, ...stringifyNamespace(queryParams[key], key) }),
     {}
   );
 
+  return stringify(namespacedObject, { arrayFormat: 'bracket-separator' });
+};
+
+export const setQueryParams = (queryParams, history) => {
   history.push({
     pathname: history.location.pathname,
-    search: stringify(namespacedObject, { arrayFormat: 'bracket-separator' }),
+    search: stringifyQueryParams(queryParams),
   });
 };

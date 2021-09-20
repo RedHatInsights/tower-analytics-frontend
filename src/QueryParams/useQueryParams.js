@@ -98,6 +98,26 @@ const paramsReducer = (state, { type, value }) => {
   }
 };
 
+const actionMapper = {
+  status: 'SET_STATUS',
+  quick_date_range: 'SET_QUICK_DATE_RANGE',
+  job_type: 'SET_JOB_TYPE',
+  org_id: 'SET_ORG',
+  cluster_id: 'SET_CLUSTER',
+  template_id: 'SET_TEMPLATE',
+  sort_order: 'SET_SORT_ORDER',
+  sort_options: `SET_SORT_OPTIONS`,
+  start_date: 'SET_START_DATE',
+  end_date: 'SET_END_DATE',
+  automation_status: 'SET_AUTOMATION_STATUS',
+  category: 'SET_CATEGORY',
+  frequency_period: 'SET_FREQUENCY',
+  name: 'SET_NAME',
+  only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS',
+  inventory_id: 'SET_INVENTORY',
+  granularity: 'SET_GRANULARITY',
+};
+
 const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
   const { queryParams, update, initialize } = useContext(QueryParamsContext);
 
@@ -112,26 +132,6 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
       const newQueryParams = paramsReducer(queryParams[namespace], action);
       update({ newQueryParams, namespace });
     }
-  };
-
-  const actionMapper = {
-    status: 'SET_STATUS',
-    quick_date_range: 'SET_QUICK_DATE_RANGE',
-    job_type: 'SET_JOB_TYPE',
-    org_id: 'SET_ORG',
-    cluster_id: 'SET_CLUSTER',
-    template_id: 'SET_TEMPLATE',
-    sort_order: 'SET_SORT_ORDER',
-    sort_options: `SET_SORT_OPTIONS`,
-    start_date: 'SET_START_DATE',
-    end_date: 'SET_END_DATE',
-    automation_status: 'SET_AUTOMATION_STATUS',
-    category: 'SET_CATEGORY',
-    frequency_period: 'SET_FREQUENCY',
-    name: 'SET_NAME',
-    only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS',
-    inventory_id: 'SET_INVENTORY',
-    granularity: 'SET_GRANULARITY',
   };
 
   return {

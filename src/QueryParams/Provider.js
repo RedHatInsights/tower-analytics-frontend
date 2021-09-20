@@ -7,6 +7,7 @@ import {
   setQueryParams as setQsInUrl,
   DEFAULT_NAMESPACE,
 } from './helpers';
+import redirectWithQueryParams from './redirectWithQueryParams';
 
 const QueryParamsProvider = ({ children }) => {
   const history = useHistory();
@@ -44,6 +45,7 @@ const QueryParamsProvider = ({ children }) => {
         queryParams,
         update,
         initialize,
+        redirectWithQueryParams: redirectWithQueryParams(history),
       }}
     >
       {children}
