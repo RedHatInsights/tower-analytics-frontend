@@ -134,7 +134,7 @@ describe('Containers/AutomationCalculator', () => {
     wrapper.find('a').at(0).simulate('click');
     expect(history.push).toHaveBeenCalledWith({
       pathname: '/job-explorer',
-      search: expect.stringContaining('job-explorer.template_id=1'),
+      search: expect.stringContaining('default.template_id[]=1'),
     });
   });
 

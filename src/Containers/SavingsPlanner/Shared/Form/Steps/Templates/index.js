@@ -1,8 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { parse, stringify } from 'query-string';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import {
   Button,
@@ -59,8 +57,6 @@ const initialQueryParams = {
 };
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
-  const { pathname, hash, search } = useLocation();
-  const history = useHistory();
   const {
     queryParams,
     setFromPagination,
@@ -110,19 +106,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
       onSort,
     },
   };
-
-  const initialSearchParams = parse(search, {
-    parseBooleans: true,
-    parseNumbers: true,
-  });
-
-  useEffect(() => {
-    history.replace({
-      pathname,
-      hash,
-      search: stringify({ ...initialQueryParams, ...initialSearchParams }),
-    });
-  }, []);
 
   useEffect(() => {
     fetchOptions();

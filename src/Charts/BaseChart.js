@@ -1,7 +1,7 @@
 import React from 'react';
-import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
+import { useRedirect } from '../QueryParams';
 
 const initializeChart = (Chart) => {
   const BaseChart = (props) => {
@@ -25,14 +25,14 @@ const initializeChart = (Chart) => {
       return height;
     };
 
-    let history = useHistory();
+    const redirect = useRedirect();
 
     return (
       <Chart
         {...props}
         getWidth={getWidth}
         getHeight={getHeight}
-        history={history}
+        redirect={redirect}
       />
     );
   };

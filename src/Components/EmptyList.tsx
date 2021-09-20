@@ -9,7 +9,7 @@ import {
   ButtonVariant,
 } from '@patternfly/react-core';
 import { AddCircleOIcon, SearchIcon } from '@patternfly/react-icons';
-import { useHistory } from 'react-router-dom';
+import { useRedirect } from '../QueryParams/';
 
 interface Props {
   label?: string;
@@ -26,7 +26,7 @@ const EmptyList: FunctionComponent<Props> = ({
   canAdd = false,
   path = undefined,
 }) => {
-  const history = useHistory();
+  const redirect = useRedirect();
 
   return (
     <EmptyState variant={EmptyStateVariant.full}>
@@ -41,11 +41,7 @@ const EmptyList: FunctionComponent<Props> = ({
           variant={ButtonVariant.primary}
           aria-label={label}
           onClick={() => {
-            if (path) {
-              history.push({
-                pathname: path,
-              });
-            }
+            if (path) redirect(path);
           }}
         >
           {label}
