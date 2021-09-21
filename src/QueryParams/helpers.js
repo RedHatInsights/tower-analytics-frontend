@@ -25,7 +25,7 @@ const stringifyNamespace = (obj, namespace) => {
 
 export const parseQueryParams = (search) => {
   const parsed = parse(search, {
-    parseNumbers: true,
+    parseNumbers: false,
     parseBooleans: true,
     arrayFormat: 'bracket-separator',
   });
