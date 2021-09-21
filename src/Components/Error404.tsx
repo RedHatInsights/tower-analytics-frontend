@@ -7,7 +7,7 @@ import {
   EmptyStateBody,
   TitleSizes,
 } from '@patternfly/react-core';
-import { PathMissingIcon } from '@patternfly/react-icons';
+import PathMissingIcon from '@patternfly/react-icons/dist/js/icons/pathMissing-icon';
 import { Paths } from '../paths';
 import { Link } from 'react-router-dom';
 
