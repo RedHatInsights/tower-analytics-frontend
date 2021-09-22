@@ -324,7 +324,7 @@ LineChart.propTypes = {
   margin: PropTypes.object,
   getHeight: PropTypes.func,
   getWidth: PropTypes.func,
-  redirect: PropTypes.object,
+  redirect: PropTypes.func,
 };
 
 export default initializeChart(LineChart);

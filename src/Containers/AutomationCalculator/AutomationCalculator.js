@@ -227,7 +227,7 @@ const AutomationCalculator = () => {
         </Grid>
       );
 
-    return null;
+    return <></>;
   };
 
   return (

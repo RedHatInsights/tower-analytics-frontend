@@ -126,8 +126,8 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
             <Pagination
               count={count}
               params={{
-                limit: queryParams.limit,
-                offset: queryParams.offset,
+                limit: +queryParams.limit,
+                offset: +queryParams.offset,
               }}
               setPagination={setFromPagination}
               isCompact
@@ -189,8 +189,8 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
           <Pagination
             count={count}
             params={{
-              limit: queryParams.limit,
-              offset: queryParams.offset,
+              limit: +queryParams.limit,
+              offset: +queryParams.offset,
             }}
             setPagination={setFromPagination}
             variant={PaginationVariant.bottom}

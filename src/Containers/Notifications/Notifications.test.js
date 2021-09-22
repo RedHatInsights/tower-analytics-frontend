@@ -2,18 +2,6 @@ import { act } from 'react-dom/test-utils';
 import { parse } from 'query-string';
 import { mountPage } from '../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useHistory: () => ({
-    push: jest.fn(),
-    location: jest.fn(),
-  }),
-  useLocation: () => ({
-    push: jest.fn(),
-    pathname: 'some_path',
-    search: '',
-  }),
-}));
 import Notifications from './Notifications';
 
 const notificationsUrl = 'path:/api/tower-analytics/v0/notifications/';

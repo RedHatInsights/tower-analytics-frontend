@@ -1,6 +1,6 @@
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderPage } from '../../../../../../__tests__/helpers.reactTestingLib';
-import Templates from '.';
+import Templates from './';
 
 import mockResponses from '../../../../../../__tests__/fixtures';
 import * as api from '../../../../../../Api';
@@ -34,7 +34,7 @@ describe('SavingsPlanner/Shared/Form/Templates', () => {
     });
     renderPage(Templates, undefined, defaultProps);
 
-    await waitFor(() => expect(api.readJobExplorer).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(api.readJobExplorer).toHaveBeenCalledTimes(2));
 
     expect(screen.getByText('No results found')).toBeTruthy();
   });
@@ -42,7 +42,7 @@ describe('SavingsPlanner/Shared/Form/Templates', () => {
   test('has rendered Templates component with data and is clickable', async () => {
     renderPage(Templates, undefined, defaultProps);
 
-    await waitFor(() => expect(api.readJobExplorer).toHaveBeenCalledTimes(1));
+    await waitFor(() => expect(api.readJobExplorer).toHaveBeenCalledTimes(2));
 
     expect(screen.getByText('Link a template to this plan:')).toBeTruthy();
 

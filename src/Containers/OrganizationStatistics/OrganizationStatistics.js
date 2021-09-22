@@ -204,13 +204,11 @@ const OrganizationStatistics = () => {
   } = useRequest(
     useCallback(
       async (tabIndex = 0) => {
-        let orgs;
         if (tabIndex === 0) {
-          orgs = await readJobExplorer(jobsByDateAndOrgParams);
+          return await readJobExplorer(jobsByDateAndOrgParams);
         } else {
-          orgs = await readHostExplorer(hostAcrossOrgParams);
+          return await readHostExplorer(hostAcrossOrgParams);
         }
-        return orgs;
       },
       [hostAcrossOrgParams, jobsByDateAndOrgParams]
     ),

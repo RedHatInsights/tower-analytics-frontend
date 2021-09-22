@@ -64,14 +64,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
       collapseListedFiltersBreakpoint="xl"
     >
       <ToolbarContent>
-        <ToolbarToggleGroup
-          toggleIcon={
-            <Button variant={ButtonVariant.control}>
-              <FilterIcon />
-            </Button>
-          }
-          breakpoint="xl"
-        >
+        <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
           {Object.keys(filterCategories).length > 0 && (
             <FilterCategoriesGroup
               filterCategories={filterCategories}
@@ -93,19 +86,19 @@ const FilterableToolbar: FunctionComponent<Props> = ({
               sort_options={sort_options}
             />
           )}
-          {hasSettings && (
-            <ToolbarItem>
-              <Button
-                variant={ButtonVariant.plain}
-                onClick={() => setSettingsExpanded(!settingsExpanded)}
-                aria-label="settings"
-                isActive={settingsExpanded}
-              >
-                <CogIcon />
-              </Button>
-            </ToolbarItem>
-          )}
         </ToolbarToggleGroup>
+        {hasSettings && (
+          <ToolbarItem>
+            <Button
+              variant={ButtonVariant.plain}
+              onClick={() => setSettingsExpanded(!settingsExpanded)}
+              aria-label="settings"
+              isActive={settingsExpanded}
+            >
+              <CogIcon />
+            </Button>
+          </ToolbarItem>
+        )}
         {additionalControls.length > 0 && (
           <ToolbarGroup>
             {additionalControls.map((control, idx) => (
