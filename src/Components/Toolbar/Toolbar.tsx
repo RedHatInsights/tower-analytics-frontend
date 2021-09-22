@@ -7,6 +7,7 @@ import {
   ToolbarItem,
   ToolbarItemVariant,
   ButtonVariant,
+  ToolbarToggleGroup,
 } from '@patternfly/react-core';
 import { FilterIcon, CogIcon } from '@patternfly/react-icons';
 
@@ -69,47 +70,54 @@ const FilterableToolbar: FunctionComponent<Props> = ({
 
   return (
     <Toolbar
+      className="pf-m-toggle-group-container"
       id={`${qsConfig.namespace}-filterable-toolbar-with-chip-groups`}
       clearAllFilters={() => setFilters(undefined, undefined)}
       collapseListedFiltersBreakpoint="xl"
     >
       <ToolbarContent>
-        <Button variant={ButtonVariant.control}>
-          <FilterIcon />
-        </Button>
-        {Object.keys(filterCategories).length > 0 && (
-          <FilterCategoriesGroup
-            filterCategories={filterCategories}
-            filters={filters}
-            setFilters={setFilters}
-          />
-        )}
-        {(quick_date_range || granularity) && (
-          <QuickDateGroup
-            filters={filters}
-            values={{ quick_date_range, granularity }}
-            setFilters={setFilters}
-          />
-        )}
-        {sort_options && (
-          <SortByGroup
-            filters={filters}
-            setFilters={setFilters}
-            sort_options={sort_options}
-          />
-        )}
-        {hasSettings && (
-          <ToolbarItem>
-            <Button
-              variant={ButtonVariant.plain}
-              onClick={() => setSettingsExpanded(!settingsExpanded)}
-              aria-label="settings"
-              isActive={settingsExpanded}
-            >
-              <CogIcon />
+        <ToolbarToggleGroup
+          toggleIcon={
+            <Button variant={ButtonVariant.control}>
+              <FilterIcon />
             </Button>
-          </ToolbarItem>
-        )}
+          }
+          breakpoint="xl"
+        >
+          {Object.keys(filterCategories).length > 0 && (
+            <FilterCategoriesGroup
+              filterCategories={filterCategories}
+              filters={filters}
+              setFilters={setFilters}
+            />
+          )}
+          {(quick_date_range || granularity) && (
+            <QuickDateGroup
+              filters={filters}
+              values={{ quick_date_range, granularity }}
+              setFilters={setFilters}
+            />
+          )}
+          {sort_options && (
+            <SortByGroup
+              filters={filters}
+              setFilters={setFilters}
+              sort_options={sort_options}
+            />
+          )}
+          {hasSettings && (
+            <ToolbarItem>
+              <Button
+                variant={ButtonVariant.plain}
+                onClick={() => setSettingsExpanded(!settingsExpanded)}
+                aria-label="settings"
+                isActive={settingsExpanded}
+              >
+                <CogIcon />
+              </Button>
+            </ToolbarItem>
+          )}
+        </ToolbarToggleGroup>
         {additionalControls.length > 0 && (
           <ToolbarGroup>
             {additionalControls.map((control, idx) => (
