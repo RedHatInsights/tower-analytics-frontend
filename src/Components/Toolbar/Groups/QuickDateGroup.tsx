@@ -53,7 +53,7 @@ const QuickDateGroup: FunctionComponent<Props> = ({
         selectOptions={values.quick_date_range}
         setValue={(value) => setFilters('quick_date_range', value)}
       />
-      {filters.quick_date_range === 'custom' && (
+      {filters.quick_date_range.toString().includes('custom') && (
         <Split hasGutter>
           <SplitItem>
             <ToolbarInput
