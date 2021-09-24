@@ -22,7 +22,7 @@ const expandRows = true;
 const description =
   'The number of times a job template has ran in a specified time window.\n\nYou can use this report to be able to tell which playbooks are running most frequently, allowing you to see which groups in your organization are running Ansible the most.';
 const categories = [CATEGORIES.executive];
-const listAttributes = ['failed_count', 'successful_count', 'total_count']
+const listAttributes = ['failed_count', 'successful_count', 'total_count'];
 const expandedAttributes = [
   'average_host_task_count_per_host',
   'average_host_task_ok_count_per_host',
@@ -51,8 +51,8 @@ const expandedAttributes = [
   'changed_host_count',
   'ok_host_count',
   'skipped_host_count',
-  'total_count'
-  ]
+  'total_count',
+];
 
 const defaultParams: Params = {
   limit: 6,

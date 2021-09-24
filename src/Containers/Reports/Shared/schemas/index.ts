@@ -15,7 +15,11 @@ const defaultReport: ReportPageParams = {
   categories: [] as string[],
 };
 
-const flaggedReports = [hostsByOrganization, jobsTasksByOrganization, templates_explorer];
+const flaggedReports = [
+  hostsByOrganization,
+  jobsTasksByOrganization,
+  templates_explorer,
+];
 
 const prodReports = [affectedHostsByPlaybook, changesMade, playbookRunRate];
 

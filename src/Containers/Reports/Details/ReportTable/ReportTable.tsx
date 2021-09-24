@@ -5,7 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, {FunctionComponent} from 'react';
+import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
 import ChartBuilder, {
@@ -22,7 +22,7 @@ import {
 } from '@patternfly/react-table';
 
 import EmptyList from '../../../../Components/EmptyList';
-import TableRow from "./TableRow";
+import TableRow from './TableRow';
 
 const Tr = styled(PFTr)`
   & td:first-child {
@@ -50,7 +50,7 @@ const ReportTable: FunctionComponent<ReportGeneratorParams> = ({
   chartSchema,
   attrPairs,
   getSortParams,
-  expandRows
+  expandRows,
 }) => {
   if (dataApi.isSuccess && dataApi.result.meta?.count === 0)
     return <EmptyList />;
@@ -72,7 +72,11 @@ const ReportTable: FunctionComponent<ReportGeneratorParams> = ({
             ))}
           </Tr>
         </Thead>
-        <TableRow dataApi={dataApi} attrPairs={attrPairs} expandRows={expandRows} />
+        <TableRow
+          dataApi={dataApi}
+          attrPairs={attrPairs}
+          expandRows={expandRows}
+        />
       </TableComposable>
     </>
   );

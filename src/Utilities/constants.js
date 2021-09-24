@@ -1,9 +1,10 @@
 import {
-  global_palette_black_400, global_palette_blue_300,
+  global_palette_black_400,
+  global_palette_blue_300,
   global_palette_gold_300,
   global_palette_green_300,
-  global_palette_red_100
-} from "@patternfly/react-tokens";
+  global_palette_red_100,
+} from '@patternfly/react-tokens';
 
 export const jobExplorer = {
   attributes: [

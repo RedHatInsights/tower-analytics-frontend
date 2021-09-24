@@ -11,22 +11,18 @@ import {
   DescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
-  DescriptionListTerm, Divider,
+  DescriptionListTerm,
+  Divider,
   Flex,
   FlexItem,
   Grid,
-  GridItem
+  GridItem,
 } from '@patternfly/react-core';
-import {
-  ExpandableRowContent,
-  Td,
-  Tr as PFTr,
-} from '@patternfly/react-table';
+import { ExpandableRowContent, Td, Tr as PFTr } from '@patternfly/react-table';
 
 import { ReportGeneratorParams } from '../../Shared/types';
 import Breakdown from '../../../../Charts/Breakdown';
-import {categoryColor} from "../../../../Utilities/constants";
-
+import { categoryColor } from '../../../../Utilities/constants';
 
 const Tr = styled(PFTr)`
   & td:first-child {
@@ -34,10 +30,7 @@ const Tr = styled(PFTr)`
   }
 `;
 
-const renderExpandedRow = (
-  expanded,
-  item
-) => {
+const renderExpandedRow = (expanded, item) => {
   const totalCount = (item) =>
     item
       ? {
@@ -79,20 +72,28 @@ const renderExpandedRow = (
       {
         label: 'Module name',
         value: task.module_name,
-      }
+      },
     ];
-  }
+  };
 
   const total_host_status_count = (task) => {
-    return task.passed_host_count + task.failed_host_count + task.unreachable_host_count
-  }
+    return (
+      parseInt(task.passed_host_count) +
+      parseInt(task.failed_host_count) +
+      parseInt(task.unreachable_host_count)
+    );
+  };
 
   const total_task_status_count = (task) => {
-    return task.successful_count + task.failed_count + task.unfinished_count
-  }
+    return (
+      parseInt(task.successful_count) +
+      parseInt(task.failed_count) +
+      parseInt(task.unfinished_count)
+    );
+  };
 
   const renderFailedTaskBar = (item) => {
-    const failed_tasks = item.most_failed_tasks
+    const failed_tasks = item.most_failed_tasks;
     if (failed_tasks != null) {
       return (
         <>
@@ -103,7 +104,7 @@ const renderExpandedRow = (
           <Grid hasGutter>
             {failed_tasks
               .slice(0, failed_tasks.length)
-              .map((task, idx) => {
+              .map((task, idx: number) => {
                 const hostCount = {
                   passed: task?.passed_host_count ?? 0,
                   failed: task?.failed_host_count ?? 0,
@@ -182,9 +183,9 @@ const renderExpandedRow = (
       {
         label: 'Organizations',
         value: item.total_org_count ?? 0,
-      }
+      },
     ];
-  }
+  };
 
   return (
     <Tr isExpanded={expanded.some((s) => s.id === item.id)}>
@@ -249,9 +250,7 @@ const renderExpandedRow = (
             {expandedInfo(item).map(({ label, value }) => (
               <DescriptionListGroup key={label}>
                 <DescriptionListTerm>{label}</DescriptionListTerm>
-                <DescriptionListDescription>
-                  {value}
-                </DescriptionListDescription>
+                <DescriptionListDescription>{value}</DescriptionListDescription>
               </DescriptionListGroup>
             ))}
           </DescriptionList>
@@ -263,11 +262,9 @@ const renderExpandedRow = (
 
 const TableExpandedRow: FunctionComponent<ReportGeneratorParams> = ({
   expanded,
-  item
+  item,
 }) => {
-  return (
-    renderExpandedRow(expanded, item)
-  );
+  return renderExpandedRow(expanded, item);
 };
 
 export default TableExpandedRow;

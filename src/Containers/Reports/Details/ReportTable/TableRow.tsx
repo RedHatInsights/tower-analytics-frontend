@@ -5,24 +5,17 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, {
-  FunctionComponent,
-  useState,
-} from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
 import { global_disabled_color_300 } from '@patternfly/react-tokens';
 
-import {
-  Tbody,
-  Td,
-  Tr as PFTr,
-} from '@patternfly/react-table';
+import { Tbody, Td, Tr as PFTr } from '@patternfly/react-table';
 import { formatTotalTime } from '../../../../Utilities/helpers';
 
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
 
 import { ReportGeneratorParams } from '../Shared/types';
-import TableExpandedRow from "./TableExpandedRow";
+import TableExpandedRow from './TableExpandedRow';
 
 const Tr = styled(PFTr)`
   & td:first-child {
@@ -61,11 +54,7 @@ const getOthersStyle = (item: Record<string, string | number>, key: string) => {
   return {};
 };
 
-const renderRow = (
-  dataApi,
-  attrPairs,
-  expandRows
-) => {
+const renderRow = (dataApi, attrPairs, expandRows) => {
   const [expanded, setExpanded] = useState([]);
   const handleExpansion = (row) => {
     if (expanded.some((s) => s.id === row.id)) {
@@ -97,9 +86,7 @@ const renderRow = (
                 </>
               ))}
             </Tr>
-            {expandRows && (
-              <TableExpandedRow expanded={expanded} item={item} />
-            )}
+            {expandRows && <TableExpandedRow expanded={expanded} item={item} />}
           </>
         )
       )}
@@ -110,7 +97,7 @@ const renderRow = (
 const TableRow: FunctionComponent<ReportGeneratorParams> = ({
   dataApi,
   attrPairs,
-  expandRows
+  expandRows,
 }) => {
   return renderRow(dataApi, attrPairs, expandRows);
 };

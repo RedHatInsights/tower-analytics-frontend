@@ -31,7 +31,7 @@ import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
 
 import { AttributesType, ReportGeneratorParams } from '../Shared/types';
 import { getQSConfig } from '../../../Utilities/qs';
-import ReportTable from "./ReportTable";
+import ReportTable from './ReportTable';
 
 const CardBody = styled(PFCardBody)`
   & .pf-c-toolbar,
@@ -60,7 +60,7 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
   readOptions,
   schemaFnc,
   expandRows,
-  listAttributes
+  listAttributes,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const qsConfig = getQSConfig('non-unique-report', defaultParams as any, [
@@ -84,7 +84,9 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
   const [attrPairs, setAttrPairs] = useState<AttributesType>([]);
   useEffect(() => {
     if (listAttributes && options.sort_options) {
-      const attrsList = options.sort_options.filter(({ key }) => listAttributes.includes(key));
+      const attrsList = options.sort_options.filter(({ key }) =>
+        listAttributes.includes(key)
+      );
       setAttrPairs([...extraAttributes, ...attrsList]);
     } else if (options.sort_options) {
       setAttrPairs([...extraAttributes, ...options.sort_options]);
@@ -155,15 +157,17 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
             />
           }
         />
-        {attrPairs &&
+        {attrPairs && (
           <ApiStatusWrapper api={dataApi}>
-            <ReportTable dataApi={dataApi}
-                         chartSchema={chartSchema}
-                         attrPairs={attrPairs}
-                         getSortParams={getSortParams}
-                         expandRows={expandRows}/>
+            <ReportTable
+              dataApi={dataApi}
+              chartSchema={chartSchema}
+              attrPairs={attrPairs}
+              getSortParams={getSortParams}
+              expandRows={expandRows}
+            />
           </ApiStatusWrapper>
-        }
+        )}
       </CardBody>
       <CardFooter>
         <Pagination
