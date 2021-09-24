@@ -11,13 +11,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
-
-import ChartBuilder, {
-  ApiReturnType,
-  functions,
-} from 'react-json-chart-builder';
 
 import {
   Card,
@@ -25,31 +19,19 @@ import {
   CardFooter,
   PaginationVariant,
 } from '@patternfly/react-core';
-import {
-  TableComposable,
-  TableVariant,
-  Tbody,
-  Td,
-  Th,
-  Thead,
-  Tr as PFTr,
-} from '@patternfly/react-table';
 
 import Pagination from '../../../Components/Pagination';
 
 import { useQueryParams } from '../../../Utilities/useQueryParams';
 
 import useRequest from '../../../Utilities/useRequest';
-import { formatTotalTime } from '../../../Utilities/helpers';
 
-import { global_disabled_color_300 } from '@patternfly/react-tokens';
 import ApiStatusWrapper from '../../../Components/ApiStatus/ApiStatusWrapper';
 import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
-import currencyFormatter from '../../../Utilities/currencyFormatter';
 
 import { AttributesType, ReportGeneratorParams } from '../Shared/types';
 import { getQSConfig } from '../../../Utilities/qs';
-import EmptyList from '../../../Components/EmptyList';
+import ReportTable from './ReportTable';
 
 const CardBody = styled(PFCardBody)`
   & .pf-c-toolbar,
@@ -58,27 +40,6 @@ const CardBody = styled(PFCardBody)`
   }
 `;
 
-const Tr = styled(PFTr)`
-  & td:first-child {
-    width: 50px;
-  }
-`;
-
-const customFunctions = (data: ApiReturnType) => ({
-  ...functions,
-  axisFormat: {
-    ...functions.axisFormat,
-    formatAsYear: (tick: string) =>
-      Intl.DateTimeFormat('en', { year: 'numeric' }).format(new Date(tick)),
-    formatAsMonth: (tick: string) =>
-      Intl.DateTimeFormat('en', { month: 'long' }).format(new Date(tick)),
-  },
-  fetchFnc: () =>
-    new Promise<ApiReturnType>((resolve) => {
-      resolve(data);
-    }),
-});
-
 const perPageOptions = [
   { title: '4', value: 4 },
   { title: '6', value: 6 },
@@ -86,78 +47,10 @@ const perPageOptions = [
   { title: '10', value: 10 },
 ];
 
-const timeFields: string[] = ['elapsed'];
-const costFields: string[] = [];
-
-const isOther = (item: Record<string, string | number>, key: string) =>
-  key === 'id' && item[key] === -1;
-
-const isNoName = (item: Record<string, string | number>, key: string) =>
-  key === 'id' && item[key] === -2;
-
-const getText = (
-  item: Record<string, string | number>,
-  key: string
-): string => {
-  if (isNoName(item, key)) return '-';
-  if (isOther(item, key)) return '-';
-  if (timeFields.includes(key)) return formatTotalTime(item[key]);
-  if (costFields.includes(key)) return currencyFormatter(+item[key]);
-  // TODO: Remove no name when api does not return empty values
-  // https://issues.redhat.com/browse/AA-691
-  return `${item[key]}` || 'No name';
-};
-
-const getOthersStyle = (item: Record<string, string | number>, key: string) => {
-  if (isOther(item, key)) {
-    return {
-      backgroundColor: global_disabled_color_300.value,
-    };
-  }
-  return {};
-};
-
 const getDateFormatByGranularity = (granularity: string): string => {
   if (granularity === 'yearly') return 'formatAsYear';
   if (granularity === 'monthly') return 'formatAsMonth';
   if (granularity === 'daily') return 'formatDateAsDayMonth';
-};
-
-const renderData = (dataApi, chartSchema, attrPairs, getSorParams) => {
-  if (dataApi.isSuccess && dataApi.result.meta?.count === 0)
-    return <EmptyList />;
-
-  return (
-    <>
-      <ChartBuilder
-        schema={chartSchema}
-        functions={customFunctions(dataApi.result as unknown as ApiReturnType)}
-      />
-      <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
-        <Thead>
-          <Tr>
-            {attrPairs.map(({ key, value }) => (
-              <Th key={key} {...getSorParams(key)}>
-                {value}
-              </Th>
-            ))}
-          </Tr>
-        </Thead>
-        <Tbody>
-          {dataApi.result.meta?.legend.map(
-            (item: Record<string, string | number>) => (
-              <Tr key={item.id} style={getOthersStyle(item, 'id')}>
-                {attrPairs.map(({ key }) => (
-                  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-                  <Td key={`${item.id}-${key}`}>{getText(item, key)}</Td>
-                ))}
-              </Tr>
-            )
-          )}
-        </Tbody>
-      </TableComposable>
-    </>
-  );
 };
 
 const Report: FunctionComponent<ReportGeneratorParams> = ({
@@ -166,6 +59,8 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
   readData,
   readOptions,
   schemaFnc,
+  expandRows,
+  listAttributes,
 }) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const qsConfig = getQSConfig('non-unique-report', defaultParams as any, [
@@ -188,7 +83,12 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
 
   const [attrPairs, setAttrPairs] = useState<AttributesType>([]);
   useEffect(() => {
-    if (options.sort_options) {
+    if (listAttributes && options.sort_options) {
+      const attrsList = options.sort_options.filter(({ key }) =>
+        listAttributes.includes(key)
+      );
+      setAttrPairs([...extraAttributes, ...attrsList]);
+    } else if (options.sort_options) {
       setAttrPairs([...extraAttributes, ...options.sort_options]);
     }
   }, [options, extraAttributes]);
@@ -214,11 +114,11 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
     setFromToolbar('sort_options', attrPairs[index]?.key);
   };
 
-  const getSorParams = (currKey: string) => {
+  const getSortParams = (currKey: string) => {
     const whitelistKeys = options?.sort_options?.map(
       ({ key }: { key: string }) => key
     );
-    if (!whitelistKeys.includes(currKey)) return {};
+    if (!whitelistKeys?.includes(currKey)) return {};
 
     return {
       sort: {
@@ -257,9 +157,17 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
             />
           }
         />
-        <ApiStatusWrapper api={dataApi}>
-          {renderData(dataApi, chartSchema, attrPairs, getSorParams)}
-        </ApiStatusWrapper>
+        {attrPairs && (
+          <ApiStatusWrapper api={dataApi}>
+            <ReportTable
+              dataApi={dataApi}
+              chartSchema={chartSchema}
+              attrPairs={attrPairs}
+              getSortParams={getSortParams}
+              expandRows={expandRows}
+            />
+          </ApiStatusWrapper>
+        )}
       </CardBody>
       <CardFooter>
         <Pagination
@@ -276,19 +184,6 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
       </CardFooter>
     </Card>
   );
-};
-
-Report.propTypes = {
-  defaultParams: PropTypes.any,
-  extraAttributes: PropTypes.arrayOf(
-    PropTypes.exact({
-      key: PropTypes.string.isRequired,
-      value: PropTypes.string.isRequired,
-    }).isRequired
-  ).isRequired,
-  readData: PropTypes.func.isRequired,
-  readOptions: PropTypes.func.isRequired,
-  schemaFnc: PropTypes.func.isRequired,
 };
 
 export default Report;

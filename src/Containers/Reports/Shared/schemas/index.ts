@@ -6,6 +6,7 @@ import changesMade from './changesMade';
 import playbookRunRate from './playbookRunRate';
 import hostsByOrganization from './hostsByOrganizations';
 import jobsTasksByOrganization from './jobsTasksByOrganization';
+import templates_explorer from './templates_explorer';
 
 const defaultReport: ReportPageParams = {
   slug: '',
@@ -14,7 +15,11 @@ const defaultReport: ReportPageParams = {
   categories: [] as string[],
 };
 
-const flaggedReports = [hostsByOrganization, jobsTasksByOrganization];
+const flaggedReports = [
+  hostsByOrganization,
+  jobsTasksByOrganization,
+  templates_explorer,
+];
 
 const prodReports = [affectedHostsByPlaybook, changesMade, playbookRunRate];
 
