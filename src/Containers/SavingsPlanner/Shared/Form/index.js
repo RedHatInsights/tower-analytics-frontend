@@ -200,7 +200,7 @@ const Form = ({ title, options, data = {} }) => {
           variant="error"
         >
           {'There was an error saving the plan.'}
-          <ErrorDetail error={error.detail} />
+          <ErrorDetail error={error?.error?.detail.name} />
         </AlertModal>
       )}
     </>
