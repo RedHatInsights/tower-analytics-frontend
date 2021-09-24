@@ -53,7 +53,13 @@ const QuickDateGroup: FunctionComponent<Props> = ({
         selectOptions={values.quick_date_range}
         setValue={(value) => setFilters('quick_date_range', value)}
       />
+<<<<<<< HEAD
       {filters.quick_date_range.toString().includes('custom') && (
+=======
+      {['custom', 'roi_custom'].includes(
+        filters.quick_date_range as string
+      ) && (
+>>>>>>> 7b97257 (Fixed custom date selector)
         <Split hasGutter>
           <SplitItem>
             <ToolbarInput
