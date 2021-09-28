@@ -14,8 +14,6 @@ const QueryParamsProvider = ({ children }) => {
   const [queryParams, setQueryParams] = useState({});
 
   useEffect(() => {
-    setQueryParams(parseQueryParams(location.search));
-
     const unlisten = history.listen((location) => {
       setQueryParams(parseQueryParams(location.search));
     });
@@ -34,17 +32,11 @@ const QueryParamsProvider = ({ children }) => {
     setQsInUrl(q, history);
   };
 
-  const initialize = ({ initialValues, namespace = DEFAULT_NAMESPACE }) => {
-    if (!(namespace in queryParams))
-      update({ newQueryParams: initialValues, namespace });
-  };
-
   return (
     <Provider
       value={{
         queryParams,
         update,
-        initialize,
         redirectWithQueryParams: redirectWithQueryParams(history),
       }}
     >

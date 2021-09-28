@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import moment from 'moment';
 import { QueryParamsContext } from './Context';
 
@@ -90,9 +90,6 @@ const paramsReducer = (state, { type, value }) => {
       });
       return { ...state, ...newValues };
     }
-
-    case 'REINITIALIZE':
-      return { ...value };
     default:
       throw new Error(`The query params reducer action (${type}) not found.`);
   }
@@ -119,23 +116,20 @@ const actionMapper = {
 };
 
 const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
-  const { queryParams, update, initialize } = useContext(QueryParamsContext);
-
-  useEffect(() => {
-    initialize({ initialValues: initial, namespace });
-  }, [queryParams]);
+  const { queryParams, update } = useContext(QueryParamsContext);
+  const params = queryParams[namespace] || initial;
 
   const dispatch = (action) => {
     if (action.type === 'RESET_FILTER') {
       update({ newQueryParams: initial, namespace });
     } else {
-      const newQueryParams = paramsReducer(queryParams[namespace], action);
+      const newQueryParams = paramsReducer(params, action);
       update({ newQueryParams, namespace });
     }
   };
 
   return {
-    queryParams: queryParams[namespace] ?? initial,
+    queryParams: params,
     dispatch,
     setFromToolbar: (varName, value = null) => {
       if (!varName) {
