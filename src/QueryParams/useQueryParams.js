@@ -30,12 +30,12 @@ const paramsReducer = (state, { type, value }) => {
     /* v1 api reducers */
     case 'SET_LIMIT':
       return isNaN(value)
-        ? { ...state, limit: 5 } // Defaults back to 5
-        : { ...state, limit: +value };
+        ? { ...state, limit: '5' } // Defaults back to 5
+        : { ...state, limit: value };
     case 'SET_OFFSET':
       return isNaN(value)
-        ? { ...state, offset: 0 } // Defaults back to 0
-        : { ...state, offset: +value };
+        ? { ...state, offset: '0' } // Defaults back to 0
+        : { ...state, offset: value };
     case 'SET_GRANULARITY':
       switch (value.granularity) {
         case 'daily':
