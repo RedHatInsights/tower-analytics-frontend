@@ -28,7 +28,7 @@ interface UseRequestReturn<T> extends UseRequestVariables<T> {
   setValue: (value: T) => void;
 }
 
-export const useRequest = <T>(
+const useRequest = <T>(
   makeRequest: () => Promise<T>,
   initialValue: T
 ): UseRequestReturn<T> => {
