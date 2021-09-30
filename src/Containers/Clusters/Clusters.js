@@ -119,52 +119,40 @@ const Clusters = () => {
   };
 
   const {
-    result: chartData,
+    result: { items: chartData },
     isLoading: chartDataIsLoading,
     isSuccess: chartDataIsSuccess,
     request: fetchChartData,
   } = useRequest(
-    useCallback(async () => {
-      const chartData = await readJobExplorer(queryParams);
-      return chartData.items;
-    }, [queryParams]),
-    []
+    useCallback(async () => readJobExplorer(queryParams), [queryParams]),
+    { items: [] }
   );
 
   const {
-    result: modules,
+    result: { items: modules },
     isLoading: modulesIsLoading,
     request: fetchModules,
   } = useRequest(
-    useCallback(async () => {
-      const modules = await readEventExplorer(topModuleParams);
-      return modules.items;
-    }, [queryParams]),
-    []
+    useCallback(() => readEventExplorer(topModuleParams), [queryParams]),
+    { items: [] }
   );
 
   const {
-    result: templates,
+    result: { items: templates },
     isLoading: templatesIsLoading,
     request: fetchTemplates,
   } = useRequest(
-    useCallback(async () => {
-      const templates = await readJobExplorer(topTemplatesParams);
-      return templates.items;
-    }, [queryParams]),
-    []
+    useCallback(() => readJobExplorer(topTemplatesParams), [queryParams]),
+    { items: [] }
   );
 
   const {
-    result: workflows,
+    result: { items: workflows },
     isLoading: workflowsIsLoading,
     request: fetchWorkflows,
   } = useRequest(
-    useCallback(async () => {
-      const workflows = await readJobExplorer(topWorkflowParams);
-      return workflows.items;
-    }, [queryParams]),
-    []
+    useCallback(() => readJobExplorer(topWorkflowParams), [queryParams]),
+    { items: [] }
   );
 
   useEffect(() => {
