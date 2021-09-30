@@ -235,9 +235,6 @@ describe('Containers/JobExplorer', () => {
     });
   });
 
-  // Keep this as the last test, don't know why but mock restore
-  // does not works as expected and breaks only some of the next tests
-  // depending how FAR are they are after this test.
   it('should render with default api values', async () => {
     const spy = jest.spyOn(useRequest, 'default');
     spy.mockImplementation(mockUseRequestDefaultParams);
@@ -247,7 +244,7 @@ describe('Containers/JobExplorer', () => {
     });
     wrapper.update();
 
-    expect(wrapper).toBeTruthy();
+    expect(wrapper.text()).toEqual(expect.stringContaining('No results found'));
     spy.mockRestore();
   });
 });

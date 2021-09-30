@@ -1,8 +1,14 @@
 import { act } from 'react-dom/test-utils';
-import { history, mountPage } from '../../__tests__/helpers';
+import {
+  history,
+  mountPage,
+  mockUseRequestDefaultParams,
+} from '../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 import AutomationCalculator from './AutomationCalculator';
 import TotalSavings from './TotalSavings';
+import * as useRequest from '../../Utilities/useRequest';
+
 fetchMock.config.overwriteRoutes = true;
 
 const jobExplorerUrl = 'path:/api/tower-analytics/v1/roi_templates/';
@@ -187,5 +193,18 @@ describe('Containers/AutomationCalculator', () => {
     expect(wrapper.find(TotalSavings).text()).toEqual(
       expect.stringContaining('1,210.00')
     );
+  });
+
+  it('should render with default api values', async () => {
+    const spy = jest.spyOn(useRequest, 'default');
+    spy.mockImplementation(mockUseRequestDefaultParams);
+
+    await act(async () => {
+      wrapper = mountPage(AutomationCalculator);
+    });
+    wrapper.update();
+
+    expect(wrapper.text()).toEqual(expect.stringContaining('No Data'));
+    spy.mockRestore();
   });
 });
