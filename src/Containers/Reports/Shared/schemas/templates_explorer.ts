@@ -17,12 +17,15 @@ const slug = 'templates_explorer';
 
 const name = 'Templates Explorer';
 
+const description =
+  'An overview of the job templates that have ran across your Ansible cluster.\n\nYou can use this report to review the status of particular job templates across its job runs, giving you an overview of the times a template fails a job run, a host, or a task. You can also review the host and task status for tasks that fail the most, allowing you to identify any bottlenecks or problems with the templates you are running';
+
+const categories = [CATEGORIES.executive];
+
+const listAttributes = ['failed_count', 'successful_count', 'total_count'];
+
 const expandRows = true;
 
-const description =
-  'The number of times a job template has ran in a specified time window.\n\nYou can use this report to be able to tell which playbooks are running most frequently, allowing you to see which groups in your organization are running Ansible the most.';
-const categories = [CATEGORIES.executive];
-const listAttributes = ['failed_count', 'successful_count', 'total_count'];
 const expandedAttributes = [
   'average_host_task_count_per_host',
   'average_host_task_ok_count_per_host',
@@ -80,7 +83,7 @@ const extraAttributes: AttributesType = [
 const schemaFnc = (
   label: string,
   y: string,
-  xTickFormat: string
+  _xTickFormat: string
 ): ChartSchemaElement[] => [
   {
     id: 1,
@@ -100,12 +103,13 @@ const schemaFnc = (
     },
     xAxis: {
       label: 'Template',
+      // It is using names instead of dates so no need for formatting.
       // tickFormat: xTickFormat,
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label: 'Number of runs',
+      label,
       style: {
         axisLabel: {
           padding: 55,
@@ -135,7 +139,7 @@ const schemaFnc = (
       parent: 0,
       props: {
         x: 'name',
-        y: 'total_count',
+        y,
       },
     },
   },
