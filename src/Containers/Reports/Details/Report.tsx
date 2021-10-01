@@ -32,6 +32,7 @@ import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
 import { AttributesType, ReportGeneratorParams } from '../Shared/types';
 import { getQSConfig } from '../../../Utilities/qs';
 import ReportTable from './ReportTable';
+import DownloadPdfButton from '../../../Components/Toolbar/DownloadPdfButton';
 
 const CardBody = styled(PFCardBody)`
   & .pf-c-toolbar,
@@ -156,6 +157,16 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
               isCompact
             />
           }
+          additionalControls={[
+            <DownloadPdfButton
+              key="download-button"
+              slug="hosts_by_organization"
+              data={dataApi.result}
+              y={chartSchema.y}
+              label={chartSchema.label}
+              xTickFormat={chartSchema.xTickFormat}
+            />,
+          ]}
         />
         {attrPairs && (
           <ApiStatusWrapper api={dataApi}>

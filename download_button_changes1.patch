@@ -1,0 +1,128 @@
+Index: src/Containers/Reports/Details/Report.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Containers/Reports/Details/Report.tsx b/src/Containers/Reports/Details/Report.tsx
+--- a/src/Containers/Reports/Details/Report.tsx	(revision 21e53db67d4d74a90fecf458325b888f36bd1b00)
++++ b/src/Containers/Reports/Details/Report.tsx	(date 1632951290121)
+@@ -14,6 +14,7 @@
+ import styled from 'styled-components';
+ 
+ import {
++  Button,
+   Card,
+   CardBody as PFCardBody,
+   CardFooter,
+@@ -32,6 +33,8 @@
+ import { AttributesType, ReportGeneratorParams } from '../Shared/types';
+ import { getQSConfig } from '../../../Utilities/qs';
+ import ReportTable from './ReportTable';
++import DownloadPdfButton from '../../../Components/Toolbar/DownloadPdfButton';
++import {generatePdf} from "../../../Api";
+ 
+ const CardBody = styled(PFCardBody)`
+   & .pf-c-toolbar,
+@@ -135,6 +138,18 @@
+     };
+   };
+ 
++  const {
++    result: pdfFile,
++    error,
++    request: download,
++  } = useRequest(
++    useCallback(
++      () => generatePdf(dataApi.result),
++      []
++    ),
++    {}
++  );
++
+   return (
+     <Card>
+       <CardBody>
+@@ -156,6 +171,13 @@
+               isCompact
+             />
+           }
++          additionalControls={[
++            <DownloadPdfButton
++              key="download-button"
++              reportToDownload={dataApi.result}
++              onDownload={download}
++            />
++          ]}
+         />
+         {attrPairs && (
+           <ApiStatusWrapper api={dataApi}>
+Index: src/Api/api.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Api/api.ts b/src/Api/api.ts
+--- a/src/Api/api.ts	(revision 21e53db67d4d74a90fecf458325b888f36bd1b00)
++++ b/src/Api/api.ts	(date 1632943593249)
+@@ -16,6 +16,7 @@
+ export const clustersEndpoint = `/api/tower-analytics/v0/clusters/`;
+ 
+ /* v1 endpoints */
++export const pdfGenerateEndpoint = '/api/tower-analytics/v1/generate_pdf/';
+ export const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
+ export const hostExplorerEndpoint = '/api/tower-analytics/v1/host_explorer/';
+ export const eventExplorerEndpoint = '/api/tower-analytics/v1/event_explorer/';
+@@ -106,3 +107,6 @@
+ 
+ export const readNotifications = (params: Params): Promise<ApiJson> =>
+   get(notificationsEndpoint, params);
++
++export const generatePdf = (api_data: Params): Promise<ApiJson> =>
++  post(pdfGenerateEndpoint, api_data);
+Index: src/Components/Toolbar/DownloadPdfButton.js
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/Components/Toolbar/DownloadPdfButton.js b/src/Components/Toolbar/DownloadPdfButton.js
+new file mode 100644
+--- /dev/null	(date 1632945752899)
++++ b/src/Components/Toolbar/DownloadPdfButton.js	(date 1632945752899)
+@@ -0,0 +1,37 @@
++import React from 'react';
++import PropTypes from 'prop-types';
++import { Button, Tooltip } from '@patternfly/react-core';
++import { DownloadIcon } from '@patternfly/react-icons';
++
++const DownloadPdfButton = ({
++  onDownload,
++  reportToDownload
++}) => {
++  return (
++    <>
++      <Tooltip content={'Export report'} position="top">
++        <div>
++          <Button variant="plain" aria-label="Download" onClick={() => {
++              onDownload();
++            }}>
++            <Tooltip position="top" content={<div>Export report</div>}>
++              <DownloadIcon />
++            </Tooltip>
++          </Button>
++        </div>
++      </Tooltip>
++    </>
++  );
++};
++
++DownloadPdfButton.propTypes = {
++  onDownload: PropTypes.func.isRequired,
++  reportToDownload: PropTypes.arrayOf(
++    PropTypes.shape({
++      slug: PropTypes.string.isRequired,
++      name: PropTypes.string.isRequired
++    })
++  ).isRequired,
++};
++
++export default DownloadPdfButton;

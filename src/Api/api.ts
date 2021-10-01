@@ -7,6 +7,7 @@ import {
   updateById,
   authenticatedFetch,
   deleteByIds,
+  postWithFileReturn,
 } from './methods';
 import { Params, ParamsWithPagination, ApiJson } from './types';
 
@@ -16,6 +17,7 @@ export const preflightEndpoint = `/api/tower-analytics/v0/authorized/`;
 export const clustersEndpoint = `/api/tower-analytics/v0/clusters/`;
 
 /* v1 endpoints */
+export const pdfGenerateEndpoint = '/api/tower-analytics/v1/generate_pdf/';
 export const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
 export const hostExplorerEndpoint = '/api/tower-analytics/v1/host_explorer/';
 export const eventExplorerEndpoint = '/api/tower-analytics/v1/event_explorer/';
@@ -106,3 +108,6 @@ export const readClustersOptions = (params: Params): Promise<ApiJson> =>
 
 export const readNotifications = (params: Params): Promise<ApiJson> =>
   get(notificationsEndpoint, params);
+
+export const generatePdf = (params: Params): Promise<void> =>
+  postWithFileReturn(pdfGenerateEndpoint, params);
