@@ -14,6 +14,7 @@ import { AttributesType, ReportPageParams } from '../types';
 const slug = 'hosts_changed_by_job_template';
 
 const name = 'Hosts changed by job template';
+
 const description =
   'The number of hosts changed by a job template in a specified time window.\n\nYou can use this report to find discrepancies in the host change rate at a particular time, helping you drill down to when and why hosts were unreachable at a particular time.';
 
@@ -117,6 +118,7 @@ const reportParams: ReportPageParams = {
   description,
   categories,
   report: {
+    slug,
     defaultParams,
     extraAttributes,
     readData: readHostExplorer,

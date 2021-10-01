@@ -37,6 +37,27 @@ export const authenticatedFetch = (
     })
   );
 
+export const postWithFileReturn = (
+  endpoint: string,
+  params: Params = {}
+): Promise<void> => {
+  const url = new URL(endpoint, window.location.origin);
+  return authenticatedFetch(url.toString(), {
+    method: 'POST',
+    body: JSON.stringify(params),
+  })
+    .then((data) => data.body)
+    .then((stream) => new Response(stream))
+    .then((response) => response.blob())
+    .then((blob) => {
+      blob = blob.slice(0, blob.size, 'application/pdf');
+      return URL.createObjectURL(blob);
+    })
+    .then((url) => {
+      window.open(url, '_blank');
+    });
+};
+
 export const get = (
   endpoint: string,
   params: Params = {}

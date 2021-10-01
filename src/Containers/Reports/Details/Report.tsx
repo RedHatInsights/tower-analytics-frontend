@@ -31,6 +31,8 @@ import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
 
 import { AttributesType, ReportGeneratorParams } from '../Shared/types';
 import ReportTable from './ReportTable';
+import DownloadPdfButton from '../../../Components/Toolbar/DownloadPdfButton';
+import { useFeatureFlag, ValidFeatureFlags } from '../../../FeatureFlags';
 
 const CardBody = styled(PFCardBody)`
   & .pf-c-toolbar,
@@ -51,8 +53,10 @@ const getDateFormatByGranularity = (granularity: string): string => {
   if (granularity === 'monthly') return 'formatAsMonth';
   if (granularity === 'daily') return 'formatDateAsDayMonth';
 };
+const pdfDownloadEnabled = useFeatureFlag(ValidFeatureFlags.pdfDownloadButton);
 
 const Report: FunctionComponent<ReportGeneratorParams> = ({
+  slug,
   defaultParams,
   extraAttributes,
   readData,
@@ -146,6 +150,20 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
               setPagination={setFromPagination}
               isCompact
             />
+          }
+          additionalControls={
+            pdfDownloadEnabled
+              ? [
+                  <DownloadPdfButton
+                    key="download-button"
+                    slug={slug}
+                    data={dataApi.result}
+                    y={chartSchema.y}
+                    label={chartSchema.label}
+                    xTickFormat={chartSchema.xTickFormat}
+                  />,
+                ]
+              : []
           }
         />
         {attrPairs && (
