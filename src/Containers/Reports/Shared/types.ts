@@ -9,6 +9,7 @@ export type SchemaFnc = (
 ) => ChartSchemaElement[];
 
 export interface ReportGeneratorParams {
+  slug: string;
   defaultParams: Params;
   expandRows?: boolean;
   extraAttributes: AttributesType;

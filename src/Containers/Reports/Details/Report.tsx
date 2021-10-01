@@ -56,12 +56,12 @@ const getDateFormatByGranularity = (granularity: string): string => {
 };
 
 const Report: FunctionComponent<ReportGeneratorParams> = ({
+  slug,
   defaultParams,
   extraAttributes,
   readData,
   readOptions,
   schemaFnc,
-  slug,
   expandRows,
   listAttributes,
 }) => {
