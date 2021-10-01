@@ -87,8 +87,8 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
   }, [options, extraAttributes]);
 
   const chartSchema = schemaFnc(
-    attrPairs.find(({ key }) => key === queryParams.sort_options)?.value ||
-      'Label Y',
+    options.sort_options?.find(({ key }) => key === queryParams.sort_options)
+      ?.value || 'Label Y',
     queryParams.sort_options as string,
     getDateFormatByGranularity(queryParams.granularity)
   );
