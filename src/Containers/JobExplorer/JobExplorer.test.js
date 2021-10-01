@@ -1,25 +1,10 @@
 import { act } from 'react-dom/test-utils';
-import { stringify } from 'query-string';
 import { mountPage } from '../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 import JobExplorer from './JobExplorer';
 import { jobExplorer } from '../../Utilities/constants';
 
 fetchMock.config.overwriteRoutes = true;
-
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useHistory: () => ({
-    push: jest.fn(),
-    location: jest.fn(),
-    pathname: 'some_path',
-  }),
-  useLocation: () => ({
-    push: jest.fn(),
-    pathname: 'some_path',
-    search: '',
-  }),
-}));
 
 const jobExplorerUrl = 'path:/api/tower-analytics/v1/job_explorer/';
 const dummyData = (size, count = 0) => ({
@@ -58,10 +43,7 @@ const jobExplorerOptions = {
   ],
 };
 
-const defaultQueryParams = {
-  ...jobExplorer.defaultParams,
-  attributes: jobExplorer.attributes,
-};
+const defaultQueryParams = jobExplorer.defaultParams;
 
 const getPagination = (wrapper) => wrapper.find('.pf-c-options-menu');
 
@@ -125,39 +107,6 @@ describe('Containers/JobExplorer', () => {
     expect(JSON.parse(body)).toEqual(defaultQueryParams);
   });
 
-  xit('should send the custom query params', async () => {
-    const queryParams = {
-      ...defaultQueryParams,
-      template_id: [1, 2],
-    };
-
-    const search = stringify(
-      {
-        template_id: ['1', '2'],
-      },
-      { arrayFormat: 'bracket' }
-    );
-
-    await act(async () => {
-      wrapper = mountPage(JobExplorer, { search });
-    });
-    wrapper.update();
-    const [, { body }] = inspectCall(jobExplorerUrl, 'POST');
-    expect(JSON.parse(body)).toEqual(queryParams);
-  });
-
-  it('should render the right amount of data rows', async () => {
-    fetchMock.post({ url: jobExplorerUrl }, { ...dummyData(5) });
-    await act(async () => {
-      wrapper = mountPage(JobExplorer);
-    });
-    wrapper.update();
-
-    // The fetchMock returns 5 data + the header row
-    // Does not include expandable rows
-    expect(wrapper.find('tr:not(.pf-c-table__expandable-row)')).toHaveLength(6);
-  });
-
   it('should display the correct page number', async () => {
     fetchMock.post({ url: jobExplorerUrl }, { ...dummyData(5, 100) });
 
@@ -196,8 +145,8 @@ describe('Containers/JobExplorer', () => {
 
     expect(JSON.parse(body)).toEqual({
       ...defaultQueryParams,
-      limit: 15,
-      offset: 0,
+      limit: '15',
+      offset: '0',
     });
   });
 
@@ -223,8 +172,8 @@ describe('Containers/JobExplorer', () => {
 
     expect(JSON.parse(body)).toEqual({
       ...defaultQueryParams,
-      limit: 20,
-      offset: 0,
+      limit: '20',
+      offset: '0',
     });
   });
 
@@ -251,7 +200,7 @@ describe('Containers/JobExplorer', () => {
 
     expect(JSON.parse(body)).toEqual({
       ...defaultQueryParams,
-      offset: 5,
+      offset: '5',
     });
   });
 
@@ -278,7 +227,7 @@ describe('Containers/JobExplorer', () => {
 
     expect(JSON.parse(body)).toEqual({
       ...defaultQueryParams,
-      offset: 95,
+      offset: '95',
     });
   });
 });

@@ -22,7 +22,7 @@ import {
 
 import Pagination from '../../../Components/Pagination';
 
-import { useQueryParams } from '../../../Utilities/useQueryParams';
+import { useQueryParams } from '../../../QueryParams/';
 
 import useRequest from '../../../Utilities/useRequest';
 
@@ -30,7 +30,6 @@ import ApiStatusWrapper from '../../../Components/ApiStatus/ApiStatusWrapper';
 import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
 
 import { AttributesType, ReportGeneratorParams } from '../Shared/types';
-import { getQSConfig } from '../../../Utilities/qs';
 import ReportTable from './ReportTable';
 
 const CardBody = styled(PFCardBody)`
@@ -62,14 +61,8 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
   expandRows,
   listAttributes,
 }) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const qsConfig = getQSConfig('non-unique-report', defaultParams as any, [
-    'limit',
-    'offset',
-  ]);
-
   const { queryParams, setFromPagination, setFromToolbar } =
-    useQueryParams(qsConfig);
+    useQueryParams(defaultParams);
 
   const { request: setData, ...dataApi } = useRequest(
     useCallback(() => readData(queryParams), [queryParams]),
@@ -141,7 +134,6 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
         <FilterableToolbar
           categories={options}
           filters={queryParams}
-          qsConfig={qsConfig}
           setFilters={setFromToolbar}
           pagination={
             <Pagination
@@ -151,7 +143,6 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
                 limit: queryParams.limit,
                 offset: queryParams.offset,
               }}
-              qsConfig={qsConfig.defaultParams}
               setPagination={setFromPagination}
               isCompact
             />
@@ -177,7 +168,6 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
             limit: queryParams.limit,
             offset: queryParams.offset,
           }}
-          qsConfig={qsConfig.defaultParams}
           setPagination={setFromPagination}
           variant={PaginationVariant.bottom}
         />

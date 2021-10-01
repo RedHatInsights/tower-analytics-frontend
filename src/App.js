@@ -16,11 +16,11 @@ const App = () => {
     insights.chrome.init();
     insights.chrome.identifyApp('automation-analytics');
     const appNav = insights.chrome.on('APP_NAVIGATION', (event) => {
-      if (event.domEvent) {
-        history.push(`/${event.navId}`);
-      }
+      history.push(`/${event.navId}`);
     });
 
+    // Fetch on first load and then on page changes
+    fetchPreflight();
     const unlisten = history.listen(() => {
       fetchPreflight();
     });

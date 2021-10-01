@@ -1,6 +1,6 @@
 import { screen, fireEvent, waitFor } from '@testing-library/react';
 import { renderPage } from '../../../../../../__tests__/helpers.reactTestingLib';
-import Templates from '.';
+import Templates from './';
 
 import mockResponses from '../../../../../../__tests__/fixtures';
 import * as api from '../../../../../../Api';

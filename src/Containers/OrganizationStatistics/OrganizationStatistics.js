@@ -1,9 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { useHistory } from 'react-router';
 
-import { useQueryParams } from '../../Utilities/useQueryParams';
-import useRedirect from '../../Utilities/useRedirect';
+import {
+  useQueryParams,
+  useRedirect,
+  DEFAULT_NAMESPACE,
+} from '../../QueryParams/';
 import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
 
 import { readJobExplorer, readHostExplorer, readOrgOptions } from '../../Api/';
@@ -35,19 +38,22 @@ import {
 } from '../../Charts/GroupedBarChart/';
 import PieChart from '../../Charts/PieChart';
 import FilterableToolbar from '../../Components/Toolbar/';
-import { organizationStatistics as constants } from '../../Utilities/constants';
+import {
+  jobExplorer,
+  organizationStatistics as constants,
+} from '../../Utilities/constants';
 import reportPaths from '../Reports/paths';
 
 // For chart colors
 import { pfmulti } from '../../Charts/Utilities/colors';
 import { scaleOrdinal } from 'd3';
 import useRequest from '../../Utilities/useRequest';
-import { getQSConfig } from '../../Utilities/qs';
 
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
 import { useFeatureFlag, ValidFeatureFlags } from '../../FeatureFlags';
+import { Paths } from '../../paths';
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
@@ -82,7 +88,7 @@ const pieChartMapper = (items = [], attrName) => {
 };
 
 const redirectToJobExplorer =
-  (toJobExplorer, queryParams) =>
+  (redirect, queryParams) =>
   ({ date, id }) => {
     if (id === -1) {
       // disable clicking on "others" block
@@ -92,24 +98,18 @@ const redirectToJobExplorer =
     const { sort_options, sort_order, ...rest } = queryParams;
     const formattedDate = dateForJobExplorer(date);
     const initialQueryParams = {
-      ...rest,
-      'job-explorer.quick_date_range': 'custom',
-      'job-explorer.start_date': formattedDate,
-      'job-explorer.end_date': formattedDate,
-      'job-explorer.status': [
-        'successful',
-        'failed',
-        'new',
-        'pending',
-        'waiting',
-        'error',
-        'canceled',
-        'running',
-      ],
-      'job-explorer.org_id': [id],
+      [DEFAULT_NAMESPACE]: {
+        ...jobExplorer.defaultParams,
+        ...rest,
+        quick_date_range: 'custom',
+        start_date: formattedDate,
+        end_date: formattedDate,
+        status: [],
+        org_id: [id],
+      },
     };
 
-    toJobExplorer(initialQueryParams);
+    redirect(Paths.jobExplorer, initialQueryParams);
   };
 
 const chartMapper = [
@@ -128,19 +128,17 @@ const chartMapper = [
     tooltip: HostsTooltip,
   },
 ];
-const qsConfig = getQSConfig(
-  'organization-statistics',
-  { ...constants.defaultParams },
-  ['limit', 'offset']
-);
 
-const OrganizationStatistics = ({ history }) => {
-  const toJobExplorer = useRedirect(history, 'jobExplorer');
+const OrganizationStatistics = () => {
+  const history = useHistory();
+  const redirect = useRedirect();
   const [activeTabKey, setActiveTabKey] = useState(0);
   const orgReportsEnabled = useFeatureFlag(ValidFeatureFlags.orgReports);
 
   // params from toolbar/searchbar
-  const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
+  const { queryParams, setFromToolbar } = useQueryParams(
+    constants.defaultParams
+  );
 
   const jobEventsByOrgParams = {
     ...queryParams,
@@ -206,13 +204,11 @@ const OrganizationStatistics = ({ history }) => {
   } = useRequest(
     useCallback(
       async (tabIndex = 0) => {
-        let orgs;
         if (tabIndex === 0) {
-          orgs = await readJobExplorer(jobsByDateAndOrgParams);
+          return await readJobExplorer(jobsByDateAndOrgParams);
         } else {
-          orgs = await readHostExplorer(hostAcrossOrgParams);
+          return await readHostExplorer(hostAcrossOrgParams);
         }
-        return orgs;
       },
       [hostAcrossOrgParams, jobsByDateAndOrgParams]
     ),
@@ -301,7 +297,7 @@ const OrganizationStatistics = ({ history }) => {
                 colorFunc={colorFunc}
                 yLabel={chartMapper[activeTabKey].label}
                 onClick={chartMapper[activeTabKey].onClick(
-                  toJobExplorer,
+                  redirect,
                   queryParams
                 )}
                 TooltipClass={chartMapper[activeTabKey].tooltip}
@@ -363,16 +359,11 @@ const OrganizationStatistics = ({ history }) => {
           categories={options}
           filters={queryParams}
           setFilters={setFromToolbar}
-          qsConfig={qsConfig}
         />
       </PageHeader>
       <Main>{renderContent()}</Main>
     </>
   );
-};
-
-OrganizationStatistics.propTypes = {
-  history: PropTypes.object,
 };
 
 export default OrganizationStatistics;

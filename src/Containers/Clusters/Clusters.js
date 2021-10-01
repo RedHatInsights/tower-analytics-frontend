@@ -1,7 +1,5 @@
 import React, { useEffect, useCallback } from 'react';
 
-import { useQueryParams } from '../../Utilities/useQueryParams';
-
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import {
   readClustersOptions,
@@ -34,7 +32,7 @@ import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 
 import { clusters } from '../../Utilities/constants';
 import useRequest from '../../Utilities/useRequest';
-import { getQSConfig } from '../../Utilities/qs';
+import { useQueryParams } from '../../QueryParams/';
 
 const initialTopTemplateParams = {
   group_by: 'template',
@@ -63,16 +61,12 @@ const initialOptionsParams = {
   attributes: jobExplorer.attributes,
 };
 
-// takes json and returns
-const qsConfig = getQSConfig('clusters', { ...clusters.defaultParams }, [
-  'limit',
-  'offset',
-]);
-
 const Clusters = () => {
   // params from toolbar/searchbar
   const optionsQueryParams = useQueryParams(initialOptionsParams);
-  const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
+  const { queryParams, setFromToolbar } = useQueryParams(
+    clusters.defaultParams
+  );
   const {
     result: options,
     error,
@@ -84,6 +78,45 @@ const Clusters = () => {
     ),
     {}
   );
+
+  const {
+    cluster_id,
+    org_id,
+    template_id,
+    quick_date_range,
+    start_date,
+    end_date,
+  } = queryParams;
+
+  const topTemplatesParams = {
+    cluster_id,
+    org_id,
+    template_id,
+    quick_date_range,
+    start_date,
+    end_date,
+    ...initialTopTemplateParams,
+  };
+
+  const topWorkflowParams = {
+    cluster_id,
+    org_id,
+    template_id,
+    quick_date_range,
+    start_date,
+    end_date,
+    ...initialTopWorkflowParams,
+  };
+
+  const topModuleParams = {
+    cluster_id,
+    org_id,
+    template_id,
+    quick_date_range,
+    start_date,
+    end_date,
+    ...initialModuleParams,
+  };
 
   const {
     result: chartData,
@@ -141,45 +174,6 @@ const Clusters = () => {
     fetchTemplates();
     fetchWorkflows();
   }, [queryParams]);
-
-  const {
-    cluster_id,
-    org_id,
-    template_id,
-    quick_date_range,
-    start_date,
-    end_date,
-  } = queryParams;
-
-  const topTemplatesParams = {
-    cluster_id,
-    org_id,
-    template_id,
-    quick_date_range,
-    start_date,
-    end_date,
-    ...initialTopTemplateParams,
-  };
-
-  const topWorkflowParams = {
-    cluster_id,
-    org_id,
-    template_id,
-    quick_date_range,
-    start_date,
-    end_date,
-    ...initialTopWorkflowParams,
-  };
-
-  const topModuleParams = {
-    cluster_id,
-    org_id,
-    template_id,
-    quick_date_range,
-    start_date,
-    end_date,
-    ...initialModuleParams,
-  };
 
   if (error) return <ApiErrorState message={error.error} />;
 
@@ -247,7 +241,6 @@ const Clusters = () => {
         <PageHeaderTitle title={'Clusters'} />
         <FilterableToolbar
           categories={options}
-          qsConfig={qsConfig}
           filters={queryParams}
           setFilters={setFromToolbar}
         />

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
@@ -25,12 +24,14 @@ import FilterableToolbar from '../../Components/Toolbar/';
 import { readROI, readROIOptions } from '../../Api/';
 
 // Imports from utilities
-import { useQueryParams } from '../../Utilities/useQueryParams';
-import { roi as roiConst } from '../../Utilities/constants';
-import useRedirect from '../../Utilities/useRedirect';
+import {
+  useQueryParams,
+  useRedirect,
+  DEFAULT_NAMESPACE,
+} from '../../QueryParams/';
+import { jobExplorer, roi as roiConst } from '../../Utilities/constants';
 import { calculateDelta, convertSecondsToHours } from '../../Utilities/helpers';
 import useRequest from '../../Utilities/useRequest';
-import { getQSConfig } from '../../Utilities/qs';
 
 // Chart
 import TopTemplatesSavings from '../../Charts/ROITopTemplates';
@@ -41,6 +42,7 @@ import TotalSavings from './TotalSavings';
 import CalculationCost from './CalculationCost';
 import AutomationFormula from './AutomationFormula';
 import TopTemplates from './TopTemplates';
+import { Paths } from '../../paths';
 
 const mapApi = ({ items = [] }) =>
   items.map((el) => ({
@@ -71,18 +73,14 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
 const computeTotalSavings = (data) =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
-const qsConfig = getQSConfig('clusters', { ...roiConst.defaultParams }, [
-  'limit',
-  'offset',
-]);
-
-const AutomationCalculator = ({ history }) => {
-  const toJobExplorer = useRedirect(history, 'jobExplorer');
+const AutomationCalculator = () => {
   const [costManual, setCostManual] = useState('50');
   const [costAutomation, setCostAutomation] = useState('20');
 
-  // params from toolbar/searchbar
-  const { queryParams, setFromToolbar } = useQueryParams(qsConfig);
+  const redirect = useRedirect();
+  const { queryParams, setFromToolbar } = useQueryParams(
+    roiConst.defaultParams
+  );
 
   const { result: options, request: setOptions } = useRequest(
     useCallback(() => readROIOptions(queryParams), [queryParams]),
@@ -156,10 +154,14 @@ const AutomationCalculator = ({ history }) => {
    */
   const redirectToJobExplorer = (templateId) => {
     const initialQueryParams = {
-      'job-explorer.quick_date_range': 'last_30_days',
-      'job-explorer.template_id': templateId,
+      [DEFAULT_NAMESPACE]: {
+        ...jobExplorer.defaultParams,
+        quick_date_range: 'last_30_days',
+        template_id: [templateId],
+      },
     };
-    toJobExplorer(initialQueryParams);
+
+    redirect(Paths.jobExplorer, initialQueryParams);
   };
 
   const renderLeft = () => (
@@ -225,7 +227,7 @@ const AutomationCalculator = ({ history }) => {
         </Grid>
       );
 
-    return null;
+    return <></>;
   };
 
   return (
@@ -235,17 +237,12 @@ const AutomationCalculator = ({ history }) => {
         <FilterableToolbar
           categories={options}
           filters={queryParams}
-          qsConfig={qsConfig}
           setFilters={setFromToolbar}
         />
       </PageHeader>
       <Main>{renderContents()}</Main>
     </>
   );
-};
-
-AutomationCalculator.propTypes = {
-  history: PropTypes.object,
 };
 
 export default AutomationCalculator;

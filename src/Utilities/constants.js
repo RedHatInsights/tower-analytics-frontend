@@ -7,26 +7,26 @@ import {
 } from '@patternfly/react-tokens';
 
 export const jobExplorer = {
-  attributes: [
-    'id',
-    'status',
-    'job_type',
-    'started',
-    'finished',
-    'elapsed',
-    'created',
-    'cluster_name',
-    'org_name',
-    'most_failed_tasks',
-    'host_count',
-    'host_task_count',
-    'failed_host_count',
-    'unreachable_host_count',
-    'changed_host_count',
-    'ok_host_count',
-    'skipped_host_count',
-  ],
   defaultParams: {
+    attributes: [
+      'id',
+      'status',
+      'job_type',
+      'started',
+      'finished',
+      'elapsed',
+      'created',
+      'cluster_name',
+      'org_name',
+      'most_failed_tasks',
+      'host_count',
+      'host_task_count',
+      'failed_host_count',
+      'unreachable_host_count',
+      'changed_host_count',
+      'ok_host_count',
+      'skipped_host_count',
+    ],
     status: ['successful', 'failed'],
     quick_date_range: 'last_30_days',
     job_type: ['workflowjob', 'job'],
@@ -37,8 +37,8 @@ export const jobExplorer = {
     sort_options: 'created',
     sort_order: 'desc',
     only_root_workflows_and_standalone_jobs: false,
-    limit: 5,
-    offset: 0,
+    limit: '5',
+    offset: '0',
   },
 };
 
@@ -55,7 +55,8 @@ export const roi = {
     sort_order: 'desc',
     start_date: null,
     end_date: null,
-    limit: 25,
+    limit: '25',
+    offset: '0',
     only_root_workflows_and_standalone_jobs: true,
     attributes: [
       'successful_hosts_total',
@@ -73,8 +74,8 @@ export const organizationStatistics = {
     status: [],
     org_id: [],
     quick_date_range: 'last_30_days',
-    limit: 5,
-    offset: 0,
+    limit: '5',
+    offset: '0',
     job_type: ['workflowjob', 'job'],
     cluster_id: [],
     template_id: [],
@@ -106,8 +107,8 @@ export const savingsPlanner = {
     category: [],
     frequency_period: [],
     name: '',
-    limit: 10,
-    offset: 0,
+    limit: '10',
+    offset: '0',
     sort_options: 'modified',
     sort_order: 'desc',
   },
@@ -118,21 +119,6 @@ export const notAuthorizedParams = {
   description:
     'User does not have privileges to perform this action. Contact your organization adminstrator(s) for more information.',
 };
-
-export const arrayFields = [
-  'automation_status',
-  'attributes',
-  'cluster_id',
-  'category',
-  'frequency_period',
-  'host_id',
-  'host_status',
-  'inventory_id',
-  'job_type',
-  'status',
-  'org_id',
-  'template_id',
-];
 
 export const categoryColor = {
   ok: global_palette_green_300.value,
