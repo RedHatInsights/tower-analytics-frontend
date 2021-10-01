@@ -56,7 +56,7 @@ export const roi = {
     start_date: null,
     end_date: null,
     limit: '25',
-    ofset: '0',
+    offset: '0',
     only_root_workflows_and_standalone_jobs: true,
     attributes: [
       'successful_hosts_total',

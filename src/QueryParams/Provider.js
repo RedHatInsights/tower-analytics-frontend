@@ -14,6 +14,10 @@ const QueryParamsProvider = ({ children }) => {
   const [queryParams, setQueryParams] = useState({});
 
   useEffect(() => {
+    if (history.location.search.length > 0) {
+      setQueryParams(parseQueryParams(location.search));
+    }
+
     const unlisten = history.listen((location) => {
       setQueryParams(parseQueryParams(location.search));
     });
