@@ -61,40 +61,37 @@ const ListItem = ({ report: { slug, description, name, categories } }) => (
         <Label key={idx}>{category}</Label>
       ))}
       <TooltipButton
-        variant="plain"
-        aria-label="Download"
-        onClick={() => {
-          const DownloadPdfButton = ({ slug, data, y, label, xTickFormat }) => {
-            const { error, isLoading } = useRequest(
-              useCallback(
-                (data) =>
-                  generatePdf({
-                    slug,
-                    data,
-                    y,
-                    label,
-                    x_tick_format: xTickFormat,
-                  }),
-                []
-              ),
-              null
-            );
-            return (
-              <>
-                <Button
-                  variant={ButtonVariant.plain}
-                  aria-label="Download"
-                  onClick={data}
-                >
-                  <Tooltip position="top" content={<div>Export report</div>}>
-                    {isLoading && <Spinner isSVG size="sm" />}
-                    {error && <ExclamationCircleIcon />}
-                    {!isLoading && !error && <DownloadIcon />}
-                  </Tooltip>
-                </Button>
-              </>
-            );
-          };
+        const
+        DownloadPdfButton={({ slug, data, y, label, xTickFormat }) => {
+          const { error, isLoading, request } = useRequest(
+            useCallback(
+              (data) =>
+                generatePdf({
+                  slug,
+                  data,
+                  y,
+                  label,
+                  x_tick_format: xTickFormat,
+                }),
+              []
+            ),
+            null
+          );
+          return (
+            <>
+              <Button
+                variant={ButtonVariant.plain}
+                aria-label="Download"
+                onClick={() => request(data)}
+              >
+                <Tooltip position="top" content={<div>Export report</div>}>
+                  {isLoading && <Spinner isSVG size="md" />}
+                  {error && <ExclamationCircleIcon />}
+                  {!isLoading && !error && <DownloadIcon />}
+                </Tooltip>
+              </Button>
+            </>
+          );
         }}
       ></TooltipButton>
     </CardFooter>

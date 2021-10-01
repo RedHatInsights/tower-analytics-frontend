@@ -33,6 +33,7 @@ import { AttributesType, ReportGeneratorParams } from '../Shared/types';
 import { getQSConfig } from '../../../Utilities/qs';
 import ReportTable from './ReportTable';
 import DownloadPdfButton from '../../../Components/Toolbar/DownloadPdfButton';
+import Details from '../Details/Details';
 
 const CardBody = styled(PFCardBody)`
   & .pf-c-toolbar,
@@ -60,6 +61,7 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
   readData,
   readOptions,
   schemaFnc,
+  slug,
   expandRows,
   listAttributes,
 }) => {
@@ -160,7 +162,7 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
           additionalControls={[
             <DownloadPdfButton
               key="download-button"
-              slug="hosts_by_organization"
+              slug={slug}
               data={dataApi.result}
               y={chartSchema.y}
               label={chartSchema.label}

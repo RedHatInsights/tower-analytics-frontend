@@ -46,7 +46,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
             <Description>{description}</Description>
           </PageHeader>
           <Main>
-            <Card>{report && <Report {...report} />}</Card>
+            <Card>{report && <Report {...report} slug={slug} />}</Card>
           </Main>
         </>
       );

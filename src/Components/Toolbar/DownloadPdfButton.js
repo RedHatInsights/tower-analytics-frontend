@@ -13,7 +13,7 @@ import { useCallback } from 'react';
 import { generatePdf } from '../../Api';
 
 const DownloadPdfButton = ({ slug, data, y, label, xTickFormat }) => {
-  const { error, isLoading } = useRequest(
+  const { error, isLoading, request } = useRequest(
     useCallback(
       (data) =>
         generatePdf({
@@ -33,11 +33,11 @@ const DownloadPdfButton = ({ slug, data, y, label, xTickFormat }) => {
       <Button
         variant={ButtonVariant.plain}
         aria-label="Download"
-        onClick={data}
+        onClick={() => request(data)}
       >
         {/* TooltipVariant.top */}
         <Tooltip position="top" content={<div>Export report</div>}>
-          {isLoading && <Spinner isSVG size="sm" />}
+          {isLoading && <Spinner isSVG size="md" />}
           {error && <ExclamationCircleIcon />}
           {!isLoading && !error && <DownloadIcon />}
         </Tooltip>
