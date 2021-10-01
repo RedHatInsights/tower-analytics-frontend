@@ -33,7 +33,7 @@ import { AttributesType, ReportGeneratorParams } from '../Shared/types';
 import { getQSConfig } from '../../../Utilities/qs';
 import ReportTable from './ReportTable';
 import DownloadPdfButton from '../../../Components/Toolbar/DownloadPdfButton';
-import Details from '../Details/Details';
+import { useFeatureFlag, ValidFeatureFlags } from '../../../FeatureFlags';
 
 const CardBody = styled(PFCardBody)`
   & .pf-c-toolbar,
@@ -54,6 +54,7 @@ const getDateFormatByGranularity = (granularity: string): string => {
   if (granularity === 'monthly') return 'formatAsMonth';
   if (granularity === 'daily') return 'formatDateAsDayMonth';
 };
+const pdfDownloadEnabled = useFeatureFlag(ValidFeatureFlags.pdfDownloadButton);
 
 const Report: FunctionComponent<ReportGeneratorParams> = ({
   slug,
@@ -159,16 +160,20 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
               isCompact
             />
           }
-          additionalControls={[
-            <DownloadPdfButton
-              key="download-button"
-              slug={slug}
-              data={dataApi.result}
-              y={chartSchema.y}
-              label={chartSchema.label}
-              xTickFormat={chartSchema.xTickFormat}
-            />,
-          ]}
+          additionalControls={
+            pdfDownloadEnabled
+              ? [
+                  <DownloadPdfButton
+                    key="download-button"
+                    slug={slug}
+                    data={dataApi.result}
+                    y={chartSchema.y}
+                    label={chartSchema.label}
+                    xTickFormat={chartSchema.xTickFormat}
+                  />,
+                ]
+              : []
+          }
         />
         {attrPairs && (
           <ApiStatusWrapper api={dataApi}>
