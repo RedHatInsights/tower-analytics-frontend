@@ -1,17 +1,6 @@
 import { act } from 'react-dom/test-utils';
 import { history, mountPage } from '../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useHistory: () => ({
-    push: jest.fn(),
-  }),
-  useLocation: () => ({
-    push: jest.fn(),
-    pathname: 'some_path',
-    search: '',
-  }),
-}));
 import AutomationCalculator from './AutomationCalculator';
 import TotalSavings from './TotalSavings';
 fetchMock.config.overwriteRoutes = true;
@@ -132,10 +121,7 @@ describe('Containers/AutomationCalculator', () => {
     wrapper.update();
 
     wrapper.find('a').at(0).simulate('click');
-    expect(history.push).toHaveBeenCalledWith({
-      pathname: '/job-explorer',
-      search: expect.stringContaining('job-explorer.template_id=1'),
-    });
+    expect(history.location.pathname).toBe('/job-explorer');
   });
 
   it('should compute total savings correctly', async () => {

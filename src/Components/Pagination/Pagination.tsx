@@ -1,11 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import PropTypes from 'prop-types';
 import { Pagination as PFPagination } from '@patternfly/react-core';
-import {
-  encodeNonDefaultQueryString,
-  parseQueryString,
-} from '../../Utilities/qs';
-import { useHistory } from 'react-router-dom';
 
 const defaultPerPageOptions = [
   { title: '5', value: 5 },
@@ -16,10 +11,6 @@ const defaultPerPageOptions = [
 ];
 
 type SetPagination = (offset: number, limit?: number) => void;
-type ApiParams = Record<
-  string,
-  string | boolean | number | string[] | number[]
->;
 
 interface Props {
   count?: number;
@@ -29,18 +20,11 @@ interface Props {
     limit: number;
   };
   setPagination: SetPagination;
-  qsConfig: {
-    namespace: string;
-    defaultParams: ApiParams;
-    integerFields: string[];
-    dateFields: string[];
-  };
   [x: string]: unknown;
 }
 
 const Pagination: FunctionComponent<Props> = ({
   count = 0,
-  qsConfig,
   perPageOptions = null,
   params,
   setPagination,
@@ -49,34 +33,6 @@ const Pagination: FunctionComponent<Props> = ({
   const { offset, limit } = params;
   const currentPage = Math.floor(offset / limit + 1);
   const returnOffsetVal = (page: number) => (page - 1) * limit;
-  const history = useHistory();
-
-  const pushHistoryState = (params: Record<string, number> = {}) => {
-    const { pathname, search } = history.location;
-    const nonNamespacedParams = parseQueryString({}, search);
-    const encodedParams = encodeNonDefaultQueryString(
-      qsConfig,
-      params,
-      nonNamespacedParams
-    );
-    history.push(encodedParams ? `${pathname}?${encodedParams}` : pathname);
-  };
-
-  const handleSetPage = (
-    _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
-    pageNumber: number
-  ) => {
-    const oldParams = parseQueryString(qsConfig, history.location.search);
-    pushHistoryState({ ...oldParams, limit: pageNumber });
-  };
-
-  const handleSetPageSize = (
-    _event: React.MouseEvent | React.KeyboardEvent | MouseEvent,
-    page: number
-  ) => {
-    const oldParams = parseQueryString(qsConfig, history.location.search);
-    pushHistoryState({ ...oldParams, offset: page });
-  };
 
   return (
     <PFPagination
@@ -85,13 +41,11 @@ const Pagination: FunctionComponent<Props> = ({
       perPageOptions={perPageOptions ?? defaultPerPageOptions}
       perPage={limit}
       page={currentPage}
-      onPerPageSelect={(event, perPage: number, page: number) => {
+      onPerPageSelect={(_e, perPage: number, page: number) => {
         setPagination(returnOffsetVal(page), perPage);
-        handleSetPage(event, perPage);
       }}
-      onSetPage={(event, page: number) => {
+      onSetPage={(_e, page: number) => {
         setPagination(returnOffsetVal(page));
-        handleSetPageSize(event, returnOffsetVal(page));
       }}
       {...props}
     />
@@ -100,7 +54,6 @@ const Pagination: FunctionComponent<Props> = ({
 
 Pagination.propTypes = {
   count: PropTypes.number,
-  qsConfig: PropTypes.any,
   params: PropTypes.exact({
     offset: PropTypes.number.isRequired,
     limit: PropTypes.number.isRequired,

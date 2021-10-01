@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from 'react';
 import styled from 'styled-components';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
   PageHeader,
@@ -15,7 +15,7 @@ import LoadingState from '../../../Components/ApiStatus/LoadingState';
 import EmptyList from '../../../Components/EmptyList';
 import Pagination from '../../../Components/Pagination';
 import PlanCard from './ListItem';
-import { useQueryParams } from '../../../Utilities/useQueryParams';
+import { useQueryParams, useRedirect } from '../../../QueryParams/';
 import { savingsPlanner } from '../../../Utilities/constants';
 
 import ToolbarDeleteButton from '../../../Components/Toolbar/ToolbarDeleteButton';
@@ -23,7 +23,6 @@ import useSelected from '../../../Utilities/useSelected';
 import useRequest, { useDeleteItems } from '../../../Utilities/useRequest';
 import ErrorDetail from '../../../Components/ErrorDetail';
 import AlertModal from '../../../Components/AlertModal';
-import { getQSConfig } from '../../../Utilities/qs';
 
 const PageContainer = styled.div`
   display: flex;
@@ -38,19 +37,15 @@ const Footer = styled.div`
 const FlexMain = styled(Main)`
   flex-grow: 1;
 `;
-const qsConfig = getQSConfig(
-  'savings-planner',
-  { ...savingsPlanner.defaultParams },
-  ['limit', 'offset']
-);
 
 const List = () => {
-  const history = useHistory();
+  const redirect = useRedirect();
   const { pathname } = useLocation();
 
   // params from toolbar/searchbar
-  const { queryParams, setFromPagination, setFromToolbar } =
-    useQueryParams(qsConfig);
+  const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(
+    savingsPlanner.defaultParams
+  );
 
   const {
     result: options,
@@ -172,7 +167,6 @@ const List = () => {
         <FilterableToolbar
           categories={combinedOptions}
           filters={queryParams}
-          qsConfig={qsConfig}
           setFilters={setFromToolbar}
           additionalControls={[
             ...(canWrite
@@ -182,9 +176,7 @@ const List = () => {
                     variant="primary"
                     aria-label="Add plan"
                     onClick={() => {
-                      history.push({
-                        pathname: `${pathname}/add`,
-                      });
+                      redirect(`${pathname}/add`);
                     }}
                   >
                     Add plan
@@ -208,7 +200,6 @@ const List = () => {
                   limit: +queryParams.limit,
                   offset: +queryParams.offset,
                 }}
-                qsConfig={qsConfig}
                 setPagination={setFromPagination}
                 isCompact
               />
@@ -225,7 +216,6 @@ const List = () => {
               limit: parseInt(queryParams.limit),
               offset: parseInt(queryParams.offset),
             }}
-            qsConfig={qsConfig}
             setPagination={setFromPagination}
             variant={PaginationVariant.bottom}
           />

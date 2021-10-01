@@ -1,7 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
 
-import { useQueryParams } from '../../Utilities/useQueryParams';
+import { useQueryParams } from '../../QueryParams/';
 import useRequest from '../../Utilities/useRequest';
 
 import LoadingState from '../../Components/ApiStatus/LoadingState';
@@ -22,16 +21,6 @@ import { Card, CardBody, PaginationVariant } from '@patternfly/react-core';
 
 import JobExplorerList from './JobExplorerList';
 import FilterableToolbar from '../../Components/Toolbar/';
-import { getQSConfig } from '../../Utilities/qs';
-
-const initialQueryParams = {
-  ...jobExplorer.defaultParams,
-  attributes: jobExplorer.attributes,
-};
-const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
-  'limit',
-  'offset',
-]);
 
 const JobExplorer = () => {
   const {
@@ -39,7 +28,7 @@ const JobExplorer = () => {
     setFromPagination,
     setFromToolbar,
     dispatch: queryParamsDispatch,
-  } = useQueryParams(qsConfig);
+  } = useQueryParams(jobExplorer.defaultParams);
 
   const {
     result: options,
@@ -78,16 +67,14 @@ const JobExplorer = () => {
             <FilterableToolbar
               categories={options}
               filters={queryParams}
-              qsConfig={qsConfig}
               setFilters={setFromToolbar}
               pagination={
                 <Pagination
                   count={meta?.count}
                   params={{
-                    limit: parseInt(queryParams.limit),
-                    offset: parseInt(queryParams.offset),
+                    limit: +queryParams.limit,
+                    offset: +queryParams.offset,
                   }}
-                  qsConfig={qsConfig}
                   setPagination={setFromPagination}
                   isCompact
                 />
@@ -106,10 +93,9 @@ const JobExplorer = () => {
             <Pagination
               count={meta?.count}
               params={{
-                limit: parseInt(queryParams.limit),
-                offset: parseInt(queryParams.offset),
+                limit: +queryParams.limit,
+                offset: +queryParams.offset,
               }}
-              qsConfig={qsConfig}
               setPagination={setFromPagination}
               variant={PaginationVariant.bottom}
             />
@@ -118,11 +104,6 @@ const JobExplorer = () => {
       </Main>
     </React.Fragment>
   );
-};
-
-JobExplorer.propTypes = {
-  location: PropTypes.object,
-  history: PropTypes.object,
 };
 
 export default JobExplorer;

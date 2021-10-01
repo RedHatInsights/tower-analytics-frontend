@@ -1,18 +1,8 @@
 import { act } from 'react-dom/test-utils';
 import { mountPage } from '../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useHistory: () => ({
-    push: jest.fn(),
-  }),
-  useLocation: () => ({
-    push: jest.fn(),
-    pathname: 'some_path',
-    search: '',
-  }),
-}));
 import OrganizationStatistics from './OrganizationStatistics';
+import { organizationStatistics } from '../../Utilities/constants';
 
 const chartRoots = [
   'd3-grouped-bar-chart-root',
@@ -70,32 +60,31 @@ const jobExplorerOptions = {
   ],
 };
 
-const defaultQueryParams = {
-  quick_date_range: 'last_30_days',
-  limit: 5,
-  offset: 0,
-  job_type: ['workflowjob', 'job'],
-  cluster_id: [],
-  start_date: null,
-  end_date: null,
-  org_id: [],
-  status: [],
-  template_id: [],
-  inventory_id: [],
+const defaultQueryParamsForPie = {
+  ...organizationStatistics.defaultParams,
+  attributes: ['total_count'],
+  group_by: 'org',
+  include_others: true,
+  sort_options: 'total_count',
+  sort_order: 'desc',
+};
+
+const defaultQueryParamsForBar = {
+  ...organizationStatistics.defaultParams,
+  attributes: ['total_count'],
+  group_by: 'org',
+  group_by_time: true,
+  sort_options: 'total_count',
+  sort_order: 'desc',
 };
 
 const defaultHostsQueryParams = {
-  status: [],
-  org_id: [],
-  quick_date_range: 'last_30_days',
-  limit: 5,
-  offset: 0,
-  job_type: ['workflowjob', 'job'],
-  cluster_id: [],
-  template_id: [],
-  inventory_id: [],
-  start_date: null,
-  end_date: null,
+  ...organizationStatistics.defaultParams,
+  attributes: ['total_unique_host_count'],
+  group_by: 'org',
+  group_by_time: true,
+  sort_options: 'host_task_count',
+  sort_order: 'desc',
 };
 
 const lastCallBody = (url) => JSON.parse(fetchMock.lastCall(url)[1].body);
@@ -194,20 +183,7 @@ describe('Containers/OrganizationStatistics', () => {
     });
     wrapper.update();
 
-    const {
-      sort_order,
-      attributes,
-      granularity,
-      include_others,
-      group_by,
-      dateFields,
-      integerFields,
-      namespace,
-      ...rest
-    } = lastCallBody(jobExplorerUrl);
-
-    expect(sort_order).toBe('desc');
-    expect(rest.defaultParams).toEqual(defaultQueryParams);
+    expect(lastCallBody(jobExplorerUrl)).toEqual(defaultQueryParamsForPie);
   });
 
   it('should handle the tab switching correctly', async () => {
@@ -226,42 +202,13 @@ describe('Containers/OrganizationStatistics', () => {
     wrapper.update();
 
     // Wait for the call to hosts options and hosts data
-    const checkHostsCall = () => {
-      const {
-        attributes,
-        granularity,
-        group_by,
-        group_by_time,
-        dateFields,
-        integerFields,
-        namespace,
-        ...rest
-      } = lastCallBody(hostExplorerUrl);
-      expect(rest.defaultParams).toEqual(defaultHostsQueryParams);
-    };
+    expect(lastCallBody(hostExplorerUrl)).toEqual(defaultHostsQueryParams);
 
-    checkHostsCall();
     // Click on the orgs tab
     await act(async () => {
-      tabs.at(0).simulate('click');
+      tabs.at(1).simulate('click');
     });
-    wrapper.update();
 
-    // Wait for the calls for the orgs options and orgs data
-    const checkOrgsCall = () => {
-      const {
-        attributes,
-        granularity,
-        group_by_time,
-        group_by,
-        dateFields,
-        integerFields,
-        namespace,
-        ...rest
-      } = lastCallBody(jobExplorerUrl);
-      expect(rest.defaultParams).toEqual(defaultQueryParams);
-    };
-
-    checkOrgsCall();
+    expect(lastCallBody(jobExplorerUrl)).toEqual(defaultQueryParamsForBar);
   });
 });

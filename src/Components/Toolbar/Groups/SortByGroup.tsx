@@ -4,6 +4,8 @@ import {
   Button,
   SelectOptionProps,
   ButtonVariant,
+  ToolbarGroupVariant,
+  ToolbarItem,
 } from '@patternfly/react-core';
 import { SortAmountDownIcon, SortAmountUpIcon } from '@patternfly/react-icons';
 
@@ -21,22 +23,29 @@ const SortByGroup: FunctionComponent<Props> = ({
   setFilters,
   sort_options,
 }) => (
-  <ToolbarGroup variant="filter-group">
-    <ToolbarInput
-      categoryKey="sort_options"
-      value={filters.sort_options}
-      selectOptions={sort_options}
-      setValue={(value) => setFilters('sort_options', value as string)}
-    />
-    <Button
-      variant={ButtonVariant.control}
-      onClick={() =>
-        setFilters('sort_order', filters.sort_order === 'asc' ? 'desc' : 'asc')
-      }
-    >
-      {filters.sort_order === 'asc' && <SortAmountUpIcon />}
-      {filters.sort_order === 'desc' && <SortAmountDownIcon />}
-    </Button>
+  <ToolbarGroup variant={ToolbarGroupVariant['filter-group']}>
+    <ToolbarItem>
+      <ToolbarInput
+        categoryKey="sort_options"
+        value={filters.sort_options}
+        selectOptions={sort_options}
+        setValue={(value) => setFilters('sort_options', value as string)}
+      />
+    </ToolbarItem>
+    <ToolbarItem>
+      <Button
+        variant={ButtonVariant.control}
+        onClick={() =>
+          setFilters(
+            'sort_order',
+            filters.sort_order === 'asc' ? 'desc' : 'asc'
+          )
+        }
+      >
+        {filters.sort_order === 'asc' && <SortAmountUpIcon />}
+        {filters.sort_order === 'desc' && <SortAmountDownIcon />}
+      </Button>
+    </ToolbarItem>
   </ToolbarGroup>
 );
 

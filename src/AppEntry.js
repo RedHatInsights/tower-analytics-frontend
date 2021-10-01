@@ -4,13 +4,16 @@ import { Provider } from 'react-redux';
 import { init } from './store';
 import App from './App';
 import getBaseName from './Utilities/getBaseName';
-import { Provider as FeatureFlagProvider } from './FeatureFlags/';
+import { FeatureFlagProvider } from './FeatureFlags';
+import { QueryParamsProvider } from './QueryParams';
 
 const AutomationAnalytics = () => (
   <Provider store={init().getStore()}>
     <FeatureFlagProvider>
       <Router basename={getBaseName()}>
-        <App />
+        <QueryParamsProvider>
+          <App />
+        </QueryParamsProvider>
       </Router>
     </FeatureFlagProvider>
   </Provider>

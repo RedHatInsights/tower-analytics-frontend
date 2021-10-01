@@ -2,10 +2,7 @@ import React, { useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
-import { Paths } from '../../../../paths';
-import { stringify } from 'query-string';
-
-import { useHistory, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 
 import { Button } from '@patternfly/react-core';
 
@@ -34,6 +31,10 @@ import AlertModal from '../../../../Components/AlertModal/AlertModal';
 import ErrorDetail from '../../../../Components/ErrorDetail/ErrorDetail';
 import JobStatus from '../../../../Components/JobStatus';
 
+import { useRedirect, DEFAULT_NAMESPACE } from '../../../../QueryParams/';
+import { jobExplorer } from '../../../../Utilities/constants';
+import { Paths } from '../../../../paths';
+
 const CardBody = styled(PFCardBody)`
   min-height: 500px;
   padding: 0;
@@ -50,7 +51,7 @@ const Divider = styled(PFDivider)`
 
 const DetailsTab = ({ tabsArray, plan, canWrite, options }) => {
   const { pathname } = useLocation();
-  const history = useHistory();
+  const redirect = useRedirect();
   const {
     id,
     automation_status,
@@ -67,17 +68,16 @@ const DetailsTab = ({ tabsArray, plan, canWrite, options }) => {
   } = plan;
 
   const redirectToJobExplorer = (templateId) => {
-    const { jobExplorer } = Paths;
     const initialQueryParams = {
-      'job-explorer.quick_date_range': 'last_30_days',
-      'job-explorer.status': ['failed', 'successful'],
-      'job-explorer.template_id': templateId,
+      [DEFAULT_NAMESPACE]: {
+        ...jobExplorer.defaultParams,
+        quick_date_range: 'last_30_days',
+        status: ['failed', 'successful'],
+        template_id: [templateId],
+      },
     };
-    const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
-    history.push({
-      pathname: jobExplorer,
-      search,
-    });
+
+    redirect(Paths.jobExplorer, initialQueryParams);
   };
 
   const showTemplate = (template_details) => {
@@ -129,7 +129,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite, options }) => {
   const { request: deletePlans, error: deleteError } = useRequest(
     useCallback(async () => {
       await deletePlan(id);
-      history.push(`/savings-planner`);
+      redirect(Paths.savingsPlanner);
     }, [id, history])
   );
 
@@ -180,9 +180,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite, options }) => {
                   variant="primary"
                   aria-label="Edit plan"
                   onClick={() => {
-                    history.push({
-                      pathname: `${pathname.split('/details')[0]}/edit`,
-                    });
+                    redirect(`${pathname.split('/details')[0]}/edit`);
                   }}
                 >
                   Edit
