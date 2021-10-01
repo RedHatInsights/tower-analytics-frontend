@@ -14,29 +14,28 @@ import { generatePdf } from '../../Api';
 
 const DownloadPdfButton = ({ slug, data, y, label, xTickFormat }) => {
   const { error, isLoading, request } = useRequest(
-    useCallback(
-      (data) =>
-        generatePdf({
-          slug,
-          data,
-          y,
-          label,
-          x_tick_format: xTickFormat,
-        }),
-      []
+    useCallback((data) =>
+      generatePdf({
+        slug,
+        data,
+        y,
+        label,
+        x_tick_format: xTickFormat,
+      })
     ),
     null
   );
-
+  const getPdfButtonText = (error) => error || 'Download PDF version of report';
   return (
     <>
       <Button
-        variant={ButtonVariant.plain}
-        aria-label="Download"
+        variant={error ? ButtonVariant.link : ButtonVariant.plain}
+        aria-label={getPdfButtonText(error)}
         onClick={() => request(data)}
+        isDanger={error}
       >
         {/* TooltipVariant.top */}
-        <Tooltip position="top" content={<div>Export report</div>}>
+        <Tooltip position="top" content={<div>{getPdfButtonText(error)}</div>}>
           {isLoading && <Spinner isSVG size="md" />}
           {error && <ExclamationCircleIcon />}
           {!isLoading && !error && <DownloadIcon />}
