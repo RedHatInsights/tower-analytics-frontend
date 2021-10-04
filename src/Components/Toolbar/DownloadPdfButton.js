@@ -30,21 +30,21 @@ const DownloadPdfButton = ({ slug, data, y, label, xTickFormat }) => {
   const getPdfButtonText = (error) => error || 'Download PDF version of report';
 
   return (
-    <Button
-      variant={error ? ButtonVariant.link : ButtonVariant.plain}
-      aria-label={getPdfButtonText(error)}
-      onClick={() => request(data)}
-      isDanger={error}
+    <Tooltip
+      position={TooltipPosition.top}
+      content={<div>{getPdfButtonText(error)}</div>}
     >
-      <Tooltip
-        position={TooltipPosition.top}
-        content={<div>{getPdfButtonText(error)}</div>}
+      <Button
+        variant={error ? ButtonVariant.link : ButtonVariant.plain}
+        aria-label={getPdfButtonText(error)}
+        onClick={() => request(data)}
+        isDanger={error}
       >
         {isLoading && <Spinner isSVG size="md" />}
         {error && <ExclamationCircleIcon />}
         {!isLoading && !error && <DownloadIcon />}
-      </Tooltip>
-    </Button>
+      </Button>
+    </Tooltip>
   );
 };
 
