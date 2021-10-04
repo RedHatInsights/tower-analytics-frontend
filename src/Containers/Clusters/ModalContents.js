@@ -145,13 +145,17 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
   );
 
   const redirectToJobExplorer = () => {
+    const { start_date, end_date, quick_date_range } = qp;
+
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...jobExplorer.defaultParams,
         template_id: [selectedId],
         status: [],
         job_type: [jobType],
-        quick_date_range: 'last_30_days',
+        quick_date_range,
+        start_date,
+        end_date,
       },
     };
 
