@@ -247,12 +247,12 @@ const OrganizationStatistics = () => {
   const renderDeprecationWarning = () => (
     <Alert
       variant={AlertVariant.warning}
-      title="The Organization statistics page will be deprecated in the future release."
+      title="The organization statistics page will be deprecated in a future release."
       actionLinks={
         <>
           <AlertActionLink>
             <Link to={reportPaths.getDetails('hosts_by_organization')}>
-              Host by organization report
+              Hosts by organization report
             </Link>
           </AlertActionLink>
           <AlertActionLink>
@@ -263,8 +263,9 @@ const OrganizationStatistics = () => {
         </>
       }
     >
-      The organization statistics page is being converted to reports. Please use
-      our new, more full-featured reports by following the links below.
+      The organization statistics page has been converted to a set of reports.
+      Please use our new, more full-featured reports by following the links
+      below.
     </Alert>
   );
 
