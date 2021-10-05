@@ -90,11 +90,18 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
     }
   }, [options, extraAttributes]);
 
+  const chartParams = {
+    y: queryParams.sort_options as string,
+    label:
+      options.sort_options?.find(({ key }) => key === queryParams.sort_options)
+        ?.value || 'Label Y',
+    xTickFormat: getDateFormatByGranularity(queryParams.granularity),
+  };
+
   const chartSchema = schemaFnc(
-    options.sort_options?.find(({ key }) => key === queryParams.sort_options)
-      ?.value || 'Label Y',
-    queryParams.sort_options as string,
-    getDateFormatByGranularity(queryParams.granularity)
+    chartParams.label,
+    chartParams.y,
+    chartParams.xTickFormat
   );
 
   useEffect(() => {
@@ -158,9 +165,9 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
                     key="download-button"
                     slug={slug}
                     data={dataApi.result}
-                    y={chartSchema.y}
-                    label={chartSchema.label}
-                    xTickFormat={chartSchema.xTickFormat}
+                    y={chartParams.y}
+                    label={chartParams.label}
+                    xTickFormat={chartParams.xTickFormat}
                   />,
                 ]
               : []
