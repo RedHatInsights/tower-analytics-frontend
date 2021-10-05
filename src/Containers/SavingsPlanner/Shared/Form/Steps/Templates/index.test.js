@@ -28,9 +28,6 @@ describe('SavingsPlanner/Shared/Form/Templates', () => {
     api.readJobExplorer.mockResolvedValue({
       items: [],
       meta: { count: 0 },
-      isSuccess: true,
-      response: { msg: 'Success', status: 200 },
-      url: '/api/tower-analytics/v1/job_explorer/',
     });
     renderPage(Templates, undefined, defaultProps);
 
