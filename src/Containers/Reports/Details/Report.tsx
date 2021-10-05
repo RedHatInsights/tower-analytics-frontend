@@ -53,7 +53,6 @@ const getDateFormatByGranularity = (granularity: string): string => {
   if (granularity === 'monthly') return 'formatAsMonth';
   if (granularity === 'daily') return 'formatDateAsDayMonth';
 };
-const pdfDownloadEnabled = useFeatureFlag(ValidFeatureFlags.pdfDownloadButton);
 
 const Report: FunctionComponent<ReportGeneratorParams> = ({
   slug,
@@ -65,6 +64,10 @@ const Report: FunctionComponent<ReportGeneratorParams> = ({
   expandRows,
   listAttributes,
 }) => {
+  const pdfDownloadEnabled = useFeatureFlag(
+    ValidFeatureFlags.pdfDownloadButton
+  );
+
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(defaultParams);
 
