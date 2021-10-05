@@ -16,7 +16,7 @@ const slug = 'hosts_by_organization';
 const name = 'Hosts by organization';
 
 const description =
-  'The number of unique hosts, grouped by organizations from Ansible Controller.  You can use this report to find which organizations are managing the most hosts with Ansible automation.';
+  'The number of unique hosts, grouped by organizations from Ansible Controller.\n\nYou can use this report to find which organizations are managing the most hosts with Ansible automation.';
 
 const categories = [CATEGORIES.executive];
 
