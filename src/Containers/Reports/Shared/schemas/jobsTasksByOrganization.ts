@@ -16,7 +16,7 @@ const slug = 'jobs_and_tasks_by_organization';
 const name = 'Jobs/Tasks by organization';
 
 const description =
-  'The number of job template and task runs, grouped by organizations from Ansible Controller. You can use this report to find which organizations are running the most Ansible jobs.';
+  'The number of job template and task runs, grouped by organizations from Ansible Controller.\n\nYou can use this report to find which organizations are running the most Ansible jobs.';
 
 const categories = [CATEGORIES.executive];
 
