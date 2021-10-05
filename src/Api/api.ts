@@ -45,8 +45,9 @@ export const getFeatures = async (): Promise<ApiFeatureFlagReturnType> => {
     const url = new URL(featuresEndpoint, window.location.origin);
     const response = await authenticatedFetch(url.toString());
     return response.ok ? response.json() : { toggles: [] };
-  } catch (_error) {
-    return {};
+  } catch (error) {
+    console.error('feature flag fetch failed', error);
+    return { toggles: [] };
   }
 };
 
