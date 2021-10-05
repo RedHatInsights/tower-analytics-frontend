@@ -53,7 +53,8 @@ const defaultParams = {
 const schemaFnc = (
   label: string,
   y: string,
-  xTickFormat: string
+  xTickFormat: string,
+  chartToggle?: boolean
 ): ChartSchemaElement[] => [
   {
     id: 1,
@@ -109,7 +110,7 @@ const schemaFnc = (
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: ChartType.line,
+      type: chartToggle ? ChartType.line : ChartType.bar,
       parent: 0,
       props: {
         x: 'created_date',

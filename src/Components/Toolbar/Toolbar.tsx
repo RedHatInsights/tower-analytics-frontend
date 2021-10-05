@@ -4,6 +4,8 @@ import {
   ToolbarContent,
   ToolbarGroup,
   Button,
+  ToggleGroup,
+  ToggleGroupItem,
   ToolbarItem,
   ToolbarItemVariant,
   ButtonVariant,
@@ -27,6 +29,7 @@ interface Props {
   setFilters: SetValues;
   pagination: FunctionComponent;
   hasSettings: boolean;
+  chartToggle: FunctionComponent;
   additionalControls: FunctionComponent[];
 }
 
@@ -36,6 +39,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
   setFilters: setQueryParams,
   pagination = null,
   hasSettings = false,
+  chartToggle = null,
   additionalControls = [],
 }) => {
   const [settingsExpanded, setSettingsExpanded] = useState(false);
@@ -56,6 +60,8 @@ const FilterableToolbar: FunctionComponent<Props> = ({
   ) => {
     setQueryParams(key, value);
   };
+
+  const [isLine, setIsLine] = useState(true);
 
   return (
     <Toolbar
@@ -97,6 +103,24 @@ const FilterableToolbar: FunctionComponent<Props> = ({
             >
               <CogIcon />
             </Button>
+          </ToolbarItem>
+        )}
+        {chartToggle && (
+          <ToolbarItem>
+            <ToggleGroup aria-label="Chart type toggle">
+              <ToggleGroupItem
+                text="Line Chart"
+                buttonId="line"
+                isSelected={isLine}
+                onChange={() => setIsLine(true)}
+              />
+              <ToggleGroupItem
+                text="Bar Chart"
+                buttonId="bar"
+                isSelected={!isLine}
+                onChange={() => setIsLine(false)}
+              />
+            </ToggleGroup>
           </ToolbarItem>
         )}
         {additionalControls.length > 0 && (
