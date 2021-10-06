@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, { FunctionComponent, useCallback, useEffect } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
 
 import {
@@ -66,7 +66,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
     useQueryParams(defaultParams);
 
   const { request: setData, ...dataApi } = useRequest(
-    useCallback(() => readData(queryParams), [queryParams]),
+    () => readData(queryParams),
     { meta: { count: 0, legend: [] } }
   );
 

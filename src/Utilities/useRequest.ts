@@ -1,7 +1,8 @@
 import { useEffect, useState, useCallback } from 'react';
+import { TempApiErrorType } from '../Api';
 import useIsMounted from './useIsMounted';
 
-type ErrorType = unknown; // TODO: When the error format is evident, use that instead of `unknown`
+type ErrorType = TempApiErrorType; // TODO: When the error format is evident, use that instead of `unknown`
 
 /*
  * The useRequest hook accepts a request function and returns an object with
@@ -24,12 +25,12 @@ interface UseRequestVariables<T> {
 }
 
 interface UseRequestReturn<T> extends UseRequestVariables<T> {
-  request: () => void;
+  request: (...args: unknown[]) => void;
   setValue: (value: T) => void;
 }
 
 export const useRequest = <T>(
-  makeRequest: () => Promise<T>,
+  makeRequest: (...args: unknown[]) => Promise<T>,
   initialValue: T
 ): UseRequestReturn<T> => {
   const [variables, setVariables] = useState<UseRequestVariables<T>>({
@@ -64,7 +65,7 @@ export const useRequest = <T>(
             setVariables({
               isSuccess: false,
               isLoading: false,
-              error,
+              error: error as ErrorType,
               result: initialValue,
             });
           }

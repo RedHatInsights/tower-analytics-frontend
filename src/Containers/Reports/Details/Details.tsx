@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Main from '@redhat-cloud-services/frontend-components/Main';
@@ -14,6 +14,13 @@ import Breadcrumbs from '../../../Components/Breadcrumbs';
 import { ReportCard } from './Components/';
 import { getReport } from '../Shared/schemas';
 import paths from '../paths';
+import UnrolledTableCard from './Components/UnrolledTableCard';
+import {
+  Button,
+  ButtonVariant,
+  Stack,
+  StackItem,
+} from '@patternfly/react-core';
 
 const Description = styled.p`
   max-width: 70em;
@@ -23,6 +30,7 @@ const Description = styled.p`
 const Details: FunctionComponent<Record<string, never>> = () => {
   const { slug } = useParams<{ slug: string }>();
   const { name, description, report } = getReport(slug);
+  const [unrolledVisible, setUnrolledVisible] = useState(false);
 
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
 
@@ -36,7 +44,31 @@ const Details: FunctionComponent<Record<string, never>> = () => {
             <Description>{description}</Description>
           </PageHeader>
           <Main>
-            <ReportCard {...report} />
+            <Stack hasGutter>
+              <StackItem>
+                <ReportCard {...report} />
+              </StackItem>
+              <StackItem>
+                {/* TODO Own component */}
+                <Button
+                  variant={ButtonVariant.link}
+                  onClick={() => setUnrolledVisible(!unrolledVisible)}
+                >
+                  {unrolledVisible ? 'Hide' : 'Show'} the top 100 rows
+                </Button>
+              </StackItem>
+              {unrolledVisible && (
+                <StackItem>
+                  <UnrolledTableCard
+                    defaultParams={report.defaultParams}
+                    defaultTableHeaders={report.defaultTableHeaders}
+                    tableAttributes={report.tableAttributes}
+                    readData={report.readData}
+                    readOptions={report.readOptions}
+                  />
+                </StackItem>
+              )}
+            </Stack>
           </Main>
         </>
       );

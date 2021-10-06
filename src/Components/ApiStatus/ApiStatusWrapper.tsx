@@ -1,4 +1,5 @@
 import React, { FunctionComponent } from 'react';
+import { TempApiErrorType } from '../../Api';
 import ApiErrorState from './ApiErrorState';
 import LoadingState from './LoadingState';
 import NoData from './NoData';
@@ -6,7 +7,7 @@ import NoData from './NoData';
 interface Props {
   api: {
     result: unknown;
-    error: { error: string; [key: string]: string } | null;
+    error: TempApiErrorType;
     isSuccess: boolean;
     isLoading: boolean;
   };

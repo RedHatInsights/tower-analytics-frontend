@@ -7,6 +7,9 @@ export type OptionsReturnType = Record<
   string,
   { key: string; value: string }[]
 >;
+
+export type TempApiErrorType = { error: string; [key: string]: string } | null;
+
 export type ApiJson = Record<string, unknown> | OptionsReturnType;
 
 export interface ParamsWithPagination {
