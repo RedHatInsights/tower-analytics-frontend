@@ -65,7 +65,7 @@ const defaultParams: Params = {
   group_by_time: false,
   granularity: 'monthly',
   quick_date_range: 'last_6_months',
-  sort_options: 'host_count',
+  sort_options: 'total_count',
   sort_order: 'desc',
   cluster_id: [],
   inventory_id: [],
