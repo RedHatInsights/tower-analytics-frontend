@@ -55,7 +55,8 @@ const defaultParams = {
 const schemaFnc = (
   label: string,
   y: string,
-  xTickFormat: string
+  xTickFormat: string,
+  isLine?: boolean
 ): ChartSchemaElement[] => [
   {
     id: 1,
@@ -70,6 +71,7 @@ const schemaFnc = (
       },
       domainPadding: {
         y: 25,
+        x: !isLine ? 85 : 0,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
@@ -111,7 +113,7 @@ const schemaFnc = (
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: ChartType.line,
+      type: isLine ? ChartType.line : ChartType.bar,
       parent: 0,
       props: {
         x: 'created_date',

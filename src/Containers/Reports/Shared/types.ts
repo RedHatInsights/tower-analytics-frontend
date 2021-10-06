@@ -5,7 +5,8 @@ export type AttributesType = { key: string; value: string }[];
 export type SchemaFnc = (
   label: string,
   y: string,
-  xTickFormat: string
+  xTickFormat: string,
+  isLine?: boolean
 ) => ChartSchemaElement[];
 
 export interface ReportGeneratorParams {
@@ -24,5 +25,6 @@ export interface ReportPageParams {
   name: string;
   description: string;
   categories: string[];
+  showChartToggle?: boolean;
   report?: ReportGeneratorParams;
 }

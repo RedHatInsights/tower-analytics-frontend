@@ -76,6 +76,7 @@ const defaultParams: Params = {
   org_id: [],
   status: [],
   template_id: [],
+  showChartToggle: false,
 };
 
 const schemaFnc = (
