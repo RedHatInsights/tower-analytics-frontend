@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react';
-import styled from 'styled-components';
 
 import {
   TableComposable,
@@ -7,30 +6,24 @@ import {
   Tbody,
   Th,
   Thead,
-  Tr as PFTr,
+  Tr,
 } from '@patternfly/react-table';
 
 import TableRow from './TableRow';
 import { LegendEntry, TableHeaders, TableSortParams } from '../types';
 
-const Tr = styled(PFTr)`
-  & td:first-child {
-    width: 50px;
-  }
-`;
-
 interface Props {
   headers: TableHeaders;
   legend: LegendEntry[];
-  expandRows: boolean;
-  getSortParams: (currKey: string) => TableSortParams;
+  expandRows?: boolean;
+  getSortParams?: (currKey: string) => TableSortParams;
 }
 
 const ReportTable: FunctionComponent<Props> = ({
   legend,
   headers,
-  getSortParams,
-  expandRows,
+  getSortParams = () => ({}),
+  expandRows = false,
 }) => (
   <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
     <Thead>

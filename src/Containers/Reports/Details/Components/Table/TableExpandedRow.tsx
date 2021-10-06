@@ -13,7 +13,6 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import React, { FunctionComponent } from 'react';
-import styled from 'styled-components';
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -25,17 +24,11 @@ import {
   Grid,
   GridItem,
 } from '@patternfly/react-core';
-import { ExpandableRowContent, Td, Tr as PFTr } from '@patternfly/react-table';
+import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 
 import Breakdown from '../../../../../Charts/Breakdown';
 import { categoryColor } from '../../../../../Utilities/constants';
 import { LegendEntry } from '../types';
-
-const Tr = styled(PFTr)`
-  & td:first-child {
-    width: 50px;
-  }
-`;
 
 interface Props {
   isExpanded: boolean;

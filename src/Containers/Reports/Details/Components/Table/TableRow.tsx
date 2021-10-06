@@ -1,20 +1,13 @@
 import React, { FunctionComponent, useState } from 'react';
-import styled from 'styled-components';
 import { global_disabled_color_300 } from '@patternfly/react-tokens';
 
-import { Td, Tr as PFTr } from '@patternfly/react-table';
+import { Td, Tr } from '@patternfly/react-table';
 import { formatTotalTime } from '../../../../../Utilities/helpers';
 
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
 
 import TableExpandedRow from './TableExpandedRow';
 import { LegendEntry, TableHeaders } from '../types';
-
-const Tr = styled(PFTr)`
-  & td:first-child {
-    width: 50px;
-  }
-`;
 
 const timeFields: string[] = ['elapsed'];
 const costFields: string[] = [];
