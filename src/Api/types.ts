@@ -2,7 +2,12 @@ export type Params = Record<
   string,
   string | number | string[] | number[] | boolean
 >;
-export type ApiJson = Record<string, unknown>;
+
+export type OptionsReturnType = Record<
+  string,
+  { key: string; value: string }[]
+>;
+export type ApiJson = Record<string, unknown> | OptionsReturnType;
 
 export interface ParamsWithPagination {
   limit?: string | number;
