@@ -123,6 +123,7 @@ const reportParams: ReportPageParams = {
   description,
   categories,
   report: {
+    slug,
     defaultParams,
     extraAttributes,
     readData: readJobExplorer,

@@ -10,7 +10,7 @@ import {
   WizardContextConsumer,
 } from '@patternfly/react-core';
 
-import { Paths } from '../../../../paths';
+import { paths } from '../../index';
 import useRequest from '../../../../Utilities/useRequest';
 import usePlanData from '../usePlanData';
 
@@ -151,13 +151,9 @@ const Form = ({ title, options, data = {} }) => {
 
   const onClose = () => {
     if (location.pathname.indexOf('/edit') !== -1) {
-      history.push({
-        pathname: `${Paths.savingsPlanner}/${data?.id}`,
-      });
+      history.push(paths.getDetails(data?.id));
     } else {
-      history.push({
-        pathname: Paths.savingsPlanner,
-      });
+      history.push(paths.get);
     }
   };
 
@@ -170,9 +166,9 @@ const Form = ({ title, options, data = {} }) => {
       {!error && apiResponse?.plan_created && (
         <Redirect
           to={{
-            pathname: `${Paths.savingsPlanner}/${
+            pathname: paths.getDetails(
               apiResponse.id || apiResponse.plan_created.id
-            }`,
+            ),
             state: { reload: true },
           }}
         />
@@ -200,7 +196,7 @@ const Form = ({ title, options, data = {} }) => {
           variant="error"
         >
           {'There was an error saving the plan.'}
-          <ErrorDetail error={error.detail} />
+          <ErrorDetail error={error?.error?.detail.name} />
         </AlertModal>
       )}
     </>

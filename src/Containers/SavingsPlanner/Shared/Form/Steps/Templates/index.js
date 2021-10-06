@@ -1,8 +1,6 @@
 import React, { useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { parse, stringify } from 'query-string';
-import { useHistory, useLocation } from 'react-router-dom';
 
 import {
   Button,
@@ -24,8 +22,7 @@ import NoResults from '../../../../../../Components/ApiStatus/NoResults';
 import ApiErrorState from '../../../../../../Components/ApiStatus/ApiErrorState';
 import Pagination from '../../../../../../Components/Pagination';
 
-import { useQueryParams } from '../../../../../../Utilities/useQueryParams';
-import { getQSConfig } from '../../../../../../Utilities/qs';
+import { useQueryParams } from '../../../../../../QueryParams/';
 
 import {
   readJobExplorer,
@@ -58,20 +55,14 @@ const initialQueryParams = {
   status: [],
   template_id: [],
 };
-const qsConfig = getQSConfig('job-explorer', { ...initialQueryParams }, [
-  'limit',
-  'offset',
-]);
 
 const Templates = ({ template_id, dispatch: formDispatch }) => {
-  const { pathname, hash, search } = useLocation();
-  const history = useHistory();
   const {
     queryParams,
     setFromPagination,
     setFromToolbar,
     dispatch: queryParamsDispatch,
-  } = useQueryParams(qsConfig);
+  } = useQueryParams(initialQueryParams);
 
   const {
     result: options,
@@ -116,23 +107,6 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     },
   };
 
-  const initialSearchParams = parse(search, {
-    arrayFormat: 'bracket',
-    parseBooleans: true,
-    parseNumbers: true,
-  });
-
-  useEffect(() => {
-    history.replace({
-      pathname,
-      hash,
-      search: stringify(
-        { ...initialQueryParams, ...initialSearchParams },
-        { arrayFormat: 'bracket' }
-      ),
-    });
-  }, []);
-
   useEffect(() => {
     fetchOptions();
     fetchEndpoints();
@@ -147,16 +121,14 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
         <FilterableToolbar
           categories={options}
           filters={queryParams}
-          qsConfig={qsConfig}
           setFilters={setFromToolbar}
           pagination={
             <Pagination
               count={count}
               params={{
-                limit: queryParams.limit,
-                offset: queryParams.offset,
+                limit: +queryParams.limit,
+                offset: +queryParams.offset,
               }}
-              qsConfig={qsConfig}
               setPagination={setFromPagination}
               isCompact
             />
@@ -217,10 +189,9 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
           <Pagination
             count={count}
             params={{
-              limit: queryParams.limit,
-              offset: queryParams.offset,
+              limit: +queryParams.limit,
+              offset: +queryParams.offset,
             }}
-            qsConfig={qsConfig}
             setPagination={setFromPagination}
             variant={PaginationVariant.bottom}
           />

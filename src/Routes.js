@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import asyncComponent from './Utilities/asyncComponent';
 import { Paths } from './paths';
+import Error404 from './Components/Error404';
 
 const components = {
   clusters: asyncComponent(() => import('./Containers/Clusters/Clusters')),
@@ -59,9 +60,9 @@ export const Routes = () => {
           rootClass={key}
         />
       ))}
-      {/* Finally, catch all unmatched routes and redirect to Clusters page */}
+      {/* Finally, catch all unmatched routes and render 404 */}
       <Route>
-        <Redirect to={Paths.clusters} />
+        <Error404 body="Sorry, we could not find what you were looking for. The page you requested may have been changed or moved." />
       </Route>
     </Switch>
   );

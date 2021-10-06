@@ -4,8 +4,9 @@ import PropTypes from 'prop-types';
 import Tooltip from './Utilities/Tooltip';
 import { Paths } from '../paths';
 import { formatDate } from '../Utilities/helpers';
-import { stringify } from 'query-string';
 import * as d3 from 'd3';
+import { DEFAULT_NAMESPACE } from '../QueryParams/';
+import { jobExplorer } from '../Utilities/constants';
 
 class LineChart extends Component {
   constructor(props) {
@@ -22,24 +23,22 @@ class LineChart extends Component {
   }
 
   redirectToJobExplorer({ DATE: date }) {
-    const { jobExplorer } = Paths;
     const formattedDate = formatDate(date);
     const initialQueryParams = {
-      start_date: formattedDate,
-      end_date: formattedDate,
-      quick_date_range: 'custom',
-      status: ['failed', 'successful'],
-      cluster_id: this.props.queryParams.cluster_id,
-      org_id: this.props.queryParams.org_id,
-      template_id: this.props.queryParams.template_id,
-      job_type: this.props.queryParams.job_type,
+      [DEFAULT_NAMESPACE]: {
+        ...jobExplorer.defaultParams,
+        start_date: formattedDate,
+        end_date: formattedDate,
+        quick_date_range: 'custom',
+        status: ['failed', 'successful'],
+        cluster_id: this.props.queryParams.cluster_id,
+        org_id: this.props.queryParams.org_id,
+        template_id: this.props.queryParams.template_id,
+        job_type: this.props.queryParams.job_type,
+      },
     };
 
-    const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
-    this.props.history.push({
-      pathname: jobExplorer,
-      search,
-    });
+    this.props.redirect(Paths.jobExplorer, initialQueryParams);
   }
 
   resize() {
@@ -325,7 +324,7 @@ LineChart.propTypes = {
   margin: PropTypes.object,
   getHeight: PropTypes.func,
   getWidth: PropTypes.func,
-  history: PropTypes.object,
+  redirect: PropTypes.func,
 };
 
 export default initializeChart(LineChart);

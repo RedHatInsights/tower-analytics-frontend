@@ -9,8 +9,11 @@ export type SchemaFnc = (
 ) => ChartSchemaElement[];
 
 export interface ReportGeneratorParams {
+  slug: string;
   defaultParams: Params;
+  expandRows?: boolean;
   extraAttributes: AttributesType;
+  listAttributes?: string[];
   readData: (options: ParamsWithPagination) => Promise<ApiJson>;
   readOptions: (options: Params) => Promise<ApiJson>;
   schemaFnc: SchemaFnc;

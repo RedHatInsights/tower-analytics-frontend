@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
@@ -8,7 +7,6 @@ import NoResults from '../../Components/ApiStatus/NoResults';
 import Breakdown from '../../Charts/Breakdown';
 import JobStatus from '../../Components/JobStatus';
 import { Paths } from '../../paths';
-import { stringify } from 'query-string';
 import {
   formatDateTime,
   formatJobType,
@@ -45,6 +43,8 @@ import {
   Td,
 } from '@patternfly/react-table';
 import useRequest from '../../Utilities/useRequest';
+import { DEFAULT_NAMESPACE, useRedirect } from '../../QueryParams';
+import { jobExplorer } from '../../Utilities/constants';
 
 const ActionContainer = styled.div`
   display: flex;
@@ -76,49 +76,7 @@ const formatAvgRun = (elapsed, totalCount) =>
   new Date(Math.ceil(elapsed / totalCount) * 1000).toISOString().substr(11, 8);
 
 const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
-  const {
-    result: stats,
-    request: fetchStats,
-    ...statsApi
-  } = useRequest(
-    useCallback(() => readJobExplorer(agreggateTemplateParams), [selectedId]),
-    {}
-  );
-
-  const {
-    result: relatedJobs,
-    request: fetchJobs,
-    ...jobsApi
-  } = useRequest(
-    useCallback(() => readJobExplorer(relatedTemplateJobsParams), [selectedId]),
-    {}
-  );
-  let history = useHistory();
-
-  const redirectToJobExplorer = () => {
-    const { jobExplorer } = Paths;
-    const initialQueryParams = {
-      'job-explorer.template_id': selectedId,
-      'job-explorer.status': [
-        'successful',
-        'failed',
-        'new',
-        'pending',
-        'waiting',
-        'error',
-        'canceled',
-        'running',
-      ],
-      'job-explorer.job_type': [jobType],
-      'job-explorer.quick_date_range': 'last_30_days',
-    };
-
-    const search = stringify(initialQueryParams, { arrayFormat: 'bracket' });
-    history.push({
-      pathname: jobExplorer,
-      search,
-    });
-  };
+  const redirect = useRedirect();
 
   const relatedTemplateJobsParams = {
     ...qp,
@@ -166,6 +124,42 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
       ? qp.quick_date_range
       : 'last_30_days',
     job_type: [jobType],
+  };
+
+  const {
+    result: stats,
+    request: fetchStats,
+    ...statsApi
+  } = useRequest(
+    useCallback(() => readJobExplorer(agreggateTemplateParams), [selectedId]),
+    {}
+  );
+
+  const {
+    result: relatedJobs,
+    request: fetchJobs,
+    ...jobsApi
+  } = useRequest(
+    useCallback(() => readJobExplorer(relatedTemplateJobsParams), [selectedId]),
+    {}
+  );
+
+  const redirectToJobExplorer = () => {
+    const { start_date, end_date, quick_date_range } = qp;
+
+    const initialQueryParams = {
+      [DEFAULT_NAMESPACE]: {
+        ...jobExplorer.defaultParams,
+        template_id: [selectedId],
+        status: [],
+        job_type: [jobType],
+        quick_date_range,
+        start_date,
+        end_date,
+      },
+    };
+
+    redirect(Paths.jobExplorer, initialQueryParams);
   };
 
   useEffect(() => {

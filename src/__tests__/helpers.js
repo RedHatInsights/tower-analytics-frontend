@@ -1,24 +1,24 @@
 import React from 'react';
 import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
+import { Router } from 'react-router';
+import { createMemoryHistory } from 'history';
+import { QueryParamsProvider } from '../QueryParams';
 
 // Initialize the mocked store (we don't use it but it is initialized)
 const mockStore = configureStore();
 const store = mockStore({});
 
-export const history = {
-  push: jest.fn(),
-  replace: jest.fn(),
-};
+export const history = createMemoryHistory();
 
-const defaultParams = {
-  search: '',
-};
-
-export const mountPage = (Component, { search } = defaultParams) =>
+export const mountPage = (Component) =>
   mount(
     <Provider store={store}>
-      <Component history={history} location={{ search }} />
+      <Router history={history}>
+        <QueryParamsProvider>
+          <Component />
+        </QueryParamsProvider>
+      </Router>
     </Provider>
   );
 
