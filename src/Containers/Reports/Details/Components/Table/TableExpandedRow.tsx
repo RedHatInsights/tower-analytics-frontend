@@ -1,3 +1,10 @@
+/**
+ * TODO: This file is super specific to the data set, it is not reusable at all.
+ * TODO: The types could be specified if I would be more confortable with the
+ * data set this is developed for. The Brekadown component is not TS, which
+ * is preventing the typescript compiler from compiling this component.
+ */
+
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -20,9 +27,9 @@ import {
 } from '@patternfly/react-core';
 import { ExpandableRowContent, Td, Tr as PFTr } from '@patternfly/react-table';
 
-import { ReportGeneratorParams } from '../../Shared/types';
-import Breakdown from '../../../../Charts/Breakdown';
-import { categoryColor } from '../../../../Utilities/constants';
+import Breakdown from '../../../../../Charts/Breakdown';
+import { categoryColor } from '../../../../../Utilities/constants';
+import { LegendEntry } from '../types';
 
 const Tr = styled(PFTr)`
   & td:first-child {
@@ -30,40 +37,42 @@ const Tr = styled(PFTr)`
   }
 `;
 
-const renderExpandedRow = (expanded, item) => {
-  const totalCount = (item) =>
-    item
-      ? {
-          ok: item?.successful_count ?? 0,
-          skipped: item?.skipped_count ?? 0,
-          failed: item?.failed_count ?? 0,
-          error: item?.error_count ?? 0,
-        }
-      : null;
+interface Props {
+  isExpanded: boolean;
+  item: LegendEntry;
+}
 
-  const totalTaskCount = (item) =>
-    item
-      ? {
-          ok: item?.average_host_task_ok_count_per_host ?? 0,
-          skipped: item?.average_host_task_skipped_count_per_host ?? 0,
-          changed: item?.average_host_task_changed_count_per_host ?? 0,
-          failed: item?.average_host_task_failed_count_per_host ?? 0,
-          unreachable: item?.average_host_task_unreachable_count_per_host ?? 0,
-        }
-      : null;
+const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
+  const totalCount = item
+    ? {
+        ok: item?.successful_count ?? 0,
+        skipped: item?.skipped_count ?? 0,
+        failed: item?.failed_count ?? 0,
+        error: item?.error_count ?? 0,
+      }
+    : null;
 
-  const totalHostCount = (item) =>
-    item
-      ? {
-          ok: item?.ok_host_count ?? 0,
-          skipped: item?.skipped_host_count ?? 0,
-          changed: item?.changed_host_count ?? 0,
-          failed: item?.failed_host_count ?? 0,
-          unreachable: item?.unreachable_host_count ?? 0,
-        }
-      : null;
+  const totalTaskCount = item
+    ? {
+        ok: item?.average_host_task_ok_count_per_host ?? 0,
+        skipped: item?.average_host_task_skipped_count_per_host ?? 0,
+        changed: item?.average_host_task_changed_count_per_host ?? 0,
+        failed: item?.average_host_task_failed_count_per_host ?? 0,
+        unreachable: item?.average_host_task_unreachable_count_per_host ?? 0,
+      }
+    : null;
 
-  const taskInfo = (task) => {
+  const totalHostCount = item
+    ? {
+        ok: item?.ok_host_count ?? 0,
+        skipped: item?.skipped_host_count ?? 0,
+        changed: item?.changed_host_count ?? 0,
+        failed: item?.failed_host_count ?? 0,
+        unreachable: item?.unreachable_host_count ?? 0,
+      }
+    : null;
+
+  const taskInfo = (task: any) => {
     return [
       {
         label: 'Task name',
@@ -76,7 +85,7 @@ const renderExpandedRow = (expanded, item) => {
     ];
   };
 
-  const total_host_status_count = (task) => {
+  const totalHostStatusCount = (task: any) => {
     return (
       parseInt(task.passed_host_count) +
       parseInt(task.failed_host_count) +
@@ -84,7 +93,7 @@ const renderExpandedRow = (expanded, item) => {
     );
   };
 
-  const total_task_status_count = (task) => {
+  const totalTaskStatusCount = (task: any) => {
     return (
       parseInt(task.successful_count) +
       parseInt(task.failed_count) +
@@ -92,7 +101,7 @@ const renderExpandedRow = (expanded, item) => {
     );
   };
 
-  const renderFailedTaskBar = (item) => {
+  const renderFailedTaskBar = (item: any) => {
     const failed_tasks = item.most_failed_tasks;
     if (failed_tasks != null) {
       return (
@@ -104,7 +113,7 @@ const renderExpandedRow = (expanded, item) => {
           <Grid hasGutter>
             {failed_tasks
               .slice(0, failed_tasks.length)
-              .map((task, idx: number) => {
+              .map((task: any, idx: number) => {
                 const hostCount = {
                   passed: task?.passed_host_count ?? 0,
                   failed: task?.failed_host_count ?? 0,
@@ -116,56 +125,54 @@ const renderExpandedRow = (expanded, item) => {
                   unfinished: task?.unfinished_count ?? 0,
                 };
                 return (
-                  <>
-                    <Grid hasGutter>
-                      <GridItem>
-                        <DescriptionList isCompact isHorizontal>
-                          {taskInfo(task).map(({ label, value }) => (
-                            <DescriptionListGroup key={label}>
-                              <DescriptionListTerm>{label}</DescriptionListTerm>
-                              <DescriptionListDescription>
-                                {value}
-                              </DescriptionListDescription>
-                            </DescriptionListGroup>
-                          ))}
-                        </DescriptionList>
-                      </GridItem>
-                      <GridItem>
-                        <Flex>
-                          <FlexItem>
-                            <strong>Host status</strong>
-                          </FlexItem>
-                          <FlexItem align={{ default: 'alignRight' }}>
-                            <strong>Hosts</strong>
-                            {'  '}
-                            {total_host_status_count(task)}
-                          </FlexItem>
-                          <FlexItem>
-                            <strong>Task status</strong>
-                          </FlexItem>
-                          <FlexItem align={{ default: 'alignRight' }}>
-                            <strong>Tasks</strong>
-                            {'  '}
-                            {total_task_status_count(task)}
-                          </FlexItem>
-                        </Flex>
-                      </GridItem>
-                      <GridItem lg={6} md={12} key={`hosts-${idx}`}>
-                        <Breakdown
-                          categoryCount={hostCount}
-                          categoryColor={categoryColor}
-                          showPercent
-                        />
-                      </GridItem>
-                      <GridItem lg={6} md={12} key={`tasks-${idx}`}>
-                        <Breakdown
-                          categoryCount={taskCount}
-                          categoryColor={categoryColor}
-                          showPercent
-                        />
-                      </GridItem>
-                    </Grid>
-                  </>
+                  <Grid hasGutter key={idx}>
+                    <GridItem>
+                      <DescriptionList isHorizontal>
+                        {taskInfo(task).map(({ label, value }) => (
+                          <DescriptionListGroup key={label}>
+                            <DescriptionListTerm>{label}</DescriptionListTerm>
+                            <DescriptionListDescription>
+                              {value}
+                            </DescriptionListDescription>
+                          </DescriptionListGroup>
+                        ))}
+                      </DescriptionList>
+                    </GridItem>
+                    <GridItem>
+                      <Flex>
+                        <FlexItem>
+                          <strong>Host status</strong>
+                        </FlexItem>
+                        <FlexItem align={{ default: 'alignRight' }}>
+                          <strong>Hosts</strong>
+                          {'  '}
+                          {totalHostStatusCount(task)}
+                        </FlexItem>
+                        <FlexItem>
+                          <strong>Task status</strong>
+                        </FlexItem>
+                        <FlexItem align={{ default: 'alignRight' }}>
+                          <strong>Tasks</strong>
+                          {'  '}
+                          {totalTaskStatusCount(task)}
+                        </FlexItem>
+                      </Flex>
+                    </GridItem>
+                    <GridItem lg={6} md={12} key={`hosts-${idx}`}>
+                      <Breakdown
+                        categoryCount={hostCount}
+                        categoryColor={categoryColor}
+                        showPercent
+                      />
+                    </GridItem>
+                    <GridItem lg={6} md={12} key={`tasks-${idx}`}>
+                      <Breakdown
+                        categoryCount={taskCount}
+                        categoryColor={categoryColor}
+                        showPercent
+                      />
+                    </GridItem>
+                  </Grid>
                 );
               })}
           </Grid>
@@ -174,7 +181,7 @@ const renderExpandedRow = (expanded, item) => {
     }
   };
 
-  const expandedInfo = (item) => {
+  const expandedInfo = (item: any) => {
     return [
       {
         label: 'Clusters',
@@ -188,7 +195,7 @@ const renderExpandedRow = (expanded, item) => {
   };
 
   return (
-    <Tr isExpanded={expanded.some((s) => s.id === item.id)}>
+    <Tr isExpanded={isExpanded}>
       <Td colSpan={6}>
         <ExpandableRowContent>
           <Flex>
@@ -202,7 +209,7 @@ const renderExpandedRow = (expanded, item) => {
             </FlexItem>
           </Flex>
           <Breakdown
-            categoryCount={totalCount(item)}
+            categoryCount={totalCount}
             categoryColor={categoryColor}
             showPercent
           />
@@ -218,7 +225,7 @@ const renderExpandedRow = (expanded, item) => {
             </FlexItem>
           </Flex>
           <Breakdown
-            categoryCount={totalHostCount(item)}
+            categoryCount={totalHostCount}
             categoryColor={categoryColor}
             showPercent
           />
@@ -234,7 +241,7 @@ const renderExpandedRow = (expanded, item) => {
             </FlexItem>
           </Flex>
           <Breakdown
-            categoryCount={totalTaskCount(item)}
+            categoryCount={totalTaskCount}
             categoryColor={categoryColor}
             showPercent
           />
@@ -258,13 +265,6 @@ const renderExpandedRow = (expanded, item) => {
       </Td>
     </Tr>
   );
-};
-
-const TableExpandedRow: FunctionComponent<ReportGeneratorParams> = ({
-  expanded,
-  item,
-}) => {
-  return renderExpandedRow(expanded, item);
 };
 
 export default TableExpandedRow;

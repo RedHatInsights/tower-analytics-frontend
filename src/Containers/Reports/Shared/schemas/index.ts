@@ -13,6 +13,7 @@ const defaultReport: ReportPageParams = {
   name: '',
   description: '',
   categories: [] as string[],
+  report: undefined,
 };
 
 const flaggedReports = [
