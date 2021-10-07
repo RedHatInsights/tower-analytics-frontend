@@ -24,7 +24,7 @@ interface UseRequestVariables<T> {
 }
 
 interface UseRequestReturn<T> extends UseRequestVariables<T> {
-  request: () => Promise<void>;
+  request: () => void;
   setValue: (value: T) => void;
 }
 
@@ -118,7 +118,7 @@ export const useDismissableError = (
  */
 interface UseDeleteItemsReturn {
   isLoading: boolean;
-  deleteItems: () => Promise<void>;
+  deleteItems: () => void;
   deletionError: ErrorType;
   clearDeletionError: () => void;
 }

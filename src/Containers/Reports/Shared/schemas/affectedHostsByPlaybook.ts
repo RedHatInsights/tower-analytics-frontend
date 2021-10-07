@@ -20,10 +20,22 @@ const description =
 
 const categories = [CATEGORIES.executive];
 
+const defaultTableHeaders: AttributesType = [
+  { key: 'id', value: 'ID' },
+  { key: 'name', value: 'Template name' },
+];
+
+const tableAttributes = [
+  'total_unique_host_count',
+  'total_unique_host_changed_count',
+];
+
+const expandedAttributes = [] as string[];
+
 const defaultParams = {
   limit: 6,
   offset: 0,
-  attributes: ['total_unique_host_count', 'total_unique_host_changed_count'],
+  attributes: [...tableAttributes, ...expandedAttributes],
   group_by: 'template',
   group_by_time: true,
   granularity: 'monthly',
@@ -37,11 +49,6 @@ const defaultParams = {
   status: [],
   template_id: [],
 };
-
-const extraAttributes: AttributesType = [
-  { key: 'id', value: 'ID' },
-  { key: 'name', value: 'Template name' },
-];
 
 const schemaFnc = (
   label: string,
@@ -120,7 +127,9 @@ const reportParams: ReportPageParams = {
   report: {
     slug,
     defaultParams,
-    extraAttributes,
+    defaultTableHeaders,
+    tableAttributes,
+    expandedAttributes,
     readData: readHostExplorer,
     readOptions: readHostExplorerOptions,
     schemaFnc,
