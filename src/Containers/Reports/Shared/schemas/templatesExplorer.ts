@@ -22,9 +22,12 @@ const description =
 
 const categories = [CATEGORIES.executive];
 
-const listAttributes = ['failed_count', 'successful_count', 'total_count'];
+const defaultTableHeaders: AttributesType = [
+  { key: 'id', value: 'ID' },
+  { key: 'name', value: 'Template name' },
+];
 
-const expandRows = true;
+const tableAttributes = ['failed_count', 'successful_count', 'total_count'];
 
 const expandedAttributes = [
   'average_host_task_count_per_host',
@@ -60,7 +63,7 @@ const expandedAttributes = [
 const defaultParams: Params = {
   limit: 6,
   offset: 0,
-  attributes: [...listAttributes, ...expandedAttributes],
+  attributes: [...tableAttributes, ...expandedAttributes],
   group_by: 'template',
   group_by_time: false,
   granularity: 'monthly',
@@ -74,11 +77,6 @@ const defaultParams: Params = {
   status: [],
   template_id: [],
 };
-
-const extraAttributes: AttributesType = [
-  { key: 'id', value: 'ID' },
-  { key: 'name', value: 'Template name' },
-];
 
 const schemaFnc = (
   label: string,
@@ -153,9 +151,9 @@ const reportParams: ReportPageParams = {
   report: {
     slug,
     defaultParams,
-    extraAttributes,
-    expandRows,
-    listAttributes,
+    defaultTableHeaders,
+    tableAttributes,
+    expandedAttributes,
     readData: readJobExplorer,
     readOptions: readJobExplorerOptions,
     schemaFnc,

@@ -2,12 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { FunctionComponent, useCallback, useEffect } from 'react';
 import styled from 'styled-components';
 
 import {
@@ -26,7 +21,7 @@ import useRequest from '../../../../Utilities/useRequest';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
 
-import { AttributesType, ReportGeneratorParams } from '../../Shared/types';
+import { ReportGeneratorParams } from '../../Shared/types';
 import { Chart, Table } from './';
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
 import { useFeatureFlag, ValidFeatureFlags } from '../../../../FeatureFlags';
@@ -56,12 +51,12 @@ const getDateFormatByGranularity = (granularity: string): string => {
 const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   slug,
   defaultParams,
-  extraAttributes,
+  defaultTableHeaders,
+  tableAttributes,
+  expandedAttributes,
   readData,
   readOptions,
   schemaFnc,
-  expandRows,
-  listAttributes,
 }) => {
   const pdfDownloadEnabled = useFeatureFlag(
     ValidFeatureFlags.pdfDownloadButton
@@ -78,21 +73,20 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   const { result: options, request: setOptions } =
     useRequest<OptionsReturnType>(
       () => readOptions(queryParams) as Promise<OptionsReturnType>,
-      {}
+      { sort_options: [] }
     );
 
-  const [attrPairs, setAttrPairs] = useState<AttributesType>([]);
-
   useEffect(() => {
-    if (listAttributes && options.sort_options) {
-      const attrsList = options.sort_options.filter(({ key }) =>
-        listAttributes.includes(key)
-      );
-      setAttrPairs([...extraAttributes, ...attrsList]);
-    } else if (options.sort_options) {
-      setAttrPairs([...extraAttributes, ...options.sort_options]);
-    }
-  }, [options, extraAttributes]);
+    setData();
+    setOptions();
+  }, [queryParams]);
+
+  const tableHeaders = [
+    ...defaultTableHeaders,
+    ...(tableAttributes
+      ? options.sort_options.filter(({ key }) => tableAttributes.includes(key))
+      : options.sort_options),
+  ];
 
   const chartParams = {
     y: queryParams.sort_options as string,
@@ -102,11 +96,6 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
     xTickFormat: getDateFormatByGranularity(queryParams.granularity),
   };
 
-  useEffect(() => {
-    setData();
-    setOptions();
-  }, [queryParams]);
-
   const getSortParams = (currKey: string) => {
     const onSort = (
       _event: unknown,
@@ -114,7 +103,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       direction: 'asc' | 'desc'
     ) => {
       setFromToolbar('sort_order', direction);
-      setFromToolbar('sort_options', attrPairs[index]?.key);
+      setFromToolbar('sort_options', tableHeaders[index]?.key);
     };
 
     const whitelistKeys = options?.sort_options?.map(
@@ -126,13 +115,13 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       sort: {
         sortBy: {
           index:
-            attrPairs.findIndex(
+            tableHeaders.findIndex(
               ({ key }) => key === queryParams.sort_options
             ) || 0,
           direction: queryParams.sort_order || 'none',
         },
         onSort,
-        columnIndex: attrPairs.findIndex(({ key }) => key === currKey),
+        columnIndex: tableHeaders.findIndex(({ key }) => key === currKey),
       },
     };
   };
@@ -171,7 +160,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
           }
           additionalControls={additionalControls}
         />
-        {attrPairs && (
+        {tableHeaders && (
           <ApiStatusWrapper api={dataApi}>
             <Chart
               schema={schemaFnc(
@@ -183,9 +172,9 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
             />
             <Table
               legend={dataApi.result.meta.legend}
-              headers={attrPairs}
+              headers={tableHeaders}
               getSortParams={getSortParams}
-              expandRows={!!expandRows}
+              expandRows={expandedAttributes.length > 0}
             />
           </ApiStatusWrapper>
         )}

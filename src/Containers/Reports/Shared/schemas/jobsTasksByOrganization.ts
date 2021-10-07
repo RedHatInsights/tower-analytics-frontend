@@ -20,6 +20,15 @@ const description =
 
 const categories = [CATEGORIES.executive];
 
+const defaultTableHeaders: AttributesType = [
+  { key: 'id', value: 'ID' },
+  { key: 'name', value: 'Organization name' },
+];
+
+const tableAttributes = ['total_count', 'host_task_count'];
+
+const expandedAttributes = [] as string[];
+
 const defaultParams = {
   limit: 6,
   offset: 0,
@@ -31,17 +40,12 @@ const defaultParams = {
   cluster_id: [],
   template_id: [],
   inventory_id: [],
-  attributes: ['total_count', 'host_task_count'],
+  attributes: [...tableAttributes, ...expandedAttributes],
   group_by: 'org',
   group_by_time: true,
   sort_options: 'total_count',
   sort_order: 'desc',
 };
-
-const extraAttributes: AttributesType = [
-  { key: 'id', value: 'ID' },
-  { key: 'name', value: 'Organization name' },
-];
 
 const schemaFnc = (
   label: string,
@@ -120,7 +124,9 @@ const reportParams: ReportPageParams = {
   report: {
     slug,
     defaultParams,
-    extraAttributes,
+    defaultTableHeaders,
+    tableAttributes,
+    expandedAttributes,
     readData: readJobExplorer,
     readOptions: readJobExplorerOptions,
     schemaFnc,
