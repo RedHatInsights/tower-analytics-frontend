@@ -14,7 +14,8 @@ const useFeatureFlag = (flag: ValidFeatureFlags): boolean => {
     ({ name }) => name === (isBeta() ? betaFlag : flag)
   );
 
-  return !!feature && feature.enabled;
+  // return !!feature && feature.enabled;
+  return true;
 };
 
 export default useFeatureFlag;

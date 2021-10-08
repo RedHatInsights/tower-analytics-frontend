@@ -1,4 +1,4 @@
-import { ChartSchemaElement } from 'react-json-chart-builder';
+import { ChartSchemaElement, ChartType } from 'react-json-chart-builder';
 import { ApiJson, Params, ParamsWithPagination } from '../../../Api';
 
 export type AttributesType = { key: string; value: string }[];
@@ -6,7 +6,7 @@ export type SchemaFnc = (
   label: string,
   y: string,
   xTickFormat: string,
-  isLine?: boolean
+  chartType: ChartType.line
 ) => ChartSchemaElement[];
 
 export interface ReportGeneratorParams {
@@ -15,6 +15,7 @@ export interface ReportGeneratorParams {
   defaultTableHeaders: AttributesType;
   tableAttributes: string[];
   expandedAttributes: string[];
+  availableChartTypes: string[];
   readData: (options: ParamsWithPagination) => Promise<ApiJson>;
   readOptions: (options: Params) => Promise<ApiJson>;
   schemaFnc: SchemaFnc;
@@ -25,6 +26,5 @@ export interface ReportPageParams {
   name: string;
   description: string;
   categories: string[];
-  showChartToggle?: boolean;
   report?: ReportGeneratorParams;
 }

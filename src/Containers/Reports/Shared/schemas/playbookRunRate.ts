@@ -51,11 +51,13 @@ const defaultParams: Params = {
   template_id: [],
 };
 
+const availableChartTypes = [ChartType.bar, ChartType.line];
+
 const schemaFnc = (
   label: string,
   y: string,
   xTickFormat: string,
-  isLine?: boolean
+  chartType: string
 ): ChartSchemaElement[] => [
   {
     id: 1,
@@ -70,7 +72,7 @@ const schemaFnc = (
       },
       domainPadding: {
         y: 25,
-        x: !isLine ? 85 : 0,
+        x: chartType == ChartType.bar ? 85 : 0,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
@@ -112,7 +114,7 @@ const schemaFnc = (
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: isLine ? ChartType.line : ChartType.bar,
+      type: chartType == ChartType.bar ? ChartType.bar : ChartType.line,
       parent: 0,
       props: {
         x: 'created_date',
@@ -133,6 +135,7 @@ const reportParams: ReportPageParams = {
     defaultTableHeaders,
     tableAttributes,
     expandedAttributes,
+    availableChartTypes,
     readData: readJobExplorer,
     readOptions: readJobExplorerOptions,
     schemaFnc,

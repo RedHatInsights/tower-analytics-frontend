@@ -2,7 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, { FunctionComponent, useCallback, useEffect } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 
 import {
@@ -10,6 +15,8 @@ import {
   CardBody as PFCardBody,
   CardFooter,
   PaginationVariant,
+  ToggleGroup,
+  ToggleGroupItem,
 } from '@patternfly/react-core';
 
 import Pagination from '../../../../Components/Pagination';
@@ -54,6 +61,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   defaultTableHeaders,
   tableAttributes,
   expandedAttributes,
+  availableChartTypes,
   readData,
   readOptions,
   schemaFnc,
@@ -80,6 +88,8 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
     setData();
     setOptions();
   }, [queryParams]);
+
+  const [activeChartType, setActiveChartType] = useState('line');
 
   const tableHeaders = [
     ...defaultTableHeaders,
@@ -126,19 +136,31 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
     };
   };
 
-  const additionalControls = pdfDownloadEnabled
-    ? [
-        <DownloadPdfButton
-          key="download-button"
-          slug={slug}
-          data={dataApi.result}
-          y={chartParams.y}
-          label={chartParams.label}
-          xTickFormat={chartParams.xTickFormat}
-        />,
-      ]
-    : [];
-
+  const additionalControls = [
+    availableChartTypes.length > 1 && (
+      <ToggleGroup aria-label="Chart type toggle" key="chart-toggle">
+        {availableChartTypes.map((chartType) => (
+          <ToggleGroupItem
+            key={chartType}
+            text={chartType === 'bar' ? 'Bar Chart' : 'Line Chart'}
+            buttonId={chartType}
+            isSelected={chartType === activeChartType}
+            onChange={() => setActiveChartType(chartType)}
+          />
+        ))}
+      </ToggleGroup>
+    ),
+    pdfDownloadEnabled && (
+      <DownloadPdfButton
+        key="download-button"
+        slug={slug}
+        data={dataApi.result}
+        y={chartParams.y}
+        label={chartParams.label}
+        xTickFormat={chartParams.xTickFormat}
+      />
+    ),
+  ];
   return (
     <Card>
       <CardBody>

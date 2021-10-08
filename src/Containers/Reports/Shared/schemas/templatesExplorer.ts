@@ -78,6 +78,8 @@ const defaultParams: Params = {
   template_id: [],
 };
 
+const availableChartTypes = [ChartType.bar];
+
 const schemaFnc = (
   label: string,
   y: string,
@@ -154,6 +156,7 @@ const reportParams: ReportPageParams = {
     defaultTableHeaders,
     tableAttributes,
     expandedAttributes,
+    availableChartTypes,
     readData: readJobExplorer,
     readOptions: readJobExplorerOptions,
     schemaFnc,
