@@ -104,6 +104,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
     xTickFormat: getDateFormatByGranularity(queryParams.granularity),
+    chartType: activeChartType,
   };
 
   const getSortParams = (currKey: string) => {
@@ -188,7 +189,8 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
               schema={schemaFnc(
                 chartParams.label,
                 chartParams.y,
-                chartParams.xTickFormat
+                chartParams.xTickFormat,
+                chartParams.chartType
               )}
               data={dataApi.result}
             />

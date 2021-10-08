@@ -113,7 +113,7 @@ const schemaFnc = (
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: chartType == ChartType.bar ? ChartType.bar : ChartType.line,
+      type: chartType == 'bar' ? ChartType.bar : ChartType.line,
       parent: 0,
       props: {
         x: 'created_date',
