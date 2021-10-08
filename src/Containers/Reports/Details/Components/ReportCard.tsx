@@ -33,6 +33,7 @@ import { Chart, Table } from './';
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
 import { useFeatureFlag, ValidFeatureFlags } from '../../../../FeatureFlags';
 import { OptionsReturnType } from '../../../../Api';
+import { capitalize } from '../../../../Utilities/helpers';
 
 const CardBody = styled(PFCardBody)`
   & .pf-c-toolbar,
@@ -89,7 +90,9 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
     setOptions();
   }, [queryParams]);
 
-  const [activeChartType, setActiveChartType] = useState('line');
+  const [activeChartType, setActiveChartType] = useState(
+    availableChartTypes[0]
+  );
 
   const tableHeaders = [
     ...defaultTableHeaders,
@@ -143,7 +146,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
         {availableChartTypes.map((chartType) => (
           <ToggleGroupItem
             key={chartType}
-            text={chartType === 'bar' ? 'Bar Chart' : 'Line Chart'}
+            text={`${capitalize(chartType)} Chart`}
             buttonId={chartType}
             isSelected={chartType === activeChartType}
             onChange={() => setActiveChartType(chartType)}

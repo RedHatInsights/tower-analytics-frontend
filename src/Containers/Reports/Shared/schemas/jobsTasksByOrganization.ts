@@ -47,13 +47,13 @@ const defaultParams = {
   sort_order: 'desc',
 };
 
-const availableChartTypes = [ChartType.bar, ChartType.line];
+const availableChartTypes = [ChartType.line, ChartType.bar];
 
 const schemaFnc = (
   label: string,
   y: string,
   xTickFormat: string,
-  chartType: string
+  chartType: ChartType
 ): ChartSchemaElement[] => [
   {
     id: 1,
@@ -110,7 +110,7 @@ const schemaFnc = (
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: chartType == 'bar' ? ChartType.bar : ChartType.line,
+      type: chartType,
       parent: 0,
       props: {
         x: 'created_date',
