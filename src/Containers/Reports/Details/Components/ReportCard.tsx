@@ -2,7 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, { FunctionComponent, useCallback, useEffect } from 'react';
+import React, {
+  FunctionComponent,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import styled from 'styled-components';
 
 import {
@@ -10,6 +15,8 @@ import {
   CardBody as PFCardBody,
   CardFooter,
   PaginationVariant,
+  ToggleGroup,
+  ToggleGroupItem,
 } from '@patternfly/react-core';
 
 import Pagination from '../../../../Components/Pagination';
@@ -26,6 +33,7 @@ import { Chart, Table } from './';
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
 import { useFeatureFlag, ValidFeatureFlags } from '../../../../FeatureFlags';
 import { OptionsReturnType } from '../../../../Api';
+import { capitalize } from '../../../../Utilities/helpers';
 
 const CardBody = styled(PFCardBody)`
   & .pf-c-toolbar,
@@ -54,6 +62,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   defaultTableHeaders,
   tableAttributes,
   expandedAttributes,
+  availableChartTypes,
   readData,
   readOptions,
   schemaFnc,
@@ -81,6 +90,10 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
     setOptions();
   }, [queryParams]);
 
+  const [activeChartType, setActiveChartType] = useState(
+    availableChartTypes[0]
+  );
+
   const tableHeaders = [
     ...defaultTableHeaders,
     ...(tableAttributes
@@ -94,6 +107,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
     xTickFormat: getDateFormatByGranularity(queryParams.granularity),
+    chartType: activeChartType,
   };
 
   const getSortParams = (currKey: string) => {
@@ -126,19 +140,31 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
     };
   };
 
-  const additionalControls = pdfDownloadEnabled
-    ? [
-        <DownloadPdfButton
-          key="download-button"
-          slug={slug}
-          data={dataApi.result}
-          y={chartParams.y}
-          label={chartParams.label}
-          xTickFormat={chartParams.xTickFormat}
-        />,
-      ]
-    : [];
-
+  const additionalControls = [
+    availableChartTypes.length > 1 && (
+      <ToggleGroup aria-label="Chart type toggle" key="chart-toggle">
+        {availableChartTypes.map((chartType) => (
+          <ToggleGroupItem
+            key={chartType}
+            text={`${capitalize(chartType)} Chart`}
+            buttonId={chartType}
+            isSelected={chartType === activeChartType}
+            onChange={() => setActiveChartType(chartType)}
+          />
+        ))}
+      </ToggleGroup>
+    ),
+    pdfDownloadEnabled && (
+      <DownloadPdfButton
+        key="download-button"
+        slug={slug}
+        data={dataApi.result}
+        y={chartParams.y}
+        label={chartParams.label}
+        xTickFormat={chartParams.xTickFormat}
+      />
+    ),
+  ];
   return (
     <Card>
       <CardBody>
@@ -166,7 +192,8 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
               schema={schemaFnc(
                 chartParams.label,
                 chartParams.y,
-                chartParams.xTickFormat
+                chartParams.xTickFormat,
+                chartParams.chartType
               )}
               data={dataApi.result}
             />
