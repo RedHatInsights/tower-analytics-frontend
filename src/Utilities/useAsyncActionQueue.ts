@@ -1,7 +1,18 @@
 import { useState, useEffect } from 'react';
 
-const useAsyncActionQueue = ({ executeAction, waitFor }) => {
-  const [actionQueue, setActionQueue] = useState([]);
+interface Props<T> {
+  executeAction: (arg: T) => void;
+  waitFor: unknown;
+}
+interface Return<T> {
+  push: (arg: T) => void;
+}
+
+const useAsyncActionQueue = <T>({
+  executeAction,
+  waitFor,
+}: Props<T>): Return<T> => {
+  const [actionQueue, setActionQueue] = useState<T[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const processNext = () => {
