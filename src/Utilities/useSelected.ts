@@ -1,5 +1,12 @@
 import { useState } from 'react';
 
+interface Return<T> {
+  selected: T[];
+  isAllSelected: boolean;
+  handleSelect: (id: T) => void;
+  setSelected: (selected: T[]) => void;
+}
+
 /**
  * useSelected hook provides a way to read and update a selected list
  * Param: array of list items
@@ -10,17 +17,19 @@ import { useState } from 'react';
  *  setSelected: setter function
  * }
  */
-
-export default function useSelected(list = []) {
-  const [selected, setSelected] = useState([]);
+const useSelected = <T extends string | number>(list: T[] = []): Return<T> => {
+  const [selected, setSelected] = useState<T[]>([]);
   const isAllSelected = selected.length > 0 && selected.length === list.length;
 
-  const handleSelect = (row) => {
-    if (selected.some((s) => s.id === row.id)) {
-      setSelected((prevState) => [...prevState.filter((i) => i.id !== row.id)]);
+  const handleSelect = (id: T) => {
+    if (selected.some((s) => s === id)) {
+      setSelected((prevState) => [...prevState.filter((i) => i !== id)]);
     } else {
-      setSelected((prevState) => [...prevState, row]);
+      setSelected((prevState) => [...prevState, id]);
     }
   };
+
   return { selected, isAllSelected, handleSelect, setSelected };
-}
+};
+
+export default useSelected;
