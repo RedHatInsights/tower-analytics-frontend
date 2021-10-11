@@ -11,7 +11,7 @@
   },
   "rules": {
     "no-use-before-define": [
-      "warn"
+      "error"
     ]
   },
   "overrides": [
@@ -39,7 +39,15 @@
           "@typescript-eslint/no-use-before-define": [
             "error"
           ],
-          "react/prop-types": "off"
+          "react/prop-types": "off",
+          "no-unused-vars": "off",
+          "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+              "args": "all",
+              "argsIgnorePattern": "^_"
+            }
+          ]
       }
     }
   ]

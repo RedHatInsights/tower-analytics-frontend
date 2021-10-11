@@ -72,6 +72,39 @@ const Form = ({ title, options, data = {} }) => {
     },
   ];
 
+  useEffect(() => {
+    if (pathname.indexOf('/add') === -1 && hash) {
+      setStartStep(steps.find((step) => `#${step.id}` === hash).step_number);
+    } else {
+      history.replace({
+        hash: 'details',
+      });
+      setStartStep(1);
+    }
+  }, []);
+
+  const onStepChange = (newStep) => {
+    history.replace({
+      hash: newStep.id,
+    });
+  };
+
+  const onSave = () => {
+    setData(requestPayload, data?.id);
+  };
+
+  const onClose = () => {
+    if (location.pathname.indexOf('/edit') !== -1) {
+      history.push(paths.getDetails(data?.id));
+    } else {
+      history.push(paths.get);
+    }
+  };
+
+  const reset = () => {
+    setData();
+  };
+
   const CustomFooter = (
     <WizardFooter>
       <WizardContextConsumer>
@@ -127,39 +160,6 @@ const Form = ({ title, options, data = {} }) => {
       </WizardContextConsumer>
     </WizardFooter>
   );
-
-  useEffect(() => {
-    if (pathname.indexOf('/add') === -1 && hash) {
-      setStartStep(steps.find((step) => `#${step.id}` === hash).step_number);
-    } else {
-      history.replace({
-        hash: 'details',
-      });
-      setStartStep(1);
-    }
-  }, []);
-
-  const onStepChange = (newStep) => {
-    history.replace({
-      hash: newStep.id,
-    });
-  };
-
-  const onSave = () => {
-    setData(requestPayload, data?.id);
-  };
-
-  const onClose = () => {
-    if (location.pathname.indexOf('/edit') !== -1) {
-      history.push(paths.getDetails(data?.id));
-    } else {
-      history.push(paths.get);
-    }
-  };
-
-  const reset = () => {
-    setData();
-  };
 
   return (
     <>
