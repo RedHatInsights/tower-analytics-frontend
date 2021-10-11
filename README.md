@@ -19,6 +19,12 @@ Automation Analytics provides data analytics for Ansible Tower that provides vis
 2. `npm start --env=stage` - starts local frontend while proxying all the request to the stage environment.
 3. Follow the link the proxy outputs to the terminal - this is different from env to env. You need valid credentials for the environment you are running against to be able to log in
 
+#### Developing against a backend on the ephemeral
+
+1. `npm ci` - install dependencies from the lockfile
+2. `npm start --env=eph --eph_id=YOUR_EPH_ID` - starts local frontend while proxying all the request to the eph environment.
+3. Follow the link the proxy outputs to the terminal - this is different from env to env. You need valid credentials for the environment you are running against to be able to log in
+
 ### Testing
 
 - `npm run lint` - runs eslint

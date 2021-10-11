@@ -7,14 +7,17 @@ const {
 
 // TODO: Add 'prod' - currently it is not wokring while returns
 // errors on backend queries: strict cross origin policy
-const validEnvValues = ['standalone', 'stage'];
+const validEnvValues = ['standalone', 'stage', 'eph'];
 
-const proxy = validEnvValues.includes(process.env.npm_config_env)
+const env = validEnvValues.includes(process.env.npm_config_env)
   ? process.env.npm_config_env
   : 'standalone';
 
+// Only when using ephemeral environment
+const ephId = process.env.npm_config_eph_id ?? '1';
+
 const environmentSetup = {
-  ...(proxy === 'standalone' && {
+  ...(env === 'standalone' && {
     https: false,
     standalone: {
       apiAnalytics: {
@@ -31,11 +34,19 @@ const environmentSetup = {
         ),
     ],
   }),
-  ...(['prod', 'stage'].includes(proxy) && {
+  ...(['prod', 'stage'].includes(env) && {
     https: true,
     useProxy: true,
     proxyVerbose: true,
-    env: `${proxy}-beta`,
+    env: `${env}-beta`,
+  }),
+  ...(['eph'].includes(env) && {
+    https: true,
+    useProxy: true,
+    proxyVerbose: true,
+    env: 'qa-beta', // TODO change to whatewer the aggregator pulls data from
+    keycloakUri: `https://keycloak-ephemeral-${ephId}.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com`,
+    target: `https://front-end-aggregator-ephemeral-${ephId}.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com`,
   }),
 };
 
@@ -43,9 +54,9 @@ const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
   debug: true,
   sassPrefix: '.automation-analytics, .automationAnalytics',
-  ...environmentSetup,
   appUrl: ['/beta/ansible/insights/', '/ansible/insights/'],
   deployment: 'beta/apps',
+  ...environmentSetup,
 });
 
 plugins.push(
