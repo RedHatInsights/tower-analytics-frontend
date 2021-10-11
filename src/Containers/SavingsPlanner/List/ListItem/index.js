@@ -156,8 +156,8 @@ const ListItem = ({
               position={'right'}
             />
             <Checkbox
-              onChange={() => handleSelect(plan)}
-              isChecked={selected.some((row) => row.id === plan.id)}
+              onChange={() => handleSelect(plan.id)}
+              isChecked={selected.includes(plan.id)}
               aria-label="card checkbox"
               id="check-1"
               name="check1"

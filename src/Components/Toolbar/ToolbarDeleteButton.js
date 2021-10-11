@@ -60,10 +60,6 @@ const ToolbarDeleteButton = ({
   const [isLoading, setIsLoading] = useState(false);
 
   const [deleteMessageError, setDeleteMessageError] = useState('');
-  const handleDelete = () => {
-    onDelete();
-    toggleModal();
-  };
 
   const toggleModal = async (isOpen) => {
     setIsLoading(true);
@@ -85,6 +81,11 @@ const ToolbarDeleteButton = ({
     }
     setIsLoading(false);
     setIsModalOpen(isOpen);
+  };
+
+  const handleDelete = () => {
+    onDelete();
+    toggleModal();
   };
 
   const renderTooltip = () => {

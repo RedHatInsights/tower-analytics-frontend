@@ -92,7 +92,9 @@ const List = () => {
     itemsIsSuccess &&
     (rbac?.perms?.write === true || rbac?.perms?.all === true);
 
-  const { selected, handleSelect, setSelected } = useSelected(data);
+  const { selected, handleSelect, setSelected } = useSelected(
+    data.map(({ id }) => id)
+  );
 
   const {
     isLoading: deleteLoading,
@@ -102,7 +104,7 @@ const List = () => {
   } = useDeleteItems(deletePlans, null);
 
   const handleDelete = async () => {
-    await deleteItems(selected.map(({ id }) => id));
+    await deleteItems(selected);
     setSelected([]);
     fetchEndpoints();
   };
@@ -187,7 +189,7 @@ const List = () => {
               <ToolbarDeleteButton
                 key="delete-plan-button"
                 onDelete={handleDelete}
-                itemsToDelete={selected}
+                itemsToDelete={data.filter((d) => selected.includes(d.id))}
                 pluralizedItemName={'Savings plan'}
               />
             ),
