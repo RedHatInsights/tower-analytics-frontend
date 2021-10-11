@@ -30,8 +30,8 @@ const tableAttributes = ['total_count', 'host_task_count'];
 const expandedAttributes = [] as string[];
 
 const defaultParams = {
-  limit: 6,
-  offset: 0,
+  limit: '6',
+  offset: '0',
   granularity: 'daily',
   quick_date_range: 'last_30_days',
   status: [],

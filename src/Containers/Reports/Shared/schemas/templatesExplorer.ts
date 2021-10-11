@@ -61,8 +61,8 @@ const expandedAttributes = [
 ];
 
 const defaultParams: Params = {
-  limit: 6,
-  offset: 0,
+  limit: '6',
+  offset: '0',
   attributes: [...tableAttributes, ...expandedAttributes],
   group_by: 'template',
   group_by_time: false,

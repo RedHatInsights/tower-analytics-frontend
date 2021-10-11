@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect, FunctionComponent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { QueryParamsProvider as Provider } from './Context';
 import {
@@ -8,8 +7,13 @@ import {
   DEFAULT_NAMESPACE,
 } from './helpers';
 import redirectWithQueryParams from './redirectWithQueryParams';
+import { UpdateFunction } from './types';
 
-const QueryParamsProvider = ({ children }) => {
+interface Props {
+  children: React.ReactNode;
+}
+
+const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
   const history = useHistory();
   const [queryParams, setQueryParams] = useState({});
 
@@ -27,7 +31,10 @@ const QueryParamsProvider = ({ children }) => {
     };
   }, []);
 
-  const update = ({ newQueryParams, namespace = DEFAULT_NAMESPACE }) => {
+  const update: UpdateFunction = ({
+    newQueryParams,
+    namespace = DEFAULT_NAMESPACE,
+  }) => {
     const q = {
       ...queryParams,
       [namespace]: newQueryParams,
@@ -47,10 +54,6 @@ const QueryParamsProvider = ({ children }) => {
       {children}
     </Provider>
   );
-};
-
-QueryParamsProvider.propTypes = {
-  children: PropTypes.node.isRequired,
 };
 
 export default QueryParamsProvider;

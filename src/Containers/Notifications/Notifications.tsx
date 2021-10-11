@@ -93,8 +93,8 @@ const formatClusterName = (
 
 const initialQueryParams = {
   defaultParams: {
-    limit: 5,
-    offset: 0,
+    limit: '5',
+    offset: '0',
     // This is not doing anything opn the v0 api
     sort_options: 'created',
   },
@@ -148,7 +148,6 @@ const Notifications: FC<Record<string, never>> = () => {
   );
 
   useEffect(() => {
-    // TODO: Update the useRequest hook to return function and not a promise!! @brum
     fetchClusters();
   }, []);
 

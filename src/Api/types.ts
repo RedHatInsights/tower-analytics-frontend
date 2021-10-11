@@ -1,7 +1,6 @@
-export type Params = Record<
-  string,
-  string | number | string[] | number[] | boolean
->;
+import { QueryParams } from '../QueryParams/types';
+
+export type Params = QueryParams;
 
 export type OptionsReturnType = Record<
   string,

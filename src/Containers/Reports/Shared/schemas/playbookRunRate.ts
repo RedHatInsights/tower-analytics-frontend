@@ -34,8 +34,8 @@ const tableAttributes = ['failed_count', 'successful_count', 'total_count'];
 const expandedAttributes = [] as string[];
 
 const defaultParams: Params = {
-  limit: 6,
-  offset: 0,
+  limit: '6',
+  offset: '0',
   attributes: [...tableAttributes, ...expandedAttributes],
   group_by: 'template',
   group_by_time: true,
