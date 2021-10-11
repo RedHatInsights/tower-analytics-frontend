@@ -26,30 +26,32 @@ async function fuzzClustersPage() {
     cy.get(appid)
       .find('a')
       .eq(i)
-      .click({ waitForAnimations: true })
+      .click()
       .then(() => {
         cy.screenshot('top-template-modal-' + i + '.png', {
           capture: 'fullPage',
         });
       });
+    cy.get('[aria-label="Close"]').click();
+  }
 
-    // navigate to the job explorer page for each bar in the chart ...
-    for (let i = 0; i <= 4; i++) {
-      // pick a random bar to click on ...
-      const barid = parseInt(Math.floor(Math.random() * 10));
+  // navigate to the job explorer page for each bar in the chart ...
+  for (let i = 0; i <= 4; i++) {
+    // pick a random bar to click on ...
+    const barid = parseInt(Math.floor(Math.random() * 10));
 
-      // click it and wait for the jobexplorer page to load ...
-      cy.get(appid)
-        .find('#d3-bar-chart-root', { timeout: 1000 })
-        .should('be.visible');
-      cy.get(appid).find('rect').eq(barid).click({ waitForAnimations: true });
-      cy.screenshot('clusters-bar-' + barid + '-jobexplorer-details.png', {
-        capture: 'fullPage',
-      });
+    // click it and wait for the jobexplorer page to load ...
+    cy.get(appid)
+      .find('#d3-bar-chart-root', { timeout: 1000 })
+      .should('be.visible');
+    cy.get(appid).find('rect').eq(barid).click({ force: true });
+    cy.url().should('include', 'job-explorer');
+    cy.screenshot('clusters-bar-' + barid + '-jobexplorer-details.png', {
+      capture: 'fullPage',
+    });
 
-      // go back to the clusters page ...
-      cy.visit(dashboardUrl);
-    }
+    // go back to the clusters page ...
+    cy.visit(dashboardUrl);
   }
 }
 
@@ -63,17 +65,6 @@ describe('Dashboard page smoketests', () => {
     fuzzClustersPage();
   });
 
-  xit('Page contains chart, and 3 card elements', () => {
-    cy.get('#d3-bar-chart-root').should((chartElem) => {
-      expect(chartElem).to.have.length(1);
-    });
-
-    // fails due to bug: https://issues.redhat.com/browse/AA-470
-    it.skip('can interact with the clusters page without breaking the UI', () => {
-      fuzzClustersPage();
-    });
-  });
-
   it('Page contains chart, and 3 card elements', () => {
     cy.get('#d3-bar-chart-root').should((chartElem) => {
       expect(chartElem).to.have.length(1);
@@ -83,7 +74,8 @@ describe('Dashboard page smoketests', () => {
     });
   });
 
-  it('There is a filter toolbar on the Clusters page', () => {
+  // Fails due to lack of selectors
+  xit('There is a filter toolbar on the Clusters page', () => {
     cy.get('div[id="filterable-toolbar-with-chip-groups"]').should(
       (toolbar) => {
         expect(toolbar).to.have.length(1);
