@@ -124,7 +124,6 @@ describe('Containers/Notifications', () => {
     expect(lastCallBody(notificationsUrl)).toEqual({
       limit: '15',
       offset: '0',
-      sort_options: 'created',
     });
   });
 
@@ -149,7 +148,6 @@ describe('Containers/Notifications', () => {
     expect(lastCallBody(notificationsUrl)).toEqual({
       limit: '20',
       offset: '0',
-      sort_options: 'created',
     });
   });
 
@@ -180,7 +178,6 @@ describe('Containers/Notifications', () => {
     expect(lastCallBody(notificationsUrl)).toEqual({
       limit: '5',
       offset: '5',
-      sort_options: 'created',
     });
   });
 
@@ -211,7 +208,6 @@ describe('Containers/Notifications', () => {
     expect(lastCallBody(notificationsUrl)).toEqual({
       limit: '5',
       offset: '95',
-      sort_options: 'created',
     });
   });
 });

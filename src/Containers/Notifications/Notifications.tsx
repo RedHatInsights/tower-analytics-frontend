@@ -59,6 +59,29 @@ const DropdownGroup = styled.div`
   }
 `;
 
+interface NotificationDataType {
+  notifications: {
+    notification_id: number;
+    label: string;
+    date: string;
+    code: string;
+    active: boolean;
+    message: string;
+    tower_url: string;
+  }[];
+  meta: {
+    count: number;
+  };
+}
+
+interface ClusterDataType {
+  templates: {
+    label: string;
+    cluster_id: number;
+    install_uuid: string;
+  }[];
+}
+
 const notificationOptions = [
   {
     value: 'please choose',
@@ -72,7 +95,7 @@ const notificationOptions = [
 ];
 
 const formatClusterName = (
-  data: any[]
+  data: ClusterDataType['templates']
 ): { value: string; label: string; disabled: boolean }[] => {
   const defaultClusterOptions = [
     { value: 'please choose', label: 'Select cluster', disabled: true },
@@ -82,8 +105,8 @@ const formatClusterName = (
 
   const calcData = data.map(
     ({ label, cluster_id: id, install_uuid: uuid }) => ({
-      value: id as string,
-      label: (label ?? uuid) as string,
+      value: `${id}`,
+      label: label ?? uuid,
       disabled: false,
     })
   );
@@ -95,26 +118,12 @@ const initialQueryParams = {
   defaultParams: {
     limit: '5',
     offset: '0',
-    // This is not doing anything opn the v0 api
-    sort_options: 'created',
   },
 };
-
-interface NotificationDataType {
-  notifications: any[];
-  meta: {
-    count: number;
-  };
-}
-
-interface ClusterDataType {
-  templates: any[];
-}
 
 const Notifications: FC<Record<string, never>> = () => {
   const [selectedCluster, setSelectedCluster] = useState('');
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { queryParams, setId, setFromPagination, setSeverity } = useQueryParams(
     initialQueryParams.defaultParams
   );
@@ -123,7 +132,6 @@ const Notifications: FC<Record<string, never>> = () => {
 
   const {
     result: { notifications: notificationsData, meta },
-    error: notificationsError,
     isLoading,
     isSuccess,
     request: fetchNotifications,
@@ -140,7 +148,6 @@ const Notifications: FC<Record<string, never>> = () => {
 
   const {
     result: { templates: clustersData = [] },
-    error: clustersError,
     request: fetchClusters,
   } = useRequest<ClusterDataType>(
     () => readClusters() as unknown as Promise<ClusterDataType>,
