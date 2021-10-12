@@ -5,6 +5,7 @@ import {
   Tooltip,
   ButtonVariant,
   Spinner,
+  TooltipPosition,
 } from '@patternfly/react-core';
 import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 
@@ -25,32 +26,34 @@ const DownloadPdfButton = ({ slug, data, y, label, xTickFormat }) => {
     ),
     null
   );
+
   const getPdfButtonText = (error) => error || 'Download PDF version of report';
+
   return (
-    <>
+    <Tooltip
+      position={TooltipPosition.top}
+      content={<div>{getPdfButtonText(error)}</div>}
+    >
       <Button
         variant={error ? ButtonVariant.link : ButtonVariant.plain}
         aria-label={getPdfButtonText(error)}
         onClick={() => request(data)}
         isDanger={error}
       >
-        {/* TooltipVariant.top */}
-        <Tooltip position="top" content={<div>{getPdfButtonText(error)}</div>}>
-          {isLoading && <Spinner isSVG size="md" />}
-          {error && <ExclamationCircleIcon />}
-          {!isLoading && !error && <DownloadIcon />}
-        </Tooltip>
+        {isLoading && <Spinner isSVG size="md" />}
+        {error && <ExclamationCircleIcon />}
+        {!isLoading && !error && <DownloadIcon />}
       </Button>
-    </>
+    </Tooltip>
   );
 };
 
 DownloadPdfButton.propTypes = {
-  slug: PropTypes.func,
-  data: PropTypes.object,
-  y: PropTypes.object,
-  label: PropTypes.object,
-  xTickFormat: PropTypes.object,
+  slug: PropTypes.string.isRequired,
+  data: PropTypes.object.isRequired,
+  y: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
+  xTickFormat: PropTypes.string.isRequired,
 };
 
 export default DownloadPdfButton;

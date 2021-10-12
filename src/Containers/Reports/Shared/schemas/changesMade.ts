@@ -20,15 +20,24 @@ const description =
 
 const categories = [CATEGORIES.executive];
 
+const defaultTableHeaders: AttributesType = [
+  { key: 'id', value: 'ID' },
+  { key: 'name', value: 'Template name' },
+];
+
+const tableAttributes = [
+  'host_count',
+  'changed_host_count',
+  'host_task_count',
+  'host_task_changed_count',
+];
+
+const expandedAttributes = [] as string[];
+
 const defaultParams = {
   limit: 6,
   offset: 0,
-  attributes: [
-    'host_count',
-    'changed_host_count',
-    'host_task_count',
-    'host_task_changed_count',
-  ],
+  attributes: [...tableAttributes, ...expandedAttributes],
   group_by: 'template',
   group_by_time: true,
   granularity: 'monthly',
@@ -43,15 +52,13 @@ const defaultParams = {
   template_id: [],
 };
 
-const extraAttributes: AttributesType = [
-  { key: 'id', value: 'ID' },
-  { key: 'name', value: 'Template name' },
-];
+const availableChartTypes = [ChartType.line, ChartType.bar];
 
 const schemaFnc = (
   label: string,
   y: string,
-  xTickFormat: string
+  xTickFormat: string,
+  chartType: ChartType
 ): ChartSchemaElement[] => [
   {
     id: 1,
@@ -66,6 +73,7 @@ const schemaFnc = (
       },
       domainPadding: {
         y: 25,
+        x: chartType == ChartType.bar ? 85 : 0,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
@@ -107,7 +115,7 @@ const schemaFnc = (
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: ChartType.line,
+      type: chartType,
       parent: 0,
       props: {
         x: 'created_date',
@@ -125,7 +133,10 @@ const reportParams: ReportPageParams = {
   report: {
     slug,
     defaultParams,
-    extraAttributes,
+    defaultTableHeaders,
+    tableAttributes,
+    expandedAttributes,
+    availableChartTypes,
     readData: readJobExplorer,
     readOptions: readJobExplorerOptions,
     schemaFnc,

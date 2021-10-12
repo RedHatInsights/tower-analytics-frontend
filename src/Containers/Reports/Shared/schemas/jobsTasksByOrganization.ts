@@ -16,9 +16,18 @@ const slug = 'jobs_and_tasks_by_organization';
 const name = 'Jobs/Tasks by organization';
 
 const description =
-  'The number of job template and task runs, grouped by organizations from Ansible Controller. You can use this report to find which organizations are running the most Ansible jobs.';
+  'The number of job template and task runs, grouped by organizations from Ansible Controller.\n\nYou can use this report to find which organizations are running the most Ansible jobs.';
 
 const categories = [CATEGORIES.executive];
+
+const defaultTableHeaders: AttributesType = [
+  { key: 'id', value: 'ID' },
+  { key: 'name', value: 'Organization name' },
+];
+
+const tableAttributes = ['total_count', 'host_task_count'];
+
+const expandedAttributes = [] as string[];
 
 const defaultParams = {
   limit: 6,
@@ -31,22 +40,20 @@ const defaultParams = {
   cluster_id: [],
   template_id: [],
   inventory_id: [],
-  attributes: ['total_count', 'host_task_count'],
+  attributes: [...tableAttributes, ...expandedAttributes],
   group_by: 'org',
   group_by_time: true,
   sort_options: 'total_count',
   sort_order: 'desc',
 };
 
-const extraAttributes: AttributesType = [
-  { key: 'id', value: 'ID' },
-  { key: 'name', value: 'Organization name' },
-];
+const availableChartTypes = [ChartType.line, ChartType.bar];
 
 const schemaFnc = (
   label: string,
   y: string,
-  xTickFormat: string
+  xTickFormat: string,
+  chartType: ChartType
 ): ChartSchemaElement[] => [
   {
     id: 1,
@@ -61,6 +68,7 @@ const schemaFnc = (
       },
       domainPadding: {
         y: 25,
+        x: chartType == ChartType.bar ? 85 : 0,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
@@ -102,7 +110,7 @@ const schemaFnc = (
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: ChartType.line,
+      type: chartType,
       parent: 0,
       props: {
         x: 'created_date',
@@ -120,7 +128,10 @@ const reportParams: ReportPageParams = {
   report: {
     slug,
     defaultParams,
-    extraAttributes,
+    defaultTableHeaders,
+    tableAttributes,
+    expandedAttributes,
+    availableChartTypes,
     readData: readJobExplorer,
     readOptions: readJobExplorerOptions,
     schemaFnc,

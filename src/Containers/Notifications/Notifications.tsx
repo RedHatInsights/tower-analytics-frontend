@@ -149,15 +149,11 @@ const Notifications: FC<Record<string, never>> = () => {
 
   useEffect(() => {
     // TODO: Update the useRequest hook to return function and not a promise!! @brum
-    fetchClusters()
-      .then(() => ({}))
-      .catch(() => ({}));
+    fetchClusters();
   }, []);
 
   useEffect(() => {
-    fetchNotifications()
-      .then(() => ({}))
-      .catch(() => ({}));
+    fetchNotifications();
   }, [queryParams]);
 
   return (

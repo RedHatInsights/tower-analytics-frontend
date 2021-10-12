@@ -1,7 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { Card } from '@patternfly/react-core';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import Error404 from '../../../Components/Error404';
 
@@ -12,7 +11,7 @@ import {
 
 import Breadcrumbs from '../../../Components/Breadcrumbs';
 
-import Report from './Report';
+import { ReportCard } from './Components/';
 import { getReport } from '../Shared/schemas';
 import paths from '../paths';
 
@@ -28,16 +27,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
 
   const render = () => {
-    if (!name)
-      return (
-        <Error404
-          title="404: Page does not exist."
-          body="The report you are looking for does not exist."
-          buttonText="Return to Reports page"
-          link={paths.get}
-        />
-      );
-    else
+    if (report)
       return (
         <>
           <PageHeader>
@@ -46,9 +36,18 @@ const Details: FunctionComponent<Record<string, never>> = () => {
             <Description>{description}</Description>
           </PageHeader>
           <Main>
-            <Card>{report && <Report {...report} />}</Card>
+            <ReportCard {...report} />
           </Main>
         </>
+      );
+    else
+      return (
+        <Error404
+          title="404: Page does not exist."
+          body="The report you are looking for does not exist."
+          buttonText="Return to Reports page"
+          link={paths.get}
+        />
       );
   };
 
