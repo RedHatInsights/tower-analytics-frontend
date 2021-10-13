@@ -14,6 +14,7 @@ import ModalContents from './ModalContents';
 
 const DataListCell = styled(PFDataListCell)`
   --pf-c-data-list__cell-cell--MarginRight: 0;
+  --pf-c-data-list__cell--PaddingBottom: 10px;
 `;
 
 const DataListItem = styled(PFDataListItem)`
