@@ -42,9 +42,12 @@ async function fuzzClustersPage() {
 
     // click it and wait for the jobexplorer page to load ...
     cy.get(appid)
-      .find('#d3-bar-chart-root', { timeout: 1000 })
+      .find('#d3-bar-chart-root', { timeout: 3000 })
       .should('be.visible');
-    cy.get(appid).find('rect').eq(barid).click({ force: true });
+    cy.get(appid)
+      .find('rect')
+      .eq(barid)
+      .click({ force: true, waitForAnimations: true });
     cy.url().should('include', 'job-explorer');
     cy.screenshot('clusters-bar-' + barid + '-jobexplorer-details.png', {
       capture: 'fullPage',
@@ -61,7 +64,7 @@ describe('Dashboard page smoketests', () => {
     cy.visit(dashboardUrl);
   });
 
-  it('can interact with the clusters page without breaking the UI', () => {
+  it.only('can interact with the clusters page without breaking the UI', () => {
     fuzzClustersPage();
   });
 

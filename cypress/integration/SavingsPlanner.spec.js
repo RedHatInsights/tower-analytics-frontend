@@ -13,7 +13,7 @@ describe('Savings Planner page smoketests', () => {
     // Add more once fixtures are implemented - other filters are content-dependent.
     cy.get('[data-cy="sort_options"]').click();
     cy.contains('Manual Time').click();
-    cy.url().should('include', 'savings-planner.sort_options=manual_time');
+    cy.url().should('include', 'sort_options=manual_time');
   });
 });
 
