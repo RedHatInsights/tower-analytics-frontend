@@ -1,5 +1,7 @@
 import { stringify } from 'query-string';
 import { ApiJson, Params, ParamsWithPagination } from './types';
+import saveAs from 'save-as';
+import {formatDateTime} from "../Utilities/helpers";
 
 declare global {
   interface Window {
@@ -51,11 +53,8 @@ export const postWithFileReturn = (
     .then((response) => response.blob())
     .then((blob) => {
       blob = blob.slice(0, blob.size, 'application/pdf');
-      return URL.createObjectURL(blob);
+      saveAs(blob, `${params.slug}_${formatDateTime(Date.now())}.pdf`)
     })
-    .then((url) => {
-      window.open(url, '_blank');
-    });
 };
 
 export const get = (
