@@ -1,6 +1,7 @@
 import { useContext } from 'react';
 import moment from 'moment';
 import { QueryParamsContext } from './Context';
+import useAsyncActionQueue from '../Utilities/useAsyncActionQueue';
 
 import { formatDate } from '../Utilities/helpers';
 import { DEFAULT_NAMESPACE } from './helpers';
@@ -119,7 +120,7 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
   const { queryParams, update } = useContext(QueryParamsContext);
   const params = queryParams[namespace] || initial;
 
-  const dispatch = (action) => {
+  const executeAction = (action) => {
     if (action.type === 'RESET_FILTER') {
       update({ newQueryParams: initial, namespace });
     } else {
@@ -127,6 +128,11 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
       update({ newQueryParams, namespace });
     }
   };
+
+  const { push: dispatch } = useAsyncActionQueue({
+    executeAction,
+    waitFor: params,
+  });
 
   return {
     queryParams: params,
