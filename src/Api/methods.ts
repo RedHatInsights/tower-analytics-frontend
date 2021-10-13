@@ -1,6 +1,6 @@
 import { stringify } from 'query-string';
 import { ApiJson, Params, ParamsWithPagination } from './types';
-
+import { inspect } from 'util' // or directly
 declare global {
   interface Window {
     insights: {
@@ -46,7 +46,15 @@ export const postWithFileReturn = (
     method: 'POST',
     body: JSON.stringify(params),
   })
-    .then((data) => data.body)
+    .then((data) => {
+      if (data.status === 404) {
+        return Promise.reject({
+          status: data.status,
+          error: 'PDF layout is not implemented for this report yet'
+        });
+      }
+      return data.body
+    })
     .then((stream) => new Response(stream))
     .then((response) => response.blob())
     .then((blob) => {
