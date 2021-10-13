@@ -35,7 +35,7 @@ function ErrorDetail({ error }) {
   const handleToggle = () => {
     setIsExpanded(!isExpanded);
   };
-  console.log('errrrrrr', error)
+
   return (
     <>
       {Array.isArray(error) && error.length && (
@@ -54,15 +54,6 @@ function ErrorDetail({ error }) {
             </CardBody>
           </Card>
         </Expandable>
-      )}
-      {typeof error === 'string' && (
-        <Card>
-          <CardBody>
-            <ul>
-              <li key={'error'}>{error}</li>
-            </ul>
-          </CardBody>
-        </Card>
       )}
     </>
   );
