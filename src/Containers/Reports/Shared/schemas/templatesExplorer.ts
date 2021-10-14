@@ -20,7 +20,7 @@ const name = 'Templates explorer';
 const description =
   'An overview of the job templates that have ran across your Ansible cluster.\n\nYou can use this report to review the status of particular job templates across its job runs, giving you an overview of the times a template fails a job run, a host, or a task. You can also review the host and task status for tasks that fail the most, allowing you to identify any bottlenecks or problems with the templates you are running.';
 
-const categories = [CATEGORIES.executive];
+const categories = [CATEGORIES.operations];
 
 const defaultTableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
@@ -91,18 +91,26 @@ const schemaFnc = (
     type: ChartTopLevelType.chart,
     parent: null,
     props: {
-      height: 600,
-      domainPadding: {
-        x: 100,
-      },
+      height: 400,
       padding: {
-        bottom: 60,
-        left: 80,
+        top: 40,
+        bottom: 85,
+        right: 90,
+        left: 90,
+      },
+      domainPadding: {
+        y: 25,
+        x: 85,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
       label: 'Template',
+      style: {
+        axisLabel: {
+          padding: 50,
+        },
+      },
       // It is using names instead of dates so no need for formatting.
       // tickFormat: xTickFormat,
     },
@@ -112,7 +120,7 @@ const schemaFnc = (
       label,
       style: {
         axisLabel: {
-          padding: 55,
+          padding: 60,
         },
       },
     },
