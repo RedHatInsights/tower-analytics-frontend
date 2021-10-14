@@ -29,9 +29,10 @@ const DownloadPdfButton = ({ slug, data, y, label, xTickFormat }) => {
     null
   );
 
-  const getPdfButtonText = (error) => {
-    return error ? error.error : 'Download PDF version of report';
-  };
+  const getErrorMessage = error?.error?.detail?.name;
+
+  const getPdfButtonText =
+    getErrorMessage?.at(0) ?? 'Download PDF version of report';
 
   useEffect(() => {
     if (error) {
@@ -41,10 +42,10 @@ const DownloadPdfButton = ({ slug, data, y, label, xTickFormat }) => {
 
   return (
     <>
-      <Tooltip position={TooltipPosition.top} content={getPdfButtonText(error)}>
+      <Tooltip position={TooltipPosition.top} content={getPdfButtonText}>
         <Button
           variant={error ? ButtonVariant.link : ButtonVariant.plain}
-          aria-label={getPdfButtonText(error)}
+          aria-label={getPdfButtonText}
           onClick={() => request(data)}
           isDanger={!!error}
         >
@@ -60,7 +61,7 @@ const DownloadPdfButton = ({ slug, data, y, label, xTickFormat }) => {
           setIsModalOpen(false);
         }}
       >
-        <ErrorDetail error={error?.error} />
+        <ErrorDetail error={getErrorMessage} />
       </AlertModal>
     </>
   );

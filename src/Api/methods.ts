@@ -46,18 +46,16 @@ export const postWithFileReturn = (
     method: 'POST',
     body: JSON.stringify(params),
   })
-    .then((response) => {
-      return response.status === 404 ? response.json() : response;
-    })
-    .then((data) => {
-      if (data.detail?.status === 404) {
-        return Promise.reject({
-          status: data.detail?.status,
-          error: data.detail?.name,
-        });
-      }
-      return data.body;
-    })
+    .then((response) =>
+      response.ok
+        ? response // If reposnse is ok, then continue to download the PDF
+        : response // Else it is an error and we have to parse it as a json
+            .json()
+            .then((error: ApiJson) =>
+              Promise.reject({ status: response.status, error })
+            )
+    )
+    .then((data) => data.body)
     .then((stream) => new Response(stream))
     .then((response) => response.blob())
     .then((blob) => {
