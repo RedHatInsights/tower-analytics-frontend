@@ -1,5 +1,5 @@
 /* global cy */
-import { appid, calculatorUrl, jobExplorerUrl } from '../support/constants';
+import { appid, calculatorUrl } from '../support/constants';
 
 describe('Automation Caluclator page smoketests', () => {
   beforeEach(() => {
@@ -31,14 +31,7 @@ describe('Automation Caluclator page smoketests', () => {
     }
   });
 
-  xit('can click on the template name', () => {
-    cy.get('.top-templates').find('a').eq(0).click();
-    cy.location().should((location) => {
-      expect(location.pathname).to.include(jobExplorerUrl);
-    });
-  });
   it('Query parameters are stored in the URL to enable refresh', () => {
-    // Add more once fixtures are implemented - other filters are content-dependent.
     cy.get('[data-cy="quick_date_range"]').click();
     cy.contains('Past 2 years').click();
     cy.url().should('include', 'quick_date_range=roi_last_2_years');
