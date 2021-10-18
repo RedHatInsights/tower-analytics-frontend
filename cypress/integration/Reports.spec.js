@@ -31,8 +31,9 @@ describe('Report: Hosts Changed By Job Template Smoketests', () => {
     cy.screenshot('report_hcbjt_line.png');
   });
 
-  it('Can change lookback without breaking the UI', () => {
+  it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
+    cy.get('.pf-c-select__menu-item').contains('Past year').click()
   });
 });
 
@@ -48,6 +49,11 @@ describe('Report: Changes Made By Job Template Smoketests', () => {
     cy.get('#line').click();
     cy.screenshot('report_cmbjt_line.png');
   });
+
+  it('Can change lookback', () => {
+    cy.get('[data-cy="quick_date_range"]').click();
+    cy.get('.pf-c-select__menu-item').contains('Past year').click()
+  });
 });
 
 describe('Report: Job Template Run Rate Smoketests', () => {
@@ -61,6 +67,10 @@ describe('Report: Job Template Run Rate Smoketests', () => {
     cy.screenshot('report_jtrr_bar.png');
     cy.get('#line').click();
     cy.screenshot('report_jtrr_line.png');
+  });
+  it('Can change lookback', () => {
+    cy.get('[data-cy="quick_date_range"]').click();
+    cy.get('.pf-c-select__menu-item').contains('Past year').click()
   });
 });
 
@@ -76,6 +86,10 @@ describe('Report: Hosts By Organization Smoketests', () => {
     cy.get('#line').click();
     cy.screenshot('report_hbo_line.png');
   });
+  it('Can change lookback', () => {
+    cy.get('[data-cy="quick_date_range"]').click();
+    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click()
+  });
 });
 
 describe('Report: Jobs and Tasks By Organization Smoketests', () => {
@@ -90,6 +104,10 @@ describe('Report: Jobs and Tasks By Organization Smoketests', () => {
     cy.get('#line').click();
     cy.screenshot('report_jtbo_line.png');
   });
+  it('Can change lookback', () => {
+    cy.get('[data-cy="quick_date_range"]').click();
+    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click()
+  });
 });
 
 describe('Report: Templates Explorer Smoketests', () => {
@@ -98,7 +116,8 @@ describe('Report: Templates Explorer Smoketests', () => {
     cy.visit(reportsUrl + '/' + texp);
   });
 
-  it('Can change lookback without breaking the UI', () => {
+  it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
+    cy.get('.pf-c-select__menu-item').contains('Past year').click()
   });
 });
