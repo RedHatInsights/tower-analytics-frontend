@@ -128,13 +128,6 @@ const schemaFnc = (
       url: '',
       params: {},
     },
-    tooltip: {
-      mouseFollow: true,
-      stickToAxis: 'x',
-      cursor: true,
-      customFnc: (datum: Record<string, string | number>) =>
-        `${datum.name}: ${datum.y}`,
-    },
   },
   {
     id: 2,
@@ -148,6 +141,9 @@ const schemaFnc = (
       props: {
         x: 'name',
         y,
+      },
+      tooltip: {
+        standalone: true,
       },
     },
   },
