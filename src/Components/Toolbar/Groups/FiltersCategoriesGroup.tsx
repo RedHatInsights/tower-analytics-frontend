@@ -24,6 +24,7 @@ const FilterCategoriesGroup: FunctionComponent<Props> = ({
   return (
     <ToolbarGroup variant="filter-group">
       <CategoryDropdown
+        categoryKey="category_selector"
         selected={currentCategory}
         setSelected={setCurrentCategory}
         categories={Object.keys(filterCategories).map((el) => ({

@@ -7,6 +7,7 @@ import {
 } from '@patternfly/react-core';
 
 interface Props {
+  categoryKey: string;
   selected: string;
   setSelected: (value: string) => void;
   categories: {
@@ -16,14 +17,14 @@ interface Props {
 }
 
 const CategoryDropdown: FunctionComponent<Props> = ({
+  categoryKey,
   selected,
   setSelected = () => null,
   categories = [],
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-
   return (
-    <ToolbarItem>
+    <ToolbarItem data-cy={categoryKey}>
       <Select
         isOpen={isExpanded}
         variant={SelectVariant.single}
