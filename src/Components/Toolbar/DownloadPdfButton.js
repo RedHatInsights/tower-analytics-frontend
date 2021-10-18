@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -10,41 +10,60 @@ import {
 import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 
 import useRequest from '../../Utilities/useRequest';
-import { useCallback } from 'react';
 import { generatePdf } from '../../Api';
+import AlertModal from '../AlertModal';
+import ErrorDetail from '../ErrorDetail';
 
 const DownloadPdfButton = ({ slug, data, y, label, xTickFormat }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const { error, isLoading, request } = useRequest(
-    useCallback((data) =>
+    (data) =>
       generatePdf({
         slug,
         data,
         y,
         label,
         x_tick_format: xTickFormat,
-      })
-    ),
+      }),
     null
   );
 
-  const getPdfButtonText = (error) => error || 'Download PDF version of report';
+  const getErrorMessage = error?.error?.detail?.name;
+
+  const getPdfButtonText =
+    getErrorMessage?.at(0) ?? 'Download PDF version of report';
+
+  useEffect(() => {
+    if (error) {
+      setIsModalOpen(true);
+    }
+  }, [error]);
 
   return (
-    <Tooltip
-      position={TooltipPosition.top}
-      content={<div>{getPdfButtonText(error)}</div>}
-    >
-      <Button
-        variant={error ? ButtonVariant.link : ButtonVariant.plain}
-        aria-label={getPdfButtonText(error)}
-        onClick={() => request(data)}
-        isDanger={error}
+    <>
+      <Tooltip position={TooltipPosition.top} content={getPdfButtonText}>
+        <Button
+          variant={error ? ButtonVariant.link : ButtonVariant.plain}
+          aria-label={getPdfButtonText}
+          onClick={() => request(data)}
+          isDanger={!!error}
+        >
+          {isLoading && <Spinner isSVG size="md" />}
+          {!isLoading && error && <ExclamationCircleIcon />}
+          {!isLoading && !error && <DownloadIcon />}
+        </Button>
+      </Tooltip>
+      <AlertModal
+        isOpen={isModalOpen}
+        title={'PDF download error!'}
+        onClose={() => {
+          setIsModalOpen(false);
+        }}
       >
-        {isLoading && <Spinner isSVG size="md" />}
-        {error && <ExclamationCircleIcon />}
-        {!isLoading && !error && <DownloadIcon />}
-      </Button>
-    </Tooltip>
+        <ErrorDetail error={getErrorMessage} />
+      </AlertModal>
+    </>
   );
 };
 
