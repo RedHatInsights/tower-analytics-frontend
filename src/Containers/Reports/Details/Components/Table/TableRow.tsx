@@ -54,21 +54,17 @@ const TableRow: FunctionComponent<Params> = ({
   return (
     <>
       <Tr style={getOthersStyle(legendEntry, 'id')}>
-        {headers.map(({ key }, index) => (
-          <>
-            {expandRows && index === 0 && (
-              <Td
-                expand={{
-                  rowIndex: +legendEntry.id,
-                  isExpanded,
-                  onToggle: () => setIsExpanded(!isExpanded),
-                }}
-              />
-            )}
-            <Td key={`${legendEntry.id}-${key}`}>
-              {getText(legendEntry, key)}
-            </Td>
-          </>
+        {expandRows && (
+          <Td
+            expand={{
+              rowIndex: +legendEntry.id,
+              isExpanded,
+              onToggle: () => setIsExpanded(!isExpanded),
+            }}
+          />
+        )}
+        {headers.map(({ key }) => (
+          <Td key={`${legendEntry.id}-${key}`}>{getText(legendEntry, key)}</Td>
         ))}
       </Tr>
       {expandRows && (
