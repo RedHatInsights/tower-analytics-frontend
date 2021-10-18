@@ -68,8 +68,10 @@ const schemaFnc = (
     props: {
       height: 400,
       padding: {
-        top: 10,
-        right: 100,
+        top: 40,
+        bottom: 85,
+        right: 90,
+        left: 90,
       },
       domainPadding: {
         y: 25,
@@ -80,6 +82,11 @@ const schemaFnc = (
     xAxis: {
       label: 'Date',
       tickFormat: xTickFormat,
+      style: {
+        axisLabel: {
+          padding: 50,
+        },
+      },
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
@@ -87,7 +94,7 @@ const schemaFnc = (
       label,
       style: {
         axisLabel: {
-          padding: 55,
+          padding: 60,
         },
       },
     },
@@ -104,8 +111,9 @@ const schemaFnc = (
       mouseFollow: true,
       stickToAxis: 'x',
       cursor: true,
-      customFnc: (datum: Record<string, string | number>) =>
-        `${datum.name}: ${datum.y}`,
+      legendTooltip: {
+        titleProperyForLegend: 'created_date',
+      },
     },
   },
   {
@@ -120,6 +128,9 @@ const schemaFnc = (
       props: {
         x: 'created_date',
         y,
+      },
+      tooltip: {
+        labelName: '',
       },
     },
   },
