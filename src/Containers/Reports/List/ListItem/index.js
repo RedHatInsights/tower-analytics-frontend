@@ -31,7 +31,7 @@ const Label = styled(PFLabel)`
 `;
 
 const ListItem = ({ report: { slug, description, name, categories } }) => (
-  <Card>
+  <Card data-testid={slug}>
     <CardHeader>
       <CardHeaderMain>
         <CardTitle>
