@@ -49,11 +49,13 @@ const List = () => {
 
   const {
     result: options,
-    error,
     isSuccess,
     request: fetchOptions,
   } = useRequest(
-    useCallback(() => readPlanOptions(), [queryParams]),
+    useCallback(async () => {
+      const response = await readPlanOptions();
+      return response || {};
+    }, [queryParams]),
     {}
   );
 
@@ -61,6 +63,7 @@ const List = () => {
     result: { data, rbac, count },
     isLoading: itemsIsLoading,
     isSuccess: itemsIsSuccess,
+    error: itemsError,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(async () => {
@@ -108,7 +111,7 @@ const List = () => {
   };
 
   const renderContent = () => {
-    if (error) return <ApiErrorState message={error.error} />;
+    if (itemsError) return <ApiErrorState message={itemsError.error} />;
     if (itemsIsLoading || deleteLoading) return <LoadingState />;
     if (
       itemsIsSuccess &&
@@ -141,8 +144,7 @@ const List = () => {
             '2xl': '307px',
           }}
         >
-          {isSuccess &&
-            itemsIsSuccess &&
+          {itemsIsSuccess &&
             data.map((datum) => (
               <PlanCard
                 key={datum.id}

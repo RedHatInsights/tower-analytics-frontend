@@ -104,7 +104,9 @@ const ListItem = ({
   };
 
   const renderOptionsBasedValue = (key, val) => {
-    return options[key].find(({ key: apiValue }) => apiValue === val).value;
+    return options[key]
+      ? options[key].find(({ key: apiValue }) => apiValue === val).value
+      : val;
   };
 
   const kebabDropDownItems = [
