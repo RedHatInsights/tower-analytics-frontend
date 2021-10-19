@@ -30,7 +30,7 @@ const ReportTable: FunctionComponent<Props> = ({
       <Tr>
         {expandRows && <Th />}
         {headers.map(({ key, value }) => (
-          <Th key={key} {...getSortParams(key)} data-cy={key}>
+          <Th key={key} {...getSortParams(key)} data-testid={key}>
             {value}
           </Th>
         ))}

@@ -24,7 +24,7 @@ const CategoryDropdown: FunctionComponent<Props> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   return (
-    <ToolbarItem data-cy={categoryKey}>
+    <ToolbarItem data-testid={categoryKey}>
       <Select
         isOpen={isExpanded}
         variant={SelectVariant.single}
