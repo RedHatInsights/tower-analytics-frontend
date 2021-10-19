@@ -144,8 +144,8 @@ describe('Dashboard page filter tests', () => {
     const screenshotFilename = 'clusters_filter_by_quickDateRange.png';
     cy.screenshot(screenshotFilename);
   });
-//FIXME
-  it.skip('Can filter by a custom date range', () => {
+
+  it('Can filter by a custom date range', () => {
     const today = moment(new Date().toISOString()).format('YYYY-MM-DD');
     const oneWeekAgo = moment(new Date().toISOString())
       .subtract(1, 'week')
@@ -367,8 +367,7 @@ describe('Dashboard page drilldown tests', () => {
     cy.screenshot(screenshotFilename);
   });
 
-  // FIX
-  it.skip('Can navigate to job explorer from top templates modal', () => {
+  it('Can navigate to job explorer from top templates modal', () => {
     const todayminusone = moment(new Date().toISOString())
       .subtract(1, 'day')
       .format('M/D');
@@ -420,21 +419,8 @@ describe('Dashboard page drilldown tests', () => {
     cy.get('#pf-modal-part-0').find('a').contains('View all jobs').click();
     // Verify the redirect to Job explorer
     cy.get(appid).find('.pf-c-title').contains('Job Explorer');
-    // Verify the organization and date range filter is carried correctly to Job Explorer page
-    cy.get(toolBarChipGroup)
-      .find('span')
-      .contains('Organization')
-      .siblings()
-      .find('span')
-      .contains('No organization');
     cy.get('div[data-cy="quick_date_range"]').contains('Past 62 days');
     cy.get(toolBarChipGroup).find('span').contains('Template');
-    cy.get(toolBarChipGroup)
-      .find('span')
-      .contains('Job')
-      .siblings()
-      .find('span')
-      .should('not.contain', 'Playbook run');
     const screenshotFilename = 'clusters_drilldown_top_templates.png';
     cy.screenshot(screenshotFilename);
   });
