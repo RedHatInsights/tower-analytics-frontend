@@ -28,6 +28,7 @@ const List = () => {
       </PageHeader>
       <FlexMain>
         <Gallery
+          data-testid="all_reports"
           hasGutter
           minWidths={{
             sm: '307px',
