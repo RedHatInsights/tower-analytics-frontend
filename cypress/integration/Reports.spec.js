@@ -9,13 +9,19 @@ const hbo = 'hosts_by_organization';
 const jtbo = 'jobs_and_tasks_by_organization';
 const texp = 'templates_explorer';
 
+const allReports = [hcbjt, cmbjt, jtrr, hbo, jtbo, texp];
+
 describe('Reports page smoketests', () => {
   beforeEach(() => {
     cy.loginFlow();
     cy.visit(reportsUrl);
   });
 
-  it.skip('All report cards are displayed on main reports page', () => {});
+  it('All report cards are displayed on main reports page', () => {
+    allReports.forEach(function (item) {
+      cy.get(`[data-testid="${item}"]`).should('exist');
+    });
+  });
 });
 
 describe('Report: Hosts Changed By Job Template Smoketests', () => {
@@ -33,7 +39,7 @@ describe('Report: Hosts Changed By Job Template Smoketests', () => {
 
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click()
+    cy.get('.pf-c-select__menu-item').contains('Past year').click();
   });
 });
 
@@ -52,7 +58,7 @@ describe('Report: Changes Made By Job Template Smoketests', () => {
 
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click()
+    cy.get('.pf-c-select__menu-item').contains('Past year').click();
   });
 });
 
@@ -70,7 +76,7 @@ describe('Report: Job Template Run Rate Smoketests', () => {
   });
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click()
+    cy.get('.pf-c-select__menu-item').contains('Past year').click();
   });
 });
 
@@ -88,7 +94,7 @@ describe('Report: Hosts By Organization Smoketests', () => {
   });
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click()
+    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
   });
 });
 
@@ -106,7 +112,7 @@ describe('Report: Jobs and Tasks By Organization Smoketests', () => {
   });
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click()
+    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
   });
 });
 
@@ -118,6 +124,6 @@ describe('Report: Templates Explorer Smoketests', () => {
 
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click()
+    cy.get('.pf-c-select__menu-item').contains('Past year').click();
   });
 });
