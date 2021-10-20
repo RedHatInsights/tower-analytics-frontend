@@ -9,7 +9,6 @@ const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
   debug: true,
   sassPrefix: '.automation-analytics, .automationAnalytics',
-  useCloud: true,
   https: false,
   standalone: {
     apiAnalytics: {

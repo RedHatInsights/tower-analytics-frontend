@@ -1,5 +1,7 @@
 import { stringify } from 'query-string';
-import { ApiJson, Params, ParamsWithPagination } from './types';
+import { saveStream } from './streamSaver';
+import { ApiJson, Params, ParamsWithPagination, PDFParams } from './types';
+import { createWriteStream } from 'streamsaver';
 
 declare global {
   interface Window {
@@ -39,8 +41,13 @@ export const authenticatedFetch = (
 
 export const postWithFileReturn = (
   endpoint: string,
-  params: Params = {}
+  params: PDFParams
 ): Promise<void> => {
+  // Create the service worker on user interaction.
+  const date = new Intl.DateTimeFormat('en-US').format(new Date());
+  const fileStream = createWriteStream(
+    `${params.slug}_${date}.pdf`.replace(/\s/g, '_')
+  );
   const url = new URL(endpoint, window.location.origin);
   return authenticatedFetch(url.toString(), {
     method: 'POST',
@@ -56,14 +63,8 @@ export const postWithFileReturn = (
             )
     )
     .then((data) => data.body)
-    .then((stream) => new Response(stream))
-    .then((response) => response.blob())
-    .then((blob) => {
-      blob = blob.slice(0, blob.size, 'application/pdf');
-      return URL.createObjectURL(blob);
-    })
-    .then((url) => {
-      window.open(url, '_blank');
+    .then((stream) => {
+      if (stream) return saveStream(stream, fileStream);
     });
 };
 

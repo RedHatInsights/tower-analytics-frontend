@@ -3,6 +3,14 @@ export type Params = Record<
   string | number | string[] | number[] | boolean
 >;
 
+export interface PDFParams {
+  slug: string;
+  data: Record<string, unknown>;
+  y: string;
+  label: string;
+  x_tick_format: string;
+}
+
 export type OptionsReturnType = Record<
   string,
   { key: string; value: string }[]
