@@ -1,8 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import React, { FunctionComponent, useState } from 'react';
-import PropTypes from 'prop-types';
 import {
   Card,
   CardActions,
@@ -36,8 +32,6 @@ import FormulaDescription from './FormulaDescription';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
 import hoursFormatter from '../../../../Utilities/hoursFormatter';
 
-type DataYearsSeries = Record<string, number>;
-
 // This should model the return type somewhere next to the Api.js where the call is made.
 // This is just a basic mockup of the exact data for TS to work.
 interface Data {
@@ -48,35 +42,17 @@ interface Data {
       cumulative_time_net_benefits: number;
       total_hours_saved: number;
       total_hours_spent_risk_adjusted: number;
-
       cumulative_net_benefits: number;
       total_benefits: number;
       total_costs: number;
     }[];
-  };
-}
-
-interface OldData {
-  name: string;
-  projections: {
-    time_stats: {
-      cumulative_time_net_benefits: DataYearsSeries;
-      total_hours_saved: DataYearsSeries;
-      total_hours_spent_risk_adjusted: DataYearsSeries;
-    };
     monetary_stats: {
-      cumulative_net_benefits: DataYearsSeries;
-      total_benefits: DataYearsSeries;
-      total_costs: DataYearsSeries;
+      net_preset_value: number;
     };
   };
 }
 
-const dataConversion = (data: any): Data => {
-  if ('series_stats' in data.projections) {
-    return data;
-  }
-
+const dataConversion = (data: Data): Data => {
   const yearConversion: Record<string, string> = {
     initial: 'Initial',
     year1: 'Year 1',
@@ -84,17 +60,11 @@ const dataConversion = (data: any): Data => {
     year3: 'Year 3',
   };
 
-  const seriesStats = Object.keys(yearConversion).map((year) => ({
-    year: yearConversion[year],
-    total_costs: +data.projections.monetary_stats.total_costs[year],
-    total_benefits: +data.projections.monetary_stats.total_benefits[year],
-    cumulative_net_benefits:
-      +data.projections.monetary_stats.cumulative_net_benefits[year],
-    total_hours_spent_risk_adjusted:
-      +data.projections.time_stats.total_hours_spent_risk_adjusted[year],
-    total_hours_saved: +data.projections.time_stats.total_hours_saved[year],
-    cumulative_time_net_benefits:
-      +data.projections.time_stats.cumulative_time_net_benefits[year],
+  const seriesStats = data.projections.series_stats.map((item) => ({
+    ...item,
+    year: yearConversion[item.year],
+    total_costs: item.total_costs * -1,
+    total_hours_spent_risk_adjusted: item.total_hours_spent_risk_adjusted * -1,
   }));
 
   return {
@@ -109,25 +79,12 @@ interface Props {
     link: string;
     name: React.ReactNode;
   }[];
-  plan: Data | OldData;
+  plan: Data;
 }
 
-const yearLabels: Record<string, number> = {
-  initial: 0,
-  year1: 1,
-  year2: 2,
-  year3: 3,
-};
-
 const getChartData = (data: Data): NonGroupedApi => {
-  const output = data.projections.series_stats.map((d) => ({
-    ...d,
-    total_costs: d.total_costs * -1,
-    total_hours_spent_risk_adjusted: d.total_hours_spent_risk_adjusted * -1,
-  }));
-
   return {
-    items: output,
+    items: data.projections.series_stats,
     type: ApiType.nonGrouped,
     response_type: '',
   };
@@ -158,9 +115,8 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
 
   const computeTotalSavings = (d: Data): number =>
     isMoney
-      ? d.projections.series_stats[yearLabels.year3].cumulative_net_benefits
-      : d.projections.series_stats[yearLabels.year3]
-          .cumulative_time_net_benefits;
+      ? d.projections.series_stats[3].cumulative_net_benefits
+      : d.projections.series_stats[3].cumulative_time_net_benefits;
 
   const barChartData: ChartSchema = {
     charts: [
@@ -371,19 +327,6 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
       </Grid>
     </Card>
   );
-};
-
-StatisticsTab.propTypes = {
-  /* eslint-disable-next-line */
-  /* @ts-ignore: Validation error */
-  plan: PropTypes.object.isRequired,
-  tabsArray: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.number.isRequired,
-      link: PropTypes.string.isRequired,
-      name: PropTypes.node.isRequired,
-    }).isRequired
-  ).isRequired,
 };
 
 export default StatisticsTab;

@@ -28,9 +28,9 @@ const ReportTable: FunctionComponent<Props> = ({
   <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
     <Thead>
       <Tr>
-        {expandRows && <Th></Th>}
+        {expandRows && <Th />}
         {headers.map(({ key, value }) => (
-          <Th key={key} {...getSortParams(key)}>
+          <Th key={key} {...getSortParams(key)} data-testid={key}>
             {value}
           </Th>
         ))}

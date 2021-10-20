@@ -109,8 +109,9 @@ const schemaFnc = (
       mouseFollow: true,
       stickToAxis: 'x',
       cursor: true,
-      customFnc: (datum: Record<string, string | number>) =>
-        `${datum.name}: ${datum.y}`,
+      legendTooltip: {
+        titleProperyForLegend: 'created_date',
+      },
     },
   },
   {
@@ -125,6 +126,9 @@ const schemaFnc = (
       props: {
         x: 'created_date',
         y,
+      },
+      tooltip: {
+        labelName: '',
       },
     },
   },

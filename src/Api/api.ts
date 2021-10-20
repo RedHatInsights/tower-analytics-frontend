@@ -9,7 +9,7 @@ import {
   deleteByIds,
   postWithFileReturn,
 } from './methods';
-import { Params, ParamsWithPagination, ApiJson } from './types';
+import { Params, ParamsWithPagination, ApiJson, PDFParams } from './types';
 
 /* v0 endpoints */
 export const notificationsEndpoint = `/api/tower-analytics/v0/notifications/`;
@@ -110,5 +110,5 @@ export const readClustersOptions = (params: Params): Promise<ApiJson> =>
 export const readNotifications = (params: Params): Promise<ApiJson> =>
   get(notificationsEndpoint, params);
 
-export const generatePdf = (params: Params): Promise<void> =>
+export const generatePdf = (params: PDFParams): Promise<void> =>
   postWithFileReturn(pdfGenerateEndpoint, params);

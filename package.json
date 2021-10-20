@@ -17,12 +17,14 @@
     "moment": "^2.29.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-json-chart-builder": "^1.4.0",
+    "react-json-chart-builder": "^1.5.1",
     "react-redux": "^7.2.5",
     "react-router-dom": "^5.3.0",
     "redux": "^4.1.1",
     "redux-logger": "^3.0.6",
-    "redux-promise-middleware": "^6.1.2"
+    "redux-promise-middleware": "^6.1.2",
+    "streamsaver": "^2.0.5",
+    "web-streams-polyfill": "^3.1.1"
   },
   "jest": {
     "coverageDirectory": "./coverage/",
@@ -64,6 +66,7 @@
     "@testing-library/react-hooks": "^7.0.2",
     "@testing-library/user-event": "^13.2.1",
     "@types/react-router-dom": "^5.1.9",
+    "@types/streamsaver": "^2.0.1",
     "@types/styled-components": "^5.1.14",
     "@typescript-eslint/eslint-plugin": "^4.28.2",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.6.3",
