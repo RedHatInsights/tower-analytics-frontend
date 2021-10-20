@@ -9,7 +9,10 @@ import {
   SelectOption,
   TextInput,
   NumberInput,
+  FormHelperText,
 } from '@patternfly/react-core';
+
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 
 import { actions } from '../../../constants';
 
@@ -31,6 +34,15 @@ const Details = ({ options, formData, dispatch }) => {
             label="What do you want to automate?"
             isRequired
             fieldId="name-field"
+            // helperText={
+            //   <FormHelperText
+            //     isError
+            //     icon={<ExclamationCircleIcon />}
+            //     isHidden={formData.name}
+            //   >
+            //     Name is required
+            //   </FormHelperText>
+            // }
           >
             <TextInput
               isRequired
@@ -45,6 +57,19 @@ const Details = ({ options, formData, dispatch }) => {
                   value: newName,
                 })
               }
+              onFocus={() => {
+                if (!formData.name || !formData.name === '') {
+                  return (
+                    <FormHelperText
+                      isError
+                      icon={<ExclamationCircleIcon />}
+                      isHidden={formData.name}
+                    >
+                      Name is required
+                    </FormHelperText>
+                  );
+                }
+              }}
             />
           </FormGroup>
           <FormGroup label="What type of task is it?" fieldId="category-field">
