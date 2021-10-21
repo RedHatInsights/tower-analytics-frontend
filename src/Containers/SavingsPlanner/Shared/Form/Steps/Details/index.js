@@ -25,6 +25,11 @@ const Details = ({ options, formData, dispatch }) => {
   const [categoryIsOpen, setCategoryIsOpen] = useState(false);
   const [manualTimeIsOpen, setManualTimeIsOpen] = useState(false);
   const [frequencyPeriodIsOpen, setFrequencyPeriodIsOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
+
+  const handleFocus = (name) => {
+    !name || !name === '' ? setShowError(true) : setShowError(false);
+  };
 
   return (
     <Form>
@@ -34,15 +39,6 @@ const Details = ({ options, formData, dispatch }) => {
             label="What do you want to automate?"
             isRequired
             fieldId="name-field"
-            // helperText={
-            //   <FormHelperText
-            //     isError
-            //     icon={<ExclamationCircleIcon />}
-            //     isHidden={formData.name}
-            //   >
-            //     Name is required
-            //   </FormHelperText>
-            // }
           >
             <TextInput
               isRequired
@@ -58,19 +54,19 @@ const Details = ({ options, formData, dispatch }) => {
                 })
               }
               onFocus={() => {
-                if (!formData.name || !formData.name === '') {
-                  return (
-                    <FormHelperText
-                      isError
-                      icon={<ExclamationCircleIcon />}
-                      isHidden={formData.name}
-                    >
-                      Name is required
-                    </FormHelperText>
-                  );
-                }
+                handleFocus(formData.name);
               }}
+              onBlur={() => setShowError(false)}
             />
+            {(!formData.name || !formData.name === '') && showError && (
+              <FormHelperText
+                isError
+                icon={<ExclamationCircleIcon />}
+                isHidden={!showError}
+              >
+                Name is required
+              </FormHelperText>
+            )}
           </FormGroup>
           <FormGroup label="What type of task is it?" fieldId="category-field">
             <Select
