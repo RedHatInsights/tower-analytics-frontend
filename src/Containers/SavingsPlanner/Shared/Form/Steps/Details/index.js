@@ -12,7 +12,7 @@ import {
   FormHelperText,
 } from '@patternfly/react-core';
 
-import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import { ExclamationCircleIcon } from '@patternfly/react-icons';
 
 import { actions } from '../../../constants';
 
