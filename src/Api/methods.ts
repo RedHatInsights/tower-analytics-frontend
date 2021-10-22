@@ -43,28 +43,31 @@ export const postWithFileReturn = (
   endpoint: string,
   params: PDFParams
 ): Promise<void> => {
-  // Create the service worker on user interaction.
-  const date = new Intl.DateTimeFormat('en-US').format(new Date());
-  const fileStream = createWriteStream(
-    `${params.slug}_${date}.pdf`.replace(/\s/g, '_')
-  );
   const url = new URL(endpoint, window.location.origin);
   return authenticatedFetch(url.toString(), {
     method: 'POST',
     body: JSON.stringify(params),
   })
-    .then((response) =>
-      response.ok
-        ? response // If reposnse is ok, then continue to download the PDF
+    .then((response) => {
+      return response.ok
+        ? // If reposnse is ok, then continue to download the PDF
+          { response, size: response.headers.get('content-length') }
         : response // Else it is an error and we have to parse it as a json
             .json()
             .then((error: ApiJson) =>
               Promise.reject({ status: response.status, error })
-            )
-    )
-    .then((data) => data.body)
-    .then((stream) => {
-      if (stream) return saveStream(stream, fileStream);
+            );
+    })
+    .then(({ response, size }) => {
+      const date = new Intl.DateTimeFormat('en-US').format(new Date());
+      const nSize = size ? +size : undefined;
+      const fileStream = createWriteStream(
+        `${params.slug}_${date}.pdf`.replace(/\s/g, '_'),
+        {
+          size: nSize,
+        }
+      );
+      if (response.body) return saveStream(response.body, fileStream);
     });
 };
 
