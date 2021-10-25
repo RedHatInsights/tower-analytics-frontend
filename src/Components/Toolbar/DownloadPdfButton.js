@@ -14,14 +14,22 @@ import { generatePdf } from '../../Api';
 import AlertModal from '../AlertModal';
 import ErrorDetail from '../ErrorDetail';
 
-const DownloadPdfButton = ({ slug, data, y, label, xTickFormat }) => {
+const DownloadPdfButton = ({
+  slug,
+  endpointUrl,
+  queryParams,
+  y,
+  label,
+  xTickFormat,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { error, isLoading, request } = useRequest(
-    (data) =>
+    () =>
       generatePdf({
         slug,
-        data,
+        endpointUrl,
+        queryParams,
         y,
         label,
         x_tick_format: xTickFormat,
@@ -46,7 +54,7 @@ const DownloadPdfButton = ({ slug, data, y, label, xTickFormat }) => {
         <Button
           variant={error ? ButtonVariant.link : ButtonVariant.plain}
           aria-label={getPdfButtonText}
-          onClick={() => request(data)}
+          onClick={() => request()}
           isDanger={!!error}
         >
           {isLoading && <Spinner isSVG size="md" />}
@@ -69,7 +77,8 @@ const DownloadPdfButton = ({ slug, data, y, label, xTickFormat }) => {
 
 DownloadPdfButton.propTypes = {
   slug: PropTypes.string.isRequired,
-  data: PropTypes.object.isRequired,
+  endpointUrl: PropTypes.string.isRequired,
+  queryParams: PropTypes.object.isRequired,
   y: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   xTickFormat: PropTypes.string.isRequired,

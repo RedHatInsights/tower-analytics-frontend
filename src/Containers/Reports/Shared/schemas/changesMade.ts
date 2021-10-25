@@ -7,7 +7,11 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import { readJobExplorer, readJobExplorerOptions } from '../../../../Api';
+import {
+  jobExplorerEndpoint,
+  readJobExplorer,
+  readJobExplorerOptions,
+} from '../../../../Api';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
@@ -149,6 +153,7 @@ const reportParams: ReportPageParams = {
     tableAttributes,
     expandedAttributes,
     availableChartTypes,
+    dataEndpointUrl: jobExplorerEndpoint,
     readData: readJobExplorer,
     readOptions: readJobExplorerOptions,
     schemaFnc,

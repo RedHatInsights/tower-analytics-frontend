@@ -3,14 +3,6 @@ export type Params = Record<
   string | number | string[] | number[] | boolean
 >;
 
-export interface PDFParams {
-  slug: string;
-  data: Record<string, unknown>;
-  y: string;
-  label: string;
-  x_tick_format: string;
-}
-
 export type OptionsReturnType = Record<
   string,
   { key: string; value: string }[]
@@ -23,6 +15,15 @@ export interface ParamsWithPagination {
   sort_options?: string;
   sort_order?: 'asc' | 'desc';
   [x: string]: string | number | string[] | number[] | boolean | undefined;
+}
+
+export interface PDFParams {
+  slug: string;
+  endpointUrl: string;
+  queryParams: Params;
+  y: string;
+  label: string;
+  x_tick_format: string;
 }
 
 export type ReadParams = { params: Params };
