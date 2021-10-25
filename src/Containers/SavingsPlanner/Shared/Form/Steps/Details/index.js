@@ -28,7 +28,7 @@ const Details = ({ options, formData, dispatch }) => {
   const [showError, setShowError] = useState(false);
 
   const handleFocus = (name) => {
-    !name || !name === '' ? setShowError(true) : setShowError(false);
+    !name ? setShowError(true) : setShowError(false);
   };
 
   return (
@@ -56,9 +56,9 @@ const Details = ({ options, formData, dispatch }) => {
               onFocus={() => {
                 handleFocus(formData.name);
               }}
-              onBlur={() => setShowError(false)}
+              onBlur={() => setShowError(!name)}
             />
-            {(!formData.name || !formData.name === '') && showError && (
+            {!formData.name && showError && (
               <FormHelperText
                 isError
                 icon={<ExclamationCircleIcon />}

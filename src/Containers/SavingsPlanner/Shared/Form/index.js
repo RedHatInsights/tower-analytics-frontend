@@ -4,6 +4,7 @@ import { useHistory, useLocation, Redirect } from 'react-router-dom';
 
 import {
   Button,
+  ButtonVariant,
   Wizard,
   WizardFooter,
   WizardContextConsumer,
@@ -58,7 +59,7 @@ const Form = ({ title, options, data = {} }) => {
       id: 'tasks',
       name: 'Tasks',
       component: <Tasks tasks={formData.tasks} dispatch={dispatch} />,
-      canJumpTo: formData.name,
+      canJumpTo: !!formData.name,
     },
     {
       step_number: 3,
@@ -67,7 +68,7 @@ const Form = ({ title, options, data = {} }) => {
       component: (
         <Templates template_id={formData.template_id} dispatch={dispatch} />
       ),
-      canJumpTo: formData.name,
+      canJumpTo: !!formData.name,
       nextButtonText: 'Save',
     },
   ];
@@ -80,10 +81,10 @@ const Form = ({ title, options, data = {} }) => {
             return (
               <>
                 <Button
-                  variant="primary"
+                  variant={ButtonVariant.primary}
                   type="submit"
                   onClick={onNext}
-                  isDisabled={!formData.name || !formData.name === ''}
+                  isDisabled={!formData.name}
                 >
                   Next
                 </Button>
@@ -102,10 +103,10 @@ const Form = ({ title, options, data = {} }) => {
           return (
             <>
               <Button
-                variant="primary"
+                variant={ButtonVariant.primary}
                 type="submit"
                 onClick={onSave}
-                isDisabled={!formData.name || !formData.name === ''}
+                isDisabled={!formData.name}
               >
                 Save
               </Button>
