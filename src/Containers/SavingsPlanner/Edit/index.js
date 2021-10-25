@@ -1,12 +1,13 @@
-import React, { useCallback, useEffect } from 'react';
-import { Redirect, useParams } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { readPlanOptions } from '../../../Api/';
-import { Paths } from '../../../paths';
+import { paths } from '../index';
 
 import Form from '../Shared/Form';
 import useRequest from '../../../Utilities/useRequest';
+import redirectWithQueryParams from '../../../QueryParams/redirectWithQueryParams';
 
 const Edit = ({ data }) => {
   const { id } = useParams();
@@ -15,28 +16,32 @@ const Edit = ({ data }) => {
     result: options,
     isSuccess,
     request: fetchPlanOptions,
-  } = useRequest(
-    useCallback(() => readPlanOptions(), []),
-    {}
-  );
+  } = useRequest(() => readPlanOptions(), {
+    meta: {
+      rbac: {
+        perms: {
+          write: false,
+          all: false,
+        },
+      },
+    },
+  });
+
+  const canWrite =
+    options.meta.rbac.perms.write === true ||
+    options.meta.rbac.perms.all === true;
 
   useEffect(() => {
     fetchPlanOptions();
-  }, [fetchPlanOptions]);
+  }, []);
 
-  const canWrite =
-    isSuccess &&
-    (options?.meta?.rbac?.perms?.write === true ||
-      options?.meta?.rbac?.perms?.all === true);
+  useEffect(() => {
+    if (isSuccess && !canWrite) redirectWithQueryParams(paths.getDetails(id));
+  }, [canWrite]);
 
   const renderContent = () => {
     if (!isSuccess) return null;
-
-    return canWrite ? (
-      <Form title="Edit plan" options={options} data={data} />
-    ) : (
-      <Redirect to={`${Paths.savingsPlanner}/${id}`} />
-    );
+    return <Form title="Edit plan" options={options} data={data} />;
   };
 
   return renderContent();
