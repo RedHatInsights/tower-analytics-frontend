@@ -1,5 +1,7 @@
 import { stringify } from 'query-string';
-import { ApiJson, Params, ParamsWithPagination } from './types';
+import { saveStream } from './streamSaver';
+import { ApiJson, Params, ParamsWithPagination, PDFParams } from './types';
+import { createWriteStream } from 'streamsaver';
 
 declare global {
   interface Window {
@@ -39,31 +41,33 @@ export const authenticatedFetch = (
 
 export const postWithFileReturn = (
   endpoint: string,
-  params: Params = {}
+  params: PDFParams
 ): Promise<void> => {
   const url = new URL(endpoint, window.location.origin);
   return authenticatedFetch(url.toString(), {
     method: 'POST',
     body: JSON.stringify(params),
   })
-    .then((response) =>
-      response.ok
-        ? response // If reposnse is ok, then continue to download the PDF
+    .then((response) => {
+      return response.ok
+        ? // If reposnse is ok, then continue to download the PDF
+          { response, size: response.headers.get('content-length') }
         : response // Else it is an error and we have to parse it as a json
             .json()
             .then((error: ApiJson) =>
               Promise.reject({ status: response.status, error })
-            )
-    )
-    .then((data) => data.body)
-    .then((stream) => new Response(stream))
-    .then((response) => response.blob())
-    .then((blob) => {
-      blob = blob.slice(0, blob.size, 'application/pdf');
-      return URL.createObjectURL(blob);
+            );
     })
-    .then((url) => {
-      window.open(url, '_blank');
+    .then(({ response, size }) => {
+      const date = new Intl.DateTimeFormat('en-US').format(new Date());
+      const nSize = size ? +size : undefined;
+      const fileStream = createWriteStream(
+        `${params.slug}_${date}.pdf`.replace(/\s/g, '_'),
+        {
+          size: nSize,
+        }
+      );
+      if (response.body) return saveStream(response.body, fileStream);
     });
 };
 

@@ -3,6 +3,7 @@ import Context from './Context';
 import { ValidFeatureFlags } from './types';
 
 const isBeta = () => window.location.pathname.split('/')[1] === 'beta';
+const isLocalhost = () => window.location.hostname === 'localhost';
 
 const useFeatureFlag = (flag: ValidFeatureFlags): boolean => {
   const features = useContext(Context);
@@ -14,6 +15,7 @@ const useFeatureFlag = (flag: ValidFeatureFlags): boolean => {
     ({ name }) => name === (isBeta() ? betaFlag : flag)
   );
 
+  if (isLocalhost()) return true;
   return !!feature && feature.enabled;
 };
 
