@@ -4,7 +4,7 @@ import { useHistory, useLocation, Redirect } from 'react-router-dom';
 
 import {
   Button,
-  Tooltip,
+  ButtonVariant,
   Wizard,
   WizardFooter,
   WizardContextConsumer,
@@ -45,7 +45,6 @@ const Form = ({ title, options, data = {} }) => {
   );
 
   const { formData, requestPayload, dispatch } = usePlanData(data);
-
   const steps = [
     {
       step_number: 1,
@@ -60,6 +59,7 @@ const Form = ({ title, options, data = {} }) => {
       id: 'tasks',
       name: 'Tasks',
       component: <Tasks tasks={formData.tasks} dispatch={dispatch} />,
+      canJumpTo: !!formData.name,
     },
     {
       step_number: 3,
@@ -68,6 +68,7 @@ const Form = ({ title, options, data = {} }) => {
       component: (
         <Templates template_id={formData.template_id} dispatch={dispatch} />
       ),
+      canJumpTo: !!formData.name,
       nextButtonText: 'Save',
     },
   ];
@@ -79,7 +80,12 @@ const Form = ({ title, options, data = {} }) => {
           if (activeStep.step_number !== 3) {
             return (
               <>
-                <Button variant="primary" type="submit" onClick={onNext}>
+                <Button
+                  variant={ButtonVariant.primary}
+                  type="submit"
+                  onClick={onNext}
+                  isDisabled={!formData.name}
+                >
                   Next
                 </Button>
                 {activeStep.step_number !== 1 && (
@@ -96,25 +102,14 @@ const Form = ({ title, options, data = {} }) => {
           // Final step buttons
           return (
             <>
-              <Tooltip
-                content={
-                  !formData.name || !formData.name === ''
-                    ? 'In order to save this plan, you must enter a name in the details step'
-                    : 'Save this plan'
-                }
-                position="top"
+              <Button
+                variant={ButtonVariant.primary}
+                type="submit"
+                onClick={onSave}
+                isDisabled={!formData.name}
               >
-                <div>
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    onClick={onSave}
-                    isDisabled={!formData.name || !formData.name === ''}
-                  >
-                    Save
-                  </Button>
-                </div>
-              </Tooltip>
+                Save
+              </Button>
               <Button variant="secondary" onClick={onBack}>
                 Back
               </Button>
