@@ -5,28 +5,58 @@ const {
   defaultServices,
 } = require('@redhat-cloud-services/frontend-components-config-utilities/standalone');
 
+// TODO: Add 'prod' - currently it is not wokring while returns
+// errors on backend queries: strict cross origin policy
+const validEnvValues = ['standalone', 'stage', 'eph'];
+
+const env = validEnvValues.includes(process.env.npm_config_env)
+  ? process.env.npm_config_env
+  : 'standalone';
+
+// Only when using ephemeral environment
+const ephId = process.env.npm_config_eph_id ?? '1';
+
+const environmentSetup = {
+  ...(env === 'standalone' && {
+    https: false,
+    standalone: {
+      apiAnalytics: {
+        context: ['/api/tower-analytics'],
+        target: 'http://localhost:8004',
+      },
+      rbac,
+      ...defaultServices,
+    },
+    registry: [
+      ({ app }) =>
+        app.get('(/beta)?/config/chrome/ansible-navigation.json', (_req, res) =>
+          res.sendFile(resolve(__dirname, './ansible-navigation.json'))
+        ),
+    ],
+  }),
+  ...(['prod', 'stage'].includes(env) && {
+    https: true,
+    useProxy: true,
+    proxyVerbose: true,
+    env: `${env}-beta`,
+  }),
+  ...(['eph'].includes(env) && {
+    https: true,
+    useProxy: true,
+    proxyVerbose: true,
+    env: 'qa-beta', // TODO change to whatewer the aggregator pulls data from
+    keycloakUri: `https://keycloak-ephemeral-${ephId}.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com`,
+    target: `https://front-end-aggregator-ephemeral-${ephId}.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com`,
+  }),
+};
+
 const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
   debug: true,
   sassPrefix: '.automation-analytics, .automationAnalytics',
-  https: false,
-  standalone: {
-    apiAnalytics: {
-      context: ['/api/tower-analytics'],
-      target: 'http://localhost:8004',
-    },
-    rbac,
-    ...defaultServices,
-  },
-  registry: [
-    ({ app }) =>
-      app.get('(/beta)?/config/chrome/ansible-navigation.json', (_req, res) =>
-        res.sendFile(resolve(__dirname, './ansible-navigation.json'))
-      ),
-  ],
   appUrl: ['/beta/ansible/insights/', '/ansible/insights/'],
-  proxyVerbose: true,
-  ...(process.env.BETA && { deployment: 'beta/apps' }),
+  deployment: 'beta/apps',
+  ...environmentSetup,
 });
 
 plugins.push(
