@@ -27,10 +27,6 @@ const Details = ({ options, formData, dispatch }) => {
   const [frequencyPeriodIsOpen, setFrequencyPeriodIsOpen] = useState(false);
   const [showError, setShowError] = useState(false);
 
-  const handleFocus = (name) => {
-    !name ? setShowError(true) : setShowError(false);
-  };
-
   return (
     <Form>
       {options && (
@@ -53,9 +49,7 @@ const Details = ({ options, formData, dispatch }) => {
                   value: newName,
                 })
               }
-              onFocus={() => {
-                handleFocus(formData.name);
-              }}
+              onFocus={() => setShowError(!name)}
               onBlur={() => setShowError(!name)}
             />
             {!formData.name && showError && (
