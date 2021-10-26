@@ -9,7 +9,10 @@ import {
   SelectOption,
   TextInput,
   NumberInput,
+  FormHelperText,
 } from '@patternfly/react-core';
+
+import { ExclamationCircleIcon } from '@patternfly/react-icons';
 
 import { actions } from '../../../constants';
 
@@ -22,6 +25,7 @@ const Details = ({ options, formData, dispatch }) => {
   const [categoryIsOpen, setCategoryIsOpen] = useState(false);
   const [manualTimeIsOpen, setManualTimeIsOpen] = useState(false);
   const [frequencyPeriodIsOpen, setFrequencyPeriodIsOpen] = useState(false);
+  const [showError, setShowError] = useState(false);
 
   return (
     <Form>
@@ -45,7 +49,18 @@ const Details = ({ options, formData, dispatch }) => {
                   value: newName,
                 })
               }
+              onFocus={() => setShowError(!name)}
+              onBlur={() => setShowError(!name)}
             />
+            {!formData.name && showError && (
+              <FormHelperText
+                isError
+                icon={<ExclamationCircleIcon />}
+                isHidden={!showError}
+              >
+                Name is required
+              </FormHelperText>
+            )}
           </FormGroup>
           <FormGroup label="What type of task is it?" fieldId="category-field">
             <Select
