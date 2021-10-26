@@ -29,6 +29,11 @@ import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 import Breakdown from '../../../../../Charts/Breakdown';
 import { categoryColor } from '../../../../../Utilities/constants';
 import { LegendEntry } from '../types';
+import styled from 'styled-components';
+
+const FailedTasksBars = styled(GridItem)`
+  margin-top: -1rem;
+`;
 
 interface Props {
   isExpanded: boolean;
@@ -151,20 +156,20 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
                         </FlexItem>
                       </Flex>
                     </GridItem>
-                    <GridItem lg={6} md={12} key={`hosts-${idx}`}>
+                    <FailedTasksBars lg={6} md={12} key={`hosts-${idx}`}>
                       <Breakdown
                         categoryCount={hostCount}
                         categoryColor={categoryColor}
                         showPercent
                       />
-                    </GridItem>
-                    <GridItem lg={6} md={12} key={`tasks-${idx}`}>
+                    </FailedTasksBars>
+                    <FailedTasksBars lg={6} md={12} key={`tasks-${idx}`}>
                       <Breakdown
                         categoryCount={taskCount}
                         categoryColor={categoryColor}
                         showPercent
                       />
-                    </GridItem>
+                    </FailedTasksBars>
                   </Grid>
                 );
               })}
@@ -245,7 +250,6 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
           />
 
           {renderFailedTaskBar(item)}
-
           <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
             {expandedInfo(item).map(({ label, value }) => (
               <DescriptionListGroup key={label}>
