@@ -43,7 +43,7 @@ describe('Containers/AutomationCalculator/CalculationCost', () => {
     expect(fn).toHaveBeenCalled();
   });
 
-  it('Should set cost on invalid values to zero', () => {
+  it('Should set cost on invalid values to empty string', () => {
     const fn = jest.fn();
     const fn2 = jest.fn();
     const wrapper = mount(
@@ -60,11 +60,11 @@ describe('Containers/AutomationCalculator/CalculationCost', () => {
       costInput.simulate('change', { target: { value: '' } });
       costInput2.simulate('change', { target: { value: '' } });
     });
-    expect(fn).toHaveBeenCalledWith(0);
-    expect(fn2).toHaveBeenCalledWith(0);
+    expect(fn).toHaveBeenCalledWith('');
+    expect(fn2).toHaveBeenCalledWith('');
   });
 
-  it('Should set cost on negative values to NaN', () => {
+  it('Should set cost on negative values to empty string', () => {
     const fn = jest.fn();
     const fn2 = jest.fn();
     const wrapper = mount(
@@ -81,7 +81,7 @@ describe('Containers/AutomationCalculator/CalculationCost', () => {
       costInput.simulate('change', { target: { value: '' } });
       costInput2.simulate('change', { target: { value: '' } });
     });
-    expect(fn).toHaveBeenCalledWith(NaN);
-    expect(fn2).toHaveBeenCalledWith(NaN);
+    expect(fn).toHaveBeenCalledWith('');
+    expect(fn2).toHaveBeenCalledWith('');
   });
 });

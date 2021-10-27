@@ -87,7 +87,8 @@ describe('Containers/AutomationCalculator', () => {
     wrapper.update();
 
     expect(wrapper).toBeTruthy();
-    expect(wrapper.find('button')).toHaveLength(9);
+    // Has 3 links in the list --> 3 data points
+    expect(wrapper.find('a')).toHaveLength(3);
   });
 
   it('should render api error', async () => {
@@ -103,7 +104,7 @@ describe('Containers/AutomationCalculator', () => {
 
     expect(wrapper.text()).toEqual(expect.stringContaining('General Error'));
     // No data displayed
-    expect(wrapper.find('button')).toHaveLength(2);
+    expect(wrapper.find('a')).toHaveLength(0);
   });
 
   it('should render no data', async () => {
@@ -116,7 +117,7 @@ describe('Containers/AutomationCalculator', () => {
 
     expect(wrapper.text()).toEqual(expect.stringContaining('No Data'));
     // No data displayed
-    expect(wrapper.find('button')).toHaveLength(2);
+    expect(wrapper.find('a')).toHaveLength(0);
   });
 
   it('should call redirect to job expoler', async () => {
@@ -125,7 +126,7 @@ describe('Containers/AutomationCalculator', () => {
     });
     wrapper.update();
 
-    wrapper.find('button').at(6).simulate('click');
+    wrapper.find('a').at(0).simulate('click');
     expect(history.location.pathname).toBe('/job-explorer');
   });
 
@@ -176,7 +177,7 @@ describe('Containers/AutomationCalculator', () => {
     );
   });
 
-  xit('should recompute total savings correctly after changed average runtime', async () => {
+  it('should recompute total savings correctly after changed average runtime', async () => {
     await act(async () => {
       wrapper = mountPage(AutomationCalculator);
     });

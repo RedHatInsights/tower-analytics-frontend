@@ -1,6 +1,7 @@
 export enum ValidFeatureFlags {
   pdfDownloadButton = 'pdfDownloadButton',
   moduleReports = 'moduleReports',
+  newAutomationCalculator = 'newAutomationCalculator',
 }
 
 export interface FeatureFlagType {

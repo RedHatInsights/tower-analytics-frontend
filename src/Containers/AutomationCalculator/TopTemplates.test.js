@@ -1,4 +1,4 @@
-import TopTemplates from '.';
+import TopTemplates from './TopTemplates';
 
 const dummyData = [
   {
@@ -49,13 +49,17 @@ describe('Containers/AutomationCalculator/TopTemplates', () => {
   });
 
   it('should render with dummy data', () => {
-    const wrapper = mount(<TopTemplates data={dummyData} />);
-    expect(wrapper.find('input')).toHaveLength(7);
+    const wrapper = mount(<TopTemplates data={dummyData} sortBy={'foo:asc'} />);
+    expect(wrapper.find('input')).toHaveLength(3);
   });
 
-  xit('should call redirect on link click', () => {
+  it('should call redirect on link click', () => {
     const wrapper = mount(
-      <TopTemplates data={dummyData} redirectToJobExplorer={fn} />
+      <TopTemplates
+        data={dummyData}
+        redirectToJobExplorer={fn}
+        sortBy={'foo:desc'}
+      />
     );
     wrapper.find('a').at(0).simulate('click');
     expect(fn).toHaveBeenCalledWith(1);
@@ -63,16 +67,16 @@ describe('Containers/AutomationCalculator/TopTemplates', () => {
 
   it('should call setDataRunTime with the correct value on input change', () => {
     const wrapper = mount(
-      <TopTemplates data={dummyData} setDataRunTime={fn} />
+      <TopTemplates data={dummyData} setDataRunTime={fn} sortBy={'foo'} />
     );
 
     // First field
-    wrapper.find('input').at(3).simulate('change', {});
-    expect(fn).toHaveBeenCalledWith(3600, 2);
+    wrapper.find('input').at(0).simulate('change', {});
+    expect(fn).toHaveBeenCalledWith(3600, 1);
 
     // Last field
     fn.mockReset();
-    wrapper.find('input').at(5).simulate('change', {});
+    wrapper.find('input').at(2).simulate('change', {});
     expect(fn).toHaveBeenCalledWith(1980, 3);
   });
 });
