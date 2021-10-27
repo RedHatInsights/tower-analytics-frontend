@@ -103,7 +103,7 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
             <strong>Most failed tasks</strong>
           </p>
           <br />
-          <Grid>
+          <Grid hasGutter>
             {failed_tasks
               .slice(0, failed_tasks.length)
               .map((task: any, idx: number) => {
