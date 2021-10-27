@@ -118,7 +118,7 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
                   unfinished: task?.unfinished_count ?? 0,
                 };
                 return (
-                  <Grid hasGutter key={idx}>
+                  <>
                     <GridItem>
                       <DescriptionList isHorizontal>
                         {taskInfo(task).map(({ label, value }) => (
@@ -131,7 +131,7 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
                         ))}
                       </DescriptionList>
                     </GridItem>
-                    <GridItem>
+                    <GridItem lg={6} md={12} key={`hosts-${idx}`}>
                       <Flex>
                         <FlexItem>
                           <strong>Host status</strong>
@@ -141,6 +141,15 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
                           {'  '}
                           {totalHostStatusCount(task)}
                         </FlexItem>
+                      </Flex>
+                      <Breakdown
+                        categoryCount={hostCount}
+                        categoryColor={categoryColor}
+                        showPercent
+                      />
+                    </GridItem>
+                    <GridItem lg={6} md={12} key={`tasks-${idx}`}>
+                      <Flex>
                         <FlexItem>
                           <strong>Task status</strong>
                         </FlexItem>
@@ -150,22 +159,13 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
                           {totalTaskStatusCount(task)}
                         </FlexItem>
                       </Flex>
-                    </GridItem>
-                    <GridItem lg={6} md={12} key={`hosts-${idx}`}>
-                      <Breakdown
-                        categoryCount={hostCount}
-                        categoryColor={categoryColor}
-                        showPercent
-                      />
-                    </GridItem>
-                    <GridItem lg={6} md={12} key={`tasks-${idx}`}>
                       <Breakdown
                         categoryCount={taskCount}
                         categoryColor={categoryColor}
                         showPercent
                       />
                     </GridItem>
-                  </Grid>
+                  </>
                 );
               })}
           </Grid>
@@ -245,7 +245,6 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
           />
 
           {renderFailedTaskBar(item)}
-
           <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
             {expandedInfo(item).map(({ label, value }) => (
               <DescriptionListGroup key={label}>
