@@ -29,11 +29,6 @@ import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 import Breakdown from '../../../../../Charts/Breakdown';
 import { categoryColor } from '../../../../../Utilities/constants';
 import { LegendEntry } from '../types';
-import styled from 'styled-components';
-
-const FailedTasksBars = styled(GridItem)`
-  margin-top: -1rem;
-`;
 
 interface Props {
   isExpanded: boolean;
@@ -108,7 +103,7 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
             <strong>Most failed tasks</strong>
           </p>
           <br />
-          <Grid hasGutter>
+          <Grid>
             {failed_tasks
               .slice(0, failed_tasks.length)
               .map((task: any, idx: number) => {
@@ -123,7 +118,7 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
                   unfinished: task?.unfinished_count ?? 0,
                 };
                 return (
-                  <Grid hasGutter key={idx}>
+                  <>
                     <GridItem>
                       <DescriptionList isHorizontal>
                         {taskInfo(task).map(({ label, value }) => (
@@ -136,7 +131,7 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
                         ))}
                       </DescriptionList>
                     </GridItem>
-                    <GridItem>
+                    <GridItem lg={6} md={12} key={`hosts-${idx}`}>
                       <Flex>
                         <FlexItem>
                           <strong>Host status</strong>
@@ -146,6 +141,15 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
                           {'  '}
                           {totalHostStatusCount(task)}
                         </FlexItem>
+                      </Flex>
+                      <Breakdown
+                        categoryCount={hostCount}
+                        categoryColor={categoryColor}
+                        showPercent
+                      />
+                    </GridItem>
+                    <GridItem lg={6} md={12} key={`tasks-${idx}`}>
+                      <Flex>
                         <FlexItem>
                           <strong>Task status</strong>
                         </FlexItem>
@@ -155,22 +159,13 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
                           {totalTaskStatusCount(task)}
                         </FlexItem>
                       </Flex>
-                    </GridItem>
-                    <FailedTasksBars lg={6} md={12} key={`hosts-${idx}`}>
-                      <Breakdown
-                        categoryCount={hostCount}
-                        categoryColor={categoryColor}
-                        showPercent
-                      />
-                    </FailedTasksBars>
-                    <FailedTasksBars lg={6} md={12} key={`tasks-${idx}`}>
                       <Breakdown
                         categoryCount={taskCount}
                         categoryColor={categoryColor}
                         showPercent
                       />
-                    </FailedTasksBars>
-                  </Grid>
+                    </GridItem>
+                  </>
                 );
               })}
           </Grid>
