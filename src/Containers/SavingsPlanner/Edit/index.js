@@ -19,17 +19,14 @@ const Edit = ({ data }) => {
   } = useRequest(() => readPlanOptions(), {
     meta: {
       rbac: {
-        perms: {
-          write: false,
-          all: false,
-        },
+        perms: {},
       },
     },
   });
 
   const canWrite =
-    options.meta.rbac.perms.write === true ||
-    options.meta.rbac.perms.all === true;
+    options.meta.rbac.perms?.write === true ||
+    options.meta.rbac.perms?.all === true;
 
   useEffect(() => {
     fetchPlanOptions();

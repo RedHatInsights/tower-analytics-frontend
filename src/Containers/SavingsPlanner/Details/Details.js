@@ -51,10 +51,7 @@ const Details = () => {
     {
       plan: {},
       rbac: {
-        perms: {
-          write: false,
-          all: false,
-        },
+        perms: {},
       },
     }
   );
@@ -72,7 +69,7 @@ const Details = () => {
   }, [id]);
 
   const canWrite =
-    dataSuccess && (rbac.perms.write === true || rbac.perms.all === true);
+    dataSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
 
   const tabsArray = [
     {

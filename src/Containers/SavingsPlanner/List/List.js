@@ -64,10 +64,7 @@ const List = () => {
     {
       items: [],
       rbac: {
-        perms: {
-          write: false,
-          all: false,
-        },
+        perms: {},
       },
       meta: { count: 0 },
     }
@@ -84,7 +81,7 @@ const List = () => {
   }, [queryParams]);
 
   const canWrite =
-    itemsIsSuccess && (rbac.perms.write === true || rbac.perms.all === true);
+    itemsIsSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
 
   const { selected, handleSelect, setSelected } = useSelected(data);
 
