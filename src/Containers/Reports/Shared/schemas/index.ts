@@ -7,6 +7,10 @@ import playbookRunRate from './playbookRunRate';
 import hostsByOrganization from './hostsByOrganizations';
 import jobsTasksByOrganization from './jobsTasksByOrganization';
 import templatesExplorer from './templatesExplorer';
+import mostUsedModules from './mostUsedModules';
+import moduleUsagebyOrganization from './moduleUsagebyOrganization';
+import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
+import moduleUsageByTask from './moduleUsageByTask';
 
 const defaultReport: ReportPageParams = {
   slug: '',
@@ -20,6 +24,10 @@ const flaggedReports = [
   hostsByOrganization,
   jobsTasksByOrganization,
   templatesExplorer,
+  mostUsedModules,
+  moduleUsagebyOrganization,
+  moduleUsageByJobTemplate,
+  moduleUsageByTask,
 ];
 
 const prodReports = [affectedHostsByPlaybook, changesMade, playbookRunRate];
