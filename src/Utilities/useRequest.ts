@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useIsMounted from './useIsMounted';
 
 type ErrorType = unknown; // TODO: When the error format is evident, use that instead of `unknown`
@@ -28,8 +28,50 @@ interface UseRequestReturn<T> extends UseRequestVariables<T> {
   setValue: (value: T) => void;
 }
 
-export const useRequest = <T>(
-  makeRequest: () => Promise<T>,
+/**
+ * The function deeply compares objects if present if they have the same type
+ * or properties as the required object. This is used to check if the response has
+ * all the required fields. The function only compares the shape of the passed objects,
+ * not the values they hold.
+ *
+ * @param obj The object which is checked.
+ * @param required The object which attributes (deeply) are required in the obj.
+ * @returns True if all the attributes of the required object are in the recieved object.
+ */
+const hasAttributesDeep = (obj: unknown, required: unknown): boolean => {
+  // If they are objects, lets do the deep comparison.
+  if (
+    typeof obj === 'object' &&
+    !Array.isArray(obj) &&
+    obj !== null &&
+    typeof required === 'object' &&
+    !Array.isArray(required) &&
+    required !== null
+  ) {
+    const reqKeys = Object.keys(required);
+    const objKeys = Object.keys(obj);
+
+    if (reqKeys.length < 1) return true;
+    if (reqKeys.length > objKeys.length) return false;
+
+    const matchArray = reqKeys.map(
+      (key) =>
+        !!Object.prototype.hasOwnProperty.call(required, key) &&
+        !!Object.prototype.hasOwnProperty.call(obj, key) &&
+        // eslint-disable-next-line
+        // @ts-ignore-next-line
+        hasAttributesDeep(obj[key], required[key])
+    );
+
+    return !matchArray.includes(false);
+  }
+
+  // Same type, but not an object
+  return typeof obj === typeof required;
+};
+
+const useRequest = <T>(
+  makeRequest: (...args: unknown[]) => Promise<T>,
   initialValue: T
 ): UseRequestReturn<T> => {
   const [variables, setVariables] = useState<UseRequestVariables<T>>({
@@ -43,7 +85,7 @@ export const useRequest = <T>(
   return {
     ...variables,
     request: useCallback(
-      async (...args) => {
+      async (...args: unknown[]) => {
         setVariables({
           ...variables,
           isSuccess: false,
@@ -51,10 +93,21 @@ export const useRequest = <T>(
         });
         try {
           const response = await makeRequest(...args);
+
+          const hasSameAttrs = hasAttributesDeep(response, initialValue);
+          if (!hasSameAttrs)
+            console.error(
+              'The request does not have all the required attributes.',
+              '\nRecieved response from API:\n',
+              response,
+              '\nInitial value supplied:\n',
+              initialValue
+            );
+
           if (isMounted.current) {
             setVariables({
               isLoading: false,
-              result: response,
+              result: hasSameAttrs ? response : initialValue,
               error: null,
               isSuccess: true,
             });

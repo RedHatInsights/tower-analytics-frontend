@@ -22,7 +22,7 @@ import {
 
 import Breadcrumbs from '../../../Components/Breadcrumbs';
 
-import { readPlan, readPlanOptions } from '../../../Api/';
+import { readPlan } from '../../../Api/';
 
 import SavingsPlanEdit from '../Edit';
 import useRequest from '../../../Utilities/useRequest';
@@ -42,23 +42,21 @@ const Details = () => {
   }
 
   const {
-    result: options,
-    error,
-    request: fetchOptions,
-  } = useRequest(() => readPlanOptions(), {});
-
-  const {
     result: { rbac, plan },
-    isSuccess: planIsSuccess,
+    isSuccess: dataSuccess,
+    error: dataError,
     request: fetchEndpoints,
   } = useRequest(
     useCallback(() => readPlan(id), [id]),
-    { plan: {}, rbac: [] }
+    {
+      plan: {},
+      rbac: {
+        perms: {},
+      },
+    }
   );
 
   useEffect(() => {
-    fetchOptions();
-
     const unlisten = history.listen(({ pathname }) => {
       if (!pathname.includes('/edit')) fetchEndpoints();
     });
@@ -71,7 +69,7 @@ const Details = () => {
   }, [id]);
 
   const canWrite =
-    planIsSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
+    dataSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
 
   const tabsArray = [
     {
@@ -92,7 +90,7 @@ const Details = () => {
     },
   ];
 
-  const breadcrumbsItems = planIsSuccess
+  const breadcrumbsItems = dataSuccess
     ? [
         { title: 'Savings Planner', navigate: savingsPaths.get },
         { title: plan.name, navigate: savingsPaths.getDetails(id) },
@@ -101,8 +99,8 @@ const Details = () => {
 
   return (
     <>
-      {error && <ApiErrorState message={error.error} />}
-      {planIsSuccess && (
+      {dataError && <ApiErrorState message={dataError.error} />}
+      {dataSuccess && (
         <>
           <PageHeader>
             <Breadcrumbs items={breadcrumbsItems} />
@@ -126,7 +124,6 @@ const Details = () => {
                     plan={plan}
                     tabsArray={tabsArray}
                     canWrite={canWrite}
-                    options={options}
                   />
                 </Route>
               </Switch>

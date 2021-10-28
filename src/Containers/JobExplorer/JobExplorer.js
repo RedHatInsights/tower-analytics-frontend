@@ -46,7 +46,7 @@ const JobExplorer = () => {
     request: fetchEndpoints,
   } = useRequest(
     useCallback(() => readJobExplorer(queryParams), [queryParams]),
-    { items: [], meta: {} }
+    { items: [], meta: { count: 0 } }
   );
 
   useEffect(() => {
@@ -70,7 +70,7 @@ const JobExplorer = () => {
               setFilters={setFromToolbar}
               pagination={
                 <Pagination
-                  count={meta?.count}
+                  count={meta.count}
                   params={{
                     limit: +queryParams.limit,
                     offset: +queryParams.offset,
@@ -91,7 +91,7 @@ const JobExplorer = () => {
               />
             )}
             <Pagination
-              count={meta?.count}
+              count={meta.count}
               params={{
                 limit: +queryParams.limit,
                 offset: +queryParams.offset,

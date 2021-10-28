@@ -129,10 +129,6 @@ const AutomationCalculator = () => {
     setValue(api.map((el) => (el.id === id ? { ...el, enabled: value } : el)));
   };
 
-  useEffect(() => {
-    setOptions();
-  }, []);
-
   /**
    * Recalculates the delta and costs in the data after the cost is changed.
    */

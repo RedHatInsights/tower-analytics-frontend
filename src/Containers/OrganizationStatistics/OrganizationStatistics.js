@@ -184,7 +184,7 @@ const OrganizationStatistics = () => {
     request: setJobs,
   } = useRequest(
     useCallback(
-      async () => readJobExplorer(jobRunsByOrgParams),
+      () => readJobExplorer(jobRunsByOrgParams),
       [jobRunsByOrgParams]
     ),
     []
@@ -203,11 +203,11 @@ const OrganizationStatistics = () => {
     request: setOrgs,
   } = useRequest(
     useCallback(
-      async (tabIndex = 0) => {
+      (tabIndex = 0) => {
         if (tabIndex === 0) {
-          return await readJobExplorer(jobsByDateAndOrgParams);
+          return readJobExplorer(jobsByDateAndOrgParams);
         } else {
-          return await readHostExplorer(hostAcrossOrgParams);
+          return readHostExplorer(hostAcrossOrgParams);
         }
       },
       [hostAcrossOrgParams, jobsByDateAndOrgParams]

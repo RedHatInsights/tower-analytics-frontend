@@ -30,18 +30,33 @@ const Form = ({ title, options, data = {} }) => {
 
   const {
     result: apiResponse,
+    isSuccess,
     error,
     request: setData,
   } = useRequest(
-    useCallback((requestPayload, id) => {
+    useCallback(async (requestPayload, id) => {
       if (requestPayload) {
-        return id ? updatePlan(id, requestPayload) : createPlan(requestPayload);
+        if (id) {
+          return await updatePlan(id, requestPayload);
+        } else {
+          // Put the id inside the plan_created to match the update endpoint
+          const { id, plan_created } = await createPlan(requestPayload);
+          return {
+            plan_created: {
+              id,
+              ...plan_created,
+            },
+          };
+        }
       }
 
-      // TODO this should be a promise
-      return {};
+      return { plan_created: { id: 0 } };
     }, []),
-    data
+    {
+      plan_created: {
+        id: 0, // put zero to match the type
+      },
+    }
   );
 
   const { formData, requestPayload, dispatch } = usePlanData(data);
@@ -72,6 +87,28 @@ const Form = ({ title, options, data = {} }) => {
       nextButtonText: 'Save',
     },
   ];
+
+  const onStepChange = (newStep) => {
+    history.replace({
+      hash: newStep.id,
+    });
+  };
+
+  const onSave = () => {
+    setData(requestPayload, data?.id);
+  };
+
+  const onClose = () => {
+    if (location.pathname.indexOf('/edit') !== -1) {
+      history.push(paths.getDetails(data?.id));
+    } else {
+      history.push(paths.get);
+    }
+  };
+
+  const reset = () => {
+    setData();
+  };
 
   const CustomFooter = (
     <WizardFooter>
@@ -134,36 +171,12 @@ const Form = ({ title, options, data = {} }) => {
     }
   }, []);
 
-  const onStepChange = (newStep) => {
-    history.replace({
-      hash: newStep.id,
-    });
-  };
-
-  const onSave = () => {
-    setData(requestPayload, data?.id);
-  };
-
-  const onClose = () => {
-    if (location.pathname.indexOf('/edit') !== -1) {
-      history.push(paths.getDetails(data?.id));
-    } else {
-      history.push(paths.get);
-    }
-  };
-
-  const reset = () => {
-    setData();
-  };
-
   return (
     <>
-      {!error && apiResponse?.plan_created && (
+      {isSuccess && (
         <Redirect
           to={{
-            pathname: paths.getDetails(
-              apiResponse.id || apiResponse.plan_created.id
-            ),
+            pathname: paths.getDetails(apiResponse.plan_created.id),
             state: { reload: true },
           }}
         />
@@ -202,10 +215,6 @@ Form.propTypes = {
   title: PropTypes.string.isRequired,
   options: PropTypes.object.isRequired,
   data: PropTypes.object,
-};
-
-Form.defaultProps = {
-  data: {},
 };
 
 export default Form;

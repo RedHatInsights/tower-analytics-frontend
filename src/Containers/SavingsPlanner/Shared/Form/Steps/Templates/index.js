@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -69,27 +69,22 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     error,
     isSuccess,
     request: fetchOptions,
-  } = useRequest(async (qp) => {
+  } = useRequest(async () => {
+    // No idea why we are calling this endpoint without query but it seems to work
     const { quick_date_range, sort_options, ...rest } =
-      await readJobExplorerOptions(qp);
+      await readJobExplorerOptions();
     return rest;
   }, {});
 
   const {
-    result: { templates, count },
+    result: { items: templates, meta },
     isLoading: templatesIsLoading,
     isSuccess: templatesIsSuccess,
     request: fetchEndpoints,
-  } = useRequest(
-    useCallback(async () => {
-      const response = await readJobExplorer(queryParams);
-      return {
-        templates: response.items,
-        count: response.meta.count,
-      };
-    }, [queryParams]),
-    { templates: [], count: 0 }
-  );
+  } = useRequest((qp) => readJobExplorer(qp), {
+    items: [],
+    meta: { count: 0 },
+  });
 
   const onSort = (_ev, _idx, dir) => {
     queryParamsDispatch({
@@ -109,7 +104,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
 
   useEffect(() => {
     fetchOptions();
-    fetchEndpoints();
+    fetchEndpoints(queryParams);
   }, [queryParams]);
 
   return isSuccess ? (
@@ -124,7 +119,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
           setFilters={setFromToolbar}
           pagination={
             <Pagination
-              count={count}
+              count={meta.count}
               params={{
                 limit: +queryParams.limit,
                 offset: +queryParams.offset,
@@ -153,7 +148,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
                     key={`template-detail-${id}-radio-td`}
                     select={{
                       rowIndex: id,
-                      onSelect: (event, isSelected, value) =>
+                      onSelect: (_event, _isSelected, value) =>
                         formDispatch({
                           type: actions.SET_TEMPLATE_ID,
                           value,
@@ -187,7 +182,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
             )}
           </div>
           <Pagination
-            count={count}
+            count={meta.count}
             params={{
               limit: +queryParams.limit,
               offset: +queryParams.offset,
