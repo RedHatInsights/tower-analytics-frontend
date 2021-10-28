@@ -30,7 +30,7 @@ const Add = () => {
 
   useEffect(() => {
     fetchPlanOptions();
-  }, [fetchPlanOptions]);
+  }, []);
 
   const canWrite =
     isSuccess &&

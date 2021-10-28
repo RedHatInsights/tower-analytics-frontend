@@ -58,7 +58,7 @@ describe('Containers/Notifications', () => {
   it('should render with empty response', async () => {
     fetchMock.get(
       { url: notificationsUrl, overwriteRoutes: true },
-      { notifications: [], meta: {} }
+      { notifications: [], meta: { count: 0 } }
     );
 
     await act(async () => {

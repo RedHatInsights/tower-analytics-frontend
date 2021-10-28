@@ -1,29 +1,50 @@
-import { act } from 'react-dom/test-utils';
-import { screen } from '@testing-library/react';
+import { screen, waitFor } from '@testing-library/react';
 import { renderPage } from '../../__tests__/helpers.reactTestingLib';
+import { mockUseRequestDefaultParams } from '../../__tests__/helpers';
 import Clusters from './Clusters';
 
+import * as useRequest from '../../Utilities/useRequest';
 import mockResponses from '../../__tests__/fixtures/';
 import * as api from '../../Api/';
 jest.mock('../../Api');
 
-describe('<Clusters />', () => {
-  test('true', () => {
-    expect(true).toBe(true);
-  });
-  afterEach(() => {
+describe('Containers/Clusters', () => {
+  beforeEach(() => {
     api.readClustersOptions.mockResolvedValue(mockResponses.readClusterOptions);
     api.readJobExplorer.mockResolvedValue(mockResponses.readJobExplorer);
     api.readEventExplorer.mockResolvedValue(mockResponses.readEventExplorer);
   });
 
-  test('has rendered Clusters component with data', async () => {
-    await act(async () => {
-      renderPage(Clusters);
+  afterEach(() => {
+    jest.resetAllMocks();
+  });
+
+  it('should render the clusters page with data', async () => {
+    renderPage(Clusters);
+
+    await waitFor(() => {
+      expect(api.readJobExplorer).toHaveBeenCalledTimes(3);
+      expect(api.readClustersOptions).toHaveBeenCalledTimes(1);
+      expect(api.readEventExplorer).toHaveBeenCalledTimes(1);
     });
+
     expect(screen.getAllByText(/Clusters/i));
     expect(screen.getByText('Jobs across all clusters'));
     expect(screen.getByText('Top workflows'));
     expect(screen.getByText('Job status'));
+  });
+
+  it('should render the page with default api values', async () => {
+    const spy = jest.spyOn(useRequest, 'default');
+    spy.mockImplementation(mockUseRequestDefaultParams);
+
+    renderPage(Clusters);
+
+    await waitFor(() => {
+      expect(screen.getByTestId('barchart'));
+    });
+
+    expect(screen.getAllByText(/No Data/i)).toHaveLength(3);
+    spy.mockRestore();
   });
 });
