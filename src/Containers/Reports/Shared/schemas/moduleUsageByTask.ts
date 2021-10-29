@@ -50,6 +50,7 @@ const defaultParams = {
   job_type: [],
   org_id: [],
   status: [],
+  task_action_id: [],
   template_id: [],
 };
 
