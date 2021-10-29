@@ -8,11 +8,10 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import styled from 'styled-components';
 
 import {
   Card,
-  CardBody as PFCardBody,
+  CardBody,
   CardFooter,
   PaginationVariant,
   ToggleGroup,
@@ -34,13 +33,6 @@ import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton'
 import { useFeatureFlag, ValidFeatureFlags } from '../../../../FeatureFlags';
 import { OptionsReturnType } from '../../../../Api';
 import { capitalize } from '../../../../Utilities/helpers';
-
-const CardBody = styled(PFCardBody)`
-  & .pf-c-toolbar,
-  & .pf-c-toolbar__content {
-    padding: 0;
-  }
-`;
 
 const perPageOptions = [
   { title: '4', value: 4 },
