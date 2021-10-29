@@ -106,6 +106,7 @@ const schemaFnc = (
       interactive: true,
       orientation: ChartLegendOrientation.vertical,
       position: ChartLegendPosition.right,
+      turncateAt: 18,
     },
     tooltip: {
       mouseFollow: true,
