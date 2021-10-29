@@ -1,5 +1,4 @@
 export enum ValidFeatureFlags {
-  orgReports = 'orgReports',
   pdfDownloadButton = 'pdfDownloadButton',
 }
 
