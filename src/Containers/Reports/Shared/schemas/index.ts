@@ -43,16 +43,13 @@ export const getReport = (searchSlug: string): ReportPageParams => {
     ...prodReports,
     ...(moduleReportsEnabled ? moduleReports : []),
   ];
-  
+
   return reports.find(({ slug }) => slug === searchSlug) ?? defaultReport;
 };
 
 export const getAllReports = (): ReportPageParams[] => {
   prodReports;
   const moduleReportsEnabled = useFeatureFlag(ValidFeatureFlags.moduleReports);
-  
-  return [
-    ...prodReports,
-    ...(moduleReportsEnabled ? moduleReports : []),
-  ];
+
+  return [...prodReports, ...(moduleReportsEnabled ? moduleReports : [])];
 };
