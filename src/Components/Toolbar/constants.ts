@@ -48,6 +48,12 @@ export const optionsForCategories: OptionsForCategories = {
     placeholder: 'Filter by cluster',
     hasChips: true,
   },
+  task_action_id: {
+    type: 'select',
+    name: 'Module',
+    placeholder: 'Filter by module',
+    hasChips: true,
+  },
   template_id: {
     type: 'select',
     name: 'Template',
