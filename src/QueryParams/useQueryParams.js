@@ -69,6 +69,7 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_STATUS':
     case 'SET_ORG':
     case 'SET_CLUSTER':
+    case 'SET_MODULE':
     case 'SET_TEMPLATE':
     case 'SET_AUTOMATION_STATUS':
     case 'SET_CATEGORY':
@@ -102,6 +103,7 @@ const actionMapper = {
   job_type: 'SET_JOB_TYPE',
   org_id: 'SET_ORG',
   cluster_id: 'SET_CLUSTER',
+  task_action_id: 'SET_MODULE',
   template_id: 'SET_TEMPLATE',
   sort_order: 'SET_SORT_ORDER',
   sort_options: `SET_SORT_OPTIONS`,

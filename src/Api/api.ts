@@ -35,6 +35,8 @@ export const orgOptionsEndpoint =
 export const clustersOptionsEndpoint =
   '/api/tower-analytics/v1/dashboard_clusters_options/';
 export const planOptionsEndpoint = '/api/tower-analytics/v1/plan_options/';
+export const eventExplorerOptionsEndpoint =
+  '/api/tower-analytics/v1/event_explorer_options/';
 const hostExplorerOptionsEndpoint =
   '/api/tower-analytics/v1/host_explorer_options/';
 
@@ -64,6 +66,9 @@ export const readJobExplorerOptions = (params: Params): Promise<ApiJson> =>
 export const readEventExplorer = (
   params: ParamsWithPagination
 ): Promise<ApiJson> => postWithPagination(eventExplorerEndpoint, params);
+
+export const readEventExplorerOptions = (params: Params): Promise<ApiJson> =>
+  post(eventExplorerOptionsEndpoint, params);
 
 export const readROI = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(ROIEndpoint, params);
