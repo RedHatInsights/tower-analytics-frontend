@@ -24,6 +24,9 @@ const flaggedReports = [
   hostsByOrganization,
   jobsTasksByOrganization,
   templatesExplorer,
+];
+
+const moduleReports = [
   mostUsedModules,
   moduleUsagebyOrganization,
   moduleUsageByJobTemplate,
@@ -34,10 +37,12 @@ const prodReports = [affectedHostsByPlaybook, changesMade, playbookRunRate];
 
 export const getReport = (searchSlug: string): ReportPageParams => {
   const orgReportsEnabled = useFeatureFlag(ValidFeatureFlags.orgReports);
+  const moduleReportsEnabled = useFeatureFlag(ValidFeatureFlags.moduleReports);
 
   const reports = [
     ...prodReports,
     ...(orgReportsEnabled ? flaggedReports : []),
+    ...(moduleReportsEnabled ? moduleReports : []),
   ];
 
   return reports.find(({ slug }) => slug === searchSlug) ?? defaultReport;
@@ -45,6 +50,11 @@ export const getReport = (searchSlug: string): ReportPageParams => {
 
 export const getAllReports = (): ReportPageParams[] => {
   const orgReportsEnabled = useFeatureFlag(ValidFeatureFlags.orgReports);
+  const moduleReportsEnabled = useFeatureFlag(ValidFeatureFlags.moduleReports);
 
-  return [...prodReports, ...(orgReportsEnabled ? flaggedReports : [])];
+  return [
+    ...prodReports,
+    ...(orgReportsEnabled ? flaggedReports : []),
+    ...(moduleReportsEnabled ? moduleReports : []),
+  ];
 };
