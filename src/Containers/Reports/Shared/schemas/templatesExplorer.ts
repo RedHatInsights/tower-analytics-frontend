@@ -145,6 +145,7 @@ const schemaFnc = (
       },
       tooltip: {
         standalone: true,
+        labelName: label,
       },
     },
   },
