@@ -1,8 +1,12 @@
 import { act } from 'react-dom/test-utils';
-import { mountPage } from '../../__tests__/helpers';
+import {
+  mountPage,
+  mockUseRequestDefaultParams,
+} from '../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 import JobExplorer from './JobExplorer';
 import { jobExplorer } from '../../Utilities/constants';
+import * as useRequest from '../../Utilities/useRequest';
 
 fetchMock.config.overwriteRoutes = true;
 
@@ -66,7 +70,7 @@ describe('Containers/JobExplorer', () => {
 
   it('should render without any errors', async () => {
     await act(async () => {
-      wrapper = mountPage(JobExplorer, { history: jest.fn() });
+      wrapper = mountPage(JobExplorer);
     });
     wrapper.update();
 
@@ -88,7 +92,7 @@ describe('Containers/JobExplorer', () => {
   });
 
   it('should render with empty response', async () => {
-    fetchMock.post({ url: jobExplorerUrl }, { items: [] });
+    fetchMock.post({ url: jobExplorerUrl }, { items: [], meta: { count: 0 } });
 
     await act(async () => {
       wrapper = mountPage(JobExplorer);
@@ -229,5 +233,18 @@ describe('Containers/JobExplorer', () => {
       ...defaultQueryParams,
       offset: '95',
     });
+  });
+
+  it('should render with default api values', async () => {
+    const spy = jest.spyOn(useRequest, 'default');
+    spy.mockImplementation(mockUseRequestDefaultParams);
+
+    await act(async () => {
+      wrapper = mountPage(JobExplorer);
+    });
+    wrapper.update();
+
+    expect(wrapper.text()).toEqual(expect.stringContaining('No results found'));
+    spy.mockRestore();
   });
 });

@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
@@ -19,7 +19,7 @@ import {
   ListItem,
 } from '@patternfly/react-core';
 import CardActionsRow from '../../../../Components/CardActionsRow';
-import { deletePlan } from '../../../../Api/';
+import { deletePlan, readPlanOptions } from '../../../../Api/';
 import useRequest, {
   useDismissableError,
 } from '../../../../Utilities/useRequest';
@@ -49,7 +49,7 @@ const Divider = styled(PFDivider)`
   padding-top: 24px;
 `;
 
-const DetailsTab = ({ tabsArray, plan, canWrite, options }) => {
+const DetailsTab = ({ tabsArray, plan, canWrite }) => {
   const { pathname } = useLocation();
   const redirect = useRedirect();
   const {
@@ -66,6 +66,16 @@ const DetailsTab = ({ tabsArray, plan, canWrite, options }) => {
     template_details,
     template_id,
   } = plan;
+
+  const {
+    result: options,
+    isSuccess: optionsSuccess,
+    request: fetchOptions,
+  } = useRequest(() => readPlanOptions(), {});
+
+  useEffect(() => {
+    fetchOptions();
+  }, []);
 
   const redirectToJobExplorer = (templateId) => {
     const initialQueryParams = {
@@ -92,11 +102,13 @@ const DetailsTab = ({ tabsArray, plan, canWrite, options }) => {
     );
   };
 
-  const renderOptionsBasedValue = (key, val) => {
-    const fromOptionsValue = (options[key] || []).find(
-      ({ key: apiValue }) => apiValue === val
-    );
-    return (fromOptionsValue || {}).value;
+  const renderOptionsBasedValue = (name, val) => {
+    // Return if no options yet or no key in the options is found.
+    if (!optionsSuccess || !options[name]) return '';
+
+    // Search for the key and return the value if exists.
+    const fromOptionsValue = options[name].find(({ key }) => key === val);
+    return fromOptionsValue?.value ?? '';
   };
 
   const labelsAndValues = {
@@ -216,7 +228,6 @@ DetailsTab.propTypes = {
   plan: PropTypes.object,
   tabsArray: PropTypes.array,
   canWrite: PropTypes.bool.isRequired,
-  options: PropTypes.object.isRequired,
 };
 
 export default DetailsTab;

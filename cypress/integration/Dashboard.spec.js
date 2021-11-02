@@ -6,8 +6,7 @@ const appid = Cypress.env('appid');
 
 // const toolBarCatSelector =
 // 'div[id="filterable-toolbar-with-chip-groups"] > .pf-c-toolbar__content > .pf-c-toolbar__content-section > div[class="pf-c-toolbar__group pf-m-filter-group"]';
-const toolBarChipGroup =
-  '#filterable-toolbar-with-chip-groups > div:nth-child(2)';
+const toolBarChipGroup = '.pf-c-chip-group';
 
 const setDate = (input, value) => {
   const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
@@ -24,32 +23,37 @@ async function fuzzClustersPage() {
   // open each top template modal and save a screenshot ...
   for (let i = 0; i <= 4; i++) {
     cy.get(appid)
-      .find('a')
+      .find('a', { timeout: 6000 })
       .eq(i)
-      .click({ waitForAnimations: true })
+      .click()
       .then(() => {
         cy.screenshot('top-template-modal-' + i + '.png', {
           capture: 'fullPage',
         });
       });
+    cy.get('[aria-label="Close"]').click();
+  }
 
-    // navigate to the job explorer page for each bar in the chart ...
-    for (let i = 0; i <= 4; i++) {
-      // pick a random bar to click on ...
-      const barid = parseInt(Math.floor(Math.random() * 10));
+  // navigate to the job explorer page for each bar in the chart ...
+  for (let i = 0; i <= 4; i++) {
+    // pick a random bar to click on ...
+    const barid = parseInt(Math.floor(Math.random() * 10));
 
-      // click it and wait for the jobexplorer page to load ...
-      cy.get(appid)
-        .find('#d3-bar-chart-root', { timeout: 1000 })
-        .should('be.visible');
-      cy.get(appid).find('rect').eq(barid).click({ waitForAnimations: true });
-      cy.screenshot('clusters-bar-' + barid + '-jobexplorer-details.png', {
-        capture: 'fullPage',
-      });
+    // click it and wait for the jobexplorer page to load ...
+    cy.get(appid)
+      .find('#d3-bar-chart-root', { timeout: 6000 })
+      .should('be.visible');
+    cy.get(appid)
+      .find('rect')
+      .eq(barid)
+      .click({ force: true, waitForAnimations: true });
+    cy.url().should('include', 'job-explorer');
+    cy.screenshot('clusters-bar-' + barid + '-jobexplorer-details.png', {
+      capture: 'fullPage',
+    });
 
-      // go back to the clusters page ...
-      cy.visit(dashboardUrl);
-    }
+    // go back to the clusters page ...
+    cy.visit(dashboardUrl);
   }
 }
 
@@ -63,17 +67,6 @@ describe('Dashboard page smoketests', () => {
     fuzzClustersPage();
   });
 
-  xit('Page contains chart, and 3 card elements', () => {
-    cy.get('#d3-bar-chart-root').should((chartElem) => {
-      expect(chartElem).to.have.length(1);
-    });
-
-    // fails due to bug: https://issues.redhat.com/browse/AA-470
-    it.skip('can interact with the clusters page without breaking the UI', () => {
-      fuzzClustersPage();
-    });
-  });
-
   it('Page contains chart, and 3 card elements', () => {
     cy.get('#d3-bar-chart-root').should((chartElem) => {
       expect(chartElem).to.have.length(1);
@@ -84,20 +77,18 @@ describe('Dashboard page smoketests', () => {
   });
 
   it('There is a filter toolbar on the Clusters page', () => {
-    cy.get('div[id="filterable-toolbar-with-chip-groups"]').should(
-      (toolbar) => {
-        expect(toolbar).to.have.length(1);
-      }
-    );
+    cy.get('.pf-c-toolbar__content-section').should((toolbar) => {
+      expect(toolbar).to.have.length(1);
+    });
   });
 });
+
 
 describe('Dashboard page filter tests', () => {
   beforeEach(() => {
     cy.loginFlow();
     cy.visit(dashboardUrl);
   });
-
   it('Can filter by organization', () => {
     cy.get('button[class="pf-c-select__toggle"]').eq(0).click();
     cy.get('button[class*="pf-c-select__menu-item"]')
@@ -124,7 +115,6 @@ describe('Dashboard page filter tests', () => {
     const screenshotFilename = 'clusters_filter_by_org.png';
     cy.screenshot(screenshotFilename);
   });
-
   it('Can filter by a preset date range', () => {
     const todayminusone = moment(new Date().toISOString())
       .subtract(1, 'day')
@@ -297,7 +287,7 @@ describe('Dashboard page filter tests', () => {
   });
 
   it('Can clear filters', () => {
-    cy.get('button[class="pf-c-select__toggle"]').eq(0).click();
+    cy.get('button[class="pf-c-select__toggle"]', { timeout: 6000 }).eq(0).click();
     cy.get('button[class*="pf-c-select__menu-item"]')
       .contains('Organization')
       .click();
@@ -311,7 +301,8 @@ describe('Dashboard page filter tests', () => {
       .contains('No organization')
       .parent()
       .siblings('input')
-      .click();
+      .click()
+      .type('{esc}');
     // Verify the filter is added in the Chip group
     cy.get(toolBarChipGroup)
       .find('span')
@@ -319,10 +310,9 @@ describe('Dashboard page filter tests', () => {
       .siblings()
       .find('span')
       .contains('No organization');
-    cy.get(toolBarChipGroup)
-      .find('button')
-      .contains('Clear all filters')
-      .click();
+    cy.get(
+      '#pf-random-id-0 > :nth-child(2) > :nth-child(2) > .pf-c-button'
+    ).click();
     // Verify the filter is removed from the Chip group
     cy.get(toolBarChipGroup).find('span').should('not.contain', 'Organization');
     const screenshotFilename = 'clusters_clear_filter.png';
@@ -377,8 +367,7 @@ describe('Dashboard page drilldown tests', () => {
     cy.screenshot(screenshotFilename);
   });
 
-  // will fail due to bug: https://issues.redhat.com/browse/AA-534 and https://issues.redhat.com/browse/AA-535
-  it.skip('Can navigate to job explorer from top templates modal', () => {
+  it('Can navigate to job explorer from top templates modal', () => {
     const todayminusone = moment(new Date().toISOString())
       .subtract(1, 'day')
       .format('M/D');
@@ -430,21 +419,8 @@ describe('Dashboard page drilldown tests', () => {
     cy.get('#pf-modal-part-0').find('a').contains('View all jobs').click();
     // Verify the redirect to Job explorer
     cy.get(appid).find('.pf-c-title').contains('Job Explorer');
-    // Verify the organization and date range filter is carried correctly to Job Explorer page
-    cy.get(toolBarChipGroup)
-      .find('span')
-      .contains('Organization')
-      .siblings()
-      .find('span')
-      .contains('No organization');
     cy.get('div[data-cy="quick_date_range"]').contains('Past 62 days');
     cy.get(toolBarChipGroup).find('span').contains('Template');
-    cy.get(toolBarChipGroup)
-      .find('span')
-      .contains('Job')
-      .siblings()
-      .find('span')
-      .should('not.contain', 'Playbook run');
     const screenshotFilename = 'clusters_drilldown_top_templates.png';
     cy.screenshot(screenshotFilename);
   });

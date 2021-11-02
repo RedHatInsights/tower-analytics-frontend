@@ -12,15 +12,23 @@ describe('Insights smoketests', () => {
     cy.loginFlow();
   });
 
-  xit('has all the AA navigation items', () => {
-    cy.visit('/ansible/automation-analytics');
-    const navbar = cy.get('li[ouiaid="automation-analytics"]');
-    const navlis = navbar.find('li');
-    navlis.should('have.length', 5);
+  it('has all the AA navigation items', () => {
+    cy.visit(dashboardUrl);
+    cy.get('[aria-labelledby="Operations Insights"]')
+      .find('.pf-c-nav__toggle-icon')
+      .click({ multiple: true });
+    cy.get('[aria-labelledby="Operations Insights"]')
+      .find('li')
+      .should('have.length', 11);
+    cy.get('[aria-labelledby="Security Insights"]')
+      .find('li')
+      .should('have.length', 1);
+    cy.get('[aria-labelledby="Business Insights"]')
+      .find('li')
+      .should('have.length', 6);
   });
-
+  // requires expansion
   it('can open each page without breaking the UI', () => {
-    cy.visit('/ansible/automation-analytics');
     cy.visit(calculatorUrl);
     cy.visit(jobExplorerUrl);
     cy.visit(dashboardUrl);

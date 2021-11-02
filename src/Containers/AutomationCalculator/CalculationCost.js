@@ -18,7 +18,7 @@ const InputAndText = styled.div`
 
 const validFloat = (value) => {
   const floatValue = parseFloat(value);
-  return floatValue && floatValue >= 0 ? value : '';
+  return floatValue && floatValue < 0 ? '' : value;
 };
 
 const CalculationCost = ({

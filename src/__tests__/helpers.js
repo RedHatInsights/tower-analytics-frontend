@@ -22,6 +22,15 @@ export const mountPage = (Component) =>
     </Provider>
   );
 
+export const mockUseRequestDefaultParams = (_req, defaultValues) => ({
+  result: defaultValues,
+  error: null,
+  isLoading: false,
+  isSuccess: true,
+  request: jest.fn(),
+  setValue: jest.fn(),
+});
+
 export const preflight200 = {
   url: '/api/tower-analytics/v0/authorized/',
   response: { msg: 'Authorized' },

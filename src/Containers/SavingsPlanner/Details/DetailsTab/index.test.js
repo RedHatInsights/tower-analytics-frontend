@@ -1,3 +1,4 @@
+import { act } from 'react-dom/test-utils';
 import reactRouterDom from 'react-router-dom';
 const pushMock = jest.fn();
 reactRouterDom.useHistory = jest.fn().mockReturnValue({ push: pushMock });
@@ -52,15 +53,13 @@ const dummyData = {
   template_id: 1,
 };
 
-it('should render successfully', () => {
-  const wrapper = mount(
-    <DetailsTab
-      tabsArray={tabs}
-      plan={dummyData}
-      canWrite={true}
-      options={{}}
-    />
-  );
+it('should render successfully', async () => {
+  let wrapper;
+  await act(async () => {
+    wrapper = mount(
+      <DetailsTab tabsArray={tabs} plan={dummyData} canWrite={true} />
+    );
+  });
   wrapper.update();
-  expect(wrapper.find('div.pf-c-description-list__text')).toHaveLength(6);
+  expect(wrapper.find('div.pf-c-description-list__text')).toHaveLength(9);
 });

@@ -52,7 +52,6 @@ import useRequest from '../../Utilities/useRequest';
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
-import { useFeatureFlag, ValidFeatureFlags } from '../../FeatureFlags';
 import { Paths } from '../../paths';
 
 const Divider = styled('hr')`
@@ -133,7 +132,6 @@ const OrganizationStatistics = () => {
   const history = useHistory();
   const redirect = useRedirect();
   const [activeTabKey, setActiveTabKey] = useState(0);
-  const orgReportsEnabled = useFeatureFlag(ValidFeatureFlags.orgReports);
 
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(
@@ -184,7 +182,7 @@ const OrganizationStatistics = () => {
     request: setJobs,
   } = useRequest(
     useCallback(
-      async () => readJobExplorer(jobRunsByOrgParams),
+      () => readJobExplorer(jobRunsByOrgParams),
       [jobRunsByOrgParams]
     ),
     []
@@ -203,11 +201,11 @@ const OrganizationStatistics = () => {
     request: setOrgs,
   } = useRequest(
     useCallback(
-      async (tabIndex = 0) => {
+      (tabIndex = 0) => {
         if (tabIndex === 0) {
-          return await readJobExplorer(jobsByDateAndOrgParams);
+          return readJobExplorer(jobsByDateAndOrgParams);
         } else {
-          return await readHostExplorer(hostAcrossOrgParams);
+          return readHostExplorer(hostAcrossOrgParams);
         }
       },
       [hostAcrossOrgParams, jobsByDateAndOrgParams]
@@ -271,9 +269,7 @@ const OrganizationStatistics = () => {
 
   const renderContent = () => (
     <Grid hasGutter>
-      {orgReportsEnabled && (
-        <GridItem span={12}>{renderDeprecationWarning()}</GridItem>
-      )}
+      <GridItem span={12}>{renderDeprecationWarning()}</GridItem>
       <GridItem span={12}>
         <Card>
           <Tabs activeKey={activeTabKey} onSelect={handleTabClick}>

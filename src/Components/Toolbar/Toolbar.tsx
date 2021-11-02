@@ -42,9 +42,13 @@ const FilterableToolbar: FunctionComponent<Props> = ({
   const { quick_date_range, sort_options, granularity, ...restCategories } =
     categories;
 
-  // Filter out elements which are not in the option object.
+  // Filter out elements which are not in the option object and in defaultParams
   const filterCategories = Object.keys(restCategories)
-    .filter((key) => Object.keys(optionsForCategories).includes(key))
+    .filter(
+      (key) =>
+        Object.keys(optionsForCategories).includes(key) &&
+        Object.keys(filters).includes(key)
+    )
     .reduce((obj: ApiOptionsType, key) => {
       obj[key] = restCategories[key];
       return obj;

@@ -4,7 +4,7 @@ import { useHistory, useLocation, Redirect } from 'react-router-dom';
 
 import {
   Button,
-  Tooltip,
+  ButtonVariant,
   Wizard,
   WizardFooter,
   WizardContextConsumer,
@@ -30,22 +30,36 @@ const Form = ({ title, options, data = {} }) => {
 
   const {
     result: apiResponse,
+    isSuccess,
     error,
     request: setData,
   } = useRequest(
-    useCallback((requestPayload, id) => {
+    useCallback(async (requestPayload, id) => {
       if (requestPayload) {
-        return id ? updatePlan(id, requestPayload) : createPlan(requestPayload);
+        if (id) {
+          return await updatePlan(id, requestPayload);
+        } else {
+          // Put the id inside the plan_created to match the update endpoint
+          const { id, plan_created } = await createPlan(requestPayload);
+          return {
+            plan_created: {
+              id,
+              ...plan_created,
+            },
+          };
+        }
       }
 
-      // TODO this should be a promise
-      return {};
+      return { plan_created: { id: 0 } };
     }, []),
-    data
+    {
+      plan_created: {
+        id: 0, // put zero to match the type
+      },
+    }
   );
 
   const { formData, requestPayload, dispatch } = usePlanData(data);
-
   const steps = [
     {
       step_number: 1,
@@ -60,6 +74,7 @@ const Form = ({ title, options, data = {} }) => {
       id: 'tasks',
       name: 'Tasks',
       component: <Tasks tasks={formData.tasks} dispatch={dispatch} />,
+      canJumpTo: !!formData.name,
     },
     {
       step_number: 3,
@@ -68,9 +83,32 @@ const Form = ({ title, options, data = {} }) => {
       component: (
         <Templates template_id={formData.template_id} dispatch={dispatch} />
       ),
+      canJumpTo: !!formData.name,
       nextButtonText: 'Save',
     },
   ];
+
+  const onStepChange = (newStep) => {
+    history.replace({
+      hash: newStep.id,
+    });
+  };
+
+  const onSave = () => {
+    setData(requestPayload, data?.id);
+  };
+
+  const onClose = () => {
+    if (location.pathname.indexOf('/edit') !== -1) {
+      history.push(paths.getDetails(data?.id));
+    } else {
+      history.push(paths.get);
+    }
+  };
+
+  const reset = () => {
+    setData();
+  };
 
   const CustomFooter = (
     <WizardFooter>
@@ -79,7 +117,12 @@ const Form = ({ title, options, data = {} }) => {
           if (activeStep.step_number !== 3) {
             return (
               <>
-                <Button variant="primary" type="submit" onClick={onNext}>
+                <Button
+                  variant={ButtonVariant.primary}
+                  type="submit"
+                  onClick={onNext}
+                  isDisabled={!formData.name}
+                >
                   Next
                 </Button>
                 {activeStep.step_number !== 1 && (
@@ -96,25 +139,14 @@ const Form = ({ title, options, data = {} }) => {
           // Final step buttons
           return (
             <>
-              <Tooltip
-                content={
-                  !formData.name || !formData.name === ''
-                    ? 'In order to save this plan, you must enter a name in the details step'
-                    : 'Save this plan'
-                }
-                position="top"
+              <Button
+                variant={ButtonVariant.primary}
+                type="submit"
+                onClick={onSave}
+                isDisabled={!formData.name}
               >
-                <div>
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    onClick={onSave}
-                    isDisabled={!formData.name || !formData.name === ''}
-                  >
-                    Save
-                  </Button>
-                </div>
-              </Tooltip>
+                Save
+              </Button>
               <Button variant="secondary" onClick={onBack}>
                 Back
               </Button>
@@ -139,36 +171,12 @@ const Form = ({ title, options, data = {} }) => {
     }
   }, []);
 
-  const onStepChange = (newStep) => {
-    history.replace({
-      hash: newStep.id,
-    });
-  };
-
-  const onSave = () => {
-    setData(requestPayload, data?.id);
-  };
-
-  const onClose = () => {
-    if (location.pathname.indexOf('/edit') !== -1) {
-      history.push(paths.getDetails(data?.id));
-    } else {
-      history.push(paths.get);
-    }
-  };
-
-  const reset = () => {
-    setData();
-  };
-
   return (
     <>
-      {!error && apiResponse?.plan_created && (
+      {isSuccess && (
         <Redirect
           to={{
-            pathname: paths.getDetails(
-              apiResponse.id || apiResponse.plan_created.id
-            ),
+            pathname: paths.getDetails(apiResponse.plan_created.id),
             state: { reload: true },
           }}
         />
@@ -207,10 +215,6 @@ Form.propTypes = {
   title: PropTypes.string.isRequired,
   options: PropTypes.object.isRequired,
   data: PropTypes.object,
-};
-
-Form.defaultProps = {
-  data: {},
 };
 
 export default Form;

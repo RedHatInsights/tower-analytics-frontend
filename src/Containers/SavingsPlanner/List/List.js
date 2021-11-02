@@ -49,32 +49,24 @@ const List = () => {
 
   const {
     result: options,
-    error,
     isSuccess,
     request: fetchOptions,
-  } = useRequest(
-    useCallback(() => readPlanOptions(), [queryParams]),
-    {}
-  );
+  } = useRequest(() => readPlanOptions(), {});
 
   const {
-    result: { data, rbac, count },
+    result: { items: data, rbac, meta },
     isLoading: itemsIsLoading,
     isSuccess: itemsIsSuccess,
+    error: itemsError,
     request: fetchEndpoints,
   } = useRequest(
-    useCallback(async () => {
-      const response = await readPlans(queryParams);
-      return {
-        data: response.items,
-        rbac: response.rbac,
-        count: response.meta.count,
-      };
-    }, [queryParams]),
+    useCallback(() => readPlans(queryParams), [queryParams]),
     {
-      data: [],
-      rbac: {},
-      count: 0,
+      items: [],
+      rbac: {
+        perms: {},
+      },
+      meta: { count: 0 },
     }
   );
 
@@ -89,8 +81,7 @@ const List = () => {
   }, [queryParams]);
 
   const canWrite =
-    itemsIsSuccess &&
-    (rbac?.perms?.write === true || rbac?.perms?.all === true);
+    itemsIsSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
 
   const { selected, handleSelect, setSelected } = useSelected(data);
 
@@ -108,7 +99,7 @@ const List = () => {
   };
 
   const renderContent = () => {
-    if (error) return <ApiErrorState message={error.error} />;
+    if (itemsError) return <ApiErrorState message={itemsError.error} />;
     if (itemsIsLoading || deleteLoading) return <LoadingState />;
     if (
       itemsIsSuccess &&
@@ -141,19 +132,17 @@ const List = () => {
             '2xl': '307px',
           }}
         >
-          {isSuccess &&
-            itemsIsSuccess &&
-            data.map((datum) => (
-              <PlanCard
-                key={datum.id}
-                isSuccess={itemsIsSuccess}
-                selected={selected}
-                plan={datum}
-                handleSelect={handleSelect}
-                canWrite={canWrite}
-                options={options}
-              />
-            ))}
+          {data.map((datum) => (
+            <PlanCard
+              key={datum.id}
+              isSuccess={itemsIsSuccess}
+              selected={selected}
+              plan={datum}
+              handleSelect={handleSelect}
+              canWrite={canWrite}
+              options={options}
+            />
+          ))}
         </Gallery>
       );
 
@@ -195,7 +184,7 @@ const List = () => {
           pagination={
             itemsIsSuccess && data.length > 0 ? (
               <Pagination
-                count={count}
+                count={meta.count}
                 params={{
                   limit: +queryParams.limit,
                   offset: +queryParams.offset,
@@ -211,10 +200,10 @@ const List = () => {
       {data.length > 0 && !(itemsIsLoading || deleteLoading) && (
         <Footer>
           <Pagination
-            count={count}
+            count={meta.count}
             params={{
-              limit: parseInt(queryParams.limit),
-              offset: parseInt(queryParams.offset),
+              limit: +queryParams.limit,
+              offset: +queryParams.offset,
             }}
             setPagination={setFromPagination}
             variant={PaginationVariant.bottom}

@@ -7,7 +7,11 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import { readJobExplorer, readJobExplorerOptions } from '../../../../Api';
+import {
+  jobExplorerEndpoint,
+  readJobExplorer,
+  readJobExplorerOptions,
+} from '../../../../Api';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
@@ -20,6 +24,15 @@ const description =
 
 const categories = [CATEGORIES.executive];
 
+const defaultTableHeaders: AttributesType = [
+  { key: 'id', value: 'ID' },
+  { key: 'name', value: 'Organization name' },
+];
+
+const tableAttributes = ['total_count', 'host_task_count'];
+
+const expandedAttributes = [] as string[];
+
 const defaultParams = {
   limit: 6,
   offset: 0,
@@ -31,22 +44,20 @@ const defaultParams = {
   cluster_id: [],
   template_id: [],
   inventory_id: [],
-  attributes: ['total_count', 'host_task_count'],
+  attributes: [...tableAttributes, ...expandedAttributes],
   group_by: 'org',
   group_by_time: true,
   sort_options: 'total_count',
   sort_order: 'desc',
 };
 
-const extraAttributes: AttributesType = [
-  { key: 'id', value: 'ID' },
-  { key: 'name', value: 'Organization name' },
-];
+const availableChartTypes = [ChartType.line, ChartType.bar];
 
 const schemaFnc = (
   label: string,
   y: string,
-  xTickFormat: string
+  xTickFormat: string,
+  chartType: ChartType
 ): ChartSchemaElement[] => [
   {
     id: 1,
@@ -56,17 +67,25 @@ const schemaFnc = (
     props: {
       height: 400,
       padding: {
-        top: 10,
-        right: 100,
+        top: 40,
+        bottom: 85,
+        right: 90,
+        left: 90,
       },
       domainPadding: {
         y: 25,
+        x: chartType == ChartType.bar ? 85 : 0,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
       label: 'Date',
       tickFormat: xTickFormat,
+      style: {
+        axisLabel: {
+          padding: 50,
+        },
+      },
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
@@ -74,7 +93,7 @@ const schemaFnc = (
       label,
       style: {
         axisLabel: {
-          padding: 55,
+          padding: 60,
         },
       },
     },
@@ -86,13 +105,15 @@ const schemaFnc = (
       interactive: true,
       orientation: ChartLegendOrientation.vertical,
       position: ChartLegendPosition.right,
+      turncateAt: 18,
     },
     tooltip: {
       mouseFollow: true,
       stickToAxis: 'x',
       cursor: true,
-      customFnc: (datum: Record<string, string | number>) =>
-        `${datum.name}: ${datum.y}`,
+      legendTooltip: {
+        titleProperyForLegend: 'created_date',
+      },
     },
   },
   {
@@ -102,11 +123,14 @@ const schemaFnc = (
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: ChartType.line,
+      type: chartType,
       parent: 0,
       props: {
         x: 'created_date',
         y,
+      },
+      tooltip: {
+        labelName: '',
       },
     },
   },
@@ -120,7 +144,11 @@ const reportParams: ReportPageParams = {
   report: {
     slug,
     defaultParams,
-    extraAttributes,
+    defaultTableHeaders,
+    tableAttributes,
+    expandedAttributes,
+    availableChartTypes,
+    dataEndpointUrl: jobExplorerEndpoint,
     readData: readJobExplorer,
     readOptions: readJobExplorerOptions,
     schemaFnc,

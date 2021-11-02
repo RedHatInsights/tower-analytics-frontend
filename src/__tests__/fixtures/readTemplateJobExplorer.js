@@ -1,5 +1,5 @@
 export default {
-  meta: {},
+  meta: { count: 2 },
   items: [
     {
       id: 345,

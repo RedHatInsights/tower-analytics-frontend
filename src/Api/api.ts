@@ -9,7 +9,7 @@ import {
   deleteByIds,
   postWithFileReturn,
 } from './methods';
-import { Params, ParamsWithPagination, ApiJson } from './types';
+import { Params, ParamsWithPagination, ApiJson, PDFParams } from './types';
 
 /* v0 endpoints */
 export const notificationsEndpoint = `/api/tower-analytics/v0/notifications/`;
@@ -35,6 +35,8 @@ export const orgOptionsEndpoint =
 export const clustersOptionsEndpoint =
   '/api/tower-analytics/v1/dashboard_clusters_options/';
 export const planOptionsEndpoint = '/api/tower-analytics/v1/plan_options/';
+export const eventExplorerOptionsEndpoint =
+  '/api/tower-analytics/v1/event_explorer_options/';
 const hostExplorerOptionsEndpoint =
   '/api/tower-analytics/v1/host_explorer_options/';
 
@@ -64,6 +66,9 @@ export const readJobExplorerOptions = (params: Params): Promise<ApiJson> =>
 export const readEventExplorer = (
   params: ParamsWithPagination
 ): Promise<ApiJson> => postWithPagination(eventExplorerEndpoint, params);
+
+export const readEventExplorerOptions = (params: Params): Promise<ApiJson> =>
+  post(eventExplorerOptionsEndpoint, params);
 
 export const readROI = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(ROIEndpoint, params);
@@ -110,5 +115,5 @@ export const readClustersOptions = (params: Params): Promise<ApiJson> =>
 export const readNotifications = (params: Params): Promise<ApiJson> =>
   get(notificationsEndpoint, params);
 
-export const generatePdf = (params: Params): Promise<void> =>
+export const generatePdf = (params: PDFParams): Promise<void> =>
   postWithFileReturn(pdfGenerateEndpoint, params);

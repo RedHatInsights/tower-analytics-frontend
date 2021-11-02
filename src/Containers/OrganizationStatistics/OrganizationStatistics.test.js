@@ -1,8 +1,12 @@
 import { act } from 'react-dom/test-utils';
-import { mountPage } from '../../__tests__/helpers';
+import {
+  mountPage,
+  mockUseRequestDefaultParams,
+} from '../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 import OrganizationStatistics from './OrganizationStatistics';
 import { organizationStatistics } from '../../Utilities/constants';
+import * as useRequest from '../../Utilities/useRequest';
 
 const chartRoots = [
   'd3-grouped-bar-chart-root',
@@ -210,5 +214,19 @@ describe('Containers/OrganizationStatistics', () => {
     });
 
     expect(lastCallBody(jobExplorerUrl)).toEqual(defaultQueryParamsForBar);
+  });
+
+  it('should render with default api values', async () => {
+    const spy = jest.spyOn(useRequest, 'default');
+    spy.mockImplementation(mockUseRequestDefaultParams);
+
+    await act(async () => {
+      wrapper = mountPage(OrganizationStatistics);
+    });
+    wrapper.update();
+
+    expect(wrapper.text()).toEqual(expect.stringContaining('Job Runs'));
+    expect(wrapper.text()).toEqual(expect.stringContaining('Usage by'));
+    spy.mockRestore();
   });
 });
