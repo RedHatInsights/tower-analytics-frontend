@@ -152,7 +152,7 @@ describe('SavingsPlanner/Shared/Form/Steps/Details', () => {
         dispatch={mockDispatch}
       />
     );
-    fireEvent.click(screen.getByRole('button', { name: 'System' }));
+    fireEvent.click(screen.getByText('System'));
     fireEvent.click(screen.getByRole('option', { name: 'Development' }));
 
     expect(mockDispatch).toHaveBeenCalledWith({
@@ -169,7 +169,7 @@ describe('SavingsPlanner/Shared/Form/Steps/Details', () => {
         dispatch={mockDispatch}
       />
     );
-    fireEvent.click(screen.getByRole('button', { name: 'Weekly' }));
+    fireEvent.click(screen.getByText('Weekly'));
     fireEvent.click(screen.getByRole('option', { name: 'Daily' }));
 
     expect(mockDispatch).toHaveBeenCalledWith({
@@ -186,7 +186,7 @@ describe('SavingsPlanner/Shared/Form/Steps/Details', () => {
         dispatch={mockDispatch}
       />
     );
-    fireEvent.click(screen.getByRole('button', { name: '240' }));
+    fireEvent.click(screen.getByText('240'));
     fireEvent.click(screen.getByRole('option', { name: '2 hours' }));
 
     expect(mockDispatch).toHaveBeenCalledWith({
