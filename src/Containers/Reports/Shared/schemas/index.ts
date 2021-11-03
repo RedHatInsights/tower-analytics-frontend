@@ -8,7 +8,7 @@ import hostsByOrganization from './hostsByOrganizations';
 import jobsTasksByOrganization from './jobsTasksByOrganization';
 import templatesExplorer from './templatesExplorer';
 import mostUsedModules from './mostUsedModules';
-import moduleUsagebyOrganization from './moduleUsagebyOrganization';
+import moduleUsageByOrganization from './moduleUsageByOrganization';
 import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
 import moduleUsageByTask from './moduleUsageByTask';
 
@@ -31,7 +31,7 @@ const prodReports = [
 
 const moduleReports = [
   mostUsedModules,
-  moduleUsagebyOrganization,
+  moduleUsageByOrganization,
   moduleUsageByJobTemplate,
   moduleUsageByTask,
 ];
