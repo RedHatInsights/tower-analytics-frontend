@@ -8,19 +8,19 @@ import {
   ChartThemeColor,
 } from 'react-json-chart-builder';
 import {
-  jobExplorerEndpoint,
-  readJobExplorer,
-  readJobExplorerOptions,
+  eventExplorerEndpoint,
+  readEventExplorer,
+  readEventExplorerOptions,
 } from '../../../../Api';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
-const slug = 'changes_made_by_job_template';
+const slug = 'module_usage_by_job_template';
 
-const name = 'Changes made by job template';
+const name = 'Module usage by job template';
 
 const description =
-  'The total count of changes made by each job template in a specified time window.\n\nYou can use this report to ensure the correct number of changes are made per hostname, as well as see which job templates are doing the most changes to your infrastructure.';
+  'The number of job template and task runs for a specified set of Ansible modules, grouped by job template.\n\nYou can use this report to find which job templates are using particular modules, helping you to check things like adoption of purpose-built modules for particular templates.';
 
 const categories = [CATEGORIES.executive];
 
@@ -30,10 +30,11 @@ const defaultTableHeaders: AttributesType = [
 ];
 
 const tableAttributes = [
-  'host_count',
-  'changed_host_count',
   'host_task_count',
   'host_task_changed_count',
+  'host_task_ok_count',
+  'host_task_failed_count',
+  'host_task_unreachable_count',
 ];
 
 const expandedAttributes = [] as string[];
@@ -46,13 +47,14 @@ const defaultParams = {
   group_by_time: true,
   granularity: 'monthly',
   quick_date_range: 'last_6_months',
-  sort_options: 'changed_host_count',
+  sort_options: 'host_task_count',
   sort_order: 'desc',
   cluster_id: [],
   inventory_id: [],
   job_type: [],
   org_id: [],
   status: [],
+  task_action_id: [],
   template_id: [],
 };
 
@@ -110,7 +112,6 @@ const schemaFnc = (
       interactive: true,
       orientation: ChartLegendOrientation.vertical,
       position: ChartLegendPosition.right,
-      turncateAt: 18,
     },
     tooltip: {
       mouseFollow: true,
@@ -153,9 +154,9 @@ const reportParams: ReportPageParams = {
     tableAttributes,
     expandedAttributes,
     availableChartTypes,
-    dataEndpointUrl: jobExplorerEndpoint,
-    readData: readJobExplorer,
-    readOptions: readJobExplorerOptions,
+    dataEndpointUrl: eventExplorerEndpoint,
+    readData: readEventExplorer,
+    readOptions: readEventExplorerOptions,
     schemaFnc,
   },
 };

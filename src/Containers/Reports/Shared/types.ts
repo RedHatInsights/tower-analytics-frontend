@@ -16,6 +16,7 @@ export interface ReportGeneratorParams {
   tableAttributes: string[];
   expandedAttributes: string[];
   availableChartTypes: string[];
+  dataEndpointUrl: string;
   readData: (options: ParamsWithPagination) => Promise<ApiJson>;
   readOptions: (options: Params) => Promise<ApiJson>;
   schemaFnc: SchemaFnc;

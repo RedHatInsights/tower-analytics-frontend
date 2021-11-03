@@ -63,6 +63,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   tableAttributes,
   expandedAttributes,
   availableChartTypes,
+  dataEndpointUrl,
   readData,
   readOptions,
   schemaFnc,
@@ -158,7 +159,8 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       <DownloadPdfButton
         key="download-button"
         slug={slug}
-        data={dataApi.result}
+        endpointUrl={dataEndpointUrl}
+        queryParams={queryParams}
         y={chartParams.y}
         label={chartParams.label}
         xTickFormat={chartParams.xTickFormat}

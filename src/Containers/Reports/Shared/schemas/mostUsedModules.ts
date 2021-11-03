@@ -8,32 +8,33 @@ import {
   ChartThemeColor,
 } from 'react-json-chart-builder';
 import {
-  jobExplorerEndpoint,
-  readJobExplorer,
-  readJobExplorerOptions,
+  eventExplorerEndpoint,
+  readEventExplorer,
+  readEventExplorerOptions,
 } from '../../../../Api';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
-const slug = 'changes_made_by_job_template';
+const slug = 'most_used_modules';
 
-const name = 'Changes made by job template';
+const name = 'Most used modules';
 
 const description =
-  'The total count of changes made by each job template in a specified time window.\n\nYou can use this report to ensure the correct number of changes are made per hostname, as well as see which job templates are doing the most changes to your infrastructure.';
+  'The number of job template and task runs, grouped by Ansible module usage.\n\nYou can use this report to find which modules are being used the most across your automation, helping you to check things like organization-wide adoption of purpose-built modules over potentially less performant, catch-all solutions.';
 
 const categories = [CATEGORIES.executive];
 
 const defaultTableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
-  { key: 'name', value: 'Template name' },
+  { key: 'name', value: 'Module name' },
 ];
 
 const tableAttributes = [
-  'host_count',
-  'changed_host_count',
   'host_task_count',
   'host_task_changed_count',
+  'host_task_ok_count',
+  'host_task_failed_count',
+  'host_task_unreachable_count',
 ];
 
 const expandedAttributes = [] as string[];
@@ -42,11 +43,11 @@ const defaultParams = {
   limit: 6,
   offset: 0,
   attributes: [...tableAttributes, ...expandedAttributes],
-  group_by: 'template',
+  group_by: 'module',
   group_by_time: true,
   granularity: 'monthly',
   quick_date_range: 'last_6_months',
-  sort_options: 'changed_host_count',
+  sort_options: 'host_task_count',
   sort_order: 'desc',
   cluster_id: [],
   inventory_id: [],
@@ -55,7 +56,6 @@ const defaultParams = {
   status: [],
   template_id: [],
 };
-
 const availableChartTypes = [ChartType.line, ChartType.bar];
 
 const schemaFnc = (
@@ -110,7 +110,6 @@ const schemaFnc = (
       interactive: true,
       orientation: ChartLegendOrientation.vertical,
       position: ChartLegendPosition.right,
-      turncateAt: 18,
     },
     tooltip: {
       mouseFollow: true,
@@ -153,9 +152,9 @@ const reportParams: ReportPageParams = {
     tableAttributes,
     expandedAttributes,
     availableChartTypes,
-    dataEndpointUrl: jobExplorerEndpoint,
-    readData: readJobExplorer,
-    readOptions: readJobExplorerOptions,
+    dataEndpointUrl: eventExplorerEndpoint,
+    readData: readEventExplorer,
+    readOptions: readEventExplorerOptions,
     schemaFnc,
   },
 };

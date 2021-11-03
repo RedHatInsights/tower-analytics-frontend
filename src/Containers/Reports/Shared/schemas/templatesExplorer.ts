@@ -9,6 +9,7 @@ import {
   readJobExplorer,
   readJobExplorerOptions,
   Params,
+  jobExplorerEndpoint,
 } from '../../../../Api';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
@@ -144,6 +145,7 @@ const schemaFnc = (
       },
       tooltip: {
         standalone: true,
+        labelName: label,
       },
     },
   },
@@ -161,6 +163,7 @@ const reportParams: ReportPageParams = {
     tableAttributes,
     expandedAttributes,
     availableChartTypes,
+    dataEndpointUrl: jobExplorerEndpoint,
     readData: readJobExplorer,
     readOptions: readJobExplorerOptions,
     schemaFnc,
