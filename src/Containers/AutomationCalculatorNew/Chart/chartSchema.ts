@@ -15,8 +15,8 @@ const schema: ChartSchemaElement[] = [
       height: 400,
       padding: {
         top: 40,
-        bottom: 85,
-        right: 90,
+        bottom: 150,
+        right: 0,
         left: 90,
       },
       domainPadding: {
@@ -28,9 +28,16 @@ const schema: ChartSchemaElement[] = [
       label: 'Templates',
       style: {
         axisLabel: {
-          padding: 50,
+          padding: 130,
         },
       },
+      labelProps: {
+        angle: -45,
+        textAnchor: 'end',
+        dx: 0,
+        dy: 0,
+      },
+      fixLabelOverlap: false,
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',

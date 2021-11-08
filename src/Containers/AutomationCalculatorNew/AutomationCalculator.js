@@ -36,7 +36,7 @@ import { calculateDelta, convertSecondsToHours } from '../../Utilities/helpers';
 import useRequest from '../../Utilities/useRequest';
 
 // Chart
-import TopTemplatesSavings from '../../Charts/ROITopTemplates';
+import Chart from './Chart';
 
 // Local imports
 import TotalSavings from './TotalSavings';
@@ -189,12 +189,7 @@ const AutomationCalculator = () => {
         <CardTitle>Automation savings</CardTitle>
       </CardHeader>
       <CardBody>
-        <TopTemplatesSavings
-          margin={{ top: 20, right: 20, bottom: 20, left: 70 }}
-          id="d3-roi-chart-root"
-          data={filterDisabled(api)}
-        />
-        <p style={{ textAlign: 'center' }}>Templates</p>
+        <Chart data={filterDisabled(api)} />
       </CardBody>
     </Card>
   );
