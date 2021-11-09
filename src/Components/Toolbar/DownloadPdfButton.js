@@ -2,9 +2,13 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
-  Tooltip,
   ButtonVariant,
+  Grid,
+  GridItem,
+  Modal,
+  Radio,
   Spinner,
+  Tooltip,
   TooltipPosition,
 } from '@patternfly/react-core';
 import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
@@ -21,8 +25,13 @@ const DownloadPdfButton = ({
   y,
   label,
   xTickFormat,
+  totalCount,
+  optionSelected,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [isCurrent, setIsCurrent] = useState(false);
+  const [isTotalCount, setIsTotalCount] = useState(false);
 
   const { error, isLoading, request } = useRequest(
     () =>
@@ -33,6 +42,7 @@ const DownloadPdfButton = ({
         y,
         label,
         x_tick_format: xTickFormat,
+        optionSelected,
       }),
     null
   );
@@ -54,7 +64,7 @@ const DownloadPdfButton = ({
         <Button
           variant={error ? ButtonVariant.link : ButtonVariant.plain}
           aria-label={getPdfButtonText}
-          onClick={() => request()}
+          onClick={() => setIsExportModalOpen(true)}
           isDanger={!!error}
         >
           {isLoading && <Spinner isSVG size="md" />}
@@ -62,6 +72,52 @@ const DownloadPdfButton = ({
           {!isLoading && !error && <DownloadIcon />}
         </Button>
       </Tooltip>
+      <Modal
+        width={'25%'}
+        title="Export report"
+        isOpen={isExportModalOpen}
+        onClose={() => {
+          setIsExportModalOpen(false);
+        }}
+        actions={[
+          <Button
+            key="export"
+            variant="primary"
+            onClick={() => request()}
+            isDisabled={!isCurrent && !isTotalCount}
+          >
+            Export
+          </Button>,
+          <Button
+            key="cancel"
+            variant="link"
+            onClick={() => setIsExportModalOpen(false)}
+          >
+            Cancel
+          </Button>,
+        ]}
+      >
+        <Grid md={4}>
+          <GridItem>
+            <Radio
+              onChange={() => setIsCurrent(true)}
+              name="optionSelected"
+              label="Current page"
+              id="current-page-radio"
+              aria-label="current-page-radio"
+            />
+          </GridItem>
+          <GridItem>
+            <Radio
+              onChange={() => setIsTotalCount(true)}
+              name="optionSelected"
+              label={totalCount <= 100 ? 'All items' : 'Top 100'}
+              id="total-count-radio"
+              aria-label="total-count-radio"
+            />
+          </GridItem>
+        </Grid>
+      </Modal>
       <AlertModal
         isOpen={isModalOpen}
         title={'PDF download error!'}
@@ -82,6 +138,8 @@ DownloadPdfButton.propTypes = {
   y: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
   xTickFormat: PropTypes.string.isRequired,
+  totalCount: PropTypes.number.isRequired,
+  optionSelected: PropTypes.string.isRequired,
 };
 
 export default DownloadPdfButton;
