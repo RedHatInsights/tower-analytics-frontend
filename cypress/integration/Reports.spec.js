@@ -8,8 +8,23 @@ const jtrr = 'job_template_run_rate';
 const hbo = 'hosts_by_organization';
 const jtbo = 'jobs_and_tasks_by_organization';
 const texp = 'templates_explorer';
+const mum = 'most_used_modules';
+const mubo = 'module_usage_by_organization';
+const mubjt = 'module_usage_by_job_template';
+const mubt = 'module_usage_by_task';
 
-const allReports = [hcbjt, cmbjt, jtrr, hbo, jtbo, texp];
+const allReports = [
+  hcbjt,
+  cmbjt,
+  jtrr,
+  hbo,
+  jtbo,
+  texp,
+  mum,
+  mubo,
+  mubjt,
+  mubt,
+];
 
 describe('Reports page smoketests', () => {
   beforeEach(() => {
@@ -74,6 +89,7 @@ describe('Report: Job Template Run Rate Smoketests', () => {
     cy.get('#line').click();
     cy.screenshot('report_jtrr_line.png');
   });
+
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
     cy.get('.pf-c-select__menu-item').contains('Past year').click();
@@ -92,6 +108,7 @@ describe('Report: Hosts By Organization Smoketests', () => {
     cy.get('#line').click();
     cy.screenshot('report_hbo_line.png');
   });
+
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
     cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
@@ -110,6 +127,7 @@ describe('Report: Jobs and Tasks By Organization Smoketests', () => {
     cy.get('#line').click();
     cy.screenshot('report_jtbo_line.png');
   });
+
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
     cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
@@ -125,5 +143,81 @@ describe('Report: Templates Explorer Smoketests', () => {
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
     cy.get('.pf-c-select__menu-item').contains('Past year').click();
+  });
+});
+
+describe('Report: Most Used Modules Smoketests', () => {
+  beforeEach(() => {
+    cy.loginFlow();
+    cy.visit(reportsUrl + '/' + mum);
+  });
+
+  it('Can Switch between Line and Bar chart without breaking UI', () => {
+    cy.get('#bar').click();
+    cy.screenshot('report_mum_bar.png');
+    cy.get('#line').click();
+    cy.screenshot('report_mum_line.png');
+  });
+
+  it('Can change lookback', () => {
+    cy.get('[data-cy="quick_date_range"]').click();
+    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+  });
+});
+
+describe('Report: Module Usage By Organization Smoketests', () => {
+  beforeEach(() => {
+    cy.loginFlow();
+    cy.visit(reportsUrl + '/' + mubo);
+  });
+
+  it('Can Switch between Line and Bar chart without breaking UI', () => {
+    cy.get('#bar').click();
+    cy.screenshot('report_mubo_bar.png');
+    cy.get('#line').click();
+    cy.screenshot('report_mubo_line.png');
+  });
+
+  it('Can change lookback', () => {
+    cy.get('[data-cy="quick_date_range"]').click();
+    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+  });
+});
+
+describe('Report: Module Usage By Job Template Smoketests', () => {
+  beforeEach(() => {
+    cy.loginFlow();
+    cy.visit(reportsUrl + '/' + mubjt);
+  });
+
+  it('Can Switch between Line and Bar chart without breaking UI', () => {
+    cy.get('#bar').click();
+    cy.screenshot('report_mubjt_bar.png');
+    cy.get('#line').click();
+    cy.screenshot('report_mubjt_line.png');
+  });
+
+  it('Can change lookback', () => {
+    cy.get('[data-cy="quick_date_range"]').click();
+    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+  });
+});
+
+describe('Report: Module Usage By Task Smoketests', () => {
+  beforeEach(() => {
+    cy.loginFlow();
+    cy.visit(reportsUrl + '/' + mubt);
+  });
+
+  it('Can Switch between Line and Bar chart without breaking UI', () => {
+    cy.get('#bar').click();
+    cy.screenshot('report_mubt_bar.png');
+    cy.get('#line').click();
+    cy.screenshot('report_mubt_line.png');
+  });
+
+  it('Can change lookback', () => {
+    cy.get('[data-cy="quick_date_range"]').click();
+    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
   });
 });
