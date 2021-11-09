@@ -6,6 +6,7 @@ import {
   Grid,
   GridItem,
   Modal,
+  ModalVariant,
   Radio,
   Spinner,
   Tooltip,
@@ -73,7 +74,7 @@ const DownloadPdfButton = ({
         </Button>
       </Tooltip>
       <Modal
-        width={'25%'}
+        variant={ModalVariant.small}
         title="Export report"
         isOpen={isExportModalOpen}
         onClose={() => {
