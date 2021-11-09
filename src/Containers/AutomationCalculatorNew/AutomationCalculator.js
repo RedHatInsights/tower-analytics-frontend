@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
@@ -17,9 +17,6 @@ import {
 } from '@patternfly/react-core';
 
 // Imports from custom components
-import LoadingState from '../../Components/ApiStatus/LoadingState';
-import NoData from '../../Components/ApiStatus/NoData';
-import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import FilterableToolbar from '../../Components/Toolbar/';
 
 // Imports from API
@@ -44,6 +41,7 @@ import CalculationCost from './CalculationCost';
 import AutomationFormula from './AutomationFormula';
 import TemplatesTable from './TemplatesTable';
 import { Paths } from '../../paths';
+import ApiStatusWrapper from '../../Components/ApiStatus/ApiStatusWrapper';
 
 const mapApi = ({ items = [] }) =>
   items.map((el) => ({
@@ -84,24 +82,18 @@ const AutomationCalculator = () => {
   );
 
   const { result: options, request: setOptions } = useRequest(
-    useCallback(() => readROIOptions(queryParams), [queryParams]),
+    () => readROIOptions(queryParams),
     {}
   );
 
   const {
-    result: api,
-    error: apiError,
-    isLoading: apiIsLoading,
-    isSuccess: apiIsSuccess,
     request: fetchEndpoint,
     setValue,
-  } = useRequest(
-    useCallback(async () => {
-      const response = await readROI(queryParams);
-      return updateDeltaCost(mapApi(response), costAutomation, costManual);
-    }, [queryParams]),
-    []
-  );
+    ...api
+  } = useRequest(async () => {
+    const response = await readROI(queryParams);
+    return updateDeltaCost(mapApi(response), costAutomation, costManual);
+  }, []);
 
   /**
    * Modifies one elements avgRunTime in the unfilteredData
@@ -109,7 +101,7 @@ const AutomationCalculator = () => {
    * Used in top templates.
    */
   const setDataRunTime = (seconds, id) => {
-    const updatedData = api.map((el) => {
+    const updatedData = api.result.map((el) => {
       if (el.id === id) {
         el.avgRunTime = seconds;
         const updatedDelta = updateDeltaCost(
@@ -128,10 +120,10 @@ const AutomationCalculator = () => {
 
   const setEnabled = (id) => (value) => {
     if (!id) {
-      setValue(api.map((el) => ({ ...el, enabled: value })));
+      setValue(api.result.map((el) => ({ ...el, enabled: value })));
     } else {
       setValue(
-        api.map((el) => (el.id === id ? { ...el, enabled: value } : el))
+        api.result.map((el) => (el.id === id ? { ...el, enabled: value } : el))
       );
     }
   };
@@ -140,7 +132,7 @@ const AutomationCalculator = () => {
    * Recalculates the delta and costs in the data after the cost is changed.
    */
   useEffect(() => {
-    setValue(updateDeltaCost(api, costAutomation, costManual));
+    setValue(updateDeltaCost(api.result, costAutomation, costManual));
   }, [costAutomation, costManual]);
 
   /**
@@ -170,26 +162,10 @@ const AutomationCalculator = () => {
   const renderLeft = () => (
     <Card isPlain>
       <CardHeader>
-        {/* <CardActions>
-              <ToggleGroup aria-label="toggleButton">
-                <ToggleGroupItem
-                  text="Money"
-                  buttonId="money"
-                  isSelected={isMoney}
-                  onChange={() => setIsMoney(true)}
-                />
-                <ToggleGroupItem
-                  text="Time"
-                  buttonId="time"
-                  isSelected={!isMoney}
-                  onChange={() => setIsMoney(false)}
-                />
-              </ToggleGroup>
-            </CardActions> */}
         <CardTitle>Automation savings</CardTitle>
       </CardHeader>
       <CardBody>
-        <Chart data={filterDisabled(api)} />
+        <Chart data={filterDisabled(api.result)} />
       </CardBody>
     </Card>
   );
@@ -197,7 +173,9 @@ const AutomationCalculator = () => {
   const renderRight = () => (
     <Stack>
       <StackItem>
-        <TotalSavings totalSavings={computeTotalSavings(filterDisabled(api))} />
+        <TotalSavings
+          totalSavings={computeTotalSavings(filterDisabled(api.result))}
+        />
       </StackItem>
       <StackItem>
         <Stack>
@@ -217,30 +195,22 @@ const AutomationCalculator = () => {
     </Stack>
   );
 
-  const renderContents = () => {
-    if (apiIsLoading) return <LoadingState />;
-    if (apiError) return <ApiErrorState message={apiError.error} />;
-    if (apiIsSuccess && api.length <= 0) return <NoData />;
-    if (apiIsSuccess && api.length > 0)
-      return (
-        <Card>
-          <Grid hasGutter className="automation-wrapper">
-            <GridItem span={9}>{renderLeft()}</GridItem>
-            <GridItem span={3}>{renderRight()}</GridItem>
-            <GridItem span={12}>
-              <TemplatesTable
-                redirectToJobExplorer={redirectToJobExplorer}
-                data={api}
-                setDataRunTime={setDataRunTime}
-                setEnabled={setEnabled}
-              />
-            </GridItem>
-          </Grid>
-        </Card>
-      );
-
-    return <></>;
-  };
+  const renderContents = () => (
+    <Card>
+      <Grid hasGutter>
+        <GridItem span={9}>{renderLeft()}</GridItem>
+        <GridItem span={3}>{renderRight()}</GridItem>
+        <GridItem span={12}>
+          <TemplatesTable
+            redirectToJobExplorer={redirectToJobExplorer}
+            data={api.result}
+            setDataRunTime={setDataRunTime}
+            setEnabled={setEnabled}
+          />
+        </GridItem>
+      </Grid>
+    </Card>
+  );
 
   return (
     <>
@@ -252,7 +222,9 @@ const AutomationCalculator = () => {
           setFilters={setFromToolbar}
         />
       </PageHeader>
-      <Main>{renderContents()}</Main>
+      <Main>
+        <ApiStatusWrapper api={api}>{renderContents()}</ApiStatusWrapper>
+      </Main>
     </>
   );
 };

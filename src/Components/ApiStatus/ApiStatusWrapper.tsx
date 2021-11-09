@@ -18,9 +18,12 @@ const ApiStatusWrapper: FunctionComponent<Props> = ({ api, children }) => {
   if (api.error) return <ApiErrorState message={api.error.error} />;
 
   if (api.isSuccess) {
-    if (Array.isArray(api.result) && api.result.length === 0) return <NoData />;
-    if (Object.keys(api.result as Record<string, string>).length === 0)
-      return <NoData />;
+    if (Array.isArray(api.result)) {
+      if (api.result.length === 0) return <NoData />;
+    } else {
+      if (Object.keys(api.result as Record<string, string>).length === 0)
+        return <NoData />;
+    }
     return <>{children}</>;
   }
 
