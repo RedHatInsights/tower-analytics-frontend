@@ -1,5 +1,5 @@
 import { act } from 'react-dom/test-utils';
-import { history, mountPage } from '../../__tests__/helpers';
+import { history, mountPage } from '../../../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 import AutomationCalculator from './AutomationCalculator';
 import TotalSavings from './TotalSavings';

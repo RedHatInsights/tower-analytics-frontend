@@ -3,9 +3,8 @@ import React, { FunctionComponent } from 'react';
 import asyncComponent from './Utilities/asyncComponent';
 import { Paths } from './paths';
 import Error404 from './Components/Error404';
-import { useFeatureFlag, ValidFeatureFlags } from './FeatureFlags';
 
-const components = (newAutomaticCalculator: boolean) => ({
+const components = {
   [Paths.clusters]: asyncComponent(
     () => import('./Containers/Clusters/Clusters')
   ),
@@ -15,10 +14,8 @@ const components = (newAutomaticCalculator: boolean) => ({
   [Paths.notifications]: asyncComponent(
     () => import('./Containers/Notifications/Notifications')
   ),
-  [Paths.automationCalculator]: asyncComponent(() =>
-    newAutomaticCalculator
-      ? import('./Containers/AutomationCalculatorNew/AutomationCalculator')
-      : import('./Containers/AutomationCalculator/AutomationCalculator')
+  [Paths.automationCalculator]: asyncComponent(
+    () => import('./Containers/AutomationCalculator/AutomationCalculator')
   ),
   [Paths.jobExplorer]: asyncComponent(
     () => import('./Containers/JobExplorer/JobExplorer')
@@ -27,7 +24,7 @@ const components = (newAutomaticCalculator: boolean) => ({
     () => import('./Containers/SavingsPlanner')
   ),
   [Paths.reports]: asyncComponent(() => import('./Containers/Reports')),
-});
+};
 
 const InsightsRoute = ({
   component: Component,
@@ -55,21 +52,14 @@ const InsightsRoute = ({
 
 export const Routes: FunctionComponent<Record<string, never>> = () => {
   const { pathname } = useLocation();
-  const newAutomationCalculatorFlag = useFeatureFlag(
-    ValidFeatureFlags.newAutomationCalculator
-  );
 
   return (
     <Switch>
       {/* Catch urls with the trailing slash and remove it */}
       <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
       {/* Render the valid routes */}
-      {Object.keys(components(newAutomationCalculatorFlag)).map((key) => (
-        <InsightsRoute
-          key={key}
-          path={key}
-          component={components(newAutomationCalculatorFlag)[key]}
-        />
+      {Object.keys(components).map((key) => (
+        <InsightsRoute key={key} path={key} component={components[key]} />
       ))}
       {/* Finally, catch all unmatched routes and render 404 */}
       <Route>

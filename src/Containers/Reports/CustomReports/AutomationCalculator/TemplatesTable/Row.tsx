@@ -12,7 +12,7 @@ import {
 import { Tr, Td } from '@patternfly/react-table';
 import { global_success_color_200 as globalSuccessColor200 } from '@patternfly/react-tokens';
 
-import currencyFormatter from '../../../Utilities/currencyFormatter';
+import currencyFormatter from '../../../../../Utilities/currencyFormatter';
 import { Template } from './types';
 import ExpandedRowContents from './ExplandedRowContents';
 

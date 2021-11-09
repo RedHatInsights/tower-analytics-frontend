@@ -11,13 +11,13 @@ import mostUsedModules from './mostUsedModules';
 import moduleUsageByOrganization from './moduleUsageByOrganization';
 import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
 import moduleUsageByTask from './moduleUsageByTask';
+import automationCalculator from './automationCalculator';
 
 const defaultReport: ReportPageParams = {
   slug: '',
   name: '',
   description: '',
   categories: [] as string[],
-  report: undefined,
 };
 
 const prodReports = [
@@ -36,20 +36,32 @@ const moduleReports = [
   moduleUsageByTask,
 ];
 
+const automationCalculatorReport = [automationCalculator];
+
 export const getReport = (searchSlug: string): ReportPageParams => {
   const moduleReportsEnabled = useFeatureFlag(ValidFeatureFlags.moduleReports);
+  const newAutomationCalculator = useFeatureFlag(
+    ValidFeatureFlags.newAutomationCalculator
+  );
 
   const reports = [
     ...prodReports,
     ...(moduleReportsEnabled ? moduleReports : []),
+    ...(newAutomationCalculator ? automationCalculatorReport : []),
   ];
 
   return reports.find(({ slug }) => slug === searchSlug) ?? defaultReport;
 };
 
 export const getAllReports = (): ReportPageParams[] => {
-  prodReports;
   const moduleReportsEnabled = useFeatureFlag(ValidFeatureFlags.moduleReports);
+  const newAutomationCalculator = useFeatureFlag(
+    ValidFeatureFlags.newAutomationCalculator
+  );
 
-  return [...prodReports, ...(moduleReportsEnabled ? moduleReports : [])];
+  return [
+    ...prodReports,
+    ...(moduleReportsEnabled ? moduleReports : []),
+    ...(newAutomationCalculator ? automationCalculatorReport : []),
+  ];
 };

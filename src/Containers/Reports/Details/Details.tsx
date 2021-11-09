@@ -22,12 +22,36 @@ const Description = styled.p`
 
 const Details: FunctionComponent<Record<string, never>> = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { name, description, report } = getReport(slug);
+  const {
+    name,
+    description,
+    reportParams,
+    ReportComponent,
+    slug: reportSlug,
+  } = getReport(slug);
 
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
 
+  const renderReport = () => {
+    if (ReportComponent) {
+      return <ReportComponent />;
+    } else if (reportParams) {
+      return <ReportCard {...reportParams} />;
+    }
+
+    // This should never happen hopefully.
+    return (
+      <Error404
+        title="Report not found or report params are invalid."
+        body="This is an error, please report it."
+        buttonText="Go back"
+        link={paths.get}
+      />
+    );
+  };
+
   const render = () => {
-    if (report)
+    if (reportSlug !== '')
       return (
         <>
           <PageHeader>
@@ -35,9 +59,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
             <PageHeaderTitle title={name} />
             <Description>{description}</Description>
           </PageHeader>
-          <Main>
-            <ReportCard {...report} />
-          </Main>
+          <Main>{renderReport()}</Main>
         </>
       );
     else

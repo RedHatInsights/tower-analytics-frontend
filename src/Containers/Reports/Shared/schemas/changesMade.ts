@@ -146,7 +146,7 @@ const reportParams: ReportPageParams = {
   name,
   description,
   categories,
-  report: {
+  reportParams: {
     slug,
     defaultParams,
     defaultTableHeaders,

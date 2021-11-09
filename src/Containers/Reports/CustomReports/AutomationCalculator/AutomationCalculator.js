@@ -1,10 +1,5 @@
 import React, { useState, useEffect } from 'react';
 
-import Main from '@redhat-cloud-services/frontend-components/Main';
-import {
-  PageHeader,
-  PageHeaderTitle,
-} from '@redhat-cloud-services/frontend-components/PageHeader';
 import {
   Card,
   CardBody,
@@ -17,20 +12,23 @@ import {
 } from '@patternfly/react-core';
 
 // Imports from custom components
-import FilterableToolbar from '../../Components/Toolbar/';
+import FilterableToolbar from '../../../../Components/Toolbar';
 
 // Imports from API
-import { readROI, readROIOptions } from '../../Api/';
+import { readROI, readROIOptions } from '../../../../Api';
 
 // Imports from utilities
 import {
   useQueryParams,
   useRedirect,
   DEFAULT_NAMESPACE,
-} from '../../QueryParams/';
-import { jobExplorer, roi as roiConst } from '../../Utilities/constants';
-import { calculateDelta, convertSecondsToHours } from '../../Utilities/helpers';
-import useRequest from '../../Utilities/useRequest';
+} from '../../../../QueryParams';
+import { jobExplorer, roi as roiConst } from '../../../../Utilities/constants';
+import {
+  calculateDelta,
+  convertSecondsToHours,
+} from '../../../../Utilities/helpers';
+import useRequest from '../../../../Utilities/useRequest';
 
 // Chart
 import Chart from './Chart';
@@ -40,8 +38,8 @@ import TotalSavings from './TotalSavings';
 import CalculationCost from './CalculationCost';
 import AutomationFormula from './AutomationFormula';
 import TemplatesTable from './TemplatesTable';
-import { Paths } from '../../paths';
-import ApiStatusWrapper from '../../Components/ApiStatus/ApiStatusWrapper';
+import { Paths } from '../../../../paths';
+import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 
 const mapApi = ({ items = [] }) =>
   items.map((el) => ({
@@ -197,36 +195,29 @@ const AutomationCalculator = () => {
 
   const renderContents = () => (
     <Card>
-      <Grid hasGutter>
-        <GridItem span={9}>{renderLeft()}</GridItem>
-        <GridItem span={3}>{renderRight()}</GridItem>
-        <GridItem span={12}>
-          <TemplatesTable
-            redirectToJobExplorer={redirectToJobExplorer}
-            data={api.result}
-            setDataRunTime={setDataRunTime}
-            setEnabled={setEnabled}
-          />
-        </GridItem>
-      </Grid>
-    </Card>
-  );
-
-  return (
-    <>
-      <PageHeader>
-        <PageHeaderTitle title={'Automation Calculator'} />
+      <CardBody>
         <FilterableToolbar
           categories={options}
           filters={queryParams}
           setFilters={setFromToolbar}
         />
-      </PageHeader>
-      <Main>
-        <ApiStatusWrapper api={api}>{renderContents()}</ApiStatusWrapper>
-      </Main>
-    </>
+        <Grid hasGutter>
+          <GridItem span={9}>{renderLeft()}</GridItem>
+          <GridItem span={3}>{renderRight()}</GridItem>
+          <GridItem span={12}>
+            <TemplatesTable
+              redirectToJobExplorer={redirectToJobExplorer}
+              data={api.result}
+              setDataRunTime={setDataRunTime}
+              setEnabled={setEnabled}
+            />
+          </GridItem>
+        </Grid>
+      </CardBody>
+    </Card>
   );
+
+  return <ApiStatusWrapper api={api}>{renderContents()}</ApiStatusWrapper>;
 };
 
 export default AutomationCalculator;

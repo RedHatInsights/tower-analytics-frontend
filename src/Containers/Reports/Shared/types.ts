@@ -1,3 +1,4 @@
+import { FunctionComponent } from 'react';
 import { ChartSchemaElement, ChartType } from 'react-json-chart-builder';
 import { ApiJson, Params, ParamsWithPagination } from '../../../Api';
 
@@ -27,5 +28,8 @@ export interface ReportPageParams {
   name: string;
   description: string;
   categories: string[];
-  report?: ReportGeneratorParams;
+  reportParams?: ReportGeneratorParams;
+  ReportComponent?: FunctionComponent<
+    ReportGeneratorParams | Record<string, never>
+  >;
 }
