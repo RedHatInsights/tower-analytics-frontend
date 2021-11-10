@@ -1,5 +1,4 @@
 import {
-  ChartSchemaElement,
   ChartKind,
   ChartLegendOrientation,
   ChartLegendPosition,

@@ -13,14 +13,13 @@
     "no-use-before-define": [
       "warn"
     ],
-    
     "no-unused-vars":
     [
       "error",
       {
         "vars": "all",
         "args": "after-used",
-        "ignoreRestSiblings": false,
+        "ignoreRestSiblings": true,
         "argsIgnorePattern": "^_"
       }
     ]
@@ -46,6 +45,16 @@
         "@typescript-eslint"
       ],
       "rules": {
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": [
+            "error",
+            {
+              "vars": "all",
+              "args": "after-used",
+              "ignoreRestSiblings": true,
+              "argsIgnorePattern": "^_"
+            }
+          ],
           "no-use-before-define": "off",
           "@typescript-eslint/no-use-before-define": [
             "error"
