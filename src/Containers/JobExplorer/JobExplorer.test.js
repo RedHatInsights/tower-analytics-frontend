@@ -88,7 +88,7 @@ describe('Containers/JobExplorer', () => {
     });
     wrapper.update();
 
-    expect(wrapper.text()).toEqual(expect.stringContaining('General Error'));
+    expect(wrapper.text()).toEqual(expect.stringContaining('Error'));
   });
 
   it('should render with empty response', async () => {
