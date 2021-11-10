@@ -83,7 +83,7 @@ const DownloadPdfButton = ({
         actions={[
           <Button
             key="export"
-            variant="primary"
+            variant={ButtonVariant.primary}
             onClick={() => request()}
             isDisabled={!isCurrent && !isTotalCount}
           >
@@ -91,7 +91,7 @@ const DownloadPdfButton = ({
           </Button>,
           <Button
             key="cancel"
-            variant="link"
+            variant={ButtonVariant.link}
             onClick={() => setIsExportModalOpen(false)}
           >
             Cancel
