@@ -4,10 +4,10 @@ import { ApiJson, Params, ParamsWithPagination } from '../../../Api';
 
 export type AttributesType = { key: string; value: string }[];
 export type SchemaFnc = (
-  label: string,
-  y: string,
-  xTickFormat: string,
-  chartType: ChartType.line
+  label?: string,
+  y?: string,
+  xTickFormat?: string,
+  chartType?: ChartType
 ) => ChartSchemaElement[];
 
 export interface ReportGeneratorParams {
@@ -29,7 +29,5 @@ export interface ReportPageParams {
   description: string;
   categories: string[];
   reportParams?: ReportGeneratorParams;
-  ReportComponent?: FunctionComponent<
-    ReportGeneratorParams | Record<string, never>
-  >;
+  ReportComponent?: FunctionComponent<ReportGeneratorParams>;
 }

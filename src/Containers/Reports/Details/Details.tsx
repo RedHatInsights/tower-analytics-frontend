@@ -32,26 +32,10 @@ const Details: FunctionComponent<Record<string, never>> = () => {
 
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
 
-  const renderReport = () => {
-    if (ReportComponent) {
-      return <ReportComponent />;
-    } else if (reportParams) {
-      return <ReportCard {...reportParams} />;
-    }
-
-    // This should never happen hopefully.
-    return (
-      <Error404
-        title="Report not found or report params are invalid."
-        body="This is an error, please report it."
-        buttonText="Go back"
-        link={paths.get}
-      />
-    );
-  };
+  const ReportContent = ReportComponent ?? ReportCard;
 
   const render = () => {
-    if (reportSlug !== '')
+    if (reportSlug !== '' && reportParams)
       return (
         <>
           <PageHeader>
@@ -59,7 +43,9 @@ const Details: FunctionComponent<Record<string, never>> = () => {
             <PageHeaderTitle title={name} />
             <Description>{description}</Description>
           </PageHeader>
-          <Main>{renderReport()}</Main>
+          <Main>
+            <ReportContent {...reportParams} />
+          </Main>
         </>
       );
     else

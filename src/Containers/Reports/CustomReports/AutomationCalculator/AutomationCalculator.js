@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types';
 
 import {
   Card,
@@ -14,16 +15,13 @@ import {
 // Imports from custom components
 import FilterableToolbar from '../../../../Components/Toolbar';
 
-// Imports from API
-import { readROI, readROIOptions } from '../../../../Api';
-
 // Imports from utilities
 import {
   useQueryParams,
   useRedirect,
   DEFAULT_NAMESPACE,
 } from '../../../../QueryParams';
-import { jobExplorer, roi as roiConst } from '../../../../Utilities/constants';
+import { jobExplorer } from '../../../../Utilities/constants';
 import {
   calculateDelta,
   convertSecondsToHours,
@@ -70,17 +68,29 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
 const computeTotalSavings = (data) =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
-const AutomationCalculator = () => {
+const AutomationCalculator = ({
+  slug: _ignoredUntilPDFDownload1,
+  defaultParams,
+  defaultTableHeaders: _ignored2,
+  tabbleAttributes: _ignored3,
+  expandedAttributes: _ignored4,
+  availableChartTypes: _ignored5,
+  dataEndpointUrl: _ignoredUntilPDFDownload2,
+  readData,
+  readOptions,
+  schemaFnc,
+}) => {
   const [costManual, setCostManual] = useState('50');
   const [costAutomation, setCostAutomation] = useState('20');
 
   const redirect = useRedirect();
   const { queryParams, setFromToolbar } = useQueryParams(
-    roiConst.defaultParams
+    defaultParams
+    // roiConst.defaultParams
   );
 
   const { result: options, request: setOptions } = useRequest(
-    () => readROIOptions(queryParams),
+    () => readOptions(queryParams),
     {}
   );
 
@@ -89,7 +99,7 @@ const AutomationCalculator = () => {
     setValue,
     ...api
   } = useRequest(async () => {
-    const response = await readROI(queryParams);
+    const response = await readData(queryParams);
     return updateDeltaCost(mapApi(response), costAutomation, costManual);
   }, []);
 
@@ -163,7 +173,7 @@ const AutomationCalculator = () => {
         <CardTitle>Automation savings</CardTitle>
       </CardHeader>
       <CardBody>
-        <Chart data={filterDisabled(api.result)} />
+        <Chart schema={schemaFnc()} data={filterDisabled(api.result)} />
       </CardBody>
     </Card>
   );
@@ -218,6 +228,19 @@ const AutomationCalculator = () => {
   );
 
   return <ApiStatusWrapper api={api}>{renderContents()}</ApiStatusWrapper>;
+};
+
+AutomationCalculator.propTypes = {
+  slug: PropTypes.string.isRequired,
+  defaultParams: PropTypes.object.isRequired,
+  defaultTableHeaders: PropTypes.array.isRequired,
+  tabbleAttributes: PropTypes.array.isRequired,
+  expandedAttributes: PropTypes.array.isRequired,
+  availableChartTypes: PropTypes.array.isRequired,
+  dataEndpointUrl: PropTypes.string.isRequired,
+  readData: PropTypes.func.isRequired,
+  readOptions: PropTypes.func.isRequired,
+  schemaFnc: PropTypes.func.isRequired,
 };
 
 export default AutomationCalculator;

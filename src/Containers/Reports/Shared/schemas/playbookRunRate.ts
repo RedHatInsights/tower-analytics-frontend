@@ -1,5 +1,4 @@
 import {
-  ChartSchemaElement,
   ChartKind,
   ChartLegendOrientation,
   ChartLegendPosition,
@@ -14,7 +13,7 @@ import {
   jobExplorerEndpoint,
 } from '../../../../Api';
 import { CATEGORIES } from '../constants';
-import { AttributesType, ReportPageParams } from '../types';
+import { AttributesType, ReportPageParams, SchemaFnc } from '../types';
 
 const slug = 'job_template_run_rate';
 
@@ -54,12 +53,12 @@ const defaultParams: Params = {
 
 const availableChartTypes = [ChartType.line, ChartType.bar];
 
-const schemaFnc = (
-  label: string,
-  y: string,
-  xTickFormat: string,
-  chartType: ChartType
-): ChartSchemaElement[] => [
+const schemaFnc: SchemaFnc = (
+  label,
+  y,
+  xTickFormat,
+  chartType = ChartType.line
+) => [
   {
     id: 1,
     kind: ChartKind.wrapper,
