@@ -3,9 +3,9 @@ import ChartBuilder, {
   ApiReturnType,
   functions,
   ApiType,
+  ChartSchemaElement,
 } from 'react-json-chart-builder';
-import { Template } from '../TemplatesTable/types';
-import schema from './chartSchema';
+import { Template } from './TemplatesTable/types';
 
 const customFunctions = (data: ApiReturnType) => ({
   ...functions,
@@ -16,10 +16,11 @@ const customFunctions = (data: ApiReturnType) => ({
 });
 
 interface Props {
+  schema: ChartSchemaElement[];
   data: Template[];
 }
 
-const Chart: FunctionComponent<Props> = ({ data }) => (
+const Chart: FunctionComponent<Props> = ({ schema, data }) => (
   <ChartBuilder
     schema={schema}
     functions={customFunctions({

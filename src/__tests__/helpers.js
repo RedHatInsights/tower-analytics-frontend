@@ -11,12 +11,12 @@ const store = mockStore({});
 
 export const history = createMemoryHistory();
 
-export const mountPage = (Component) =>
+export const mountPage = (Component, params = {}) =>
   mount(
     <Provider store={store}>
       <Router history={history}>
         <QueryParamsProvider>
-          <Component />
+          <Component {...params} />
         </QueryParamsProvider>
       </Router>
     </Provider>

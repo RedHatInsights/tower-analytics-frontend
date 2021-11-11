@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Card, CardBody, CardTitle, Title } from '@patternfly/react-core';
-import currencyFormatter from '../../Utilities/currencyFormatter';
+import currencyFormatter from '../../../../Utilities/currencyFormatter';
 
 interface Props {
   totalSavings: number;
