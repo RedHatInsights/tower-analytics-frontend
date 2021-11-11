@@ -1,6 +1,6 @@
 import TotalSavings from './TotalSavings';
 
-describe('Containers/AutomationCalculator/TotalSavings', () => {
+describe('Containers/CustomReports/AutomationCalculator/TotalSavings', () => {
   it('Should render 0.00 without any param', () => {
     const wrapper = mount(<TotalSavings />);
     expect(wrapper.text()).toEqual(expect.stringContaining('0.00'));

@@ -15,7 +15,6 @@
 import React, { FunctionComponent } from 'react';
 import {
   DescriptionList,
-  DescriptionList as FailedTaskDescriptionList,
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,

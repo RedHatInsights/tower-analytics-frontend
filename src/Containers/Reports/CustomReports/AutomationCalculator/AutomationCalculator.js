@@ -83,7 +83,7 @@ const AutomationCalculator = ({
   slug: _ignoredUntilPDFDownload1,
   defaultParams,
   defaultTableHeaders: _ignored2,
-  tabbleAttributes: _ignored3,
+  tableAttributes: _ignored3,
   expandedAttributes: _ignored4,
   availableChartTypes: _ignored5,
   dataEndpointUrl: _ignoredUntilPDFDownload2,
@@ -103,8 +103,8 @@ const AutomationCalculator = ({
     {
       sort_options: [
         {
-          key: queryParams.sort_by,
-          value: queryParams.sort_by,
+          key: defaultParams.sort_options,
+          value: defaultParams.sort_options,
         },
       ],
     }
@@ -290,7 +290,7 @@ AutomationCalculator.propTypes = {
   slug: PropTypes.string.isRequired,
   defaultParams: PropTypes.object.isRequired,
   defaultTableHeaders: PropTypes.array.isRequired,
-  tabbleAttributes: PropTypes.array.isRequired,
+  tableAttributes: PropTypes.array.isRequired,
   expandedAttributes: PropTypes.array.isRequired,
   availableChartTypes: PropTypes.array.isRequired,
   dataEndpointUrl: PropTypes.string.isRequired,
