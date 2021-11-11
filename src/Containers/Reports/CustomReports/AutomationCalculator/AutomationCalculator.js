@@ -10,10 +10,13 @@ import {
   StackItem,
   CardHeader,
   CardTitle,
+  CardFooter,
+  PaginationVariant,
 } from '@patternfly/react-core';
 
 // Imports from custom components
 import FilterableToolbar from '../../../../Components/Toolbar';
+import Pagination from '../../../../Components/Pagination';
 
 // Imports from utilities
 import {
@@ -38,6 +41,14 @@ import AutomationFormula from './AutomationFormula';
 import TemplatesTable from './TemplatesTable';
 import { Paths } from '../../../../paths';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
+import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants';
+
+const perPageOptions = [
+  ...defaultPerPageOptions,
+  { title: '15', value: 15 },
+  { title: '20', value: 20 },
+  { title: '25', value: 25 },
+];
 
 const mapApi = ({ items = [] }) =>
   items.map((el) => ({
@@ -84,10 +95,8 @@ const AutomationCalculator = ({
   const [costAutomation, setCostAutomation] = useState('20');
 
   const redirect = useRedirect();
-  const { queryParams, setFromToolbar } = useQueryParams(
-    defaultParams
-    // roiConst.defaultParams
-  );
+  const { queryParams, setFromToolbar, setFromPagination } =
+    useQueryParams(defaultParams);
 
   const { result: options, request: setOptions } = useRequest(
     () => readOptions(queryParams),
@@ -98,10 +107,21 @@ const AutomationCalculator = ({
     request: fetchEndpoint,
     setValue,
     ...api
-  } = useRequest(async () => {
-    const response = await readData(queryParams);
-    return updateDeltaCost(mapApi(response), costAutomation, costManual);
-  }, []);
+  } = useRequest(
+    async () => {
+      const response = await readData(queryParams);
+      return {
+        ...response,
+        items: updateDeltaCost(mapApi(response), costAutomation, costManual),
+      };
+    },
+    {
+      items: [],
+      meta: {
+        count: 0,
+      },
+    }
+  );
 
   /**
    * Modifies one elements avgRunTime in the unfilteredData
@@ -109,7 +129,7 @@ const AutomationCalculator = ({
    * Used in top templates.
    */
   const setDataRunTime = (seconds, id) => {
-    const updatedData = api.result.map((el) => {
+    const updatedData = api.result.items.map((el) => {
       if (el.id === id) {
         el.avgRunTime = seconds;
         const updatedDelta = updateDeltaCost(
@@ -128,10 +148,12 @@ const AutomationCalculator = ({
 
   const setEnabled = (id) => (value) => {
     if (!id) {
-      setValue(api.result.map((el) => ({ ...el, enabled: value })));
+      setValue(api.result.items.map((el) => ({ ...el, enabled: value })));
     } else {
       setValue(
-        api.result.map((el) => (el.id === id ? { ...el, enabled: value } : el))
+        api.result.items.map((el) =>
+          el.id === id ? { ...el, enabled: value } : el
+        )
       );
     }
   };
@@ -140,7 +162,7 @@ const AutomationCalculator = ({
    * Recalculates the delta and costs in the data after the cost is changed.
    */
   useEffect(() => {
-    setValue(updateDeltaCost(api.result, costAutomation, costManual));
+    setValue(updateDeltaCost(api.result.items, costAutomation, costManual));
   }, [costAutomation, costManual]);
 
   /**
@@ -173,7 +195,7 @@ const AutomationCalculator = ({
         <CardTitle>Automation savings</CardTitle>
       </CardHeader>
       <CardBody>
-        <Chart schema={schemaFnc()} data={filterDisabled(api.result)} />
+        <Chart schema={schemaFnc()} data={filterDisabled(api.result.items)} />
       </CardBody>
     </Card>
   );
@@ -182,7 +204,7 @@ const AutomationCalculator = ({
     <Stack>
       <StackItem>
         <TotalSavings
-          totalSavings={computeTotalSavings(filterDisabled(api.result))}
+          totalSavings={computeTotalSavings(filterDisabled(api.result.items))}
         />
       </StackItem>
       <StackItem>
@@ -210,6 +232,18 @@ const AutomationCalculator = ({
           categories={options}
           filters={queryParams}
           setFilters={setFromToolbar}
+          pagination={
+            <Pagination
+              count={api.result.meta.count}
+              perPageOptions={perPageOptions}
+              params={{
+                limit: +queryParams.limit,
+                offset: +queryParams.offset,
+              }}
+              setPagination={setFromPagination}
+              isCompact
+            />
+          }
         />
         <Grid hasGutter>
           <GridItem span={9}>{renderLeft()}</GridItem>
@@ -217,13 +251,25 @@ const AutomationCalculator = ({
           <GridItem span={12}>
             <TemplatesTable
               redirectToJobExplorer={redirectToJobExplorer}
-              data={api.result}
+              data={api.result.items}
               setDataRunTime={setDataRunTime}
               setEnabled={setEnabled}
             />
           </GridItem>
         </Grid>
       </CardBody>
+      <CardFooter>
+        <Pagination
+          count={api.result.meta.count}
+          perPageOptions={perPageOptions}
+          params={{
+            limit: +queryParams.limit,
+            offset: +queryParams.offset,
+          }}
+          setPagination={setFromPagination}
+          variant={PaginationVariant.bottom}
+        />
+      </CardFooter>
     </Card>
   );
 
