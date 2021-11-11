@@ -18,6 +18,7 @@ import ExpandedRowContents from './ExplandedRowContents';
 
 interface Props {
   template: Template;
+  variableRow: { key: string; value: string };
   setDataRunTime: (delta: number, id: number) => void;
   setEnabled: (enabled: boolean) => void;
   redirectToJobExplorer: (id: number) => void;
@@ -25,6 +26,7 @@ interface Props {
 
 const Row: FunctionComponent<Props> = ({
   template,
+  variableRow,
   setDataRunTime,
   setEnabled,
   redirectToJobExplorer,
@@ -51,6 +53,7 @@ const Row: FunctionComponent<Props> = ({
             </Button>
           </Tooltip>
         </Td>
+        <Td>{template[variableRow.key]}</Td>
         <Td>
           <InputGroup>
             <TextInput

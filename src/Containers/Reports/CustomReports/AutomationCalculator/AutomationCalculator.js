@@ -100,7 +100,14 @@ const AutomationCalculator = ({
 
   const { result: options, request: setOptions } = useRequest(
     () => readOptions(queryParams),
-    {}
+    {
+      sort_options: [
+        {
+          key: queryParams.sort_by,
+          value: queryParams.sort_by,
+        },
+      ],
+    }
   );
 
   const {
@@ -252,6 +259,9 @@ const AutomationCalculator = ({
             <TemplatesTable
               redirectToJobExplorer={redirectToJobExplorer}
               data={api.result.items}
+              variableRow={options.sort_options.find(
+                ({ key }) => key === queryParams.sort_options
+              )}
               setDataRunTime={setDataRunTime}
               setEnabled={setEnabled}
             />

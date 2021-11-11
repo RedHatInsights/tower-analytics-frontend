@@ -14,6 +14,7 @@ import Row from './Row';
 
 interface Props {
   data: Template[];
+  variableRow: { key: string; value: string };
   setDataRunTime: (delta: number, id: number) => void;
   setEnabled: (id: number | undefined) => (enabled: boolean) => void;
   redirectToJobExplorer: (id: number) => void;
@@ -21,6 +22,7 @@ interface Props {
 
 const TopTemplates: FunctionComponent<Props> = ({
   data = [],
+  variableRow,
   setDataRunTime = () => ({}),
   setEnabled = () => () => ({}),
   redirectToJobExplorer = () => ({}),
@@ -33,6 +35,7 @@ const TopTemplates: FunctionComponent<Props> = ({
           <Tr>
             <Th />
             <Th>Name</Th>
+            <Th>{variableRow.value}</Th>
             <Th>Time</Th>
             <Th>Savings</Th>
             <Th>
@@ -50,6 +53,7 @@ const TopTemplates: FunctionComponent<Props> = ({
             <Row
               key={template.id}
               template={template}
+              variableRow={variableRow}
               setDataRunTime={setDataRunTime}
               redirectToJobExplorer={redirectToJobExplorer}
               setEnabled={setEnabled(template.id)}
