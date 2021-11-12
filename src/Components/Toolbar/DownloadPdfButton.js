@@ -27,12 +27,10 @@ const DownloadPdfButton = ({
   label,
   xTickFormat,
   totalCount,
-  optionSelected,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
-  const [isCurrent, setIsCurrent] = useState(false);
-  const [isTotalCount, setIsTotalCount] = useState(false);
+  const [isCurrent, setIsCurrent] = useState(true);
 
   const { error, isLoading, request } = useRequest(
     () =>
@@ -43,7 +41,7 @@ const DownloadPdfButton = ({
         y,
         label,
         x_tick_format: xTickFormat,
-        optionSelected,
+        optionSelected: isCurrent ? 'current' : 'total',
       }),
     null
   );
@@ -84,8 +82,7 @@ const DownloadPdfButton = ({
           <Button
             key="export"
             variant={ButtonVariant.primary}
-            onClick={() => request()}
-            isDisabled={!isCurrent && !isTotalCount}
+            onClick={() => request() && setIsExportModalOpen(false)}
           >
             Export
           </Button>,
@@ -102,6 +99,7 @@ const DownloadPdfButton = ({
           <GridItem>
             <Radio
               onChange={() => setIsCurrent(true)}
+              isChecked={isCurrent}
               name="optionSelected"
               label="Current page"
               id="current-page-radio"
@@ -110,7 +108,8 @@ const DownloadPdfButton = ({
           </GridItem>
           <GridItem>
             <Radio
-              onChange={() => setIsTotalCount(true)}
+              onChange={() => setIsCurrent(false)}
+              isChecked={!isCurrent}
               name="optionSelected"
               label={totalCount <= 100 ? 'All items' : 'Top 100'}
               id="total-count-radio"
@@ -140,7 +139,6 @@ DownloadPdfButton.propTypes = {
   label: PropTypes.string.isRequired,
   xTickFormat: PropTypes.string.isRequired,
   totalCount: PropTypes.number.isRequired,
-  optionSelected: PropTypes.string.isRequired,
 };
 
 export default DownloadPdfButton;
