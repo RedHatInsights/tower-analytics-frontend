@@ -5,7 +5,7 @@ import NoData from './NoData';
 
 interface Props {
   api: {
-    result: unknown;
+    result: { meta: { count: number } };
     error: { error: string; [key: string]: string } | null;
     isSuccess: boolean;
     isLoading: boolean;
@@ -18,9 +18,7 @@ const ApiStatusWrapper: FunctionComponent<Props> = ({ api, children }) => {
   if (api.error) return <ApiErrorState message={api.error.error} />;
 
   if (api.isSuccess) {
-    if (Array.isArray(api.result) && api.result.length === 0) return <NoData />;
-    if (Object.keys(api.result as Record<string, string>).length === 0)
-      return <NoData />;
+    if (api.result.meta.count === 0) return <NoData />;
     return <>{children}</>;
   }
 

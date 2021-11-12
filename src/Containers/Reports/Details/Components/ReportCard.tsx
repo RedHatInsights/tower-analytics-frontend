@@ -34,6 +34,7 @@ import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton'
 import { useFeatureFlag, ValidFeatureFlags } from '../../../../FeatureFlags';
 import { OptionsReturnType } from '../../../../Api';
 import { capitalize } from '../../../../Utilities/helpers';
+import { perPageOptions } from '../../Shared/constants';
 
 const CardBody = styled(PFCardBody)`
   & .pf-c-toolbar,
@@ -41,13 +42,6 @@ const CardBody = styled(PFCardBody)`
     padding: 0;
   }
 `;
-
-const perPageOptions = [
-  { title: '4', value: 4 },
-  { title: '6', value: 6 },
-  { title: '8', value: 8 },
-  { title: '10', value: 10 },
-];
 
 const getDateFormatByGranularity = (granularity: string): string => {
   if (granularity === 'yearly') return 'formatAsYear';

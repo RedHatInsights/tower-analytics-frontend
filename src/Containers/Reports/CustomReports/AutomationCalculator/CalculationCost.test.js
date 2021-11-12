@@ -1,7 +1,7 @@
 import { act } from 'react-dom/test-utils';
 import CalculationCost from './CalculationCost';
 
-describe('Containers/AutomationCalculator/CalculationCost', () => {
+describe('Containers/CustomReports/AutomationCalculator/CalculationCost', () => {
   it('Should render without any params', () => {
     const wrapper = mount(<CalculationCost />);
     expect(wrapper).toBeTruthy();

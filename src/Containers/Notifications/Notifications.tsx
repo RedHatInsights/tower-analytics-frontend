@@ -123,7 +123,6 @@ const Notifications: FC<Record<string, never>> = () => {
 
   const {
     result: { notifications: notificationsData, meta },
-    error: notificationsError,
     isLoading,
     isSuccess,
     request: fetchNotifications,
@@ -140,7 +139,6 @@ const Notifications: FC<Record<string, never>> = () => {
 
   const {
     result: { templates: clustersData = [] },
-    error: clustersError,
     request: fetchClusters,
   } = useRequest<ClusterDataType>(
     () => readClusters() as unknown as Promise<ClusterDataType>,

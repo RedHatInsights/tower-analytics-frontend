@@ -1,5 +1,4 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { FunctionComponent } from 'react';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
   PageHeader,
@@ -10,23 +9,13 @@ import { Gallery } from '@patternfly/react-core';
 import ListItem from './ListItem';
 import { getAllReports } from '../Shared/schemas';
 
-const PageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 76px);
-`;
-
-const FlexMain = styled(Main)`
-  flex-grow: 1;
-`;
-
-const List = () => {
+const List: FunctionComponent<Record<string, never>> = () => {
   return (
-    <PageContainer>
+    <>
       <PageHeader>
         <PageHeaderTitle title={'Reports'} />
       </PageHeader>
-      <FlexMain>
+      <Main>
         <Gallery
           data-testid="all_reports"
           hasGutter
@@ -42,8 +31,8 @@ const List = () => {
             <ListItem key={report.slug} report={report} />
           ))}
         </Gallery>
-      </FlexMain>
-    </PageContainer>
+      </Main>
+    </>
   );
 };
 

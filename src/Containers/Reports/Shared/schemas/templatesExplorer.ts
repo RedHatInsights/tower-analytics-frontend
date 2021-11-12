@@ -1,5 +1,4 @@
 import {
-  ChartSchemaElement,
   ChartKind,
   ChartTopLevelType,
   ChartType,
@@ -12,7 +11,7 @@ import {
   jobExplorerEndpoint,
 } from '../../../../Api';
 import { CATEGORIES } from '../constants';
-import { AttributesType, ReportPageParams } from '../types';
+import { AttributesType, ReportPageParams, SchemaFnc } from '../types';
 
 const slug = 'templates_explorer';
 
@@ -81,11 +80,7 @@ const defaultParams: Params = {
 
 const availableChartTypes = [ChartType.bar];
 
-const schemaFnc = (
-  label: string,
-  y: string,
-  _xTickFormat: string
-): ChartSchemaElement[] => [
+const schemaFnc: SchemaFnc = (label, y) => [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -156,7 +151,7 @@ const reportParams: ReportPageParams = {
   name,
   description,
   categories,
-  report: {
+  reportParams: {
     slug,
     defaultParams,
     defaultTableHeaders,

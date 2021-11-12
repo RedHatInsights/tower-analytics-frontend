@@ -1,11 +1,25 @@
+import { CATEGORIES } from '../constants';
+import { ReportPageParams, SchemaFnc } from '../types';
+import AutomationCalculator from '../../CustomReports/AutomationCalculator';
+import { roi } from '../../../../Utilities/constants';
+import { readROI, readROIOptions, ROIEndpoint } from '../../../../Api';
 import {
   ChartKind,
-  ChartSchemaElement,
   ChartTopLevelType,
   ChartType,
 } from 'react-json-chart-builder';
 
-const schema: ChartSchemaElement[] = [
+const slug = 'automation_calculator';
+
+const name = 'Automation calculator';
+
+const description = 'Some desc.';
+
+const categories = [CATEGORIES.executive];
+
+const defaultParams = roi.defaultParams;
+
+const schemaFnc: SchemaFnc = () => [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -75,4 +89,31 @@ const schema: ChartSchemaElement[] = [
   },
 ];
 
-export default schema;
+const reportParams: ReportPageParams = {
+  slug,
+  name,
+  description,
+  categories,
+  reportParams: {
+    slug,
+    defaultParams,
+    defaultTableHeaders: [],
+    tableAttributes: [],
+    expandedAttributes: [],
+    availableChartTypes: [],
+    dataEndpointUrl: ROIEndpoint,
+    readData: readROI,
+    readOptions: readROIOptions,
+    schemaFnc,
+  },
+  /*
+   * TODO!
+   * Disabling typescript because AutomationCalculator is not TS.
+   * It cannot be made to TS until the Query params is made into TS.
+   */
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  ReportComponent: AutomationCalculator,
+};
+
+export default reportParams;

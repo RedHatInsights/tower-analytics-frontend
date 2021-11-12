@@ -1,6 +1,6 @@
 export type Params = Record<
   string,
-  string | number | string[] | number[] | boolean
+  string | number | string[] | number[] | boolean | undefined
 >;
 
 export type OptionsReturnType = Record<

@@ -4,7 +4,7 @@ import { shape, string, number, arrayOf, node, oneOfType } from 'prop-types';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
 import { useHistory, useLocation } from 'react-router-dom';
 
-const RoutedTabs = ({ tabsArray, defaultTabId }) => {
+const RoutedTabs = ({ tabsArray, defaultTabId = 1 }) => {
   const history = useHistory();
   const location = useLocation();
 
@@ -47,10 +47,6 @@ RoutedTabs.propTypes = {
       name: oneOfType([string.isRequired, node.isRequired]),
     })
   ).isRequired,
-};
-
-RoutedTabs.defaultProps = {
-  defaultTabId: 1,
 };
 
 export default RoutedTabs;

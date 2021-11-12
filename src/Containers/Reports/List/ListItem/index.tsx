@@ -1,6 +1,5 @@
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import {
@@ -14,6 +13,7 @@ import {
 } from '@patternfly/react-core';
 
 import paths from '../../paths';
+import { ReportPageParams } from '../../Shared/types';
 
 const CardTitle = styled(PFCardTitle)`
   word-break: break-word;
@@ -30,7 +30,13 @@ const Label = styled(PFLabel)`
   margin-right: 10px;
 `;
 
-const ListItem = ({ report: { slug, description, name, categories } }) => (
+interface Props {
+  report: ReportPageParams;
+}
+
+const ListItem: FunctionComponent<Props> = ({
+  report: { slug, description, name, categories },
+}) => (
   <Card data-testid={slug}>
     <CardHeader>
       <CardHeaderMain>
@@ -47,9 +53,5 @@ const ListItem = ({ report: { slug, description, name, categories } }) => (
     </CardFooter>
   </Card>
 );
-
-ListItem.propTypes = {
-  report: PropTypes.object,
-};
 
 export default ListItem;

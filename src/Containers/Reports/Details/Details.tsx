@@ -22,12 +22,20 @@ const Description = styled.p`
 
 const Details: FunctionComponent<Record<string, never>> = () => {
   const { slug } = useParams<{ slug: string }>();
-  const { name, description, report } = getReport(slug);
+  const {
+    name,
+    description,
+    reportParams,
+    ReportComponent,
+    slug: reportSlug,
+  } = getReport(slug);
 
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
 
+  const ReportContent = ReportComponent ?? ReportCard;
+
   const render = () => {
-    if (report)
+    if (reportSlug !== '' && reportParams)
       return (
         <>
           <PageHeader>
@@ -36,7 +44,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
             <Description>{description}</Description>
           </PageHeader>
           <Main>
-            <ReportCard {...report} />
+            <ReportContent {...reportParams} />
           </Main>
         </>
       );
