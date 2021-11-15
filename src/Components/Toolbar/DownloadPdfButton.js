@@ -41,7 +41,7 @@ const DownloadPdfButton = ({
         y,
         label,
         x_tick_format: xTickFormat,
-        optionSelected: isCurrent ? 'current' : 'total',
+        showExtraRows: isCurrent ? false : true,
       }),
     null
   );
