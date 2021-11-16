@@ -41,7 +41,7 @@ const DownloadPdfButton = ({
         y,
         label,
         x_tick_format: xTickFormat,
-        showExtraRows: isCurrent ? false : true,
+        showExtraRows: isCurrent,
       }),
     null
   );
@@ -82,7 +82,10 @@ const DownloadPdfButton = ({
           <Button
             key="export"
             variant={ButtonVariant.primary}
-            onClick={() => request() && setIsExportModalOpen(false)}
+            onClick={() => {
+              request();
+              setIsExportModalOpen(false);
+            }}
           >
             Export
           </Button>,
