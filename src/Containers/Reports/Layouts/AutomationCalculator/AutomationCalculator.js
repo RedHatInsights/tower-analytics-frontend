@@ -43,6 +43,7 @@ import { Paths } from '../../../../paths';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants';
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
+import { endpointFunctionMap } from '../../../../Api';
 
 const perPageOptions = [
   ...defaultPerPageOptions,
@@ -87,9 +88,8 @@ const AutomationCalculator = ({
   tableAttributes: _ignored3,
   expandedAttributes: _ignored4,
   availableChartTypes: _ignored5,
-  dataEndpointUrl,
-  readData,
-  readOptions,
+  dataEndpoint,
+  optionEndpoint,
   schemaFnc,
 }) => {
   const [costManual, setCostManual] = useState('50');
@@ -100,7 +100,7 @@ const AutomationCalculator = ({
     useQueryParams(defaultParams);
 
   const { result: options, request: setOptions } = useRequest(
-    () => readOptions(queryParams),
+    (qp) => endpointFunctionMap(optionEndpoint)(qp),
     {
       sort_options: [
         {
@@ -116,8 +116,8 @@ const AutomationCalculator = ({
     setValue: setApiData,
     ...api
   } = useRequest(
-    async () => {
-      const response = await readData(queryParams);
+    async (qp) => {
+      const response = await endpointFunctionMap(dataEndpoint)(qp);
       return {
         ...response,
         items: updateDeltaCost(mapApi(response), costAutomation, costManual),
@@ -183,8 +183,8 @@ const AutomationCalculator = ({
    * Get data from API depending on the queryParam.
    */
   useEffect(() => {
-    setOptions();
-    fetchEndpoint();
+    setOptions(queryParams);
+    fetchEndpoint(queryParams);
   }, [queryParams]);
 
   /**
@@ -262,7 +262,7 @@ const AutomationCalculator = ({
             <DownloadPdfButton
               key="download-button"
               slug={slug}
-              endpointUrl={dataEndpointUrl}
+              endpointUrl={dataEndpoint}
               queryParams={queryParams}
               y={undefined}
               label={undefined}
@@ -312,9 +312,8 @@ AutomationCalculator.propTypes = {
   tableAttributes: PropTypes.array.isRequired,
   expandedAttributes: PropTypes.array.isRequired,
   availableChartTypes: PropTypes.array.isRequired,
-  dataEndpointUrl: PropTypes.string.isRequired,
-  readData: PropTypes.func.isRequired,
-  readOptions: PropTypes.func.isRequired,
+  dataEndpoint: PropTypes.string.isRequired,
+  optionEndpoint: PropTypes.string.isRequired,
   schemaFnc: PropTypes.func.isRequired,
 };
 

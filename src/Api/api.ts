@@ -34,7 +34,7 @@ export enum Endpoint {
 
   /* page options endpoints */
   jobExplorerOptions = '/api/tower-analytics/v1/job_explorer_options/',
-  ROITemplatesOptions = '/api/tower-analytics/v1/roi_templates_options/',
+  ROIOptions = '/api/tower-analytics/v1/roi_templates_options/',
   orgOptions = '/api/tower-analytics/v1/dashboard_organization_statistics_options/',
   clustersOptions = '/api/tower-analytics/v1/dashboard_clusters_options/',
   planOptions = '/api/tower-analytics/v1/plan_options/',
@@ -76,7 +76,7 @@ export const readROI = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(Endpoint.ROI, params);
 
 export const readROIOptions = (params: Params): Promise<ApiJson> =>
-  post(Endpoint.ROITemplatesOptions, params);
+  post(Endpoint.ROIOptions, params);
 
 export const readHostExplorer = (
   params: ParamsWithPagination
@@ -138,7 +138,7 @@ export const endpointFunctionMap = (endpoint: Endpoint): ReadEndpointFnc => {
       return readEventExplorerOptions;
     case Endpoint.ROI:
       return readROI;
-    case Endpoint.ROITemplatesOptions:
+    case Endpoint.ROIOptions:
       return readROIOptions;
     case Endpoint.hostExplorer:
       return readHostExplorer;

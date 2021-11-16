@@ -6,11 +6,7 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import {
-  Endpoint,
-  readHostExplorer,
-  readHostExplorerOptions,
-} from '../../../../Api';
+import { Endpoint } from '../../../../Api';
 import { ReportLayout } from '../../Layouts';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams, SchemaFnc } from '../types';
@@ -70,7 +66,7 @@ const schemaFnc: SchemaFnc = (
     props: {
       height: 400,
       padding: {
-        top: 40,
+        top: 10,
         bottom: 85,
         right: 90,
         left: 90,
@@ -151,9 +147,8 @@ const reportParams: ReportPageParams = {
     tableAttributes,
     expandedAttributes,
     availableChartTypes,
-    dataEndpointUrl: Endpoint.hostExplorer,
-    readData: readHostExplorer,
-    readOptions: readHostExplorerOptions,
+    dataEndpoint: Endpoint.hostExplorer,
+    optionEndpoint: Endpoint.hostExplorerOptions,
     schemaFnc,
   },
   componentName: ReportLayout.DEFAULT,
