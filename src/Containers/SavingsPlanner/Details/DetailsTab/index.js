@@ -71,7 +71,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
     result: options,
     isSuccess: optionsSuccess,
     request: fetchOptions,
-  } = useRequest(() => readPlanOptions(), {});
+  } = useRequest(() => readPlanOptions({}), {});
 
   useEffect(() => {
     fetchOptions();

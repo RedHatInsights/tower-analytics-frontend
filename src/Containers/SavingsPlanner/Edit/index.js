@@ -16,7 +16,7 @@ const Edit = ({ data }) => {
     result: options,
     isSuccess,
     request: fetchPlanOptions,
-  } = useRequest(() => readPlanOptions(), {
+  } = useRequest(() => readPlanOptions({}), {
     meta: {
       rbac: {
         perms: {},

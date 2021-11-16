@@ -9,42 +9,44 @@ import {
   deleteByIds,
   postWithFileReturn,
 } from './methods';
-import { Params, ParamsWithPagination, ApiJson, PDFParams } from './types';
+import {
+  ReadEndpointFnc,
+  Params,
+  ParamsWithPagination,
+  ApiJson,
+  PDFParams,
+} from './types';
 
-/* v0 endpoints */
-export const notificationsEndpoint = `/api/tower-analytics/v0/notifications/`;
-export const preflightEndpoint = `/api/tower-analytics/v0/authorized/`;
-export const clustersEndpoint = `/api/tower-analytics/v0/clusters/`;
+export enum Endpoint {
+  /* v0 endpoints */
+  notifications = '/api/tower-analytics/v0/notifications/',
+  preflight = '/api/tower-analytics/v0/authorized/',
+  clusters = '/api/tower-analytics/v0/clusters/',
 
-/* v1 endpoints */
-export const pdfGenerateEndpoint = '/api/tower-analytics/v1/generate_pdf/';
-export const jobExplorerEndpoint = '/api/tower-analytics/v1/job_explorer/';
-export const hostExplorerEndpoint = '/api/tower-analytics/v1/host_explorer/';
-export const eventExplorerEndpoint = '/api/tower-analytics/v1/event_explorer/';
-export const ROIEndpoint = '/api/tower-analytics/v1/roi_templates/';
-export const plansEndpoint = '/api/tower-analytics/v1/plans/';
-export const planEndpoint = '/api/tower-analytics/v1/plan/';
+  /* v1 endpoints */
+  pdfGenerate = '/api/tower-analytics/v1/generate_pdf/',
+  jobExplorer = '/api/tower-analytics/v1/job_explorer/',
+  hostExplorer = '/api/tower-analytics/v1/host_explorer/',
+  eventExplorer = '/api/tower-analytics/v1/event_explorer/',
+  ROI = '/api/tower-analytics/v1/roi_templates/',
+  plans = '/api/tower-analytics/v1/plans/',
+  plan = '/api/tower-analytics/v1/plan/',
 
-/* page options endpoints */
-export const jobExplorerOptionsEndpoint =
-  '/api/tower-analytics/v1/job_explorer_options/';
-export const ROITemplatesOptionsEndpoint =
-  '/api/tower-analytics/v1/roi_templates_options/';
-export const orgOptionsEndpoint =
-  '/api/tower-analytics/v1/dashboard_organization_statistics_options/';
-export const clustersOptionsEndpoint =
-  '/api/tower-analytics/v1/dashboard_clusters_options/';
-export const planOptionsEndpoint = '/api/tower-analytics/v1/plan_options/';
-export const eventExplorerOptionsEndpoint =
-  '/api/tower-analytics/v1/event_explorer_options/';
-const hostExplorerOptionsEndpoint =
-  '/api/tower-analytics/v1/host_explorer_options/';
+  /* page options endpoints */
+  jobExplorerOptions = '/api/tower-analytics/v1/job_explorer_options/',
+  ROITemplatesOptions = '/api/tower-analytics/v1/roi_templates_options/',
+  orgOptions = '/api/tower-analytics/v1/dashboard_organization_statistics_options/',
+  clustersOptions = '/api/tower-analytics/v1/dashboard_clusters_options/',
+  planOptions = '/api/tower-analytics/v1/plan_options/',
+  eventExplorerOptions = '/api/tower-analytics/v1/event_explorer_options/',
+  hostExplorerOptions = '/api/tower-analytics/v1/host_explorer_options/',
 
-const featuresEndpoint = '/api/featureflags/v0';
+  features = '/api/featureflags/v0',
+}
 
 export const getFeatures = async (): Promise<ApiFeatureFlagReturnType> => {
   try {
-    const url = new URL(featuresEndpoint, window.location.origin);
+    const url = new URL(Endpoint.features, window.location.origin);
     const response = await authenticatedFetch(url.toString());
     return response.ok ? response.json() : { toggles: [] };
   } catch (error) {
@@ -54,66 +56,105 @@ export const getFeatures = async (): Promise<ApiFeatureFlagReturnType> => {
 };
 
 export const preflightRequest = (): Promise<Response> =>
-  authenticatedFetch(preflightEndpoint);
+  authenticatedFetch(Endpoint.preflight);
 
 export const readJobExplorer = (
   params: ParamsWithPagination
-): Promise<ApiJson> => postWithPagination(jobExplorerEndpoint, params);
+): Promise<ApiJson> => postWithPagination(Endpoint.jobExplorer, params);
 
 export const readJobExplorerOptions = (params: Params): Promise<ApiJson> =>
-  post(jobExplorerOptionsEndpoint, params);
+  post(Endpoint.jobExplorerOptions, params);
 
 export const readEventExplorer = (
   params: ParamsWithPagination
-): Promise<ApiJson> => postWithPagination(eventExplorerEndpoint, params);
+): Promise<ApiJson> => postWithPagination(Endpoint.eventExplorer, params);
 
 export const readEventExplorerOptions = (params: Params): Promise<ApiJson> =>
-  post(eventExplorerOptionsEndpoint, params);
+  post(Endpoint.eventExplorerOptions, params);
 
 export const readROI = (params: ParamsWithPagination): Promise<ApiJson> =>
-  postWithPagination(ROIEndpoint, params);
+  postWithPagination(Endpoint.ROI, params);
 
 export const readROIOptions = (params: Params): Promise<ApiJson> =>
-  post(ROITemplatesOptionsEndpoint, params);
+  post(Endpoint.ROITemplatesOptions, params);
 
 export const readHostExplorer = (
   params: ParamsWithPagination
-): Promise<ApiJson> => postWithPagination(hostExplorerEndpoint, params);
+): Promise<ApiJson> => postWithPagination(Endpoint.hostExplorer, params);
 
 export const readOrgOptions = (params: Params): Promise<ApiJson> =>
-  post(orgOptionsEndpoint, params);
+  post(Endpoint.orgOptions, params);
 
 export const readHostExplorerOptions = (params: Params): Promise<ApiJson> =>
-  post(hostExplorerOptionsEndpoint, params);
+  post(Endpoint.hostExplorerOptions, params);
 
 export const readPlans = (params: ParamsWithPagination): Promise<ApiJson> =>
-  postWithPagination(plansEndpoint, params);
+  postWithPagination(Endpoint.plans, params);
 
 export const createPlan = (params: Params): Promise<ApiJson> =>
-  post(planEndpoint, params);
+  post(Endpoint.plan, params);
 
 export const readPlan = (id: number): Promise<ApiJson> =>
-  get(`${planEndpoint}${id}/`);
+  get(`${Endpoint.plan}${id}/`);
 
 export const deletePlan = (id: number): Promise<ApiJson> =>
-  deleteById(planEndpoint, id);
+  deleteById(Endpoint.plan, id);
 
 export const deletePlans = (id: number[]): Promise<ApiJson> =>
-  deleteByIds(plansEndpoint, id);
+  deleteByIds(Endpoint.plans, id);
 
 export const updatePlan = (id: string, params: Params): Promise<ApiJson> =>
-  updateById(planEndpoint, id, params);
+  updateById(Endpoint.plan, id, params);
 
-export const readPlanOptions = (params: Params = {}): Promise<ApiJson> =>
-  get(planOptionsEndpoint, params);
+export const readPlanOptions = (params: Params): Promise<ApiJson> =>
+  get(Endpoint.planOptions, params);
 
-export const readClusters = (): Promise<ApiJson> => get(clustersEndpoint);
+export const readClusters = (): Promise<ApiJson> => get(Endpoint.clusters);
 
 export const readClustersOptions = (params: Params): Promise<ApiJson> =>
-  post(clustersOptionsEndpoint, params);
+  post(Endpoint.clustersOptions, params);
 
 export const readNotifications = (params: Params): Promise<ApiJson> =>
-  get(notificationsEndpoint, params);
+  get(Endpoint.notifications, params);
 
 export const generatePdf = (params: PDFParams): Promise<void> =>
-  postWithFileReturn(pdfGenerateEndpoint, params);
+  postWithFileReturn(Endpoint.pdfGenerate, params);
+
+/**
+ * Used to convert the string representation of the path to the
+ * function which handles it. It is not covering endpoints which
+ * are not using the default params to read from the endpoint, like
+ * updating by ID, searching by id or the pdf generator params.
+ */
+export const endpointFunctionMap = (endpoint: Endpoint): ReadEndpointFnc => {
+  switch (endpoint) {
+    case Endpoint.jobExplorer:
+      return readJobExplorer;
+    case Endpoint.jobExplorerOptions:
+      return readJobExplorerOptions;
+    case Endpoint.eventExplorer:
+      return readEventExplorer;
+    case Endpoint.eventExplorerOptions:
+      return readEventExplorerOptions;
+    case Endpoint.ROI:
+      return readROI;
+    case Endpoint.ROITemplatesOptions:
+      return readROIOptions;
+    case Endpoint.hostExplorer:
+      return readHostExplorer;
+    case Endpoint.hostExplorerOptions:
+      return readHostExplorerOptions;
+    case Endpoint.orgOptions:
+      return readOrgOptions;
+    case Endpoint.plans:
+      return readPlans;
+    case Endpoint.planOptions:
+      return readPlanOptions;
+    case Endpoint.clustersOptions:
+      return readClustersOptions;
+    case Endpoint.notifications:
+      return readNotifications;
+    default:
+      throw new Error(`${endpoint} is not found in the api mapper.`);
+  }
+};
