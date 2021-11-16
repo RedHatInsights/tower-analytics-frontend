@@ -42,6 +42,7 @@ import TemplatesTable from './TemplatesTable';
 import { Paths } from '../../../../paths';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants';
+import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
 
 const perPageOptions = [
   ...defaultPerPageOptions,
@@ -80,13 +81,13 @@ const computeTotalSavings = (data) =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
 const AutomationCalculator = ({
-  slug: _ignoredUntilPDFDownload1,
+  slug,
   defaultParams,
   defaultTableHeaders: _ignored2,
   tableAttributes: _ignored3,
   expandedAttributes: _ignored4,
   availableChartTypes: _ignored5,
-  dataEndpointUrl: _ignoredUntilPDFDownload2,
+  dataEndpointUrl,
   readData,
   readOptions,
   schemaFnc,
@@ -251,6 +252,18 @@ const AutomationCalculator = ({
               isCompact
             />
           }
+          additionalControls={[
+            <DownloadPdfButton
+              key="download-button"
+              slug={slug}
+              endpointUrl={dataEndpointUrl}
+              queryParams={queryParams}
+              y={undefined}
+              label={undefined}
+              xTickFormat={undefined}
+              totalCount={api.result.meta.count}
+            />,
+          ]}
         />
         <Grid hasGutter>
           <GridItem span={9}>{renderLeft()}</GridItem>
