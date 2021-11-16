@@ -25,7 +25,6 @@ import { ReportGeneratorParams } from '../../Shared/types';
 import Chart from './Chart';
 import Table from './Table';
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
-import { useFeatureFlag, ValidFeatureFlags } from '../../../../FeatureFlags';
 import { endpointFunctionMap, OptionsReturnType } from '../../../../Api';
 import { capitalize } from '../../../../Utilities/helpers';
 import { perPageOptions } from '../../Shared/constants';
@@ -48,10 +47,6 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   optionEndpoint,
   schemaFnc,
 }) => {
-  const pdfDownloadEnabled = useFeatureFlag(
-    ValidFeatureFlags.pdfDownloadButton
-  );
-
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(defaultParams);
 
@@ -160,18 +155,16 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
         ))}
       </ToggleGroup>
     ),
-    pdfDownloadEnabled && (
-      <DownloadPdfButton
-        key="download-button"
-        slug={slug}
-        endpointUrl={dataEndpoint}
-        queryParams={queryParams}
-        y={chartParams.y}
-        label={chartParams.label}
-        xTickFormat={chartParams.xTickFormat}
-        totalCount={dataApi.result.meta.count}
-      />
-    ),
+    <DownloadPdfButton
+      key="download-button"
+      slug={slug}
+      endpointUrl={dataEndpoint}
+      queryParams={queryParams}
+      y={chartParams.y}
+      label={chartParams.label}
+      xTickFormat={chartParams.xTickFormat}
+      totalCount={dataApi.result.meta.count}
+    />,
   ];
   return (
     <Card>
