@@ -29,7 +29,8 @@ import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper'
 import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
 
 import { ReportGeneratorParams } from '../../Shared/types';
-import { Chart, Table } from './';
+import Chart from './Chart';
+import Table from './Table';
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
 import { useFeatureFlag, ValidFeatureFlags } from '../../../../FeatureFlags';
 import { OptionsReturnType } from '../../../../Api';

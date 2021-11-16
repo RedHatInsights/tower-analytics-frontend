@@ -1,6 +1,6 @@
-import { FunctionComponent } from 'react';
 import { ChartSchemaElement, ChartType } from 'react-json-chart-builder';
 import { ApiJson, Params, ParamsWithPagination } from '../../../Api';
+import { ReportLayout } from '../Layouts';
 
 export type AttributesType = { key: string; value: string }[];
 export type SchemaFnc = (
@@ -28,6 +28,6 @@ export interface ReportPageParams {
   name: string;
   description: string;
   categories: string[];
-  reportParams?: ReportGeneratorParams;
-  ReportComponent?: FunctionComponent<ReportGeneratorParams>;
+  reportParams: ReportGeneratorParams;
+  componentName: ReportLayout;
 }

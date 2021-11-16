@@ -1,6 +1,5 @@
 import { CATEGORIES } from '../constants';
 import { ReportPageParams, SchemaFnc } from '../types';
-import AutomationCalculator from '../../CustomReports/AutomationCalculator';
 import { roi } from '../../../../Utilities/constants';
 import { readROI, readROIOptions, ROIEndpoint } from '../../../../Api';
 import {
@@ -8,6 +7,7 @@ import {
   ChartTopLevelType,
   ChartType,
 } from 'react-json-chart-builder';
+import { ReportLayout } from '../../Layouts';
 
 const slug = 'automation_calculator';
 
@@ -106,14 +106,7 @@ const reportParams: ReportPageParams = {
     readOptions: readROIOptions,
     schemaFnc,
   },
-  /*
-   * TODO!
-   * Disabling typescript because AutomationCalculator is not TS.
-   * It cannot be made to TS until the Query params is made into TS.
-   */
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  ReportComponent: AutomationCalculator,
+  componentName: ReportLayout.AUTOMATION_CALCULATOR,
 };
 
 export default reportParams;

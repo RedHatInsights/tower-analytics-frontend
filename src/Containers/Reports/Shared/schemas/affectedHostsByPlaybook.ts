@@ -11,6 +11,7 @@ import {
   readHostExplorer,
   readHostExplorerOptions,
 } from '../../../../Api';
+import { ReportLayout } from '../../Layouts';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams, SchemaFnc } from '../types';
 
@@ -155,6 +156,7 @@ const reportParams: ReportPageParams = {
     readOptions: readHostExplorerOptions,
     schemaFnc,
   },
+  componentName: ReportLayout.DEFAULT,
 };
 
 export default reportParams;
