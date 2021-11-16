@@ -10,6 +10,7 @@ import {
   Params,
   jobExplorerEndpoint,
 } from '../../../../Api';
+import { ReportLayout } from '../../Layouts';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams, SchemaFnc } from '../types';
 
@@ -163,6 +164,7 @@ const reportParams: ReportPageParams = {
     readOptions: readJobExplorerOptions,
     schemaFnc,
   },
+  componentName: ReportLayout.DEFAULT,
 };
 
 export default reportParams;
