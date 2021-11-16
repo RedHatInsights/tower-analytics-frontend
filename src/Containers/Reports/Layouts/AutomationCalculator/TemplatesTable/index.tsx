@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 
-import { Card, CardBody, Switch } from '@patternfly/react-core';
+import { Switch } from '@patternfly/react-core';
 import {
   TableComposable,
   TableVariant,
@@ -27,42 +27,40 @@ const TopTemplates: FunctionComponent<Props> = ({
   setEnabled = () => () => ({}),
   redirectToJobExplorer = () => ({}),
 }) => (
-  <Card>
-    <CardBody>
-      <p>Enter the time it takes to run the following templates manually.</p>
-      <TableComposable aria-label="ROI Table" variant={TableVariant.compact}>
-        <Thead>
-          <Tr>
-            <Th />
-            <Th>Name</Th>
-            <Th>{variableRow.value}</Th>
-            <Th>Time</Th>
-            <Th>Savings</Th>
-            <Th>
-              <Switch
-                label="Show all"
-                labelOff="Show all"
-                isChecked={!data.find((d) => !d.enabled)}
-                onChange={(checked) => setEnabled(undefined)(checked)}
-              />
-            </Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {data.map((template) => (
-            <Row
-              key={template.id}
-              template={template}
-              variableRow={variableRow}
-              setDataRunTime={setDataRunTime}
-              redirectToJobExplorer={redirectToJobExplorer}
-              setEnabled={setEnabled(template.id)}
+  <>
+    <p>Enter the time it takes to run the following templates manually.</p>
+    <TableComposable aria-label="ROI Table" variant={TableVariant.compact}>
+      <Thead>
+        <Tr>
+          <Th />
+          <Th>Name</Th>
+          <Th>{variableRow.value}</Th>
+          <Th>Time</Th>
+          <Th>Savings</Th>
+          <Th>
+            <Switch
+              label="Show all"
+              labelOff="Show all"
+              isChecked={!data.find((d) => !d.enabled)}
+              onChange={(checked) => setEnabled(undefined)(checked)}
             />
-          ))}
-        </Tbody>
-      </TableComposable>
-    </CardBody>
-  </Card>
+          </Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {data.map((template) => (
+          <Row
+            key={template.id}
+            template={template}
+            variableRow={variableRow}
+            setDataRunTime={setDataRunTime}
+            redirectToJobExplorer={redirectToJobExplorer}
+            setEnabled={setEnabled(template.id)}
+          />
+        ))}
+      </Tbody>
+    </TableComposable>
+  </>
 );
 
 export default TopTemplates;

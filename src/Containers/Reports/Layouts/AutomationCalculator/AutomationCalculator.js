@@ -113,7 +113,7 @@ const AutomationCalculator = ({
 
   const {
     request: fetchEndpoint,
-    setValue,
+    setValue: setApiData,
     ...api
   } = useRequest(
     async () => {
@@ -130,6 +130,12 @@ const AutomationCalculator = ({
       },
     }
   );
+
+  const setValue = (items) =>
+    setApiData({
+      ...api.result,
+      items,
+    });
 
   /**
    * Modifies one elements avgRunTime in the unfilteredData
