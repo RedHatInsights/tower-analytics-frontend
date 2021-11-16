@@ -1,7 +1,7 @@
 import { CATEGORIES } from '../constants';
 import { ReportPageParams, SchemaFnc } from '../types';
 import { roi } from '../../../../Utilities/constants';
-import { readROI, readROIOptions, ROIEndpoint } from '../../../../Api';
+import { readROI, readROIOptions, Endpoint } from '../../../../Api';
 import {
   ChartKind,
   ChartTopLevelType,
@@ -101,7 +101,7 @@ const reportParams: ReportPageParams = {
     tableAttributes: [],
     expandedAttributes: [],
     availableChartTypes: [],
-    dataEndpointUrl: ROIEndpoint,
+    dataEndpointUrl: Endpoint.ROI,
     readData: readROI,
     readOptions: readROIOptions,
     schemaFnc,

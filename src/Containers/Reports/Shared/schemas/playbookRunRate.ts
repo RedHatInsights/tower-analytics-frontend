@@ -10,7 +10,7 @@ import {
   readJobExplorer,
   readJobExplorerOptions,
   Params,
-  jobExplorerEndpoint,
+  Endpoint,
 } from '../../../../Api';
 import { ReportLayout } from '../../Layouts';
 import { CATEGORIES } from '../constants';
@@ -149,7 +149,7 @@ const reportParams: ReportPageParams = {
     tableAttributes,
     expandedAttributes,
     availableChartTypes,
-    dataEndpointUrl: jobExplorerEndpoint,
+    dataEndpointUrl: Endpoint.jobExplorer,
     readData: readJobExplorer,
     readOptions: readJobExplorerOptions,
     schemaFnc,

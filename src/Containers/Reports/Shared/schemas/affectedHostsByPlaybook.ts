@@ -7,7 +7,7 @@ import {
   ChartThemeColor,
 } from 'react-json-chart-builder';
 import {
-  hostExplorerEndpoint,
+  Endpoint,
   readHostExplorer,
   readHostExplorerOptions,
 } from '../../../../Api';
@@ -151,7 +151,7 @@ const reportParams: ReportPageParams = {
     tableAttributes,
     expandedAttributes,
     availableChartTypes,
-    dataEndpointUrl: hostExplorerEndpoint,
+    dataEndpointUrl: Endpoint.hostExplorer,
     readData: readHostExplorer,
     readOptions: readHostExplorerOptions,
     schemaFnc,
