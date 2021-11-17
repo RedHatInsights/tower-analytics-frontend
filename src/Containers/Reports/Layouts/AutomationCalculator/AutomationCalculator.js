@@ -90,7 +90,7 @@ const AutomationCalculator = ({
   availableChartTypes: _ignored5,
   dataEndpoint,
   optionEndpoint,
-  schemaFnc,
+  schema,
 }) => {
   const [costManual, setCostManual] = useState('50');
   const [costAutomation, setCostAutomation] = useState('20');
@@ -209,7 +209,7 @@ const AutomationCalculator = ({
         <CardTitle>Automation savings</CardTitle>
       </CardHeader>
       <CardBody>
-        <Chart schema={schemaFnc()} data={filterDisabled(api.result.items)} />
+        <Chart schema={schema} data={filterDisabled(api.result.items)} />
       </CardBody>
     </Card>
   );
@@ -314,7 +314,7 @@ AutomationCalculator.propTypes = {
   availableChartTypes: PropTypes.array.isRequired,
   dataEndpoint: PropTypes.string.isRequired,
   optionEndpoint: PropTypes.string.isRequired,
-  schemaFnc: PropTypes.func.isRequired,
+  schema: PropTypes.object.isRequired,
 };
 
 export default AutomationCalculator;

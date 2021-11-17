@@ -28,6 +28,7 @@ import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton'
 import { endpointFunctionMap, OptionsReturnType } from '../../../../Api';
 import { capitalize } from '../../../../Utilities/helpers';
 import { perPageOptions } from '../../Shared/constants';
+import hydrateSchema from '../../Shared/hydrateSchema';
 
 const getDateFormatByGranularity = (granularity: string): string => {
   if (granularity === 'yearly') return 'formatAsYear';
@@ -45,7 +46,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   availableChartTypes,
   dataEndpoint,
   optionEndpoint,
-  schemaFnc,
+  schema,
 }) => {
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(defaultParams);
@@ -190,12 +191,12 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
         {tableHeaders && (
           <ApiStatusWrapper api={dataApi}>
             <Chart
-              schema={schemaFnc(
-                chartParams.label,
-                chartParams.y,
-                chartParams.xTickFormat,
-                chartParams.chartType
-              )}
+              schema={hydrateSchema(schema)({
+                label: chartParams.label,
+                y: chartParams.y,
+                xTickFormat: chartParams.xTickFormat,
+                chartType: chartParams.chartType,
+              })}
               data={dataApi.result}
             />
             <Table

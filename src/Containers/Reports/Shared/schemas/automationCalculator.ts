@@ -1,5 +1,5 @@
 import { CATEGORIES } from '../constants';
-import { ReportPageParams, SchemaFnc } from '../types';
+import { ReportPageParams } from '../types';
 import { roi } from '../../../../Utilities/constants';
 import { Endpoint } from '../../../../Api';
 import {
@@ -19,7 +19,7 @@ const categories = [CATEGORIES.executive];
 
 const defaultParams = roi.defaultParams;
 
-const schemaFnc: SchemaFnc = () => [
+const schema = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -103,7 +103,7 @@ const reportParams: ReportPageParams = {
     availableChartTypes: [],
     dataEndpoint: Endpoint.ROI,
     optionEndpoint: Endpoint.ROIOptions,
-    schemaFnc,
+    schema,
   },
   componentName: ReportLayout.AUTOMATION_CALCULATOR,
 };
