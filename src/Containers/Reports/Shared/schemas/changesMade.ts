@@ -8,7 +8,7 @@ import {
 } from 'react-json-chart-builder';
 import { Endpoint } from '../../../../Api';
 import { LayoutComponentName } from '../../Layouts';
-import { CATEGORIES } from '../constants';
+import { TagName } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
 const slug = 'changes_made_by_job_template';
@@ -18,7 +18,12 @@ const name = 'Changes made by job template';
 const description =
   'The total count of changes made by each job template in a specified time window.\n\nYou can use this report to ensure the correct number of changes are made per hostname, as well as see which job templates are doing the most changes to your infrastructure.';
 
-const categories = [CATEGORIES.executive];
+const tags = [
+  TagName.executive,
+  TagName.jobTemplate,
+  TagName.hosts,
+  TagName.timeSeries,
+];
 
 const defaultTableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
@@ -132,7 +137,7 @@ const reportParams: ReportPageParams = {
   slug,
   name,
   description,
-  categories,
+  tags,
   reportParams: {
     slug,
     defaultParams,

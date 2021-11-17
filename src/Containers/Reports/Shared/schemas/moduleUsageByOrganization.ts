@@ -8,7 +8,7 @@ import {
 } from 'react-json-chart-builder';
 import { Endpoint } from '../../../../Api';
 import { LayoutComponentName } from '../../Layouts';
-import { CATEGORIES } from '../constants';
+import { TagName } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
 const slug = 'module_usage_by_organization';
@@ -18,7 +18,14 @@ const name = 'Module usage by organization';
 const description =
   'The number of job template and task runs for a specified set of Ansible modules, grouped by organizations from Ansible Controller.\n\nYou can use this report to find which organizations are using particular modules, helping you to check things like adoption of purpose-built modules of particular teams.';
 
-const categories = [CATEGORIES.executive];
+const tags = [
+  TagName.executive,
+  TagName.modules,
+  TagName.organization,
+  TagName.jobTemplate,
+  TagName.tasks,
+  TagName.timeSeries,
+];
 
 const defaultTableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
@@ -133,7 +140,7 @@ const reportParams: ReportPageParams = {
   slug,
   name,
   description,
-  categories,
+  tags,
   reportParams: {
     slug,
     defaultParams,

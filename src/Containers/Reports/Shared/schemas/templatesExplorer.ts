@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import {
   ChartKind,
   ChartTopLevelType,
@@ -6,7 +7,7 @@ import {
 } from 'react-json-chart-builder';
 import { Params, Endpoint } from '../../../../Api';
 import { LayoutComponentName } from '../../Layouts';
-import { CATEGORIES } from '../constants';
+import { TagName } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
 const slug = 'templates_explorer';
@@ -16,7 +17,13 @@ const name = 'Templates explorer';
 const description =
   'An overview of the job templates that have ran across your Ansible cluster.\n\nYou can use this report to review the status of a particular job template across its job runs, giving you an overview of the times a template fails a job run, a host, or a task. You can also review the host and task status for tasks that fail the most, allowing you to identify any bottlenecks or problems with the templates you are running.';
 
-const categories = [CATEGORIES.operations];
+const tags = [
+  TagName.operations,
+  TagName.jobTemplate,
+  TagName.jobRuns,
+  TagName.tasks,
+  TagName.performanceAnomalyDetection,
+];
 
 const defaultTableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
@@ -144,7 +151,7 @@ const reportParams: ReportPageParams = {
   slug,
   name,
   description,
-  categories,
+  tags,
   reportParams: {
     slug,
     defaultParams,

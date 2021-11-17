@@ -1,4 +1,4 @@
-import { CATEGORIES } from '../constants';
+import { TagName } from '../constants';
 import { ReportPageParams } from '../types';
 import { roi } from '../../../../Utilities/constants';
 import { Endpoint } from '../../../../Api';
@@ -15,7 +15,7 @@ const name = 'Automation calculator';
 
 const description = 'Some desc.';
 
-const categories = [CATEGORIES.executive];
+const tags = [TagName.executive, TagName.jobTemplate, TagName.savings];
 
 const defaultParams = roi.defaultParams;
 
@@ -89,7 +89,7 @@ const reportParams: ReportPageParams = {
   slug,
   name,
   description,
-  categories,
+  tags,
   reportParams: {
     slug,
     defaultParams,
