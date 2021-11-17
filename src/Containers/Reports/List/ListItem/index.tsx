@@ -10,10 +10,13 @@ import {
   CardBody,
   CardFooter,
   Label as PFLabel,
+  Tooltip,
+  TooltipPosition,
 } from '@patternfly/react-core';
 
 import paths from '../../paths';
 import { ReportPageParams } from '../../Shared/types';
+import { TAGS } from '../../Shared/constants';
 
 const CardTitle = styled(PFCardTitle)`
   word-break: break-word;
@@ -28,6 +31,7 @@ const Small = styled.small`
 
 const Label = styled(PFLabel)`
   margin-right: 10px;
+  margin-bottom: 10px;
 `;
 
 interface Props {
@@ -35,7 +39,7 @@ interface Props {
 }
 
 const ListItem: FunctionComponent<Props> = ({
-  report: { slug, description, name, categories },
+  report: { slug, description, name, tags },
 }) => (
   <Card data-testid={slug}>
     <CardHeader>
@@ -47,9 +51,20 @@ const ListItem: FunctionComponent<Props> = ({
     </CardHeader>
     <CardBody>{description ? <Small>{description}</Small> : null}</CardBody>
     <CardFooter>
-      {categories.map((category, idx) => (
-        <Label key={idx}>{category}</Label>
-      ))}
+      {tags.map((tagKey, idx) => {
+        const tag = TAGS.find((t) => t.key === tagKey);
+        if (tag) {
+          return (
+            <Tooltip
+              key={`tooltip_${idx}`}
+              position={TooltipPosition.top}
+              content={tag.description}
+            >
+              <Label key={idx}>{tag.name}</Label>
+            </Tooltip>
+          );
+        }
+      })}
     </CardFooter>
   </Card>
 );

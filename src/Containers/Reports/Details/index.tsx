@@ -10,14 +10,26 @@ import {
 } from '@redhat-cloud-services/frontend-components/PageHeader';
 
 import Breadcrumbs from '../../../Components/Breadcrumbs';
+import {
+  Label as PFLabel,
+  Tooltip,
+  TooltipPosition,
+} from '@patternfly/react-core';
 
 import getComponent from '../Layouts';
 import { getReport } from '../Shared/schemas';
 import paths from '../paths';
+import { TAGS } from '../Shared/constants';
 
 const Description = styled.p`
   max-width: 70em;
   padding-top: 8px;
+`;
+
+const Label = styled(PFLabel)`
+  margin-top: 16px;
+  margin-right: 10px;
+  margin-bottom: 10px;
 `;
 
 const Details: FunctionComponent<Record<string, never>> = () => {
@@ -35,6 +47,20 @@ const Details: FunctionComponent<Record<string, never>> = () => {
             <Breadcrumbs items={breadcrumbsItems} />
             <PageHeaderTitle title={report.name} />
             <Description>{report.description}</Description>
+            {report.tags.map((tagKey, idx) => {
+              const tag = TAGS.find((t) => t.key === tagKey);
+              if (tag) {
+                return (
+                  <Tooltip
+                    key={`tooltip_${idx}`}
+                    position={TooltipPosition.bottom}
+                    content={tag.description}
+                  >
+                    <Label key={idx}>{tag.name}</Label>
+                  </Tooltip>
+                );
+              }
+            })}
           </PageHeader>
           <Main>
             <ReportContent {...report.reportParams} />
