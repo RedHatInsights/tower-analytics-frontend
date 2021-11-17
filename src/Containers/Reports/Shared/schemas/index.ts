@@ -10,6 +10,7 @@ import templatesExplorer from './templatesExplorer';
 import mostUsedModules from './mostUsedModules';
 import moduleUsageByOrganization from './moduleUsageByOrganization';
 import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
+import moduleUsageByFile from './moduleUsageByFile';
 import moduleUsageByTask from './moduleUsageByTask';
 import automationCalculator from './automationCalculator';
 
@@ -34,6 +35,7 @@ const moduleReports = [
   moduleUsageByOrganization,
   moduleUsageByJobTemplate,
   moduleUsageByTask,
+  moduleUsageByFile,
 ];
 
 const automationCalculatorReport = [automationCalculator];

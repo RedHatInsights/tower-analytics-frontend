@@ -27,21 +27,39 @@ const FilterCategoriesGroup: FunctionComponent<Props> = ({
         categoryKey="category_selector"
         selected={currentCategory}
         setSelected={setCurrentCategory}
-        categories={Object.keys(filterCategories).map((el) => ({
-          key: el,
-          name: optionsForCategories[el].name,
-        }))}
+        categories={Object.keys(filterCategories).map((el) => {
+          return {
+            key: el,
+            name: optionsForCategories[el].name,
+          };
+        })}
       />
-      {Object.keys(filterCategories).map((key) => (
-        <ToolbarInput
-          key={key}
-          categoryKey={key}
-          value={filters[key]}
-          selectOptions={filterCategories[key]}
-          isVisible={currentCategory === key}
-          setValue={(value) => setFilters(key, value)}
-        />
-      ))}
+      {Object.keys(filterCategories).map((key) => {
+        const val =
+          filters.task_action_name && key === 'task_action_id'
+            ? [
+                filterCategories.task_action_id
+                  .filter((obj) => obj.value === filters.task_action_name)[0]
+                  .key?.toString(),
+              ]
+            : null;
+
+        // if (val && filters.task_action_name && key === 'task_action_id') {
+        //   console.log('set filters', key, val);
+        //   setFilters(key, val ?? 0);
+        // }
+
+        return (
+          <ToolbarInput
+            key={key}
+            categoryKey={key}
+            value={val ?? filters[key]}
+            selectOptions={filterCategories[key]}
+            isVisible={currentCategory === key}
+            setValue={(value) => setFilters(key, value)}
+          />
+        );
+      })}
     </ToolbarGroup>
   );
 };
