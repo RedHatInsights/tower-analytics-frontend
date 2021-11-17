@@ -264,9 +264,9 @@ const AutomationCalculator = ({
               slug={slug}
               endpointUrl={dataEndpoint}
               queryParams={queryParams}
-              y={undefined}
-              label={undefined}
-              xTickFormat={undefined}
+              y={''}
+              label={''}
+              xTickFormat={''}
               totalCount={api.result.meta.count}
             />,
           ]}
@@ -314,7 +314,7 @@ AutomationCalculator.propTypes = {
   availableChartTypes: PropTypes.array.isRequired,
   dataEndpoint: PropTypes.string.isRequired,
   optionEndpoint: PropTypes.string.isRequired,
-  schema: PropTypes.object.isRequired,
+  schema: PropTypes.array.isRequired,
 };
 
 export default AutomationCalculator;
