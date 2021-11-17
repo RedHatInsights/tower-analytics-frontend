@@ -7,7 +7,7 @@ import {
 import { Params, Endpoint } from '../../../../Api';
 import { ReportLayout } from '../../Layouts';
 import { CATEGORIES } from '../constants';
-import { AttributesType, ReportPageParams, SchemaFnc } from '../types';
+import { AttributesType, ReportPageParams } from '../types';
 
 const slug = 'templates_explorer';
 
@@ -76,7 +76,7 @@ const defaultParams: Params = {
 
 const availableChartTypes = [ChartType.bar];
 
-const schemaFnc: SchemaFnc = (label, y) => [
+const schema = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -103,13 +103,11 @@ const schemaFnc: SchemaFnc = (label, y) => [
           padding: 50,
         },
       },
-      // It is using names instead of dates so no need for formatting.
-      // tickFormat: xTickFormat,
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label,
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 60,
@@ -132,11 +130,11 @@ const schemaFnc: SchemaFnc = (label, y) => [
       parent: 0,
       props: {
         x: 'name',
-        y,
+        y: 'VAR_y',
       },
       tooltip: {
         standalone: true,
-        labelName: label,
+        labelName: 'VAR_label',
       },
     },
   },
@@ -156,7 +154,7 @@ const reportParams: ReportPageParams = {
     availableChartTypes,
     dataEndpoint: Endpoint.jobExplorer,
     optionEndpoint: Endpoint.jobExplorerOptions,
-    schemaFnc,
+    schema,
   },
   componentName: ReportLayout.DEFAULT,
 };
