@@ -24,6 +24,7 @@ export interface PDFParams {
   y: string;
   label: string;
   x_tick_format: string;
+  showExtraRows: boolean;
 }
 
 export type ReadParams = { params: Params };
