@@ -81,7 +81,7 @@ const pageParams = {
   expandedAttributes: [],
   availableChartTypes: [],
   dataEndpoint: Endpoint.ROI,
-  optionEndpoint: Endpoint.ROIOptions,
+  optionsEndpoint: Endpoint.ROIOptions,
   schema: [
     {
       id: 1,

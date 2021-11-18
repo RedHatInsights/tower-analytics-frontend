@@ -7,7 +7,7 @@ import {
   ChartThemeColor,
 } from 'react-json-chart-builder';
 import { Params, Endpoint } from '../../../../Api';
-import { ReportLayout } from '../../Layouts';
+import { LayoutComponentName } from '../../Layouts';
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
@@ -136,10 +136,10 @@ const reportParams: ReportPageParams = {
     expandedAttributes,
     availableChartTypes,
     dataEndpoint: Endpoint.jobExplorer,
-    optionEndpoint: Endpoint.jobExplorerOptions,
+    optionsEndpoint: Endpoint.jobExplorerOptions,
     schema,
   },
-  componentName: ReportLayout.DEFAULT,
+  layoutComponent: LayoutComponentName.standard,
 };
 
 export default reportParams;

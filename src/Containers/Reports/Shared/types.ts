@@ -1,6 +1,6 @@
 import { ChartSchemaElement, ChartType } from 'react-json-chart-builder';
 import { Endpoint, Params } from '../../../Api';
-import { ReportLayout } from '../Layouts';
+import { LayoutComponentName } from '../Layouts';
 
 export type AttributesType = { key: string; value: string }[];
 export type SchemaFnc = (props: {
@@ -18,7 +18,7 @@ export interface ReportGeneratorParams {
   expandedAttributes: string[];
   availableChartTypes: string[];
   dataEndpoint: Endpoint;
-  optionEndpoint: Endpoint;
+  optionsEndpoint: Endpoint;
   schema: unknown;
 }
 
@@ -28,5 +28,5 @@ export interface ReportPageParams {
   description: string;
   categories: string[];
   reportParams: ReportGeneratorParams;
-  componentName: ReportLayout;
+  layoutComponent: LayoutComponentName;
 }

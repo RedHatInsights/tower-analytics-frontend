@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Details from './Show';
+import Details from './Details';
 import List from './List';
 import paths from './paths';
 

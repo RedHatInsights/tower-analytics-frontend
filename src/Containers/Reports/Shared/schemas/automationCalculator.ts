@@ -7,7 +7,7 @@ import {
   ChartTopLevelType,
   ChartType,
 } from 'react-json-chart-builder';
-import { ReportLayout } from '../../Layouts';
+import { LayoutComponentName } from '../../Layouts';
 
 const slug = 'automation_calculator';
 
@@ -98,10 +98,10 @@ const reportParams: ReportPageParams = {
     expandedAttributes: [],
     availableChartTypes: [],
     dataEndpoint: Endpoint.ROI,
-    optionEndpoint: Endpoint.ROIOptions,
+    optionsEndpoint: Endpoint.ROIOptions,
     schema,
   },
-  componentName: ReportLayout.AUTOMATION_CALCULATOR,
+  layoutComponent: LayoutComponentName.automationCalculator,
 };
 
 export default reportParams;
