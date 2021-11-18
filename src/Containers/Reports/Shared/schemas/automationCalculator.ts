@@ -33,10 +33,6 @@ const schema = [
         right: 0,
         left: 90,
       },
-      domainPadding: {
-        y: 25,
-        x: 85,
-      },
     },
     xAxis: {
       label: 'Templates',

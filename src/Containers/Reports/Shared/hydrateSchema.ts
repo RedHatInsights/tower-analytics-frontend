@@ -1,4 +1,4 @@
-import { ChartSchemaElement, ChartType } from 'react-json-chart-builder';
+import { ChartSchemaElement } from 'react-json-chart-builder';
 import { SchemaFnc } from './types';
 
 /**
@@ -19,16 +19,8 @@ const hydrateSchema =
       return schema;
     }
 
-    // The domain padding is currently a bug in the charting library,
-    // TODO remove this when the bug is fixed.
-    const extendedProps = {
-      domainPaddingX:
-        props.chartType && props.chartType === ChartType.bar ? 85 : 0,
-      ...props,
-    };
-
     let hydratedSchema = JSON.stringify(schema);
-    Object.entries(extendedProps).forEach((arr) => {
+    Object.entries(props).forEach((arr) => {
       const regVar = new RegExp(`VAR_${arr[0]}`, 'g');
       hydratedSchema = hydratedSchema.replace(regVar, `${arr[1]}`);
     });

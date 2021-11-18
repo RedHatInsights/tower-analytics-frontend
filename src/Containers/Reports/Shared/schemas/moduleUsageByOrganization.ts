@@ -70,10 +70,6 @@ const schema = [
         right: 90,
         left: 90,
       },
-      domainPadding: {
-        y: 25,
-        x: 'VAR_domainPaddingX',
-      },
       themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
