@@ -69,16 +69,25 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(defaultParams);
 
-  const { request: setData, ...dataApi } = useRequest(
-    useCallback(() => readData(queryParams), [queryParams]),
-    { meta: { count: 0, legend: [] } }
-  );
-
   const { result: options, request: setOptions } =
     useRequest<OptionsReturnType>(
       () => readOptions(queryParams) as Promise<OptionsReturnType>,
       { sort_options: [] }
     );
+  const updateFilter = () => {
+    if (queryParams.task_action_name && options?.task_action_id) {
+      queryParams.task_action_id =
+        [options.task_action_id
+          .filter((obj) => obj.value === queryParams.task_action_name)[0]
+          .key?.toString()];
+    }
+  }
+  updateFilter();
+
+  const { request: setData, ...dataApi } = useRequest(
+    useCallback(() => readData(queryParams), [queryParams]),
+    { meta: { count: 0, legend: [] } }
+  );
 
   useEffect(() => {
     setData();
