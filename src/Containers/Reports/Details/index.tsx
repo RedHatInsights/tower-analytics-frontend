@@ -11,7 +11,7 @@ import {
 
 import Breadcrumbs from '../../../Components/Breadcrumbs';
 
-import getComponent from '../Layouts/';
+import getComponent from '../Layouts';
 import { getReport } from '../Shared/schemas';
 import paths from '../paths';
 
@@ -28,7 +28,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
 
   const render = () => {
     if (report) {
-      const ReportContent = getComponent(report.componentName);
+      const ReportContent = getComponent(report.layoutComponent);
       return (
         <>
           <PageHeader>

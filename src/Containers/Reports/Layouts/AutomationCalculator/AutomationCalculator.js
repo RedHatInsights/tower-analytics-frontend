@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import {
@@ -89,9 +89,12 @@ const AutomationCalculator = ({
   expandedAttributes: _ignored4,
   availableChartTypes: _ignored5,
   dataEndpoint,
-  optionEndpoint,
+  optionsEndpoint,
   schema,
 }) => {
+  const readData = endpointFunctionMap(dataEndpoint);
+  const readOptions = endpointFunctionMap(optionsEndpoint);
+
   const [costManual, setCostManual] = useState('50');
   const [costAutomation, setCostAutomation] = useState('20');
 
@@ -99,8 +102,8 @@ const AutomationCalculator = ({
   const { queryParams, setFromToolbar, setFromPagination } =
     useQueryParams(defaultParams);
 
-  const { result: options, request: setOptions } = useRequest(
-    (qp) => endpointFunctionMap(optionEndpoint)(qp),
+  const { result: options, request: fetchOptions } = useRequest(
+    useCallback(() => readOptions(queryParams), [queryParams]),
     {
       sort_options: [
         {
@@ -112,17 +115,17 @@ const AutomationCalculator = ({
   );
 
   const {
-    request: fetchEndpoint,
+    request: fetchData,
     setValue: setApiData,
     ...api
   } = useRequest(
-    async (qp) => {
-      const response = await endpointFunctionMap(dataEndpoint)(qp);
+    useCallback(async () => {
+      const response = await readData(queryParams);
       return {
         ...response,
         items: updateDeltaCost(mapApi(response), costAutomation, costManual),
       };
-    },
+    }, [queryParams, costAutomation, costManual]),
     {
       items: [],
       meta: {
@@ -183,8 +186,8 @@ const AutomationCalculator = ({
    * Get data from API depending on the queryParam.
    */
   useEffect(() => {
-    setOptions(queryParams);
-    fetchEndpoint(queryParams);
+    fetchOptions();
+    fetchData();
   }, [queryParams]);
 
   /**
@@ -313,7 +316,7 @@ AutomationCalculator.propTypes = {
   expandedAttributes: PropTypes.array.isRequired,
   availableChartTypes: PropTypes.array.isRequired,
   dataEndpoint: PropTypes.string.isRequired,
-  optionEndpoint: PropTypes.string.isRequired,
+  optionsEndpoint: PropTypes.string.isRequired,
   schema: PropTypes.array.isRequired,
 };
 

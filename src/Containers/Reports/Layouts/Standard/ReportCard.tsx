@@ -2,7 +2,12 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, {
+  FunctionComponent,
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
 import {
   Card,
   CardBody,
@@ -45,27 +50,31 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   expandedAttributes,
   availableChartTypes,
   dataEndpoint,
-  optionEndpoint,
+  optionsEndpoint,
   schema,
 }) => {
+  const readData = endpointFunctionMap(dataEndpoint);
+  const readOptions = endpointFunctionMap(optionsEndpoint);
+
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(defaultParams);
 
-  const { request: setData, ...dataApi } = useRequest(
-    (qp) => endpointFunctionMap(dataEndpoint)(qp),
-    { meta: { count: 0, legend: [] } }
-  );
-
-  const { result: options, request: setOptions } =
+  const { result: options, request: fetchOptions } =
     useRequest<OptionsReturnType>(
-      (qp) =>
-        endpointFunctionMap(optionEndpoint)(qp) as Promise<OptionsReturnType>,
+      useCallback(() => readOptions(queryParams), [queryParams]),
       { sort_options: [] }
     );
 
+  const { request: fetchData, ...dataApi } = useRequest(
+    useCallback(() => readData(queryParams), [queryParams]),
+    {
+      meta: { count: 0, legend: [] },
+    }
+  );
+
   useEffect(() => {
-    setData(queryParams);
-    setOptions(queryParams);
+    fetchData();
+    fetchOptions();
   }, [queryParams]);
 
   const [activeChartType, setActiveChartType] = useState(

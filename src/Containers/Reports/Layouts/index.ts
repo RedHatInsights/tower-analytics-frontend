@@ -1,20 +1,20 @@
-import DefaultReport from './Default/';
+import StandardReport from './Standard';
 import AutomationCalculator from './AutomationCalculator';
 import { FunctionComponent } from 'react';
 import { ReportGeneratorParams } from '../Shared/types';
 
-export enum ReportLayout {
-  DEFAULT = 'default',
-  AUTOMATION_CALCULATOR = 'automationCalculator',
+export enum LayoutComponentName {
+  standard = 'standard',
+  automationCalculator = 'automationCalculator',
 }
 
-const getReportComponent = (
-  layout: ReportLayout
+const getLayoutComponent = (
+  layout: LayoutComponentName
 ): FunctionComponent<ReportGeneratorParams> => {
   switch (layout) {
-    case ReportLayout.DEFAULT:
-      return DefaultReport;
-    case ReportLayout.AUTOMATION_CALCULATOR:
+    case LayoutComponentName.standard:
+      return StandardReport;
+    case LayoutComponentName.automationCalculator:
       // TODO remove as when AutomationCalculator is TS ready
       return AutomationCalculator as FunctionComponent<ReportGeneratorParams>;
     default:
@@ -24,4 +24,4 @@ const getReportComponent = (
   }
 };
 
-export default getReportComponent;
+export default getLayoutComponent;

@@ -121,6 +121,10 @@ export const generatePdf = (params: PDFParams): Promise<void> =>
   postWithFileReturn(Endpoint.pdfGenerate, params);
 
 /**
+ * This mapper is used by the reports to map url strings to functions
+ * This function should be used if you want to map dynamically to an endpoint
+ * from an URL. In general the exported functions should be preferred.
+ *
  * Used to convert the string representation of the path to the
  * function which handles it. It is not covering endpoints which
  * are not using the default params to read from the endpoint, like
