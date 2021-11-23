@@ -59,11 +59,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(defaultParams);
 
-<<<<<<< HEAD:src/Containers/Reports/Layouts/Standard/ReportCard.tsx
   const { result: options, request: fetchOptions } =
-=======
-  const { result: options, request: setOptions } =
->>>>>>> 45d8e17 (added changes to support pre-selected module filter in Report):src/Containers/Reports/Details/Components/ReportCard.tsx
     useRequest<OptionsReturnType>(
       useCallback(() => readOptions(queryParams), [queryParams]),
       { sort_options: [] }
@@ -90,11 +86,11 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       queryParams.task_action_id.length === 0 &&
       options?.task_action_id
     ) {
-      queryParams.task_action_id = [
-        options.task_action_id
-          .filter((obj) => obj.value === queryParams.task_action_name)[0]
-          .key?.toString(),
-      ];
+      const module = options.task_action_id.filter(
+        (obj) => obj.value === queryParams.task_action_name
+      );
+      if (module.length > 0)
+        queryParams.task_action_id = [module[0].key?.toString()];
     }
   };
 
