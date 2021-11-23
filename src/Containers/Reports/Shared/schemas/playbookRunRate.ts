@@ -8,7 +8,7 @@ import {
 } from 'react-json-chart-builder';
 import { Params, Endpoint } from '../../../../Api';
 import { LayoutComponentName } from '../../Layouts';
-import { CATEGORIES } from '../constants';
+import { TagName } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
 const slug = 'job_template_run_rate';
@@ -18,7 +18,12 @@ const name = 'Job template run rate';
 const description =
   'The number of times a job template has ran in a specified time window.\n\nYou can use this report to be able to tell which playbooks are running most frequently, allowing you to see which groups in your organization are running Ansible the most.';
 
-const categories = [CATEGORIES.executive];
+const tags = [
+  TagName.executive,
+  TagName.jobTemplate,
+  TagName.jobRuns,
+  TagName.timeSeries,
+];
 
 const defaultTableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
@@ -127,7 +132,7 @@ const reportParams: ReportPageParams = {
   slug,
   name,
   description,
-  categories,
+  tags,
   reportParams: {
     slug,
     defaultParams,

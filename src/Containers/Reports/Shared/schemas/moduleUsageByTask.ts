@@ -8,7 +8,7 @@ import {
 } from 'react-json-chart-builder';
 import { Endpoint } from '../../../../Api';
 import { LayoutComponentName } from '../../Layouts';
-import { CATEGORIES } from '../constants';
+import { TagName } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
 const slug = 'module_usage_by_task';
@@ -18,7 +18,13 @@ const name = 'Module usage by task';
 const description =
   'The number of job template and task runs for a specified set of Ansible modules, grouped by task.\n\nYou can use this report to find which tasks are using particular modules, helping you to check things like adoption of purpose-built modules for particular tasks.';
 
-const categories = [CATEGORIES.executive];
+const tags = [
+  TagName.executive,
+  TagName.modules,
+  TagName.tasks,
+  TagName.jobTemplate,
+  TagName.timeSeries,
+];
 
 const defaultTableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
@@ -133,7 +139,7 @@ const reportParams: ReportPageParams = {
   slug,
   name,
   description,
-  categories,
+  tags,
   reportParams: {
     slug,
     defaultParams,
