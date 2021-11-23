@@ -1,26 +1,14 @@
 import ReducerRegistry from '@redhat-cloud-services/frontend-components-utilities/ReducerRegistry';
 import promiseMiddleware from 'redux-promise-middleware';
 
+import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';
+
 let registry;
 
 export function init(...middleware) {
   if (!registry) {
     registry = new ReducerRegistry({}, [promiseMiddleware, ...middleware]);
   }
-
-  //If you want to register all of your reducers, this is good place.
-  /*
-   *  registry.register({
-   *    someName: (state, action) => ({...state})
-   *  });
-   */
-  return registry;
-}
-
-export function getStore() {
+  registry.register({ notifications: notificationsReducer });
   return registry.getStore();
-}
-
-export function register(...args) {
-  return registry.register(...args);
 }
