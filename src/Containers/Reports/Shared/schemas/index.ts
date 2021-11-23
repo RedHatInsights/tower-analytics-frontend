@@ -13,13 +13,6 @@ import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
 import moduleUsageByTask from './moduleUsageByTask';
 import automationCalculator from './automationCalculator';
 
-const defaultReport: ReportPageParams = {
-  slug: '',
-  name: '',
-  description: '',
-  categories: [] as string[],
-};
-
 const prodReports = [
   affectedHostsByPlaybook,
   changesMade,
@@ -38,7 +31,7 @@ const moduleReports = [
 
 const automationCalculatorReport = [automationCalculator];
 
-export const getReport = (searchSlug: string): ReportPageParams => {
+export const getReport = (searchSlug: string): ReportPageParams | undefined => {
   const moduleReportsEnabled = useFeatureFlag(ValidFeatureFlags.moduleReports);
   const newAutomationCalculator = useFeatureFlag(
     ValidFeatureFlags.newAutomationCalculator
@@ -50,7 +43,7 @@ export const getReport = (searchSlug: string): ReportPageParams => {
     ...(newAutomationCalculator ? automationCalculatorReport : []),
   ];
 
-  return reports.find(({ slug }) => slug === searchSlug) ?? defaultReport;
+  return reports.find(({ slug }) => slug === searchSlug);
 };
 
 export const getAllReports = (): ReportPageParams[] => {

@@ -4,14 +4,10 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import {
-  readJobExplorer,
-  readJobExplorerOptions,
-  Params,
-  jobExplorerEndpoint,
-} from '../../../../Api';
+import { Params, Endpoint } from '../../../../Api';
+import { LayoutComponentName } from '../../Layouts';
 import { CATEGORIES } from '../constants';
-import { AttributesType, ReportPageParams, SchemaFnc } from '../types';
+import { AttributesType, ReportPageParams } from '../types';
 
 const slug = 'templates_explorer';
 
@@ -80,7 +76,7 @@ const defaultParams: Params = {
 
 const availableChartTypes = [ChartType.bar];
 
-const schemaFnc: SchemaFnc = (label, y) => [
+const schema = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -89,7 +85,7 @@ const schemaFnc: SchemaFnc = (label, y) => [
     props: {
       height: 400,
       padding: {
-        top: 40,
+        top: 10,
         bottom: 85,
         right: 90,
         left: 90,
@@ -107,13 +103,11 @@ const schemaFnc: SchemaFnc = (label, y) => [
           padding: 50,
         },
       },
-      // It is using names instead of dates so no need for formatting.
-      // tickFormat: xTickFormat,
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label,
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 60,
@@ -136,11 +130,11 @@ const schemaFnc: SchemaFnc = (label, y) => [
       parent: 0,
       props: {
         x: 'name',
-        y,
+        y: 'VAR_y',
       },
       tooltip: {
         standalone: true,
-        labelName: label,
+        labelName: 'VAR_label',
       },
     },
   },
@@ -158,11 +152,11 @@ const reportParams: ReportPageParams = {
     tableAttributes,
     expandedAttributes,
     availableChartTypes,
-    dataEndpointUrl: jobExplorerEndpoint,
-    readData: readJobExplorer,
-    readOptions: readJobExplorerOptions,
-    schemaFnc,
+    dataEndpoint: Endpoint.jobExplorer,
+    optionsEndpoint: Endpoint.jobExplorerOptions,
+    schema,
   },
+  layoutComponent: LayoutComponentName.standard,
 };
 
 export default reportParams;

@@ -29,3 +29,7 @@ export interface PDFParams {
 
 export type ReadParams = { params: Params };
 export type ReadParamsWithPagination = { params: ParamsWithPagination };
+
+export type ReadEndpointFnc = (
+  params: Params | ParamsWithPagination
+) => Promise<ApiJson>;

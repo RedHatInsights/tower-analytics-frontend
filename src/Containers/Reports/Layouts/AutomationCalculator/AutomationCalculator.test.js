@@ -3,7 +3,7 @@ import { history, mountPage } from '../../../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 import AutomationCalculator from './AutomationCalculator';
 import TotalSavings from './TotalSavings';
-import { readROI, readROIOptions } from '../../../../Api';
+import { Endpoint } from '../../../../Api';
 import { roi } from '../../../../Utilities/constants';
 import {
   ChartTopLevelType,
@@ -80,10 +80,9 @@ const pageParams = {
   tableAttributes: [],
   expandedAttributes: [],
   availableChartTypes: [],
-  dataEndpointUrl: '',
-  readData: readROI,
-  readOptions: readROIOptions,
-  schemaFnc: () => [
+  dataEndpoint: Endpoint.ROI,
+  optionsEndpoint: Endpoint.ROIOptions,
+  schema: [
     {
       id: 1,
       kind: ChartKind.wrapper,

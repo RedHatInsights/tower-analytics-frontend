@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 
 import {
@@ -43,6 +43,7 @@ import { Paths } from '../../../../paths';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants';
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
+import { endpointFunctionMap } from '../../../../Api';
 
 const perPageOptions = [
   ...defaultPerPageOptions,
@@ -87,11 +88,13 @@ const AutomationCalculator = ({
   tableAttributes: _ignored3,
   expandedAttributes: _ignored4,
   availableChartTypes: _ignored5,
-  dataEndpointUrl,
-  readData,
-  readOptions,
-  schemaFnc,
+  dataEndpoint,
+  optionsEndpoint,
+  schema,
 }) => {
+  const readData = endpointFunctionMap(dataEndpoint);
+  const readOptions = endpointFunctionMap(optionsEndpoint);
+
   const [costManual, setCostManual] = useState('50');
   const [costAutomation, setCostAutomation] = useState('20');
 
@@ -99,8 +102,8 @@ const AutomationCalculator = ({
   const { queryParams, setFromToolbar, setFromPagination } =
     useQueryParams(defaultParams);
 
-  const { result: options, request: setOptions } = useRequest(
-    () => readOptions(queryParams),
+  const { result: options, request: fetchOptions } = useRequest(
+    useCallback(() => readOptions(queryParams), [queryParams]),
     {
       sort_options: [
         {
@@ -112,17 +115,17 @@ const AutomationCalculator = ({
   );
 
   const {
-    request: fetchEndpoint,
-    setValue,
+    request: fetchData,
+    setValue: setApiData,
     ...api
   } = useRequest(
-    async () => {
+    useCallback(async () => {
       const response = await readData(queryParams);
       return {
         ...response,
         items: updateDeltaCost(mapApi(response), costAutomation, costManual),
       };
-    },
+    }, [queryParams, costAutomation, costManual]),
     {
       items: [],
       meta: {
@@ -130,6 +133,12 @@ const AutomationCalculator = ({
       },
     }
   );
+
+  const setValue = (items) =>
+    setApiData({
+      ...api.result,
+      items,
+    });
 
   /**
    * Modifies one elements avgRunTime in the unfilteredData
@@ -177,8 +186,8 @@ const AutomationCalculator = ({
    * Get data from API depending on the queryParam.
    */
   useEffect(() => {
-    setOptions();
-    fetchEndpoint();
+    fetchOptions();
+    fetchData();
   }, [queryParams]);
 
   /**
@@ -203,7 +212,7 @@ const AutomationCalculator = ({
         <CardTitle>Automation savings</CardTitle>
       </CardHeader>
       <CardBody>
-        <Chart schema={schemaFnc()} data={filterDisabled(api.result.items)} />
+        <Chart schema={schema} data={filterDisabled(api.result.items)} />
       </CardBody>
     </Card>
   );
@@ -256,11 +265,11 @@ const AutomationCalculator = ({
             <DownloadPdfButton
               key="download-button"
               slug={slug}
-              endpointUrl={dataEndpointUrl}
+              endpointUrl={dataEndpoint}
               queryParams={queryParams}
-              y={undefined}
-              label={undefined}
-              xTickFormat={undefined}
+              y={''}
+              label={''}
+              xTickFormat={''}
               totalCount={api.result.meta.count}
             />,
           ]}
@@ -306,10 +315,9 @@ AutomationCalculator.propTypes = {
   tableAttributes: PropTypes.array.isRequired,
   expandedAttributes: PropTypes.array.isRequired,
   availableChartTypes: PropTypes.array.isRequired,
-  dataEndpointUrl: PropTypes.string.isRequired,
-  readData: PropTypes.func.isRequired,
-  readOptions: PropTypes.func.isRequired,
-  schemaFnc: PropTypes.func.isRequired,
+  dataEndpoint: PropTypes.string.isRequired,
+  optionsEndpoint: PropTypes.string.isRequired,
+  schema: PropTypes.array.isRequired,
 };
 
 export default AutomationCalculator;

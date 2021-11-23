@@ -6,13 +6,10 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import {
-  eventExplorerEndpoint,
-  readEventExplorer,
-  readEventExplorerOptions,
-} from '../../../../Api';
+import { Endpoint } from '../../../../Api';
+import { LayoutComponentName } from '../../Layouts';
 import { CATEGORIES } from '../constants';
-import { AttributesType, ReportPageParams, SchemaFnc } from '../types';
+import { AttributesType, ReportPageParams } from '../types';
 
 const slug = 'most_used_modules';
 
@@ -58,12 +55,7 @@ const defaultParams = {
 };
 const availableChartTypes = [ChartType.line, ChartType.bar];
 
-const schemaFnc: SchemaFnc = (
-  label,
-  y,
-  xTickFormat,
-  chartType = ChartType.line
-) => [
+const schema = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -72,20 +64,16 @@ const schemaFnc: SchemaFnc = (
     props: {
       height: 400,
       padding: {
-        top: 40,
+        top: 10,
         bottom: 85,
         right: 90,
         left: 90,
-      },
-      domainPadding: {
-        y: 25,
-        x: chartType == ChartType.bar ? 85 : 0,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
       label: 'Date',
-      tickFormat: xTickFormat,
+      tickFormat: 'VAR_xTickFormat',
       style: {
         axisLabel: {
           padding: 50,
@@ -95,7 +83,7 @@ const schemaFnc: SchemaFnc = (
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label,
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 60,
@@ -127,11 +115,11 @@ const schemaFnc: SchemaFnc = (
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: chartType,
+      type: 'VAR_chartType',
       parent: 0,
       props: {
         x: 'created_date',
-        y,
+        y: 'VAR_y',
       },
       tooltip: {
         labelName: '',
@@ -152,11 +140,11 @@ const reportParams: ReportPageParams = {
     tableAttributes,
     expandedAttributes,
     availableChartTypes,
-    dataEndpointUrl: eventExplorerEndpoint,
-    readData: readEventExplorer,
-    readOptions: readEventExplorerOptions,
-    schemaFnc,
+    dataEndpoint: Endpoint.eventExplorer,
+    optionsEndpoint: Endpoint.eventExplorerOptions,
+    schema,
   },
+  layoutComponent: LayoutComponentName.standard,
 };
 
 export default reportParams;

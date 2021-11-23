@@ -24,7 +24,7 @@ const Add = () => {
     isSuccess,
     request: fetchPlanOptions,
   } = useRequest(
-    useCallback(() => readPlanOptions(), []),
+    useCallback(() => readPlanOptions({}), []),
     {}
   );
 

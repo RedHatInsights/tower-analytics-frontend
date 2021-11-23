@@ -51,7 +51,7 @@ const List = () => {
     result: options,
     isSuccess,
     request: fetchOptions,
-  } = useRequest(() => readPlanOptions(), {});
+  } = useRequest(() => readPlanOptions({}), {});
 
   const {
     result: { items: data, rbac, meta },

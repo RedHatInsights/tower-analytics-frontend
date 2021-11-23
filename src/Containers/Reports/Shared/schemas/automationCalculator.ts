@@ -1,13 +1,13 @@
 import { CATEGORIES } from '../constants';
-import { ReportPageParams, SchemaFnc } from '../types';
-import AutomationCalculator from '../../CustomReports/AutomationCalculator';
+import { ReportPageParams } from '../types';
 import { roi } from '../../../../Utilities/constants';
-import { readROI, readROIOptions, ROIEndpoint } from '../../../../Api';
+import { Endpoint } from '../../../../Api';
 import {
   ChartKind,
   ChartTopLevelType,
   ChartType,
 } from 'react-json-chart-builder';
+import { LayoutComponentName } from '../../Layouts';
 
 const slug = 'automation_calculator';
 
@@ -19,7 +19,7 @@ const categories = [CATEGORIES.executive];
 
 const defaultParams = roi.defaultParams;
 
-const schemaFnc: SchemaFnc = () => [
+const schema = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -28,14 +28,10 @@ const schemaFnc: SchemaFnc = () => [
     props: {
       height: 400,
       padding: {
-        top: 40,
+        top: 10,
         bottom: 150,
         right: 0,
         left: 90,
-      },
-      domainPadding: {
-        y: 25,
-        x: 85,
       },
     },
     xAxis: {
@@ -101,19 +97,11 @@ const reportParams: ReportPageParams = {
     tableAttributes: [],
     expandedAttributes: [],
     availableChartTypes: [],
-    dataEndpointUrl: ROIEndpoint,
-    readData: readROI,
-    readOptions: readROIOptions,
-    schemaFnc,
+    dataEndpoint: Endpoint.ROI,
+    optionsEndpoint: Endpoint.ROIOptions,
+    schema,
   },
-  /*
-   * TODO!
-   * Disabling typescript because AutomationCalculator is not TS.
-   * It cannot be made to TS until the Query params is made into TS.
-   */
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  ReportComponent: AutomationCalculator,
+  layoutComponent: LayoutComponentName.automationCalculator,
 };
 
 export default reportParams;

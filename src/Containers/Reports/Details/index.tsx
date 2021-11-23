@@ -11,7 +11,7 @@ import {
 
 import Breadcrumbs from '../../../Components/Breadcrumbs';
 
-import { ReportCard } from './Components/';
+import getComponent from '../Layouts';
 import { getReport } from '../Shared/schemas';
 import paths from '../paths';
 
@@ -22,33 +22,26 @@ const Description = styled.p`
 
 const Details: FunctionComponent<Record<string, never>> = () => {
   const { slug } = useParams<{ slug: string }>();
-  const {
-    name,
-    description,
-    reportParams,
-    ReportComponent,
-    slug: reportSlug,
-  } = getReport(slug);
+  const report = getReport(slug);
 
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
 
-  const ReportContent = ReportComponent ?? ReportCard;
-
   const render = () => {
-    if (reportSlug !== '' && reportParams)
+    if (report) {
+      const ReportContent = getComponent(report.layoutComponent);
       return (
         <>
           <PageHeader>
             <Breadcrumbs items={breadcrumbsItems} />
-            <PageHeaderTitle title={name} />
-            <Description>{description}</Description>
+            <PageHeaderTitle title={report.name} />
+            <Description>{report.description}</Description>
           </PageHeader>
           <Main>
-            <ReportContent {...reportParams} />
+            <ReportContent {...report.reportParams} />
           </Main>
         </>
       );
-    else
+    } else
       return (
         <Error404
           title="404: Page does not exist."

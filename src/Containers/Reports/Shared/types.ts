@@ -1,14 +1,14 @@
-import { FunctionComponent } from 'react';
 import { ChartSchemaElement, ChartType } from 'react-json-chart-builder';
-import { ApiJson, Params, ParamsWithPagination } from '../../../Api';
+import { Endpoint, Params } from '../../../Api';
+import { LayoutComponentName } from '../Layouts';
 
 export type AttributesType = { key: string; value: string }[];
-export type SchemaFnc = (
-  label?: string,
-  y?: string,
-  xTickFormat?: string,
-  chartType?: ChartType
-) => ChartSchemaElement[];
+export type SchemaFnc = (props: {
+  label?: string;
+  y?: string;
+  xTickFormat?: string;
+  chartType?: ChartType;
+}) => ChartSchemaElement[];
 
 export interface ReportGeneratorParams {
   slug: string;
@@ -17,10 +17,9 @@ export interface ReportGeneratorParams {
   tableAttributes: string[];
   expandedAttributes: string[];
   availableChartTypes: string[];
-  dataEndpointUrl: string;
-  readData: (options: ParamsWithPagination) => Promise<ApiJson>;
-  readOptions: (options: Params) => Promise<ApiJson>;
-  schemaFnc: SchemaFnc;
+  dataEndpoint: Endpoint;
+  optionsEndpoint: Endpoint;
+  schema: unknown;
 }
 
 export interface ReportPageParams {
@@ -28,6 +27,6 @@ export interface ReportPageParams {
   name: string;
   description: string;
   categories: string[];
-  reportParams?: ReportGeneratorParams;
-  ReportComponent?: FunctionComponent<ReportGeneratorParams>;
+  reportParams: ReportGeneratorParams;
+  layoutComponent: LayoutComponentName;
 }
