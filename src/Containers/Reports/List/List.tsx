@@ -7,11 +7,13 @@ import {
 import { Gallery } from '@patternfly/react-core';
 
 import ListItem from './ListItem';
+import MagicButton from './MagicButton';
 import { getAllReports } from '../Shared/schemas';
 
 const List: FunctionComponent<Record<string, never>> = () => {
   return (
     <>
+      <MagicButton />
       <PageHeader>
         <PageHeaderTitle title={'Reports'} />
       </PageHeader>
