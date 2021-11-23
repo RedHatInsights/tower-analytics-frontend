@@ -74,15 +74,6 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       () => readOptions(queryParams) as Promise<OptionsReturnType>,
       { sort_options: [] }
     );
-  const updateFilter = () => {
-    if (queryParams.task_action_name && options?.task_action_id) {
-      queryParams.task_action_id =
-        [options.task_action_id
-          .filter((obj) => obj.value === queryParams.task_action_name)[0]
-          .key?.toString()];
-    }
-  }
-  updateFilter();
 
   const { request: setData, ...dataApi } = useRequest(
     useCallback(() => readData(queryParams), [queryParams]),
@@ -93,6 +84,25 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
     setData();
     setOptions();
   }, [queryParams]);
+
+  const updateFilter = () => {
+    if (
+      queryParams.task_action_name &&
+      queryParams.task_action_id.length === 0 &&
+      options?.task_action_id
+    ) {
+      queryParams.task_action_id = [
+        options.task_action_id
+          .filter((obj) => obj.value === queryParams.task_action_name)[0]
+          .key?.toString(),
+      ];
+    }
+  };
+
+  useEffect(() => {
+    updateFilter();
+    setData();
+  }, [options?.task_action_id]);
 
   const [activeChartType, setActiveChartType] = useState(
     availableChartTypes[0]
