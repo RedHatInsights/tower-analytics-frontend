@@ -14,7 +14,7 @@ import {
 import { CATEGORIES } from '../constants';
 import { AttributesType, ReportPageParams, SchemaFnc } from '../types';
 
-const slug = 'aa_2.1_migration';
+const slug = 'aa_2_1_migration';
 
 const name = 'AA 2.1 Migration';
 
