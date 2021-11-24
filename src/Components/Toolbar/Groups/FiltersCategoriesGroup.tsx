@@ -27,25 +27,21 @@ const FilterCategoriesGroup: FunctionComponent<Props> = ({
         categoryKey="category_selector"
         selected={currentCategory}
         setSelected={setCurrentCategory}
-        categories={Object.keys(filterCategories).map((el) => {
-          return {
-            key: el,
-            name: optionsForCategories[el].name,
-          };
-        })}
+        categories={Object.keys(filterCategories).map((el) => ({
+          key: el,
+          name: optionsForCategories[el].name,
+        }))}
       />
-      {Object.keys(filterCategories).map((key) => {
-        return (
-          <ToolbarInput
-            key={key}
-            categoryKey={key}
-            value={filters[key]}
-            selectOptions={filterCategories[key]}
-            isVisible={currentCategory === key}
-            setValue={(value) => setFilters(key, value)}
-          />
-        );
-      })}
+      {Object.keys(filterCategories).map((key) => (
+        <ToolbarInput
+          key={key}
+          categoryKey={key}
+          value={filters[key]}
+          selectOptions={filterCategories[key]}
+          isVisible={currentCategory === key}
+          setValue={(value) => setFilters(key, value)}
+        />
+      ))}
     </ToolbarGroup>
   );
 };
