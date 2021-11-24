@@ -8,19 +8,24 @@ import {
 } from 'react-json-chart-builder';
 import { Endpoint } from '../../../../Api';
 import { LayoutComponentName } from '../../Layouts';
-import { CATEGORIES } from '../constants';
+import { TagName } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
-const slug = 'aa_2_1_migration';
+const slug = 'aa_2_1_onboarding';
 
-const name = 'AA 2.1 Migration';
+const name = 'AA 2.1 Onboarding Report';
 
-// TODO: Ask Harpreet or John for clarification on use of this report
-const description = `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce velit purus, ultricies sed convallis sed, euismod ut felis. Maecenas bibendum aliquet felis. 
+const description = `This report shows templates that utilize certain module types that have been identified to pose potential problems when migrating to AAP 2.1.
 
-Mauris magna massa, vulputate eget velit tempor, cursus viverra risus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin ex dui, dapibus at augue ut, fermentum volutpat justo.`;
+You can use this report to determine the last job run of these templates, as well as a link into the Controller instance where the template is defined.`;
 
-const categories = [CATEGORIES.executive];
+const tags = [
+  TagName.operations,
+  TagName.onboarding,
+  TagName.modules,
+  TagName.jobTemplate,
+  TagName.timeSeries,
+];
 
 const defaultTableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
@@ -53,7 +58,7 @@ const defaultParams = {
   org_id: [],
   status: [],
   task_id: [],
-  task_action_name: 'verbose_module_58',
+  task_action_name: ['file', 'fetch'],
   task_action_id: [],
   template_id: [],
 };
@@ -137,7 +142,7 @@ const reportParams: ReportPageParams = {
   slug,
   name,
   description,
-  categories,
+  tags,
   reportParams: {
     slug,
     defaultParams,

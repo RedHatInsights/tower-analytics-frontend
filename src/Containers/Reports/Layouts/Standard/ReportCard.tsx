@@ -56,8 +56,13 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
 
-  const { queryParams, setFromPagination, setFromToolbar } =
-    useQueryParams(defaultParams);
+  const {
+    queryParams,
+    setFromPagination,
+    setFromToolbar,
+    // dispatch action to set filter before initial render of chart
+    // dispatch: queryParamsDispatch,
+  } = useQueryParams(defaultParams);
 
   const { result: options, request: fetchOptions } =
     useRequest<OptionsReturnType>(
@@ -76,7 +81,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   );
 
   useEffect(() => {
-    fetchData();
+    setData();
     fetchOptions();
   }, [queryParams]);
 
@@ -86,11 +91,24 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       queryParams.task_action_id.length === 0 &&
       options?.task_action_id
     ) {
-      const module = options.task_action_id.filter(
-        (obj) => obj.value === queryParams.task_action_name
-      );
-      if (module.length > 0)
-        queryParams.task_action_id = [module[0].key?.toString()];
+      if (Array.isArray(queryParams.task_action_name)) {
+        const task_action_name = queryParams.task_action_name as Array<T>;
+        const modules = options.task_action_id.filter((obj) =>
+          task_action_name.includes(obj.value)
+        );
+        queryParams.task_action_id = modules.map((module) =>
+          module.key?.toString()
+        );
+
+        // dispatch action to set filter before initial render of chart
+        // this check does not seem needed any longer
+        // if (modules.length > 0) {
+        //   queryParamsDispatch({
+        //     type: 'SET_MODULE',
+        //     value: { task_action_name: modules },
+        //   });
+        // }
+      }
     }
   };
 
