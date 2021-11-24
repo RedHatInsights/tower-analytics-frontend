@@ -28,8 +28,9 @@ const moduleReports = [
   moduleUsageByOrganization,
   moduleUsageByJobTemplate,
   moduleUsageByTask,
-  aa21OnboardingReport,
 ];
+
+const onboardingReports = [aa21OnboardingReport];
 
 const automationCalculatorReport = [automationCalculator];
 
@@ -38,11 +39,15 @@ export const getReport = (searchSlug: string): ReportPageParams | undefined => {
   const newAutomationCalculator = useFeatureFlag(
     ValidFeatureFlags.newAutomationCalculator
   );
+  const aa21OnboardingReportEnabled = useFeatureFlag(
+    ValidFeatureFlags.onboardingReports
+  );
 
   const reports = [
     ...prodReports,
     ...(moduleReportsEnabled ? moduleReports : []),
     ...(newAutomationCalculator ? automationCalculatorReport : []),
+    ...(aa21OnboardingReportEnabled ? onboardingReports : []),
   ];
 
   return reports.find(({ slug }) => slug === searchSlug);
@@ -53,10 +58,14 @@ export const getAllReports = (): ReportPageParams[] => {
   const newAutomationCalculator = useFeatureFlag(
     ValidFeatureFlags.newAutomationCalculator
   );
+  const aa21OnboardingReportEnabled = useFeatureFlag(
+    ValidFeatureFlags.onboardingReports
+  );
 
   return [
     ...prodReports,
     ...(moduleReportsEnabled ? moduleReports : []),
     ...(newAutomationCalculator ? automationCalculatorReport : []),
+    ...(aa21OnboardingReportEnabled ? onboardingReports : []),
   ];
 };
