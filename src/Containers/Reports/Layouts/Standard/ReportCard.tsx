@@ -83,26 +83,25 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
     if (
       queryParams.task_action_name &&
       queryParams.task_action_id.length === 0 &&
-      options?.task_action_id
+      options?.task_action_id &&
+      Array.isArray(queryParams.task_action_name)
     ) {
-      if (Array.isArray(queryParams.task_action_name)) {
-        const task_action_name = queryParams.task_action_name as Array<T>;
-        const modules = options.task_action_id.filter((obj) =>
-          task_action_name.includes(obj.value)
-        );
-        queryParams.task_action_id = modules.map((module) =>
-          module.key?.toString()
-        );
+      const task_action_name = queryParams.task_action_name as Array<T>;
+      const modules = options.task_action_id.filter((obj) =>
+        task_action_name.includes(obj.value)
+      );
+      queryParams.task_action_id = modules.map((module) =>
+        module.key?.toString()
+      );
 
-        // dispatch action to set filter before initial render of chart
-        // this check does not seem needed any longer
-        // if (modules.length > 0) {
-        //   queryParamsDispatch({
-        //     type: 'SET_MODULE',
-        //     value: { task_action_name: modules },
-        //   });
-        // }
-      }
+      // dispatch action to set filter before initial render of chart
+      // this check does not seem needed any longer
+      // if (modules.length > 0) {
+      //   queryParamsDispatch({
+      //     type: 'SET_MODULE',
+      //     value: { task_action_name: modules },
+      //   });
+      // }
     }
   };
 
