@@ -110,8 +110,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
     updateFilter();
     setData();
   }, [options?.task_action_id]);
-    
-  
+
   const [activeChartType, setActiveChartType] = useState(
     availableChartTypes[0]
   );
