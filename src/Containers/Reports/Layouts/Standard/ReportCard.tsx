@@ -55,7 +55,6 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
 }) => {
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
-
   const {
     queryParams,
     setFromPagination,
@@ -69,11 +68,6 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       useCallback(() => readOptions(queryParams), [queryParams]),
       { sort_options: [] }
     );
-
-  const { request: setData, ...dataApi } = useRequest(
-    useCallback(() => readData(queryParams), [queryParams]),
-    { meta: { count: 0, legend: [] } }
-  );
 
   const { request: setData, ...dataApi } = useRequest(
     useCallback(() => readData(queryParams), [queryParams]),
@@ -116,7 +110,8 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
     updateFilter();
     setData();
   }, [options?.task_action_id]);
-
+    
+  
   const [activeChartType, setActiveChartType] = useState(
     availableChartTypes[0]
   );
