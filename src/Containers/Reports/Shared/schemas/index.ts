@@ -10,7 +10,7 @@ import templatesExplorer from './templatesExplorer';
 import mostUsedModules from './mostUsedModules';
 import moduleUsageByOrganization from './moduleUsageByOrganization';
 import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
-import moduleUsageByFile from './moduleUsageByFile';
+import aa21OnboardingReport from './aa21OnboardingReport';
 import moduleUsageByTask from './moduleUsageByTask';
 import automationCalculator from './automationCalculator';
 
@@ -28,7 +28,7 @@ const moduleReports = [
   moduleUsageByOrganization,
   moduleUsageByJobTemplate,
   moduleUsageByTask,
-  moduleUsageByFile,
+  aa21OnboardingReport,
 ];
 
 const automationCalculatorReport = [automationCalculator];
