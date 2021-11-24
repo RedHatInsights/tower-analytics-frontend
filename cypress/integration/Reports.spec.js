@@ -224,7 +224,6 @@ describe('Report: Module Usage By Task Smoketests', () => {
   });
 });
 
-
 describe('Report: AA 2.1 Migration', () => {
   beforeEach(() => {
     cy.loginFlow();
@@ -233,9 +232,9 @@ describe('Report: AA 2.1 Migration', () => {
 
   it('Can Switch between Line and Bar chart without breaking UI', () => {
     cy.get('#bar').click();
-    cy.screenshot('report_mubt_bar.png');
+    cy.screenshot('report_aa21m_bar.png');
     cy.get('#line').click();
-    cy.screenshot('report_mubt_line.png');
+    cy.screenshot('report_aa21m_line.png');
   });
 
   it('Can change lookback', () => {
