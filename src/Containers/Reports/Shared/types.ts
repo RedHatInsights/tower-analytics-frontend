@@ -1,5 +1,5 @@
 import { ChartSchemaElement, ChartType } from 'react-json-chart-builder';
-import { ApiJson, Params, ParamsWithPagination } from '../../../Api';
+import { Endpoint, Params } from '../../../Api';
 import { ReportLayout } from '../Layouts';
 
 export type AttributesType = { key: string; value: string }[];
@@ -17,9 +17,8 @@ export interface ReportGeneratorParams {
   tableAttributes: string[];
   expandedAttributes: string[];
   availableChartTypes: string[];
-  dataEndpointUrl: string;
-  readData: (options: ParamsWithPagination) => Promise<ApiJson>;
-  readOptions: (options: Params) => Promise<ApiJson>;
+  dataEndpoint: Endpoint;
+  optionEndpoint: Endpoint;
   schemaFnc: SchemaFnc;
 }
 

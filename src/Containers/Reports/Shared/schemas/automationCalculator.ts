@@ -1,7 +1,7 @@
 import { CATEGORIES } from '../constants';
 import { ReportPageParams, SchemaFnc } from '../types';
 import { roi } from '../../../../Utilities/constants';
-import { readROI, readROIOptions, Endpoint } from '../../../../Api';
+import { Endpoint } from '../../../../Api';
 import {
   ChartKind,
   ChartTopLevelType,
@@ -28,7 +28,7 @@ const schemaFnc: SchemaFnc = () => [
     props: {
       height: 400,
       padding: {
-        top: 40,
+        top: 10,
         bottom: 150,
         right: 0,
         left: 90,
@@ -101,9 +101,8 @@ const reportParams: ReportPageParams = {
     tableAttributes: [],
     expandedAttributes: [],
     availableChartTypes: [],
-    dataEndpointUrl: Endpoint.ROI,
-    readData: readROI,
-    readOptions: readROIOptions,
+    dataEndpoint: Endpoint.ROI,
+    optionEndpoint: Endpoint.ROIOptions,
     schemaFnc,
   },
   componentName: ReportLayout.AUTOMATION_CALCULATOR,

@@ -2,17 +2,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, {
-  FunctionComponent,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
-import styled from 'styled-components';
-
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import {
   Card,
-  CardBody as PFCardBody,
+  CardBody,
   CardFooter,
   PaginationVariant,
   ToggleGroup,
@@ -33,16 +26,9 @@ import Chart from './Chart';
 import Table from './Table';
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
 import { useFeatureFlag, ValidFeatureFlags } from '../../../../FeatureFlags';
-import { OptionsReturnType } from '../../../../Api';
+import { endpointFunctionMap, OptionsReturnType } from '../../../../Api';
 import { capitalize } from '../../../../Utilities/helpers';
 import { perPageOptions } from '../../Shared/constants';
-
-const CardBody = styled(PFCardBody)`
-  & .pf-c-toolbar,
-  & .pf-c-toolbar__content {
-    padding: 0;
-  }
-`;
 
 const getDateFormatByGranularity = (granularity: string): string => {
   if (granularity === 'yearly') return 'formatAsYear';
@@ -58,9 +44,8 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   tableAttributes,
   expandedAttributes,
   availableChartTypes,
-  dataEndpointUrl,
-  readData,
-  readOptions,
+  dataEndpoint,
+  optionEndpoint,
   schemaFnc,
 }) => {
   const pdfDownloadEnabled = useFeatureFlag(
@@ -70,9 +55,15 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(defaultParams);
 
+  const { request: setData, ...dataApi } = useRequest(
+    (qp) => endpointFunctionMap(dataEndpoint)(qp),
+    { meta: { count: 0, legend: [] } }
+  );
+
   const { result: options, request: setOptions } =
     useRequest<OptionsReturnType>(
-      () => readOptions(queryParams) as Promise<OptionsReturnType>,
+      (qp) =>
+        endpointFunctionMap(optionEndpoint)(qp) as Promise<OptionsReturnType>,
       { sort_options: [] }
     );
 
@@ -82,8 +73,8 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   );
 
   useEffect(() => {
-    setData();
-    setOptions();
+    setData(queryParams);
+    setOptions(queryParams);
   }, [queryParams]);
 
   const updateFilter = () => {
@@ -173,7 +164,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       <DownloadPdfButton
         key="download-button"
         slug={slug}
-        endpointUrl={dataEndpointUrl}
+        endpointUrl={dataEndpoint}
         queryParams={queryParams}
         y={chartParams.y}
         label={chartParams.label}
