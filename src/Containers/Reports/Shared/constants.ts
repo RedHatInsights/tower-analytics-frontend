@@ -4,7 +4,7 @@ export enum TagName {
   operations = 'Operations',
   executive = 'Executive',
   subscription = 'Subscription',
-  migration = 'Migration',
+  onboarding = 'Onboarding',
   controller = 'Controller',
   catalog = 'Catalog',
   automationHub = 'Automation Hub',
@@ -39,7 +39,7 @@ export const TAGS: Tag[] = [
       'This report provides useful information around subscription data, helping you make decisions around compliance.',
   },
   {
-    key: TagName.migration,
+    key: TagName.onboarding,
     name: 'Migration',
     description:
       'This report provides useful information around migrations, such as helping to identify what could be necessary to move to newer versions of the Ansible Automation Platform.',

@@ -10,6 +10,7 @@ import templatesExplorer from './templatesExplorer';
 import mostUsedModules from './mostUsedModules';
 import moduleUsageByOrganization from './moduleUsageByOrganization';
 import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
+import aa21OnboardingReport from './aa21OnboardingReport';
 import moduleUsageByTask from './moduleUsageByTask';
 import automationCalculator from './automationCalculator';
 
@@ -29,6 +30,8 @@ const moduleReports = [
   moduleUsageByTask,
 ];
 
+const onboardingReports = [aa21OnboardingReport];
+
 const automationCalculatorReport = [automationCalculator];
 
 export const getReport = (searchSlug: string): ReportPageParams | undefined => {
@@ -36,11 +39,15 @@ export const getReport = (searchSlug: string): ReportPageParams | undefined => {
   const newAutomationCalculator = useFeatureFlag(
     ValidFeatureFlags.newAutomationCalculator
   );
+  const aa21OnboardingReportEnabled = useFeatureFlag(
+    ValidFeatureFlags.onboardingReports
+  );
 
   const reports = [
     ...prodReports,
     ...(moduleReportsEnabled ? moduleReports : []),
     ...(newAutomationCalculator ? automationCalculatorReport : []),
+    ...(aa21OnboardingReportEnabled ? onboardingReports : []),
   ];
 
   return reports.find(({ slug }) => slug === searchSlug);
@@ -51,10 +58,14 @@ export const getAllReports = (): ReportPageParams[] => {
   const newAutomationCalculator = useFeatureFlag(
     ValidFeatureFlags.newAutomationCalculator
   );
+  const aa21OnboardingReportEnabled = useFeatureFlag(
+    ValidFeatureFlags.onboardingReports
+  );
 
   return [
     ...prodReports,
     ...(moduleReportsEnabled ? moduleReports : []),
     ...(newAutomationCalculator ? automationCalculatorReport : []),
+    ...(aa21OnboardingReportEnabled ? onboardingReports : []),
   ];
 };

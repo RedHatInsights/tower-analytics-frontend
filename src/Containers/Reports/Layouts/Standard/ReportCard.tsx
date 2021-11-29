@@ -55,9 +55,13 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
 }) => {
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
-
-  const { queryParams, setFromPagination, setFromToolbar } =
-    useQueryParams(defaultParams);
+  const {
+    queryParams,
+    setFromPagination,
+    setFromToolbar,
+    // dispatch action to set filter before initial render of chart
+    // dispatch: queryParamsDispatch,
+  } = useQueryParams(defaultParams);
 
   const { result: options, request: fetchOptions } =
     useRequest<OptionsReturnType>(
@@ -65,17 +69,46 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       { sort_options: [] }
     );
 
-  const { request: fetchData, ...dataApi } = useRequest(
+  const { request: setData, ...dataApi } = useRequest(
     useCallback(() => readData(queryParams), [queryParams]),
-    {
-      meta: { count: 0, legend: [] },
-    }
+    { meta: { count: 0, legend: [] } }
   );
 
   useEffect(() => {
-    fetchData();
+    setData();
     fetchOptions();
   }, [queryParams]);
+
+  const updateFilter = () => {
+    if (
+      queryParams.task_action_name &&
+      queryParams.task_action_id.length === 0 &&
+      options?.task_action_id &&
+      Array.isArray(queryParams.task_action_name)
+    ) {
+      const task_action_name = queryParams.task_action_name as Array<T>;
+      const modules = options.task_action_id.filter((obj) =>
+        task_action_name.includes(obj.value)
+      );
+      queryParams.task_action_id = modules.map((module) =>
+        module.key?.toString()
+      );
+
+      // dispatch action to set filter before initial render of chart
+      // this check does not seem needed any longer
+      // if (modules.length > 0) {
+      //   queryParamsDispatch({
+      //     type: 'SET_MODULE',
+      //     value: { task_action_name: modules },
+      //   });
+      // }
+    }
+  };
+
+  useEffect(() => {
+    updateFilter();
+    setData();
+  }, [options?.task_action_id]);
 
   const [activeChartType, setActiveChartType] = useState(
     availableChartTypes[0]
