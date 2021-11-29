@@ -1,6 +1,7 @@
 {
   "extends": [
-    "@redhat-cloud-services/eslint-config-redhat-cloud-services"
+    "@redhat-cloud-services/eslint-config-redhat-cloud-services",
+    "plugin:cypress/recommended"
   ],
   "globals": {
     "insights": true,

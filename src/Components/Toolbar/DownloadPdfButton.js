@@ -114,7 +114,11 @@ const DownloadPdfButton = ({
               onChange={() => setIsCurrent(false)}
               isChecked={!isCurrent}
               name="optionSelected"
-              label={totalCount <= 100 ? `All ${totalCount} items` : 'Top 100'}
+              label={
+                totalCount <= 100
+                  ? `All ${totalCount} items`
+                  : `Top 100 of ${totalCount} items`
+              }
               id="total-count-radio"
               aria-label="total-count-radio"
             />
