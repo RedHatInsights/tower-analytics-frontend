@@ -1,5 +1,4 @@
 import {
-  ChartSchemaElement,
   ChartKind,
   ChartLegendOrientation,
   ChartLegendPosition,
@@ -7,12 +6,9 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import {
-  eventExplorerEndpoint,
-  readEventExplorer,
-  readEventExplorerOptions,
-} from '../../../../Api';
-import { CATEGORIES } from '../constants';
+import { Endpoint } from '../../../../Api';
+import { LayoutComponentName } from '../../Layouts';
+import { TagName } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
 const slug = 'most_used_modules';
@@ -22,7 +18,13 @@ const name = 'Most used modules';
 const description =
   'The number of job template and task runs, grouped by Ansible module usage.\n\nYou can use this report to find which modules are being used the most across your automation, helping you to check things like organization-wide adoption of purpose-built modules over potentially less performant, catch-all solutions.';
 
-const categories = [CATEGORIES.executive];
+const tags = [
+  TagName.executive,
+  TagName.modules,
+  TagName.jobTemplate,
+  TagName.tasks,
+  TagName.timeSeries,
+];
 
 const defaultTableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
@@ -54,16 +56,12 @@ const defaultParams = {
   job_type: [],
   org_id: [],
   status: [],
+  task_action_id: [],
   template_id: [],
 };
 const availableChartTypes = [ChartType.line, ChartType.bar];
 
-const schemaFnc = (
-  label: string,
-  y: string,
-  xTickFormat: string,
-  chartType: ChartType
-): ChartSchemaElement[] => [
+const schema = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -72,20 +70,16 @@ const schemaFnc = (
     props: {
       height: 400,
       padding: {
-        top: 40,
+        top: 10,
         bottom: 85,
         right: 90,
         left: 90,
-      },
-      domainPadding: {
-        y: 25,
-        x: chartType == ChartType.bar ? 85 : 0,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
       label: 'Date',
-      tickFormat: xTickFormat,
+      tickFormat: 'VAR_xTickFormat',
       style: {
         axisLabel: {
           padding: 50,
@@ -95,7 +89,7 @@ const schemaFnc = (
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label,
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 60,
@@ -127,11 +121,11 @@ const schemaFnc = (
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: chartType,
+      type: 'VAR_chartType',
       parent: 0,
       props: {
         x: 'created_date',
-        y,
+        y: 'VAR_y',
       },
       tooltip: {
         labelName: '',
@@ -144,19 +138,19 @@ const reportParams: ReportPageParams = {
   slug,
   name,
   description,
-  categories,
-  report: {
+  tags,
+  reportParams: {
     slug,
     defaultParams,
     defaultTableHeaders,
     tableAttributes,
     expandedAttributes,
     availableChartTypes,
-    dataEndpointUrl: eventExplorerEndpoint,
-    readData: readEventExplorer,
-    readOptions: readEventExplorerOptions,
-    schemaFnc,
+    dataEndpoint: Endpoint.eventExplorer,
+    optionsEndpoint: Endpoint.eventExplorerOptions,
+    schema,
   },
+  layoutComponent: LayoutComponentName.standard,
 };
 
 export default reportParams;

@@ -1,6 +1,6 @@
 export type Params = Record<
   string,
-  string | number | string[] | number[] | boolean
+  string | number | string[] | number[] | boolean | undefined
 >;
 
 export type OptionsReturnType = Record<
@@ -24,7 +24,12 @@ export interface PDFParams {
   y: string;
   label: string;
   x_tick_format: string;
+  showExtraRows: boolean;
 }
 
 export type ReadParams = { params: Params };
 export type ReadParamsWithPagination = { params: ParamsWithPagination };
+
+export type ReadEndpointFnc = (
+  params: Params | ParamsWithPagination
+) => Promise<ApiJson>;

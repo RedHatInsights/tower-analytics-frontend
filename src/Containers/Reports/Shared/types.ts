@@ -1,13 +1,15 @@
 import { ChartSchemaElement, ChartType } from 'react-json-chart-builder';
-import { ApiJson, Params, ParamsWithPagination } from '../../../Api';
+import { Endpoint, Params } from '../../../Api';
+import { LayoutComponentName } from '../Layouts';
+import { TagName } from './constants';
 
 export type AttributesType = { key: string; value: string }[];
-export type SchemaFnc = (
-  label: string,
-  y: string,
-  xTickFormat: string,
-  chartType: ChartType.line
-) => ChartSchemaElement[];
+export type SchemaFnc = (props: {
+  label?: string;
+  y?: string;
+  xTickFormat?: string;
+  chartType?: ChartType;
+}) => ChartSchemaElement[];
 
 export interface ReportGeneratorParams {
   slug: string;
@@ -16,16 +18,22 @@ export interface ReportGeneratorParams {
   tableAttributes: string[];
   expandedAttributes: string[];
   availableChartTypes: string[];
-  dataEndpointUrl: string;
-  readData: (options: ParamsWithPagination) => Promise<ApiJson>;
-  readOptions: (options: Params) => Promise<ApiJson>;
-  schemaFnc: SchemaFnc;
+  dataEndpoint: Endpoint;
+  optionsEndpoint: Endpoint;
+  schema: unknown;
 }
 
 export interface ReportPageParams {
   slug: string;
   name: string;
   description: string;
-  categories: string[];
-  report?: ReportGeneratorParams;
+  tags: TagName[];
+  reportParams: ReportGeneratorParams;
+  layoutComponent: LayoutComponentName;
+}
+
+export interface Tag {
+  key: TagName;
+  name: string;
+  description: string;
 }

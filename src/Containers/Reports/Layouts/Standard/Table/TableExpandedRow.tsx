@@ -29,6 +29,11 @@ import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 import Breakdown from '../../../../../Charts/Breakdown';
 import { categoryColor } from '../../../../../Utilities/constants';
 import { LegendEntry } from '../types';
+import styled from 'styled-components';
+
+const FailedTaskDescriptionList = styled(DescriptionList)`
+  row-gap: 16px;
+`;
 
 interface Props {
   isExpanded: boolean;
@@ -120,7 +125,7 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
                 return (
                   <>
                     <GridItem>
-                      <DescriptionList isHorizontal>
+                      <FailedTaskDescriptionList isHorizontal>
                         {taskInfo(task).map(({ label, value }) => (
                           <DescriptionListGroup key={label}>
                             <DescriptionListTerm>{label}</DescriptionListTerm>
@@ -129,7 +134,7 @@ const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
                             </DescriptionListDescription>
                           </DescriptionListGroup>
                         ))}
-                      </DescriptionList>
+                      </FailedTaskDescriptionList>
                     </GridItem>
                     <GridItem lg={6} md={12} key={`hosts-${idx}`}>
                       <Flex>

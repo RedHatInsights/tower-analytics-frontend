@@ -1,5 +1,4 @@
 import {
-  ChartSchemaElement,
   ChartKind,
   ChartLegendOrientation,
   ChartLegendPosition,
@@ -7,12 +6,9 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import {
-  hostExplorerEndpoint,
-  readHostExplorer,
-  readHostExplorerOptions,
-} from '../../../../Api';
-import { CATEGORIES } from '../constants';
+import { Endpoint } from '../../../../Api';
+import { LayoutComponentName } from '../../Layouts';
+import { TagName } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
 const slug = 'hosts_changed_by_job_template';
@@ -22,7 +18,12 @@ const name = 'Hosts changed by job template';
 const description =
   'The number of hosts changed by a job template in a specified time window.\n\nYou can use this report to find discrepancies in the host change rate at a particular time, helping you drill down to when and why hosts were unreachable at a particular time.';
 
-const categories = [CATEGORIES.executive];
+const tags = [
+  TagName.executive,
+  TagName.hosts,
+  TagName.jobTemplate,
+  TagName.timeSeries,
+];
 
 const defaultTableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
@@ -56,12 +57,7 @@ const defaultParams = {
 
 const availableChartTypes = [ChartType.line, ChartType.bar];
 
-const schemaFnc = (
-  label: string,
-  y: string,
-  xTickFormat: string,
-  chartType: ChartType
-): ChartSchemaElement[] => [
+const schema = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -70,20 +66,16 @@ const schemaFnc = (
     props: {
       height: 400,
       padding: {
-        top: 40,
+        top: 10,
         bottom: 85,
         right: 90,
         left: 90,
-      },
-      domainPadding: {
-        y: 25,
-        x: chartType == ChartType.bar ? 85 : 0,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
       label: 'Date',
-      tickFormat: xTickFormat,
+      tickFormat: 'VAR_xTickFormat',
       style: {
         axisLabel: {
           padding: 50,
@@ -93,7 +85,7 @@ const schemaFnc = (
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label,
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 60,
@@ -126,11 +118,11 @@ const schemaFnc = (
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: chartType,
+      type: 'VAR_chartType',
       parent: 0,
       props: {
         x: 'created_date',
-        y,
+        y: 'VAR_y',
       },
       tooltip: {
         labelName: '',
@@ -143,19 +135,19 @@ const reportParams: ReportPageParams = {
   slug,
   name,
   description,
-  categories,
-  report: {
+  tags,
+  reportParams: {
     slug,
     defaultParams,
     defaultTableHeaders,
     tableAttributes,
     expandedAttributes,
     availableChartTypes,
-    dataEndpointUrl: hostExplorerEndpoint,
-    readData: readHostExplorer,
-    readOptions: readHostExplorerOptions,
-    schemaFnc,
+    dataEndpoint: Endpoint.hostExplorer,
+    optionsEndpoint: Endpoint.hostExplorerOptions,
+    schema,
   },
+  layoutComponent: LayoutComponentName.standard,
 };
 
 export default reportParams;

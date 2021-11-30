@@ -1,17 +1,13 @@
+/* eslint-disable prettier/prettier */
 import {
-  ChartSchemaElement,
   ChartKind,
   ChartTopLevelType,
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import {
-  readJobExplorer,
-  readJobExplorerOptions,
-  Params,
-  jobExplorerEndpoint,
-} from '../../../../Api';
-import { CATEGORIES } from '../constants';
+import { Params, Endpoint } from '../../../../Api';
+import { LayoutComponentName } from '../../Layouts';
+import { TagName } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
 const slug = 'templates_explorer';
@@ -21,7 +17,13 @@ const name = 'Templates explorer';
 const description =
   'An overview of the job templates that have ran across your Ansible cluster.\n\nYou can use this report to review the status of a particular job template across its job runs, giving you an overview of the times a template fails a job run, a host, or a task. You can also review the host and task status for tasks that fail the most, allowing you to identify any bottlenecks or problems with the templates you are running.';
 
-const categories = [CATEGORIES.operations];
+const tags = [
+  TagName.operations,
+  TagName.jobTemplate,
+  TagName.jobRuns,
+  TagName.tasks,
+  TagName.performanceAnomalyDetection,
+];
 
 const defaultTableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
@@ -81,11 +83,7 @@ const defaultParams: Params = {
 
 const availableChartTypes = [ChartType.bar];
 
-const schemaFnc = (
-  label: string,
-  y: string,
-  _xTickFormat: string
-): ChartSchemaElement[] => [
+const schema = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -94,7 +92,7 @@ const schemaFnc = (
     props: {
       height: 400,
       padding: {
-        top: 40,
+        top: 10,
         bottom: 85,
         right: 90,
         left: 90,
@@ -112,13 +110,11 @@ const schemaFnc = (
           padding: 50,
         },
       },
-      // It is using names instead of dates so no need for formatting.
-      // tickFormat: xTickFormat,
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label,
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 60,
@@ -141,10 +137,11 @@ const schemaFnc = (
       parent: 0,
       props: {
         x: 'name',
-        y,
+        y: 'VAR_y',
       },
       tooltip: {
         standalone: true,
+        labelName: 'VAR_label',
       },
     },
   },
@@ -154,19 +151,19 @@ const reportParams: ReportPageParams = {
   slug,
   name,
   description,
-  categories,
-  report: {
+  tags,
+  reportParams: {
     slug,
     defaultParams,
     defaultTableHeaders,
     tableAttributes,
     expandedAttributes,
     availableChartTypes,
-    dataEndpointUrl: jobExplorerEndpoint,
-    readData: readJobExplorer,
-    readOptions: readJobExplorerOptions,
-    schemaFnc,
+    dataEndpoint: Endpoint.jobExplorer,
+    optionsEndpoint: Endpoint.jobExplorerOptions,
+    schema,
   },
+  layoutComponent: LayoutComponentName.standard,
 };
 
 export default reportParams;

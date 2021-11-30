@@ -54,7 +54,7 @@ const JobExplorer = () => {
     fetchEndpoints();
   }, [queryParams]);
 
-  if (error) return <ApiErrorState message={error.error} />;
+  if (error) return <ApiErrorState message={error.error.error} />;
 
   return (
     <React.Fragment>

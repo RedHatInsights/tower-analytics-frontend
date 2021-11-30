@@ -1,29 +1,38 @@
 import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import React from 'react';
+import React, { FunctionComponent } from 'react';
 import asyncComponent from './Utilities/asyncComponent';
 import { Paths } from './paths';
 import Error404 from './Components/Error404';
 
 const components = {
-  clusters: asyncComponent(() => import('./Containers/Clusters/Clusters')),
-  organizationStatistics: asyncComponent(() =>
-    import('./Containers/OrganizationStatistics/OrganizationStatistics')
+  [Paths.clusters]: asyncComponent(
+    () => import('./Containers/Clusters/Clusters')
   ),
-  notifications: asyncComponent(() =>
-    import('./Containers/Notifications/Notifications')
+  [Paths.organizationStatistics]: asyncComponent(
+    () => import('./Containers/OrganizationStatistics/OrganizationStatistics')
   ),
-  automationCalculator: asyncComponent(() =>
-    import('./Containers/AutomationCalculator/AutomationCalculator')
+  [Paths.notifications]: asyncComponent(
+    () => import('./Containers/Notifications/Notifications')
   ),
-  jobExplorer: asyncComponent(() =>
-    import('./Containers/JobExplorer/JobExplorer')
+  [Paths.automationCalculator]: asyncComponent(
+    () => import('./Containers/AutomationCalculator/AutomationCalculator')
   ),
-  savingsPlanner: asyncComponent(() => import('./Containers/SavingsPlanner/')),
-  reports: asyncComponent(() => import('./Containers/Reports/')),
+  [Paths.jobExplorer]: asyncComponent(
+    () => import('./Containers/JobExplorer/JobExplorer')
+  ),
+  [Paths.savingsPlanner]: asyncComponent(
+    () => import('./Containers/SavingsPlanner')
+  ),
+  [Paths.reports]: asyncComponent(() => import('./Containers/Reports')),
 };
 
-const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {
+const InsightsRoute = ({
+  component: Component,
+  path,
+}: {
+  component: ReturnType<typeof asyncComponent>;
+  path: string;
+}) => {
   /*
    * We are not using page based scss/css rules as we prefer styled components
    * therefore we don't need to add the classto the root element.
@@ -36,15 +45,12 @@ const InsightsRoute = ({ component: Component, rootClass, ...rest }) => {
   // root.classList.add(`page__${rootClass}`, 'pf-c-page__main');
   // root.setAttribute('role', 'main');
 
-  return <Route {...rest} component={Component} />;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore
+  return <Route path={path} component={Component} />;
 };
 
-InsightsRoute.propTypes = {
-  component: PropTypes.func,
-  rootClass: PropTypes.string,
-};
-
-export const Routes = () => {
+export const Routes: FunctionComponent<Record<string, never>> = () => {
   const { pathname } = useLocation();
 
   return (
@@ -53,12 +59,7 @@ export const Routes = () => {
       <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
       {/* Render the valid routes */}
       {Object.keys(components).map((key) => (
-        <InsightsRoute
-          key={key}
-          path={Paths[key]}
-          component={components[key]}
-          rootClass={key}
-        />
+        <InsightsRoute key={key} path={key} component={components[key]} />
       ))}
       {/* Finally, catch all unmatched routes and render 404 */}
       <Route>

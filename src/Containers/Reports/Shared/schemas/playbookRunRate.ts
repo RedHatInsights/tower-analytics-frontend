@@ -1,5 +1,4 @@
 import {
-  ChartSchemaElement,
   ChartKind,
   ChartLegendOrientation,
   ChartLegendPosition,
@@ -7,13 +6,9 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import {
-  readJobExplorer,
-  readJobExplorerOptions,
-  Params,
-  jobExplorerEndpoint,
-} from '../../../../Api';
-import { CATEGORIES } from '../constants';
+import { Params, Endpoint } from '../../../../Api';
+import { LayoutComponentName } from '../../Layouts';
+import { TagName } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
 const slug = 'job_template_run_rate';
@@ -23,7 +18,12 @@ const name = 'Job template run rate';
 const description =
   'The number of times a job template has ran in a specified time window.\n\nYou can use this report to be able to tell which playbooks are running most frequently, allowing you to see which groups in your organization are running Ansible the most.';
 
-const categories = [CATEGORIES.executive];
+const tags = [
+  TagName.executive,
+  TagName.jobTemplate,
+  TagName.jobRuns,
+  TagName.timeSeries,
+];
 
 const defaultTableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
@@ -54,12 +54,7 @@ const defaultParams: Params = {
 
 const availableChartTypes = [ChartType.line, ChartType.bar];
 
-const schemaFnc = (
-  label: string,
-  y: string,
-  xTickFormat: string,
-  chartType: ChartType
-): ChartSchemaElement[] => [
+const schema = [
   {
     id: 1,
     kind: ChartKind.wrapper,
@@ -68,20 +63,16 @@ const schemaFnc = (
     props: {
       height: 400,
       padding: {
-        top: 40,
+        top: 10,
         bottom: 85,
         right: 90,
         left: 90,
-      },
-      domainPadding: {
-        y: 25,
-        x: chartType == ChartType.bar ? 85 : 0,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
       label: 'Date',
-      tickFormat: xTickFormat,
+      tickFormat: 'VAR_xTickFormat',
       style: {
         axisLabel: {
           padding: 50,
@@ -91,7 +82,7 @@ const schemaFnc = (
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label,
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 60,
@@ -124,11 +115,11 @@ const schemaFnc = (
     template: {
       id: 0,
       kind: ChartKind.simple,
-      type: chartType,
+      type: 'VAR_chartType',
       parent: 0,
       props: {
         x: 'created_date',
-        y,
+        y: 'VAR_y',
       },
       tooltip: {
         labelName: '',
@@ -141,19 +132,19 @@ const reportParams: ReportPageParams = {
   slug,
   name,
   description,
-  categories,
-  report: {
+  tags,
+  reportParams: {
     slug,
     defaultParams,
     defaultTableHeaders,
     tableAttributes,
     expandedAttributes,
     availableChartTypes,
-    dataEndpointUrl: jobExplorerEndpoint,
-    readData: readJobExplorer,
-    readOptions: readJobExplorerOptions,
-    schemaFnc,
+    dataEndpoint: Endpoint.jobExplorer,
+    optionsEndpoint: Endpoint.jobExplorerOptions,
+    schema,
   },
+  layoutComponent: LayoutComponentName.standard,
 };
 
 export default reportParams;

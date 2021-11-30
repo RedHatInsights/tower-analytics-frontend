@@ -4,15 +4,13 @@
 // @ts-nocheck
 import React, {
   FunctionComponent,
-  useCallback,
   useEffect,
   useState,
+  useCallback,
 } from 'react';
-import styled from 'styled-components';
-
 import {
   Card,
-  CardBody as PFCardBody,
+  CardBody,
   CardFooter,
   PaginationVariant,
   ToggleGroup,
@@ -29,25 +27,13 @@ import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper'
 import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
 
 import { ReportGeneratorParams } from '../../Shared/types';
-import { Chart, Table } from './';
+import Chart from './Chart';
+import Table from './Table';
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
-import { useFeatureFlag, ValidFeatureFlags } from '../../../../FeatureFlags';
-import { OptionsReturnType } from '../../../../Api';
+import { endpointFunctionMap, OptionsReturnType } from '../../../../Api';
 import { capitalize } from '../../../../Utilities/helpers';
-
-const CardBody = styled(PFCardBody)`
-  & .pf-c-toolbar,
-  & .pf-c-toolbar__content {
-    padding: 0;
-  }
-`;
-
-const perPageOptions = [
-  { title: '4', value: 4 },
-  { title: '6', value: 6 },
-  { title: '8', value: 8 },
-  { title: '10', value: 10 },
-];
+import { perPageOptions } from '../../Shared/constants';
+import hydrateSchema from '../../Shared/hydrateSchema';
 
 const getDateFormatByGranularity = (granularity: string): string => {
   if (granularity === 'yearly') return 'formatAsYear';
@@ -63,33 +49,66 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   tableAttributes,
   expandedAttributes,
   availableChartTypes,
-  dataEndpointUrl,
-  readData,
-  readOptions,
-  schemaFnc,
+  dataEndpoint,
+  optionsEndpoint,
+  schema,
 }) => {
-  const pdfDownloadEnabled = useFeatureFlag(
-    ValidFeatureFlags.pdfDownloadButton
-  );
+  const readData = endpointFunctionMap(dataEndpoint);
+  const readOptions = endpointFunctionMap(optionsEndpoint);
+  const {
+    queryParams,
+    setFromPagination,
+    setFromToolbar,
+    // dispatch action to set filter before initial render of chart
+    // dispatch: queryParamsDispatch,
+  } = useQueryParams(defaultParams);
 
-  const { queryParams, setFromPagination, setFromToolbar } =
-    useQueryParams(defaultParams);
+  const { result: options, request: fetchOptions } =
+    useRequest<OptionsReturnType>(
+      useCallback(() => readOptions(queryParams), [queryParams]),
+      { sort_options: [] }
+    );
 
   const { request: setData, ...dataApi } = useRequest(
     useCallback(() => readData(queryParams), [queryParams]),
     { meta: { count: 0, legend: [] } }
   );
 
-  const { result: options, request: setOptions } =
-    useRequest<OptionsReturnType>(
-      () => readOptions(queryParams) as Promise<OptionsReturnType>,
-      { sort_options: [] }
-    );
-
   useEffect(() => {
     setData();
-    setOptions();
+    fetchOptions();
   }, [queryParams]);
+
+  const updateFilter = () => {
+    if (
+      queryParams.task_action_name &&
+      queryParams.task_action_id.length === 0 &&
+      options?.task_action_id &&
+      Array.isArray(queryParams.task_action_name)
+    ) {
+      const task_action_name = queryParams.task_action_name as Array<T>;
+      const modules = options.task_action_id.filter((obj) =>
+        task_action_name.includes(obj.value)
+      );
+      queryParams.task_action_id = modules.map((module) =>
+        module.key?.toString()
+      );
+
+      // dispatch action to set filter before initial render of chart
+      // this check does not seem needed any longer
+      // if (modules.length > 0) {
+      //   queryParamsDispatch({
+      //     type: 'SET_MODULE',
+      //     value: { task_action_name: modules },
+      //   });
+      // }
+    }
+  };
+
+  useEffect(() => {
+    updateFilter();
+    setData();
+  }, [options?.task_action_id]);
 
   const [activeChartType, setActiveChartType] = useState(
     availableChartTypes[0]
@@ -155,17 +174,16 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
         ))}
       </ToggleGroup>
     ),
-    pdfDownloadEnabled && (
-      <DownloadPdfButton
-        key="download-button"
-        slug={slug}
-        endpointUrl={dataEndpointUrl}
-        queryParams={queryParams}
-        y={chartParams.y}
-        label={chartParams.label}
-        xTickFormat={chartParams.xTickFormat}
-      />
-    ),
+    <DownloadPdfButton
+      key="download-button"
+      slug={slug}
+      endpointUrl={dataEndpoint}
+      queryParams={queryParams}
+      y={chartParams.y}
+      label={chartParams.label}
+      xTickFormat={chartParams.xTickFormat}
+      totalCount={dataApi.result.meta.count}
+    />,
   ];
   return (
     <Card>
@@ -191,12 +209,12 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
         {tableHeaders && (
           <ApiStatusWrapper api={dataApi}>
             <Chart
-              schema={schemaFnc(
-                chartParams.label,
-                chartParams.y,
-                chartParams.xTickFormat,
-                chartParams.chartType
-              )}
+              schema={hydrateSchema(schema)({
+                label: chartParams.label,
+                y: chartParams.y,
+                xTickFormat: chartParams.xTickFormat,
+                chartType: chartParams.chartType,
+              })}
               data={dataApi.result}
             />
             <Table

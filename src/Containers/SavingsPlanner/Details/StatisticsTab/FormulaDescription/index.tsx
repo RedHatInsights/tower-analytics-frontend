@@ -109,7 +109,7 @@ const FormulaDescription: FunctionComponent<Record<string, never>> = () => {
   return (
     <>
       <Button
-        variant="link"
+        variant={ButtonVariant.link}
         onClick={() => setIsOpen(true)}
         icon={<InfoCircleIcon />}
       >
