@@ -23,7 +23,7 @@ const ExpandedRowContents: FunctionComponent<Props> = ({ template }) => (
         <DescriptionListGroup>
           <DescriptionListTerm>Elapsed</DescriptionListTerm>
           <DescriptionListDescription>
-            {template.elapsed}
+            {template.elapsed} seconds
           </DescriptionListDescription>
         </DescriptionListGroup>
         <DescriptionListGroup>

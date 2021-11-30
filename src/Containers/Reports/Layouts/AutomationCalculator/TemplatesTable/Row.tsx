@@ -53,7 +53,7 @@ const Row: FunctionComponent<Props> = ({
             </Button>
           </Tooltip>
         </Td>
-        <Td>{template[variableRow.key]}</Td>
+        <Td>{(+template[variableRow.key]).toFixed(2)}</Td>
         <Td>
           <InputGroup>
             <TextInput
