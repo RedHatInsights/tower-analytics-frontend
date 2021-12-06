@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Alert,
-  AlertActionCloseButton,
-  AlertGroup,
-  AlertVariant,
+  // Alert,
+  // AlertActionCloseButton,
+  // AlertGroup,
+  // AlertVariant,
   Button,
   ButtonVariant,
   Grid,
@@ -12,18 +12,24 @@ import {
   Modal,
   ModalVariant,
   Radio,
-  Spinner,
+  // Spinner,
   Tooltip,
   TooltipPosition,
 } from '@patternfly/react-core';
-import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
+// import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
+import { DownloadIcon } from '@patternfly/react-icons';
 
-import useRequest from '../../Utilities/useRequest';
-import { generatePdf } from '../../Api';
-import AlertModal from '../AlertModal';
-import ErrorDetail from '../ErrorDetail';
+// import useRequest from '../../Utilities/useRequest';
+// import { generatePdf } from '../../Api';
+// import AlertModal from '../AlertModal';
+// import ErrorDetail from '../ErrorDetail';
 import { useDispatch } from 'react-redux';
-import { addNotification, clearNotifications } from '@redhat-cloud-services/frontend-components-notifications/redux';
+import {
+  addNotification,
+  clearNotifications,
+  removeNotification,
+} from '@redhat-cloud-services/frontend-components-notifications/redux';
+import { toast } from '../../store/ToastNotifications/actions';
 
 const DownloadPdfButton = ({
   slug,
@@ -34,14 +40,52 @@ const DownloadPdfButton = ({
   xTickFormat,
   totalCount,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isCurrent, setIsCurrent] = useState(true);
   const dispatch = useDispatch();
 
-  const { error, isLoading, request } = useRequest(
-    () =>
-      generatePdf({
+  // const { error, isLoading, request } = useRequest(
+  //   () =>
+  //     generatePdf({
+  //       slug,
+  //       endpointUrl,
+  //       queryParams,
+  //       y,
+  //       label,
+  //       x_tick_format: xTickFormat,
+  //       showExtraRows: !isCurrent,
+  //     }),
+  //   null
+  // );
+
+  // const getErrorMessage = error?.error?.detail?.name;
+
+  // const getPdfButtonText =
+  //   getErrorMessage?.at(0) ?? 'Download PDF version of report';
+
+  // useEffect(() => {
+  //   if (error) {
+  //     dispatch(clearNotifications());
+  //     dispatch(
+  //       addNotification({
+  //         variant: 'danger',
+  //         title: 'There was an error generating your report. Please try again.',
+  //         autoDismiss: false,
+  //       })
+  //     );
+  //   }
+  // }, [error]);
+
+  // useEffect(() => {
+  //   if (isLoading === false) {
+  //     dispatch(removeNotification(3));
+  //   }
+  // }, [isLoading]);
+
+  const displayToast = () => {
+    dispatch(
+      toast({
         slug,
         endpointUrl,
         queryParams,
@@ -49,33 +93,9 @@ const DownloadPdfButton = ({
         label,
         x_tick_format: xTickFormat,
         showExtraRows: !isCurrent,
-      }),
-    null
-  );
-
-  const getErrorMessage = error?.error?.detail?.name;
-
-  const getPdfButtonText =
-    getErrorMessage?.at(0) ?? 'Download PDF version of report';
-
-  useEffect(() => {
-    // console.log(error);
-    // if (error) {
-    //   setIsModalOpen(true);
-    // }
-    dispatch(clearNotifications())
-  }, [error]);
-
-  const displayToast = () => {
-    dispatch(
-      addNotification({
-        variant: 'info',
-        title: 'Your report is being generated and will download shortly.',
       })
-      // setIsToastOpen(true);
-    )
+    );
   };
-
   return (
     <>
       {/* {isToastOpen &&
@@ -104,16 +124,18 @@ const DownloadPdfButton = ({
             </AlertGroup>
           )
         ))} */}
-      <Tooltip position={TooltipPosition.top} content={getPdfButtonText}>
+      {/* <Tooltip position={TooltipPosition.top} content={getPdfButtonText}> */}
+      <Tooltip position={TooltipPosition.top}>
         <Button
-          variant={error ? ButtonVariant.link : ButtonVariant.plain}
-          aria-label={getPdfButtonText}
+          // variant={error ? ButtonVariant.link : ButtonVariant.plain}
+          // aria-label={getPdfButtonText}
           onClick={() => setIsExportModalOpen(true)}
-          isDanger={!!error}
+          // isDanger={!!error}
         >
-          {isLoading && <Spinner isSVG size="md" />}
-          {!isLoading && error && <ExclamationCircleIcon />}
-          {!isLoading && !error && <DownloadIcon />}
+          {/* {isLoading && <Spinner isSVG size="md" />}
+          {!isLoading && error && <ExclamationCircleIcon />} */}
+          {/* {!isLoading && !error && <DownloadIcon />} */}
+          <DownloadIcon />
         </Button>
       </Tooltip>
       <Modal
@@ -129,7 +151,7 @@ const DownloadPdfButton = ({
               key="export"
               variant={ButtonVariant.primary}
               onClick={() => {
-                request();
+                // request();
                 setIsExportModalOpen(false);
                 displayToast();
               }}

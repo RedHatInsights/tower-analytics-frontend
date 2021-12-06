@@ -13,10 +13,10 @@ import { QueryParamsProvider } from './QueryParams';
 
 const AutomationAnalytics = () => (
   <Provider store={init()}>
-    <NotificationPortal />
     <FeatureFlagProvider>
       <Router basename={getBaseName()}>
         <QueryParamsProvider>
+          <NotificationPortal />
           <App />
         </QueryParamsProvider>
       </Router>

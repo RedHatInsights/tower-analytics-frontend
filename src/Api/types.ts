@@ -33,3 +33,8 @@ export type ReadParamsWithPagination = { params: ParamsWithPagination };
 export type ReadEndpointFnc = (
   params: Params | ParamsWithPagination
 ) => Promise<ApiJson>;
+
+export interface ToastNotification {
+  variant: string;
+  title: string;
+}
