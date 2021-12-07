@@ -1,10 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  // Alert,
-  // AlertActionCloseButton,
-  // AlertGroup,
-  // AlertVariant,
   Button,
   ButtonVariant,
   Grid,
@@ -12,24 +8,15 @@ import {
   Modal,
   ModalVariant,
   Radio,
-  // Spinner,
+  Spinner,
   Tooltip,
   TooltipPosition,
 } from '@patternfly/react-core';
-// import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
-import { DownloadIcon } from '@patternfly/react-icons';
+import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 
-// import useRequest from '../../Utilities/useRequest';
-// import { generatePdf } from '../../Api';
-// import AlertModal from '../AlertModal';
-// import ErrorDetail from '../ErrorDetail';
-import { useDispatch } from 'react-redux';
-import {
-  addNotification,
-  clearNotifications,
-  removeNotification,
-} from '@redhat-cloud-services/frontend-components-notifications/redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { toast } from '../../store/ToastNotifications/actions';
+import { DownloadState } from '../../store/ToastNotifications/types';
 
 const DownloadPdfButton = ({
   slug,
@@ -40,102 +27,50 @@ const DownloadPdfButton = ({
   xTickFormat,
   totalCount,
 }) => {
-  // const [isModalOpen, setIsModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isCurrent, setIsCurrent] = useState(true);
   const dispatch = useDispatch();
 
-  // const { error, isLoading, request } = useRequest(
-  //   () =>
-  //     generatePdf({
-  //       slug,
-  //       endpointUrl,
-  //       queryParams,
-  //       y,
-  //       label,
-  //       x_tick_format: xTickFormat,
-  //       showExtraRows: !isCurrent,
-  //     }),
-  //   null
-  // );
+  const status = useSelector((state) => state.downloadPdf?.slug);
+  const isLoading = status === DownloadState.pending;
+  const isError = status === DownloadState.rejected;
 
-  // const getErrorMessage = error?.error?.detail?.name;
+  // This can change depending loading and error states
+  const getPdfButtonText = 'Download PDF version of report';
 
-  // const getPdfButtonText =
-  //   getErrorMessage?.at(0) ?? 'Download PDF version of report';
+  const downloadPdf = () => {
+    // Don't allow user to span download button
+    if (isLoading) return;
 
-  // useEffect(() => {
-  //   if (error) {
-  //     dispatch(clearNotifications());
-  //     dispatch(
-  //       addNotification({
-  //         variant: 'danger',
-  //         title: 'There was an error generating your report. Please try again.',
-  //         autoDismiss: false,
-  //       })
-  //     );
-  //   }
-  // }, [error]);
-
-  // useEffect(() => {
-  //   if (isLoading === false) {
-  //     dispatch(removeNotification(3));
-  //   }
-  // }, [isLoading]);
-
-  const displayToast = () => {
+    // Dispatch the start of downloading the pdf
     dispatch(
-      toast({
-        slug,
-        endpointUrl,
-        queryParams,
-        y,
-        label,
-        x_tick_format: xTickFormat,
-        showExtraRows: !isCurrent,
-      })
+      toast(
+        {
+          slug,
+          endpointUrl,
+          queryParams,
+          y,
+          label,
+          x_tick_format: xTickFormat,
+          showExtraRows: !isCurrent,
+        },
+        dispatch,
+        slug
+      )
     );
   };
   return (
     <>
-      {/* {isToastOpen &&
-        (isLoading ? (
-          <AlertGroup isToast isLiveRegion>
-            <Alert
-              variant={AlertVariant.info}
-              title="Your report is being generated and will download shortly."
-              actionClose={
-                <AlertActionCloseButton onClose={() => setIsToastOpen(false)} />
-              }
-            />
-          </AlertGroup>
-        ) : (
-          error && (
-            <AlertGroup isToast isLiveRegion>
-              <Alert
-                variant={AlertVariant.danger}
-                title="There was an error generating your report. Please try again."
-                actionClose={
-                  <AlertActionCloseButton
-                    onClose={() => setIsToastOpen(false)}
-                  />
-                }
-              />
-            </AlertGroup>
-          )
-        ))} */}
-      {/* <Tooltip position={TooltipPosition.top} content={getPdfButtonText}> */}
-      <Tooltip position={TooltipPosition.top}>
+      <Tooltip position={TooltipPosition.top} content={getPdfButtonText}>
         <Button
-          // variant={error ? ButtonVariant.link : ButtonVariant.plain}
-          // aria-label={getPdfButtonText}
+          variant={isError ? ButtonVariant.link : ButtonVariant.plain}
+          aria-label={getPdfButtonText}
           onClick={() => setIsExportModalOpen(true)}
-          // isDanger={!!error}
+          isDanger={isError}
         >
-          {/* {isLoading && <Spinner isSVG size="md" />}
-          {!isLoading && error && <ExclamationCircleIcon />} */}
-          {/* {!isLoading && !error && <DownloadIcon />} */}
-          <DownloadIcon />
+          {isLoading && <Spinner isSVG size="md" />}
+          {!isLoading && isError && <ExclamationCircleIcon />}
+          {!isLoading && !isError && <DownloadIcon />}
         </Button>
       </Tooltip>
       <Modal
@@ -151,9 +86,8 @@ const DownloadPdfButton = ({
               key="export"
               variant={ButtonVariant.primary}
               onClick={() => {
-                // request();
                 setIsExportModalOpen(false);
-                displayToast();
+                downloadPdf();
               }}
             >
               Export
@@ -195,15 +129,6 @@ const DownloadPdfButton = ({
           </GridItem>
         </Grid>
       </Modal>
-      {/* <AlertModal
-        isOpen={isModalOpen}
-        title={'PDF download error!'}
-        onClose={() => {
-          setIsModalOpen(false);
-        }}
-      >
-        <ErrorDetail error={getErrorMessage} />
-      </AlertModal> */}
     </>
   );
 };
