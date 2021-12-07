@@ -285,7 +285,9 @@ describe('Dashboard page filter tests', () => {
   });
 
   it('Can clear filters', () => {
-    cy.get('button[class="pf-c-select__toggle"]', { timeout: 6000 }).eq(0).click();
+    cy.get('button[class="pf-c-select__toggle"]', { timeout: 6000 })
+      .eq(0)
+      .click();
     cy.get('button[class*="pf-c-select__menu-item"]')
       .contains('Organization')
       .click();
