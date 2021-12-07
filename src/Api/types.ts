@@ -1,3 +1,5 @@
+import { Dispatch } from 'redux';
+
 export type Params = Record<
   string,
   string | number | string[] | number[] | boolean | undefined
@@ -27,14 +29,18 @@ export interface PDFParams {
   showExtraRows: boolean;
 }
 
+export type NotificationAsyncFunction = (id: string, message?: string) => any;
+
+export interface NotificationParams {
+  pending: NotificationAsyncFunction;
+  rejected: NotificationAsyncFunction;
+  dispatch: Dispatch<any>;
+  id: string | number;
+}
+
 export type ReadParams = { params: Params };
 export type ReadParamsWithPagination = { params: ParamsWithPagination };
 
 export type ReadEndpointFnc = (
   params: Params | ParamsWithPagination
 ) => Promise<ApiJson>;
-
-export interface ToastNotification {
-  variant: string;
-  title: string;
-}

@@ -1,34 +1,36 @@
-import { ToastNotification } from '../../Api/types';
+export enum DownloadState {
+  pending,
+  rejected,
+}
 
-export type State = ToastNotification[];
+export type State = Record<string, DownloadState>;
 
 export enum ReducerTypes {
   pending = `TOAST_PENDING`,
   rejected = `TOAST_REJECTED`,
-  fulfilled = `TOAST_FULFILLED`,
   toast = 'TOAST',
 }
 
 interface PendingAction {
   type: ReducerTypes.pending;
+  meta: {
+    slug: string;
+  };
 }
 
 interface RejectedAction {
   type: ReducerTypes.rejected;
-}
-
-interface FulfilledAction {
-  type: ReducerTypes.fulfilled;
+  meta: {
+    slug: string;
+  };
 }
 
 interface Toast {
   type: ReducerTypes.toast;
   payload: Promise<void>;
-  meta: any;
+  meta: {
+    slug: string;
+  };
 }
 
-export type ActionTypes =
-  | Toast
-  | PendingAction
-  | RejectedAction
-  | FulfilledAction;
+export type ActionTypes = Toast | PendingAction | RejectedAction;
