@@ -5,14 +5,14 @@ import { Provider } from 'react-redux';
 import NotificationPortal from '@redhat-cloud-services/frontend-components-notifications/NotificationPortal';
 
 import './polyfills';
-import { init } from './store';
+import store from './store';
 import App from './App';
 import getBaseName from './Utilities/getBaseName';
 import { FeatureFlagProvider } from './FeatureFlags';
 import { QueryParamsProvider } from './QueryParams';
 
 const AutomationAnalytics = () => (
-  <Provider store={init()}>
+  <Provider store={store}>
     <FeatureFlagProvider>
       <Router basename={getBaseName()}>
         <QueryParamsProvider>

@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { FC, useState } from 'react';
 import {
   Button,
   ButtonVariant,
@@ -15,10 +14,22 @@ import {
 import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from '../../store/ToastNotifications/actions';
-import { DownloadState } from '../../store/ToastNotifications/types';
+import { downloadPdf as downloadPdfAction } from '../../store/pdfDownloadButton/actions';
+import { DownloadState } from '../../store/pdfDownloadButton/types';
+import { Endpoint, Params } from '../../Api';
+import { DispatchType, RootState } from '../../store';
 
-const DownloadPdfButton = ({
+interface Props {
+  slug: string;
+  endpointUrl: Endpoint;
+  queryParams: Params;
+  y: string;
+  label: string;
+  xTickFormat: string;
+  totalCount: number;
+}
+
+const DownloadPdfButton: FC<Props> = ({
   slug,
   endpointUrl,
   queryParams,
@@ -29,9 +40,11 @@ const DownloadPdfButton = ({
 }) => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isCurrent, setIsCurrent] = useState(true);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<DispatchType>();
 
-  const status = useSelector((state) => state.downloadPdf?.slug);
+  const status = useSelector<RootState>(
+    (state) => state?.pdfDownloadButton[slug]
+  );
   const isLoading = status === DownloadState.pending;
   const isError = status === DownloadState.rejected;
 
@@ -44,7 +57,7 @@ const DownloadPdfButton = ({
 
     // Dispatch the start of downloading the pdf
     dispatch(
-      toast(
+      downloadPdfAction(
         {
           slug,
           endpointUrl,
@@ -59,6 +72,7 @@ const DownloadPdfButton = ({
       )
     );
   };
+
   return (
     <>
       <Tooltip position={TooltipPosition.top} content={getPdfButtonText}>
@@ -131,16 +145,6 @@ const DownloadPdfButton = ({
       </Modal>
     </>
   );
-};
-
-DownloadPdfButton.propTypes = {
-  slug: PropTypes.string.isRequired,
-  endpointUrl: PropTypes.string.isRequired,
-  queryParams: PropTypes.object.isRequired,
-  y: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  xTickFormat: PropTypes.string.isRequired,
-  totalCount: PropTypes.number.isRequired,
 };
 
 export default DownloadPdfButton;
