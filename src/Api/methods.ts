@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import { stringify } from 'query-string';
 import { saveStream } from './streamSaver';
 import {
@@ -75,13 +72,13 @@ export const postWithFileReturn = async (
           { response, size: response.headers.get('content-length') }
         : response // Else it is an error and we have to parse it as a json
             .json()
-            .then((error: ApiJson) => {
+            .then((error: { detail: { name: string[] } }) => {
               // Add error reporting notification if we errored out.
               dispatch(
-                addNotification(notif.rejected(notif.id, error?.detail[0]))
+                addNotification(notif.rejected(notif.id, error?.detail.name[0]))
               );
-              // Return the failed promise (probably not needed when we display notif from here).
-              return Promise.reject({ status: response.status, error });
+
+              return Promise.reject();
             });
     })
     .then(({ response, size }) => {

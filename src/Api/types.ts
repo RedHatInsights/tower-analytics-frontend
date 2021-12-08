@@ -1,4 +1,5 @@
-import { Dispatch } from 'redux';
+import { NotificationOptions } from '../globalTypes';
+import { DispatchType } from '../store';
 
 export type Params = Record<
   string,
@@ -29,13 +30,16 @@ export interface PDFParams {
   showExtraRows: boolean;
 }
 
-export type NotificationAsyncFunction = (id: string, message?: string) => any;
+export type NotificationAsyncFunction = (
+  id: string,
+  message?: string
+) => NotificationOptions;
 
 export interface NotificationParams {
   pending: NotificationAsyncFunction;
   rejected: NotificationAsyncFunction;
-  dispatch: Dispatch<any>;
-  id: string | number;
+  dispatch: DispatchType;
+  id: string;
 }
 
 export type ReadParams = { params: Params };

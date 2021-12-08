@@ -7,13 +7,18 @@ const reducer = (state = {}, action: ActionTypes): State => {
         ...state,
         [action.meta.slug]: DownloadState.pending,
       };
+    case ReducerTypes.fulfilled:
+      return {
+        ...state,
+        [action.meta.slug]: DownloadState.fulfilled,
+      };
     case ReducerTypes.rejected:
       return {
         ...state,
         [action.meta.slug]: DownloadState.rejected,
       };
     default:
-      return state;
+      return { ...state };
   }
 };
 
