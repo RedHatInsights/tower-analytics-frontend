@@ -61,7 +61,7 @@ describe('Components/ModalContents', () => {
         url: jobExplorerUrl,
         repeat: 1,
       },
-      mockRelatedJobs
+      mockStats
     );
     fetchMock.post(
       {
@@ -69,7 +69,7 @@ describe('Components/ModalContents', () => {
         overwriteRoutes: false,
         repeat: 1,
       },
-      mockStats
+      mockRelatedJobs
     );
   });
 

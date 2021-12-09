@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useHistory } from 'react-router';
 
@@ -180,16 +180,10 @@ const OrganizationStatistics = () => {
     isLoading: jobsIsLoading,
     isSuccess: jobsIsSuccess,
     request: setJobs,
-  } = useRequest(
-    useCallback(
-      () => readJobExplorer(jobRunsByOrgParams),
-      [jobRunsByOrgParams]
-    ),
-    []
-  );
+  } = useRequest(readJobExplorer, []);
 
   const { result: options, request: setOptions } = useRequest(
-    useCallback(() => readOrgOptions(queryParams), [queryParams]),
+    readOrgOptions,
     {}
   );
 
@@ -199,19 +193,13 @@ const OrganizationStatistics = () => {
     isLoading: orgsIsLoading,
     isSuccess: orgsIsSuccess,
     request: setOrgs,
-  } = useRequest(
-    useCallback(
-      (tabIndex = 0) => {
-        if (tabIndex === 0) {
-          return readJobExplorer(jobsByDateAndOrgParams);
-        } else {
-          return readHostExplorer(hostAcrossOrgParams);
-        }
-      },
-      [hostAcrossOrgParams, jobsByDateAndOrgParams]
-    ),
-    []
-  );
+  } = useRequest(async (tabIndex = 0) => {
+    if (tabIndex === 0) {
+      return readJobExplorer(jobsByDateAndOrgParams);
+    } else {
+      return readHostExplorer(hostAcrossOrgParams);
+    }
+  }, []);
 
   const {
     result: tasks,
@@ -219,13 +207,7 @@ const OrganizationStatistics = () => {
     isLoading: tasksIsLoading,
     isSuccess: tasksIsSuccess,
     request: setTasks,
-  } = useRequest(
-    useCallback(
-      async () => readJobExplorer(jobEventsByOrgParams),
-      [jobEventsByOrgParams]
-    ),
-    []
-  );
+  } = useRequest(readJobExplorer, []);
 
   const handleTabClick = (_, tabIndex) => {
     setActiveTabKey(tabIndex);
@@ -237,9 +219,9 @@ const OrganizationStatistics = () => {
 
   useEffect(() => {
     setOrgs(activeTabKey);
-    setTasks();
-    setOptions();
-    setJobs();
+    setTasks(jobEventsByOrgParams);
+    setOptions(queryParams);
+    setJobs(jobRunsByOrgParams);
   }, [queryParams]);
 
   const renderDeprecationWarning = () => (
