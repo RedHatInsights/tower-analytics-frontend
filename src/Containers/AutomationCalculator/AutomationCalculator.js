@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
@@ -83,7 +83,7 @@ const AutomationCalculator = () => {
   );
 
   const { result: options, request: setOptions } = useRequest(
-    useCallback(() => readROIOptions(queryParams), [queryParams]),
+    readROIOptions,
     {}
   );
 
@@ -94,13 +94,10 @@ const AutomationCalculator = () => {
     isSuccess: apiIsSuccess,
     request: fetchEndpoint,
     setValue,
-  } = useRequest(
-    useCallback(async () => {
-      const response = await readROI(queryParams);
-      return updateDeltaCost(mapApi(response), costAutomation, costManual);
-    }, [queryParams]),
-    []
-  );
+  } = useRequest(async (params) => {
+    const response = await readROI(params);
+    return updateDeltaCost(mapApi(response), costAutomation, costManual);
+  }, []);
 
   /**
    * Modifies one elements avgRunTime in the unfilteredData
@@ -129,10 +126,6 @@ const AutomationCalculator = () => {
     setValue(api.map((el) => (el.id === id ? { ...el, enabled: value } : el)));
   };
 
-  useEffect(() => {
-    setOptions();
-  }, []);
-
   /**
    * Recalculates the delta and costs in the data after the cost is changed.
    */
@@ -144,8 +137,8 @@ const AutomationCalculator = () => {
    * Get data from API depending on the queryParam.
    */
   useEffect(() => {
-    setOptions();
-    fetchEndpoint();
+    setOptions(queryParams);
+    fetchEndpoint(queryParams);
   }, [queryParams]);
 
   /**

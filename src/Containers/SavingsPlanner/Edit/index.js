@@ -16,7 +16,7 @@ const Edit = ({ data }) => {
     result: options,
     isSuccess,
     request: fetchPlanOptions,
-  } = useRequest(() => readPlanOptions({}), {
+  } = useRequest(readPlanOptions, {
     meta: {
       rbac: {
         perms: {},
@@ -29,7 +29,7 @@ const Edit = ({ data }) => {
     options.meta.rbac.perms?.all === true;
 
   useEffect(() => {
-    fetchPlanOptions();
+    fetchPlanOptions({});
   }, []);
 
   useEffect(() => {
