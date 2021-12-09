@@ -268,6 +268,7 @@ const AutomationCalculator = ({
               label={''}
               xTickFormat={''}
               totalCount={api.result.meta.count}
+              onPageCount={queryParams.limit}
             />,
           ]}
         />
