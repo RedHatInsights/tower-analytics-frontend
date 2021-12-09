@@ -75,10 +75,12 @@ export const postWithFileReturn = async (
             .then((error: { detail: { name: string[] } }) => {
               // Add error reporting notification if we errored out.
               dispatch(
-                addNotification(notif.rejected(notif.id, error?.detail.name[0]))
+                addNotification(
+                  notif.rejected(notif.id, error?.detail?.name[0])
+                )
               );
 
-              return Promise.reject();
+              return Promise.reject({ status: response.status, error });
             });
     })
     .then(({ response, size }) => {

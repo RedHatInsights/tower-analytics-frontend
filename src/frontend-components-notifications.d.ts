@@ -1,3 +1,5 @@
+// This file will be deprecated and should be removed once the library is typed
+
 declare module '@redhat-cloud-services/frontend-components-notifications/redux' {
   export enum NotificationType {
     success = 'success',

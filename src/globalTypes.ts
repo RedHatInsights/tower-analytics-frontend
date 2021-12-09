@@ -1,3 +1,5 @@
+// This file will be deprecated and should be removed once the library is typed
+
 export enum NotificationType {
   success = 'success',
   danger = 'danger',
