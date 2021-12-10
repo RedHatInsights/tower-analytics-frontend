@@ -27,6 +27,7 @@ interface Props {
   label: string;
   xTickFormat: string;
   totalCount: number;
+  onPageCount: number;
 }
 
 const DownloadPdfButton: FC<Props> = ({
@@ -37,6 +38,7 @@ const DownloadPdfButton: FC<Props> = ({
   label,
   xTickFormat,
   totalCount,
+  onPageCount,
 }) => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isCurrent, setIsCurrent] = useState(true);
@@ -117,30 +119,36 @@ const DownloadPdfButton: FC<Props> = ({
         ]}
       >
         <Grid md={4}>
-          <GridItem>
-            <Radio
-              onChange={() => setIsCurrent(true)}
-              isChecked={isCurrent}
-              name="optionSelected"
-              label="Current page"
-              id="current-page-radio"
-              aria-label="current-page-radio"
-            />
-          </GridItem>
-          <GridItem>
-            <Radio
-              onChange={() => setIsCurrent(false)}
-              isChecked={!isCurrent}
-              name="optionSelected"
-              label={
-                totalCount <= 100
-                  ? `All ${totalCount} items`
-                  : `Top 100 of ${totalCount} items`
-              }
-              id="total-count-radio"
-              aria-label="total-count-radio"
-            />
-          </GridItem>
+          {totalCount <= onPageCount ? (
+            <GridItem>All {totalCount} items</GridItem>
+          ) : (
+            <>
+              <GridItem>
+                <Radio
+                  onChange={() => setIsCurrent(true)}
+                  isChecked={isCurrent}
+                  name="optionSelected"
+                  label="Current page"
+                  id="current-page-radio"
+                  aria-label="current-page-radio"
+                />
+              </GridItem>
+              <GridItem>
+                <Radio
+                  onChange={() => setIsCurrent(false)}
+                  isChecked={!isCurrent}
+                  name="optionSelected"
+                  label={
+                    totalCount <= 100
+                      ? `All ${totalCount} items`
+                      : `Top 100 of ${totalCount} items`
+                  }
+                  id="total-count-radio"
+                  aria-label="total-count-radio"
+                />
+              </GridItem>
+            </>
+          )}
         </Grid>
       </Modal>
     </>

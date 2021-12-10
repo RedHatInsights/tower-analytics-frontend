@@ -183,6 +183,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       label={chartParams.label}
       xTickFormat={chartParams.xTickFormat}
       totalCount={dataApi.result.meta.count}
+      onPageCount={queryParams.limit}
     />,
   ];
   return (
