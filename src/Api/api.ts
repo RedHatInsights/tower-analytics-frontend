@@ -15,6 +15,7 @@ import {
   ParamsWithPagination,
   ApiJson,
   PDFParams,
+  NotificationParams,
 } from './types';
 
 export enum Endpoint {
@@ -117,8 +118,10 @@ export const readClustersOptions = (params: Params): Promise<ApiJson> =>
 export const readNotifications = (params: Params): Promise<ApiJson> =>
   get(Endpoint.notifications, params);
 
-export const generatePdf = (params: PDFParams): Promise<void> =>
-  postWithFileReturn(Endpoint.pdfGenerate, params);
+export const generatePdf = async (
+  params: PDFParams,
+  meta: NotificationParams
+): Promise<void> => postWithFileReturn(Endpoint.pdfGenerate, params, meta);
 
 /**
  * This mapper is used by the reports to map url strings to functions

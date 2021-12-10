@@ -1,3 +1,6 @@
+import { NotificationOptions } from '../globalTypes';
+import { DispatchType } from '../store';
+
 export type Params = Record<
   string,
   string | number | string[] | number[] | boolean | undefined
@@ -25,6 +28,18 @@ export interface PDFParams {
   label: string;
   x_tick_format: string;
   showExtraRows: boolean;
+}
+
+export type NotificationAsyncFunction = (
+  id: string,
+  message?: string
+) => NotificationOptions;
+
+export interface NotificationParams {
+  pending: NotificationAsyncFunction;
+  rejected: NotificationAsyncFunction;
+  dispatch: DispatchType;
+  id: string;
 }
 
 export type ReadParams = { params: Params };

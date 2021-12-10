@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
+import React, { FC, useState } from 'react';
 import {
   Button,
   ButtonVariant,
@@ -14,12 +13,23 @@ import {
 } from '@patternfly/react-core';
 import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 
-import useRequest from '../../Utilities/useRequest';
-import { generatePdf } from '../../Api';
-import AlertModal from '../AlertModal';
-import ErrorDetail from '../ErrorDetail';
+import { useDispatch, useSelector } from 'react-redux';
+import { downloadPdf as downloadPdfAction } from '../../store/pdfDownloadButton/actions';
+import { DownloadState } from '../../store/pdfDownloadButton/types';
+import { Endpoint, Params } from '../../Api';
+import { DispatchType, RootState } from '../../store';
 
-const DownloadPdfButton = ({
+interface Props {
+  slug: string;
+  endpointUrl: Endpoint;
+  queryParams: Params;
+  y: string;
+  label: string;
+  xTickFormat: string;
+  totalCount: number;
+}
+
+const DownloadPdfButton: FC<Props> = ({
   slug,
   endpointUrl,
   queryParams,
@@ -28,47 +38,53 @@ const DownloadPdfButton = ({
   xTickFormat,
   totalCount,
 }) => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isCurrent, setIsCurrent] = useState(true);
+  const dispatch = useDispatch<DispatchType>();
 
-  const { error, isLoading, request } = useRequest(
-    () =>
-      generatePdf({
-        slug,
-        endpointUrl,
-        queryParams,
-        y,
-        label,
-        x_tick_format: xTickFormat,
-        showExtraRows: !isCurrent,
-      }),
-    null
+  const status = useSelector<RootState>(
+    (state) => state?.pdfDownloadButton[slug]
   );
+  const isLoading = status === DownloadState.pending;
+  const isError = status === DownloadState.rejected;
 
-  const getErrorMessage = error?.error?.detail?.name;
+  // This can change depending loading and error states
+  const getPdfButtonText = 'Download PDF version of report';
 
-  const getPdfButtonText =
-    getErrorMessage?.at(0) ?? 'Download PDF version of report';
+  const downloadPdf = () => {
+    // Don't allow user to span download button
+    if (isLoading) return;
 
-  useEffect(() => {
-    if (error) {
-      setIsModalOpen(true);
-    }
-  }, [error]);
+    // Dispatch the start of downloading the pdf
+    dispatch(
+      downloadPdfAction(
+        {
+          slug,
+          endpointUrl,
+          queryParams,
+          y,
+          label,
+          x_tick_format: xTickFormat,
+          showExtraRows: !isCurrent,
+        },
+        dispatch,
+        slug
+      )
+    );
+  };
 
   return (
     <>
       <Tooltip position={TooltipPosition.top} content={getPdfButtonText}>
         <Button
-          variant={error ? ButtonVariant.link : ButtonVariant.plain}
+          variant={isError ? ButtonVariant.link : ButtonVariant.plain}
           aria-label={getPdfButtonText}
           onClick={() => setIsExportModalOpen(true)}
-          isDanger={!!error}
+          isDanger={isError}
         >
           {isLoading && <Spinner isSVG size="md" />}
-          {!isLoading && error && <ExclamationCircleIcon />}
-          {!isLoading && !error && <DownloadIcon />}
+          {!isLoading && isError && <ExclamationCircleIcon />}
+          {!isLoading && !isError && <DownloadIcon />}
         </Button>
       </Tooltip>
       <Modal
@@ -79,16 +95,18 @@ const DownloadPdfButton = ({
           setIsExportModalOpen(false);
         }}
         actions={[
-          <Button
-            key="export"
-            variant={ButtonVariant.primary}
-            onClick={() => {
-              request();
-              setIsExportModalOpen(false);
-            }}
-          >
-            Export
-          </Button>,
+          <>
+            <Button
+              key="export"
+              variant={ButtonVariant.primary}
+              onClick={() => {
+                setIsExportModalOpen(false);
+                downloadPdf();
+              }}
+            >
+              Export
+            </Button>
+          </>,
           <Button
             key="cancel"
             variant={ButtonVariant.link}
@@ -125,27 +143,8 @@ const DownloadPdfButton = ({
           </GridItem>
         </Grid>
       </Modal>
-      <AlertModal
-        isOpen={isModalOpen}
-        title={'PDF download error!'}
-        onClose={() => {
-          setIsModalOpen(false);
-        }}
-      >
-        <ErrorDetail error={getErrorMessage} />
-      </AlertModal>
     </>
   );
-};
-
-DownloadPdfButton.propTypes = {
-  slug: PropTypes.string.isRequired,
-  endpointUrl: PropTypes.string.isRequired,
-  queryParams: PropTypes.object.isRequired,
-  y: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  xTickFormat: PropTypes.string.isRequired,
-  totalCount: PropTypes.number.isRequired,
 };
 
 export default DownloadPdfButton;

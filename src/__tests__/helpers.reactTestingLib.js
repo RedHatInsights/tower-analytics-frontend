@@ -1,15 +1,10 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 import { QueryParamsProvider } from '../QueryParams';
-
-// Initialize the mocked store
-// AAA don't use it but it is needed by the <Main> component
-const mockStore = configureStore();
-const store = mockStore({});
+import store from '../store';
 
 export const history = {
   ...createMemoryHistory(),
