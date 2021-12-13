@@ -74,7 +74,7 @@ const inputAutCost = (wrapper) => wrapper.find('input').at(1);
 const inputsRuntime = (wrapper) => wrapper.find('input').slice(2);
 
 const pageParams = {
-  slug: '',
+  slug: 'slug',
   defaultParams: roi.defaultParams,
   defaultTableHeaders: [],
   tableAttributes: [],

@@ -1,7 +1,17 @@
 import { stringify } from 'query-string';
 import { saveStream } from './streamSaver';
-import { ApiJson, Params, ParamsWithPagination, PDFParams } from './types';
+import {
+  ApiJson,
+  Params,
+  ParamsWithPagination,
+  PDFParams,
+  NotificationParams,
+} from './types';
 import { createWriteStream } from 'streamsaver';
+import {
+  addNotification,
+  removeNotification,
+} from '@redhat-cloud-services/frontend-components-notifications/redux';
 
 declare global {
   interface Window {
@@ -39,24 +49,39 @@ export const authenticatedFetch = (
     })
   );
 
-export const postWithFileReturn = (
+export const postWithFileReturn = async (
   endpoint: string,
-  params: PDFParams
+  params: PDFParams,
+  { dispatch, ...notif }: NotificationParams
 ): Promise<void> => {
   const url = new URL(endpoint, window.location.origin);
+
+  // Dispatch notification when starts the download.
+  dispatch(addNotification(notif.pending(notif.id)));
+
   return authenticatedFetch(url.toString(), {
     method: 'POST',
     body: JSON.stringify(params),
   })
     .then((response) => {
+      // Delete pending notification when we have results.
+      dispatch(removeNotification(notif.id));
+
       return response.ok
-        ? // If reposnse is ok, then continue to download the PDF
+        ? // If response is ok, then continue to download the PDF
           { response, size: response.headers.get('content-length') }
         : response // Else it is an error and we have to parse it as a json
             .json()
-            .then((error: ApiJson) =>
-              Promise.reject({ status: response.status, error })
-            );
+            .then((error: { detail: { name: string[] } }) => {
+              // Add error reporting notification if we errored out.
+              dispatch(
+                addNotification(
+                  notif.rejected(notif.id, error?.detail?.name[0])
+                )
+              );
+
+              return Promise.reject({ status: response.status, error });
+            });
     })
     .then(({ response, size }) => {
       const date = new Intl.DateTimeFormat('en-US').format(new Date());
