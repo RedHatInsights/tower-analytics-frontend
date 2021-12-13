@@ -2,10 +2,99 @@ import React, { FunctionComponent, useState } from 'react';
 import {
   Button,
   ButtonVariant,
+  CodeBlock,
+  CodeBlockCode,
   Modal,
   ModalVariant,
 } from '@patternfly/react-core';
 import { InfoCircleIcon } from '@patternfly/react-icons';
+
+const SavingsPerTemplateText: FunctionComponent<Record<string, never>> = () => (
+  <>
+    <p>
+      <strong>Savings per template</strong>
+    </p>
+    <p>
+      Savings per template is the difference between the manual cost and
+      automation cost of successfully running templates across hosts. Manual
+      cost is calculated by multiplying the number of hours spent manually
+      running templates across hosts by the average hourly wages per engineer.
+      Automation cost is the total amount of time, in seconds, spent running
+      templates automatically multiplied by the average monthly cost for
+      automated processes.
+    </p>
+    <br />
+    <p>The formula used to calculate maunal cost:</p>
+    <CodeBlock>
+      <CodeBlockCode>
+        {`manual time  = successful hosts total * 1 
+manual cost = manual time * average engineer salary`}
+      </CodeBlockCode>
+    </CodeBlock>
+    <br />
+
+    <p>The formula used to calculate automation cost:</p>
+    <CodeBlock>
+      <CodeBlockCode>
+        {`automation time = successful elapsed total / 3600
+automated process cost = $20 per hour
+automation cost = automation time * automated process cost`}
+      </CodeBlockCode>
+    </CodeBlock>
+    <br />
+
+    <p>The formula used to calculate automation cost:</p>
+    <CodeBlock>
+      <CodeBlockCode>
+        {`savings per template = manual cost - automation cost`}
+      </CodeBlockCode>
+    </CodeBlock>
+    <br />
+  </>
+);
+
+const FailedHostPerTemplateText: FunctionComponent<Record<string, never>> =
+  () => (
+    <>
+      <p>
+        <strong>Failed hosts cost per template</strong>
+      </p>
+      <p>
+        Failed hosts cost per template is the total amount of time spent on
+        failed automated job runs multiplied by the average cost per month spent
+        on automation.
+      </p>
+      <br />
+      <p>The formula used to calculate failed host cost per template:</p>
+      <CodeBlock>
+        <CodeBlockCode>
+          {`failed cost per template = (failed elapsed total / 3600) * 20`}
+        </CodeBlockCode>
+      </CodeBlock>
+      <br />
+    </>
+  );
+
+const MonetaryGainPerTemplateText: FunctionComponent<Record<string, never>> =
+  () => (
+    <>
+      <p>
+        <strong>Monetary gain per template</strong>
+      </p>
+      <p>
+        Monetary gain per template is the difference between total savings per
+        template and failed hosts cost per template.
+      </p>
+      <br />
+      <p>The formulate for monetary gain per template:</p>
+      <CodeBlock>
+        <CodeBlockCode>
+          {`monetary gain per template = savings per template - failed host cost per template`}
+        </CodeBlockCode>
+      </CodeBlock>
+      <br />
+    </>
+  );
 
 const AutomationFormula: FunctionComponent<Record<string, never>> = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -35,24 +124,23 @@ const AutomationFormula: FunctionComponent<Record<string, never>> = () => {
         ]}
       >
         <p>
-          <b>Manual cost for template X</b>
-          <br />
-          (time for a manual run on one host in hours * (sum of all hosts across
-          all job runs) ) * cost per hour
+          We use manual effort versus time spent on automation as factors to
+          create formulas for cost and savings related to automation. While we
+          aim to provide as accurate an account of the cost and savings as
+          possible, actual values may differ in practice. The following
+          information breaks down where we get the data, the factors we use, the
+          assumptions we make, and the formula used to compute the values as
+          displayed in the chart.
         </p>
         <br />
-        <p>
-          <b>Automation cost for template X</b>
-          <br />
-          cost of automation per hour * sum of total elapsed hours for a
-          template
-        </p>
+
+        <SavingsPerTemplateText />
         <br />
-        <p>
-          <b>Savings</b>
-          <br />
-          Sum of (manual cost - automation cost) across all templates
-        </p>
+
+        <FailedHostPerTemplateText />
+        <br />
+
+        <MonetaryGainPerTemplateText />
       </Modal>
     </>
   );
