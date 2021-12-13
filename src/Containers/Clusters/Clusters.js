@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import {
@@ -71,13 +71,7 @@ const Clusters = () => {
     result: options,
     error,
     request: fetchOptions,
-  } = useRequest(
-    useCallback(
-      () => readClustersOptions(optionsQueryParams),
-      [optionsQueryParams]
-    ),
-    {}
-  );
+  } = useRequest(readClustersOptions, {});
 
   const {
     cluster_id,
@@ -123,44 +117,32 @@ const Clusters = () => {
     isLoading: chartDataIsLoading,
     isSuccess: chartDataIsSuccess,
     request: fetchChartData,
-  } = useRequest(
-    useCallback(async () => readJobExplorer(queryParams), [queryParams]),
-    { items: [] }
-  );
+  } = useRequest(readJobExplorer, { items: [] });
 
   const {
     result: { items: modules },
     isLoading: modulesIsLoading,
     request: fetchModules,
-  } = useRequest(
-    useCallback(() => readEventExplorer(topModuleParams), [queryParams]),
-    { items: [] }
-  );
+  } = useRequest(readEventExplorer, { items: [] });
 
   const {
     result: { items: templates },
     isLoading: templatesIsLoading,
     request: fetchTemplates,
-  } = useRequest(
-    useCallback(() => readJobExplorer(topTemplatesParams), [queryParams]),
-    { items: [] }
-  );
+  } = useRequest(readJobExplorer, { items: [] });
 
   const {
     result: { items: workflows },
     isLoading: workflowsIsLoading,
     request: fetchWorkflows,
-  } = useRequest(
-    useCallback(() => readJobExplorer(topWorkflowParams), [queryParams]),
-    { items: [] }
-  );
+  } = useRequest(readJobExplorer, { items: [] });
 
   useEffect(() => {
-    fetchOptions();
-    fetchChartData();
-    fetchModules();
-    fetchTemplates();
-    fetchWorkflows();
+    fetchOptions(optionsQueryParams);
+    fetchChartData(queryParams);
+    fetchModules(topModuleParams);
+    fetchTemplates(topTemplatesParams);
+    fetchWorkflows(topWorkflowParams);
   }, [queryParams]);
 
   if (error) return <ApiErrorState message={error.error} />;

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 import {
   useHistory,
   useParams,
@@ -46,26 +46,23 @@ const Details = () => {
     isSuccess: dataSuccess,
     error: dataError,
     request: fetchEndpoints,
-  } = useRequest(
-    useCallback(() => readPlan(id), [id]),
-    {
-      plan: {},
-      rbac: {
-        perms: {},
-      },
-    }
-  );
+  } = useRequest(readPlan, {
+    plan: {},
+    rbac: {
+      perms: {},
+    },
+  });
 
   useEffect(() => {
     const unlisten = history.listen(({ pathname }) => {
-      if (!pathname.includes('/edit')) fetchEndpoints();
+      if (!pathname.includes('/edit')) fetchEndpoints(id);
     });
 
     return unlisten;
   }, []);
 
   useEffect(() => {
-    fetchEndpoints();
+    fetchEndpoints(id);
   }, [id]);
 
   const canWrite =

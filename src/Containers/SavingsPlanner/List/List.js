@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
 import Main from '@redhat-cloud-services/frontend-components/Main';
@@ -51,7 +51,7 @@ const List = () => {
     result: options,
     isSuccess,
     request: fetchOptions,
-  } = useRequest(() => readPlanOptions({}), {});
+  } = useRequest(readPlanOptions, {});
 
   const {
     result: { items: data, rbac, meta },
@@ -59,16 +59,13 @@ const List = () => {
     isSuccess: itemsIsSuccess,
     error: itemsError,
     request: fetchEndpoints,
-  } = useRequest(
-    useCallback(() => readPlans(queryParams), [queryParams]),
-    {
-      items: [],
-      rbac: {
-        perms: {},
-      },
-      meta: { count: 0 },
-    }
-  );
+  } = useRequest(readPlans, {
+    items: [],
+    rbac: {
+      perms: {},
+    },
+    meta: { count: 0 },
+  });
 
   const combinedOptions = {
     ...options,
@@ -76,8 +73,11 @@ const List = () => {
   };
 
   useEffect(() => {
-    fetchOptions();
-    fetchEndpoints();
+    fetchOptions({});
+  }, []);
+
+  useEffect(() => {
+    fetchEndpoints(queryParams);
   }, [queryParams]);
 
   const canWrite =
@@ -95,7 +95,7 @@ const List = () => {
   const handleDelete = async () => {
     await deleteItems(selected.map(({ id }) => id));
     setSelected([]);
-    fetchEndpoints();
+    fetchEndpoints(queryParams);
   };
 
   const renderContent = () => {
