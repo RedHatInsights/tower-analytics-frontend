@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 import {
   ChartKind,
   ChartTopLevelType,
@@ -97,10 +96,6 @@ const schema = [
         right: 90,
         left: 90,
       },
-      domainPadding: {
-        y: 25,
-        x: 85,
-      },
       themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
@@ -121,28 +116,25 @@ const schema = [
         },
       },
     },
-    api: {
-      url: '',
-      params: {},
-    },
   },
   {
     id: 2,
     kind: ChartKind.group,
     parent: 1,
-    template: {
-      id: 0,
-      kind: ChartKind.simple,
-      type: ChartType.bar,
-      parent: 0,
-      props: {
-        x: 'name',
-        y: 'VAR_y',
-      },
-      tooltip: {
-        standalone: true,
-        labelName: 'VAR_label',
-      },
+    template: 3,
+  },
+  {
+    id: 3,
+    kind: ChartKind.simple,
+    type: ChartType.bar,
+    parent: 0,
+    props: {
+      x: 'name',
+      y: 'VAR_y',
+    },
+    tooltip: {
+      standalone: true,
+      labelName: 'VAR_label',
     },
   },
 ];
