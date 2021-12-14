@@ -1,4 +1,3 @@
-/* global cy, Cypress */
 import { dashboardUrl } from '../support/constants';
 import moment from 'moment';
 
@@ -83,7 +82,6 @@ describe('Dashboard page smoketests', () => {
   });
 });
 
-
 describe('Dashboard page filter tests', () => {
   beforeEach(() => {
     cy.loginFlow();
@@ -115,7 +113,7 @@ describe('Dashboard page filter tests', () => {
     const screenshotFilename = 'clusters_filter_by_org.png';
     cy.screenshot(screenshotFilename);
   });
-  it('Can filter by a preset date range', () => {
+  xit('Can filter by a preset date range', () => {
     const todayminusone = moment(new Date().toISOString())
       .subtract(1, 'day')
       .format('M/DD');
@@ -145,7 +143,7 @@ describe('Dashboard page filter tests', () => {
     cy.screenshot(screenshotFilename);
   });
 
-  it('Can filter by a custom date range', () => {
+  xit('Can filter by a custom date range', () => {
     const today = moment(new Date().toISOString()).format('YYYY-MM-DD');
     const oneWeekAgo = moment(new Date().toISOString())
       .subtract(1, 'week')
@@ -287,7 +285,9 @@ describe('Dashboard page filter tests', () => {
   });
 
   it('Can clear filters', () => {
-    cy.get('button[class="pf-c-select__toggle"]', { timeout: 6000 }).eq(0).click();
+    cy.get('button[class="pf-c-select__toggle"]', { timeout: 6000 })
+      .eq(0)
+      .click();
     cy.get('button[class*="pf-c-select__menu-item"]')
       .contains('Organization')
       .click();
@@ -351,7 +351,7 @@ describe('Dashboard page drilldown tests', () => {
       .find('span')
       .should('not.contain', 'Workflow job');
     // Click on the bar for today minus one ( 4th from the last rect)
-    cy.get(appid).find('rect').eq(-4).click();
+    cy.get(appid).find('rect').eq(-4).click({ force: true });
     // Verify the redirect to Job explorer
     cy.get(appid).find('.pf-c-title').contains('Job Explorer');
     // Verify the job type filter and date filter is carried correctly to Job Explorer page

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useLocation, Redirect } from 'react-router-dom';
 
@@ -34,7 +34,7 @@ const Form = ({ title, options, data = {} }) => {
     error,
     request: setData,
   } = useRequest(
-    useCallback(async (requestPayload, id) => {
+    async (requestPayload, id) => {
       if (requestPayload) {
         if (id) {
           return await updatePlan(id, requestPayload);
@@ -51,7 +51,7 @@ const Form = ({ title, options, data = {} }) => {
       }
 
       return { plan_created: { id: 0 } };
-    }, []),
+    },
     {
       plan_created: {
         id: 0, // put zero to match the type

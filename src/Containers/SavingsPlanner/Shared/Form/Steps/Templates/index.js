@@ -81,7 +81,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
     isLoading: templatesIsLoading,
     isSuccess: templatesIsSuccess,
     request: fetchEndpoints,
-  } = useRequest((qp) => readJobExplorer(qp), {
+  } = useRequest(readJobExplorer, {
     items: [],
     meta: { count: 0 },
   });

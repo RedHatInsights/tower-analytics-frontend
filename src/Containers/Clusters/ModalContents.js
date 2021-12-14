@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
@@ -130,19 +130,13 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     result: stats,
     request: fetchStats,
     ...statsApi
-  } = useRequest(
-    useCallback(() => readJobExplorer(agreggateTemplateParams), [selectedId]),
-    {}
-  );
+  } = useRequest(readJobExplorer, {});
 
   const {
     result: relatedJobs,
     request: fetchJobs,
     ...jobsApi
-  } = useRequest(
-    useCallback(() => readJobExplorer(relatedTemplateJobsParams), [selectedId]),
-    {}
-  );
+  } = useRequest(readJobExplorer, {});
 
   const redirectToJobExplorer = () => {
     const { start_date, end_date, quick_date_range } = qp;
@@ -163,8 +157,8 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
   };
 
   useEffect(() => {
-    fetchJobs();
-    fetchStats();
+    fetchStats(agreggateTemplateParams);
+    fetchJobs(relatedTemplateJobsParams);
   }, [selectedId]);
 
   const tableCols = ['Id/Name', 'Status', 'Cluster', 'Finished', 'Total time'];
