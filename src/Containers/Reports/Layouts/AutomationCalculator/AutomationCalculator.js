@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import {
@@ -102,30 +102,27 @@ const AutomationCalculator = ({
   const { queryParams, setFromToolbar, setFromPagination } =
     useQueryParams(defaultParams);
 
-  const { result: options, request: fetchOptions } = useRequest(
-    useCallback(() => readOptions(queryParams), [queryParams]),
-    {
-      sort_options: [
-        {
-          key: defaultParams.sort_options,
-          value: defaultParams.sort_options,
-        },
-      ],
-    }
-  );
+  const { result: options, request: fetchOptions } = useRequest(readOptions, {
+    sort_options: [
+      {
+        key: defaultParams.sort_options,
+        value: defaultParams.sort_options,
+      },
+    ],
+  });
 
   const {
     request: fetchData,
     setValue: setApiData,
     ...api
   } = useRequest(
-    useCallback(async () => {
-      const response = await readData(queryParams);
+    async (params) => {
+      const response = await readData(params);
       return {
         ...response,
         items: updateDeltaCost(mapApi(response), costAutomation, costManual),
       };
-    }, [queryParams, costAutomation, costManual]),
+    },
     {
       items: [],
       meta: {
@@ -186,8 +183,8 @@ const AutomationCalculator = ({
    * Get data from API depending on the queryParam.
    */
   useEffect(() => {
-    fetchOptions();
-    fetchData();
+    fetchOptions(queryParams);
+    fetchData(queryParams);
   }, [queryParams]);
 
   /**
@@ -271,6 +268,7 @@ const AutomationCalculator = ({
               label={''}
               xTickFormat={''}
               totalCount={api.result.meta.count}
+              onPageCount={queryParams.limit}
             />,
           ]}
         />

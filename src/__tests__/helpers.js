@@ -1,13 +1,9 @@
 import React from 'react';
-import configureStore from 'redux-mock-store';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router';
 import { createMemoryHistory } from 'history';
 import { QueryParamsProvider } from '../QueryParams';
-
-// Initialize the mocked store (we don't use it but it is initialized)
-const mockStore = configureStore();
-const store = mockStore({});
+import store from '../store';
 
 export const history = createMemoryHistory();
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
 import { Card, CardBody } from '@patternfly/react-core';
@@ -23,13 +23,10 @@ const Add = () => {
     result: options,
     isSuccess,
     request: fetchPlanOptions,
-  } = useRequest(
-    useCallback(() => readPlanOptions({}), []),
-    {}
-  );
+  } = useRequest(readPlanOptions, {});
 
   useEffect(() => {
-    fetchPlanOptions();
+    fetchPlanOptions({});
   }, []);
 
   const canWrite =

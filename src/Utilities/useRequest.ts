@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import useIsMounted from './useIsMounted';
 
 type ErrorType = unknown; // TODO: When the error format is evident, use that instead of `unknown`
@@ -84,47 +84,44 @@ const useRequest = <T>(
 
   return {
     ...variables,
-    request: useCallback(
-      async (...args: unknown[]) => {
-        setVariables({
-          ...variables,
-          isSuccess: false,
-          isLoading: true,
-        });
-        try {
-          const response = await makeRequest(...args);
+    request: async (...args: unknown[]) => {
+      setVariables({
+        ...variables,
+        isSuccess: false,
+        isLoading: true,
+      });
+      try {
+        const response = await makeRequest(...args);
 
-          const hasSameAttrs = hasAttributesDeep(response, initialValue);
-          if (!hasSameAttrs)
-            console.error(
-              'The request does not have all the required attributes.',
-              '\nRecieved response from API:\n',
-              response,
-              '\nInitial value supplied:\n',
-              initialValue
-            );
+        const hasSameAttrs = hasAttributesDeep(response, initialValue);
+        if (!hasSameAttrs)
+          console.error(
+            'The request does not have all the required attributes.',
+            '\nRecieved response from API:\n',
+            response,
+            '\nInitial value supplied:\n',
+            initialValue
+          );
 
-          if (isMounted.current) {
-            setVariables({
-              isLoading: false,
-              result: hasSameAttrs ? response : initialValue,
-              error: null,
-              isSuccess: true,
-            });
-          }
-        } catch (error: unknown) {
-          if (isMounted.current) {
-            setVariables({
-              isSuccess: false,
-              isLoading: false,
-              error,
-              result: initialValue,
-            });
-          }
+        if (isMounted.current) {
+          setVariables({
+            isLoading: false,
+            result: hasSameAttrs ? response : initialValue,
+            error: null,
+            isSuccess: true,
+          });
         }
-      },
-      [makeRequest]
-    ),
+      } catch (error: unknown) {
+        if (isMounted.current) {
+          setVariables({
+            isSuccess: false,
+            isLoading: false,
+            error,
+            result: initialValue,
+          });
+        }
+      }
+    },
     setValue: (value: T) => setVariables({ ...variables, result: value }),
   };
 };

@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect } from 'react';
 
 import { useQueryParams } from '../../QueryParams/';
 import useRequest from '../../Utilities/useRequest';
@@ -34,24 +34,18 @@ const JobExplorer = () => {
     result: options,
     error,
     request: fetchOptions,
-  } = useRequest(
-    useCallback(() => readJobExplorerOptions(queryParams), [queryParams]),
-    {}
-  );
+  } = useRequest(readJobExplorerOptions, {});
 
   const {
     result: { items: data, meta },
     isLoading: dataIsLoading,
     isSuccess: dataIsSuccess,
     request: fetchEndpoints,
-  } = useRequest(
-    useCallback(() => readJobExplorer(queryParams), [queryParams]),
-    { items: [], meta: { count: 0 } }
-  );
+  } = useRequest(readJobExplorer, { items: [], meta: { count: 0 } });
 
   useEffect(() => {
-    fetchOptions();
-    fetchEndpoints();
+    fetchOptions(queryParams);
+    fetchEndpoints(queryParams);
   }, [queryParams]);
 
   if (error) return <ApiErrorState message={error.error.error} />;

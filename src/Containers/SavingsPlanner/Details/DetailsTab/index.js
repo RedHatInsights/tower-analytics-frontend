@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
@@ -71,10 +71,10 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
     result: options,
     isSuccess: optionsSuccess,
     request: fetchOptions,
-  } = useRequest(() => readPlanOptions({}), {});
+  } = useRequest(readPlanOptions, {});
 
   useEffect(() => {
-    fetchOptions();
+    fetchOptions({});
   }, []);
 
   const redirectToJobExplorer = (templateId) => {
@@ -139,10 +139,10 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
   };
 
   const { request: deletePlans, error: deleteError } = useRequest(
-    useCallback(async () => {
-      await deletePlan(id);
+    async (props) => {
+      await deletePlan(props);
       redirect(Paths.savingsPlanner);
-    }, [id, history])
+    }
   );
 
   const { error, dismissError } = useDismissableError(deleteError);
@@ -201,7 +201,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
                   key={'delete-plan-button'}
                   name={name}
                   modalTitle={'Delete Plan'}
-                  onConfirm={deletePlans}
+                  onConfirm={() => deletePlans(id)}
                 >
                   {'Delete'}
                 </DeleteButton>

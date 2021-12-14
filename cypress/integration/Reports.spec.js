@@ -1,7 +1,5 @@
 import { reportsUrl } from '../support/constants';
 
-const appid = Cypress.env('appid');
-
 const hcbjt = 'hosts_changed_by_job_template';
 const cmbjt = 'changes_made_by_job_template';
 const jtrr = 'job_template_run_rate';
@@ -12,7 +10,7 @@ const mum = 'most_used_modules';
 const mubo = 'module_usage_by_organization';
 const mubjt = 'module_usage_by_job_template';
 const mubt = 'module_usage_by_task';
-const aa21m = 'aa_2_1_migration';
+const aa21m = 'aa_2_1_onboarding';
 
 const allReports = [
   hcbjt,
@@ -35,7 +33,7 @@ describe('Reports page smoketests', () => {
   });
 
   it('All report cards are displayed on main reports page', () => {
-    allReports.forEach(function (item) {
+    allReports.forEach((item) => {
       cy.get(`[data-testid="${item}"]`).should('exist');
     });
   });
@@ -163,7 +161,7 @@ describe('Report: Most Used Modules Smoketests', () => {
 
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+    cy.get('.pf-c-select__menu-item').contains('Past year').click();
   });
 });
 
@@ -182,7 +180,7 @@ describe('Report: Module Usage By Organization Smoketests', () => {
 
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+    cy.get('.pf-c-select__menu-item').contains('Past year').click();
   });
 });
 
@@ -201,7 +199,7 @@ describe('Report: Module Usage By Job Template Smoketests', () => {
 
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+    cy.get('.pf-c-select__menu-item').contains('Past year').click();
   });
 });
 
@@ -220,7 +218,7 @@ describe('Report: Module Usage By Task Smoketests', () => {
 
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+    cy.get('.pf-c-select__menu-item').contains('Past year').click();
   });
 });
 
@@ -239,6 +237,6 @@ describe('Report: AA 2.1 Migration', () => {
 
   it('Can change lookback', () => {
     cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+    cy.get('.pf-c-select__menu-item').contains('Past year').click();
   });
 });
