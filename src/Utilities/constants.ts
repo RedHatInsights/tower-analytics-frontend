@@ -104,7 +104,6 @@ export const clusters = {
 
 export const savingsPlanner = {
   defaultParams: {
-    template_id: [],
     inventory_id: [],
     automation_status: [],
     category: [],
