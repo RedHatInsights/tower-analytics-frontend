@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, { FunctionComponent, useEffect, useState } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import {
   Card,
   CardBody,
@@ -52,6 +52,12 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   const readOptions = endpointFunctionMap(optionsEndpoint);
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(defaultParams);
+  const { queryParams: settingsQueryParams, dispatch } = useQueryParams(
+    {
+      chartType: availableChartTypes[0],
+    },
+    'settings'
+  );
 
   const { result: options, request: fetchOptions } =
     useRequest<OptionsReturnType>(readOptions, { sort_options: [] });
@@ -87,10 +93,6 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
     setData(queryParams);
   }, [options?.task_action_id]);
 
-  const [activeChartType, setActiveChartType] = useState(
-    availableChartTypes[0]
-  );
-
   const tableHeaders = [
     ...defaultTableHeaders,
     ...(tableAttributes
@@ -104,7 +106,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
     xTickFormat: getDateFormatByGranularity(queryParams.granularity),
-    chartType: activeChartType,
+    chartType: settingsQueryParams.chartType,
   };
 
   const getSortParams = (currKey: string) => {
@@ -145,8 +147,10 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
             key={chartType}
             text={`${capitalize(chartType)} Chart`}
             buttonId={chartType}
-            isSelected={chartType === activeChartType}
-            onChange={() => setActiveChartType(chartType)}
+            isSelected={chartType === settingsQueryParams.chartType}
+            onChange={() => {
+              dispatch({ type: 'SET_CHART_TYPE', value: chartType });
+            }}
           />
         ))}
       </ToggleGroup>
@@ -161,6 +165,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       xTickFormat={chartParams.xTickFormat}
       totalCount={dataApi.result.meta.count}
       onPageCount={queryParams.limit}
+      chartType={settingsQueryParams.chartType}
     />,
   ];
   return (

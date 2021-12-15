@@ -26,6 +26,7 @@ interface Props {
   y: string;
   label: string;
   xTickFormat: string;
+  chartType: string;
   totalCount: number;
   onPageCount: number;
 }
@@ -37,6 +38,7 @@ const DownloadPdfButton: FC<Props> = ({
   y,
   label,
   xTickFormat,
+  chartType,
   totalCount,
   onPageCount,
 }) => {
@@ -68,6 +70,7 @@ const DownloadPdfButton: FC<Props> = ({
           label,
           x_tick_format: xTickFormat,
           showExtraRows: !isCurrent,
+          chartType,
         },
         dispatch,
         slug
