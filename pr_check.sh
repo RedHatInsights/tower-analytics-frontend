@@ -1,14 +1,15 @@
 #!/bin/bash
 
+echo $(date -u) "*** To start PR check"
 # --------------------------------------------
 # Export vars for helper scripts to use
 # --------------------------------------------
 # name of app-sre "application" folder this component lives in; needs to match for the push to quay.
-export COMPONENT="tower-analytics"
-export APP_NAME=`node -e 'console.log(require("./package.json").insights.appname)'` # `automation-analytics`
-export IMAGE="quay.io/cloudservices/automation-analytics-frontend"
-export WORKSPACE=${WORKSPACE:-$APP_ROOT}  # if running in jenkins, use the build's workspace
-export APP_ROOT=$(pwd)
+COMPONENT_NAME="tower-analytics-clowdapp"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
+APP_NAME=`node -e 'console.log(require("./package.json").insights.appname)'`  # name of app-sre "application" folder this component lives in
+APP_NAME="$APP_NAME,gateway,insights-ephemeral"
+
+IMAGE="quay.io/cloudservices/automation-analytics-frontend"
 cat /etc/redhat-release
 COMMON_BUILDER=https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master
 
@@ -20,6 +21,38 @@ IQE_MARKER_EXPRESSION="smoke"
 IQE_FILTER_EXPRESSION=""
 
 set -ex
+
+# Install bonfire repo/initialize
+CICD_URL=https://raw.githubusercontent.com/RedHatInsights/bonfire/master/cicd
+curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
+
+echo $(date -u) "*** To start deployment"
+source ${CICD_ROOT}/_common_deploy_logic.sh
+export NAMESPACE=$(bonfire namespace reserve)
+export IQE_IMAGE=quay.io/cloudservices/iqe-tests:automation-analytics
+
+bonfire deploy \
+    ${APP_NAME} \
+    --no-remove-resources tower-analytics-clowdapp \
+    --source appsre \
+    --set-template-ref ${COMPONENT_NAME}=${GIT_COMMIT} \
+    --set-image-tag $IMAGE=$IMAGE_TAG \
+    --namespace ${NAMESPACE} \
+    ${COMPONENTS_ARG}
+
+
+echo $(date -u) "*** To start generating testing data"
+### Populate test data
+oc get deployments -n $NAMESPACE
+# oc exec  -n $NAMESPACE deployments/automation-analytics-api-fastapi-v2 -- bash -c "./entrypoint ./tower_analytics_report/management/commands/run_report_migrations.py"
+oc exec  -n $NAMESPACE deployments/automation-analytics-api-fastapi-v2 -- bash -c "./entrypoint ./tower_analytics_report/management/commands/generate_development_data.py --tenant_id 3340852"
+oc exec  -n $NAMESPACE deployments/automation-analytics-api-fastapi-v2 -- bash -c "./entrypoint ./tower_analytics_report/management/commands/process_rollups_one_time.py"
+# oc exec  -n $NAMESPACE deployments/automation-analytics-api-fastapi-v2 -- bash -c "./entrypoint ./tower_analytics_report/management/commands/tenants_metrics.py"
+
+echo $(date -u) "*** To start smoke test"
+source $CICD_ROOT/smoke_test.sh
+
+curl -sSL https://gitlab.cee.redhat.com/automation-analytics/automation-analytics-backend/-/raw/main/cypress.sh  | bash -s || true
 
 # ---------------------------
 # Build and Publish to Quay
