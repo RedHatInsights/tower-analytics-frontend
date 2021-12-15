@@ -25,14 +25,14 @@ const tags = [
   TagName.timeSeries,
 ];
 
-const defaultTableHeaders: AttributesType = [
+const tableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Organization name' },
-];
-
-const tableAttributes = [
-  'total_unique_host_count',
-  'total_unique_host_changed_count',
+  { key: 'total_unique_host_count', value: 'Unique host count' },
+  {
+    key: 'total_unique_host_changed_count',
+    value: 'Unique changed host count',
+  },
 ];
 
 const expandedAttributes = [] as string[];
@@ -48,7 +48,11 @@ const defaultParams = {
   cluster_id: [],
   template_id: [],
   inventory_id: [],
-  attributes: [...tableAttributes, ...expandedAttributes],
+  attributes: [
+    'total_unique_host_count',
+    'total_unique_host_changed_count',
+    ...expandedAttributes,
+  ],
   group_by: 'org',
   group_by_time: true,
   sort_options: 'total_unique_host_count',
@@ -136,8 +140,7 @@ const reportParams: ReportPageParams = {
   reportParams: {
     slug,
     defaultParams,
-    defaultTableHeaders,
-    tableAttributes,
+    tableHeaders,
     expandedAttributes,
     availableChartTypes,
     dataEndpoint: Endpoint.hostExplorer,

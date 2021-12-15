@@ -40,8 +40,7 @@ const getDateFormatByGranularity = (granularity: string): string => {
 const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   slug,
   defaultParams,
-  defaultTableHeaders,
-  tableAttributes,
+  tableHeaders,
   expandedAttributes,
   availableChartTypes,
   dataEndpoint,
@@ -62,12 +61,12 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   const { result: options, request: fetchOptions } =
     useRequest<OptionsReturnType>(readOptions, { sort_options: [] });
 
-  const { request: setData, ...dataApi } = useRequest(readData, {
+  const { request: fetchData, ...dataApi } = useRequest(readData, {
     meta: { count: 0, legend: [] },
   });
 
   useEffect(() => {
-    setData(queryParams);
+    fetchData(queryParams);
     fetchOptions(queryParams);
   }, [queryParams]);
 
@@ -99,15 +98,8 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
    */
   useEffect(() => {
     // Pass the queryParams to the function making a copy so it is not mutated.
-    setData(addTaskActionId(queryParams));
+    fetchData(addTaskActionId(queryParams));
   }, [options?.task_action_id]);
-
-  const tableHeaders = [
-    ...defaultTableHeaders,
-    ...(tableAttributes
-      ? options.sort_options.filter(({ key }) => tableAttributes.includes(key))
-      : options.sort_options),
-  ];
 
   const chartParams = {
     y: queryParams.sort_options as string,
