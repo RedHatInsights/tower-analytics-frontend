@@ -27,17 +27,14 @@ const tags = [
   TagName.timeSeries,
 ];
 
-const defaultTableHeaders: AttributesType = [
+const tableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Organization name' },
-];
-
-const tableAttributes = [
-  'host_task_count',
-  'host_task_changed_count',
-  'host_task_ok_count',
-  'host_task_failed_count',
-  'host_task_unreachable_count',
+  { key: 'host_task_count', value: 'Tasks count' },
+  { key: 'host_task_changed_count', value: 'Changed tasks count' },
+  { key: 'host_task_ok_count', value: 'Successful tasks count' },
+  { key: 'host_task_failed_count', value: 'Failed tasks count' },
+  { key: 'host_task_unreachable_count', value: 'Unreachable tasks count' },
 ];
 
 const expandedAttributes = [] as string[];
@@ -45,7 +42,14 @@ const expandedAttributes = [] as string[];
 const defaultParams = {
   limit: 6,
   offset: 0,
-  attributes: [...tableAttributes, ...expandedAttributes],
+  attributes: [
+    'host_task_count',
+    'host_task_changed_count',
+    'host_task_ok_count',
+    'host_task_failed_count',
+    'host_task_unreachable_count',
+    ...expandedAttributes,
+  ],
   group_by: 'org',
   group_by_time: true,
   granularity: 'monthly',
@@ -141,8 +145,7 @@ const reportParams: ReportPageParams = {
   reportParams: {
     slug,
     defaultParams,
-    defaultTableHeaders,
-    tableAttributes,
+    tableHeaders,
     expandedAttributes,
     availableChartTypes,
     dataEndpoint: Endpoint.eventExplorer,

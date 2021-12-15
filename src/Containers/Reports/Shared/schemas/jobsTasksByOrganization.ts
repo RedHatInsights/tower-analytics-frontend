@@ -26,12 +26,12 @@ const tags = [
   TagName.timeSeries,
 ];
 
-const defaultTableHeaders: AttributesType = [
+const tableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Organization name' },
+  { key: 'total_count', value: 'Total jobs count' },
+  { key: 'host_task_count', value: 'Tasks count' },
 ];
-
-const tableAttributes = ['total_count', 'host_task_count'];
 
 const expandedAttributes = [] as string[];
 
@@ -46,7 +46,7 @@ const defaultParams = {
   cluster_id: [],
   template_id: [],
   inventory_id: [],
-  attributes: [...tableAttributes, ...expandedAttributes],
+  attributes: ['total_count', 'host_task_count', ...expandedAttributes],
   group_by: 'org',
   group_by_time: true,
   sort_options: 'total_count',
@@ -134,8 +134,7 @@ const reportParams: ReportPageParams = {
   reportParams: {
     slug,
     defaultParams,
-    defaultTableHeaders,
-    tableAttributes,
+    tableHeaders,
     expandedAttributes,
     availableChartTypes,
     dataEndpoint: Endpoint.jobExplorer,
