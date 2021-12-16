@@ -41,7 +41,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   slug,
   defaultParams,
   tableHeaders,
-  expandedAttributes,
+  expandedTableRowName,
   availableChartTypes,
   dataEndpoint,
   optionsEndpoint,
@@ -205,7 +205,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
               legend={dataApi.result.meta.legend}
               headers={tableHeaders}
               getSortParams={getSortParams}
-              expandRows={expandedAttributes.length > 0}
+              expandedRowName={expandedTableRowName}
             />
           </ApiStatusWrapper>
         )}

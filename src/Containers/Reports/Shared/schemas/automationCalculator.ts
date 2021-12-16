@@ -92,7 +92,6 @@ const reportParams: ReportPageParams = {
     slug,
     defaultParams,
     tableHeaders: [],
-    expandedAttributes: [],
     availableChartTypes: [],
     dataEndpoint: Endpoint.ROI,
     optionsEndpoint: Endpoint.ROIOptions,

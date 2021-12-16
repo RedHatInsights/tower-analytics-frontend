@@ -33,12 +33,10 @@ const tableHeaders: AttributesType = [
   { key: 'host_task_count', value: 'Tasks count' },
 ];
 
-const expandedAttributes = [] as string[];
-
 const defaultParams = {
   limit: 6,
   offset: 0,
-  attributes: ['host_task_count', ...expandedAttributes],
+  attributes: ['host_task_count'],
   group_by: 'template',
   group_by_time: true,
   granularity: 'monthly',
@@ -189,7 +187,6 @@ const reportParams: ReportPageParams = {
     slug,
     defaultParams,
     tableHeaders,
-    expandedAttributes,
     availableChartTypes,
     dataEndpoint: Endpoint.eventExplorer,
     optionsEndpoint: Endpoint.eventExplorerOptions,

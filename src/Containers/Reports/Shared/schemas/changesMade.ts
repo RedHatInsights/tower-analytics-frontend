@@ -34,8 +34,6 @@ const tableHeaders: AttributesType = [
   { key: 'host_task_changed_count', value: 'Changed task count' },
 ];
 
-const expandedAttributes = [] as string[];
-
 const defaultParams = {
   limit: 6,
   offset: 0,
@@ -44,7 +42,6 @@ const defaultParams = {
     'changed_host_count',
     'host_task_count',
     'host_task_changed_count',
-    ...expandedAttributes,
   ],
   group_by: 'template',
   group_by_time: true,
@@ -142,7 +139,6 @@ const reportParams: ReportPageParams = {
     slug,
     defaultParams,
     tableHeaders,
-    expandedAttributes,
     availableChartTypes,
     dataEndpoint: Endpoint.jobExplorer,
     optionsEndpoint: Endpoint.jobExplorerOptions,

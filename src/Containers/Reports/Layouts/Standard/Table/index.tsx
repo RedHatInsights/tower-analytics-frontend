@@ -11,11 +11,12 @@ import {
 
 import TableRow from './TableRow';
 import { LegendEntry, TableHeaders, TableSortParams } from '../types';
+import { ExpandedTableRowName } from '../Components';
 
 interface Props {
   headers: TableHeaders;
   legend: LegendEntry[];
-  expandRows?: boolean;
+  expandedRowName?: ExpandedTableRowName;
   getSortParams?: (currKey: string) => TableSortParams;
 }
 
@@ -23,12 +24,12 @@ const ReportTable: FunctionComponent<Props> = ({
   legend,
   headers,
   getSortParams = () => ({}),
-  expandRows = false,
+  expandedRowName,
 }) => (
   <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
     <Thead>
       <Tr>
-        {expandRows && <Th />}
+        {expandedRowName && <Th />}
         {headers.map(({ key, value }) => (
           <Th key={key} {...getSortParams(key)} data-testid={key}>
             {value}
@@ -42,7 +43,7 @@ const ReportTable: FunctionComponent<Props> = ({
           key={entry.id}
           legendEntry={entry}
           headers={headers}
-          expandRows={expandRows}
+          expandedRowName={expandedRowName}
         />
       ))}
     </Tbody>

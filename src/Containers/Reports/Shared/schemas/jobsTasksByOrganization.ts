@@ -33,8 +33,6 @@ const tableHeaders: AttributesType = [
   { key: 'host_task_count', value: 'Tasks count' },
 ];
 
-const expandedAttributes = [] as string[];
-
 const defaultParams = {
   limit: 6,
   offset: 0,
@@ -46,7 +44,7 @@ const defaultParams = {
   cluster_id: [],
   template_id: [],
   inventory_id: [],
-  attributes: ['total_count', 'host_task_count', ...expandedAttributes],
+  attributes: ['total_count', 'host_task_count'],
   group_by: 'org',
   group_by_time: true,
   sort_options: 'total_count',
@@ -135,7 +133,6 @@ const reportParams: ReportPageParams = {
     slug,
     defaultParams,
     tableHeaders,
-    expandedAttributes,
     availableChartTypes,
     dataEndpoint: Endpoint.jobExplorer,
     optionsEndpoint: Endpoint.jobExplorerOptions,
