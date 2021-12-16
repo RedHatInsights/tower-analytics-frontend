@@ -13,6 +13,8 @@ const paramsReducer = (state, { type, value }) => {
       return { ...state, startDate: value };
     case 'SET_ENDDATE':
       return { ...state, endDate: value };
+    case 'SET_CHART_TYPE':
+      return { ...state, chartType: value };
     case 'SET_ID':
       if (isNaN(value)) {
         const { id: ignored, ...rest } = state;

@@ -28,6 +28,7 @@ export interface PDFParams {
   label: string;
   x_tick_format: string;
   showExtraRows: boolean;
+  chartType: string;
 }
 
 export type NotificationAsyncFunction = (
