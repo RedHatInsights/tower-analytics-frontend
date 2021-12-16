@@ -96,10 +96,6 @@ const schema = [
         },
       },
     },
-    api: {
-      url: '',
-      params: {},
-    },
     legend: {
       interactive: true,
       orientation: ChartLegendOrientation.vertical,
@@ -118,18 +114,19 @@ const schema = [
     id: 2,
     kind: ChartKind.group,
     parent: 1,
-    template: {
-      id: 0,
-      kind: ChartKind.simple,
-      type: 'VAR_chartType',
-      parent: 0,
-      props: {
-        x: 'created_date',
-        y: 'VAR_y',
-      },
-      tooltip: {
-        labelName: '',
-      },
+    template: 3,
+  },
+  {
+    id: 3,
+    kind: ChartKind.simple,
+    type: 'VAR_chartType',
+    parent: 0,
+    props: {
+      x: 'created_date',
+      y: 'VAR_y',
+    },
+    tooltip: {
+      labelName: '',
     },
   },
 ];

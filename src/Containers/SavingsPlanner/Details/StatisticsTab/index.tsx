@@ -14,15 +14,13 @@ import {
 } from '@patternfly/react-core';
 import { SquareFullIcon } from '@patternfly/react-icons';
 
-import ChartRenderer, {
-  functions,
+import {
   ChartKind,
   ChartThemeColor,
   ChartType,
   ChartTopLevelType,
-  ChartSchema,
-  ApiType,
-  NonGroupedApi,
+  ChartSchemaElement,
+  ChartLabelFormatFunction,
 } from 'react-json-chart-builder';
 
 import RoutedTabs from '../../../../Components/RoutedTabs';
@@ -31,6 +29,8 @@ import TotalSavings from './TotalSavings';
 import FormulaDescription from './FormulaDescription';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
 import hoursFormatter from '../../../../Utilities/hoursFormatter';
+import Chart from '../../../../Components/Chart';
+import { ApiReturnType } from '../../../../Components/Chart/types';
 
 // This should model the return type somewhere next to the Api.js where the call is made.
 // This is just a basic mockup of the exact data for TS to work.
@@ -82,11 +82,13 @@ interface Props {
   plan: Data;
 }
 
-const getChartData = (data: Data): NonGroupedApi => {
+const getChartData = (data: Data): ApiReturnType => {
   return {
     items: data.projections.series_stats,
-    type: ApiType.nonGrouped,
-    response_type: '',
+    meta: {
+      legend: [],
+      count: 0,
+    },
   };
 };
 
@@ -110,7 +112,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
 
   const [isMoney, setIsMoney] = useState(true);
 
-  const customTooltipFormatting = (datum: Record<string, string>) =>
+  const customTooltipFormatting: ChartLabelFormatFunction = ({ datum }) =>
     isMoney ? currencyFormatter(+datum.y) : hoursFormatter(+datum.y);
 
   const computeTotalSavings = (d: Data): number =>
@@ -118,147 +120,138 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
       ? d.projections.series_stats[3].cumulative_net_benefits
       : d.projections.series_stats[3].cumulative_time_net_benefits;
 
-  const barChartData: ChartSchema = {
-    charts: [
-      {
-        id: 1000,
-        kind: ChartKind.wrapper,
-        type: ChartTopLevelType.chart,
-        parent: null,
-        props: {
-          height: 600,
-          domainPadding: {
-            x: 100,
-          },
-          padding: {
-            bottom: 60,
-            left: 80,
-          },
-          themeColor: ChartThemeColor.gray,
+  const chartSchema: ChartSchemaElement[] = [
+    {
+      id: 1000,
+      kind: ChartKind.wrapper,
+      type: ChartTopLevelType.chart,
+      parent: null,
+      props: {
+        height: 600,
+        domainPadding: {
+          x: 100,
         },
-        tooltip: {
-          cursor: true,
-          stickToAxis: 'x',
-          mouseFollow: true,
-          legendTooltip: {
-            legendData: [
-              {
-                childName: constants(isMoney).benefit.key,
-                name: 'Savings',
-                symbol: {
-                  fill: constants(isMoney).benefit.color,
-                },
+        padding: {
+          bottom: 60,
+          left: 80,
+        },
+        themeColor: ChartThemeColor.gray,
+      },
+      tooltip: {
+        cursor: true,
+        stickToAxis: 'x',
+        mouseFollow: true,
+        legendTooltip: {
+          legendData: [
+            {
+              childName: constants(isMoney).benefit.key,
+              name: 'Savings',
+              symbol: {
+                fill: constants(isMoney).benefit.color,
               },
-              {
-                childName: constants(isMoney).cost.key,
-                name: 'Costs',
-                symbol: {
-                  fill: constants(isMoney).cost.color,
-                },
+            },
+            {
+              childName: constants(isMoney).cost.key,
+              name: 'Costs',
+              symbol: {
+                fill: constants(isMoney).cost.color,
               },
-              {
-                childName: constants(isMoney).net.key,
-                name: 'Cumulative savings',
-                symbol: {
-                  fill: constants(isMoney).net.color,
-                },
+            },
+            {
+              childName: constants(isMoney).net.key,
+              name: 'Cumulative savings',
+              symbol: {
+                fill: constants(isMoney).net.color,
               },
-            ],
-            titleProperyForLegend: 'year',
-          },
-          customFnc: customTooltipFormatting,
-        },
-        xAxis: {
-          label: 'Time',
-        },
-        yAxis: {
-          label: isMoney ? 'Money Saved' : 'Hours Saved',
-          tickFormat: 'formatNumberAsK',
-          style: {
-            grid: { stroke: '#D2D2D2' },
-            axisLabel: { padding: 60 },
-          },
-        },
-      },
-      {
-        id: 1001,
-        kind: ChartKind.stack,
-        parent: 1000,
-        props: {},
-      },
-      {
-        id: 1102,
-        kind: ChartKind.simple,
-        type: ChartType.bar,
-        name: constants(isMoney).benefit.key,
-        parent: 1001,
-        props: {
-          x: 'year',
-          y: constants(isMoney).benefit.key,
-          barRatio: 0.8,
-          barWidth: 0,
-          style: {
-            data: {
-              fill: constants(isMoney).benefit.color,
-              width: 120,
             },
-          },
+          ],
+          titleProperyForLegend: 'year',
         },
-        tooltip: {
-          labelName: '',
+        labelFormat: 'customTooltipFormatting',
+      },
+      xAxis: {
+        label: 'Time',
+      },
+      yAxis: {
+        label: isMoney ? 'Money Saved' : 'Hours Saved',
+        tickFormat: 'formatNumberAsK',
+        style: {
+          grid: { stroke: '#D2D2D2' },
+          axisLabel: { padding: 60 },
         },
       },
-      {
-        id: 1101,
-        kind: ChartKind.simple,
-        type: ChartType.bar,
-        name: constants(isMoney).cost.key,
-        parent: 1001,
-        props: {
-          x: 'year',
-          y: constants(isMoney).cost.key,
-          barRatio: 0.8,
-          barWidth: 0,
-          style: {
-            data: {
-              fill: constants(isMoney).cost.color,
-              width: 120,
-            },
-          },
-        },
-        tooltip: {
-          labelName: '',
-        },
-      },
-      {
-        id: 1002,
-        kind: ChartKind.simple,
-        type: ChartType.line,
-        name: constants(isMoney).net.key,
-        parent: 1000,
-        props: {
-          x: 'year',
-          y: constants(isMoney).net.key,
-          style: {
-            data: {
-              stroke: constants(isMoney).net.color,
-              strokeWidth: 5,
-            },
-          },
-        },
-        tooltip: {
-          labelName: '',
-        },
-      },
-    ],
-    functions: {
-      ...functions,
-      fetchFnc: () =>
-        new Promise((resolve) => {
-          resolve(getChartData(statsPlan));
-        }),
     },
-  };
+    {
+      id: 1001,
+      kind: ChartKind.stack,
+      parent: 1000,
+      props: {},
+    },
+    {
+      id: 1102,
+      kind: ChartKind.simple,
+      type: ChartType.bar,
+      name: constants(isMoney).benefit.key,
+      parent: 1001,
+      props: {
+        x: 'year',
+        y: constants(isMoney).benefit.key,
+        barRatio: 0.8,
+        barWidth: 0,
+        style: {
+          data: {
+            fill: constants(isMoney).benefit.color,
+            width: 120,
+          },
+        },
+      },
+      tooltip: {
+        labelName: '',
+      },
+    },
+    {
+      id: 1101,
+      kind: ChartKind.simple,
+      type: ChartType.bar,
+      name: constants(isMoney).cost.key,
+      parent: 1001,
+      props: {
+        x: 'year',
+        y: constants(isMoney).cost.key,
+        barRatio: 0.8,
+        barWidth: 0,
+        style: {
+          data: {
+            fill: constants(isMoney).cost.color,
+            width: 120,
+          },
+        },
+      },
+      tooltip: {
+        labelName: '',
+      },
+    },
+    {
+      id: 1002,
+      kind: ChartKind.simple,
+      type: ChartType.line,
+      name: constants(isMoney).net.key,
+      parent: 1000,
+      props: {
+        x: 'year',
+        y: constants(isMoney).net.key,
+        style: {
+          data: {
+            stroke: constants(isMoney).net.color,
+            strokeWidth: 5,
+          },
+        },
+      },
+      tooltip: {
+        labelName: '',
+      },
+    },
+  ];
 
   const renderLeft = () => (
     <Card isPlain>
@@ -282,9 +275,14 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
         <CardTitle>{statsPlan.name}</CardTitle>
       </CardHeader>
       <CardBody>
-        <ChartRenderer
-          schema={barChartData.charts}
-          functions={barChartData.functions}
+        <Chart
+          schema={chartSchema}
+          data={getChartData(statsPlan)}
+          specificFunctions={{
+            labelFormat: {
+              customTooltipFormatting,
+            },
+          }}
         />
       </CardBody>
     </Card>

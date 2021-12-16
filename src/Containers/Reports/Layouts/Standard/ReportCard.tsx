@@ -22,7 +22,7 @@ import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper'
 import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
 
 import { ReportGeneratorParams } from '../../Shared/types';
-import Chart from './Chart';
+import Chart from '../../../../Components/Chart';
 import Table from './Table';
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
 import { endpointFunctionMap, OptionsReturnType } from '../../../../Api';
