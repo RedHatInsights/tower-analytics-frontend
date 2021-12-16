@@ -15,15 +15,12 @@ install:
   - npm ci
 jobs:
   include:
-  - stage: Lint
-    script: npm run lint
-  - stage: Test
-    script: npm run test
-  - stage: Deploy
-    script: npm run deploy && curl -sSL https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master/src/bootstrap.sh | bash -s
+  - stage: PR Check
+    script: bash .travis/pr_build.sh
 env:
     global:
     - REPO="git@github.com:RedHatInsights/tower-analytics-frontend-build.git"
     - REPO_DIR="tower-analytics-frontend-build"
-    - BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}
+    - BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-prtesting}
     - NODE_OPTIONS="--max-old-space-size=4096 --max_old_space_size=4096"
+    - PR_CHECK=true
