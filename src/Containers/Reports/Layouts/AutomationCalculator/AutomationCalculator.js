@@ -32,7 +32,7 @@ import {
 import useRequest from '../../../../Utilities/useRequest';
 
 // Chart
-import Chart from './Chart';
+import Chart from '../../../../Components/Chart';
 
 // Local imports
 import TotalSavings from './TotalSavings';
@@ -209,7 +209,12 @@ const AutomationCalculator = ({
         <CardTitle>Automation savings</CardTitle>
       </CardHeader>
       <CardBody>
-        <Chart schema={schema} data={filterDisabled(api.result.items)} />
+        <Chart
+          schema={schema}
+          data={{
+            items: filterDisabled(api.result.items),
+          }}
+        />
       </CardBody>
     </Card>
   );
