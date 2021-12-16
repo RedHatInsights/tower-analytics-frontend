@@ -60,28 +60,25 @@ const schema = [
         },
       },
     },
-    api: {
-      url: '',
-      params: {},
-    },
   },
   {
     id: 2,
     kind: ChartKind.group,
     parent: 1,
-    template: {
-      id: 0,
-      kind: ChartKind.simple,
-      type: ChartType.bar,
-      parent: 0,
-      props: {
-        x: 'name',
-        y: 'delta',
-      },
-      tooltip: {
-        standalone: true,
-        labelName: 'Saving',
-      },
+    template: 3,
+  },
+  {
+    id: 3,
+    kind: ChartKind.simple,
+    type: ChartType.bar,
+    parent: 0,
+    props: {
+      x: 'name',
+      y: 'delta',
+    },
+    tooltip: {
+      standalone: true,
+      labelName: 'Saving',
     },
   },
 ];
