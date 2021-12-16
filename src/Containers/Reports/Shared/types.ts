@@ -1,6 +1,7 @@
 import { ChartSchemaElement, ChartType } from 'react-json-chart-builder';
 import { Endpoint, Params } from '../../../Api';
 import { LayoutComponentName } from '../Layouts';
+import { ExpandedTableRowName } from '../Layouts/Standard/Components';
 import { TagName } from './constants';
 
 export type AttributesType = { key: string; value: string }[];
@@ -15,7 +16,7 @@ export interface ReportGeneratorParams {
   slug: string;
   defaultParams: Params;
   tableHeaders: AttributesType;
-  expandedAttributes: string[];
+  expandedTableRowName?: ExpandedTableRowName;
   availableChartTypes: string[];
   dataEndpoint: Endpoint;
   optionsEndpoint: Endpoint;

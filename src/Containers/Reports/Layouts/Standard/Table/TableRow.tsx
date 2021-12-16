@@ -6,8 +6,8 @@ import { formatTotalTime } from '../../../../../Utilities/helpers';
 
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
 
-import TableExpandedRow from './TableExpandedRow';
 import { LegendEntry, TableHeaders } from '../types';
+import { ExpandedTableRowName, getExpandedRowComponent } from '../Components';
 
 const timeFields: string[] = ['elapsed'];
 const costFields: string[] = [];
@@ -41,20 +41,28 @@ const getOthersStyle = (item: Record<string, string | number>, key: string) => {
 interface Params {
   legendEntry: LegendEntry;
   headers: TableHeaders;
-  expandRows: boolean;
+  expandedRowName?: ExpandedTableRowName;
 }
 
 const TableRow: FunctionComponent<Params> = ({
   legendEntry,
   headers,
-  expandRows,
+  expandedRowName,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+
+  const renderExpandedRow = () => {
+    const Component = getExpandedRowComponent(expandedRowName);
+
+    return Component ? (
+      <Component item={legendEntry} isExpanded={isExpanded} />
+    ) : null;
+  };
 
   return (
     <>
       <Tr style={getOthersStyle(legendEntry, 'id')}>
-        {expandRows && (
+        {expandedRowName && (
           <Td
             expand={{
               rowIndex: +legendEntry.id,
@@ -67,9 +75,7 @@ const TableRow: FunctionComponent<Params> = ({
           <Td key={`${legendEntry.id}-${key}`}>{getText(legendEntry, key)}</Td>
         ))}
       </Tr>
-      {expandRows && (
-        <TableExpandedRow isExpanded={isExpanded} item={legendEntry} />
-      )}
+      {renderExpandedRow()}
     </>
   );
 };

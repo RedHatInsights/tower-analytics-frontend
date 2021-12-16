@@ -84,9 +84,6 @@ const computeTotalSavings = (data) =>
 const AutomationCalculator = ({
   slug,
   defaultParams,
-  tableHeaders: _ignored2,
-  expandedAttributes: _ignored4,
-  availableChartTypes: _ignored5,
   dataEndpoint,
   optionsEndpoint,
   schema,
@@ -314,7 +311,7 @@ AutomationCalculator.propTypes = {
   slug: PropTypes.string.isRequired,
   defaultParams: PropTypes.object.isRequired,
   tableHeaders: PropTypes.array.isRequired,
-  expandedAttributes: PropTypes.array.isRequired,
+  expandedTableRowName: PropTypes.string,
   availableChartTypes: PropTypes.array.isRequired,
   dataEndpoint: PropTypes.string.isRequired,
   optionsEndpoint: PropTypes.string.isRequired,

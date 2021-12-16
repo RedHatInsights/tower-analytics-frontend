@@ -37,8 +37,6 @@ const tableHeaders: AttributesType = [
   { key: 'host_task_unreachable_count', value: 'Unreachable tasks count' },
 ];
 
-const expandedAttributes = [] as string[];
-
 const defaultParams = {
   limit: 6,
   offset: 0,
@@ -48,7 +46,6 @@ const defaultParams = {
     'host_task_ok_count',
     'host_task_failed_count',
     'host_task_unreachable_count',
-    ...expandedAttributes,
   ],
   group_by: 'org',
   group_by_time: true,
@@ -146,7 +143,6 @@ const reportParams: ReportPageParams = {
     slug,
     defaultParams,
     tableHeaders,
-    expandedAttributes,
     availableChartTypes,
     dataEndpoint: Endpoint.eventExplorer,
     optionsEndpoint: Endpoint.eventExplorerOptions,
