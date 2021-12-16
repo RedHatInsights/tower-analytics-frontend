@@ -21,3 +21,7 @@ fi
 if [ "${TRAVIS_BRANCH}" = "prod-stable" ]; then
     .travis/release.sh "${TRAVIS_BRANCH}"
 fi
+
+if [ "${TRAVIS_PULL_REQUEST}" != "false" && "${PR_CHECK}" = "true" ]; then
+    .travis/release.sh "${TRAVIS_BRANCH}"
+fi
