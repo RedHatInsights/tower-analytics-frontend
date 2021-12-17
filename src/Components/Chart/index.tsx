@@ -39,7 +39,7 @@ const applyHiddenFilter = (
   ...chartData,
   series: chartData.series.map((series, index) => ({
     ...series,
-    hidden: !!chartSeriesHidden.at(index),
+    hidden: !!chartSeriesHidden[index],
   })),
 });
 
@@ -76,7 +76,10 @@ const Chart: FC<Props> = ({
 
   useEffect(() => {
     setChartData(
-      applyHiddenFilter(convertApiToData(data), chartSeriesHiddenProps)
+      applyHiddenFilter(
+        convertApiToData(data),
+        chartSeriesHiddenProps as boolean[]
+      )
     );
   }, [data]);
 

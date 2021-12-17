@@ -3,7 +3,7 @@ import {
   useRedirect,
   QueryParamsProvider,
   DEFAULT_NAMESPACE,
-} from './';
+} from '../';
 
 describe('QueryParams/index', () => {
   it('should have exported members', () => {
