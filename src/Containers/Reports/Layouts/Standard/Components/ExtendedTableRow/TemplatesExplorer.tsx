@@ -12,7 +12,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, { FunctionComponent } from 'react';
+import React from 'react';
 import {
   DescriptionList,
   DescriptionListDescription,
@@ -26,21 +26,16 @@ import {
 } from '@patternfly/react-core';
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 
-import Breakdown from '../../../../../Charts/Breakdown';
-import { categoryColor } from '../../../../../Utilities/constants';
-import { LegendEntry } from '../types';
+import Breakdown from '../../../../../../Charts/Breakdown';
+import { categoryColor } from '../../../../../../Utilities/constants';
 import styled from 'styled-components';
+import { ExpandedTableRowComponent } from '.';
 
 const FailedTaskDescriptionList = styled(DescriptionList)`
   row-gap: 16px;
 `;
 
-interface Props {
-  isExpanded: boolean;
-  item: LegendEntry;
-}
-
-const TableExpandedRow: FunctionComponent<Props> = ({ isExpanded, item }) => {
+const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
   const totalCount = item
     ? {
         ok: item?.successful_count ?? 0,

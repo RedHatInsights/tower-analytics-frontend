@@ -33,17 +33,10 @@ const tableHeaders: AttributesType = [
   { key: 'failed_count', value: 'Failed jobs count' },
 ];
 
-const expandedAttributes = [] as string[];
-
 const defaultParams: Params = {
   limit: 6,
   offset: 0,
-  attributes: [
-    'failed_count',
-    'successful_count',
-    'total_count',
-    ...expandedAttributes,
-  ],
+  attributes: ['failed_count', 'successful_count', 'total_count'],
   group_by: 'template',
   group_by_time: true,
   granularity: 'monthly',
@@ -140,7 +133,6 @@ const reportParams: ReportPageParams = {
     slug,
     defaultParams,
     tableHeaders,
-    expandedAttributes,
     availableChartTypes,
     dataEndpoint: Endpoint.jobExplorer,
     optionsEndpoint: Endpoint.jobExplorerOptions,

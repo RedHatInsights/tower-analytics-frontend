@@ -6,6 +6,7 @@ import {
 } from 'react-json-chart-builder';
 import { Params, Endpoint } from '../../../../Api';
 import { LayoutComponentName } from '../../Layouts';
+import { ExpandedTableRowName } from '../../Layouts/Standard/Components';
 import { TagName } from '../constants';
 import { AttributesType, ReportPageParams } from '../types';
 
@@ -154,7 +155,7 @@ const reportParams: ReportPageParams = {
     slug,
     defaultParams,
     tableHeaders,
-    expandedAttributes,
+    expandedTableRowName: ExpandedTableRowName.templatesExplorer,
     availableChartTypes,
     dataEndpoint: Endpoint.jobExplorer,
     optionsEndpoint: Endpoint.jobExplorerOptions,

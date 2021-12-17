@@ -35,16 +35,10 @@ const tableHeaders: AttributesType = [
   },
 ];
 
-const expandedAttributes = [] as string[];
-
 const defaultParams = {
   limit: 6,
   offset: 0,
-  attributes: [
-    'total_unique_host_count',
-    'total_unique_host_changed_count',
-    ...expandedAttributes,
-  ],
+  attributes: ['total_unique_host_count', 'total_unique_host_changed_count'],
   group_by: 'template',
   group_by_time: true,
   granularity: 'monthly',
@@ -141,7 +135,6 @@ const reportParams: ReportPageParams = {
     slug,
     defaultParams,
     tableHeaders,
-    expandedAttributes,
     availableChartTypes,
     dataEndpoint: Endpoint.hostExplorer,
     optionsEndpoint: Endpoint.hostExplorerOptions,
