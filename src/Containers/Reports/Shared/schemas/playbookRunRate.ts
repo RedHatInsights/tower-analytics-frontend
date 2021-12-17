@@ -64,7 +64,7 @@ const schema = [
       padding: {
         top: 10,
         bottom: 85,
-        right: 90,
+        right: 178,
         left: 90,
       },
       themeColor: ChartThemeColor.multiOrdered,
