@@ -47,7 +47,7 @@ const Chart: FC<Props> = ({
   schema,
   data,
   specificFunctions,
-  namespace = 'chart-settings',
+  namespace = 'settings',
 }) => {
   const {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
