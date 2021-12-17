@@ -64,13 +64,17 @@ const DownloadPdfButton: FC<Props> = ({
       downloadPdfAction(
         {
           slug,
-          endpointUrl,
-          queryParams,
-          y,
-          label,
-          x_tick_format: xTickFormat,
-          showExtraRows: !isCurrent,
-          chartType,
+          schemaParams: {
+            y,
+            label,
+            xTickFormat,
+            chartType,
+          },
+          dataFetchingParams: {
+            showExtraRows: !isCurrent,
+            endpointUrl,
+            queryParams,
+          },
         },
         dispatch,
         slug
