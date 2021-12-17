@@ -5,7 +5,7 @@ import { useQueryParams } from '../../QueryParams/';
 import styled from 'styled-components';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
-import { readClusters, readNotifications } from '../../Api/';
+import { Params, readClusters, readNotifications } from '../../Api/';
 import useRequest from '../../Utilities/useRequest';
 
 import Main from '@redhat-cloud-services/frontend-components/Main';
@@ -130,7 +130,7 @@ const Notifications: FC<Record<string, never>> = () => {
     useCallback(
       () =>
         readNotifications(
-          queryParams
+          queryParams as Params
         ) as unknown as Promise<NotificationDataType>,
       [queryParams]
     ),

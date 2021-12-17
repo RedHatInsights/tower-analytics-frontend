@@ -1,4 +1,4 @@
-import { parseQueryParams, stringifyQueryParams } from './helpers';
+import { parseQueryParams, stringifyQueryParams } from '../helpers';
 
 describe('QueryParams/helpers', () => {
   it('should encode null and empty query params correctly', () => {

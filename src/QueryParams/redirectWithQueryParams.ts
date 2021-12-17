@@ -1,18 +1,9 @@
-import { RouteComponentProps } from 'react-router-dom';
+import { History } from 'history';
 import { stringifyQueryParams } from './helpers';
-
-// TODO move it elsewhere when doing qp --> ts
-interface NamespacedQueryParams {
-  [key: string]: Record<string, any>;
-}
-
-export type RedirectWithQueryParamsProps = (
-  path: string,
-  queryParams: NamespacedQueryParams | undefined
-) => void;
+import { RedirectWithQueryParamsProps } from './types';
 
 type TopLevelRedirectParams = (
-  history: RouteComponentProps['history']
+  history: History
 ) => RedirectWithQueryParamsProps;
 
 /**
