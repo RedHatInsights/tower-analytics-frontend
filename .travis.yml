@@ -21,6 +21,5 @@ env:
     global:
     - REPO="git@github.com:RedHatInsights/tower-analytics-frontend-build.git"
     - REPO_DIR="tower-analytics-frontend-build"
-    - BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-prtesting}
+    - BRANCH=${TRAVIS_PULL_REQUEST_BRANCH:-$TRAVIS_BRANCH}
     - NODE_OPTIONS="--max-old-space-size=4096 --max_old_space_size=4096"
-    - PR_CHECK=true
