@@ -1,9 +1,11 @@
 import React, { FC, useEffect, useState } from 'react';
 import ChartBuilder, {
+  ChartData,
   ChartFunctions,
   ChartSchemaElement,
   functions,
 } from 'react-json-chart-builder';
+import { useQueryParams } from '../../QueryParams';
 import { convertApiToData } from './convertApi';
 import { ApiReturnType } from './types';
 
@@ -11,6 +13,7 @@ interface Props {
   schema: ChartSchemaElement[];
   data: ApiReturnType;
   specificFunctions?: ChartFunctions;
+  namespace?: string;
 }
 
 const customFunctions = (specificFunctions?: ChartFunctions) => ({
@@ -29,18 +32,59 @@ const customFunctions = (specificFunctions?: ChartFunctions) => ({
   },
 });
 
-const Chart: FC<Props> = ({ schema, data, specificFunctions }) => {
-  const dataState = useState(convertApiToData(data));
+const applyHiddenFilter = (
+  chartData: ChartData,
+  chartSeriesHidden: boolean[] = []
+): ChartData => ({
+  ...chartData,
+  series: chartData.series.map((series, index) => ({
+    ...series,
+    hidden: !!chartSeriesHidden.at(index),
+  })),
+});
+
+const Chart: FC<Props> = ({
+  schema,
+  data,
+  specificFunctions,
+  namespace = 'chart-settings',
+}) => {
+  const {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    queryParams: { chartSeriesHiddenProps },
+    dispatch,
+  } = useQueryParams(
+    {
+      chartSeriesHiddenProps: [],
+    },
+    namespace
+  );
+
+  const [chartData, setChartData] = useState<ChartData>({
+    series: [],
+    legend: [],
+  });
+
+  const setChartDataHook = (newChartData: ChartData) => {
+    dispatch({
+      type: 'SET_CHART_SERIES_HIDDEN_PROPS',
+      value: newChartData.series.map(({ hidden }) => hidden),
+    });
+
+    setChartData(newChartData);
+  };
 
   useEffect(() => {
-    dataState[1](convertApiToData(data));
+    setChartData(
+      applyHiddenFilter(convertApiToData(data), chartSeriesHiddenProps)
+    );
   }, [data]);
 
   return (
     <ChartBuilder
       schema={schema}
       functions={customFunctions(specificFunctions)}
-      dataState={dataState}
+      dataState={[chartData, setChartDataHook]}
     />
   );
 };
