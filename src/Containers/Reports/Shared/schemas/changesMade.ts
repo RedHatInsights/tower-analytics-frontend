@@ -25,16 +25,13 @@ const tags = [
   TagName.timeSeries,
 ];
 
-const defaultTableHeaders: AttributesType = [
+const tableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Template name' },
-];
-
-const tableAttributes = [
-  'host_count',
-  'changed_host_count',
-  'host_task_count',
-  'host_task_changed_count',
+  { key: 'host_count', value: 'Host count' },
+  { key: 'changed_host_count', value: 'Changed host count' },
+  { key: 'host_task_count', value: 'Task count' },
+  { key: 'host_task_changed_count', value: 'Changed task count' },
 ];
 
 const expandedAttributes = [] as string[];
@@ -42,7 +39,13 @@ const expandedAttributes = [] as string[];
 const defaultParams = {
   limit: 6,
   offset: 0,
-  attributes: [...tableAttributes, ...expandedAttributes],
+  attributes: [
+    'host_count',
+    'changed_host_count',
+    'host_task_count',
+    'host_task_changed_count',
+    ...expandedAttributes,
+  ],
   group_by: 'template',
   group_by_time: true,
   granularity: 'monthly',
@@ -138,8 +141,7 @@ const reportParams: ReportPageParams = {
   reportParams: {
     slug,
     defaultParams,
-    defaultTableHeaders,
-    tableAttributes,
+    tableHeaders,
     expandedAttributes,
     availableChartTypes,
     dataEndpoint: Endpoint.jobExplorer,

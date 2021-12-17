@@ -40,8 +40,7 @@ const getDateFormatByGranularity = (granularity: string): string => {
 const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   slug,
   defaultParams,
-  defaultTableHeaders,
-  tableAttributes,
+  tableHeaders,
   expandedAttributes,
   availableChartTypes,
   dataEndpoint,
@@ -62,43 +61,45 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   const { result: options, request: fetchOptions } =
     useRequest<OptionsReturnType>(readOptions, { sort_options: [] });
 
-  const { request: setData, ...dataApi } = useRequest(readData, {
+  const { request: fetchData, ...dataApi } = useRequest(readData, {
     meta: { count: 0, legend: [] },
   });
 
   useEffect(() => {
-    setData(queryParams);
+    fetchData(queryParams);
     fetchOptions(queryParams);
   }, [queryParams]);
 
-  const updateFilter = () => {
+  /**
+   * The function is used because the API is not returning the value.
+   * When API gets support, this function should be removed.
+   */
+  const addTaskActionId = (
+    qp: Record<string, string | string[]>
+  ): Record<string, string | string[]> => {
     if (
-      queryParams.task_action_name &&
-      queryParams.task_action_id.length === 0 &&
+      qp.task_action_name &&
+      qp.task_action_id.length === 0 &&
       options?.task_action_id &&
-      Array.isArray(queryParams.task_action_name)
+      Array.isArray(qp.task_action_name)
     ) {
-      const task_action_name = queryParams.task_action_name as Array<T>;
+      const task_action_name = qp.task_action_name;
       const modules = options.task_action_id.filter((obj) =>
         task_action_name.includes(obj.value)
       );
-      queryParams.task_action_id = modules.map((module) =>
-        module.key?.toString()
-      );
+      qp.task_action_id = modules.map((module) => module.key?.toString());
     }
+
+    return qp;
   };
 
+  /**
+   * When API gets support, this effect should be removed.
+   */
   useEffect(() => {
-    updateFilter();
-    setData(queryParams);
+    // Pass the queryParams to the function making a copy so it is not mutated.
+    fetchData(addTaskActionId(queryParams));
   }, [options?.task_action_id]);
-
-  const tableHeaders = [
-    ...defaultTableHeaders,
-    ...(tableAttributes
-      ? options.sort_options.filter(({ key }) => tableAttributes.includes(key))
-      : options.sort_options),
-  ];
 
   const chartParams = {
     y: queryParams.sort_options as string,

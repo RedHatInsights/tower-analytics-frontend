@@ -24,12 +24,13 @@ const tags = [
   TagName.performanceAnomalyDetection,
 ];
 
-const defaultTableHeaders: AttributesType = [
+const tableHeaders: AttributesType = [
   { key: 'id', value: 'ID' },
   { key: 'name', value: 'Template name' },
+  { key: 'total_count', value: 'Total jobs count' },
+  { key: 'successful_count', value: 'Successful jobs count' },
+  { key: 'failed_count', value: 'Failed jobs count' },
 ];
-
-const tableAttributes = ['failed_count', 'successful_count', 'total_count'];
 
 const expandedAttributes = [
   'average_host_task_count_per_host',
@@ -65,7 +66,12 @@ const expandedAttributes = [
 const defaultParams: Params = {
   limit: 6,
   offset: 0,
-  attributes: [...tableAttributes, ...expandedAttributes],
+  attributes: [
+    'total_count',
+    'successful_count',
+    'failed_count',
+    ...expandedAttributes,
+  ],
   group_by: 'template',
   group_by_time: false,
   granularity: 'monthly',
@@ -147,8 +153,7 @@ const reportParams: ReportPageParams = {
   reportParams: {
     slug,
     defaultParams,
-    defaultTableHeaders,
-    tableAttributes,
+    tableHeaders,
     expandedAttributes,
     availableChartTypes,
     dataEndpoint: Endpoint.jobExplorer,

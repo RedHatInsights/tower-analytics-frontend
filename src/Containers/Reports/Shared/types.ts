@@ -14,8 +14,7 @@ export type SchemaFnc = (props: {
 export interface ReportGeneratorParams {
   slug: string;
   defaultParams: Params;
-  defaultTableHeaders: AttributesType;
-  tableAttributes: string[];
+  tableHeaders: AttributesType;
   expandedAttributes: string[];
   availableChartTypes: string[];
   dataEndpoint: Endpoint;
