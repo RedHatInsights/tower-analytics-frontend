@@ -10,7 +10,12 @@ if [ "${TRAVIS_PULL_REQUEST_BAK}" != "false" ]; then
     echo `git rev-parse --verify HEAD`
     TRAVIS_PULL_REQUEST="${TRAVIS_PULL_REQUEST_BAK}"
     export TRAVIS_PULL_REQUEST
+    export TRAVIS_BRANCH_BAK="${TRAVIS_BRANCH}"
+    export TRAVIS_BRANCH="${TRAVIS_PULL_REQUEST_BRANCH}"
     .travis/release.sh "PR-${TRAVIS_PULL_REQUEST}"
+
+    export TRAVIS_BRANCH="${TRAVIS_BRANCH_BAK}"
+    echo "reset TRAVIS_BRANCH=${TRAVIS_BRANCH}"
     exit $?
 fi
 

@@ -15,7 +15,11 @@ install:
   - npm ci
 jobs:
   include:
-  - stage: PR Check
+  - stage: Lint
+    script: npm run lint
+  - stage: Test
+    script: npm run test
+  - stage: Deploy
     script: bash .travis/pr_build.sh
 env:
     global:
