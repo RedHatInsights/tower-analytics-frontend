@@ -1,7 +1,19 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const useAsyncActionQueue = ({ executeAction, waitFor }) => {
-  const [actionQueue, setActionQueue] = useState([]);
+interface Props<T> {
+  executeAction: (args: T) => void;
+  waitFor: React.DependencyList;
+}
+
+interface Return<T> {
+  push: (action: T) => void;
+}
+
+const useAsyncActionQueue = <T>({
+  executeAction,
+  waitFor,
+}: Props<T>): Return<T> => {
+  const [actionQueue, setActionQueue] = useState<T[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const processNext = () => {
@@ -21,7 +33,7 @@ const useAsyncActionQueue = ({ executeAction, waitFor }) => {
 
   useEffect(() => {
     setIsProcessing(false);
-  }, [waitFor]);
+  }, waitFor);
 
   return {
     push: (action) => {

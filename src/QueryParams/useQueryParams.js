@@ -145,7 +145,7 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
 
   const { push: dispatch } = useAsyncActionQueue({
     executeAction,
-    waitFor: params,
+    waitFor: [params],
   });
 
   return {

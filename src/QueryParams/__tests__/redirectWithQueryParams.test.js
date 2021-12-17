@@ -1,6 +1,6 @@
-import { Paths } from '../paths';
+import { Paths } from '../../paths';
 import { createMemoryHistory } from 'history';
-import useRedirect from './redirectWithQueryParams';
+import useRedirect from '../redirectWithQueryParams';
 
 describe('QueryParams/redirect', () => {
   // All the other testing is done in the helpers tests

@@ -2,8 +2,8 @@ import { renderHook, act } from '@testing-library/react-hooks';
 import { Router } from 'react-router';
 import { createMemoryHistory } from 'history';
 
-import Provider from './Provider';
-import useQueryParams from './useQueryParams';
+import Provider from '../Provider';
+import useQueryParams from '../useQueryParams';
 
 // TODO Have a feeling that the useQueryParams reducer will change a bit
 // when converting to ts, so the test are going to be expanded then.
