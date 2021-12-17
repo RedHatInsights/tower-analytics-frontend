@@ -13,8 +13,6 @@ const paramsReducer = (state, { type, value }) => {
       return { ...state, startDate: value };
     case 'SET_ENDDATE':
       return { ...state, endDate: value };
-    case 'SET_CHART_TYPE':
-      return { ...state, chartType: value };
     case 'SET_ID':
       if (isNaN(value)) {
         const { id: ignored, ...rest } = state;
@@ -31,6 +29,13 @@ const paramsReducer = (state, { type, value }) => {
       return { ...state, ...value };
 
     /* v1 api reducers */
+    /* Settings reducers START */
+    /* TODO: If possible somehow rip these two types of reducers apart */
+    case 'SET_CHART_TYPE':
+      return { ...state, chartType: value };
+    case 'SET_CHART_SERIES_HIDDEN_PROPS':
+      return { ...state, chartSeriesHiddenProps: value };
+    /* Settings reducers END */
     case 'SET_LIMIT':
       return isNaN(value)
         ? { ...state, limit: '5' } // Defaults back to 5
@@ -120,6 +125,11 @@ const actionMapper = {
   granularity: 'SET_GRANULARITY',
 };
 
+// TODO: This should be a singleton
+// (since the action queue should wait for ALL changes across namespaces and functions)
+// or we can move the action queue and the `params` constant inside the context,
+// and leave this hook as a boarder stuff, and maybe make more of it depending the
+// reducer it can use.hmmmmm.
 const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
   const { queryParams, update } = useContext(QueryParamsContext);
   const params = queryParams[namespace] || initial;
