@@ -23,8 +23,8 @@ interface UseRequestVariables<T> {
   isSuccess: boolean;
 }
 
-interface UseRequestReturn<T> extends UseRequestVariables<T> {
-  request: () => void;
+interface UseRequestReturn<A, T> extends UseRequestVariables<T> {
+  request: (...args: A[]) => void;
   setValue: (value: T) => void;
 }
 
@@ -70,10 +70,10 @@ const hasAttributesDeep = (obj: unknown, required: unknown): boolean => {
   return typeof obj === typeof required;
 };
 
-const useRequest = <T>(
-  makeRequest: (...args: unknown[]) => Promise<T>,
+const useRequest = <A, T>(
+  makeRequest: (...args: A[]) => Promise<T>,
   initialValue: T
-): UseRequestReturn<T> => {
+): UseRequestReturn<A, T> => {
   const [variables, setVariables] = useState<UseRequestVariables<T>>({
     result: initialValue,
     error: null,
@@ -84,7 +84,7 @@ const useRequest = <T>(
 
   return {
     ...variables,
-    request: async (...args: unknown[]) => {
+    request: async (...args: A[]) => {
       setVariables({
         ...variables,
         isSuccess: false,

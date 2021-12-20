@@ -126,7 +126,7 @@ const Notifications: FC<Record<string, never>> = () => {
     isLoading,
     isSuccess,
     request: fetchNotifications,
-  } = useRequest<NotificationDataType>(
+  } = useRequest<any, NotificationDataType>(
     useCallback(
       () =>
         readNotifications(
@@ -140,7 +140,7 @@ const Notifications: FC<Record<string, never>> = () => {
   const {
     result: { templates: clustersData = [] },
     request: fetchClusters,
-  } = useRequest<ClusterDataType>(
+  } = useRequest<any, ClusterDataType>(
     () => readClusters() as unknown as Promise<ClusterDataType>,
     { templates: [] }
   );

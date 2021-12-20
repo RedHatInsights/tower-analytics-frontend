@@ -58,8 +58,10 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     'settings'
   );
 
-  const { result: options, request: fetchOptions } =
-    useRequest<OptionsReturnType>(readOptions, { sort_options: [] });
+  const { result: options, request: fetchOptions } = useRequest<
+    any,
+    OptionsReturnType
+  >(readOptions, { sort_options: [] });
 
   const { request: fetchData, ...dataApi } = useRequest(readData, {
     meta: { count: 0, legend: [] },
