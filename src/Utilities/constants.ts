@@ -55,7 +55,7 @@ export const roi = {
     sort_order: 'desc',
     start_date: undefined,
     end_date: undefined,
-    limit: '25',
+    limit: '6',
     offset: '0',
     only_root_workflows_and_standalone_jobs: true,
     attributes: [
