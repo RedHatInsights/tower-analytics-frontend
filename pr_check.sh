@@ -1,29 +1,46 @@
-#!/bin/bash
+#!/bin/bash -x 
 
-# --------------------------------------------
-# Export vars for helper scripts to use
-# --------------------------------------------
-# name of app-sre "application" folder this component lives in; needs to match for the push to quay.
-export COMPONENT="tower-analytics"
-export APP_NAME=`node -e 'console.log(require("./package.json").insights.appname)'` # `automation-analytics`
-export IMAGE="quay.io/cloudservices/automation-analytics-frontend"
-export WORKSPACE=${WORKSPACE:-$APP_ROOT}  # if running in jenkins, use the build's workspace
-export APP_ROOT=$(pwd)
-cat /etc/redhat-release
-COMMON_BUILDER=https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master
-
+echo $(date -u) "*** To start PR check"
 # --------------------------------------------
 # Options that must be configured by app owner
 # --------------------------------------------
-IQE_PLUGINS="automation-analytics"
-IQE_MARKER_EXPRESSION="smoke"
+
+APP_NAME="tower-analytics"  # name of app-sre "application" folder this component lives in
+APP_NAME="$APP_NAME,gateway,insights-ephemeral"
+COMPONENT_NAME="tower-analytics-clowdapp"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
+IMAGE="quay.io/cloudservices/automation-analytics-api"
+IMAGE_TAG="qa"
+
+IQE_PLUGINS="automation_analytics"
+IQE_MARKER_EXPRESSION="ephemeral"
 IQE_FILTER_EXPRESSION=""
 
-set -ex
+# Install bonfire repo/initialize
+CICD_URL=https://raw.githubusercontent.com/RedHatInsights/bonfire/master/cicd
+curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
+
+# overriding IMAGE_TAG defined by boostrap.sh, for now
+# export IMAGE_TAG="pr-$IMAGE_TAG"
+
+export
+env
+
+export NAMESPACE=$(bonfire namespace reserve)
+export IQE_IMAGE=quay.io/cloudservices/iqe-tests:automation-analytics
+
+bonfire deploy \
+    ${APP_NAME} \
+    --no-remove-resources tower-analytics-clowdapp \
+    --source appsre \
+    --set-template-ref ${COMPONENT_NAME}=HEAD \
+    --set-image-tag $IMAGE=$IMAGE_TAG \
+    --namespace ${NAMESPACE}
 
 # ---------------------------
 # Build and Publish to Quay
 # ---------------------------
+
+
 
 npm ci
 npm run verify
