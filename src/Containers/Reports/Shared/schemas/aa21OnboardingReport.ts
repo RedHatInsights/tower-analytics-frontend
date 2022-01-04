@@ -119,7 +119,7 @@ const schema = [
       padding: {
         top: 10,
         bottom: 85,
-        right: 90,
+        right: 178,
         left: 90,
       },
       themeColor: ChartThemeColor.multiOrdered,
@@ -147,6 +147,7 @@ const schema = [
       interactive: true,
       orientation: ChartLegendOrientation.vertical,
       position: ChartLegendPosition.right,
+      turncateAt: 18,
     },
     tooltip: {
       mouseFollow: true,
