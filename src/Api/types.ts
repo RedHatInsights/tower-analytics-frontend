@@ -27,6 +27,7 @@ export interface PDFParams {
     endpointUrl: string;
     queryParams: Params;
     showExtraRows: boolean;
+    chartSeriesHiddenProps: boolean[];
   };
 }
 
