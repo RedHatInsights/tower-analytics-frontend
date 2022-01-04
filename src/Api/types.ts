@@ -22,13 +22,12 @@ export interface ParamsWithPagination {
 
 export interface PDFParams {
   slug: string;
-  endpointUrl: string;
-  queryParams: Params;
-  y: string;
-  label: string;
-  x_tick_format: string;
-  showExtraRows: boolean;
-  chartType: string;
+  schemaParams: Record<string, string>;
+  dataFetchingParams: {
+    endpointUrl: string;
+    queryParams: Params;
+    showExtraRows: boolean;
+  };
 }
 
 export type NotificationAsyncFunction = (
