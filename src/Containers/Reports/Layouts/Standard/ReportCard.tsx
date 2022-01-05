@@ -42,6 +42,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
   defaultParams,
   tableHeaders,
   expandedTableRowName,
+  defaultSelectedToolbarCategory = '',
   availableChartTypes,
   dataEndpoint,
   optionsEndpoint,
@@ -174,6 +175,7 @@ const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
       <CardBody>
         <FilterableToolbar
           categories={options}
+          defaultSelected={defaultSelectedToolbarCategory}
           filters={queryParams}
           setFilters={setFromToolbar}
           pagination={

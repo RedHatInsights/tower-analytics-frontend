@@ -18,6 +18,7 @@ export interface ReportGeneratorParams {
   tableHeaders: AttributesType;
   expandedTableRowName?: ExpandedTableRowName;
   availableChartTypes: string[];
+  defaultSelectedToolbarCategory?: string;
   dataEndpoint: Endpoint;
   optionsEndpoint: Endpoint;
   schema: unknown;

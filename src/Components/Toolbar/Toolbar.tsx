@@ -24,6 +24,7 @@ interface Props {
   categories: ApiOptionsType;
   // Todo: update to use the QueryParams type after known
   filters: Record<string, AttributeType>;
+  defaultSelected?: string;
   setFilters: SetValues;
   pagination: FunctionComponent;
   hasSettings: boolean;
@@ -33,6 +34,7 @@ interface Props {
 const FilterableToolbar: FunctionComponent<Props> = ({
   categories,
   filters,
+  defaultSelected = '',
   setFilters: setQueryParams,
   pagination = null,
   hasSettings = false,
@@ -72,6 +74,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
           {Object.keys(filterCategories).length > 0 && (
             <FilterCategoriesGroup
               filterCategories={filterCategories}
+              defaultSelected={defaultSelected}
               filters={filters}
               setFilters={setFilters}
             />
