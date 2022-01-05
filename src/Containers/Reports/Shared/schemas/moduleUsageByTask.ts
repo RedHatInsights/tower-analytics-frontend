@@ -144,6 +144,7 @@ const reportParams: ReportPageParams = {
     defaultParams,
     tableHeaders,
     availableChartTypes,
+    defaultSelectedToolbarCategory: 'task_action_id',
     dataEndpoint: Endpoint.eventExplorer,
     optionsEndpoint: Endpoint.eventExplorerOptions,
     schema,

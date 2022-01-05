@@ -8,17 +8,19 @@ import { SetValues, AttributeType } from '../types';
 
 interface Props {
   filterCategories: Record<string, SelectOptionProps[]>;
+  defaultSelected: string;
   filters: Record<string, AttributeType>;
   setFilters: SetValues;
 }
 
 const FilterCategoriesGroup: FunctionComponent<Props> = ({
   filterCategories,
+  defaultSelected,
   filters,
   setFilters,
 }) => {
   const [currentCategory, setCurrentCategory] = useState(
-    Object.keys(filterCategories)[0]
+    defaultSelected || Object.keys(filterCategories)[0]
   );
 
   return (
