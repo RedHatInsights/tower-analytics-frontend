@@ -13,10 +13,10 @@ import {
 } from '@patternfly/react-core';
 import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 
-import { useDispatch, useSelector } from 'react-redux';
 import { downloadPdf as downloadPdfAction } from '../../store/pdfDownloadButton/actions';
 import { DownloadState } from '../../store/pdfDownloadButton/types';
 import { Endpoint, Params } from '../../Api';
+
 import { DispatchType, RootState } from '../../store';
 import { useReadQueryParams } from '../../QueryParams';
 
@@ -47,6 +47,7 @@ const DownloadPdfButton: FC<Props> = ({
 }) => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isCurrent, setIsCurrent] = useState(true);
+
   const dispatch = useDispatch<DispatchType>();
   const { chartSeriesHiddenProps } = useReadQueryParams(
     {
@@ -55,9 +56,8 @@ const DownloadPdfButton: FC<Props> = ({
     settingsNamespace
   );
 
-  const status = useSelector<RootState>(
-    (state) => state?.pdfDownloadButton[slug]
-  );
+
+  const status = useAppSelector((state) => state?.pdfDownloadButton[slug]);
   const isLoading = status === DownloadState.pending;
   const isError = status === DownloadState.rejected;
 

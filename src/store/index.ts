@@ -1,26 +1,20 @@
-import { applyMiddleware, combineReducers, createStore, Dispatch } from 'redux';
+import { applyMiddleware, combineReducers, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise-middleware';
-import pdfDownloadButton, {
-  ActionTypes as PdfDownloadActionTypes,
-} from './pdfDownloadButton';
-import {
-  notificationsReducer,
-  addNotification,
-  removeNotification,
-} from '@redhat-cloud-services/frontend-components-notifications/redux';
+import pdfDownloadButton from './pdfDownloadButton';
+import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 const rootReducer = combineReducers({
   notifications: notificationsReducer,
   pdfDownloadButton,
 });
 
-export type RootState = ReturnType<typeof rootReducer>;
-export type ActionType =
-  | PdfDownloadActionTypes
-  | ReturnType<typeof addNotification>
-  | ReturnType<typeof removeNotification>;
-export type DispatchType = Dispatch<ActionType>;
-
 const store = createStore(rootReducer, applyMiddleware(promiseMiddleware));
+
+export type RootState = ReturnType<typeof store.getState>;
+export type DispatchType = typeof store.dispatch;
+
+export const useAppDispatch = (): DispatchType => useDispatch<DispatchType>();
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export default store;
