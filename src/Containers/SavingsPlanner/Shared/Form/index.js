@@ -88,6 +88,17 @@ const Form = ({ title, options, data = {} }) => {
     },
   ];
 
+  useEffect(() => {
+    if (pathname.indexOf('/add') === -1 && hash) {
+      setStartStep(steps.find((step) => `#${step.id}` === hash).step_number);
+    } else {
+      history.replace({
+        hash: 'details',
+      });
+      setStartStep(1);
+    }
+  }, []);
+
   const onStepChange = (newStep) => {
     history.replace({
       hash: newStep.id,
@@ -159,17 +170,6 @@ const Form = ({ title, options, data = {} }) => {
       </WizardContextConsumer>
     </WizardFooter>
   );
-
-  useEffect(() => {
-    if (pathname.indexOf('/add') === -1 && hash) {
-      setStartStep(steps.find((step) => `#${step.id}` === hash).step_number);
-    } else {
-      history.replace({
-        hash: 'details',
-      });
-      setStartStep(1);
-    }
-  }, []);
 
   return (
     <>

@@ -12,7 +12,7 @@
   },
   "rules": {
     "no-use-before-define": [
-      "warn"
+      "error"
     ],
     "no-unused-vars":
     [

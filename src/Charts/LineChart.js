@@ -64,16 +64,16 @@ class LineChart extends Component {
     const width = this.props.getWidth();
     const height = this.props.getHeight();
 
-    function transition(path) {
-      path.transition().duration(1000).attrTween('stroke-dasharray', tweenDash);
-    }
-
     function tweenDash() {
       const l = this.getTotalLength();
       const i = d3.interpolateString('0,' + l, l + ',' + l);
       return function (t) {
         return i(t);
       };
+    }
+
+    function transition(path) {
+      path.transition().duration(1000).attrTween('stroke-dasharray', tweenDash);
     }
 
     const x = d3.scaleTime().rangeRound([0, width]);
