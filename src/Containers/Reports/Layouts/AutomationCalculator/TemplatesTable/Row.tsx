@@ -48,6 +48,7 @@ const Row: FunctionComponent<Props> = ({
             <Button
               onClick={() => redirectToJobExplorer(template.id)}
               variant={ButtonVariant.link}
+              style={{ padding: "0px" }}
             >
               {template.name}
             </Button>
