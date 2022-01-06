@@ -56,8 +56,11 @@ export const setQueryParams = (
   queryParams: NamespacedQueryParams,
   history: History
 ): void => {
+  const search = stringifyQueryParams(queryParams);
+  if (`?${search}` === history.location.search) return;
+
   history.push({
     pathname: history.location.pathname,
-    search: stringifyQueryParams(queryParams),
+    search,
   });
 };

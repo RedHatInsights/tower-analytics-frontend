@@ -1,7 +1,7 @@
 import { useContext, useEffect } from 'react';
 import moment from 'moment';
 import { QueryParamsContext } from './Context';
-import useAsyncActionQueue from '../Utilities/useAsyncActionQueue';
+// import useAsyncActionQueue from '../Utilities/useAsyncActionQueue';
 
 import { formatDate } from '../Utilities/helpers';
 import { DEFAULT_NAMESPACE } from './helpers';
@@ -130,7 +130,7 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
   const {
     queryParams,
     initialParams,
-    update,
+    update: useDispatch,
     addInitialParams,
     removeInitialParams,
   } = useContext(QueryParamsContext);
@@ -157,12 +157,16 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
 
   const executeAction = (action) => {
     if (action.type === 'RESET_FILTER') {
-      update({ newQueryParams: initial, namespace });
+      return () => initial;
     } else {
-      const newQueryParams = paramsReducer(params, action);
-      update({ newQueryParams, namespace });
+      return (curr) => paramsReducer(curr || params, action);
     }
   };
+
+  const dispatch = useDispatch({
+    namespace,
+    actionFnc: executeAction,
+  });
 
   /**
    * We need to use an action queue to ensure that the url updates
@@ -170,10 +174,10 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
    * queryParams. Without this more than one dispatched action after each
    * other will update the url with the previous state.
    */
-  const { push: dispatch } = useAsyncActionQueue({
-    executeAction,
-    waitFor: [params],
-  });
+  // const { push: dispatch } = useAsyncActionQueue({
+  //   executeAction,
+  //   waitFor: [params],
+  // });
 
   return {
     queryParams: params,

@@ -8,6 +8,8 @@ import {
 } from './helpers';
 import redirectWithQueryParams from './redirectWithQueryParams';
 import {
+  ActionItem,
+  DispatchFunction,
   InitialParamsFunction,
   NamespacedQueryParams,
   UpdateFunction,
@@ -21,6 +23,10 @@ const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
   const history = useHistory();
   const [queryParams, setQueryParams] = useState<NamespacedQueryParams>({});
   const [initialParams, setInitialParams] = useState<NamespacedQueryParams>({});
+
+  ///
+  const [queue, setQueue] = useState<ActionItem<any>[]>([]);
+  ///
 
   useEffect(() => {
     if (history.location.search.length > 0) {
@@ -36,10 +42,8 @@ const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
     };
   }, []);
 
-  const update: UpdateFunction = ({
-    newQueryParams,
-    namespace = DEFAULT_NAMESPACE,
-  }) => {
+  const update: UpdateFunction = ({ namespace = DEFAULT_NAMESPACE, fnc }) => {
+    const newQueryParams = fnc(queryParams[namespace]);
     const q = {
       ...queryParams,
       [namespace]: newQueryParams,
@@ -47,6 +51,40 @@ const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
 
     setQsInUrl(q, history);
   };
+
+  ///////////////////////////////////////////////////\
+
+  const processNext = () => {
+    if (queue.length > 0) {
+      const a = queue[0];
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const { namespace, action, props } = a;
+      const fnc = action(props);
+      update({ namespace, fnc });
+
+      setQueue((prev) => prev.slice(1));
+    }
+  };
+
+  useEffect(() => {
+    processNext();
+  }, [queue]);
+
+  const useDispatch: DispatchFunction = ({
+    actionFnc,
+    namespace = DEFAULT_NAMESPACE,
+  }) => {
+    return (action) => {
+      console.log('adding action', action);
+      setQueue((curr) => [
+        ...curr,
+        { namespace, action: actionFnc, props: action },
+      ]);
+    };
+  };
+
+  ///////////////////////////////////////////////////
 
   const addInitialParams: InitialParamsFunction = ({
     params,
@@ -79,7 +117,7 @@ const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
       value={{
         queryParams,
         initialParams,
-        update,
+        update: useDispatch,
         addInitialParams,
         removeInitialParams,
         redirectWithQueryParams: redirectWithQueryParams(history),

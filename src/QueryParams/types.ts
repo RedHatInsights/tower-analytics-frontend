@@ -4,12 +4,14 @@ export type QueryParams = Record<
 >;
 export type NamespacedQueryParams = Record<string, QueryParams>;
 
+type UpdateInsideFunction = (curr: QueryParams) => QueryParams;
+
 export type UpdateFunction = ({
-  newQueryParams,
   namespace,
+  fnc,
 }: {
-  newQueryParams: QueryParams;
   namespace: string;
+  fnc: UpdateInsideFunction;
 }) => void;
 
 export type InitialParamsFunction = ({
@@ -28,8 +30,25 @@ export type RedirectWithQueryParamsProps = (
 export interface ContextProps {
   queryParams: NamespacedQueryParams;
   initialParams: NamespacedQueryParams;
-  update: UpdateFunction;
+  update: DispatchFunction;
   addInitialParams: InitialParamsFunction;
   removeInitialParams: InitialParamsFunction;
   redirectWithQueryParams: RedirectWithQueryParamsProps;
 }
+
+////////////////////////////////////////////////////////////////////////////////
+export interface ActionItem<T> {
+  namespace: string;
+  action: (arg: T) => (qp: QueryParams) => QueryParams;
+  props: T;
+}
+
+interface DispatchFunctionProps<T> {
+  actionFnc: (arg: T) => (qp: QueryParams) => QueryParams;
+  namespace?: string;
+}
+
+export type DispatchFunction = <T>({
+  actionFnc,
+  namespace,
+}: DispatchFunctionProps<T>) => (arg: T) => void;

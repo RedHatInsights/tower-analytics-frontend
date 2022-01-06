@@ -66,6 +66,18 @@ const Chart: FC<Props> = ({
   });
 
   const setChartDataHook = (newChartData: ChartData) => {
+    console.log(newChartData);
+
+    // This dispatch triggers a queryParams change
+    // the queryParams change triggers a data change
+    // the data change triggers the use effect, meaning
+    // the hidden is reset on every second update after
+    // the URL HAS THE API QUERY PARAMS.
+
+    // Solution:
+    // Query param value change should not trigger change in other values!!!!
+    // Acchievable: Redux
+    // Not acchievable: Like this (QueryParamsProvider)
     dispatch({
       type: 'SET_CHART_SERIES_HIDDEN_PROPS',
       value: newChartData.series.map(({ hidden }) => hidden),
@@ -75,12 +87,20 @@ const Chart: FC<Props> = ({
   };
 
   useEffect(() => {
-    setChartData(
-      applyHiddenFilter(
-        convertApiToData(data),
-        chartSeriesHiddenProps as boolean[]
-      )
-    );
+    console.log('data changed');
+    const convertedData = convertApiToData(data);
+
+    // Enable all
+    const newHiddenSeries = convertedData.series.map(() => false);
+
+    // TODO THIS IS REALLY HACKY AND DEPENDS ON API ORDER AND RETURN HEAVILY
+    // But if others are disabled keep the others (always last) disabled
+    if (Array.isArray(chartSeriesHiddenProps)) {
+      newHiddenSeries.pop();
+      newHiddenSeries.push(!!chartSeriesHiddenProps.pop());
+    }
+
+    setChartData(applyHiddenFilter(convertedData, newHiddenSeries));
   }, [data]);
 
   return (
