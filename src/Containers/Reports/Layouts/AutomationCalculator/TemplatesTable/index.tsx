@@ -35,7 +35,7 @@ const TopTemplates: FunctionComponent<Props> = ({
           <Th />
           <Th>Name</Th>
           <Th>{variableRow.value}</Th>
-          <Th>Time</Th>
+          <Th>Manual time</Th>
           <Th>Savings</Th>
           <Th>
             <Switch
