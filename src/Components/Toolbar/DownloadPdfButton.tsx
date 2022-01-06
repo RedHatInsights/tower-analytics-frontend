@@ -17,8 +17,10 @@ import { downloadPdf as downloadPdfAction } from '../../store/pdfDownloadButton/
 import { DownloadState } from '../../store/pdfDownloadButton/types';
 import { Endpoint, Params } from '../../Api';
 import { useAppDispatch, useAppSelector } from '../../store';
+import { useReadQueryParams } from '../../QueryParams';
 
 interface Props {
+  settingsNamespace: string;
   slug: string;
   endpointUrl: Endpoint;
   queryParams: Params;
@@ -31,6 +33,7 @@ interface Props {
 }
 
 const DownloadPdfButton: FC<Props> = ({
+  settingsNamespace = 'settings',
   slug,
   endpointUrl,
   queryParams,
@@ -44,6 +47,12 @@ const DownloadPdfButton: FC<Props> = ({
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isCurrent, setIsCurrent] = useState(true);
   const dispatch = useAppDispatch();
+  const { chartSeriesHiddenProps } = useReadQueryParams(
+    {
+      chartSeriesHiddenProps: [],
+    },
+    settingsNamespace
+  );
 
   const status = useAppSelector((state) => state?.pdfDownloadButton[slug]);
   const isLoading = status === DownloadState.pending;
@@ -71,6 +80,7 @@ const DownloadPdfButton: FC<Props> = ({
             showExtraRows: !isCurrent,
             endpointUrl,
             queryParams,
+            chartSeriesHiddenProps,
           },
         },
         dispatch,

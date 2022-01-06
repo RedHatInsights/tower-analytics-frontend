@@ -1,4 +1,4 @@
-import { QueryParamsContext, QueryParamsProvider } from './Context';
+import { QueryParamsContext, QueryParamsProvider } from '../Context';
 
 describe('QueryParams/Context', () => {
   it('should have exported members', () => {
