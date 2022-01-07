@@ -24,6 +24,27 @@ interface Props {
   redirectToJobExplorer: (id: number) => void;
 }
 
+const setLabeledValue = (key: string, value: number) => {
+  let label;
+  switch(key) {
+    case 'elapsed':
+      label = 'seconds';
+      break;
+    case 'template_automation_percentage':
+      label = '%';
+      break;
+    case 'successful_hosts_savings':
+    case 'failed_hosts_costs':
+    case 'monetary_gain':
+      label = '$';
+      break;
+    default:
+      label = '';
+  }
+  let convertedValue = label.includes('count') ? value : label === '$' ? currencyFormatter(value) : +value.toFixed(2);
+  return label === '$' || label === '' ? convertedValue : convertedValue + ' ' + label ;
+};
+
 const Row: FunctionComponent<Props> = ({
   template,
   variableRow,
@@ -54,7 +75,7 @@ const Row: FunctionComponent<Props> = ({
             </Button>
           </Tooltip>
         </Td>
-        <Td>{(+template[variableRow.key]).toFixed(2)}</Td>
+        <Td>{setLabeledValue(variableRow.key, +template[variableRow.key])}</Td>
         <Td>
           <InputGroup>
             <TextInput
