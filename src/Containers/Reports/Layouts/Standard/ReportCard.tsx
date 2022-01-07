@@ -21,7 +21,6 @@ import useRequest from '../../../../Utilities/useRequest';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
 
-import { ReportGeneratorParams } from '../../Shared/types';
 import Chart from '../../../../Components/Chart';
 import Table from './Table';
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
@@ -29,6 +28,7 @@ import { endpointFunctionMap, OptionsReturnType } from '../../../../Api';
 import { capitalize } from '../../../../Utilities/helpers';
 import { perPageOptions } from '../../Shared/constants';
 import hydrateSchema from '../../Shared/hydrateSchema';
+import { StandardProps } from '../types';
 
 const getDateFormatByGranularity = (granularity: string): string => {
   if (granularity === 'yearly') return 'formatAsYear';
@@ -37,7 +37,7 @@ const getDateFormatByGranularity = (granularity: string): string => {
   return '';
 };
 
-const ReportCard: FunctionComponent<ReportGeneratorParams> = ({
+const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
   defaultParams,
   tableHeaders,

@@ -1,6 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import React, { useState, useEffect, FC } from 'react';
 import {
   Card,
   CardBody,
@@ -44,6 +49,7 @@ import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper'
 import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants';
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
 import { endpointFunctionMap } from '../../../../Api';
+import { AutmationCalculatorProps } from '../types';
 
 const perPageOptions = [
   ...defaultPerPageOptions,
@@ -81,7 +87,7 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
 const computeTotalSavings = (data) =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
-const AutomationCalculator = ({
+const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   slug,
   defaultParams,
   dataEndpoint,
@@ -305,17 +311,6 @@ const AutomationCalculator = ({
   );
 
   return <ApiStatusWrapper api={api}>{renderContents()}</ApiStatusWrapper>;
-};
-
-AutomationCalculator.propTypes = {
-  slug: PropTypes.string.isRequired,
-  defaultParams: PropTypes.object.isRequired,
-  tableHeaders: PropTypes.array.isRequired,
-  expandedTableRowName: PropTypes.string,
-  availableChartTypes: PropTypes.array.isRequired,
-  dataEndpoint: PropTypes.string.isRequired,
-  optionsEndpoint: PropTypes.string.isRequired,
-  schema: PropTypes.array.isRequired,
 };
 
 export default AutomationCalculator;

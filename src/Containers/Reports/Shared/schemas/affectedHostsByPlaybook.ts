@@ -7,9 +7,9 @@ import {
   ChartThemeColor,
 } from 'react-json-chart-builder';
 import { Endpoint } from '../../../../Api';
-import { LayoutComponentName } from '../../Layouts';
+import { LayoutComponentName, ReportSchema } from '../../Layouts/types';
 import { TagName } from '../constants';
-import { AttributesType, ReportPageParams } from '../types';
+import { AttributesType } from '../types';
 
 const slug = 'hosts_changed_by_job_template';
 
@@ -126,13 +126,13 @@ const schema = [
   },
 ];
 
-const reportParams: ReportPageParams = {
-  slug,
-  name,
-  description,
-  tags,
-  reportParams: {
+const reportParams: ReportSchema = {
+  layoutComponent: LayoutComponentName.Standard,
+  layoutProps: {
     slug,
+    name,
+    description,
+    tags,
     defaultParams,
     tableHeaders,
     availableChartTypes,
@@ -140,7 +140,6 @@ const reportParams: ReportPageParams = {
     optionsEndpoint: Endpoint.hostExplorerOptions,
     schema,
   },
-  layoutComponent: LayoutComponentName.standard,
 };
 
 export default reportParams;
