@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import moment from 'moment';
 import { QueryParamsContext } from './Context';
 import useAsyncActionQueue from '../Utilities/useAsyncActionQueue';
@@ -13,8 +13,6 @@ const paramsReducer = (state, { type, value }) => {
       return { ...state, startDate: value };
     case 'SET_ENDDATE':
       return { ...state, endDate: value };
-    case 'SET_CHART_TYPE':
-      return { ...state, chartType: value };
     case 'SET_ID':
       if (isNaN(value)) {
         const { id: ignored, ...rest } = state;
@@ -31,6 +29,14 @@ const paramsReducer = (state, { type, value }) => {
       return { ...state, ...value };
 
     /* v1 api reducers */
+    /* Settings reducers START */
+    /* TODO: Rip these two types of reducers apart from the others */
+    /* It is doable for example by creating a different useParams hook */
+    case 'SET_CHART_TYPE':
+      return { ...state, chartType: value };
+    case 'SET_CHART_SERIES_HIDDEN_PROPS':
+      return { ...state, chartSeriesHiddenProps: value };
+    /* Settings reducers END */
     case 'SET_LIMIT':
       return isNaN(value)
         ? { ...state, limit: '5' } // Defaults back to 5
@@ -121,8 +127,33 @@ const actionMapper = {
 };
 
 const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
-  const { queryParams, update } = useContext(QueryParamsContext);
-  const params = queryParams[namespace] || initial;
+  const {
+    queryParams,
+    initialParams,
+    update,
+    addInitialParams,
+    removeInitialParams,
+  } = useContext(QueryParamsContext);
+
+  /**
+   * When first initializing the hook there may be no namespace for it
+   * (before the first useEffect[]), so we pass the initial params passed
+   * to the hook.
+   *
+   * If the initialProps are there already we use them until there is no qp
+   * avaiable for the namespace.
+   *
+   * If we alreadt have the initialized namespace in the URL then we use it.
+   */
+  const params = queryParams[namespace] || initialParams[namespace] || initial;
+
+  useEffect(() => {
+    addInitialParams({ params: initial, namespace });
+
+    return () => {
+      removeInitialParams({ namespace });
+    };
+  }, []);
 
   const executeAction = (action) => {
     if (action.type === 'RESET_FILTER') {
@@ -133,9 +164,15 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
     }
   };
 
+  /**
+   * We need to use an action queue to ensure that the url updates
+   * before the next action and we use the reducer on the lates
+   * queryParams. Without this more than one dispatched action after each
+   * other will update the url with the previous state.
+   */
   const { push: dispatch } = useAsyncActionQueue({
     executeAction,
-    waitFor: params,
+    waitFor: [params],
   });
 
   return {

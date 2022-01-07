@@ -23,9 +23,9 @@ describe('Containers/Clusters', () => {
     renderPage(Clusters);
 
     await waitFor(() => {
-      expect(api.readJobExplorer).toHaveBeenCalledTimes(3);
-      expect(api.readClustersOptions).toHaveBeenCalledTimes(1);
-      expect(api.readEventExplorer).toHaveBeenCalledTimes(1);
+      expect(api.readJobExplorer).toHaveBeenCalledTimes(6);
+      expect(api.readClustersOptions).toHaveBeenCalledTimes(2);
+      expect(api.readEventExplorer).toHaveBeenCalledTimes(2);
     });
 
     expect(screen.getAllByText(/Clusters/i));

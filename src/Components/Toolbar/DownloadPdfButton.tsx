@@ -13,13 +13,14 @@ import {
 } from '@patternfly/react-core';
 import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 
-import { useDispatch, useSelector } from 'react-redux';
 import { downloadPdf as downloadPdfAction } from '../../store/pdfDownloadButton/actions';
 import { DownloadState } from '../../store/pdfDownloadButton/types';
 import { Endpoint, Params } from '../../Api';
-import { DispatchType, RootState } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { useReadQueryParams } from '../../QueryParams';
 
 interface Props {
+  settingsNamespace: string;
   slug: string;
   endpointUrl: Endpoint;
   queryParams: Params;
@@ -32,6 +33,7 @@ interface Props {
 }
 
 const DownloadPdfButton: FC<Props> = ({
+  settingsNamespace = 'settings',
   slug,
   endpointUrl,
   queryParams,
@@ -44,11 +46,15 @@ const DownloadPdfButton: FC<Props> = ({
 }) => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isCurrent, setIsCurrent] = useState(true);
-  const dispatch = useDispatch<DispatchType>();
-
-  const status = useSelector<RootState>(
-    (state) => state?.pdfDownloadButton[slug]
+  const dispatch = useAppDispatch();
+  const { chartSeriesHiddenProps } = useReadQueryParams(
+    {
+      chartSeriesHiddenProps: [],
+    },
+    settingsNamespace
   );
+
+  const status = useAppSelector((state) => state?.pdfDownloadButton[slug]);
   const isLoading = status === DownloadState.pending;
   const isError = status === DownloadState.rejected;
 
@@ -74,6 +80,7 @@ const DownloadPdfButton: FC<Props> = ({
             showExtraRows: !isCurrent,
             endpointUrl,
             queryParams,
+            chartSeriesHiddenProps,
           },
         },
         dispatch,

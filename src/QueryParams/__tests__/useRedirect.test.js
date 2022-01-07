@@ -2,9 +2,9 @@ import { renderHook, act } from '@testing-library/react-hooks';
 import { Router } from 'react-router';
 import { createMemoryHistory } from 'history';
 
-import Provider from './Provider';
-import useRedirect from './useRedirect';
-import { Paths } from '../paths';
+import Provider from '../Provider';
+import useRedirect from '../useRedirect';
+import { Paths } from '../../paths';
 
 describe('QueryParams/useRedirect', () => {
   const history = createMemoryHistory();
