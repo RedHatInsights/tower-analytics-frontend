@@ -7,9 +7,9 @@ import {
   ChartThemeColor,
 } from 'react-json-chart-builder';
 import { Endpoint } from '../../../../Api';
-import { LayoutComponentName } from '../../Layouts';
+import { LayoutComponentName, ReportSchema } from '../../Layouts/types';
 import { TagName } from '../constants';
-import { AttributesType, ReportPageParams } from '../types';
+import { AttributesType } from '../types';
 
 const slug = 'module_usage_by_organization';
 
@@ -135,12 +135,12 @@ const schema = [
   },
 ];
 
-const reportParams: ReportPageParams = {
-  slug,
-  name,
-  description,
-  tags,
-  reportParams: {
+const reportParams: ReportSchema = {
+  layoutComponent: LayoutComponentName.Standard,
+  layoutProps: {
+    name,
+    description,
+    tags,
     slug,
     defaultParams,
     tableHeaders,
@@ -150,7 +150,6 @@ const reportParams: ReportPageParams = {
     optionsEndpoint: Endpoint.eventExplorerOptions,
     schema,
   },
-  layoutComponent: LayoutComponentName.standard,
 };
 
 export default reportParams;

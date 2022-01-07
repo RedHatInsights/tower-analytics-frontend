@@ -40,14 +40,14 @@ const Details: FunctionComponent<Record<string, never>> = () => {
 
   const render = () => {
     if (report) {
-      const ReportContent = getComponent(report.layoutComponent);
+      const { name, description, tags } = report.layoutProps;
       return (
         <>
           <PageHeader>
             <Breadcrumbs items={breadcrumbsItems} />
-            <PageHeaderTitle title={report.name} />
-            <Description>{report.description}</Description>
-            {report.tags.map((tagKey, idx) => {
+            <PageHeaderTitle title={name} />
+            <Description>{description}</Description>
+            {tags.map((tagKey, idx) => {
               const tag = TAGS.find((t) => t.key === tagKey);
               if (tag) {
                 return (
@@ -62,9 +62,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
               }
             })}
           </PageHeader>
-          <Main>
-            <ReportContent {...report.reportParams} />
-          </Main>
+          <Main>{getComponent(report)}</Main>
         </>
       );
     } else

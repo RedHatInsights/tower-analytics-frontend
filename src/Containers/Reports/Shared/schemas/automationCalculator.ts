@@ -1,5 +1,4 @@
 import { TagName } from '../constants';
-import { ReportPageParams } from '../types';
 import { roi } from '../../../../Utilities/constants';
 import { Endpoint } from '../../../../Api';
 import {
@@ -7,7 +6,7 @@ import {
   ChartTopLevelType,
   ChartType,
 } from 'react-json-chart-builder';
-import { LayoutComponentName } from '../../Layouts';
+import { LayoutComponentName, ReportSchema } from '../../Layouts/types';
 
 const slug = 'automation_calculator';
 
@@ -83,21 +82,18 @@ const schema = [
   },
 ];
 
-const reportParams: ReportPageParams = {
-  slug,
-  name,
-  description,
-  tags,
-  reportParams: {
+const reportParams: ReportSchema = {
+  layoutComponent: LayoutComponentName.AutomationCalculator,
+  layoutProps: {
     slug,
+    name,
+    description,
+    tags,
     defaultParams,
-    tableHeaders: [],
-    availableChartTypes: [],
     dataEndpoint: Endpoint.ROI,
     optionsEndpoint: Endpoint.ROIOptions,
     schema,
   },
-  layoutComponent: LayoutComponentName.automationCalculator,
 };
 
 export default reportParams;
