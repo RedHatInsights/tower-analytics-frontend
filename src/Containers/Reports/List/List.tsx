@@ -28,7 +28,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
           }}
         >
           {getAllReports().map((report) => (
-            <ListItem key={report.slug} report={report} />
+            <ListItem key={report.layoutProps.slug} report={report} />
           ))}
         </Gallery>
       </Main>
