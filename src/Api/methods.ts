@@ -95,7 +95,28 @@ export const postWithFileReturn = async (
       if (response.body) return saveStream(response.body, fileStream);
     });
 };
+export const postWithEmail = async (
+  endpoint: string,
+  params: Params,
+  { dispatch, ...notif }: NotificationParams
+): Promise<void> => {
+  const url = new URL(endpoint, window.location.origin);
 
+  // Dispatch notification when starts the download.
+  dispatch(addNotification(notif.pending(notif.id, 'Processing Email')));
+  console.log('Email params: ', params);
+  return authenticatedFetch(url.toString(), {
+    method: 'POST',
+    body: JSON.stringify(params),
+  }).then((response) => {
+    // Delete pending notification when we have results.
+    dispatch(removeNotification(notif.id));
+
+    if (response.ok) dispatch(addNotification(notif.success(notif.id)));
+    else dispatch(addNotification(notif.failure(notif.id)));
+    return;
+  });
+};
 export const get = (
   endpoint: string,
   params: Params = {}

@@ -40,6 +40,8 @@ export type NotificationAsyncFunction = (
 export interface NotificationParams {
   pending: NotificationAsyncFunction;
   rejected: NotificationAsyncFunction;
+  success: NotificationAsyncFunction;
+  failure: NotificationAsyncFunction;
   dispatch: DispatchType;
   id: string;
 }
