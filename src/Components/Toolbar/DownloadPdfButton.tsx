@@ -15,7 +15,7 @@ import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 
 import { downloadPdf as downloadPdfAction } from '../../store/pdfDownloadButton/actions';
 import { DownloadState } from '../../store/pdfDownloadButton/types';
-import { Endpoint, Params } from '../../Api';
+import { Endpoint, OptionsReturnType, Params } from '../../Api';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { useReadQueryParams } from '../../QueryParams';
 
@@ -24,6 +24,7 @@ interface Props {
   slug: string;
   endpointUrl: Endpoint;
   queryParams: Params;
+  selectOptions: OptionsReturnType;
   y: string;
   label: string;
   xTickFormat: string;
@@ -37,6 +38,7 @@ const DownloadPdfButton: FC<Props> = ({
   slug,
   endpointUrl,
   queryParams,
+  selectOptions,
   y,
   label,
   xTickFormat,
@@ -80,6 +82,7 @@ const DownloadPdfButton: FC<Props> = ({
             showExtraRows: !isCurrent,
             endpointUrl,
             queryParams,
+            selectOptions,
             chartSeriesHiddenProps,
           },
         },
