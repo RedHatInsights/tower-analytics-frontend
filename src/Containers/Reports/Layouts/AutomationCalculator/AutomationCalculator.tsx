@@ -50,6 +50,8 @@ import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants'
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
 import { endpointFunctionMap } from '../../../../Api';
 import { AutmationCalculatorProps } from '../types';
+import hydrateSchema from '../../Shared/hydrateSchema';
+import currencyFormatter from '../../../../Utilities/currencyFormatter';
 
 const perPageOptions = [
   ...defaultPerPageOptions,
@@ -205,6 +207,30 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     redirect(Paths.jobExplorer, initialQueryParams);
   };
 
+  const getDateFormatByGranularity = (granularity) => {
+    if (granularity === 'yearly') return 'formatAsYear';
+    if (granularity === 'monthly') return 'formatAsMonth';
+    if (granularity === 'daily') return 'formatDateAsDayMonth';
+    return '';
+  };
+
+  const chartParams = {
+    y: queryParams.sort_options,
+    tooltip: 'Savings for',
+    label:
+      options.sort_options?.find(({ key }) => key === queryParams.sort_options)
+        ?.value || 'Label Y',
+  };
+
+  const customTooltipFormatting = ({ datum }) => {
+    const tooltip =
+      'Savings for ' + datum.name + ': ' + currencyFormatter(+datum.y);
+    return tooltip;
+  };
+  console.log(
+    'api.result.itemsapi.result.itemsapi.result.itemsapi.result.items',
+    api.result.items
+  );
   const renderLeft = () => (
     <Card isPlain>
       <CardHeader>
@@ -212,9 +238,17 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       </CardHeader>
       <CardBody>
         <Chart
-          schema={schema}
+          schema={hydrateSchema(schema)({
+            label: chartParams.label,
+            tooltip: chartParams.tooltip,
+          })}
           data={{
             items: filterDisabled(api.result.items),
+          }}
+          specificFunctions={{
+            labelFormat: {
+              customTooltipFormatting,
+            },
           }}
         />
       </CardBody>
