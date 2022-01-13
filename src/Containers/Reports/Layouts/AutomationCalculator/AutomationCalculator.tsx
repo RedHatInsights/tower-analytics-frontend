@@ -207,30 +207,44 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     redirect(Paths.jobExplorer, initialQueryParams);
   };
 
-  const getDateFormatByGranularity = (granularity) => {
-    if (granularity === 'yearly') return 'formatAsYear';
-    if (granularity === 'monthly') return 'formatAsMonth';
-    if (granularity === 'daily') return 'formatDateAsDayMonth';
-    return '';
-  };
-
   const chartParams = {
     y: queryParams.sort_options,
     tooltip: 'Savings for',
+    field: queryParams.sort_options,
     label:
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
   };
 
+  const formattedValue = (key: string, value: number) => {
+    let val;
+    switch (key) {
+      case 'elapsed':
+        val = value.toFixed(2) + ' seconds';
+        break;
+      case 'template_automation_percentage':
+        val = value.toFixed(2) + '%';
+        break;
+      case 'successful_hosts_savings':
+      case 'failed_hosts_costs':
+      case 'monetary_gain':
+        val = currencyFormatter(value);
+        break;
+      default:
+        val = value.toFixed(2);
+    }
+    return val;
+  };
+
   const customTooltipFormatting = ({ datum }) => {
     const tooltip =
-      'Savings for ' + datum.name + ': ' + currencyFormatter(+datum.y);
+      'Savings for ' +
+      datum.name +
+      ': ' +
+      formattedValue(queryParams.sort_options, datum.y);
     return tooltip;
   };
-  console.log(
-    'api.result.itemsapi.result.itemsapi.result.itemsapi.result.items',
-    api.result.items
-  );
+
   const renderLeft = () => (
     <Card isPlain>
       <CardHeader>
@@ -241,6 +255,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           schema={hydrateSchema(schema)({
             label: chartParams.label,
             tooltip: chartParams.tooltip,
+            field: chartParams.field,
           })}
           data={{
             items: filterDisabled(api.result.items),

@@ -81,7 +81,7 @@ const schema = [
     parent: 0,
     props: {
       x: 'name',
-      y: 'delta',
+      y: 'VAR_field',
     },
   },
 ];
