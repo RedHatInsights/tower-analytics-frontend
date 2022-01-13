@@ -101,7 +101,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
 
   const [costManual, setCostManual] = useState('50');
   const [costAutomation, setCostAutomation] = useState('20');
-
   const redirect = useRedirect();
   const { queryParams, setFromToolbar, setFromPagination } =
     useQueryParams(defaultParams);
@@ -179,6 +178,25 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         )
       );
     }
+  };
+  const getSortParams = () => {
+    const onSort = (
+        _event,
+        index,
+        direction
+    ) => {
+      setFromToolbar('sort_order', direction)
+    };
+    return {
+      sort: {
+        sortBy: {
+          index: 2,
+          direction: queryParams.sort_order || 'none',
+        },
+        onSort,
+        columnIndex: 2,
+      },
+    };
   };
 
   /**
@@ -345,6 +363,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               )}
               setDataRunTime={setDataRunTime}
               setEnabled={setEnabled}
+              getSortParams={getSortParams}
             />
           </GridItem>
         </Grid>

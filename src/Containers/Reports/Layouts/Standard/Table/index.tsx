@@ -25,8 +25,13 @@ const ReportTable: FunctionComponent<Props> = ({
   headers,
   getSortParams = () => ({}),
   expandedRowName,
-}) => (
-  <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
+}) => {
+      headers.map(({ key, value }) => {
+        console.log(key);
+        console.log(value);
+        console.log({...getSortParams(key)});
+      });
+  return <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
     <Thead>
       <Tr>
         {expandedRowName && <Th />}
@@ -48,6 +53,7 @@ const ReportTable: FunctionComponent<Props> = ({
       ))}
     </Tbody>
   </TableComposable>
-);
+}
+;
 
 export default ReportTable;

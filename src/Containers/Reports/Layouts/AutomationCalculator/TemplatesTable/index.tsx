@@ -11,6 +11,7 @@ import {
 } from '@patternfly/react-table';
 import { Template } from './types';
 import Row from './Row';
+import {TableSortParams} from "../../Standard/types";
 
 interface Props {
   data: Template[];
@@ -18,6 +19,7 @@ interface Props {
   setDataRunTime: (delta: number, id: number) => void;
   setEnabled: (id: number | undefined) => (enabled: boolean) => void;
   redirectToJobExplorer: (id: number) => void;
+  getSortParams?: () => TableSortParams;
 }
 
 const TopTemplates: FunctionComponent<Props> = ({
@@ -26,6 +28,7 @@ const TopTemplates: FunctionComponent<Props> = ({
   setDataRunTime = () => ({}),
   setEnabled = () => () => ({}),
   redirectToJobExplorer = () => ({}),
+  getSortParams = () => ({}),
 }) => (
   <>
     <p>Enter the time it takes to run the following templates manually.</p>
@@ -34,7 +37,7 @@ const TopTemplates: FunctionComponent<Props> = ({
         <Tr>
           <Th />
           <Th>Name</Th>
-          <Th>{variableRow.value}</Th>
+          <Th {...getSortParams()}>{variableRow.value}</Th>
           <Th>Manual time</Th>
           <Th>Savings</Th>
           <Th>
