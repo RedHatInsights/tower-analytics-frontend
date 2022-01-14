@@ -7,8 +7,12 @@
 // @ts-nocheck
 import React, { useState, useEffect, FC } from 'react';
 import {
+  Button,
   Card,
   CardBody,
+  EmptyState,
+  EmptyStateIcon,
+  EmptyStateBody,
   Grid,
   GridItem,
   Stack,
@@ -17,8 +21,9 @@ import {
   CardTitle,
   CardFooter,
   PaginationVariant,
+  Title,
 } from '@patternfly/react-core';
-
+import { ExclamationTriangleIcon as ExclamationTriangleIcon } from '@patternfly/react-icons';
 // Imports from custom components
 import FilterableToolbar from '../../../../Components/Toolbar';
 import Pagination from '../../../../Components/Pagination';
@@ -274,21 +279,32 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         <CardTitle>Automation savings</CardTitle>
       </CardHeader>
       <CardBody>
-        <Chart
-          schema={hydrateSchema(schema)({
-            label: chartParams.label,
-            tooltip: chartParams.tooltip,
-            field: chartParams.field,
-          })}
-          data={{
-            items: filterDisabled(api.result.items),
-          }}
-          specificFunctions={{
-            labelFormat: {
-              customTooltipFormatting,
-            },
-          }}
-        />
+        {filterDisabled(api.result.items).length > 0 ? <Chart
+            schema={hydrateSchema(schema)({
+                label: chartParams.label,
+                tooltip: chartParams.tooltip,
+                field: chartParams.field,
+            })}
+            data={{
+                items: filterDisabled(api.result.items),
+            }}
+            specificFunctions={{
+                labelFormat: {
+                    customTooltipFormatting,
+                },
+            }}
+        />  : <EmptyState>
+          <EmptyStateIcon icon={ExclamationTriangleIcon} />
+          <Title headingLevel="h4" size="lg">
+            You have disabled all views
+          </Title>
+          <EmptyStateBody>
+            Enable individual views in the table below or press Show all button.
+          </EmptyStateBody>
+          <Button variant="primary" onClick={() => setEnabled(undefined)(true)}>
+            Show all
+          </Button>
+        </EmptyState>}
       </CardBody>
     </Card>
   );
