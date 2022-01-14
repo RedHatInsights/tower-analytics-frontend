@@ -11,7 +11,7 @@ import {
 } from '@patternfly/react-table';
 import { Template } from './types';
 import Row from './Row';
-import {TableSortParams} from "../../Standard/types";
+import { TableSortParams } from '../../Standard/types';
 
 interface Props {
   data: Template[];

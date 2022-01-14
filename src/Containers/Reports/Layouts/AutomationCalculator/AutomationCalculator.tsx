@@ -185,12 +185,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     }
   };
   const getSortParams = () => {
-    const onSort = (
-        _event,
-        index,
-        direction
-    ) => {
-      setFromToolbar('sort_order', direction)
+    const onSort = (_event, index, direction) => {
+      setFromToolbar('sort_order', direction);
     };
     return {
       sort: {
@@ -279,32 +275,40 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         <CardTitle>Automation savings</CardTitle>
       </CardHeader>
       <CardBody>
-        {filterDisabled(api.result.items).length > 0 ? <Chart
+        {filterDisabled(api.result.items).length > 0 ? (
+          <Chart
             schema={hydrateSchema(schema)({
-                label: chartParams.label,
-                tooltip: chartParams.tooltip,
-                field: chartParams.field,
+              label: chartParams.label,
+              tooltip: chartParams.tooltip,
+              field: chartParams.field,
             })}
             data={{
-                items: filterDisabled(api.result.items),
+              items: filterDisabled(api.result.items),
             }}
             specificFunctions={{
-                labelFormat: {
-                    customTooltipFormatting,
-                },
+              labelFormat: {
+                customTooltipFormatting,
+              },
             }}
-        />  : <EmptyState>
-          <EmptyStateIcon icon={ExclamationTriangleIcon} />
-          <Title headingLevel="h4" size="lg">
-            You have disabled all views
-          </Title>
-          <EmptyStateBody>
-            Enable individual views in the table below or press Show all button.
-          </EmptyStateBody>
-          <Button variant="primary" onClick={() => setEnabled(undefined)(true)}>
-            Show all
-          </Button>
-        </EmptyState>}
+          />
+        ) : (
+          <EmptyState>
+            <EmptyStateIcon icon={ExclamationTriangleIcon} />
+            <Title headingLevel="h4" size="lg">
+              You have disabled all views
+            </Title>
+            <EmptyStateBody>
+              Enable individual views in the table below or press Show all
+              button.
+            </EmptyStateBody>
+            <Button
+              variant="primary"
+              onClick={() => setEnabled(undefined)(true)}
+            >
+              Show all
+            </Button>
+          </EmptyState>
+        )}
       </CardBody>
     </Card>
   );

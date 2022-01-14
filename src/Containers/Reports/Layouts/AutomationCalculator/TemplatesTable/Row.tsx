@@ -28,7 +28,7 @@ interface Props {
 
 const setLabeledValue = (key: string, value: number) => {
   let label;
-  switch(key) {
+  switch (key) {
     case 'elapsed':
       label = timeFormatter(value) + ' seconds';
       break;
@@ -70,7 +70,7 @@ const Row: FunctionComponent<Props> = ({
             <Button
               onClick={() => redirectToJobExplorer(template.id)}
               variant={ButtonVariant.link}
-              style={{ padding: "0px" }}
+              style={{ padding: '0px' }}
             >
               {template.name}
             </Button>

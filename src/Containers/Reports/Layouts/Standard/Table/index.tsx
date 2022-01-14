@@ -26,31 +26,30 @@ const ReportTable: FunctionComponent<Props> = ({
   getSortParams = () => ({}),
   expandedRowName,
 }) => {
-      headers.map(({ key, value }) => {
-      });
-  return <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
-    <Thead>
-      <Tr>
-        {expandedRowName && <Th />}
-        {headers.map(({ key, value }) => (
-          <Th key={key} {...getSortParams(key)} data-testid={key}>
-            {value}
-          </Th>
+  headers.map(({ key, value }) => {});
+  return (
+    <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
+      <Thead>
+        <Tr>
+          {expandedRowName && <Th />}
+          {headers.map(({ key, value }) => (
+            <Th key={key} {...getSortParams(key)} data-testid={key}>
+              {value}
+            </Th>
+          ))}
+        </Tr>
+      </Thead>
+      <Tbody>
+        {legend.map((entry) => (
+          <TableRow
+            key={entry.id}
+            legendEntry={entry}
+            headers={headers}
+            expandedRowName={expandedRowName}
+          />
         ))}
-      </Tr>
-    </Thead>
-    <Tbody>
-      {legend.map((entry) => (
-        <TableRow
-          key={entry.id}
-          legendEntry={entry}
-          headers={headers}
-          expandedRowName={expandedRowName}
-        />
-      ))}
-    </Tbody>
-  </TableComposable>
-}
-;
-
+      </Tbody>
+    </TableComposable>
+  );
+};
 export default ReportTable;
