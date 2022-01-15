@@ -35,6 +35,7 @@ const tableHeaders: AttributesType = [
   { key: 'host_task_ok_count', value: 'Successful tasks count' },
   { key: 'host_task_failed_count', value: 'Failed tasks count' },
   { key: 'host_task_unreachable_count', value: 'Unreachable tasks count' },
+  { key: 'total_count', value: 'Total jobs count' },
 ];
 
 const defaultParams = {
@@ -46,6 +47,7 @@ const defaultParams = {
     'host_task_ok_count',
     'host_task_failed_count',
     'host_task_unreachable_count',
+    'total_count',
   ],
   group_by: 'org',
   group_by_time: true,
