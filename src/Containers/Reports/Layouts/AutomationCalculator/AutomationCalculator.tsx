@@ -99,12 +99,18 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
 
-  const [costManual, setCostManual] = useState('50');
-  const [costAutomation, setCostAutomation] = useState('20');
-
   const redirect = useRedirect();
-  const { queryParams, setFromToolbar, setFromPagination } =
+  const { queryParams, setFromToolbar, setFromPagination, setFromCalculation } =
     useQueryParams(defaultParams);
+  const [costManual, setCostManual] = useState(queryParams.manual_cost || '50');
+  const [costAutomation, setCostAutomation] = useState(
+    queryParams.automation_cost || '20'
+  );
+
+  const updateCalculationValues = (varName: string, value: number) => {
+    setFromCalculation(varName, value);
+    varName === 'manual_cost' ? setCostManual(value) : setCostAutomation(value);
+  };
 
   const { result: options, request: fetchOptions } = useRequest(readOptions, {
     sort_options: [
@@ -287,9 +293,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           <StackItem>
             <CalculationCost
               costManual={costManual}
-              setCostManual={setCostManual}
+              setFromCalculation={updateCalculationValues}
               costAutomation={costAutomation}
-              setCostAutomation={setCostAutomation}
             />
           </StackItem>
           <StackItem>
