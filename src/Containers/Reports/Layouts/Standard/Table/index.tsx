@@ -26,7 +26,6 @@ const ReportTable: FunctionComponent<Props> = ({
   getSortParams = () => ({}),
   expandedRowName,
 }) => {
-  headers.map(({ key, value }) => {});
   return (
     <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
       <Thead>
