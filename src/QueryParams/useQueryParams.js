@@ -179,6 +179,8 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
     queryParams: params,
     dispatch,
     setFromToolbar: (varName, value = null) => {
+      //reset pagination when filter is set
+      dispatch({ type: 'SET_OFFSET', value: 0 });
       if (!varName) {
         dispatch({ type: 'RESET_FILTER' });
       } else {
