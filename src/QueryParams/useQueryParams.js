@@ -111,6 +111,16 @@ const paramsReducer = (state, { type, value }) => {
         ...state,
         automation_cost: value,
       };
+    case 'SET_ENABLED_PER_ITEM':
+      return {
+        ...state,
+        enabled_per_item: value,
+      };
+    case 'SET_TIME_PER_ITEM':
+      return {
+        ...state,
+        time_per_item: value,
+      };
     default:
       throw new Error(`The query params reducer action (${type}) not found.`);
   }
@@ -137,6 +147,8 @@ const actionMapper = {
   granularity: 'SET_GRANULARITY',
   manual_cost: 'SET_CALCULATOR_MANUAL',
   automation_cost: 'SET_CALCULATOR_AUTOMATION',
+  enabled_per_item: 'SET_ENABLED_PER_ITEM',
+  time_per_item: 'SET_TIME_PER_ITEM',
 };
 
 const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
@@ -205,6 +217,9 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
       if (limit) {
         dispatch({ type: 'SET_LIMIT', value: limit });
       }
+    },
+    setFromTable: (varName, value) => {
+      dispatch({ type: actionMapper[varName], value: value });
     },
     setFromCalculation: (varName, value) => {
       dispatch({ type: actionMapper[varName], value: value });

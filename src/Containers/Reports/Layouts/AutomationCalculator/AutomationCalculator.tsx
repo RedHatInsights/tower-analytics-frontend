@@ -60,16 +60,6 @@ const perPageOptions = [
   { title: '25', value: 25 },
 ];
 
-const mapApi = ({ legend = [] }) =>
-  legend.map((el) => ({
-    ...el,
-    delta: 0,
-    avgRunTime: 3600,
-    manualCost: 0,
-    automatedCost: 0,
-    enabled: true,
-  }));
-
 const filterDisabled = (data) => data.filter(({ enabled }) => enabled);
 
 const updateDeltaCost = (data, costAutomation, costManual) =>
@@ -100,12 +90,31 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const readOptions = endpointFunctionMap(optionsEndpoint);
 
   const redirect = useRedirect();
-  const { queryParams, setFromToolbar, setFromPagination, setFromCalculation } =
-    useQueryParams(defaultParams);
+  const {
+    queryParams,
+    setFromToolbar,
+    setFromPagination,
+    setFromCalculation,
+    setFromTable,
+  } = useQueryParams(defaultParams);
   const [costManual, setCostManual] = useState(queryParams.manual_cost || '50');
   const [costAutomation, setCostAutomation] = useState(
     queryParams.automation_cost || '20'
   );
+
+  const mapApi = ({ legend = [] }) =>
+    legend.map((el, index) => ({
+      ...el,
+      delta: 0,
+      avgRunTime: queryParams.time_per_item
+        ? queryParams.time_per_item[index]
+        : 3600,
+      manualCost: 0,
+      automatedCost: 0,
+      enabled: queryParams.enabled_per_item
+        ? queryParams.enabled_per_item[index]
+        : true,
+    }));
 
   const updateCalculationValues = (varName: string, value: number) => {
     setFromCalculation(varName, value);
@@ -173,18 +182,23 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     });
 
     setValue(updatedData);
+    setFromTable(
+      'time_per_item',
+      updatedData.map((item) => item.avgRunTime)
+    );
   };
 
   const setEnabled = (id) => (value) => {
-    if (!id) {
-      setValue(api.result.items.map((el) => ({ ...el, enabled: value })));
-    } else {
-      setValue(
-        api.result.items.map((el) =>
+    const updatedData = !id
+      ? api.result.items.map((el) => ({ ...el, enabled: value }))
+      : api.result.items.map((el) =>
           el.id === id ? { ...el, enabled: value } : el
-        )
-      );
-    }
+        );
+    setValue(updatedData);
+    setFromTable(
+      'enabled_per_item',
+      updatedData.map((item) => item.enabled)
+    );
   };
 
   /**
