@@ -64,4 +64,15 @@ describe('QueryParams/useQueryParams', () => {
 
     expect(result.current.queryParams).toEqual({ attributes: [] });
   });
+  it('should reset the offset when a filter is set via toolbar', () => {
+    const { result } = renderHook(() => useQueryParams({ offset: 10 }), {
+      wrapper,
+    });
+
+    act(() => {
+      result.current.setFromToolbar('org_id', 1);
+    });
+
+    expect(result.current.queryParams).toEqual({ offset: '0', org_id: '1' });
+  });
 });
