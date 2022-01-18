@@ -28,6 +28,8 @@ describe('QueryParams/useQueryParams', () => {
     expect(result.current.dispatch).toBeDefined();
     expect(result.current.setFromToolbar).toBeDefined();
     expect(result.current.setFromPagination).toBeDefined();
+    expect(result.current.setFromCalculation).toBeDefined();
+    expect(result.current.setFromTable).toBeDefined();
   });
 
   it('should set the attributes with single dispatch', () => {
