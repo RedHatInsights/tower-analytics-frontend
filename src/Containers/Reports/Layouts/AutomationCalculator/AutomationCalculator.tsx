@@ -60,8 +60,8 @@ const perPageOptions = [
   { title: '25', value: 25 },
 ];
 
-const mapApi = ({ items = [] }) =>
-  items.map((el) => ({
+const mapApi = ({ legend = [] }) =>
+  legend.map((el) => ({
     ...el,
     delta: 0,
     avgRunTime: 3600,
@@ -122,9 +122,14 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   } = useRequest(
     async (params) => {
       const response = await readData(params);
+
       return {
         ...response,
-        items: updateDeltaCost(mapApi(response), costAutomation, costManual),
+        items: updateDeltaCost(
+          mapApi(response.meta),
+          costAutomation,
+          costManual
+        ),
       };
     },
     {
