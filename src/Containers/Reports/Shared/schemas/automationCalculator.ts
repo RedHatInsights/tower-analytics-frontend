@@ -34,11 +34,19 @@ const schema = [
         left: 90,
       },
     },
+    tooltip: {
+      cursor: true,
+      stickToAxis: 'x',
+      mouseFollow: true,
+      labelFormat: 'customTooltipFormatting',
+      labelName: 'VAR_tooltip',
+    },
     xAxis: {
       label: 'Templates',
       style: {
         axisLabel: {
           padding: 130,
+          title: 'test',
         },
       },
       labelProps: {
@@ -52,7 +60,7 @@ const schema = [
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label: 'Savings per template',
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 60,
@@ -73,11 +81,7 @@ const schema = [
     parent: 0,
     props: {
       x: 'name',
-      y: 'delta',
-    },
-    tooltip: {
-      standalone: true,
-      labelName: 'Saving',
+      y: 'VAR_field',
     },
   },
 ];
