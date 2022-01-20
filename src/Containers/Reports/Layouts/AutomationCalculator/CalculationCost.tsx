@@ -19,16 +19,14 @@ const validFloat = (value: number): number =>
 
 interface Props {
   costManual: number;
-  setCostManual: (value: number) => void;
+  setFromCalculation: (varName: string, value: number) => void;
   costAutomation: number;
-  setCostAutomation: (value: number) => void;
 }
 
 const CalculationCost: FunctionComponent<Props> = ({
   costManual = 0,
-  setCostManual = () => ({}),
+  setFromCalculation = () => ({}),
   costAutomation = 0,
-  setCostAutomation = () => ({}),
 }) => (
   <Card isPlain isCompact>
     <CardBody>
@@ -53,7 +51,7 @@ const CalculationCost: FunctionComponent<Props> = ({
           type="number"
           aria-label="manual-cost"
           value={isNaN(costManual) ? '' : costManual.toString()}
-          onChange={(e) => setCostManual(validFloat(+e))}
+          onChange={(e) => setFromCalculation('manual_cost', validFloat(+e))}
         />
         <InputGroupText>/hr</InputGroupText>
       </InputGroup>
@@ -67,7 +65,9 @@ const CalculationCost: FunctionComponent<Props> = ({
           type="number"
           aria-label="automation-cost"
           value={isNaN(costAutomation) ? '' : costAutomation.toString()}
-          onChange={(e) => setCostAutomation(validFloat(+e))}
+          onChange={(e) =>
+            setFromCalculation('automation_cost', validFloat(+e))
+          }
         />
         <InputGroupText>/hr</InputGroupText>
       </InputGroup>
