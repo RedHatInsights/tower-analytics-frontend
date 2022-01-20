@@ -2,7 +2,7 @@
 set -e
 set -x
 
-if [ "${TRAVIS_PULL_REQUEST_BAK}" != "false" ]; then
+if [ -n "$TRAVIS_PULL_REQUEST_BAK" ]; then
     # This is a PR build.
     # reset TRAVIS_PULL_REQUEST
     git log -n 3
