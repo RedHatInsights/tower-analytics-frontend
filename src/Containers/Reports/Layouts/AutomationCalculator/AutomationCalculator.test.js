@@ -16,37 +16,37 @@ fetchMock.config.overwriteRoutes = true;
 const jobExplorerUrl = 'path:/api/tower-analytics/v1/roi_templates/';
 const dummyRoiData = {
   response_type: '',
-  items: [
-    {
-      id: 1,
-      name: 'a',
-      successful_elapsed_total: 3600,
-      host_cluster_count: 10,
-      total_org_count: 2,
-      successful_hosts_total: 10,
-      total_cluster_count: 20,
-    },
-    {
-      id: 2,
-      name: 'b',
-      successful_elapsed_total: 3600,
-      host_cluster_count: 10,
-      total_org_count: 2,
-      successful_hosts_total: 10,
-      total_cluster_count: 20,
-    },
-    {
-      id: 3,
-      name: 'c',
-      successful_elapsed_total: 0,
-      host_cluster_count: 10,
-      total_org_count: 2,
-      successful_hosts_total: 10,
-      total_cluster_count: 20,
-    },
-  ],
   meta: {
     count: 3,
+    legend: [
+      {
+        id: 1,
+        name: 'a',
+        successful_elapsed_total: 3600,
+        host_cluster_count: 10,
+        total_org_count: 2,
+        successful_hosts_total: 10,
+        total_cluster_count: 20,
+      },
+      {
+        id: 2,
+        name: 'b',
+        successful_elapsed_total: 3600,
+        host_cluster_count: 10,
+        total_org_count: 2,
+        successful_hosts_total: 10,
+        total_cluster_count: 20,
+      },
+      {
+        id: 3,
+        name: 'c',
+        successful_elapsed_total: 0,
+        host_cluster_count: 10,
+        total_org_count: 2,
+        successful_hosts_total: 10,
+        total_cluster_count: 20,
+      },
+    ],
   },
 };
 const defaultTotalSaving = '1,460.00';
