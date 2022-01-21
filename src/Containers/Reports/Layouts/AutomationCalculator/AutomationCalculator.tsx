@@ -50,6 +50,8 @@ import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants'
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
 import { endpointFunctionMap } from '../../../../Api';
 import { AutmationCalculatorProps } from '../types';
+import hydrateSchema from '../../Shared/hydrateSchema';
+import currencyFormatter from '../../../../Utilities/currencyFormatter';
 
 const perPageOptions = [
   ...defaultPerPageOptions,
@@ -57,16 +59,6 @@ const perPageOptions = [
   { title: '20', value: 20 },
   { title: '25', value: 25 },
 ];
-
-const mapApi = ({ items = [] }) =>
-  items.map((el) => ({
-    ...el,
-    delta: 0,
-    avgRunTime: 3600,
-    manualCost: 0,
-    automatedCost: 0,
-    enabled: true,
-  }));
 
 const filterDisabled = (data) => data.filter(({ enabled }) => enabled);
 
@@ -97,12 +89,37 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
 
-  const [costManual, setCostManual] = useState('50');
-  const [costAutomation, setCostAutomation] = useState('20');
-
   const redirect = useRedirect();
-  const { queryParams, setFromToolbar, setFromPagination } =
-    useQueryParams(defaultParams);
+  const {
+    queryParams,
+    setFromToolbar,
+    setFromPagination,
+    setFromCalculation,
+    setFromTable,
+  } = useQueryParams(defaultParams);
+  const [costManual, setCostManual] = useState(queryParams.manual_cost || '50');
+  const [costAutomation, setCostAutomation] = useState(
+    queryParams.automation_cost || '20'
+  );
+
+  const mapApi = ({ legend = [] }) =>
+    legend.map((el, index) => ({
+      ...el,
+      delta: 0,
+      avgRunTime: queryParams.time_per_item
+        ? queryParams.time_per_item[index]
+        : 3600,
+      manualCost: 0,
+      automatedCost: 0,
+      enabled: queryParams.enabled_per_item
+        ? queryParams.enabled_per_item[index]
+        : true,
+    }));
+
+  const updateCalculationValues = (varName: string, value: number) => {
+    setFromCalculation(varName, value);
+    varName === 'manual_cost' ? setCostManual(value) : setCostAutomation(value);
+  };
 
   const { result: options, request: fetchOptions } = useRequest(readOptions, {
     sort_options: [
@@ -120,9 +137,14 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   } = useRequest(
     async (params) => {
       const response = await readData(params);
+
       return {
         ...response,
-        items: updateDeltaCost(mapApi(response), costAutomation, costManual),
+        items: updateDeltaCost(
+          mapApi(response.meta),
+          costAutomation,
+          costManual
+        ),
       };
     },
     {
@@ -160,18 +182,23 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     });
 
     setValue(updatedData);
+    setFromTable(
+      'time_per_item',
+      updatedData.map((item) => item.avgRunTime)
+    );
   };
 
   const setEnabled = (id) => (value) => {
-    if (!id) {
-      setValue(api.result.items.map((el) => ({ ...el, enabled: value })));
-    } else {
-      setValue(
-        api.result.items.map((el) =>
+    const updatedData = !id
+      ? api.result.items.map((el) => ({ ...el, enabled: value }))
+      : api.result.items.map((el) =>
           el.id === id ? { ...el, enabled: value } : el
-        )
-      );
-    }
+        );
+    setValue(updatedData);
+    setFromTable(
+      'enabled_per_item',
+      updatedData.map((item) => item.enabled)
+    );
   };
 
   /**
@@ -205,6 +232,44 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     redirect(Paths.jobExplorer, initialQueryParams);
   };
 
+  const chartParams = {
+    y: queryParams.sort_options,
+    tooltip: 'Savings for',
+    field: queryParams.sort_options,
+    label:
+      options.sort_options?.find(({ key }) => key === queryParams.sort_options)
+        ?.value || 'Label Y',
+  };
+
+  const formattedValue = (key: string, value: number) => {
+    let val;
+    switch (key) {
+      case 'elapsed':
+        val = value.toFixed(2) + ' seconds';
+        break;
+      case 'template_automation_percentage':
+        val = value.toFixed(2) + '%';
+        break;
+      case 'successful_hosts_savings':
+      case 'failed_hosts_costs':
+      case 'monetary_gain':
+        val = currencyFormatter(value);
+        break;
+      default:
+        val = value.toFixed(2);
+    }
+    return val;
+  };
+
+  const customTooltipFormatting = ({ datum }) => {
+    const tooltip =
+      'Savings for ' +
+      datum.name +
+      ': ' +
+      formattedValue(queryParams.sort_options, datum.y);
+    return tooltip;
+  };
+
   const renderLeft = () => (
     <Card isPlain>
       <CardHeader>
@@ -212,9 +277,18 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       </CardHeader>
       <CardBody>
         <Chart
-          schema={schema}
+          schema={hydrateSchema(schema)({
+            label: chartParams.label,
+            tooltip: chartParams.tooltip,
+            field: chartParams.field,
+          })}
           data={{
             items: filterDisabled(api.result.items),
+          }}
+          specificFunctions={{
+            labelFormat: {
+              customTooltipFormatting,
+            },
           }}
         />
       </CardBody>
@@ -233,9 +307,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           <StackItem>
             <CalculationCost
               costManual={costManual}
-              setCostManual={setCostManual}
+              setFromCalculation={updateCalculationValues}
               costAutomation={costAutomation}
-              setCostAutomation={setCostAutomation}
             />
           </StackItem>
           <StackItem>

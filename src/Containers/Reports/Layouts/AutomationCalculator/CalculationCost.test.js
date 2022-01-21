@@ -22,7 +22,7 @@ describe('Containers/CustomReports/AutomationCalculator/CalculationCost', () => 
   it('Should change the manual cost correctly', () => {
     const fn = jest.fn();
     const wrapper = mount(
-      <CalculationCost costManual={'25'} setCostManual={fn} />
+      <CalculationCost costManual={'25'} setFromCalculation={fn} />
     );
     const costInput = wrapper.find('input').at(0);
     act(() => {
@@ -34,7 +34,7 @@ describe('Containers/CustomReports/AutomationCalculator/CalculationCost', () => 
   it('Should change the automation cost correctly', () => {
     const fn = jest.fn();
     const wrapper = mount(
-      <CalculationCost costAutomation={'10'} setCostAutomation={fn} />
+      <CalculationCost costAutomation={'10'} setFromCalculation={fn} />
     );
     const costInput = wrapper.find('input').at(1);
     act(() => {
@@ -45,13 +45,11 @@ describe('Containers/CustomReports/AutomationCalculator/CalculationCost', () => 
 
   it('Should set cost on invalid values to zero', () => {
     const fn = jest.fn();
-    const fn2 = jest.fn();
     const wrapper = mount(
       <CalculationCost
         costAutomation={'qert'}
         costManual={'45srrf5'}
-        setCostAutomation={fn}
-        setCostManual={fn2}
+        setFromCalculation={fn}
       />
     );
     const costInput = wrapper.find('input').at(0);
@@ -60,19 +58,17 @@ describe('Containers/CustomReports/AutomationCalculator/CalculationCost', () => 
       costInput.simulate('change', { target: { value: '' } });
       costInput2.simulate('change', { target: { value: '' } });
     });
-    expect(fn).toHaveBeenCalledWith(0);
-    expect(fn2).toHaveBeenCalledWith(0);
+    expect(fn).toHaveBeenCalledWith('manual_cost', 0);
+    expect(fn).toHaveBeenCalledWith('automation_cost', 0);
   });
 
   it('Should set cost on negative values to NaN', () => {
     const fn = jest.fn();
-    const fn2 = jest.fn();
     const wrapper = mount(
       <CalculationCost
         costAutomation={'-2'}
         costManual={'-25'}
-        setCostAutomation={fn}
-        setCostManual={fn2}
+        setFromCalculation={fn}
       />
     );
     const costInput = wrapper.find('input').at(0);
@@ -81,7 +77,7 @@ describe('Containers/CustomReports/AutomationCalculator/CalculationCost', () => 
       costInput.simulate('change', { target: { value: '' } });
       costInput2.simulate('change', { target: { value: '' } });
     });
-    expect(fn).toHaveBeenCalledWith(NaN);
-    expect(fn2).toHaveBeenCalledWith(NaN);
+    expect(fn).toHaveBeenCalledWith('manual_cost', NaN);
+    expect(fn).toHaveBeenCalledWith('automation_cost', NaN);
   });
 });
