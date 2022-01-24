@@ -15,8 +15,8 @@ import {
 } from '@patternfly/react-core';
 
 import paths from '../../paths';
-import { ReportPageParams } from '../../Shared/types';
 import { TAGS } from '../../Shared/constants';
+import { ReportSchema } from '../../Layouts/types';
 
 const CardTitle = styled(PFCardTitle)`
   word-break: break-word;
@@ -35,11 +35,13 @@ const Label = styled(PFLabel)`
 `;
 
 interface Props {
-  report: ReportPageParams;
+  report: ReportSchema;
 }
 
 const ListItem: FunctionComponent<Props> = ({
-  report: { slug, description, name, tags },
+  report: {
+    layoutProps: { slug, description, name, tags },
+  },
 }) => (
   <Card data-testid={slug}>
     <CardHeader>

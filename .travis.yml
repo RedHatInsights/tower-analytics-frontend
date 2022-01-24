@@ -20,7 +20,7 @@ jobs:
   - stage: Test
     script: npm run test
   - stage: Deploy
-    script: npm run deploy && curl -sSL https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master/src/bootstrap.sh | bash -s
+    script: bash .travis/pr_build.sh
 env:
     global:
     - REPO="git@github.com:RedHatInsights/tower-analytics-frontend-build.git"

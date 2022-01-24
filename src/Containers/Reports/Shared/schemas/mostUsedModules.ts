@@ -7,9 +7,9 @@ import {
   ChartThemeColor,
 } from 'react-json-chart-builder';
 import { Endpoint } from '../../../../Api';
-import { LayoutComponentName } from '../../Layouts';
+import { LayoutComponentName, ReportSchema } from '../../Layouts/types';
 import { TagName } from '../constants';
-import { AttributesType, ReportPageParams } from '../types';
+import { AttributesType } from '../types';
 
 const slug = 'most_used_modules';
 
@@ -34,6 +34,7 @@ const tableHeaders: AttributesType = [
   { key: 'host_task_ok_count', value: 'Successful tasks count' },
   { key: 'host_task_failed_count', value: 'Failed tasks count' },
   { key: 'host_task_unreachable_count', value: 'Unreachable tasks count' },
+  { key: 'total_count', value: 'Total jobs count' },
 ];
 
 const defaultParams = {
@@ -45,6 +46,7 @@ const defaultParams = {
     'host_task_ok_count',
     'host_task_failed_count',
     'host_task_unreachable_count',
+    'total_count',
   ],
   group_by: 'module',
   group_by_time: true,
@@ -133,12 +135,12 @@ const schema = [
   },
 ];
 
-const reportParams: ReportPageParams = {
-  slug,
-  name,
-  description,
-  tags,
-  reportParams: {
+const reportParams: ReportSchema = {
+  layoutComponent: LayoutComponentName.Standard,
+  layoutProps: {
+    name,
+    description,
+    tags,
     slug,
     defaultParams,
     tableHeaders,
@@ -147,7 +149,6 @@ const reportParams: ReportPageParams = {
     optionsEndpoint: Endpoint.eventExplorerOptions,
     schema,
   },
-  layoutComponent: LayoutComponentName.standard,
 };
 
 export default reportParams;

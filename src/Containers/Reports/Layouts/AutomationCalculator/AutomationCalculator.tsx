@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+import React, { useState, useEffect, FC } from 'react';
 import {
+  Button,
   Card,
   CardBody,
+  EmptyState,
+  EmptyStateIcon,
+  EmptyStateBody,
   Grid,
   GridItem,
   Stack,
@@ -12,8 +21,9 @@ import {
   CardTitle,
   CardFooter,
   PaginationVariant,
+  Title,
 } from '@patternfly/react-core';
-
+import { ExclamationTriangleIcon as ExclamationTriangleIcon } from '@patternfly/react-icons';
 // Imports from custom components
 import FilterableToolbar from '../../../../Components/Toolbar';
 import Pagination from '../../../../Components/Pagination';
@@ -44,6 +54,9 @@ import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper'
 import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants';
 import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
 import { endpointFunctionMap } from '../../../../Api';
+import { AutmationCalculatorProps } from '../types';
+import hydrateSchema from '../../Shared/hydrateSchema';
+import currencyFormatter from '../../../../Utilities/currencyFormatter';
 
 const perPageOptions = [
   ...defaultPerPageOptions,
@@ -51,16 +64,6 @@ const perPageOptions = [
   { title: '20', value: 20 },
   { title: '25', value: 25 },
 ];
-
-const mapApi = ({ items = [] }) =>
-  items.map((el) => ({
-    ...el,
-    delta: 0,
-    avgRunTime: 3600,
-    manualCost: 0,
-    automatedCost: 0,
-    enabled: true,
-  }));
 
 const filterDisabled = (data) => data.filter(({ enabled }) => enabled);
 
@@ -81,7 +84,7 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
 const computeTotalSavings = (data) =>
   data.reduce((sum, curr) => sum + curr.delta, 0);
 
-const AutomationCalculator = ({
+const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   slug,
   defaultParams,
   dataEndpoint,
@@ -91,12 +94,37 @@ const AutomationCalculator = ({
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
 
-  const [costManual, setCostManual] = useState('50');
-  const [costAutomation, setCostAutomation] = useState('20');
-
   const redirect = useRedirect();
-  const { queryParams, setFromToolbar, setFromPagination } =
-    useQueryParams(defaultParams);
+  const {
+    queryParams,
+    setFromToolbar,
+    setFromPagination,
+    setFromCalculation,
+    setFromTable,
+  } = useQueryParams(defaultParams);
+  const [costManual, setCostManual] = useState(queryParams.manual_cost || '50');
+  const [costAutomation, setCostAutomation] = useState(
+    queryParams.automation_cost || '20'
+  );
+
+  const mapApi = ({ legend = [] }) =>
+    legend.map((el, index) => ({
+      ...el,
+      delta: 0,
+      avgRunTime: queryParams.time_per_item
+        ? queryParams.time_per_item[index]
+        : 3600,
+      manualCost: 0,
+      automatedCost: 0,
+      enabled: queryParams.enabled_per_item
+        ? queryParams.enabled_per_item[index]
+        : true,
+    }));
+
+  const updateCalculationValues = (varName: string, value: number) => {
+    setFromCalculation(varName, value);
+    varName === 'manual_cost' ? setCostManual(value) : setCostAutomation(value);
+  };
 
   const { result: options, request: fetchOptions } = useRequest(readOptions, {
     sort_options: [
@@ -114,9 +142,14 @@ const AutomationCalculator = ({
   } = useRequest(
     async (params) => {
       const response = await readData(params);
+
       return {
         ...response,
-        items: updateDeltaCost(mapApi(response), costAutomation, costManual),
+        items: updateDeltaCost(
+          mapApi(response.meta),
+          costAutomation,
+          costManual
+        ),
       };
     },
     {
@@ -154,18 +187,38 @@ const AutomationCalculator = ({
     });
 
     setValue(updatedData);
+    setFromTable(
+      'time_per_item',
+      updatedData.map((item) => item.avgRunTime)
+    );
   };
 
   const setEnabled = (id) => (value) => {
-    if (!id) {
-      setValue(api.result.items.map((el) => ({ ...el, enabled: value })));
-    } else {
-      setValue(
-        api.result.items.map((el) =>
+    const updatedData = !id
+      ? api.result.items.map((el) => ({ ...el, enabled: value }))
+      : api.result.items.map((el) =>
           el.id === id ? { ...el, enabled: value } : el
-        )
-      );
-    }
+        );
+    setValue(updatedData);
+    setFromTable(
+      'enabled_per_item',
+      updatedData.map((item) => item.enabled)
+    );
+  };
+  const getSortParams = () => {
+    const onSort = (_event, index, direction) => {
+      setFromToolbar('sort_order', direction);
+    };
+    return {
+      sort: {
+        sortBy: {
+          index: 2,
+          direction: queryParams.sort_order || 'none',
+        },
+        onSort,
+        columnIndex: 2,
+      },
+    };
   };
 
   /**
@@ -199,18 +252,85 @@ const AutomationCalculator = ({
     redirect(Paths.jobExplorer, initialQueryParams);
   };
 
+  const chartParams = {
+    y: queryParams.sort_options,
+    tooltip: 'Savings for',
+    field: queryParams.sort_options,
+    label:
+      options.sort_options?.find(({ key }) => key === queryParams.sort_options)
+        ?.value || 'Label Y',
+  };
+
+  const formattedValue = (key: string, value: number) => {
+    let val;
+    switch (key) {
+      case 'elapsed':
+        val = value.toFixed(2) + ' seconds';
+        break;
+      case 'template_automation_percentage':
+        val = value.toFixed(2) + '%';
+        break;
+      case 'successful_hosts_savings':
+      case 'failed_hosts_costs':
+      case 'monetary_gain':
+        val = currencyFormatter(value);
+        break;
+      default:
+        val = value.toFixed(2);
+    }
+    return val;
+  };
+
+  const customTooltipFormatting = ({ datum }) => {
+    const tooltip =
+      chartParams.label +
+      ' for ' +
+      datum.name +
+      ': ' +
+      formattedValue(queryParams.sort_options, datum.y);
+    return tooltip;
+  };
+
   const renderLeft = () => (
     <Card isPlain>
       <CardHeader>
         <CardTitle>Automation savings</CardTitle>
       </CardHeader>
       <CardBody>
-        <Chart
-          schema={schema}
-          data={{
-            items: filterDisabled(api.result.items),
-          }}
-        />
+        {filterDisabled(api.result.items).length > 0 ? (
+          <Chart
+            schema={hydrateSchema(schema)({
+              label: chartParams.label,
+              tooltip: chartParams.tooltip,
+              field: chartParams.field,
+            })}
+            data={{
+              items: filterDisabled(api.result.items),
+            }}
+            specificFunctions={{
+              labelFormat: {
+                customTooltipFormatting,
+              },
+            }}
+          />
+        ) : (
+          <EmptyState>
+            <EmptyStateIcon icon={ExclamationTriangleIcon} />
+            <Title headingLevel="h4" size="lg">
+              You have disabled all views
+            </Title>
+            <EmptyStateBody>
+              Enable individual views in the table below or press Show all
+              button.
+            </EmptyStateBody>
+            <Button
+              variant="primary"
+              onClick={() => setEnabled(undefined)(true)}
+            >
+              Show all
+            </Button>
+          </EmptyState>
+        )}
       </CardBody>
     </Card>
   );
@@ -227,9 +347,8 @@ const AutomationCalculator = ({
           <StackItem>
             <CalculationCost
               costManual={costManual}
-              setCostManual={setCostManual}
+              setFromCalculation={updateCalculationValues}
               costAutomation={costAutomation}
-              setCostAutomation={setCostAutomation}
             />
           </StackItem>
           <StackItem>
@@ -285,6 +404,7 @@ const AutomationCalculator = ({
               )}
               setDataRunTime={setDataRunTime}
               setEnabled={setEnabled}
+              getSortParams={getSortParams}
             />
           </GridItem>
         </Grid>
@@ -305,17 +425,6 @@ const AutomationCalculator = ({
   );
 
   return <ApiStatusWrapper api={api}>{renderContents()}</ApiStatusWrapper>;
-};
-
-AutomationCalculator.propTypes = {
-  slug: PropTypes.string.isRequired,
-  defaultParams: PropTypes.object.isRequired,
-  tableHeaders: PropTypes.array.isRequired,
-  expandedTableRowName: PropTypes.string,
-  availableChartTypes: PropTypes.array.isRequired,
-  dataEndpoint: PropTypes.string.isRequired,
-  optionsEndpoint: PropTypes.string.isRequired,
-  schema: PropTypes.array.isRequired,
 };
 
 export default AutomationCalculator;

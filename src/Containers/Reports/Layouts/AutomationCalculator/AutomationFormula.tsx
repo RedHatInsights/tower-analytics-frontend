@@ -24,11 +24,11 @@ const SavingsPerTemplateText: FunctionComponent<Record<string, never>> = () => (
       automated processes.
     </p>
     <br />
-    <p>The formula used to calculate maunal cost:</p>
+    <p>The formula used to calculate manual cost:</p>
     <CodeBlock>
       <CodeBlockCode>
-        {`manual time  = successful hosts total * 1 
-manual cost = manual time * average engineer salary`}
+        {`manual time  = configurable time (in minutes) to manually complete the task on one host * number of host runs 
+manual cost = manual time * configurable manual cost of automation (e.g. average salary of mid-level Software Engineer)`}
       </CodeBlockCode>
     </CodeBlock>
     <br />
@@ -37,8 +37,7 @@ manual cost = manual time * average engineer salary`}
     <CodeBlock>
       <CodeBlockCode>
         {`automation time = successful elapsed total / 3600
-automated process cost = $20 per hour
-automation cost = automation time * automated process cost`}
+automation cost = automation time * configurable automated process cost`}
       </CodeBlockCode>
     </CodeBlock>
     <br />
@@ -61,14 +60,14 @@ const FailedHostPerTemplateText: FunctionComponent<Record<string, never>> =
       </p>
       <p>
         Failed hosts cost per template is the total amount of time spent on
-        failed automated job runs multiplied by the average cost per month spent
-        on automation.
+        failed automated job runs multiplied by the configured automated process
+        cost.
       </p>
       <br />
       <p>The formula used to calculate failed host cost per template:</p>
       <CodeBlock>
         <CodeBlockCode>
-          {`failed cost per template = (failed elapsed total / 3600) * 20`}
+          {`failed cost per template = (failed elapsed total / 3600) * configurable automated process cost`}
         </CodeBlockCode>
       </CodeBlock>
       <br />

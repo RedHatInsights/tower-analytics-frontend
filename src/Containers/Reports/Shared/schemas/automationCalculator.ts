@@ -1,5 +1,4 @@
 import { TagName } from '../constants';
-import { ReportPageParams } from '../types';
 import { roi } from '../../../../Utilities/constants';
 import { Endpoint } from '../../../../Api';
 import {
@@ -7,7 +6,7 @@ import {
   ChartTopLevelType,
   ChartType,
 } from 'react-json-chart-builder';
-import { LayoutComponentName } from '../../Layouts';
+import { LayoutComponentName, ReportSchema } from '../../Layouts/types';
 
 const slug = 'automation_calculator';
 
@@ -35,11 +34,19 @@ const schema = [
         left: 90,
       },
     },
+    tooltip: {
+      cursor: true,
+      stickToAxis: 'x',
+      mouseFollow: true,
+      labelFormat: 'customTooltipFormatting',
+      labelName: 'VAR_tooltip',
+    },
     xAxis: {
       label: 'Templates',
       style: {
         axisLabel: {
           padding: 130,
+          title: 'test',
         },
       },
       labelProps: {
@@ -53,7 +60,7 @@ const schema = [
     yAxis: {
       tickFormat: 'formatNumberAsK',
       showGrid: true,
-      label: 'Savings per template',
+      label: 'VAR_label',
       style: {
         axisLabel: {
           padding: 60,
@@ -74,30 +81,23 @@ const schema = [
     parent: 0,
     props: {
       x: 'name',
-      y: 'delta',
-    },
-    tooltip: {
-      standalone: true,
-      labelName: 'Saving',
+      y: 'VAR_field',
     },
   },
 ];
 
-const reportParams: ReportPageParams = {
-  slug,
-  name,
-  description,
-  tags,
-  reportParams: {
+const reportParams: ReportSchema = {
+  layoutComponent: LayoutComponentName.AutomationCalculator,
+  layoutProps: {
     slug,
+    name,
+    description,
+    tags,
     defaultParams,
-    tableHeaders: [],
-    availableChartTypes: [],
     dataEndpoint: Endpoint.ROI,
     optionsEndpoint: Endpoint.ROIOptions,
     schema,
   },
-  layoutComponent: LayoutComponentName.automationCalculator,
 };
 
 export default reportParams;
