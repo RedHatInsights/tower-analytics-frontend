@@ -162,6 +162,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       slug={slug}
       endpointUrl={dataEndpoint}
       queryParams={queryParams}
+      selectOptions={options}
       y={chartParams.y}
       label={chartParams.label}
       xTickFormat={chartParams.xTickFormat}
