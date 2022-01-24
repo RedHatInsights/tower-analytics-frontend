@@ -283,7 +283,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
 
   const customTooltipFormatting = ({ datum }) => {
     const tooltip =
-      'Savings for ' +
+      chartParams.label +
+      ' for ' +
       datum.name +
       ': ' +
       formattedValue(queryParams.sort_options, datum.y);
