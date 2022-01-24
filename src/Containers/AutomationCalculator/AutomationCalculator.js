@@ -44,8 +44,8 @@ import AutomationFormula from './AutomationFormula';
 import TopTemplates from './TopTemplates';
 import { Paths } from '../../paths';
 
-const mapApi = ({ items = [] }) =>
-  items.map((el) => ({
+const mapApi = ({ legend = [] }) =>
+  legend.map((el) => ({
     ...el,
     delta: 0,
     avgRunTime: 3600,
@@ -96,7 +96,7 @@ const AutomationCalculator = () => {
     setValue,
   } = useRequest(async (params) => {
     const response = await readROI(params);
-    return updateDeltaCost(mapApi(response), costAutomation, costManual);
+    return updateDeltaCost(mapApi(response.meta), costAutomation, costManual);
   }, []);
 
   /**
