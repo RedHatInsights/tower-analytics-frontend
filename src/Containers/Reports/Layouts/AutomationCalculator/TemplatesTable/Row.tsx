@@ -13,6 +13,8 @@ import { Tr, Td } from '@patternfly/react-table';
 import { global_success_color_200 as globalSuccessColor200 } from '@patternfly/react-tokens';
 
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
+import timeFormatter from '../../../../../Utilities/timeFormatter';
+import percentageFormatter from '../../../../../Utilities/percentageFormatter';
 import { Template } from './types';
 import ExpandedRowContents from './ExplandedRowContents';
 
@@ -23,6 +25,26 @@ interface Props {
   setEnabled: (enabled: boolean) => void;
   redirectToJobExplorer: (id: number) => void;
 }
+
+const setLabeledValue = (key: string, value: number) => {
+  let label;
+  switch (key) {
+    case 'elapsed':
+      label = timeFormatter(value) + ' seconds';
+      break;
+    case 'template_automation_percentage':
+      label = percentageFormatter(value) + '%';
+      break;
+    case 'successful_hosts_savings':
+    case 'failed_hosts_costs':
+    case 'monetary_gain':
+      label = currencyFormatter(value);
+      break;
+    default:
+      label = value;
+  }
+  return label;
+};
 
 const Row: FunctionComponent<Props> = ({
   template,
@@ -48,12 +70,13 @@ const Row: FunctionComponent<Props> = ({
             <Button
               onClick={() => redirectToJobExplorer(template.id)}
               variant={ButtonVariant.link}
+              style={{ padding: '0px' }}
             >
               {template.name}
             </Button>
           </Tooltip>
         </Td>
-        <Td>{(+template[variableRow.key]).toFixed(2)}</Td>
+        <Td>{setLabeledValue(variableRow.key, +template[variableRow.key])}</Td>
         <Td>
           <InputGroup>
             <TextInput
