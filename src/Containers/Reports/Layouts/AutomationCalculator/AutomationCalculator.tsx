@@ -134,7 +134,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       },
     ],
   });
-
   const {
     request: fetchData,
     setValue: setApiData,
@@ -235,7 +234,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     fetchOptions(queryParams);
     fetchData(queryParams);
   }, [queryParams]);
-
   /**
    * Function to redirect to the job explorer page
    * with the same filters as is used here.
@@ -384,6 +382,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               slug={slug}
               endpointUrl={dataEndpoint}
               queryParams={queryParams}
+              selectOptions={options}
               y={''}
               label={''}
               xTickFormat={''}
