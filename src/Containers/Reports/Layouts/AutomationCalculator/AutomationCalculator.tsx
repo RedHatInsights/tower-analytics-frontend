@@ -111,9 +111,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     legend.map((el, index) => ({
       ...el,
       delta: 0,
-      avgRunTime: queryParams.time_per_item
-        ? queryParams.time_per_item[index]
-        : 3600,
+      avgRunTime:
+        queryParams.time_per_item && !!queryParams.time_per_item[index]
+          ? queryParams.time_per_item[index]
+          : 3600,
       manualCost: 0,
       automatedCost: 0,
       enabled: queryParams.enabled_per_item
