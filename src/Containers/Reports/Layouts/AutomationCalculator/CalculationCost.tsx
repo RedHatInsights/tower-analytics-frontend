@@ -48,6 +48,7 @@ const CalculationCost: FunctionComponent<Props> = ({
         </InputGroupText>
         <TextInput
           id="manual-cost"
+          key="manual-cost"
           type="number"
           aria-label="manual-cost"
           value={isNaN(costManual) ? '' : costManual.toString()}
@@ -62,6 +63,7 @@ const CalculationCost: FunctionComponent<Props> = ({
         </InputGroupText>
         <TextInput
           id="automation-cost"
+          key="automation-cost"
           type="number"
           aria-label="automation-cost"
           value={isNaN(costAutomation) ? '' : costAutomation.toString()}
