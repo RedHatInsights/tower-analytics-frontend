@@ -35,7 +35,6 @@ export enum Endpoint {
   plan = '/api/tower-analytics/v1/plan/',
   sendEmail = 'api/tower-analytics/v1/send_email',
   getRbacGroups = 'api/tower-analytics/v1/get_rbac_groups',
-  getRbacPrincipals = 'api/tower-analytics/v1/get_rbac_principals',
 
   /* page options endpoints */
   jobExplorerOptions = '/api/tower-analytics/v1/job_explorer_options/',
@@ -134,9 +133,6 @@ export const sendEmail = (
 
 export const getRbacGroups = (): Promise<ApiJson> =>
   post(Endpoint.getRbacGroups);
-
-export const getRbacPrincipals = (params: Params): Promise<ApiJson> =>
-  post(Endpoint.getRbacPrincipals, params);
 
 /**
  * This mapper is used by the reports to map url strings to functions

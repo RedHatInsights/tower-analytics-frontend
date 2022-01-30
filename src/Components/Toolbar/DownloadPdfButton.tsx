@@ -19,7 +19,6 @@ import { DownloadState } from '../../store/pdfDownloadButton/types';
 import {
   Endpoint,
   getRbacGroups,
-  getRbacPrincipals,
   OptionsReturnType,
   Params,
 } from '../../Api';
@@ -46,16 +45,6 @@ interface RbacGroupsDataType {
   data: any[];
   meta: {
     count: number;
-  };
-}
-
-interface RbacPrincipalsDataType {
-  data: any[];
-  links: any;
-  meta: {
-    count: number;
-    offset: number;
-    limit: number;
   };
 }
 
@@ -110,22 +99,6 @@ const DownloadPdfButton: FC<Props> = ({
     reportUrl: window.location.href,
   });
 
-  const {
-    result: { data: users },
-    request: fetchRbacPrincipals,
-  } = useRequest<RbacPrincipalsDataType>(
-    () =>
-      getRbacPrincipals({
-        uuid: emailInfo.recipient,
-      }) as unknown as Promise<RbacPrincipalsDataType>,
-    { data: [], links: {}, meta: { count: 0, offset: 0, limit: 0 } }
-  );
-
-  useEffect(() => {
-    // TODO: Update the useRequest hook to return function and not a promise!! @brum
-    if (emailInfo.recipient !== '') fetchRbacPrincipals();
-  }, [emailInfo.recipient]);
-
   const downloadPdf = () => {
     // Don't allow user to span download button
     if (isLoading) return;
@@ -155,11 +128,6 @@ const DownloadPdfButton: FC<Props> = ({
     );
   };
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  const getRecipients = (users: any[]) =>
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    users.map((user: Record<string, string>) => user.username);
-
   const emailSend = () => {
     // Don't allow user to spam send email button
     if (isLoading) return;
@@ -168,8 +136,7 @@ const DownloadPdfButton: FC<Props> = ({
     dispatch(
       emailAction(
         {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-          recipient: getRecipients(users),
+          recipient: emailInfo.recipient,
           subject:
             emailInfo.subject === ''
               ? 'Report is ready to be downloaded'
