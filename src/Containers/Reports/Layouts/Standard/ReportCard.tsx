@@ -39,6 +39,8 @@ const getDateFormatByGranularity = (granularity: string): string => {
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
+  name,
+  description,
   defaultParams,
   tableHeaders,
   expandedTableRowName,
@@ -160,6 +162,8 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     <DownloadPdfButton
       key="download-button"
       slug={slug}
+      name={name}
+      description={description}
       endpointUrl={dataEndpoint}
       queryParams={queryParams}
       selectOptions={options}

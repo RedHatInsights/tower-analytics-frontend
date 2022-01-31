@@ -12,7 +12,7 @@ import {
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
 
 interface Props {
-  emailInfo: Record<string, string>;
+  emailInfo: { recipient: string[]; subject: string; body: string; reportUrl: string; };
   onChange: (value: any) => void;
   rbacGroups: Record<string, string | number>[];
 }
@@ -24,7 +24,19 @@ const EmailSend: FC<Props> = ({
 }) => {
   const { body, recipient, reportUrl, subject } = emailInfo;
   const onInputChange = (field: string, val: string) => {
-    onChange({ ...emailInfo, [field]: val });
+    let newVal = [val];
+    if (field === 'recipient') {
+      const index = emailInfo.recipient.indexOf(val)
+      // if checkbox unchecked, remove element from array
+      if (index > -1) {
+        emailInfo.recipient.splice(index, 1)
+        newVal = emailInfo.recipient;
+      } else {
+        // add if checkbox checked
+        newVal = emailInfo.recipient.concat(newVal)
+      }
+    }
+    onChange({ ...emailInfo, [field]: newVal });
   };
 
   const [showError, setShowError] = useState(false);
@@ -33,7 +45,7 @@ const EmailSend: FC<Props> = ({
     <Form>
       <FormGroup label="Recipient" isRequired fieldId="recipient-field">
         <Select
-          variant={SelectVariant.single}
+          variant={SelectVariant.checkbox}
           aria-label={'Recipient'}
           isOpen={isExpanded}
           onClear={() => setShowError(!recipient)}

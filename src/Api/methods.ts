@@ -104,7 +104,6 @@ export const postWithEmail = async (
 
   // Dispatch notification when starts the download.
   dispatch(addNotification(notif.pending(notif.id, 'Processing Email')));
-  console.log('Email params: ', params);
   return authenticatedFetch(url.toString(), {
     method: 'POST',
     body: JSON.stringify(params),

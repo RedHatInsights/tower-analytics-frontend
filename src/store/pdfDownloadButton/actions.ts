@@ -56,7 +56,7 @@ export const downloadPdf = (
 });
 
 export const email = (
-  params: { payload: string; subject: string; recipient: string; reportUrl: string; body: string },
+  params: { payload: string; subject: string; recipient: string[]; reportUrl: string; body: string },
   dispatch: DispatchType,
   slug: string
 ): ActionTypes => ({

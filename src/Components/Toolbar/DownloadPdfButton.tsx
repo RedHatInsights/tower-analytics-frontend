@@ -30,6 +30,8 @@ import useRequest from '../../Utilities/useRequest';
 interface Props {
   settingsNamespace: string;
   slug: string;
+  name: string;
+  description: string;
   endpointUrl: Endpoint;
   queryParams: Params;
   selectOptions: OptionsReturnType;
@@ -51,6 +53,8 @@ interface RbacGroupsDataType {
 const DownloadPdfButton: FC<Props> = ({
   settingsNamespace = 'settings',
   slug,
+  name,
+  description,
   endpointUrl,
   queryParams,
   selectOptions,
@@ -93,9 +97,9 @@ const DownloadPdfButton: FC<Props> = ({
   }, [downloadType]);
 
   const [emailInfo, setEmailInfo] = useState({
-    recipient: '',
-    subject: `Ansible report: ${slug} is ready to be downloaded`,
-    body: 'Ansible Report can be downloaded from: ' + window.location.href,
+    recipient: [],
+    subject: `The Ansible report, ${name}, is available for view`,
+    body: 'This report shows ' + description[0].toLowerCase() + description.substring(1),
     reportUrl: window.location.href,
   });
 
@@ -139,9 +143,9 @@ const DownloadPdfButton: FC<Props> = ({
           recipient: emailInfo.recipient,
           subject:
             emailInfo.subject === ''
-              ? 'Report is ready to be downloaded'
+              ? 'Report is ready to be viewed'
               : emailInfo.subject,
-          body: emailInfo.body,
+          body: emailInfo.body.toString().replace(/(?:\r\n|\r|\n)/g, '<br>'),
           reportUrl: emailInfo.reportUrl,
           payload: 'Download',
         },
@@ -190,7 +194,7 @@ const DownloadPdfButton: FC<Props> = ({
               <Button
                 key="email"
                 variant={ButtonVariant.primary}
-                isDisabled={emailInfo.recipient === ''}
+                isDisabled={emailInfo.recipient.length == 0}
                 onClick={() => {
                   setIsExportModalOpen(false);
                   emailSend();
@@ -252,7 +256,7 @@ const DownloadPdfButton: FC<Props> = ({
           )}
         </Grid>
         {downloadType === 'email' && (
-          <Grid>
+          <Grid style={{ paddingTop: '15px' }}>
             <GridItem>
               <EmailSend
                 emailInfo={emailInfo}
