@@ -58,7 +58,13 @@ import { endpointFunctionMap } from '../../../../Api';
 import { AutmationCalculatorProps } from '../types';
 import hydrateSchema from '../../Shared/hydrateSchema';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
+import styled from 'styled-components';
 
+const SpinnerDiv = styled.div`
+  height: 400px;
+  padding-top: 200px;
+  padding-left: 400px;
+`;
 const perPageOptions = [
   ...defaultPerPageOptions,
   { title: '15', value: 15 },
@@ -297,15 +303,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       </CardHeader>
       <CardBody>
         {api.isLoading ? (
-          <div
-            style={{
-              height: '400px',
-              paddingTop: '200px',
-              paddingLeft: '400px',
-            }}
-          >
+          <SpinnerDiv>
             <Spinner isSVG />
-          </div>
+          </SpinnerDiv>
         ) : filterDisabled(api.result.items).length > 0 ? (
           <Chart
             schema={hydrateSchema(schema)({

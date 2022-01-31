@@ -7,11 +7,16 @@ import {
   Title,
 } from '@patternfly/react-core';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
+import styled from 'styled-components';
 
 interface Props {
   totalSavings: number;
   isLoading: boolean;
 }
+const SpinnerDiv = styled.div`
+  height: 46.8px;
+  padding-left: 100px;
+`;
 
 const TotalSavings: FunctionComponent<Props> = ({
   totalSavings = 0,
@@ -26,9 +31,9 @@ const TotalSavings: FunctionComponent<Props> = ({
         style={{ color: 'var(--pf-global--success-color--200)' }}
       >
         {isLoading ? (
-          <div style={{ height: '46.8px', paddingLeft: '100px' }}>
+          <SpinnerDiv>
             <Spinner isSVG size="lg" />
-          </div>
+          </SpinnerDiv>
         ) : (
           currencyFormatter(totalSavings)
         )}
