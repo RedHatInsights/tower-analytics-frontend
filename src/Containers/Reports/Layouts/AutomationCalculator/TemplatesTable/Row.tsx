@@ -53,7 +53,13 @@ const Row: FunctionComponent<Props> = ({
   setEnabled,
   redirectToJobExplorer,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(
+    window.localStorage.getItem(template.id.toString()) === 'true' || false
+  );
+  const expandedRow = (value: boolean, id: number) => {
+    window.localStorage.setItem(id.toString(), value ? 'true' : 'false');
+    setIsExpanded(value);
+  };
 
   return (
     <>
@@ -62,7 +68,7 @@ const Row: FunctionComponent<Props> = ({
           expand={{
             rowIndex: template.id,
             isExpanded: isExpanded,
-            onToggle: () => setIsExpanded(!isExpanded),
+            onToggle: () => expandedRow(!isExpanded, template.id),
           }}
         />
         <Td>
@@ -80,11 +86,23 @@ const Row: FunctionComponent<Props> = ({
         <Td>
           <InputGroup>
             <TextInput
+              autoFocus={
+                window.localStorage.getItem('focused') ===
+                'manual-time-' + template.id.toString()
+              }
+              id={'manual-time-' + template.id.toString()}
               style={{ maxWidth: '150px' }}
               type="number"
               aria-label="time run manually"
               value={template.avgRunTime / 60}
-              onChange={(minutes) => setDataRunTime(+minutes * 60, template.id)}
+              onBlur={() => window.localStorage.setItem('focused', '')}
+              onChange={(minutes) => {
+                window.localStorage.setItem(
+                  'focused',
+                  'manual-time-' + template.id.toString()
+                );
+                setDataRunTime(+minutes * 60, template.id);
+              }}
             />
             <InputGroupText>min</InputGroupText>
             <InputGroupText variant={InputGroupTextVariant.plain}>
