@@ -306,7 +306,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           <SpinnerDiv>
             <Spinner isSVG />
           </SpinnerDiv>
-        ) : filterDisabled(api.result.items).length > 0 ? (
+        ) : filterDisabled(api?.result?.items).length > 0 ? (
           <Chart
             schema={hydrateSchema(schema)({
               label: chartParams.label,
