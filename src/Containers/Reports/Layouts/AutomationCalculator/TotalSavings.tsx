@@ -1,12 +1,27 @@
 import React, { FunctionComponent } from 'react';
-import { Card, CardBody, CardTitle, Title } from '@patternfly/react-core';
+import {
+  Card,
+  CardBody,
+  CardTitle,
+  Spinner,
+  Title,
+} from '@patternfly/react-core';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
+import styled from 'styled-components';
 
 interface Props {
   totalSavings: number;
+  isLoading: boolean;
 }
+const SpinnerDiv = styled.div`
+  height: 46.8px;
+  padding-left: 100px;
+`;
 
-const TotalSavings: FunctionComponent<Props> = ({ totalSavings = 0 }) => (
+const TotalSavings: FunctionComponent<Props> = ({
+  totalSavings = 0,
+  isLoading = false,
+}) => (
   <Card isPlain isCompact>
     <CardTitle>Total savings</CardTitle>
     <CardBody>
@@ -15,7 +30,13 @@ const TotalSavings: FunctionComponent<Props> = ({ totalSavings = 0 }) => (
         size="4xl"
         style={{ color: 'var(--pf-global--success-color--200)' }}
       >
-        {currencyFormatter(totalSavings)}
+        {isLoading ? (
+          <SpinnerDiv>
+            <Spinner isSVG size="lg" />
+          </SpinnerDiv>
+        ) : (
+          currencyFormatter(totalSavings)
+        )}
       </Title>
     </CardBody>
   </Card>
