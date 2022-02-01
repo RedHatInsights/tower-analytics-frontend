@@ -206,6 +206,13 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
     setFromToolbar: (varName, value = null) => {
       //reset pagination when filter is set
       dispatch({ type: 'SET_OFFSET', value: 0 });
+      //reset visibility when filter is set
+      if (params.enabled_per_item?.length > 0) {
+        dispatch({
+          type: 'SET_ENABLED_PER_ITEM',
+          value: new Array(params.enabled_per_item.length).fill(true),
+        });
+      }
       if (!varName) {
         dispatch({ type: 'RESET_FILTER' });
       } else {
@@ -216,6 +223,13 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
       dispatch({ type: 'SET_OFFSET', value: offset });
       if (limit) {
         dispatch({ type: 'SET_LIMIT', value: limit });
+      }
+      //reset visibility when pagination changes
+      if (params.enabled_per_item?.length > 0) {
+        dispatch({
+          type: 'SET_ENABLED_PER_ITEM',
+          value: new Array(params.enabled_per_item.length).fill(true),
+        });
       }
     },
     setFromTable: (varName, value) => {
