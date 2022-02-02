@@ -11,9 +11,17 @@ interface Props {
     isLoading: boolean;
   };
   children: React.ReactNode;
+  customLoading: boolean;
 }
 
-const ApiStatusWrapper: FunctionComponent<Props> = ({ api, children }) => {
+const ApiStatusWrapper: FunctionComponent<Props> = ({
+  api,
+  children,
+  customLoading = false,
+}) => {
+  if (customLoading && api.isLoading) {
+    return <>{children}</>;
+  }
   if (!api || api.isLoading) return <LoadingState />;
   if (api.error) return <ApiErrorState message={api.error.error} />;
 

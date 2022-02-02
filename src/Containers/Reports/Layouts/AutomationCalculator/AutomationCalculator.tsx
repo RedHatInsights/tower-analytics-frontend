@@ -22,6 +22,7 @@ import {
   CardFooter,
   PaginationVariant,
   Title,
+  Spinner,
 } from '@patternfly/react-core';
 import { ExclamationTriangleIcon as ExclamationTriangleIcon } from '@patternfly/react-icons';
 // Imports from custom components
@@ -57,7 +58,13 @@ import { endpointFunctionMap } from '../../../../Api';
 import { AutmationCalculatorProps } from '../types';
 import hydrateSchema from '../../Shared/hydrateSchema';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
+import styled from 'styled-components';
 
+const SpinnerDiv = styled.div`
+  height: 400px;
+  padding-top: 200px;
+  padding-left: 400px;
+`;
 const perPageOptions = [
   ...defaultPerPageOptions,
   { title: '15', value: 15 },
@@ -111,9 +118,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     legend.map((el, index) => ({
       ...el,
       delta: 0,
-      avgRunTime: queryParams.time_per_item
-        ? queryParams.time_per_item[index]
-        : 3600,
+      avgRunTime:
+        queryParams.time_per_item && !!queryParams.time_per_item[index]
+          ? queryParams.time_per_item[index]
+          : 3600,
       manualCost: 0,
       automatedCost: 0,
       enabled: queryParams.enabled_per_item
@@ -295,7 +303,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         <CardTitle>Automation savings</CardTitle>
       </CardHeader>
       <CardBody>
-        {filterDisabled(api.result.items).length > 0 ? (
+        {api.isLoading ? (
+          <SpinnerDiv>
+            <Spinner isSVG />
+          </SpinnerDiv>
+        ) : filterDisabled(api?.result?.items).length > 0 ? (
           <Chart
             schema={hydrateSchema(schema)({
               label: chartParams.label,
@@ -338,6 +350,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       <StackItem>
         <TotalSavings
           totalSavings={computeTotalSavings(filterDisabled(api.result.items))}
+          isLoading={api.isLoading}
         />
       </StackItem>
       <StackItem>
@@ -395,16 +408,23 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           <GridItem span={9}>{renderLeft()}</GridItem>
           <GridItem span={3}>{renderRight()}</GridItem>
           <GridItem span={12}>
-            <TemplatesTable
-              redirectToJobExplorer={redirectToJobExplorer}
-              data={api.result.items}
-              variableRow={options.sort_options.find(
-                ({ key }) => key === queryParams.sort_options
-              )}
-              setDataRunTime={setDataRunTime}
-              setEnabled={setEnabled}
-              getSortParams={getSortParams}
-            />
+            <p>
+              Enter the time it takes to run the following templates manually.
+            </p>
+            {api.isLoading ? (
+              <Spinner isSVG />
+            ) : (
+              <TemplatesTable
+                redirectToJobExplorer={redirectToJobExplorer}
+                data={api.result.items}
+                variableRow={options.sort_options.find(
+                  ({ key }) => key === queryParams.sort_options
+                )}
+                setDataRunTime={setDataRunTime}
+                setEnabled={setEnabled}
+                getSortParams={getSortParams}
+              />
+            )}
           </GridItem>
         </Grid>
       </CardBody>
@@ -422,8 +442,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       </CardFooter>
     </Card>
   );
-
-  return <ApiStatusWrapper api={api}>{renderContents()}</ApiStatusWrapper>;
+  return (
+    <ApiStatusWrapper api={api} customLoading={true}>
+      {renderContents()}
+    </ApiStatusWrapper>
+  );
 };
 
 export default AutomationCalculator;
