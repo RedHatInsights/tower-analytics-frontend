@@ -48,6 +48,15 @@ export const getReport = (searchSlug: string): ReportSchema | undefined => {
     ...(newAutomationCalculator ? automationCalculatorReport : []),
     ...(aa21OnboardingReportEnabled ? onboardingReports : []),
   ];
+  console.log(reports);
+  console.log(onboardingReports);
+  console.log(prodReports);
+  console.log(moduleReports);
+  console.log(automationCalculatorReport);
+  console.log(moduleReportsEnabled);
+  console.log(newAutomationCalculator);
+  console.log(aa21OnboardingReportEnabled);
+  console.log(searchSlug);
 
   return reports.find(({ layoutProps: { slug } }) => slug === searchSlug);
 };
