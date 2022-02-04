@@ -297,6 +297,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     return tooltip;
   };
 
+  const isReadOnly = (api) => {
+    return !!api.result.rbac?.perms?.read;
+  };
+
   const renderLeft = () => (
     <Card isPlain>
       <CardHeader>
@@ -360,6 +364,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               costManual={costManual}
               setFromCalculation={updateCalculationValues}
               costAutomation={costAutomation}
+              readOnly={isReadOnly(api)}
             />
           </StackItem>
           <StackItem>
@@ -423,6 +428,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 setDataRunTime={setDataRunTime}
                 setEnabled={setEnabled}
                 getSortParams={getSortParams}
+                readOnly={isReadOnly(api)}
               />
             )}
           </GridItem>

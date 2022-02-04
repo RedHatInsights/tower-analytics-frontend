@@ -24,6 +24,7 @@ interface Props {
   setDataRunTime: (delta: number, id: number) => void;
   setEnabled: (enabled: boolean) => void;
   redirectToJobExplorer: (id: number) => void;
+  readOnly: boolean;
 }
 
 const setLabeledValue = (key: string, value: number) => {
@@ -52,6 +53,7 @@ const Row: FunctionComponent<Props> = ({
   setDataRunTime,
   setEnabled,
   redirectToJobExplorer,
+  readOnly = true,
 }) => {
   const [isExpanded, setIsExpanded] = useState(
     window.localStorage.getItem(template.id.toString()) === 'true' || false
@@ -103,6 +105,7 @@ const Row: FunctionComponent<Props> = ({
                 );
                 setDataRunTime(+minutes * 60, template.id);
               }}
+              isDisabled={readOnly}
             />
             <InputGroupText>min</InputGroupText>
             <InputGroupText variant={InputGroupTextVariant.plain}>
@@ -119,6 +122,7 @@ const Row: FunctionComponent<Props> = ({
             labelOff="Hide"
             isChecked={template.enabled}
             onChange={(checked) => setEnabled(checked)}
+            isDisabled={readOnly}
           />
         </Td>
       </Tr>
