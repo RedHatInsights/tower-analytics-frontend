@@ -26,6 +26,9 @@ const isEnabledDevel = (feature?: FeatureFlagType) => {
  * If defined and false => disabled
  */
 const isEnabled = (feature?: FeatureFlagType) => {
+  console.log(feature);
+  console.log(!!feature);
+  console.log(feature?.enabled);
   return !!feature && feature?.enabled;
 };
 
@@ -41,6 +44,7 @@ const useFeatureFlag = (flag: ValidFeatureFlags): boolean => {
 
   if (isLocalhost() || isEphemeral()) return isEnabledDevel(feature);
 
+  console.log(isEnabled(feature));
   return isEnabled(feature);
 };
 
