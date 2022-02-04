@@ -238,7 +238,7 @@ const DownloadPdfButton: FC<Props> = ({
         </Button>
       </Tooltip>
       <Modal
-        variant={ModalVariant.small}
+        variant={ModalVariant.medium}
         title="Export report"
         isOpen={isExportModalOpen}
         onClose={() => {

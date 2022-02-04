@@ -17,7 +17,7 @@ interface Props {
     subject: string;
     body: string;
     reportUrl: string;
-    users: Record<string, string | string[]>[];
+    users: Record<string, string | string[] | any>[];
   };
   onChange: (value: any) => void;
   rbacGroups: Record<string, string | number>[];
@@ -88,7 +88,8 @@ const EmailSend: FC<Props> = ({
           {emailInfo.users.map(({ name, emails }, i) => {
             return (
               <p key={i}>
-                <b>{name}</b>: {emails}
+                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-call */}
+                <b>{name}</b>: {emails.join(', ')}
               </p>
             );
           })}
