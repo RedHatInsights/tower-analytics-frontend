@@ -12,7 +12,13 @@ import {
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
 
 interface Props {
-  emailInfo: { recipient: string[]; subject: string; body: string; reportUrl: string; };
+  emailInfo: {
+    recipient: string[];
+    subject: string;
+    body: string;
+    reportUrl: string;
+    users: Record<string, string | string[]>[];
+  };
   onChange: (value: any) => void;
   rbacGroups: Record<string, string | number>[];
 }
@@ -24,19 +30,23 @@ const EmailSend: FC<Props> = ({
 }) => {
   const { body, recipient, reportUrl, subject } = emailInfo;
   const onInputChange = (field: string, val: string) => {
+    onChange({ ...emailInfo, [field]: val });
+  };
+
+  const onSelectionChange = (field: string, val: string) => {
     let newVal = [val];
-    if (field === 'recipient') {
-      const index = emailInfo.recipient.indexOf(val)
-      // if checkbox unchecked, remove element from array
-      if (index > -1) {
-        emailInfo.recipient.splice(index, 1)
-        newVal = emailInfo.recipient;
-      } else {
-        // add if checkbox checked
-        newVal = emailInfo.recipient.concat(newVal)
-      }
+    // if checkbox unchecked, remove element from array
+    if (emailInfo.recipient.indexOf(val) > -1) {
+      newVal = emailInfo.recipient.filter((el) => el !== val);
+      const pos = emailInfo.users.findIndex((object) => object.uuid === val);
+      emailInfo.users.splice(pos, 1);
+      emailInfo.recipient = newVal;
+    } else {
+      // add if checkbox checked
+      newVal = emailInfo.recipient.concat(newVal);
+      emailInfo.recipient = newVal;
     }
-    onChange({ ...emailInfo, [field]: newVal });
+    onChange({ ...emailInfo });
   };
 
   const [showError, setShowError] = useState(false);
@@ -50,8 +60,8 @@ const EmailSend: FC<Props> = ({
           isOpen={isExpanded}
           onClear={() => setShowError(!recipient)}
           onToggle={() => setIsExpanded(!isExpanded)}
-          onSelect={(_, selection) => {
-            onInputChange('recipient', selection as string);
+          onSelect={(e, selection) => {
+            onSelectionChange('recipient', selection as string);
             setIsExpanded(false);
           }}
           selections={recipient}
@@ -73,6 +83,17 @@ const EmailSend: FC<Props> = ({
           </FormHelperText>
         )}
       </FormGroup>
+      {emailInfo.users.length > 0 && (
+        <FormGroup label="User emails" fieldId="emails-field">
+          {emailInfo.users.map(({ name, emails }, i) => {
+            return (
+              <p key={i}>
+                <b>{name}</b>: {emails}
+              </p>
+            );
+          })}
+        </FormGroup>
+      )}
       <FormGroup label="Subject" fieldId="subject-field">
         <TextInput
           placeholder="Report is ready to be downloaded"
@@ -80,7 +101,7 @@ const EmailSend: FC<Props> = ({
           id="subject"
           name="subject"
           value={subject}
-          onChange={(e) => onInputChange('subject', e)}
+          onChange={(value) => onInputChange('subject', value)}
         />
       </FormGroup>
       <FormGroup label="Body" fieldId="body-field">
@@ -90,7 +111,7 @@ const EmailSend: FC<Props> = ({
           id="body"
           name="body"
           value={body}
-          onChange={(e) => onInputChange('body', e)}
+          onChange={(value) => onInputChange('body', value)}
         />
       </FormGroup>
       <FormGroup label="Report Link" fieldId="link-field">

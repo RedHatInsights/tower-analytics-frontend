@@ -86,6 +86,8 @@ const computeTotalSavings = (data) =>
 
 const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   slug,
+  name,
+  description,
   defaultParams,
   dataEndpoint,
   optionsEndpoint,
@@ -380,6 +382,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             <DownloadPdfButton
               key="download-button"
               slug={slug}
+              name={name}
+              description={description}
               endpointUrl={dataEndpoint}
               queryParams={queryParams}
               selectOptions={options}
