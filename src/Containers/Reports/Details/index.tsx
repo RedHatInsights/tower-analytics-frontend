@@ -1,8 +1,10 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import Error404 from '../../../Components/Error404';
+import LoadingState from '../../../Components/ApiStatus/LoadingState';
+import { ReportSchema } from '../Layouts/types';
 
 import {
   PageHeader,
@@ -34,7 +36,8 @@ const Label = styled(PFLabel)`
 
 const Details: FunctionComponent<Record<string, never>> = () => {
   const { slug } = useParams<{ slug: string }>();
-  const report = getReport(slug);
+  let report: ReportSchema | null | undefined = null;
+  report = getReport(slug);
 
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
 
@@ -76,7 +79,10 @@ const Details: FunctionComponent<Record<string, never>> = () => {
       );
   };
 
-  return render();
+  useEffect(() => {
+    render();
+  }, [report]);
+  return report ? render() : <LoadingState />;
 };
 
 export default Details;
