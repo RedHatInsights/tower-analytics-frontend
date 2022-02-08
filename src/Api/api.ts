@@ -3,6 +3,7 @@ import {
   get,
   post,
   postWithPagination,
+  save,
   deleteById,
   updateById,
   authenticatedFetch,
@@ -16,6 +17,7 @@ import {
   ApiJson,
   PDFParams,
   NotificationParams,
+  saveROIParams,
 } from './types';
 
 export enum Endpoint {
@@ -30,6 +32,7 @@ export enum Endpoint {
   hostExplorer = '/api/tower-analytics/v1/host_explorer/',
   eventExplorer = '/api/tower-analytics/v1/event_explorer/',
   ROI = '/api/tower-analytics/v1/roi_templates/',
+  costEffortROI = '/api/tower-analytics/v1/roi_cost_effort_data/',
   plans = '/api/tower-analytics/v1/plans/',
   plan = '/api/tower-analytics/v1/plan/',
 
@@ -75,6 +78,10 @@ export const readEventExplorerOptions = (params: Params): Promise<ApiJson> =>
 
 export const readROI = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(Endpoint.ROI, params);
+
+export const saveROI = (params: saveROIParams): Promise<ApiJson> =>{
+  return save(Endpoint.costEffortROI, params);
+};
 
 export const readROIOptions = (params: Params): Promise<ApiJson> =>
   post(Endpoint.ROIOptions, params);
