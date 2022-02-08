@@ -31,7 +31,7 @@ describe('SavingsPlanner/Shared/Form/Templates', () => {
     });
     renderPage(Templates, undefined, defaultProps);
 
-    await waitFor(() => expect(api.readJobExplorer).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(api.readJobExplorer).toHaveBeenCalledTimes(1));
 
     expect(screen.getByText('No results found')).toBeTruthy();
   });
@@ -39,7 +39,7 @@ describe('SavingsPlanner/Shared/Form/Templates', () => {
   test('has rendered Templates component with data and is clickable', async () => {
     renderPage(Templates, undefined, defaultProps);
 
-    await waitFor(() => expect(api.readJobExplorer).toHaveBeenCalledTimes(2));
+    await waitFor(() => expect(api.readJobExplorer).toHaveBeenCalledTimes(1));
 
     expect(screen.getByText('Link a template to this plan:')).toBeTruthy();
 

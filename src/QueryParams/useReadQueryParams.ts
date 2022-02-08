@@ -7,11 +7,9 @@ const useReadQueryParams = <T extends QueryParams>(
   initial: T,
   namespace = DEFAULT_NAMESPACE
 ): T => {
-  const { queryParams, initialParams } = useContext(QueryParamsContext);
+  const { queryParams } = useContext(QueryParamsContext);
 
-  return (
-    (queryParams[namespace] as T) || (initialParams[namespace] as T) || initial
-  );
+  return (queryParams[namespace] as T) || initial;
 };
 
 export default useReadQueryParams;
