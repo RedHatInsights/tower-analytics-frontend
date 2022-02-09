@@ -79,7 +79,7 @@ export const readEventExplorerOptions = (params: Params): Promise<ApiJson> =>
 export const readROI = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(Endpoint.ROI, params);
 
-export const saveROI = (params: saveROIParams): Promise<ApiJson> =>{
+export const saveROI = (params: saveROIParams): Promise<ApiJson> => {
   return save(Endpoint.costEffortROI, params);
 };
 

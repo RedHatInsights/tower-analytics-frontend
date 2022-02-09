@@ -102,47 +102,22 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const readOptions = endpointFunctionMap(optionsEndpoint);
 
   const redirect = useRedirect();
-  const {
-    queryParams,
-    setFromToolbar,
-    setFromPagination,
-    setFromTable,
-  } = useQueryParams(defaultParams);
+  const { queryParams, setFromToolbar, setFromPagination } =
+    useQueryParams(defaultParams);
 
   const [costManual, setCostManual] = useState('');
   const [costAutomation, setCostAutomation] = useState('');
 
-  const mapApi = ({ legend = [] }) =>
-  {
-    console.log("LEGEND:");
-    console.log(legend);
+  const mapApi = ({ legend = [] }) => {
     return legend.map((el) => ({
       ...el,
       delta: 0,
-      avgRunTime: el.avgRunTime || 3600,
+      avgRunTime: el.manual_effort_minutes * 60 || 3600,
       manualCost: 0,
       automatedCost: 0,
       enabled: el.template_weigh_in,
-    }))
+    }));
   };
-
-  const updateCalculationValues = (varName: string, value: number) => {
-    const hourly_automation_cost = varName === 'automation_cost' ? value : costAutomation;
-    const hourly_manual_labor_cost = varName === 'manual_cost' ? value : costManual;
-    // TODO get template
-    const prom = saveROI({"currency": "USD",
-        "hourly_manual_labor_cost": hourly_manual_labor_cost,
-        "hourly_automation_cost": hourly_automation_cost,
-        "templates_manual_equivalent": [
-      {
-        "template_id": 5,
-        "effort_minutes": 10,
-        "template_weigh_in": false
-      }
-    ]});
-    prom.then(() => varName === 'manual_cost' ? setCostManual(value) : setCostAutomation(value)).catch((err) => console.log(err));
-  };
-
   const { result: options, request: fetchOptions } = useRequest(readOptions, {
     sort_options: [
       {
@@ -164,8 +139,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         ...response,
         items: updateDeltaCost(
           mapApi(response.meta),
-            response.cost.hourly_manual_labor_cost,
-            response.cost.hourly_automation_cost
+          response.cost.hourly_manual_labor_cost,
+          response.cost.hourly_automation_cost
         ),
       };
     },
@@ -182,6 +157,31 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       ...api.result,
       items,
     });
+
+  const updateCalculationValues = (varName: string, value: number) => {
+    const hourly_automation_cost =
+      varName === 'automation_cost' ? value : costAutomation;
+    const hourly_manual_labor_cost =
+      varName === 'manual_cost' ? value : costManual;
+    const updatedDataApi = api.result.items.map((el) => ({
+      template_id: el.id,
+      effort_minutes: el.avgRunTime / 60,
+      template_weigh_in: el.enabled,
+    }));
+    const prom = saveROI({
+      currency: 'USD',
+      hourly_manual_labor_cost: hourly_manual_labor_cost,
+      hourly_automation_cost: hourly_automation_cost,
+      templates_manual_equivalent: updatedDataApi,
+    });
+    prom
+      .then(() =>
+        varName === 'manual_cost'
+          ? setCostManual(value)
+          : setCostAutomation(value)
+      )
+      .catch((err) => console.log(err));
+  };
 
   /**
    * Modifies one elements avgRunTime in the unfilteredData
@@ -202,11 +202,17 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         return el;
       }
     });
-    const updatedDataApi = updatedData.map((el) => ({template_id: el.id, effort_minutes: el.avgRunTime/60, template_weigh_in: el.enabled}));
-    const prom = saveROI({currency: "USD",
+    const updatedDataApi = updatedData.map((el) => ({
+      template_id: el.id,
+      effort_minutes: el.avgRunTime / 60,
+      template_weigh_in: el.enabled,
+    }));
+    const prom = saveROI({
+      currency: 'USD',
       hourly_manual_labor_cost: costManual,
       hourly_automation_cost: costAutomation,
-      templates_manual_equivalent: updatedDataApi});
+      templates_manual_equivalent: updatedDataApi,
+    });
     prom.then(() => setValue(updatedData)).catch((err) => console.log(err));
   };
 
@@ -216,11 +222,17 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       : api.result.items.map((el) =>
           el.id === id ? { ...el, enabled: value } : el
         );
-    const updatedDataApi = updatedData.map((el) => ({template_id: el.id, effort_minutes: el.avgRunTime/60, template_weigh_in: el.enabled}));
-    const prom = saveROI({currency: "USD",
+    const updatedDataApi = updatedData.map((el) => ({
+      template_id: el.id,
+      effort_minutes: el.avgRunTime / 60,
+      template_weigh_in: el.enabled,
+    }));
+    const prom = saveROI({
+      currency: 'USD',
       hourly_manual_labor_cost: costManual,
       hourly_automation_cost: costAutomation,
-      templates_manual_equivalent: updatedDataApi});
+      templates_manual_equivalent: updatedDataApi,
+    });
     prom.then(() => setValue(updatedData)).catch((err) => console.log(err));
   };
   const getSortParams = () => {
