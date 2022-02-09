@@ -42,7 +42,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
 
   const render = () => {
-    console.log(report, typeof report);
+    console.log('report and type of report ', report, typeof report);
     if (report) {
       const { name, description, tags } = report.layoutProps;
       return (
