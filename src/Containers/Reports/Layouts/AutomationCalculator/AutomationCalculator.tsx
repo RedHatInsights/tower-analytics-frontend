@@ -133,8 +133,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   } = useRequest(
     async (params) => {
       const response = await readData(params);
-      setCostManual(response.cost.hourly_manual_labor_cost);
-      setCostAutomation(response.cost.hourly_automation_cost);
       return {
         ...response,
         items: updateDeltaCost(
@@ -157,23 +155,36 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       ...api.result,
       items,
     });
+  const getROISaveData = (
+    items: any[],
+    manualCost?: number = costManual,
+    automationCost?: number = costAutomation
+  ) => {
+    const updatedDataApi = items.map((el) => ({
+      template_id: el.id,
+      effort_minutes: el.avgRunTime / 60,
+      template_weigh_in: el.enabled,
+    }));
+    return {
+      currency: 'USD',
+      hourly_manual_labor_cost: manualCost,
+      hourly_automation_cost: automationCost,
+      templates_manual_equivalent: updatedDataApi,
+    };
+  };
 
   const updateCalculationValues = (varName: string, value: number) => {
     const hourly_automation_cost =
       varName === 'automation_cost' ? value : costAutomation;
     const hourly_manual_labor_cost =
       varName === 'manual_cost' ? value : costManual;
-    const updatedDataApi = api.result.items.map((el) => ({
-      template_id: el.id,
-      effort_minutes: el.avgRunTime / 60,
-      template_weigh_in: el.enabled,
-    }));
-    const prom = saveROI({
-      currency: 'USD',
-      hourly_manual_labor_cost: hourly_manual_labor_cost,
-      hourly_automation_cost: hourly_automation_cost,
-      templates_manual_equivalent: updatedDataApi,
-    });
+    const prom = saveROI(
+      getROISaveData(
+        api.result.items,
+        hourly_manual_labor_cost,
+        hourly_automation_cost
+      )
+    );
     prom
       .then(() =>
         varName === 'manual_cost'
@@ -202,17 +213,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         return el;
       }
     });
-    const updatedDataApi = updatedData.map((el) => ({
-      template_id: el.id,
-      effort_minutes: el.avgRunTime / 60,
-      template_weigh_in: el.enabled,
-    }));
-    const prom = saveROI({
-      currency: 'USD',
-      hourly_manual_labor_cost: costManual,
-      hourly_automation_cost: costAutomation,
-      templates_manual_equivalent: updatedDataApi,
-    });
+    const prom = saveROI(getROISaveData(updatedData));
     prom.then(() => setValue(updatedData)).catch((err) => console.log(err));
   };
 
@@ -222,17 +223,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       : api.result.items.map((el) =>
           el.id === id ? { ...el, enabled: value } : el
         );
-    const updatedDataApi = updatedData.map((el) => ({
-      template_id: el.id,
-      effort_minutes: el.avgRunTime / 60,
-      template_weigh_in: el.enabled,
-    }));
-    const prom = saveROI({
-      currency: 'USD',
-      hourly_manual_labor_cost: costManual,
-      hourly_automation_cost: costAutomation,
-      templates_manual_equivalent: updatedDataApi,
-    });
+    const prom = saveROI(getROISaveData(updatedData));
     prom.then(() => setValue(updatedData)).catch((err) => console.log(err));
   };
   const getSortParams = () => {
@@ -250,6 +241,15 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       },
     };
   };
+  /**
+   * Set cost from API on load. Don't reload it.
+   */
+  useEffect(() => {
+    if (api.result?.cost && !costAutomation && !costManual) {
+      setCostManual(api.result.cost.hourly_manual_labor_cost);
+      setCostAutomation(api.result.cost.hourly_automation_cost);
+    }
+  }, [api]);
 
   /**
    * Recalculates the delta and costs in the data after the cost is changed.
