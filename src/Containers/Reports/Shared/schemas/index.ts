@@ -33,7 +33,9 @@ const onboardingReports = [aa21OnboardingReport];
 
 const automationCalculatorReport = [automationCalculator];
 
-export const getReport = (searchSlug: string): ReportSchema | undefined => {
+export const getReport = (
+  searchSlug: string
+): ReportSchema | undefined | null => {
   const moduleReportsEnabled = useFeatureFlag(ValidFeatureFlags.moduleReports);
   const newAutomationCalculator = useFeatureFlag(
     ValidFeatureFlags.newAutomationCalculator

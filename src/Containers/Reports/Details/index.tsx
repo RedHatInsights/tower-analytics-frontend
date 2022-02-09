@@ -1,10 +1,8 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent } from 'react';
 import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import Error404 from '../../../Components/Error404';
-import LoadingState from '../../../Components/ApiStatus/LoadingState';
-import { ReportSchema } from '../Layouts/types';
 
 import {
   PageHeader,
@@ -22,6 +20,8 @@ import getComponent from '../Layouts';
 import { getReport } from '../Shared/schemas';
 import paths from '../paths';
 import { TAGS } from '../Shared/constants';
+import { ReportSchema } from '../Layouts/types';
+import LoadingState from '../../../Components/ApiStatus/LoadingState';
 
 const Description = styled.p`
   max-width: 70em;
@@ -42,6 +42,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
 
   const render = () => {
+    console.log(report, typeof report);
     if (report) {
       const { name, description, tags } = report.layoutProps;
       return (
@@ -68,6 +69,8 @@ const Details: FunctionComponent<Record<string, never>> = () => {
           <Main>{getComponent(report)}</Main>
         </>
       );
+    } else if (report === null) {
+      return <LoadingState />;
     } else
       return (
         <Error404
@@ -79,10 +82,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
       );
   };
 
-  useEffect(() => {
-    render();
-  }, [report]);
-  return report ? render() : <LoadingState />;
+  return render();
 };
 
 export default Details;
