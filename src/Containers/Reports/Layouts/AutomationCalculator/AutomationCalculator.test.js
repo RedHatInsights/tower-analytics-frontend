@@ -18,6 +18,7 @@ const dummyRoiData = {
   response_type: '',
   meta: {
     count: 3,
+    cost: { hourly_automation_cost: 25, hourly_manual_labor_cost: 50},
     legend: [
       {
         id: 1,
