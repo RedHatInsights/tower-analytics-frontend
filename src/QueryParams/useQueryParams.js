@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 import moment from 'moment';
 import { QueryParamsContext } from './Context';
 import useAsyncActionQueue from '../Utilities/useAsyncActionQueue';
@@ -152,33 +152,9 @@ const actionMapper = {
 };
 
 const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
-  const {
-    queryParams,
-    initialParams,
-    update,
-    addInitialParams,
-    removeInitialParams,
-  } = useContext(QueryParamsContext);
+  const { queryParams, update } = useContext(QueryParamsContext);
 
-  /**
-   * When first initializing the hook there may be no namespace for it
-   * (before the first useEffect[]), so we pass the initial params passed
-   * to the hook.
-   *
-   * If the initialProps are there already we use them until there is no qp
-   * avaiable for the namespace.
-   *
-   * If we alreadt have the initialized namespace in the URL then we use it.
-   */
-  const params = queryParams[namespace] || initialParams[namespace] || initial;
-
-  useEffect(() => {
-    addInitialParams({ params: initial, namespace });
-
-    return () => {
-      removeInitialParams({ namespace });
-    };
-  }, []);
+  const params = queryParams[namespace] || initial;
 
   const executeAction = (action) => {
     if (action.type === 'RESET_FILTER') {
