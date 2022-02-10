@@ -18,7 +18,7 @@ const dummyRoiData = {
   response_type: '',
   meta: {
     count: 3,
-    cost: { hourly_automation_cost: 25, hourly_manual_labor_cost: 50},
+    cost: { hourly_automation_cost: 25, hourly_manual_labor_cost: 50 },
     legend: [
       {
         id: 1,
@@ -68,6 +68,13 @@ const jobExplorerOptions = {
       value: 'Template productivity score',
     },
   ],
+  meta: {
+    rbac: {
+      perms: {
+        all: true,
+      },
+    },
+  },
 };
 
 const inputManCost = (wrapper) => wrapper.find('input').at(0);
@@ -193,7 +200,14 @@ describe('Containers/CustomReports/AutomationCalculator', () => {
   });
 
   it('should render no data', async () => {
-    fetchMock.post({ url: jobExplorerUrl }, { items: [], meta: { count: 0 } });
+    fetchMock.post(
+      { url: jobExplorerUrl },
+      {
+        items: [],
+        meta: { count: 0 },
+        cost: { hourly_automation_cost: 50, hourly_manual_labor_cost: 25 },
+      }
+    );
 
     await act(async () => {
       wrapper = mountPage(AutomationCalculator, pageParams);
