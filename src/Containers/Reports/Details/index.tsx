@@ -20,6 +20,8 @@ import getComponent from '../Layouts';
 import { getReport } from '../Shared/schemas';
 import paths from '../paths';
 import { TAGS } from '../Shared/constants';
+import { ReportSchema } from '../Layouts/types';
+import LoadingState from '../../../Components/ApiStatus/LoadingState';
 
 const Description = styled.p`
   max-width: 70em;
@@ -34,11 +36,13 @@ const Label = styled(PFLabel)`
 
 const Details: FunctionComponent<Record<string, never>> = () => {
   const { slug } = useParams<{ slug: string }>();
-  const report = getReport(slug);
+  let report: ReportSchema | null | undefined = null;
+  report = getReport(slug);
 
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
 
   const render = () => {
+    console.log('report and type of report ', report, typeof report);
     if (report) {
       const { name, description, tags } = report.layoutProps;
       return (
@@ -65,6 +69,8 @@ const Details: FunctionComponent<Record<string, never>> = () => {
           <Main>{getComponent(report)}</Main>
         </>
       );
+    } else if (report === null) {
+      return <LoadingState />;
     } else
       return (
         <Error404
