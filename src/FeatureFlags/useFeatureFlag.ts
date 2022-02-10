@@ -26,12 +26,15 @@ const isEnabledDevel = (feature?: FeatureFlagType) => {
  * If defined and false => disabled
  */
 const isEnabled = (feature?: FeatureFlagType) => {
+  console.log('feature ', feature);
+  console.log('!!feature ', !!feature);
+  console.log('feature?.enabled ', feature?.enabled);
   return !!feature && feature?.enabled;
 };
 
 const useFeatureFlag = (flag: ValidFeatureFlags): boolean => {
   const features = useContext(Context);
-
+  console.log('features from context ', features);
   // On beta use the beta flag which has the 'beta_flagname' format.
   const betaFlag = `beta_${flag}`;
 
@@ -41,6 +44,12 @@ const useFeatureFlag = (flag: ValidFeatureFlags): boolean => {
 
   if (isLocalhost() || isEphemeral()) return isEnabledDevel(feature);
 
+  console.log('feature in useFeatureFlag ', feature);
+  console.log(
+    'feature enabled in useFeatureFlag & flag ',
+    isEnabled(feature),
+    flag
+  );
   return isEnabled(feature);
 };
 
