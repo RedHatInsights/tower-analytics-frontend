@@ -1,7 +1,6 @@
 import React, { FC, useState } from 'react';
 import {
   Form,
-  FormHelperText,
   FormGroup,
   Select,
   SelectOption,
@@ -9,7 +8,6 @@ import {
   TextArea,
   TextInput,
 } from '@patternfly/react-core';
-import { ExclamationCircleIcon } from '@patternfly/react-icons';
 
 interface Props {
   emailInfo: {
@@ -23,7 +21,7 @@ interface Props {
   rbacGroups: Record<string, string | number>[];
 }
 
-const EmailSend: FC<Props> = ({
+const EmailDetailsForm: FC<Props> = ({
   emailInfo,
   onChange = () => null,
   rbacGroups,
@@ -31,6 +29,10 @@ const EmailSend: FC<Props> = ({
   const { body, recipient, reportUrl, subject } = emailInfo;
   const onInputChange = (field: string, val: string) => {
     onChange({ ...emailInfo, [field]: val });
+  };
+
+  const clearGroupSelection = () => {
+    onChange({ ...emailInfo, ['recipient']: [], ['users']: [] });
   };
 
   const onSelectionChange = (field: string, val: string) => {
@@ -49,8 +51,8 @@ const EmailSend: FC<Props> = ({
     onChange({ ...emailInfo });
   };
 
-  const [showError, setShowError] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
+
   return (
     <Form>
       <FormGroup label="Recipient" isRequired fieldId="recipient-field">
@@ -58,7 +60,7 @@ const EmailSend: FC<Props> = ({
           variant={SelectVariant.checkbox}
           aria-label={'Recipient'}
           isOpen={isExpanded}
-          onClear={() => setShowError(!recipient)}
+          onClear={() => clearGroupSelection()}
           onToggle={() => setIsExpanded(!isExpanded)}
           onSelect={(e, selection) => {
             onSelectionChange('recipient', selection as string);
@@ -73,15 +75,6 @@ const EmailSend: FC<Props> = ({
             </SelectOption>
           ))}
         </Select>
-        {!recipient && showError && (
-          <FormHelperText
-            isError
-            icon={<ExclamationCircleIcon />}
-            isHidden={!showError}
-          >
-            Recipient field is required
-          </FormHelperText>
-        )}
       </FormGroup>
       {emailInfo.users.length > 0 && (
         <FormGroup label="User emails" fieldId="emails-field">
@@ -89,7 +82,7 @@ const EmailSend: FC<Props> = ({
             return (
               <p key={i}>
                 {/* eslint-disable-next-line @typescript-eslint/no-unsafe-call */}
-                <b>{name}</b>: {emails.join(', ')}
+                <b>{name}</b>: {emails.join(', ').toString()}
               </p>
             );
           })}
@@ -107,6 +100,8 @@ const EmailSend: FC<Props> = ({
       </FormGroup>
       <FormGroup label="Body" fieldId="body-field">
         <TextArea
+          rows={10}
+          autoResize
           placeholder=""
           type="text"
           id="body"
@@ -129,4 +124,4 @@ const EmailSend: FC<Props> = ({
   );
 };
 
-export default EmailSend;
+export default EmailDetailsForm;

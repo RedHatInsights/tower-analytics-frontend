@@ -25,9 +25,9 @@ import {
 } from '../../Api';
 import { useAppDispatch, useAppSelector } from '../../store';
 import { useReadQueryParams } from '../../QueryParams';
-import EmailSend from './EmailSend';
+import EmailDetailsForm from './EmailDetailsForm';
 import useRequest from '../../Utilities/useRequest';
-import { string } from 'prop-types';
+import { useHistory } from 'react-router-dom';
 
 interface Props {
   settingsNamespace: string;
@@ -101,8 +101,9 @@ const DownloadPdfButton: FC<Props> = ({
     // TODO: Update the useRequest hook to return function and not a promise!! @brum
     if (downloadType === 'email') fetchRbacGroups();
   }, [downloadType]);
+  const history = useHistory();
 
-  const [emailInfo, setEmailInfo] = useState({
+  const initializeEmailInfo = {
     recipient: [],
     users: [],
     subject: `The Ansible report, ${name}, is available for view`,
@@ -111,9 +112,17 @@ const DownloadPdfButton: FC<Props> = ({
       description[0].toLowerCase() +
       description.substring(1),
     reportUrl: window.location.href,
+  };
+
+  const [emailInfo, setEmailInfo] = useState(initializeEmailInfo);
+
+  const unlisten = history.listen(() => {
+    setEmailInfo({
+      ...initializeEmailInfo,
+      ['reportUrl']: window.location.href,
+    });
   });
 
-  // @ts-ignore
   const {
     result: { data: users },
     request: fetchRbacPrincipals,
@@ -133,8 +142,8 @@ const DownloadPdfButton: FC<Props> = ({
   }, [emailInfo.recipient]);
 
   const getGroupDescription = (key: string) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    return data.filter((group) => group.uuid === key)[0].name;
+    return data.filter((group: Record<string, string>) => group.uuid === key)[0]
+      .name as string;
   };
 
   const getRecipients = (users: any[]) => {
@@ -142,19 +151,20 @@ const DownloadPdfButton: FC<Props> = ({
     const usersList = users.map(
       (user: Record<string, string>) => user.username
     );
-    let lastRecipient = '';
-    // @ts-ignore
-    lastRecipient = emailInfo.recipient.at(-1);
+    const lastRecipient =
+      emailInfo.recipient.length > 1
+        ? emailInfo.recipient.at(-1)
+        : (emailInfo.recipient[0] as string);
     const userHash = {
       uuid: lastRecipient,
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      name: getGroupDescription(lastRecipient),
+      name: getGroupDescription(lastRecipient as string),
       emails: usersList,
     };
     const index = emailInfo.users.findIndex(
       (object) => object['uuid'] === userHash['uuid']
     );
     if (index === -1) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       emailInfo.users.push(userHash);
     }
@@ -199,9 +209,9 @@ const DownloadPdfButton: FC<Props> = ({
     // Don't allow user to spam send email button
     if (isLoading) return;
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    // @ts-ignore
-    const all_recipients = emailInfo.users.map((user) => user.emails);
+    const all_recipients = emailInfo.users.map(
+      (user: Record<string, string | string[]>) => user.emails
+    );
 
     // Dispatch the email,
     dispatch(
@@ -243,6 +253,7 @@ const DownloadPdfButton: FC<Props> = ({
         isOpen={isExportModalOpen}
         onClose={() => {
           setIsExportModalOpen(false);
+          unlisten();
         }}
         actions={[
           <>
@@ -275,7 +286,10 @@ const DownloadPdfButton: FC<Props> = ({
           <Button
             key="cancel"
             variant={ButtonVariant.link}
-            onClick={() => setIsExportModalOpen(false)}
+            onClick={() => {
+              setIsExportModalOpen(false);
+              unlisten();
+            }}
           >
             Cancel
           </Button>,
@@ -326,7 +340,7 @@ const DownloadPdfButton: FC<Props> = ({
         {downloadType === 'email' && (
           <Grid style={{ paddingTop: '15px' }}>
             <GridItem>
-              <EmailSend
+              <EmailDetailsForm
                 emailInfo={emailInfo}
                 onChange={setEmailInfo}
                 rbacGroups={data}

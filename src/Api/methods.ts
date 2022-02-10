@@ -111,8 +111,16 @@ export const postWithEmail = async (
     // Delete pending notification when we have results.
     dispatch(removeNotification(notif.id));
 
-    if (response.ok) dispatch(addNotification(notif.success(notif.id)));
-    else dispatch(addNotification(notif.failure(notif.id)));
+    if (response.ok)
+      dispatch(
+        addNotification(notif.success(notif.id, 'Email sent successfully'))
+      );
+    else
+      dispatch(
+        addNotification(
+          notif.rejected(notif.id, 'Error sending email, please try again.')
+        )
+      );
     return;
   });
 };

@@ -1,5 +1,4 @@
-import { PDFParams } from '../../Api/types';
-import { Params } from '../../Api/types';
+import { Params, PDFParams } from '../../Api/types';
 import { generatePdf, sendEmail } from '../../Api/api';
 import { ReducerTypes, ActionTypes } from './types';
 // Later from the frontend component / redux when typed
@@ -15,26 +14,19 @@ const pending = (id: string, title?: string) => ({
   autoDismiss: false,
 });
 
-const rejected = (id: string, message?: string) => ({
+const rejected = (id: string, title?: string, message?: string) => ({
   variant: NotificationType.danger,
-  title: `There was an error generating your report. Please try again.`,
+  title: title
+    ? title
+    : `There was an error generating your report. Please try again.`,
   description: message ? `Details: ${message}` : '',
   autoDismiss: false,
   id,
 });
 
-const success = (id: string) => ({
+const success = (id: string, title?: string) => ({
   variant: NotificationType.success,
-  title: 'Email sent successfully.',
-  id,
-  autoDismiss: false,
-});
-
-const failure = (id: string, message?: string) => ({
-  variant: NotificationType.danger,
-  title: `There was an error sending an email. Please try again.`,
-  description: message ? `Details: ${message}` : '',
-  autoDismiss: false,
+  title: title ? title : 'Email sent successfully.',
   id,
 });
 
@@ -48,7 +40,6 @@ export const downloadPdf = (
     pending,
     rejected,
     success,
-    failure,
     dispatch,
     id: slug,
   }),
@@ -56,7 +47,7 @@ export const downloadPdf = (
 });
 
 export const email = (
-  params: { payload: string; subject: string; recipient: string[]; reportUrl: string; body: string },
+  params: Params,
   dispatch: DispatchType,
   slug: string
 ): ActionTypes => ({
@@ -65,7 +56,6 @@ export const email = (
     pending,
     rejected,
     success,
-    failure,
     dispatch,
     id: slug,
   }),

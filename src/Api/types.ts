@@ -34,6 +34,7 @@ export interface PDFParams {
 
 export type NotificationAsyncFunction = (
   id: string,
+  title?: string,
   message?: string
 ) => NotificationOptions;
 
@@ -41,7 +42,6 @@ export interface NotificationParams {
   pending: NotificationAsyncFunction;
   rejected: NotificationAsyncFunction;
   success: NotificationAsyncFunction;
-  failure: NotificationAsyncFunction;
   dispatch: DispatchType;
   id: string;
 }
