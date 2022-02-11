@@ -9,16 +9,23 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 
+type NonEmptyArray<T> = T[] & { 0: T };
 interface Props {
   emailInfo: {
-    recipient: string[];
+    recipient: NonEmptyArray<string>;
+    users: [
+      {
+        uuid: string;
+        name: string;
+        emails: string[];
+      }
+    ];
     subject: string;
     body: string;
     reportUrl: string;
-    users: Record<string, string | string[] | any>[];
   };
   onChange: (value: any) => void;
-  rbacGroups: Record<string, string | number>[];
+  rbacGroups: Record<string, string | string[]>[];
 }
 
 const EmailDetailsForm: FC<Props> = ({
@@ -32,7 +39,11 @@ const EmailDetailsForm: FC<Props> = ({
   };
 
   const clearGroupSelection = () => {
-    onChange({ ...emailInfo, ['recipient']: [], ['users']: [] });
+    onChange({
+      ...emailInfo,
+      recipient: [''],
+      users: [{ uuid: '', name: '', emails: [] }],
+    });
   };
 
   const onSelectionChange = (field: string, val: string) => {
@@ -42,11 +53,12 @@ const EmailDetailsForm: FC<Props> = ({
       newVal = emailInfo.recipient.filter((el) => el !== val);
       const pos = emailInfo.users.findIndex((object) => object.uuid === val);
       emailInfo.users.splice(pos, 1);
-      emailInfo.recipient = newVal;
+      newVal = newVal.length > 0 ? newVal : [''];
+      emailInfo.recipient = newVal as NonEmptyArray<string>;
     } else {
       // add if checkbox checked
       newVal = emailInfo.recipient.concat(newVal);
-      emailInfo.recipient = newVal;
+      emailInfo.recipient = newVal as NonEmptyArray<string>;
     }
     onChange({ ...emailInfo });
   };
@@ -69,21 +81,22 @@ const EmailDetailsForm: FC<Props> = ({
           selections={recipient}
           placeholderText={'Select Recipients'}
         >
-          {rbacGroups.map(({ uuid, name }) => (
-            <SelectOption key={uuid} value={uuid}>
+          {rbacGroups.map(({ uuid, name }, i) => (
+            <SelectOption key={i} value={uuid}>
               {name}
             </SelectOption>
           ))}
         </Select>
       </FormGroup>
-      {emailInfo.users.length > 0 && (
+      {(emailInfo.users.length > 1 || emailInfo.users[0].uuid !== '') && (
         <FormGroup label="User emails" fieldId="emails-field">
-          {emailInfo.users.map(({ name, emails }, i) => {
+          {emailInfo.users.map(({ uuid, name, emails }, i) => {
             return (
-              <p key={i}>
-                {/* eslint-disable-next-line @typescript-eslint/no-unsafe-call */}
-                <b>{name}</b>: {emails.join(', ').toString()}
-              </p>
+              uuid !== '' && (
+                <p key={i}>
+                  <b>{name}</b>: {emails.join(', ')}
+                </p>
+              )
             );
           })}
         </FormGroup>

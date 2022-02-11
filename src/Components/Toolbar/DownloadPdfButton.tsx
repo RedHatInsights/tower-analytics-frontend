@@ -28,6 +28,7 @@ import { useReadQueryParams } from '../../QueryParams';
 import EmailDetailsForm from './EmailDetailsForm';
 import useRequest from '../../Utilities/useRequest';
 import { useHistory } from 'react-router-dom';
+import { string } from 'prop-types';
 
 interface Props {
   settingsNamespace: string;
@@ -46,7 +47,7 @@ interface Props {
 }
 
 interface RbacGroupsDataType {
-  data: any[];
+  data: Record<string, string | string[]>[];
   meta: {
     count: number;
   };
@@ -103,9 +104,24 @@ const DownloadPdfButton: FC<Props> = ({
   }, [downloadType]);
   const history = useHistory();
 
-  const initializeEmailInfo = {
-    recipient: [],
-    users: [],
+  type NonEmptyArray<T> = T[] & { 0: T };
+  interface EmailDetailsType {
+    recipient: NonEmptyArray<string>;
+    users: [
+      {
+        uuid: string;
+        name: string;
+        emails: string[];
+      }
+    ];
+    subject: string;
+    body: string;
+    reportUrl: string;
+  }
+
+  const initializeEmailInfo: EmailDetailsType = {
+    recipient: [''],
+    users: [{ uuid: '', name: '', emails: [] }],
     subject: `The Ansible report, ${name}, is available for view`,
     body:
       'This report shows ' +
@@ -129,7 +145,7 @@ const DownloadPdfButton: FC<Props> = ({
   } = useRequest<RbacPrincipalsDataType>(
     () =>
       getRbacPrincipals({
-        uuid: emailInfo.recipient.at(-1),
+        uuid: emailInfo.recipient.pop(),
       }) as unknown as Promise<RbacPrincipalsDataType>,
     { data: [] }
   );
@@ -137,35 +153,28 @@ const DownloadPdfButton: FC<Props> = ({
   useEffect(() => {
     // TODO: Update the useRequest hook to return function and not a promise!! @brum
     // api call if last selected group was unselected or groups are selected
-    // if (emailInfo.recipient.length > 0 || emailInfo.users.length > 0)
     if (emailInfo.recipient.length > 0) fetchRbacPrincipals();
   }, [emailInfo.recipient]);
 
   const getGroupDescription = (key: string) => {
-    return data.filter((group: Record<string, string>) => group.uuid === key)[0]
-      .name as string;
+    const group = data.filter((group) => group.uuid === key);
+    return group.length > 0 ? group[0].name : '';
   };
 
   const getRecipients = (users: any[]) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     const usersList = users.map(
       (user: Record<string, string>) => user.username
     );
-    const lastRecipient =
-      emailInfo.recipient.length > 1
-        ? emailInfo.recipient.at(-1)
-        : (emailInfo.recipient[0] as string);
+    const lastRecipient = emailInfo.recipient.pop() || '';
     const userHash = {
       uuid: lastRecipient,
-      name: getGroupDescription(lastRecipient as string),
+      name: getGroupDescription(lastRecipient) as string,
       emails: usersList,
     };
     const index = emailInfo.users.findIndex(
-      (object) => object['uuid'] === userHash['uuid']
+      (object) => object.uuid === userHash.uuid
     );
     if (index === -1) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       emailInfo.users.push(userHash);
     }
     setEmailInfo({ ...emailInfo });
@@ -209,9 +218,7 @@ const DownloadPdfButton: FC<Props> = ({
     // Don't allow user to spam send email button
     if (isLoading) return;
 
-    const all_recipients = emailInfo.users.map(
-      (user: Record<string, string | string[]>) => user.emails
-    );
+    const all_recipients = emailInfo.users.map((user) => user.emails);
 
     // Dispatch the email,
     dispatch(
@@ -273,7 +280,10 @@ const DownloadPdfButton: FC<Props> = ({
               <Button
                 key="email"
                 variant={ButtonVariant.primary}
-                isDisabled={emailInfo.recipient.length == 0}
+                isDisabled={
+                  emailInfo.recipient.length === 1 &&
+                  emailInfo.recipient[0] === ''
+                }
                 onClick={() => {
                   setIsExportModalOpen(false);
                   emailSend();
