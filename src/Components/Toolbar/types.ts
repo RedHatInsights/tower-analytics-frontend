@@ -22,3 +22,32 @@ export type ApiOptionsType = Record<
   string,
   { key: string; value: AttributeType }[]
 >;
+export interface User {
+  uuid: string;
+  name: string;
+  emails: string[];
+}
+export interface EmailDetailsType {
+  selectedRbacGroups: string[];
+  users: User[];
+  subject: string;
+  body: string;
+  reportUrl: string;
+}
+
+export interface RbacGroupFromApi {
+  uuid: string;
+  name: string;
+  description: string;
+  principalCount: number;
+  platform_default: boolean;
+  roleCount: number;
+  created: string;
+  modified: string;
+  system: boolean;
+}
+
+export interface RbacPrincipalFromApi {
+  username: string;
+  //email: string;
+}

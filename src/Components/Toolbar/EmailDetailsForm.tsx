@@ -8,32 +8,19 @@ import {
   TextArea,
   TextInput,
 } from '@patternfly/react-core';
-
-type NonEmptyArray<T> = T[] & { 0: T };
+import { EmailDetailsType, RbacGroupFromApi } from './types';
 interface Props {
-  emailInfo: {
-    recipient: NonEmptyArray<string>;
-    users: [
-      {
-        uuid: string;
-        name: string;
-        emails: string[];
-      }
-    ];
-    subject: string;
-    body: string;
-    reportUrl: string;
-  };
+  emailInfo: EmailDetailsType;
   onChange: (value: any) => void;
-  rbacGroups: Record<string, string | string[]>[];
+  allRbacGroups: RbacGroupFromApi[];
 }
 
 const EmailDetailsForm: FC<Props> = ({
   emailInfo,
   onChange = () => null,
-  rbacGroups,
+  allRbacGroups,
 }) => {
-  const { body, recipient, reportUrl, subject } = emailInfo;
+  const { body, selectedRbacGroups, users, reportUrl, subject } = emailInfo;
   const onInputChange = (field: string, val: string) => {
     onChange({ ...emailInfo, [field]: val });
   };
@@ -41,33 +28,43 @@ const EmailDetailsForm: FC<Props> = ({
   const clearGroupSelection = () => {
     onChange({
       ...emailInfo,
-      recipient: [''],
-      users: [{ uuid: '', name: '', emails: [] }],
+      selectedRbacGroups: [],
+      users: [],
     });
   };
 
-  const onSelectionChange = (field: string, val: string) => {
-    let newVal = [val];
-    // if checkbox unchecked, remove element from array
-    if (emailInfo.recipient.indexOf(val) > -1) {
-      newVal = emailInfo.recipient.filter((el) => el !== val);
-      const pos = emailInfo.users.findIndex((object) => object.uuid === val);
-      emailInfo.users.splice(pos, 1);
-      newVal = newVal.length > 0 ? newVal : [''];
-      emailInfo.recipient = newVal as NonEmptyArray<string>;
+  const onSelectionChange = (field: string, groupToChange: string) => {
+    let revisedGroups = [groupToChange];
+    // if checkbox unchecked, remove group from array & user info from users array
+    if (selectedRbacGroups.indexOf(groupToChange) > -1) {
+      revisedGroups = selectedRbacGroups.filter(
+        (group) => group !== groupToChange
+      );
+      const usersOfChangedGroup = users.findIndex(
+        ({ uuid }) => uuid === groupToChange
+      );
+      // if selected group has users
+      if (usersOfChangedGroup >= 0)
+        emailInfo.users.splice(usersOfChangedGroup, 1);
+      emailInfo.selectedRbacGroups = revisedGroups;
     } else {
       // add if checkbox checked
-      newVal = emailInfo.recipient.concat(newVal);
-      emailInfo.recipient = newVal as NonEmptyArray<string>;
+      emailInfo.selectedRbacGroups = selectedRbacGroups.concat(revisedGroups);
     }
-    onChange({ ...emailInfo });
+    onChange({
+      ...emailInfo,
+    });
   };
 
   const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <Form>
-      <FormGroup label="Recipient" isRequired fieldId="recipient-field">
+      <FormGroup
+        label="Recipient"
+        isRequired
+        fieldId="selectedRbacGroups-field"
+      >
         <Select
           variant={SelectVariant.checkbox}
           aria-label={'Recipient'}
@@ -75,28 +72,29 @@ const EmailDetailsForm: FC<Props> = ({
           onClear={() => clearGroupSelection()}
           onToggle={() => setIsExpanded(!isExpanded)}
           onSelect={(e, selection) => {
-            onSelectionChange('recipient', selection as string);
+            onSelectionChange(
+              'selectedRbacGroups',
+              typeof selection !== 'string' ? selection.toString() : selection
+            );
             setIsExpanded(false);
           }}
-          selections={recipient}
+          selections={selectedRbacGroups}
           placeholderText={'Select Recipients'}
         >
-          {rbacGroups.map(({ uuid, name }, i) => (
+          {allRbacGroups.map(({ uuid, name }, i) => (
             <SelectOption key={i} value={uuid}>
               {name}
             </SelectOption>
           ))}
         </Select>
       </FormGroup>
-      {(emailInfo.users.length > 1 || emailInfo.users[0].uuid !== '') && (
+      {users.length > 0 && (
         <FormGroup label="User emails" fieldId="emails-field">
-          {emailInfo.users.map(({ uuid, name, emails }, i) => {
+          {users.map(({ name, emails }, i) => {
             return (
-              uuid !== '' && (
-                <p key={i}>
-                  <b>{name}</b>: {emails.join(', ')}
-                </p>
-              )
+              <p key={i}>
+                <b>{name}</b>: {emails.join(', ')}
+              </p>
             );
           })}
         </FormGroup>

@@ -12,6 +12,7 @@ import {
   TooltipPosition,
 } from '@patternfly/react-core';
 import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
+import { useHistory } from 'react-router-dom';
 
 import { downloadPdf as downloadPdfAction } from '../../store/pdfDownloadButton/actions';
 import { email as emailAction } from '../../store/pdfDownloadButton/actions';
@@ -27,9 +28,13 @@ import { useAppDispatch, useAppSelector } from '../../store';
 import { useReadQueryParams } from '../../QueryParams';
 import EmailDetailsForm from './EmailDetailsForm';
 import useRequest from '../../Utilities/useRequest';
-import { useHistory } from 'react-router-dom';
-import { string } from 'prop-types';
 
+import {
+  EmailDetailsType,
+  RbacGroupFromApi,
+  RbacPrincipalFromApi,
+  User,
+} from './types';
 interface Props {
   settingsNamespace: string;
   slug: string;
@@ -47,14 +52,13 @@ interface Props {
 }
 
 interface RbacGroupsDataType {
-  data: Record<string, string | string[]>[];
+  data: RbacGroupFromApi[];
   meta: {
     count: number;
   };
 }
-
 interface RbacPrincipalsDataType {
-  data: any[];
+  data: RbacPrincipalFromApi[];
 }
 
 const DownloadPdfButton: FC<Props> = ({
@@ -73,8 +77,23 @@ const DownloadPdfButton: FC<Props> = ({
   onPageCount,
 }) => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
-
   const [downloadType, setDownloadType] = useState('current');
+
+  const initializeEmailInfo: EmailDetailsType = {
+    selectedRbacGroups: [],
+    users: [],
+    subject: `The Ansible report, ${name}, is available for view`,
+    body:
+      'This report shows ' +
+      description[0].toLowerCase() +
+      description.substring(1),
+    reportUrl: window.location.href,
+  };
+
+  const [emailInfo, setEmailInfo] =
+    useState<EmailDetailsType>(initializeEmailInfo);
+  const { selectedRbacGroups, users, subject, body, reportUrl } = emailInfo;
+
   const dispatch = useAppDispatch();
   const { chartSeriesHiddenProps } = useReadQueryParams(
     {
@@ -87,11 +106,8 @@ const DownloadPdfButton: FC<Props> = ({
   const isLoading = status === DownloadState.pending;
   const isError = status === DownloadState.rejected;
 
-  // This can change depending loading and error states
-  const getPdfButtonText = 'Download PDF version of report';
-
   const {
-    result: { data },
+    result: { data: rbacGroupsFromApi },
     request: fetchRbacGroups,
   } = useRequest<RbacGroupsDataType>(
     () => getRbacGroups() as unknown as Promise<RbacGroupsDataType>,
@@ -99,38 +115,9 @@ const DownloadPdfButton: FC<Props> = ({
   );
 
   useEffect(() => {
-    // TODO: Update the useRequest hook to return function and not a promise!! @brum
     if (downloadType === 'email') fetchRbacGroups();
   }, [downloadType]);
   const history = useHistory();
-
-  type NonEmptyArray<T> = T[] & { 0: T };
-  interface EmailDetailsType {
-    recipient: NonEmptyArray<string>;
-    users: [
-      {
-        uuid: string;
-        name: string;
-        emails: string[];
-      }
-    ];
-    subject: string;
-    body: string;
-    reportUrl: string;
-  }
-
-  const initializeEmailInfo: EmailDetailsType = {
-    recipient: [''],
-    users: [{ uuid: '', name: '', emails: [] }],
-    subject: `The Ansible report, ${name}, is available for view`,
-    body:
-      'This report shows ' +
-      description[0].toLowerCase() +
-      description.substring(1),
-    reportUrl: window.location.href,
-  };
-
-  const [emailInfo, setEmailInfo] = useState(initializeEmailInfo);
 
   const unlisten = history.listen(() => {
     setEmailInfo({
@@ -140,50 +127,44 @@ const DownloadPdfButton: FC<Props> = ({
   });
 
   const {
-    result: { data: users },
+    result: { data: principalsFromApi },
     request: fetchRbacPrincipals,
   } = useRequest<RbacPrincipalsDataType>(
     () =>
       getRbacPrincipals({
-        uuid: emailInfo.recipient.pop(),
+        uuid: selectedRbacGroups.at(-1),
       }) as unknown as Promise<RbacPrincipalsDataType>,
     { data: [] }
   );
 
   useEffect(() => {
-    // TODO: Update the useRequest hook to return function and not a promise!! @brum
-    // api call if last selected group was unselected or groups are selected
-    if (emailInfo.recipient.length > 0) fetchRbacPrincipals();
-  }, [emailInfo.recipient]);
+    if (selectedRbacGroups.length > 0) fetchRbacPrincipals();
+  }, [selectedRbacGroups]);
 
-  const getGroupDescription = (key: string) => {
-    const group = data.filter((group) => group.uuid === key);
-    return group.length > 0 ? group[0].name : '';
+  const getGroupName = (key: string) => {
+    return rbacGroupsFromApi.find((group) => group.uuid === key)?.name;
   };
 
-  const getRecipients = (users: any[]) => {
-    const usersList = users.map(
-      (user: Record<string, string>) => user.username
-    );
-    const lastRecipient = emailInfo.recipient.pop() || '';
+  const updateEmailInfo = () => {
+    const usersList = principalsFromApi.map((user) => user.username);
+
+    const lastSelectedRbacGroup = selectedRbacGroups.at(-1) as string;
     const userHash = {
-      uuid: lastRecipient,
-      name: getGroupDescription(lastRecipient) as string,
+      uuid: lastSelectedRbacGroup,
+      name: getGroupName(lastSelectedRbacGroup) as string,
       emails: usersList,
     };
-    const index = emailInfo.users.findIndex(
-      (object) => object.uuid === userHash.uuid
-    );
+    const index = users.findIndex((object) => object.uuid === userHash.uuid);
     if (index === -1) {
-      emailInfo.users.push(userHash);
+      emailInfo.users.push(userHash as User);
     }
     setEmailInfo({ ...emailInfo });
-    return usersList;
   };
 
   useEffect(() => {
-    if (users.length > 0) getRecipients(users);
-  }, [users]);
+    if (principalsFromApi.length > 0 && selectedRbacGroups.length > 0)
+      updateEmailInfo();
+  }, [principalsFromApi]);
 
   const downloadPdf = () => {
     // Don't allow user to span download button
@@ -218,7 +199,7 @@ const DownloadPdfButton: FC<Props> = ({
     // Don't allow user to spam send email button
     if (isLoading) return;
 
-    const all_recipients = emailInfo.users.map((user) => user.emails);
+    const all_recipients = users.map(({ emails }) => emails);
 
     // Dispatch the email,
     dispatch(
@@ -226,12 +207,9 @@ const DownloadPdfButton: FC<Props> = ({
         {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           recipient: all_recipients.flat(),
-          subject:
-            emailInfo.subject === ''
-              ? 'Report is ready to be viewed'
-              : emailInfo.subject,
-          body: emailInfo.body.toString().replace(/(?:\r\n|\r|\n)/g, '<br>'),
-          reportUrl: emailInfo.reportUrl,
+          subject: subject === '' ? 'Report is ready to be viewed' : subject,
+          body: body.toString().replace(/(?:\r\n|\r|\n)/g, '<br>'),
+          reportUrl: reportUrl,
           payload: 'Download',
         },
         dispatch,
@@ -242,10 +220,13 @@ const DownloadPdfButton: FC<Props> = ({
 
   return (
     <>
-      <Tooltip position={TooltipPosition.top} content={getPdfButtonText}>
+      <Tooltip
+        position={TooltipPosition.top}
+        content="Download PDF version of report"
+      >
         <Button
           variant={isError ? ButtonVariant.link : ButtonVariant.plain}
-          aria-label={getPdfButtonText}
+          aria-label="Download PDF version of report"
           onClick={() => setIsExportModalOpen(true)}
           isDanger={isError}
         >
@@ -260,6 +241,9 @@ const DownloadPdfButton: FC<Props> = ({
         isOpen={isExportModalOpen}
         onClose={() => {
           setIsExportModalOpen(false);
+          setEmailInfo({
+            ...initializeEmailInfo,
+          });
           unlisten();
         }}
         actions={[
@@ -281,8 +265,8 @@ const DownloadPdfButton: FC<Props> = ({
                 key="email"
                 variant={ButtonVariant.primary}
                 isDisabled={
-                  emailInfo.recipient.length === 1 &&
-                  emailInfo.recipient[0] === ''
+                  emailInfo.selectedRbacGroups.length === 0 ||
+                  emailInfo.users.length === 0
                 }
                 onClick={() => {
                   setIsExportModalOpen(false);
@@ -298,6 +282,9 @@ const DownloadPdfButton: FC<Props> = ({
             variant={ButtonVariant.link}
             onClick={() => {
               setIsExportModalOpen(false);
+              setEmailInfo({
+                ...initializeEmailInfo,
+              });
               unlisten();
             }}
           >
@@ -307,7 +294,16 @@ const DownloadPdfButton: FC<Props> = ({
       >
         <Grid md={4}>
           {totalCount <= onPageCount ? (
-            <GridItem>All {totalCount} items</GridItem>
+            <GridItem>
+              <Radio
+                onChange={() => setDownloadType('extra_rows')}
+                isChecked={downloadType === 'extra_rows'}
+                name="optionSelected"
+                label={`Download all ${totalCount} items as PDF`}
+                id="total-count-radio"
+                aria-label="total-count-radio"
+              />
+            </GridItem>
           ) : (
             <>
               <GridItem>
@@ -315,7 +311,7 @@ const DownloadPdfButton: FC<Props> = ({
                   onChange={() => setDownloadType('current')}
                   isChecked={downloadType === 'current'}
                   name="optionSelected"
-                  label="Current page"
+                  label="Download current page as PDF"
                   id="current-page-radio"
                   aria-label="current-page-radio"
                 />
@@ -327,25 +323,25 @@ const DownloadPdfButton: FC<Props> = ({
                   name="optionSelected"
                   label={
                     totalCount <= 100
-                      ? `All ${totalCount} items`
-                      : `Top 100 of ${totalCount} items`
+                      ? `Download all ${totalCount} items as PDF`
+                      : `Download top 100 of ${totalCount} items as PDF`
                   }
                   id="total-count-radio"
                   aria-label="total-count-radio"
                 />
               </GridItem>
-              <GridItem>
-                <Radio
-                  onChange={() => setDownloadType('email')}
-                  isChecked={downloadType === 'email'}
-                  name="optionSelected"
-                  label={'Send E-Mail'}
-                  id="email-radio"
-                  aria-label="email-radio"
-                />
-              </GridItem>
             </>
           )}
+          <GridItem>
+            <Radio
+              onChange={() => setDownloadType('email')}
+              isChecked={downloadType === 'email'}
+              name="optionSelected"
+              label="Send E-Mail"
+              id="email-radio"
+              aria-label="email-radio"
+            />
+          </GridItem>
         </Grid>
         {downloadType === 'email' && (
           <Grid style={{ paddingTop: '15px' }}>
@@ -353,7 +349,7 @@ const DownloadPdfButton: FC<Props> = ({
               <EmailDetailsForm
                 emailInfo={emailInfo}
                 onChange={setEmailInfo}
-                rbacGroups={data}
+                allRbacGroups={rbacGroupsFromApi}
               />
             </GridItem>
           </Grid>
