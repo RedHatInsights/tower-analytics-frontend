@@ -120,7 +120,7 @@ export const post = (
   }).then(handleResponse);
 };
 
-export const save = (
+export const saveROIData = (
   endpoint: string,
   params: saveROIParams
 ): Promise<ApiJson> => {

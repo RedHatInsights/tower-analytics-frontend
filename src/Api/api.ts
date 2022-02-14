@@ -3,7 +3,7 @@ import {
   get,
   post,
   postWithPagination,
-  save,
+  saveROIData,
   deleteById,
   updateById,
   authenticatedFetch,
@@ -80,7 +80,7 @@ export const readROI = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(Endpoint.ROI, params);
 
 export const saveROI = (params: saveROIParams): Promise<ApiJson> => {
-  return save(Endpoint.costEffortROI, params);
+  return saveROIData(Endpoint.costEffortROI, params);
 };
 
 export const readROIOptions = (params: Params): Promise<ApiJson> =>
