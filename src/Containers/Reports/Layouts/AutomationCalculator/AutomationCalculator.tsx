@@ -173,25 +173,23 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     };
   };
 
-  const updateCalculationValues = (varName: string, value: number) => {
+  const updateCalculationValues = async (varName: string, value: number) => {
     const hourly_automation_cost =
       varName === 'automation_cost' ? value : costAutomation;
     const hourly_manual_labor_cost =
       varName === 'manual_cost' ? value : costManual;
-    const prom = saveROI(
-      getROISaveData(
-        api.result.items,
-        hourly_manual_labor_cost,
-        hourly_automation_cost
-      )
-    );
-    prom
-      .then(() =>
-        varName === 'manual_cost'
-          ? setCostManual(value)
-          : setCostAutomation(value)
-      )
-      .catch((err) => console.log(err));
+    try {
+      await saveROI(
+        getROISaveData(
+          api.result.items,
+          hourly_manual_labor_cost,
+          hourly_automation_cost
+        )
+      );
+    } catch (err) {
+      console.log(err);
+    }
+    varName === 'manual_cost' ? setCostManual(value) : setCostAutomation(value);
   };
 
   /**
@@ -199,7 +197,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
    * and updates all calculated fields.
    * Used in top templates.
    */
-  const setDataRunTime = (seconds, id) => {
+  const setDataRunTime = async (seconds, id) => {
     const updatedData = api.result.items.map((el) => {
       if (el.id === id) {
         el.avgRunTime = seconds;
@@ -213,18 +211,26 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         return el;
       }
     });
-    const prom = saveROI(getROISaveData(updatedData));
-    prom.then(() => setValue(updatedData)).catch((err) => console.log(err));
+    try {
+      await saveROI(getROISaveData(updatedData));
+    } catch (err) {
+      console.log(err);
+    }
+    setValue(updatedData);
   };
 
-  const setEnabled = (id) => (value) => {
+  const setEnabled = (id) => async (value) => {
     const updatedData = !id
       ? api.result.items.map((el) => ({ ...el, enabled: value }))
       : api.result.items.map((el) =>
           el.id === id ? { ...el, enabled: value } : el
         );
-    const prom = saveROI(getROISaveData(updatedData));
-    prom.then(() => setValue(updatedData)).catch((err) => console.log(err));
+    try {
+      await saveROI(getROISaveData(updatedData));
+    } catch (err) {
+      console.log(err);
+    }
+    setValue(updatedData);
   };
   const getSortParams = () => {
     const onSort = (_event, index, direction) => {

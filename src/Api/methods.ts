@@ -122,7 +122,7 @@ export const post = (
 
 export const save = (
   endpoint: string,
-  params: saveROIParams = {}
+  params: saveROIParams
 ): Promise<ApiJson> => {
   const url = new URL(endpoint, window.location.origin);
   return authenticatedFetch(url.toString(), {
