@@ -82,7 +82,11 @@ const Row: FunctionComponent<Props> = ({
             </Button>
           </Tooltip>
         </Td>
-        <Td>{setLabeledValue(variableRow.key, +template[variableRow.key])}</Td>
+        {variableRow && (
+          <Td>
+            {setLabeledValue(variableRow.key, +template[variableRow.key])}
+          </Td>
+        )}
         <Td>
           <InputGroup>
             <TextInput
