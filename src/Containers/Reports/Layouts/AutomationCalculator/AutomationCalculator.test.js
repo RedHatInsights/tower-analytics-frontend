@@ -28,6 +28,8 @@ const dummyRoiData = {
         total_org_count: 2,
         successful_hosts_total: 10,
         total_cluster_count: 20,
+        template_weigh_in: true,
+        manual_effort_minutes: 60,
       },
       {
         id: 2,
@@ -37,6 +39,8 @@ const dummyRoiData = {
         total_org_count: 2,
         successful_hosts_total: 10,
         total_cluster_count: 20,
+        template_weigh_in: true,
+        manual_effort_minutes: 60,
       },
       {
         id: 3,
@@ -46,6 +50,8 @@ const dummyRoiData = {
         total_org_count: 2,
         successful_hosts_total: 10,
         total_cluster_count: 20,
+        template_weigh_in: true,
+        manual_effort_minutes: 60,
       },
     ],
   },
