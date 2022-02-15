@@ -8,8 +8,17 @@ import { Gallery } from '@patternfly/react-core';
 
 import ListItem from './ListItem';
 import { getAllReports } from '../Shared/schemas';
+import { useFlag } from '@unleash/proxy-client-react';
+import { ValidFeatureFlags } from '../../../FeatureFlags';
 
 const List: FunctionComponent<Record<string, never>> = () => {
+  const moduleReportsEnabled = useFlag(ValidFeatureFlags.moduleReports);
+  const newAutomationCalculator = useFlag(
+    ValidFeatureFlags.newAutomationCalculator
+  );
+  const aa21OnboardingReportEnabled = useFlag(
+    ValidFeatureFlags.onboardingReports
+  );
   return (
     <>
       <PageHeader>
@@ -27,7 +36,11 @@ const List: FunctionComponent<Record<string, never>> = () => {
             '2xl': '307px',
           }}
         >
-          {getAllReports().map((report) => (
+          {getAllReports(
+            moduleReportsEnabled,
+            newAutomationCalculator,
+            aa21OnboardingReportEnabled
+          ).map((report) => (
             <ListItem key={report.layoutProps.slug} report={report} />
           ))}
         </Gallery>

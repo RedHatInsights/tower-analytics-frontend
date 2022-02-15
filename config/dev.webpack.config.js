@@ -44,9 +44,7 @@ const environmentSetup = {
     https: true,
     useProxy: true,
     proxyVerbose: true,
-    env: 'qa-beta', // TODO change to whatewer the aggregator pulls data from
-    keycloakUri: `https://keycloak-ephemeral-${ephId}.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com`,
-    target: `https://front-end-aggregator-ephemeral-${ephId}.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com`,
+    env: 'stage-beta',
   }),
 };
 
@@ -56,7 +54,11 @@ const { config: webpackConfig, plugins } = config({
   sassPrefix: '.automation-analytics, .automationAnalytics',
   appUrl: ['/beta/ansible/insights/', '/ansible/insights/'],
   deployment: 'beta/apps',
-  ...environmentSetup,
+  https: true,
+  useProxy: true,
+  proxyVerbose: true,
+  env: 'stage-beta',
+  localChrome: '/home/martin/insights/insights-chrome/build/',
 });
 
 plugins.push(
@@ -64,6 +66,14 @@ plugins.push(
     {
       root: resolve(__dirname, '../'),
       useFileHash: false,
+      shared: [
+        {
+          '@unleash/proxy-client-react': {
+            singleton: true,
+            requiredVersion: '*',
+          },
+        },
+      ],
       exclude: [
         '@patternfly/react-core',
         '@patternfly/react-table',

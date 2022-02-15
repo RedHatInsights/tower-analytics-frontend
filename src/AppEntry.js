@@ -8,19 +8,16 @@ import './polyfills';
 import store from './store';
 import App from './App';
 import getBaseName from './Utilities/getBaseName';
-import { FeatureFlagProvider } from './FeatureFlags';
 import { QueryParamsProvider } from './QueryParams';
 
 const AutomationAnalytics = () => (
   <Provider store={store}>
-    <FeatureFlagProvider>
-      <Router basename={getBaseName()}>
-        <QueryParamsProvider>
-          <NotificationPortal />
-          <App />
-        </QueryParamsProvider>
-      </Router>
-    </FeatureFlagProvider>
+    <Router basename={getBaseName()}>
+      <QueryParamsProvider>
+        <NotificationPortal />
+        <App />
+      </QueryParamsProvider>
+    </Router>
   </Provider>
 );
 

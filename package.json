@@ -12,6 +12,7 @@
     "@redhat-cloud-services/frontend-components": "^3.4.2",
     "@redhat-cloud-services/frontend-components-notifications": "^3.2.5",
     "@redhat-cloud-services/frontend-components-utilities": "^3.2.4",
+    "@unleash/proxy-client-react": "^1.0.4",
     "d3": "^5.9.2",
     "eslint-plugin-cypress": "^2.12.1",
     "moment": "^2.29.1",
@@ -25,6 +26,7 @@
     "redux-promise-middleware": "^6.1.2",
     "streamsaver": "^2.0.5",
     "styled-components": "^5.3.1",
+    "unleash-proxy-client": "^1.11.0",
     "uuid": "^8.3.2",
     "web-streams-polyfill": "^3.1.1"
   },

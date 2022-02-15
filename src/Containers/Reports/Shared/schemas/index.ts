@@ -1,4 +1,3 @@
-import { useFeatureFlag, ValidFeatureFlags } from '../../../../FeatureFlags';
 import affectedHostsByPlaybook from './affectedHostsByPlaybook';
 import changesMade from './changesMade';
 import playbookRunRate from './playbookRunRate';
@@ -34,16 +33,11 @@ const onboardingReports = [aa21OnboardingReport];
 const automationCalculatorReport = [automationCalculator];
 
 export const getReport = (
-  searchSlug: string
+  searchSlug: string,
+  moduleReportsEnabled: boolean,
+  newAutomationCalculator: boolean,
+  aa21OnboardingReportEnabled: boolean
 ): ReportSchema | undefined | null => {
-  const moduleReportsEnabled = useFeatureFlag(ValidFeatureFlags.moduleReports);
-  const newAutomationCalculator = useFeatureFlag(
-    ValidFeatureFlags.newAutomationCalculator
-  );
-  const aa21OnboardingReportEnabled = useFeatureFlag(
-    ValidFeatureFlags.onboardingReports
-  );
-
   const reports = [
     ...prodReports,
     ...(moduleReportsEnabled ? moduleReports : []),
@@ -65,15 +59,11 @@ export const getReport = (
   return reports.find(({ layoutProps: { slug } }) => slug === searchSlug);
 };
 
-export const getAllReports = (): ReportSchema[] => {
-  const moduleReportsEnabled = useFeatureFlag(ValidFeatureFlags.moduleReports);
-  const newAutomationCalculator = useFeatureFlag(
-    ValidFeatureFlags.newAutomationCalculator
-  );
-  const aa21OnboardingReportEnabled = useFeatureFlag(
-    ValidFeatureFlags.onboardingReports
-  );
-
+export const getAllReports = (
+  moduleReportsEnabled: boolean,
+  newAutomationCalculator: boolean,
+  aa21OnboardingReportEnabled: boolean
+): ReportSchema[] => {
   return [
     ...prodReports,
     ...(moduleReportsEnabled ? moduleReports : []),

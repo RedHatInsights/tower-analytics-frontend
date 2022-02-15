@@ -22,6 +22,8 @@ import paths from '../paths';
 import { TAGS } from '../Shared/constants';
 import { ReportSchema } from '../Layouts/types';
 import LoadingState from '../../../Components/ApiStatus/LoadingState';
+import { useFlag } from '@unleash/proxy-client-react';
+import { ValidFeatureFlags } from '../../../FeatureFlags';
 
 const Description = styled.p`
   max-width: 70em;
@@ -37,7 +39,22 @@ const Label = styled(PFLabel)`
 const Details: FunctionComponent<Record<string, never>> = () => {
   const { slug } = useParams<{ slug: string }>();
   let report: ReportSchema | null | undefined = null;
-  report = getReport(slug);
+
+  const moduleReportsEnabled = useFlag(ValidFeatureFlags.moduleReports);
+  const newAutomationCalculator = useFlag(
+    ValidFeatureFlags.newAutomationCalculator
+  );
+  const aa21OnboardingReportEnabled = useFlag(
+    ValidFeatureFlags.onboardingReports
+  );
+  report = getReport(
+    slug,
+    moduleReportsEnabled,
+    newAutomationCalculator,
+    aa21OnboardingReportEnabled
+  );
+
+  console.log(report);
 
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
 
