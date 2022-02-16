@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -e
 set -x
 
 # ----------------------------
@@ -72,8 +73,6 @@ export NAMESPACE=$(bonfire namespace reserve)
 export IQE_IMAGE="quay.io/cloudservices/iqe-tests:automation-analytics"
 oc project ${NAMESPACE}
 
-set +e
-
 bonfire deploy \
     ${APP_NAME} \
     --no-remove-resources $COMPONENT_NAME \
@@ -86,9 +85,6 @@ bonfire deploy \
 # ----------------------------------------------
 # Update frotnend aggreagtor to us the pr branch
 # ----------------------------------------------
-
-set -x
-set -e
 
 rm -rf /tmp/frontend-build
 git clone --depth 1 --branch pr-$SHORT_COMMIT https://github.com/RedHatInsights/tower-analytics-frontend-build.git /tmp/frontend-build
@@ -175,6 +171,8 @@ source ${CICD_ROOT}/cji_smoke_test.sh
 # Cypress
 # -------
 
+set +e
+
 export UI_URL=`oc get route front-end-aggregator -o jsonpath='https://{.spec.host}{"\n"}' -n $NAMESPACE`
 export IQE_IMAGE="quay.io/cloudservices/automation-analytics-cypress-image:latest"
 export CYPRESS_RECORD_KEY=cfd2f4fd-402d-4da1-a3ad-f5f8e688fff2
@@ -259,6 +257,7 @@ oc rsync /tmp/frontend cypress:/tmp/
 
 oc exec -n ${NAMESPACE} cypress -- bash -c "/tmp/frontend/cypress_run.sh"
 
+set -e
 
 # Stubbed out for now, will be added as tests are enabled
 mkdir -p $WORKSPACE/artifacts
