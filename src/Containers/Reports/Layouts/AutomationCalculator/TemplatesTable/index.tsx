@@ -35,7 +35,7 @@ const TopTemplates: FunctionComponent<Props> = ({
       <Tr>
         <Th />
         <Th>Name</Th>
-        <Th {...getSortParams()}>{variableRow.value}</Th>
+        {variableRow && <Th {...getSortParams()}>{variableRow.value}</Th>}
         <Th>Manual time</Th>
         <Th>Savings</Th>
         <Th>
