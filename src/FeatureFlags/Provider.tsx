@@ -15,7 +15,6 @@ const FeatureFlagProvider: FunctionComponent<Props> = ({ children }) => {
   useEffect(() => {
     getFeatures()
       .then((flags: ApiFeatureFlagReturnType) => {
-        console.log('flag', flags);
         if (flags && flags.toggles) {
           setFeatures(flags.toggles);
         } else {
@@ -29,10 +28,8 @@ const FeatureFlagProvider: FunctionComponent<Props> = ({ children }) => {
   }, []);
 
   if (loading || !features) {
-    console.log(features);
     return <LoadingState />;
   } else {
-    console.log('provider set', features);
     return <Provider value={features}>{children}</Provider>;
   }
 };
