@@ -33,9 +33,7 @@ const onboardingReports = [aa21OnboardingReport];
 
 const automationCalculatorReport = [automationCalculator];
 
-export const getReport = (
-  searchSlug: string
-): ReportSchema | undefined | null => {
+export const getReport = (searchSlug: string): ReportSchema | undefined => {
   const moduleReportsEnabled = useFeatureFlag(ValidFeatureFlags.moduleReports);
   const newAutomationCalculator = useFeatureFlag(
     ValidFeatureFlags.newAutomationCalculator
@@ -50,17 +48,6 @@ export const getReport = (
     ...(newAutomationCalculator ? automationCalculatorReport : []),
     ...(aa21OnboardingReportEnabled ? onboardingReports : []),
   ];
-  console.log('*********** src/Containers/Reports/Shared/schemas/index.ts');
-  console.log('all reports: ', reports);
-  console.log('onboardingReports ', onboardingReports);
-  console.log('prodReports ', prodReports);
-  console.log('moduleReports ', moduleReports);
-  console.log('automationCalculatorReport ', automationCalculatorReport);
-  console.log('moduleReportsEnabled ', moduleReportsEnabled);
-  console.log('newAutomationCalculator ', newAutomationCalculator);
-  console.log('aa21OnboardingReportEnabled: ', aa21OnboardingReportEnabled);
-  console.log('searchSlug: ', searchSlug);
-  console.log('*********  src/Containers/Reports/Shared/schemas/index.ts');
 
   return reports.find(({ layoutProps: { slug } }) => slug === searchSlug);
 };
