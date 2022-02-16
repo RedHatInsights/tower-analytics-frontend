@@ -16,7 +16,7 @@ fetchMock.config.overwriteRoutes = true;
 const jobExplorerUrl = 'path:/api/tower-analytics/v1/roi_templates/';
 const dummyRoiData = {
   response_type: '',
-  cost: { hourly_automation_cost: 25, hourly_manual_labor_cost: 50 },
+  cost: { hourly_automation_cost: 20, hourly_manual_labor_cost: 50 },
   meta: {
     count: 3,
     legend: [
