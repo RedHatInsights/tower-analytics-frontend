@@ -31,6 +31,12 @@ interface Props {
   chartType: string;
   totalCount: number;
   onPageCount: number;
+  sortOptions: string;
+  sortOrder: 'asc' | 'desc';
+  dateGranularity: string;
+  startDate: string;
+  endDate: string;
+  dateRange: string;
 }
 
 const DownloadPdfButton: FC<Props> = ({
@@ -45,6 +51,12 @@ const DownloadPdfButton: FC<Props> = ({
   chartType,
   totalCount,
   onPageCount,
+  sortOptions,
+  sortOrder,
+  dateGranularity,
+  startDate,
+  endDate,
+  dateRange,
 }) => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [isCurrent, setIsCurrent] = useState(true);
@@ -84,6 +96,12 @@ const DownloadPdfButton: FC<Props> = ({
             queryParams,
             selectOptions,
             chartSeriesHiddenProps,
+            sortOptions,
+            sortOrder,
+            dateGranularity,
+            startDate,
+            endDate,
+            dateRange,
           },
         },
         dispatch,
