@@ -29,12 +29,6 @@ export interface PDFParams {
     selectOptions: OptionsReturnType;
     showExtraRows: boolean;
     chartSeriesHiddenProps: boolean[];
-    sortOptions: string;
-    sortOrder: 'asc' | 'desc';
-    dateGranularity: string;
-    startDate: string;
-    endDate: string;
-    dateRange: string;
   };
 }
 
