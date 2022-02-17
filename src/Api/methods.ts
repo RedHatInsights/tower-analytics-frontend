@@ -2,10 +2,10 @@ import { stringify } from 'query-string';
 import { saveStream } from './streamSaver';
 import {
   ApiJson,
+  NotificationParams,
   Params,
   ParamsWithPagination,
   PDFParams,
-  NotificationParams,
   saveROIParams,
 } from './types';
 import { createWriteStream } from 'streamsaver';

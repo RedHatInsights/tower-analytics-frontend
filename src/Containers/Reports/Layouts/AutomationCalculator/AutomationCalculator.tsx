@@ -28,7 +28,6 @@ import { ExclamationTriangleIcon as ExclamationTriangleIcon } from '@patternfly/
 // Imports from custom components
 import FilterableToolbar from '../../../../Components/Toolbar';
 import Pagination from '../../../../Components/Pagination';
-
 // Imports from utilities
 import {
   useQueryParams,
@@ -59,6 +58,9 @@ import { AutmationCalculatorProps } from '../types';
 import hydrateSchema from '../../Shared/hydrateSchema';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
+import { NotificationType } from '../../../../globalTypes';
 
 const SpinnerDiv = styled.div`
   height: 400px;
@@ -172,6 +174,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       templates_manual_equivalent: updatedDataApi,
     };
   };
+  const dispatch = useDispatch();
 
   const updateCalculationValues = async (varName: string, value: number) => {
     const hourly_automation_cost =
@@ -186,8 +189,17 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           hourly_automation_cost
         )
       );
-    } catch (err) {
-      console.log(err);
+    } catch {
+      dispatch(
+        addNotification({
+          title: 'Enable to save changes',
+          description: 'Enable to save changes. Please try again.',
+          variant: NotificationType.danger,
+          autoDismiss: false,
+        })
+      );
+      // don't update inputs
+      return;
     }
     varName === 'manual_cost' ? setCostManual(value) : setCostAutomation(value);
   };
@@ -212,9 +224,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       }
     });
     try {
-      await saveROI(getROISaveData(updatedData));
-    } catch (err) {
-      console.log(err);
+      await saveROI(getROISaveData(updatedData), dispatch);
+    } catch {
+      // don't update inputs
+      return;
     }
     setValue(updatedData);
   };
