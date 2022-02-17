@@ -194,8 +194,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     } catch {
       dispatch(
         addNotification({
-          title: `Enable to save changes to ${humanVarName}.`,
-          description: `Enable to save changes ${humanVarName}. Please try again.`,
+          title: `Unable to save changes to ${humanVarName}.`,
+          description: `Unable to save changes ${humanVarName}. Please try again.`,
           variant: NotificationType.danger,
           autoDismiss: false,
         })
@@ -230,9 +230,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     } catch {
       dispatch(
         addNotification({
-          title: 'Enable to save changes to Manual time',
+          title: 'Unable to save changes to Manual time',
           description:
-            'Enable to save changes to Manual time. Please try again.',
+            'Unable to save changes to Manual time. Please try again.',
           variant: NotificationType.danger,
           autoDismiss: false,
         })
@@ -254,9 +254,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     } catch {
       dispatch(
         addNotification({
-          title: 'Enable to save changes to visibility',
+          title: 'Unable to save changes to visibility',
           description:
-            'Enable to save changes to visibility. Please try again.',
+            'Unable to save changes to visibility. Please try again.',
           variant: NotificationType.danger,
           autoDismiss: false,
         })
