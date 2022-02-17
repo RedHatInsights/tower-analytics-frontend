@@ -19,8 +19,8 @@ import { email as emailAction } from '../../store/pdfDownloadButton/actions';
 import { DownloadState } from '../../store/pdfDownloadButton/types';
 import {
   Endpoint,
-  getRbacGroups,
-  getRbacPrincipals,
+  readRbacGroups,
+  readRbacPrincipals,
   OptionsReturnType,
   Params,
 } from '../../Api';
@@ -110,7 +110,7 @@ const DownloadPdfButton: FC<Props> = ({
     result: { data: rbacGroupsFromApi },
     request: fetchRbacGroups,
   } = useRequest<RbacGroupsDataType>(
-    () => getRbacGroups() as unknown as Promise<RbacGroupsDataType>,
+    () => readRbacGroups() as unknown as Promise<RbacGroupsDataType>,
     { data: [], meta: { count: 0 } }
   );
 
@@ -131,9 +131,9 @@ const DownloadPdfButton: FC<Props> = ({
     request: fetchRbacPrincipals,
   } = useRequest<RbacPrincipalsDataType>(
     () =>
-      getRbacPrincipals({
-        uuid: selectedRbacGroups.at(-1),
-      }) as unknown as Promise<RbacPrincipalsDataType>,
+      readRbacPrincipals(
+        selectedRbacGroups.at(-1) as string
+      ) as unknown as Promise<RbacPrincipalsDataType>,
     { data: [] }
   );
 
