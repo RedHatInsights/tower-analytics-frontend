@@ -100,7 +100,7 @@
     "webpack-cli": "^4.6.0"
   },
   "scripts": {
-    "test": "jest --verbose",
+    "test": "TZ=UTC jest --verbose --no-cache",
     "test:watch": "jest --coverage=false --watch",
     "integration": "cypress open",
     "integration:headless": "cypress run --browser=chrome",

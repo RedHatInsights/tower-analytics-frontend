@@ -99,7 +99,7 @@ const constants = (isMoney: boolean) => ({
   },
   benefit: {
     key: isMoney ? 'total_benefits' : 'total_hours_saved',
-    color: isMoney ? '#81C46B' : '#0063CF',
+    color: isMoney ? 'var(--pf-global--success-color--100)' : '#0063CF',
   },
   net: {
     key: isMoney ? 'cumulative_net_benefits' : 'cumulative_time_net_benefits',
