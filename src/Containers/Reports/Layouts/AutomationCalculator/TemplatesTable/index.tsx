@@ -20,6 +20,7 @@ interface Props {
   setEnabled: (id: number | undefined) => (enabled: boolean) => void;
   redirectToJobExplorer: (id: number) => void;
   getSortParams?: () => TableSortParams;
+  readOnly: boolean;
 }
 
 const TopTemplates: FunctionComponent<Props> = ({
@@ -29,6 +30,7 @@ const TopTemplates: FunctionComponent<Props> = ({
   setEnabled = () => () => ({}),
   redirectToJobExplorer = () => ({}),
   getSortParams = () => ({}),
+  readOnly = true,
 }) => (
   <TableComposable aria-label="ROI Table" variant={TableVariant.compact}>
     <Thead>
@@ -44,6 +46,7 @@ const TopTemplates: FunctionComponent<Props> = ({
             labelOff="Show all"
             isChecked={!data.find((d) => !d.enabled)}
             onChange={(checked) => setEnabled(undefined)(checked)}
+            isDisabled={readOnly}
           />
         </Th>
       </Tr>
@@ -57,6 +60,7 @@ const TopTemplates: FunctionComponent<Props> = ({
           setDataRunTime={setDataRunTime}
           redirectToJobExplorer={redirectToJobExplorer}
           setEnabled={setEnabled(template.id)}
+          readOnly={readOnly}
         />
       ))}
     </Tbody>
