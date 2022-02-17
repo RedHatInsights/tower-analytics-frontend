@@ -2,10 +2,11 @@ import { stringify } from 'query-string';
 import { saveStream } from './streamSaver';
 import {
   ApiJson,
+  NotificationParams,
   Params,
   ParamsWithPagination,
   PDFParams,
-  NotificationParams,
+  saveROIParams,
 } from './types';
 import { createWriteStream } from 'streamsaver';
 import {
@@ -111,6 +112,17 @@ export const get = (
 export const post = (
   endpoint: string,
   params: Params = {}
+): Promise<ApiJson> => {
+  const url = new URL(endpoint, window.location.origin);
+  return authenticatedFetch(url.toString(), {
+    method: 'POST',
+    body: JSON.stringify(params),
+  }).then(handleResponse);
+};
+
+export const saveROIData = (
+  endpoint: string,
+  params: saveROIParams
 ): Promise<ApiJson> => {
   const url = new URL(endpoint, window.location.origin);
   return authenticatedFetch(url.toString(), {
