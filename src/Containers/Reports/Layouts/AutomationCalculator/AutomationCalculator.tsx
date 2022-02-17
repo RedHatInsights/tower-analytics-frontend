@@ -181,6 +181,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       varName === 'automation_cost' ? value : costAutomation;
     const hourly_manual_labor_cost =
       varName === 'manual_cost' ? value : costManual;
+    const humanVarName =
+      varName === 'automation_cost' ? 'Automation cost' : 'Manual cost';
     try {
       await saveROI(
         getROISaveData(
@@ -192,8 +194,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     } catch {
       dispatch(
         addNotification({
-          title: 'Enable to save changes',
-          description: 'Enable to save changes. Please try again.',
+          title: `Enable to save changes to ${humanVarName}.`,
+          description: `Enable to save changes ${humanVarName}. Please try again.`,
           variant: NotificationType.danger,
           autoDismiss: false,
         })
@@ -226,6 +228,15 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     try {
       await saveROI(getROISaveData(updatedData), dispatch);
     } catch {
+      dispatch(
+        addNotification({
+          title: 'Enable to save changes to Manual time',
+          description:
+            'Enable to save changes to Manual time. Please try again.',
+          variant: NotificationType.danger,
+          autoDismiss: false,
+        })
+      );
       // don't update inputs
       return;
     }
@@ -240,8 +251,18 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         );
     try {
       await saveROI(getROISaveData(updatedData));
-    } catch (err) {
-      console.log(err);
+    } catch {
+      dispatch(
+        addNotification({
+          title: 'Enable to save changes to visibility',
+          description:
+            'Enable to save changes to visibility. Please try again.',
+          variant: NotificationType.danger,
+          autoDismiss: false,
+        })
+      );
+      // don't update inputs
+      return;
     }
     setValue(updatedData);
   };
