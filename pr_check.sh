@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+set -e
 set -x
 
 # ----------------------------
@@ -72,8 +73,6 @@ export NAMESPACE=$(bonfire namespace reserve)
 export IQE_IMAGE="quay.io/cloudservices/iqe-tests:automation-analytics"
 oc project ${NAMESPACE}
 
-set +e
-
 bonfire deploy \
     ${APP_NAME} \
     --no-remove-resources $COMPONENT_NAME \
@@ -86,9 +85,6 @@ bonfire deploy \
 # ----------------------------------------------
 # Update frotnend aggreagtor to us the pr branch
 # ----------------------------------------------
-
-set -x
-set -e
 
 rm -rf /tmp/frontend-build
 git clone --depth 1 --branch pr-$SHORT_COMMIT https://github.com/RedHatInsights/tower-analytics-frontend-build.git /tmp/frontend-build
@@ -153,20 +149,78 @@ oc exec  -n $NAMESPACE deployments/automation-analytics-api-fastapi-v2 -- bash -
 oc exec  -n $NAMESPACE deployments/automation-analytics-api-fastapi-v2 -- bash -c "./entrypoint ./tower_analytics_report/management/commands/process_rollups_one_time.py"
 
 
+# ---------------
+# Run smoke tests
+# ---------------
+
+export IQE_PLUGINS="automation_analytics"
+export IQE_FILTER_EXPRESSION=""
+export IQE_CJI_TIMEOUT="15m"
+export CLOWD_APP_NAME=automation-analytics
+export COMPONENT_NAME=automation-analytics
+
+echo $SEP
+echo "Create IQE Pod"
+echo $SEP
+
+echo $BONFIRE_NS_REQUESTER
+source ${CICD_ROOT}/cji_smoke_test.sh
+
+
 # -------
 # Cypress
 # -------
 
+set +e
+
 export UI_URL=`oc get route front-end-aggregator -o jsonpath='https://{.spec.host}{"\n"}' -n $NAMESPACE`
 export IQE_IMAGE="quay.io/cloudservices/automation-analytics-cypress-image:latest"
+export CYPRESS_RECORD_KEY=cfd2f4fd-402d-4da1-a3ad-f5f8e688fff2
+export IQE_SERVICE_ACCOUNT=$(oc get serviceaccount | grep iqe | awk '{print $1}')
 
-python $CICD_ROOT/iqe_pod/create_iqe_pod.py $NAMESPACE \
-    -e IQE_PLUGINS="$IQE_PLUGINS" \
-    -e IQE_MARKER_EXPRESSION="$IQE_MARKER_EXPRESSION" \
-    -e IQE_FILTER_EXPRESSION="$IQE_FILTER_EXPRESSION" \
-    -e ENV_FOR_DYNACONF=smoke \
-    -e NAMESPACE=$NAMESPACE \
-    --pod-name cypress
+(
+cat <<EOF
+{
+	"apiVersion": "v1", 
+	"kind": "Pod", 
+	"metadata": {
+		"name": "cypress"
+	}, 
+	"spec": {
+		"serviceAccountName": "$IQE_SERVICE_ACCOUNT",
+		"containers": [{
+			"command": ["/bin/cat"],
+			"image": "quay.io/cloudservices/automation-analytics-cypress-image:latest", 
+			"imagePullPolicy": "Always",
+			"name": "cypress",
+			"resources": {
+				"limits": {
+					"cpu": "1",
+					"memory": "2Gi"
+				},
+				"requests": {
+					"cpu": "500m",
+					"memory": "1Gi"
+                }
+			},
+			"stdin": true,
+			"tty": true
+		}], 
+		"imagePullSecrets": [{
+			"name": "quay-cloudservices-pull"
+		}],
+		"restartPolicy": "Never"
+	}
+}
+EOF
+) | oc apply -f - -n $NAMESPACE
+
+RUNNING=$(oc get pod cypress | tail -n 1 | awk '{print $3}')
+while [ "$RUNNING" != "Running" ]; do
+    echo "Waiting for cypress pod.."
+    sleep 10
+    RUNNING=$(oc get pod cypress | tail -n 1 | awk '{print $3}')
+done
 
 oc create route edge unleash --service=env-${NAMESPACE}-featureflags --port=featureflags
 
@@ -175,8 +229,6 @@ git clone --depth 1 --branch devel https://github.com/RedHatInsights/tower-analy
 cd /tmp/frontend
 git fetch origin pull/$ghprbPullId/head:pr-$ghprbPullId
 git checkout pr-$ghprbPullId
-
-export CYPRESS_RECORD_KEY=cfd2f4fd-402d-4da1-a3ad-f5f8e688fff2
 
 cat >/tmp/frontend/cypress_run.sh <<EOL
 export CYPRESS_RECORD_KEY=${CYPRESS_RECORD_KEY}
@@ -205,6 +257,7 @@ oc rsync /tmp/frontend cypress:/tmp/
 
 oc exec -n ${NAMESPACE} cypress -- bash -c "/tmp/frontend/cypress_run.sh"
 
+set -e
 
 # Stubbed out for now, will be added as tests are enabled
 mkdir -p $WORKSPACE/artifacts

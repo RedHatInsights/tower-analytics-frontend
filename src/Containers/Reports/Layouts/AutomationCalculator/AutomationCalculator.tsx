@@ -469,6 +469,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               xTickFormat={''}
               totalCount={api.result.meta.count}
               onPageCount={queryParams.limit}
+              sortOptions={chartParams.y}
+              sortOrder={queryParams.sort_order}
+              startDate={queryParams.start_date}
+              endDate={queryParams.end_date}
+              dateRange={queryParams.quick_date_range}
             />,
           ]}
         />
