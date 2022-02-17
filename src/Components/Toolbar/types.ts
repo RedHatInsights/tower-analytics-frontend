@@ -49,5 +49,5 @@ export interface RbacGroupFromApi {
 
 export interface RbacPrincipalFromApi {
   username: string;
-  //email: string;
+  email: string;
 }

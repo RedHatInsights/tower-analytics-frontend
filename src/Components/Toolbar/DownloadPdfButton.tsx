@@ -146,7 +146,7 @@ const DownloadPdfButton: FC<Props> = ({
   };
 
   const updateEmailInfo = () => {
-    const usersList = principalsFromApi.map((user) => user.username);
+    const usersList = principalsFromApi.map((user) => user.email);
 
     const lastSelectedRbacGroup = selectedRbacGroups.at(-1) as string;
     const userHash = {
