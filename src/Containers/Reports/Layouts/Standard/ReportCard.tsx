@@ -108,7 +108,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
     xTickFormat: getDateFormatByGranularity(queryParams.granularity),
-    chartType: settingsQueryParams.chartType,
+    chartType: settingsQueryParams.chartType || 'line',
   };
 
   const getSortParams = (currKey: string) => {
