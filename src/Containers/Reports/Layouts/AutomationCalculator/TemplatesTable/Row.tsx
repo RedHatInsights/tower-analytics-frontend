@@ -42,7 +42,7 @@ const setLabeledValue = (key: string, value: number) => {
       label = currencyFormatter(value);
       break;
     default:
-      label = value;
+      label = (+value).toFixed(2);
   }
   return label;
 };
