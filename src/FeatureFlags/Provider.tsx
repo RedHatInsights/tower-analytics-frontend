@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Provider } from './Context';
 import { getFeatures } from '../Api/';
 import { ApiFeatureFlagReturnType, FeatureFlagType } from './types';
+import LoadingState from '../Components/ApiStatus/LoadingState';
 
 interface Props {
   children: React.ReactNode;
@@ -10,7 +11,7 @@ interface Props {
 
 const FeatureFlagProvider: FunctionComponent<Props> = ({ children }) => {
   const [features, setFeatures] = useState([] as FeatureFlagType[]);
-
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     getFeatures()
       .then((flags: ApiFeatureFlagReturnType) => {
@@ -19,13 +20,18 @@ const FeatureFlagProvider: FunctionComponent<Props> = ({ children }) => {
         } else {
           setFeatures([]);
         }
+        setLoading(false);
       })
       .catch((error) =>
         console.error('Getting the feature flags resulted in error:', error)
       );
   }, []);
 
-  return <Provider value={features}>{children}</Provider>;
+  if (loading || !features) {
+    return <LoadingState />;
+  } else {
+    return <Provider value={features}>{children}</Provider>;
+  }
 };
 
 FeatureFlagProvider.propTypes = {

@@ -32,6 +32,17 @@ export interface PDFParams {
   };
 }
 
+export interface saveROIParams {
+  currency: string;
+  hourly_manual_labor_cost: number;
+  hourly_automation_cost: number;
+  templates_manual_equivalent: {
+    template_id: number;
+    effort_minutes: number;
+    template_weigh_in: boolean;
+  }[];
+}
+
 export type NotificationAsyncFunction = (
   id: string,
   title?: string,
