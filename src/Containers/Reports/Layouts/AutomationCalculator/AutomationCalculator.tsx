@@ -361,7 +361,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   };
 
   const isReadOnly = (api) => {
-    return !!api.result.rbac?.perms?.read;
+    return !api.result.rbac?.perms?.all && !api.result.rbac?.perms?.write;
   };
 
   const renderLeft = () => (
