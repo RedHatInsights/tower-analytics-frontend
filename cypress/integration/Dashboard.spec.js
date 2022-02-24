@@ -374,7 +374,7 @@ describe('Dashboard page drilldown tests', () => {
     const twoMonthssAgo = moment(new Date().toISOString())
       .subtract(61, 'day')
       .format('M/D');
-
+    cy.intercept('/job_explorer/*').as('jobExplorer');
     // Filter by Job Type
     cy.get('button[class="pf-c-select__toggle"]').eq(0).click();
     cy.get('button[class*="pf-c-select__menu-item"]').contains('Job').click();
@@ -401,6 +401,7 @@ describe('Dashboard page drilldown tests', () => {
     // Filter by Date range
     cy.get('div[data-cy="quick_date_range"]').click();
     cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+    cy.wait('@jobExplorer');
     cy.get('#d3-bar-chart-root > svg')
       .find('.x-axis')
       .find('g')
