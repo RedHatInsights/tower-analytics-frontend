@@ -2,7 +2,7 @@ import { Paths } from '../../paths';
 
 const paths = {
   get: `${Paths.reports}`,
-  details: `${Paths.reports}/:slug`,
+  details: [`${Paths.reports}/:slug`, '/automation_calculator'],
   getDetails: (slug: string): string => `${Paths.reports}/${slug}`,
 };
 
