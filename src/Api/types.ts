@@ -45,12 +45,14 @@ export interface saveROIParams {
 
 export type NotificationAsyncFunction = (
   id: string,
+  title?: string,
   message?: string
 ) => NotificationOptions;
 
 export interface NotificationParams {
   pending: NotificationAsyncFunction;
   rejected: NotificationAsyncFunction;
+  success: NotificationAsyncFunction;
   dispatch: DispatchType;
   id: string;
 }
