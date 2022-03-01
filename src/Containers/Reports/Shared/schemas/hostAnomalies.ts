@@ -7,7 +7,8 @@ import {
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
-import { Endpoint } from '../../../../Api';
+import { ExpandedTableRowName } from '../../Layouts/Standard/Components';
+import { Endpoint, Params } from '../../../../Api';
 import { LayoutComponentName, ReportSchema } from '../../Layouts/types';
 import { TagName } from '../constants';
 import { AttributesType } from '../types';
@@ -27,15 +28,17 @@ const tags = [
 ];
 
 const tableHeaders: AttributesType = [
-  { key: 'id', value: 'ID' },
-  { key: 'name', value: 'Template name' },
+  { key: 'template_id', value: 'ID' },
+  { key: 'template_name', value: 'Template' },
   { key: 'host_count', value: 'Host count' },
 ];
 
+const expandedAttributes = ['average_duration_per_task', 'host_runs'];
+
 const defaultParams = {
-  limit: 6,
+  limit: 25,
   offset: 0,
-  attributes: ['host_count'],
+  attributes: ['slow_hosts_count', ...expandedAttributes],
   cluster_id: [],
   org_id: [],
   inventory_id: [],
@@ -43,7 +46,7 @@ const defaultParams = {
   status: [],
   host_status: [],
   sort_options: 'average_duration_per_task',
-  quick_date_range: 'slow_hosts_last_month',
+  quick_date_range: 'slow_hosts_last_1_week',
   slow_host_view: 'templates_with_slow_hosts',
 };
 
@@ -56,18 +59,17 @@ const schema = [
     type: ChartTopLevelType.chart,
     parent: null,
     props: {
-      height: 400,
+      height: 500,
       padding: {
         top: 10,
         bottom: 85,
-        right: 178,
+        right: 90,
         left: 90,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
-      label: 'Date',
-      tickFormat: 'VAR_xTickFormat',
+      label: 'Template',
       style: {
         axisLabel: {
           padding: 50,
@@ -84,20 +86,6 @@ const schema = [
         },
       },
     },
-    legend: {
-      interactive: true,
-      orientation: ChartLegendOrientation.vertical,
-      position: ChartLegendPosition.right,
-      turncateAt: 18,
-    },
-    tooltip: {
-      mouseFollow: true,
-      stickToAxis: 'x',
-      cursor: true,
-      legendTooltip: {
-        titleProperyForLegend: 'created_date',
-      },
-    },
   },
   {
     id: 2,
@@ -108,18 +96,18 @@ const schema = [
   {
     id: 3,
     kind: ChartKind.simple,
-    type: 'VAR_chartType',
+    type: ChartType.bar,
     parent: 0,
     props: {
-      x: 'created_date',
+      x: 'name',
       y: 'VAR_y',
     },
     tooltip: {
-      labelName: '',
+      standalone: true,
+      labelName: 'VAR_label',
     },
   },
 ];
-
 const reportParams: ReportSchema = {
   layoutComponent: LayoutComponentName.Standard,
   layoutProps: {
@@ -129,6 +117,7 @@ const reportParams: ReportSchema = {
     tags,
     defaultParams,
     tableHeaders,
+    expandedTableRowName: ExpandedTableRowName.templatesExplorer,
     availableChartTypes,
     dataEndpoint: Endpoint.probeTemplates,
     optionsEndpoint: Endpoint.probeTemplatesOptions,
