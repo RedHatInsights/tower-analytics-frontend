@@ -39,14 +39,17 @@ const ReportTable: FunctionComponent<Props> = ({
         </Tr>
       </Thead>
       <Tbody>
-        {legend.map((entry) => (
-          <TableRow
-            key={entry.id}
-            legendEntry={entry}
-            headers={headers}
-            expandedRowName={expandedRowName}
-          />
-        ))}
+        {legend.map((entry) => {
+          console.log('entry', entry);
+          return (
+            <TableRow
+              key={entry.id}
+              legendEntry={entry}
+              headers={headers}
+              expandedRowName={expandedRowName}
+            />
+          );
+        })}
       </Tbody>
     </TableComposable>
   );
