@@ -78,6 +78,7 @@ const EmailDetailsForm: FC<Props> = ({
             );
             setIsExpanded(false);
           }}
+          hasInlineFilter
           selections={selectedRbacGroups}
           placeholderText={'Select Recipients'}
         >
@@ -93,7 +94,12 @@ const EmailDetailsForm: FC<Props> = ({
           {users.map(({ name, emails }, i) => {
             return (
               <p key={i}>
-                <b>{name}</b>: {emails.join(', ')}
+                <b>{name}</b>:{' '}
+                {emails.length > 0 ? (
+                  emails.join(', ')
+                ) : (
+                  <i>No emails associated with this group</i>
+                )}
               </p>
             );
           })}
