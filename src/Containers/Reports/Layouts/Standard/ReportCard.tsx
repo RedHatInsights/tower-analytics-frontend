@@ -39,6 +39,8 @@ const getDateFormatByGranularity = (granularity: string): string => {
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
+  name,
+  description,
   defaultParams,
   tableHeaders,
   expandedTableRowName,
@@ -108,7 +110,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
     xTickFormat: getDateFormatByGranularity(queryParams.granularity),
-    chartType: settingsQueryParams.chartType,
+    chartType: settingsQueryParams.chartType || 'line',
   };
 
   const getSortParams = (currKey: string) => {
@@ -160,6 +162,8 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     <DownloadPdfButton
       key="download-button"
       slug={slug}
+      name={name}
+      description={description}
       endpointUrl={dataEndpoint}
       queryParams={queryParams}
       selectOptions={options}

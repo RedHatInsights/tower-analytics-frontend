@@ -89,6 +89,7 @@ const inputsRuntime = (wrapper) => wrapper.find('input').slice(2);
 
 const pageParams = {
   slug: 'slug',
+  description: 'Foo Description',
   defaultParams: roi.defaultParams,
   defaultTableHeaders: [],
   tableAttributes: [],

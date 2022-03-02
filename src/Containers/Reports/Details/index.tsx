@@ -1,5 +1,4 @@
 import React, { FunctionComponent } from 'react';
-import { useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import Error404 from '../../../Components/Error404';
@@ -33,7 +32,8 @@ const Label = styled(PFLabel)`
 `;
 
 const Details: FunctionComponent<Record<string, never>> = () => {
-  const { slug } = useParams<{ slug: string }>();
+  const slug = location.pathname.split('/').pop() as string;
+
   const report = getReport(slug);
 
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];

@@ -9,6 +9,7 @@ import {
   authenticatedFetch,
   deleteByIds,
   postWithFileReturn,
+  postWithEmail,
 } from './methods';
 import {
   ReadEndpointFnc,
@@ -35,6 +36,9 @@ export enum Endpoint {
   costEffortROI = '/api/tower-analytics/v1/roi_cost_effort_data/',
   plans = '/api/tower-analytics/v1/plans/',
   plan = '/api/tower-analytics/v1/plan/',
+  sendEmail = 'api/tower-analytics/v1/send_email/',
+  readRbacGroups = 'api/tower-analytics/v1/rbac_groups/',
+  readRbacPrincipals = 'api/tower-analytics/v1/rbac_principals/',
 
   /* page options endpoints */
   jobExplorerOptions = '/api/tower-analytics/v1/job_explorer_options/',
@@ -129,6 +133,17 @@ export const generatePdf = async (
   params: PDFParams,
   meta: NotificationParams
 ): Promise<void> => postWithFileReturn(Endpoint.pdfGenerate, params, meta);
+
+export const sendEmail = (
+  params: Params,
+  meta: NotificationParams
+): Promise<void> => postWithEmail(Endpoint.sendEmail, params, meta);
+
+export const readRbacGroups = (): Promise<ApiJson> =>
+  get(Endpoint.readRbacGroups);
+
+export const readRbacPrincipals = (uuid: string): Promise<ApiJson> =>
+  get(`${Endpoint.readRbacPrincipals}${uuid}/`);
 
 /**
  * This mapper is used by the reports to map url strings to functions
