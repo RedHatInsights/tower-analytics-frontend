@@ -162,8 +162,7 @@ const DownloadPdfButton: FC<Props> = ({
   };
 
   useEffect(() => {
-    if (principalsFromApi.length > 0 && selectedRbacGroups.length > 0)
-      updateEmailInfo();
+    if (selectedRbacGroups.length > 0) updateEmailInfo();
   }, [principalsFromApi]);
 
   const downloadPdf = () => {
@@ -195,6 +194,14 @@ const DownloadPdfButton: FC<Props> = ({
     );
   };
 
+  const resetEmailDetails = () => {
+    setIsExportModalOpen(false);
+    setEmailInfo({
+      ...initializeEmailInfo,
+    });
+    unlisten();
+  };
+
   const emailSend = () => {
     // Don't allow user to spam send email button
     if (isLoading) return;
@@ -216,6 +223,16 @@ const DownloadPdfButton: FC<Props> = ({
         slug
       )
     );
+    resetEmailDetails();
+  };
+
+  const sendEmailButtonDisabled = () => {
+    if (emailInfo.selectedRbacGroups.length === 0) return true;
+    if (
+      emailInfo.users.length === 0 ||
+      (emailInfo.users.length === 1 && emailInfo.users[0].emails.length <= 0)
+    )
+      return true;
   };
 
   return (
@@ -240,11 +257,7 @@ const DownloadPdfButton: FC<Props> = ({
         title="Export report"
         isOpen={isExportModalOpen}
         onClose={() => {
-          setIsExportModalOpen(false);
-          setEmailInfo({
-            ...initializeEmailInfo,
-          });
-          unlisten();
+          resetEmailDetails();
         }}
         actions={[
           <>
@@ -264,12 +277,8 @@ const DownloadPdfButton: FC<Props> = ({
               <Button
                 key="email"
                 variant={ButtonVariant.primary}
-                isDisabled={
-                  emailInfo.selectedRbacGroups.length === 0 ||
-                  emailInfo.users.length === 0
-                }
+                isDisabled={sendEmailButtonDisabled()}
                 onClick={() => {
-                  setIsExportModalOpen(false);
                   emailSend();
                 }}
               >
@@ -281,11 +290,7 @@ const DownloadPdfButton: FC<Props> = ({
             key="cancel"
             variant={ButtonVariant.link}
             onClick={() => {
-              setIsExportModalOpen(false);
-              setEmailInfo({
-                ...initializeEmailInfo,
-              });
-              unlisten();
+              resetEmailDetails();
             }}
           >
             Cancel
