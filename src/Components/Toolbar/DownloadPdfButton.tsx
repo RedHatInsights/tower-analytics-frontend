@@ -35,6 +35,7 @@ import {
   RbacPrincipalFromApi,
   User,
 } from './types';
+import { useFeatureFlag, ValidFeatureFlags } from '../../FeatureFlags';
 interface Props {
   settingsNamespace: string;
   slug: string;
@@ -78,6 +79,7 @@ const DownloadPdfButton: FC<Props> = ({
 }) => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [downloadType, setDownloadType] = useState('current');
+  const sendEmailEnabled = useFeatureFlag(ValidFeatureFlags.sendEmail);
 
   const initializeEmailInfo: EmailDetailsType = {
     selectedRbacGroups: [],
@@ -220,13 +222,10 @@ const DownloadPdfButton: FC<Props> = ({
 
   return (
     <>
-      <Tooltip
-        position={TooltipPosition.top}
-        content="Download PDF version of report"
-      >
+      <Tooltip position={TooltipPosition.top} content="Export report">
         <Button
           variant={isError ? ButtonVariant.link : ButtonVariant.plain}
-          aria-label="Download PDF version of report"
+          aria-label="Export report"
           onClick={() => setIsExportModalOpen(true)}
           isDanger={isError}
         >
@@ -332,16 +331,18 @@ const DownloadPdfButton: FC<Props> = ({
               </GridItem>
             </>
           )}
-          <GridItem>
-            <Radio
-              onChange={() => setDownloadType('email')}
-              isChecked={downloadType === 'email'}
-              name="optionSelected"
-              label="Send E-Mail"
-              id="email-radio"
-              aria-label="email-radio"
-            />
-          </GridItem>
+          {sendEmailEnabled && (
+            <GridItem>
+              <Radio
+                onChange={() => setDownloadType('email')}
+                isChecked={downloadType === 'email'}
+                name="optionSelected"
+                label="Send E-Mail"
+                id="email-radio"
+                aria-label="email-radio"
+              />
+            </GridItem>
+          )}
         </Grid>
         {downloadType === 'email' && (
           <Grid style={{ paddingTop: '15px' }}>
