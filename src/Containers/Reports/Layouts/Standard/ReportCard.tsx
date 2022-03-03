@@ -173,6 +173,12 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       totalCount={dataApi.result.meta.count}
       onPageCount={queryParams.limit}
       chartType={settingsQueryParams.chartType}
+      sortOptions={chartParams.y}
+      sortOrder={queryParams.sort_order}
+      dateGranularity={queryParams.granularity}
+      startDate={queryParams.start_date}
+      endDate={queryParams.end_date}
+      dateRange={queryParams.quick_date_range}
     />,
   ];
   return (

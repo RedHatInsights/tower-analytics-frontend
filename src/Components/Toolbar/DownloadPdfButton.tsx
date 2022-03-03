@@ -50,6 +50,12 @@ interface Props {
   chartType: string;
   totalCount: number;
   onPageCount: number;
+  sortOptions: string;
+  sortOrder: 'asc' | 'desc';
+  dateGranularity: string;
+  startDate: string;
+  endDate: string;
+  dateRange: string;
 }
 
 interface RbacGroupsDataType {
@@ -76,6 +82,12 @@ const DownloadPdfButton: FC<Props> = ({
   chartType,
   totalCount,
   onPageCount,
+  sortOptions,
+  sortOrder,
+  dateGranularity,
+  startDate,
+  endDate,
+  dateRange,
 }) => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [downloadType, setDownloadType] = useState('current');
@@ -188,6 +200,12 @@ const DownloadPdfButton: FC<Props> = ({
             queryParams,
             selectOptions,
             chartSeriesHiddenProps,
+            sortOptions,
+            sortOrder,
+            dateGranularity,
+            startDate,
+            endDate,
+            dateRange,
           },
         },
         dispatch,
