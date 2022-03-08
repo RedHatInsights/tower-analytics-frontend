@@ -1,7 +1,9 @@
 import React, { FC, useState } from 'react';
 import {
+  Checkbox,
   Form,
   FormGroup,
+  FormHelperText,
   Select,
   SelectOption,
   SelectVariant,
@@ -9,6 +11,7 @@ import {
   TextInput,
 } from '@patternfly/react-core';
 import { EmailDetailsType, RbacGroupFromApi } from './types';
+import { ExclamationCircleIcon } from '@patternfly/react-icons';
 interface Props {
   emailInfo: EmailDetailsType;
   onChange: (value: any) => void;
@@ -20,9 +23,35 @@ const EmailDetailsForm: FC<Props> = ({
   onChange = () => null,
   allRbacGroups,
 }) => {
-  const { body, selectedRbacGroups, users, reportUrl, subject } = emailInfo;
+  const {
+    body,
+    selectedRbacGroups,
+    users,
+    reportUrl,
+    subject,
+    additionalRecipients,
+    eula,
+  } = emailInfo;
+  const [showError, setShowError] = useState(false);
   const onInputChange = (field: string, val: string) => {
     onChange({ ...emailInfo, [field]: val });
+  };
+
+  const handleCheckbox = (field: string, checked: boolean) => {
+    onChange({ ...emailInfo, [field]: checked });
+  };
+
+  const checkEmailInput = (value: string) => {
+    const emailList = value.split(',');
+    for (let i = 0; i < emailList.length; i++) {
+      const regEx = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+      if (!regEx.test(emailList[i])) {
+        setShowError(true);
+        return;
+      }
+    }
+    setShowError(false);
+    return;
   };
 
   const clearGroupSelection = () => {
@@ -105,6 +134,49 @@ const EmailDetailsForm: FC<Props> = ({
           })}
         </FormGroup>
       )}
+      <FormGroup
+        label="Additional Recipients"
+        fieldId="additionalRecipients-field"
+      >
+        <TextInput
+          placeholder="Comma separated emails"
+          type="email"
+          id="additionalRecipients"
+          name="additionalRecipients"
+          value={additionalRecipients}
+          onBlur={(e) => checkEmailInput(e.target.value)}
+          onFocus={(e) => checkEmailInput(e.target.value)}
+          onChange={(value) => onInputChange('additionalRecipients', value)}
+        />
+        {additionalRecipients && showError && (
+          <FormHelperText
+            isError
+            icon={<ExclamationCircleIcon />}
+            isHidden={!showError}
+          >
+            Check the additonal email format, emails must be valid and comma
+            separated values
+          </FormHelperText>
+        )}
+      </FormGroup>
+      <FormGroup label="EULA Acknowledgement" fieldId="eula-field">
+        <Checkbox
+          isChecked={eula}
+          aria-label="card checkbox"
+          id="eula"
+          name="eula"
+          onChange={(checked) => handleCheckbox('eula', checked)}
+        />
+        {additionalRecipients && (
+          <FormHelperText
+            isError
+            icon={<ExclamationCircleIcon />}
+            isHidden={additionalRecipients === ''}
+          >
+            Please check the checkbox above
+          </FormHelperText>
+        )}
+      </FormGroup>
       <FormGroup label="Subject" fieldId="subject-field">
         <TextInput
           placeholder="Report is ready to be downloaded"

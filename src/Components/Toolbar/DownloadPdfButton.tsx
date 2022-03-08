@@ -104,11 +104,21 @@ const DownloadPdfButton: FC<Props> = ({
       description[0].toLowerCase() +
       description.substring(1),
     reportUrl: window.location.href,
+    additionalRecipients: '',
+    eula: false,
   };
 
   const [emailInfo, setEmailInfo] =
     useState<EmailDetailsType>(initializeEmailInfo);
-  const { selectedRbacGroups, users, subject, body, reportUrl } = emailInfo;
+  const {
+    selectedRbacGroups,
+    users,
+    subject,
+    body,
+    reportUrl,
+    additionalRecipients,
+    eula,
+  } = emailInfo;
 
   const dispatch = useAppDispatch();
   const { chartSeriesHiddenProps } = useReadQueryParams(
@@ -231,6 +241,9 @@ const DownloadPdfButton: FC<Props> = ({
 
     const all_recipients = users.map(({ emails }) => emails);
 
+    if (additionalRecipients !== '' && eula)
+      all_recipients.push(additionalRecipients.split(','));
+
     // Dispatch the email,
     dispatch(
       emailAction(
@@ -250,10 +263,20 @@ const DownloadPdfButton: FC<Props> = ({
   };
 
   const sendEmailButtonDisabled = () => {
-    if (emailInfo.selectedRbacGroups.length === 0) return true;
+    if (eula && additionalRecipients !== '') return false;
+
+    // if additional recipient provided, eula must be checked
+    if (!eula && additionalRecipients !== '') return true;
+
+    // no group selected and no additional email and eula not checked
+    if (selectedRbacGroups.length === 0 && !eula && additionalRecipients === '')
+      return true;
+
+    // (group not selected or group selected but has no users) or additional recipients provide but eula not checked
     if (
-      emailInfo.users.length === 0 ||
-      (emailInfo.users.length === 1 && emailInfo.users[0].emails.length <= 0)
+      users.length === 0 ||
+      (users.length === 1 && users[0].emails.length <= 0) ||
+      (!eula && additionalRecipients !== '')
     )
       return true;
   };

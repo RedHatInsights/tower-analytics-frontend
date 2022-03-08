@@ -33,6 +33,8 @@ export interface EmailDetailsType {
   subject: string;
   body: string;
   reportUrl: string;
+  additionalRecipients: string;
+  eula: boolean;
 }
 
 export interface RbacGroupFromApi {
