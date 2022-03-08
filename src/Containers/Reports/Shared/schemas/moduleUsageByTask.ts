@@ -149,6 +149,7 @@ const reportParams: ReportSchema = {
     dataEndpoint: Endpoint.eventExplorer,
     optionsEndpoint: Endpoint.eventExplorerOptions,
     schema,
+    fullCard: true,
   },
   layoutComponent: LayoutComponentName.Standard,
 };

@@ -139,6 +139,7 @@ const reportParams: ReportSchema = {
     dataEndpoint: Endpoint.hostExplorer,
     optionsEndpoint: Endpoint.hostExplorerOptions,
     schema,
+    fullCard: true,
   },
 };
 

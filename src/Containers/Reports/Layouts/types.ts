@@ -21,6 +21,7 @@ export interface AutmationCalculatorProps extends BaseReportProps {
   defaultParams: Params;
   dataEndpoint: Endpoint;
   optionsEndpoint: Endpoint;
+  fullCard: boolean;
 }
 
 export interface StandardProps extends BaseReportProps {
@@ -31,6 +32,7 @@ export interface StandardProps extends BaseReportProps {
   defaultSelectedToolbarCategory?: string;
   dataEndpoint: Endpoint;
   optionsEndpoint: Endpoint;
+  fullCard: boolean;
 }
 
 export type ReportSchema =
