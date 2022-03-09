@@ -21,6 +21,7 @@ const prodReports = [
   hostsByOrganization,
   jobsTasksByOrganization,
   templatesExplorer,
+  hostAnamolies,
 ];
 
 const moduleReports = [
@@ -28,7 +29,6 @@ const moduleReports = [
   moduleUsageByOrganization,
   moduleUsageByJobTemplate,
   moduleUsageByTask,
-  hostAnamolies,
 ];
 
 const onboardingReports = [aa21OnboardingReport];
