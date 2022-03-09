@@ -1,3 +1,4 @@
+import HostAnamolies from './HostAnamolies';
 import TemplatesExplorer from './TemplatesExplorer';
 import { ExpandedTableRowComponent, ExpandedTableRowName } from './types';
 export * from './types';
@@ -8,6 +9,8 @@ export const getExpandedRowComponent = (
   switch (name) {
     case ExpandedTableRowName.templatesExplorer:
       return TemplatesExplorer;
+    case ExpandedTableRowName.hostAnamolies:
+      return HostAnamolies;
     default:
       return null;
   }
