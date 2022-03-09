@@ -47,7 +47,7 @@ const defaultParams = {
   slow_host_view: 'templates_with_slow_hosts',
 };
 
-const availableChartTypes = [ChartType.bar, ChartType.line];
+const availableChartTypes = [ChartType.bar];
 
 const schema = [
   {
