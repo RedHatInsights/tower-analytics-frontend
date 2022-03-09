@@ -25,7 +25,7 @@ export interface PDFParams {
   schemaParams: Record<string, string>;
   dataFetchingParams: {
     endpointUrl: string;
-    queryParams: Params;
+    queryParams: Params | any;
     selectOptions: OptionsReturnType;
     showExtraRows: boolean;
     chartSeriesHiddenProps: boolean[];
