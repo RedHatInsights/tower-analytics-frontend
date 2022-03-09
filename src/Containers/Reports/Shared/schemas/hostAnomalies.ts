@@ -1,19 +1,17 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
   ChartKind,
-  ChartLegendOrientation,
-  ChartLegendPosition,
   ChartTopLevelType,
   ChartType,
   ChartThemeColor,
 } from 'react-json-chart-builder';
 import { ExpandedTableRowName } from '../../Layouts/Standard/Components';
-import { Endpoint, Params } from '../../../../Api';
+import { Endpoint } from '../../../../Api';
 import { LayoutComponentName, ReportSchema } from '../../Layouts/types';
 import { TagName } from '../constants';
 import { AttributesType } from '../types';
 
-const slug = 'host_anomalies';
+const slug = 'host_anamolies';
 
 const name = 'Host Anamolies';
 
@@ -28,17 +26,15 @@ const tags = [
 ];
 
 const tableHeaders: AttributesType = [
-  { key: 'template_id', value: 'ID' },
-  { key: 'template_name', value: 'Template' },
+  { key: 'id', value: 'ID' },
+  { key: 'name', value: 'Template' },
   { key: 'host_count', value: 'Host count' },
 ];
 
-const expandedAttributes = ['average_duration_per_task', 'host_runs'];
-
 const defaultParams = {
-  limit: 25,
+  limit: 6,
   offset: 0,
-  attributes: ['slow_hosts_count', ...expandedAttributes],
+  attributes: ['slow_hosts_count'],
   cluster_id: [],
   org_id: [],
   inventory_id: [],
@@ -46,11 +42,12 @@ const defaultParams = {
   status: [],
   host_status: [],
   sort_options: 'average_duration_per_task',
+  sort_order: 'desc',
   quick_date_range: 'slow_hosts_last_1_week',
   slow_host_view: 'templates_with_slow_hosts',
 };
 
-const availableChartTypes = [ChartType.bar];
+const availableChartTypes = [ChartType.bar, ChartType.line];
 
 const schema = [
   {
@@ -59,22 +56,33 @@ const schema = [
     type: ChartTopLevelType.chart,
     parent: null,
     props: {
-      height: 500,
+      height: 400,
+      domainPadding: {
+        x: 100,
+      },
       padding: {
         top: 10,
-        bottom: 85,
+        bottom: 150,
         right: 90,
         left: 90,
       },
       themeColor: ChartThemeColor.multiOrdered,
     },
     xAxis: {
-      label: 'Template',
+      label: 'Templates',
       style: {
         axisLabel: {
-          padding: 50,
+          padding: 130,
+          title: 'test',
         },
       },
+      labelProps: {
+        angle: -45,
+        textAnchor: 'end',
+        dx: 0,
+        dy: 0,
+      },
+      fixLabelOverlap: false,
     },
     yAxis: {
       tickFormat: 'formatNumberAsK',
@@ -108,6 +116,7 @@ const schema = [
     },
   },
 ];
+
 const reportParams: ReportSchema = {
   layoutComponent: LayoutComponentName.Standard,
   layoutProps: {
@@ -117,7 +126,7 @@ const reportParams: ReportSchema = {
     tags,
     defaultParams,
     tableHeaders,
-    expandedTableRowName: ExpandedTableRowName.templatesExplorer,
+    expandedTableRowName: ExpandedTableRowName.hostAnamolies,
     availableChartTypes,
     dataEndpoint: Endpoint.probeTemplates,
     optionsEndpoint: Endpoint.probeTemplatesOptions,

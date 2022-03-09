@@ -249,11 +249,9 @@ describe('Report: Host Anomalies', () => {
     cy.visit(reportsUrl + '/' + ha);
   });
 
-  it('Can Switch between Line and Bar chart without breaking UI', () => {
+  it('Renders bar chart with data', () => {
     cy.get('#bar').click();
     cy.screenshot('report_ha_bar.png');
-    cy.get('#line').click();
-    cy.screenshot('report_aa21m_line.png');
   });
 
   it('Can change lookback', () => {
