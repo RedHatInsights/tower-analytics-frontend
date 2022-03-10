@@ -11,9 +11,9 @@ import { LayoutComponentName, ReportSchema } from '../../Layouts/types';
 import { TagName } from '../constants';
 import { AttributesType } from '../types';
 
-const slug = 'host_anamolies';
+const slug = 'host_Anomalies';
 
-const name = 'Host Anamolies';
+const name = 'Host Anomalies';
 
 const description =
   'The slowest hosts in a given job template are identified.A host is considered to be slow if it executes tasks much slower compared to the other hosts in the same template. The host slowness could be due to several factors such as low memory, CPU slowdown, network latency issues etc.\n\n You can use this report to single out templates and hosts that run slow and drive up the automation costs due to their slow performance.';
@@ -126,7 +126,7 @@ const reportParams: ReportSchema = {
     tags,
     defaultParams,
     tableHeaders,
-    expandedTableRowName: ExpandedTableRowName.hostAnamolies,
+    expandedTableRowName: ExpandedTableRowName.hostAnomalies,
     availableChartTypes,
     dataEndpoint: Endpoint.probeTemplates,
     optionsEndpoint: Endpoint.probeTemplatesOptions,

@@ -11,7 +11,7 @@ const mubo = 'module_usage_by_organization';
 const mubjt = 'module_usage_by_job_template';
 const mubt = 'module_usage_by_task';
 const aa21m = 'aa_2_1_onboarding';
-const ha = 'host_anamolies';
+const ha = 'host_anomalies';
 
 const allReports = [
   hcbjt,
