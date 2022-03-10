@@ -13,7 +13,7 @@ const slug = 'automation_calculator';
 const name = 'Automation calculator';
 
 const description =
-  'The calculated savings of the job templates running across the company in comparison to the cost of completing these jobs manually.\n\nYou can use this report to get an idea of the ROI from your automation, as well as identify which templates are contributing to this savings the most';
+  'The calculated savings of the job templates running across the company in comparison to the cost of completing these jobs manually.\n\nYou can use this report to get an idea of the ROI from your automation, as well as identify which templates are contributing to these savings the most.';
 
 const tags = [TagName.executive, TagName.jobTemplate, TagName.savings];
 

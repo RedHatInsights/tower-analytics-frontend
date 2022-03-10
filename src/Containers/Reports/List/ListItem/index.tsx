@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
@@ -36,15 +36,17 @@ const Label = styled(PFLabel)`
 
 interface Props {
   report: ReportSchema;
+  selected: string;
+  setSelected: (newSelection: string) => void;
 }
 
 const ListItem: FunctionComponent<Props> = ({
   report: {
     layoutProps: { slug, description, name, tags },
   },
+  selected,
+  setSelected,
 }) => {
-  const [selected, setSelected] = useState('hosts_changed_by_job_template');
-
   return (
     <Card
       data-testid={slug}

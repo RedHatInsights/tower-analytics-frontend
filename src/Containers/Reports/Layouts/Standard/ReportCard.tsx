@@ -217,12 +217,14 @@ const ReportCard: FunctionComponent<StandardProps> = ({
               })}
               data={dataApi.result}
             />
-            <Table
-              legend={dataApi.result.meta.legend}
-              headers={tableHeaders}
-              getSortParams={getSortParams}
-              expandedRowName={expandedTableRowName}
-            />
+            {fullCard && (
+              <Table
+                legend={dataApi.result.meta.legend}
+                headers={tableHeaders}
+                getSortParams={getSortParams}
+                expandedRowName={expandedTableRowName}
+              />
+            )}
           </ApiStatusWrapper>
         )}
       </CardBody>
