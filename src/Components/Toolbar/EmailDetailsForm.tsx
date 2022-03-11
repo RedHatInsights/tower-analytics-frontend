@@ -4,6 +4,9 @@ import {
   Form,
   FormGroup,
   FormHelperText,
+  Grid,
+  GridItem,
+  Radio,
   Select,
   SelectOption,
   SelectVariant,
@@ -14,12 +17,14 @@ import { EmailDetailsType, RbacGroupFromApi } from './types';
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
 interface Props {
   emailInfo: EmailDetailsType;
+  extraRowsLabel: string;
   onChange: (value: any) => void;
   allRbacGroups: RbacGroupFromApi[];
 }
 
 const EmailDetailsForm: FC<Props> = ({
   emailInfo,
+  extraRowsLabel,
   onChange = () => null,
   allRbacGroups,
 }) => {
@@ -31,6 +36,7 @@ const EmailDetailsForm: FC<Props> = ({
     subject,
     additionalRecipients,
     eula,
+    showExtraRows,
   } = emailInfo;
   const [showError, setShowError] = useState(false);
   const onInputChange = (field: string, val: string) => {
@@ -87,6 +93,10 @@ const EmailDetailsForm: FC<Props> = ({
 
   const [isExpanded, setIsExpanded] = useState(false);
 
+  const setExtraRows = (field: string, value: boolean) => {
+    onChange({ ...emailInfo, [field]: value });
+  };
+
   return (
     <Form>
       <FormGroup
@@ -135,7 +145,7 @@ const EmailDetailsForm: FC<Props> = ({
         </FormGroup>
       )}
       <FormGroup
-        label="Additional Recipients"
+        label="External recipients"
         fieldId="additionalRecipients-field"
       >
         <TextInput
@@ -154,8 +164,7 @@ const EmailDetailsForm: FC<Props> = ({
             icon={<ExclamationCircleIcon />}
             isHidden={!showError}
           >
-            Check the additonal email format, emails must be valid and comma
-            separated values
+            The email format must be valid and comma separated.
           </FormHelperText>
         )}
       </FormGroup>
@@ -167,15 +176,40 @@ const EmailDetailsForm: FC<Props> = ({
           name="eula"
           onChange={(checked) => handleCheckbox('eula', checked)}
         />
-        {additionalRecipients && (
+        {additionalRecipients && !eula && (
           <FormHelperText
             isError
             icon={<ExclamationCircleIcon />}
-            isHidden={additionalRecipients === ''}
+            isHidden={additionalRecipients === '' && !eula}
           >
-            Please check the checkbox above
+            Please confirm the EULA acknowledgement if external e-mails are
+            being used.
           </FormHelperText>
         )}
+      </FormGroup>
+      <FormGroup label="Email details" fieldId="extraRows-field">
+        <Grid md={4}>
+          <GridItem>
+            <Radio
+              onChange={() => setExtraRows('showExtraRows', false)}
+              isChecked={!showExtraRows}
+              name="showExtraRows"
+              label="Current page"
+              id="showExtraRows-current-radio"
+              aria-label="showExtraRows-current-radio"
+            />
+          </GridItem>
+          <GridItem>
+            <Radio
+              onChange={() => setExtraRows('showExtraRows', true)}
+              isChecked={showExtraRows}
+              name="showExtraRows"
+              label={extraRowsLabel}
+              id="showExtraRows-total-radio"
+              aria-label="showExtraRows-total-radio"
+            />
+          </GridItem>
+        </Grid>
       </FormGroup>
       <FormGroup label="Subject" fieldId="subject-field">
         <TextInput
@@ -199,15 +233,8 @@ const EmailDetailsForm: FC<Props> = ({
           onChange={(value) => onInputChange('body', value)}
         />
       </FormGroup>
-      <FormGroup label="Report Link" fieldId="link-field">
-        <TextInput
-          placeholder=""
-          type="text"
-          id="link"
-          name="link"
-          readOnly={true}
-          value={reportUrl}
-        />
+      <FormGroup label="Report link" fieldId="link-field">
+        {reportUrl}
       </FormGroup>
     </Form>
   );

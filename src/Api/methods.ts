@@ -67,7 +67,6 @@ export const postWithFileReturn = async (
     .then((response) => {
       // Delete pending notification when we have results.
       dispatch(removeNotification(notif.id));
-
       return response.ok
         ? // If response is ok, then continue to download the PDF
           { response, size: response.headers.get('content-length') }

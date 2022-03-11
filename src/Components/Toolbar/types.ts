@@ -35,6 +35,7 @@ export interface EmailDetailsType {
   reportUrl: string;
   additionalRecipients: string;
   eula: boolean;
+  showExtraRows: boolean;
 }
 
 export interface RbacGroupFromApi {

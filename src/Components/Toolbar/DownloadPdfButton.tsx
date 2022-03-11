@@ -106,6 +106,7 @@ const DownloadPdfButton: FC<Props> = ({
     reportUrl: window.location.href,
     additionalRecipients: '',
     eula: false,
+    showExtraRows: false,
   };
 
   const [emailInfo, setEmailInfo] =
@@ -118,6 +119,7 @@ const DownloadPdfButton: FC<Props> = ({
     reportUrl,
     additionalRecipients,
     eula,
+    showExtraRows,
   } = emailInfo;
 
   const dispatch = useAppDispatch();
@@ -235,6 +237,26 @@ const DownloadPdfButton: FC<Props> = ({
     unlisten();
   };
 
+  const generateToken = () => {
+    const min = 1000000;
+    const max = 10000000000;
+    return parseInt(String(min + Math.random() * (max - min)));
+  };
+
+  const generateExpiryDate = () => {
+    const d = new Date();
+    d.setMonth(d.getMonth() + 3);
+    return d.toLocaleDateString();
+  };
+
+  const parseUrl = () => {
+    // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
+    const params = `showExtraRows=${showExtraRows}&token=${generateToken()}&expires=${generateExpiryDate()}`;
+    const url =
+      new URL(window.location.href).search === '' ? '?' + params : '&' + params;
+    return reportUrl.replace('/reports/', '/downloadReport/') + url;
+  };
+
   const emailSend = () => {
     // Don't allow user to spam send email button
     if (isLoading) return;
@@ -252,7 +274,7 @@ const DownloadPdfButton: FC<Props> = ({
           recipient: all_recipients.flat(),
           subject: subject === '' ? 'Report is ready to be viewed' : subject,
           body: body.toString().replace(/(?:\r\n|\r|\n)/g, '<br>'),
-          reportUrl: reportUrl,
+          reportUrl: parseUrl(),
           payload: 'Download',
         },
         dispatch,
@@ -386,7 +408,7 @@ const DownloadPdfButton: FC<Props> = ({
                 onChange={() => setDownloadType('email')}
                 isChecked={downloadType === 'email'}
                 name="optionSelected"
-                label="Send E-Mail"
+                label="Send e-mail"
                 id="email-radio"
                 aria-label="email-radio"
               />
@@ -398,6 +420,11 @@ const DownloadPdfButton: FC<Props> = ({
             <GridItem>
               <EmailDetailsForm
                 emailInfo={emailInfo}
+                extraRowsLabel={
+                  totalCount <= 100
+                    ? `All ${totalCount} items`
+                    : `Top 100 of ${totalCount} items`
+                }
                 onChange={setEmailInfo}
                 allRbacGroups={rbacGroupsFromApi}
               />

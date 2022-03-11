@@ -59,3 +59,10 @@ export const convertSecondsToHours = (seconds: string | number): number =>
 
 export const formatJobType = (type: string): string =>
   type === 'job' ? 'Playbook run' : 'Workflow job';
+
+export const getDateFormatByGranularity = (granularity: string): string => {
+  if (granularity === 'yearly') return 'formatAsYear';
+  if (granularity === 'monthly') return 'formatAsMonth';
+  if (granularity === 'daily') return 'formatDateAsDayMonth';
+  return '';
+};

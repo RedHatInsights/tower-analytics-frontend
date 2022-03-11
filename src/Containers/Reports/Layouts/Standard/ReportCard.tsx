@@ -31,13 +31,7 @@ import { perPageOptions } from '../../Shared/constants';
 import hydrateSchema from '../../Shared/hydrateSchema';
 import { StandardProps } from '../types';
 import percentageFormatter from '../../../../Utilities/percentageFormatter';
-
-const getDateFormatByGranularity = (granularity: string): string => {
-  if (granularity === 'yearly') return 'formatAsYear';
-  if (granularity === 'monthly') return 'formatAsMonth';
-  if (granularity === 'daily') return 'formatDateAsDayMonth';
-  return '';
-};
+import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
