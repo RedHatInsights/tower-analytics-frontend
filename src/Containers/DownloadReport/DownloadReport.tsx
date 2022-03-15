@@ -20,11 +20,14 @@ import {
   Card,
   CardBody,
   EmptyState,
+  EmptyStateBody,
+  EmptyStateIcon,
   EmptyStateVariant,
   Title,
 } from '@patternfly/react-core';
 import { Paths } from '../../paths';
 import { getDateFormatByGranularity } from '../../Utilities/helpers';
+import { DownloadIcon } from '@patternfly/react-icons';
 
 const DownloadReport: FunctionComponent<Record<string, never>> = () => {
   const location = useLocation();
@@ -108,23 +111,16 @@ const DownloadReport: FunctionComponent<Record<string, never>> = () => {
     return (
       <Card>
         <CardBody>
-          <Title size="lg" headingLevel="h3">
-            {
-              'Report is being processed, download will start shortly. You can close the window after the download'
-            }
-          </Title>
           <EmptyState variant={EmptyStateVariant.full}>
-            <Button
-              key="add-item-button"
-              variant={ButtonVariant.primary}
-              aria-label={'Close this window'}
-              onClick={() => {
-                window.open('', '_self').close();
-              }}
-            >
-              {'Close this window'}
-            </Button>
-            <p></p>
+            <EmptyStateIcon icon={DownloadIcon} />
+            <Title size="lg" headingLevel="h3">
+              {'The report is being processed....'}
+            </Title>
+            <EmptyStateBody>
+              The download will start shortly. You can{' '}
+              <a href="javascript:window.open('','_self').close();">close</a>{' '}
+              this page after the report has been downloaded.
+            </EmptyStateBody>
             <Button
               key="add-item-button"
               variant={ButtonVariant.primary}
