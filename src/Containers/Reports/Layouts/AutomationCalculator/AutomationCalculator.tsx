@@ -101,7 +101,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   dataEndpoint,
   optionsEndpoint,
   schema,
-  fullCard,
+  fullCard = true,
 }) => {
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);

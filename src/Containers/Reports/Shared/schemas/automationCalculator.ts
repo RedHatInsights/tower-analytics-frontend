@@ -97,7 +97,6 @@ const reportParams: ReportSchema = {
     dataEndpoint: Endpoint.ROI,
     optionsEndpoint: Endpoint.ROIOptions,
     schema,
-    fullCard: true,
   },
 };
 

@@ -143,7 +143,6 @@ const reportParams: ReportSchema = {
     dataEndpoint: Endpoint.jobExplorer,
     optionsEndpoint: Endpoint.jobExplorerOptions,
     schema,
-    fullCard: true,
   },
 };
 
