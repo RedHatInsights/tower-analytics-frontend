@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unsafe-call */
 // TODO(Jo): Remove eslint-disable comments
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
@@ -26,11 +27,11 @@ const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
       },
       {
         label: 'Slow Hosts Percentage',
-        value: `${item.slow_hosts_percentage}%` ?? 0,
+        value: `${item.slow_hosts_percentage.toFixed(2)}%` ?? 0,
       },
       {
         label: 'Template Success Rate',
-        value: `${item.template_success_rate}%` ?? 0,
+        value: `${item.template_success_rate.toFixed(2)}%` ?? 0,
       },
     ];
   };

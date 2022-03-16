@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -114,6 +115,34 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     chartType: settingsQueryParams.chartType || 'line',
   };
 
+  const formattedValue = (key: string, value: number) => {
+    let val;
+    switch (key) {
+      case 'average_duration_per_task':
+        val = value.toFixed(2) + ' seconds';
+        break;
+      case 'slow_hosts_percentage':
+        val = value.toFixed(2) + '%';
+        break;
+      case 'template_success_rate':
+        val = value.toFixed(2) + '%';
+        break;
+      default:
+        val = value.toFixed(2);
+    }
+    return val;
+  };
+
+  const customTooltipFormatting = ({ datum }) => {
+    const tooltip =
+      chartParams.label +
+      ' for ' +
+      datum.name +
+      ': ' +
+      formattedValue(queryParams.sort_options, datum.y);
+    return tooltip;
+  };
+
   const getSortParams = (currKey: string) => {
     const onSort = (
       _event: unknown,
@@ -216,6 +245,11 @@ const ReportCard: FunctionComponent<StandardProps> = ({
                 chartType: chartParams.chartType,
               })}
               data={dataApi.result}
+              specificFunctions={{
+                labelFormat: {
+                  customTooltipFormatting,
+                },
+              }}
             />
             {fullCard && (
               <Table

@@ -40,7 +40,6 @@ const ReportTable: FunctionComponent<Props> = ({
       </Thead>
       <Tbody>
         {legend.map((entry) => {
-          console.log('entry', entry);
           return (
             <TableRow
               key={entry.id}

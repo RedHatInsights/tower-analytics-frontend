@@ -112,6 +112,7 @@ const schema = [
     tooltip: {
       standalone: true,
       labelName: 'VAR_label',
+      labelFormat: 'customTooltipFormatting',
     },
   },
 ];
