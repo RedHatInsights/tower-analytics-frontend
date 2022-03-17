@@ -49,6 +49,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   dataEndpoint,
   optionsEndpoint,
   schema,
+  fullCard = true,
 }) => {
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
@@ -190,18 +191,20 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           filters={queryParams}
           setFilters={setFromToolbar}
           pagination={
-            <Pagination
-              count={dataApi.result.meta.count}
-              perPageOptions={perPageOptions}
-              params={{
-                limit: +queryParams.limit,
-                offset: +queryParams.offset,
-              }}
-              setPagination={setFromPagination}
-              isCompact
-            />
+            fullCard && (
+              <Pagination
+                count={dataApi.result.meta.count}
+                perPageOptions={perPageOptions}
+                params={{
+                  limit: +queryParams.limit,
+                  offset: +queryParams.offset,
+                }}
+                setPagination={setFromPagination}
+                isCompact
+              />
+            )
           }
-          additionalControls={additionalControls}
+          {...(fullCard && (additionalControls = { additionalControls }))}
         />
         {tableHeaders && (
           <ApiStatusWrapper api={dataApi}>
@@ -214,26 +217,30 @@ const ReportCard: FunctionComponent<StandardProps> = ({
               })}
               data={dataApi.result}
             />
-            <Table
-              legend={dataApi.result.meta.legend}
-              headers={tableHeaders}
-              getSortParams={getSortParams}
-              expandedRowName={expandedTableRowName}
-            />
+            {fullCard && (
+              <Table
+                legend={dataApi.result.meta.legend}
+                headers={tableHeaders}
+                getSortParams={getSortParams}
+                expandedRowName={expandedTableRowName}
+              />
+            )}
           </ApiStatusWrapper>
         )}
       </CardBody>
       <CardFooter>
-        <Pagination
-          count={dataApi.result.meta.count}
-          perPageOptions={perPageOptions}
-          params={{
-            limit: +queryParams.limit,
-            offset: +queryParams.offset,
-          }}
-          setPagination={setFromPagination}
-          variant={PaginationVariant.bottom}
-        />
+        {fullCard && (
+          <Pagination
+            count={dataApi.result.meta.count}
+            perPageOptions={perPageOptions}
+            params={{
+              limit: +queryParams.limit,
+              offset: +queryParams.offset,
+            }}
+            setPagination={setFromPagination}
+            variant={PaginationVariant.bottom}
+          />
+        )}
       </CardFooter>
     </Card>
   );

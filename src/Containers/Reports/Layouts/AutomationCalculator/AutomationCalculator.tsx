@@ -101,6 +101,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   dataEndpoint,
   optionsEndpoint,
   schema,
+  fullCard = true,
 }) => {
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
@@ -448,75 +449,83 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           filters={queryParams}
           setFilters={setFromToolbar}
           pagination={
-            <Pagination
-              count={api.result.meta.count}
-              perPageOptions={perPageOptions}
-              params={{
-                limit: +queryParams.limit,
-                offset: +queryParams.offset,
-              }}
-              setPagination={setFromPagination}
-              isCompact
-            />
+            fullCard && (
+              <Pagination
+                count={api.result.meta.count}
+                perPageOptions={perPageOptions}
+                params={{
+                  limit: +queryParams.limit,
+                  offset: +queryParams.offset,
+                }}
+                setPagination={setFromPagination}
+                isCompact
+              />
+            )
           }
           additionalControls={[
-            <DownloadPdfButton
-              key="download-button"
-              slug={slug}
-              name={name}
-              description={description}
-              endpointUrl={dataEndpoint}
-              queryParams={queryParams}
-              selectOptions={options}
-              y={''}
-              label={''}
-              xTickFormat={''}
-              totalCount={api.result.meta.count}
-              onPageCount={queryParams.limit}
-              sortOptions={chartParams.y}
-              sortOrder={queryParams.sort_order}
-              startDate={queryParams.start_date}
-              endDate={queryParams.end_date}
-              dateRange={queryParams.quick_date_range}
-            />,
+            fullCard && (
+              <DownloadPdfButton
+                key="download-button"
+                slug={slug}
+                name={name}
+                description={description}
+                endpointUrl={dataEndpoint}
+                queryParams={queryParams}
+                selectOptions={options}
+                y={''}
+                label={''}
+                xTickFormat={''}
+                totalCount={api.result.meta.count}
+                onPageCount={queryParams.limit}
+                sortOptions={chartParams.y}
+                sortOrder={queryParams.sort_order}
+                startDate={queryParams.start_date}
+                endDate={queryParams.end_date}
+                dateRange={queryParams.quick_date_range}
+              />
+            ),
           ]}
         />
         <Grid hasGutter>
           <GridItem span={9}>{renderLeft()}</GridItem>
           <GridItem span={3}>{renderRight()}</GridItem>
-          <GridItem span={12}>
-            <p>
-              Enter the time it takes to run the following templates manually.
-            </p>
-            {api.isLoading ? (
-              <Spinner isSVG />
-            ) : (
-              <TemplatesTable
-                redirectToJobExplorer={redirectToJobExplorer}
-                data={api.result.items}
-                variableRow={options.sort_options.find(
-                  ({ key }) => key === queryParams.sort_options
-                )}
-                setDataRunTime={setDataRunTime}
-                setEnabled={setEnabled}
-                getSortParams={getSortParams}
-                readOnly={isReadOnly(api)}
-              />
-            )}
-          </GridItem>
+          {fullCard && (
+            <GridItem span={12}>
+              <p>
+                Enter the time it takes to run the following templates manually.
+              </p>
+              {api.isLoading ? (
+                <Spinner isSVG />
+              ) : (
+                <TemplatesTable
+                  redirectToJobExplorer={redirectToJobExplorer}
+                  data={api.result.items}
+                  variableRow={options.sort_options.find(
+                    ({ key }) => key === queryParams.sort_options
+                  )}
+                  setDataRunTime={setDataRunTime}
+                  setEnabled={setEnabled}
+                  getSortParams={getSortParams}
+                  readOnly={isReadOnly(api)}
+                />
+              )}
+            </GridItem>
+          )}
         </Grid>
       </CardBody>
       <CardFooter>
-        <Pagination
-          count={api.result.meta.count}
-          perPageOptions={perPageOptions}
-          params={{
-            limit: +queryParams.limit,
-            offset: +queryParams.offset,
-          }}
-          setPagination={setFromPagination}
-          variant={PaginationVariant.bottom}
-        />
+        {fullCard && (
+          <Pagination
+            count={api.result.meta.count}
+            perPageOptions={perPageOptions}
+            params={{
+              limit: +queryParams.limit,
+              offset: +queryParams.offset,
+            }}
+            setPagination={setFromPagination}
+            variant={PaginationVariant.bottom}
+          />
+        )}
       </CardFooter>
     </Card>
   );
