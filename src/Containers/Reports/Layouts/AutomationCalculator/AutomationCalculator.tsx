@@ -52,7 +52,7 @@ import TemplatesTable from './TemplatesTable';
 import { Paths } from '../../../../paths';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants';
-import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
+import DownloadButton from '../../../../Components/Toolbar/DownloadButton';
 import { endpointFunctionMap, saveROI } from '../../../../Api';
 import { AutmationCalculatorProps } from '../types';
 import hydrateSchema from '../../Shared/hydrateSchema';
@@ -458,7 +458,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               />
             }
             additionalControls={[
-              <DownloadPdfButton
+              <DownloadButton
                 key="download-button"
                 slug={slug}
                 name={name}

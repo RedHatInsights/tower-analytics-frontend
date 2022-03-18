@@ -27,16 +27,6 @@ export interface User {
   name: string;
   emails: string[];
 }
-export interface EmailDetailsType {
-  selectedRbacGroups: string[];
-  users: User[];
-  subject: string;
-  body: string;
-  reportUrl: string;
-  additionalRecipients: string;
-  eula: boolean;
-  showExtraRows: boolean;
-}
 
 export interface RbacGroupFromApi {
   uuid: string;

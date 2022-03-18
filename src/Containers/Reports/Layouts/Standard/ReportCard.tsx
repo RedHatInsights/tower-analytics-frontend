@@ -24,7 +24,7 @@ import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
 
 import Chart from '../../../../Components/Chart';
 import Table from './Table';
-import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
+import DownloadButton from '../../../../Components/Toolbar/DownloadButton';
 import { endpointFunctionMap, OptionsReturnType } from '../../../../Api';
 import { capitalize } from '../../../../Utilities/helpers';
 import { perPageOptions } from '../../Shared/constants';
@@ -184,7 +184,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         ))}
       </ToggleGroup>
     ),
-    <DownloadPdfButton
+    <DownloadButton
       key="download-button"
       slug={slug}
       name={name}
