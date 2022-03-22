@@ -35,6 +35,8 @@ export interface PDFParams {
     startDate: string;
     endDate: string;
     dateRange: string;
+    token: string;
+    expiry: string;
   };
 }
 

@@ -26,6 +26,7 @@ export interface User {
   uuid: string;
   name: string;
   emails: string[];
+  usernames: string[];
 }
 
 export interface RbacGroupFromApi {

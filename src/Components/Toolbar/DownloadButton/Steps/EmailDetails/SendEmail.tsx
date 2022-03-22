@@ -13,15 +13,15 @@ const generateToken = () => {
   return parseInt(String(min + Math.random() * (max - min)));
 };
 
-const generateExpiryDate = () => {
-  const d = new Date();
-  d.setMonth(d.getMonth() + 3);
-  return d.toLocaleDateString();
-};
-
-const parseUrl = (emailExtraRows: boolean, reportUrl: string) => {
+const parseUrl = (
+  emailExtraRows: boolean,
+  reportUrl: string,
+  token: string,
+  expiry: string,
+  slug: string
+) => {
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  const params = `showExtraRows=${emailExtraRows}&token=${generateToken()}&expires=${generateExpiryDate()}`;
+  const params = `showExtraRows=${emailExtraRows}&token=${token}&expiry=${expiry}&slug=${slug}`;
   const url =
     new URL(window.location.href).search === '' ? '?' + params : '&' + params;
   return reportUrl.replace('/reports/', '/downloadReport/') + url;
@@ -37,6 +37,7 @@ interface Props {
   reportUrl: string;
   dispatch: DispatchType;
   emailExtraRows: boolean;
+  expiry: string;
 }
 
 const SendEmail: FC<Props> = ({
@@ -49,12 +50,13 @@ const SendEmail: FC<Props> = ({
   reportUrl,
   dispatch,
   emailExtraRows,
+  expiry,
 }) => {
-  const all_recipients = users.map(({ emails }) => emails);
+  const all_recipients = users.map(({ usernames }) => usernames);
 
   if (additionalRecipients !== '' && eula)
     all_recipients.push(additionalRecipients.split(','));
-
+  const token = generateToken();
   // Dispatch the email,
   dispatch(
     emailAction(
@@ -63,7 +65,10 @@ const SendEmail: FC<Props> = ({
         recipient: all_recipients.flat(),
         subject: subject === '' ? 'Report is ready to be viewed' : subject,
         body: body.toString().replace(/(?:\r\n|\r|\n)/g, '<br>'),
-        reportUrl: parseUrl(emailExtraRows, reportUrl),
+        reportUrl: parseUrl(emailExtraRows, reportUrl, token, expiry, slug),
+        expiry: expiry,
+        slug: slug,
+        token: token,
         payload: 'Download',
       },
       dispatch,

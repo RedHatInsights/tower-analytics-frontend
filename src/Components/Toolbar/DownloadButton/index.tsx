@@ -96,6 +96,7 @@ const DownloadButton: FC<Props> = ({
     emailExtraRows,
     showExtraRows,
     downloadType,
+    expiry,
   } = formData;
 
   const onSave = () => {
@@ -129,6 +130,7 @@ const DownloadButton: FC<Props> = ({
           reportUrl,
           dispatch,
           emailExtraRows,
+          expiry,
         });
     dispatchReducer({ type: actions.RESET_DATA });
     setIsExportModalOpen(false);

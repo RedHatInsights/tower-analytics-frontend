@@ -4,6 +4,14 @@
 // @ts-nocheck
 import { useReducer } from 'react';
 import { actions } from './constants';
+import { formatDate } from '../../../Utilities/helpers';
+
+const generateExpiryDate = () => {
+  const d = new Date();
+  d.setMonth(d.getMonth() + 3);
+  return formatDate(d);
+  //return d.toLocaleDateString();
+};
 
 const useOptionsData = (initial, name, description) => {
   const initialData = {
@@ -18,16 +26,16 @@ const useOptionsData = (initial, name, description) => {
     body:
       initial?.body ||
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/restrict-template-expressions
-      `<b>${name}</b>\nThis report shows ${description[0].toLowerCase()} ${description.substring(
+      `<b>${name}</b>\nThis report shows ${description[0].toLowerCase()}${description.substring(
         1
       )}`,
     reportUrl: initial?.reportUrl || window.location.href,
     selectedRbacGroups: initial?.selectedRbacGroups || [],
     users: initial?.users || [],
+    expiry: initial?.expiry || generateExpiryDate(),
   };
 
   const formReducer = (state: any, { type, value }: any) => {
-    console.log('value in formReducer', type, value, state);
     switch (type) {
       /* v1 api reducers */
       case actions.SET_DOWNLOAD_TYPE:
@@ -74,6 +82,11 @@ const useOptionsData = (initial, name, description) => {
         return {
           ...state,
           users: value,
+        };
+      case actions.SET_SELECTED_EXPIRY:
+        return {
+          ...state,
+          expiry: value,
         };
       case actions.RESET_DATA:
         return initialData;

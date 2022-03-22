@@ -26,6 +26,7 @@ import { readRbacGroups, readRbacPrincipals } from '../../../../../Api';
 import { RbacGroupFromApi, RbacPrincipalFromApi, User } from '../../../types';
 import useRequest from '../../../../../Utilities/useRequest';
 import { readRbacGroups, readRbacPrincipals } from '../../../../../Api';
+import ToolbarInput from '../../../Groups/ToolbarInput';
 
 interface RbacGroupsDataType {
   data: RbacGroupFromApi[];
@@ -39,7 +40,6 @@ interface RbacPrincipalsDataType {
 
 const EmailDetails = ({ options, formData, dispatchReducer }) => {
   const {
-    downloadType,
     body,
     selectedRbacGroups,
     users,
@@ -48,6 +48,7 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
     additionalRecipients,
     eula,
     emailExtraRows,
+    expiry,
   } = formData;
   const {
     result: { data: rbacGroupsFromApi },
@@ -81,18 +82,20 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
   };
 
   const updateEmailInfo = () => {
-    const usersList = principalsFromApi.map((user) => user.email);
-
+    const usersEmailsList = principalsFromApi.map((user) => user.email);
+    const usersNamesList = principalsFromApi.map((user) => user.username);
     const lastSelectedRbacGroup = selectedRbacGroups.at(-1) as string;
     const userHash = {
       uuid: lastSelectedRbacGroup,
       name: getGroupName(lastSelectedRbacGroup) as string,
-      emails: usersList,
+      usernames: usersNamesList,
+      emails: usersEmailsList,
     };
     const index = users.findIndex((object) => object.uuid === userHash.uuid);
     if (index === -1) {
       users.push(userHash as User);
     }
+
     dispatchReducer({
       type: actions.SET_USERS,
       value: users,
@@ -156,6 +159,13 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
     dispatchReducer({
       type: actions.SET_SELECTED_RBAC_GROUPS,
       value: selectedRbacGroups,
+    });
+  };
+
+  const onExpiryChange = (value: string) => {
+    dispatchReducer({
+      type: actions.SET_SELECTED_EXPIRY,
+      value: value,
     });
     updateEmailInfo();
   };
@@ -227,6 +237,7 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
           ))}
         </Select>
       </FormGroup>
+
       {users.length > 0 && (
         <FormGroup label="User emails" fieldId="emails-field">
           {users.map(({ name, emails }, i) => {
@@ -326,6 +337,13 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
               value: newValue,
             })
           }
+        />
+      </FormGroup>
+      <FormGroup label="Link expires on" isRequired fieldId="expiry-field">
+        <ToolbarInput
+          categoryKey="start_date"
+          value={expiry}
+          setValue={(e) => onExpiryChange(e)}
         />
       </FormGroup>
       <FormGroup label="Report link" fieldId="link-field">

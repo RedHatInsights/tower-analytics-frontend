@@ -32,6 +32,8 @@ import { DownloadIcon } from '@patternfly/react-icons';
 const DownloadReport: FunctionComponent<Record<string, never>> = () => {
   const location = useLocation();
   const slug = location.pathname.split('/').pop() as string;
+  const token = new URLSearchParams(location.search).get('token');
+  const expiry = new URLSearchParams(location.search).get('expiry');
   const report = getReport(slug);
 
   const download = () => {
@@ -89,6 +91,8 @@ const DownloadReport: FunctionComponent<Record<string, never>> = () => {
             chartType: chartParams.chartType,
           },
           dataFetchingParams: {
+            token: token,
+            expiry: expiry,
             showExtraRows: showExtraRows,
             endpointUrl: dataEndpoint,
             queryParams: queryParams as Params,
