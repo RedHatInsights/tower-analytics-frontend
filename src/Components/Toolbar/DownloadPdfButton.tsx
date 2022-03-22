@@ -56,6 +56,7 @@ interface Props {
   startDate: string;
   endDate: string;
   dateRange: string;
+  inputs?: { automationCost: number; manualCost: number };
 }
 
 interface RbacGroupsDataType {
@@ -88,6 +89,7 @@ const DownloadPdfButton: FC<Props> = ({
   startDate,
   endDate,
   dateRange,
+  inputs,
 }) => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const [downloadType, setDownloadType] = useState('current');
@@ -160,7 +162,7 @@ const DownloadPdfButton: FC<Props> = ({
   };
 
   const updateEmailInfo = () => {
-    const usersList = principalsFromApi.map((user) => user.email);
+    const usersList = principalsFromApi.map((user) => user.username);
 
     const lastSelectedRbacGroup = selectedRbacGroups.at(-1) as string;
     const userHash = {
@@ -178,6 +180,7 @@ const DownloadPdfButton: FC<Props> = ({
   useEffect(() => {
     if (selectedRbacGroups.length > 0) updateEmailInfo();
   }, [principalsFromApi]);
+  const allParams = inputs ? { ...queryParams, inputs } : queryParams;
 
   const downloadPdf = () => {
     // Don't allow user to span download button
@@ -197,7 +200,7 @@ const DownloadPdfButton: FC<Props> = ({
           dataFetchingParams: {
             showExtraRows: downloadType === 'extra_rows',
             endpointUrl,
-            queryParams,
+            queryParams: allParams,
             selectOptions,
             chartSeriesHiddenProps,
             sortOptions,
