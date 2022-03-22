@@ -10,10 +10,10 @@ import {
   ButtonVariant,
   Card,
   CardActions,
-  CardBody,
   CardFooter,
   CardHeader,
   CardTitle,
+  Divider,
   Dropdown,
   DropdownItem,
   DropdownToggle,
@@ -82,7 +82,11 @@ const List: FunctionComponent<Record<string, never>> = () => {
                     isCompact
                   >
                     <CardHeader
-                      style={{ paddingTop: '15px', paddingBottom: '0px' }}
+                      style={{
+                        paddingTop: '16px',
+                        paddingBottom: '16px',
+                        paddingRight: '0px',
+                      }}
                     >
                       <CardTitle>
                         <Link to={paths.getDetails(report.layoutProps.slug)}>
@@ -90,7 +94,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                         </Link>
                       </CardTitle>
                       <CardActions
-                        style={{ marginLeft: '15px', marginTop: '-3px' }}
+                        style={{ marginLeft: '15px', marginTop: '-2px' }}
                       >
                         {report.layoutProps.tags.map((tagKey, idx) => {
                           const tag = TAGS.find((t) => t.key === tagKey);
@@ -147,12 +151,9 @@ const List: FunctionComponent<Record<string, never>> = () => {
                         </Button>
                       </CardActions>
                     </CardHeader>
-                    <CardBody
-                      style={{ paddingTop: '15px', paddingBottom: '15px' }}
-                    >
-                      {getComponent(report, false)}
-                    </CardBody>
-                    <CardFooter style={{ paddingBottom: '15px' }}>
+                    <Divider />
+                    {getComponent(report, false)}
+                    <CardFooter style={{ paddingBottom: '16px' }}>
                       <Link
                         to={paths.getDetails(report.layoutProps.slug)}
                         style={{ float: 'right' }}

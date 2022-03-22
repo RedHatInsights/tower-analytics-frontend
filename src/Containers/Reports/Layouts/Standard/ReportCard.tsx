@@ -212,7 +212,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       dateRange={queryParams.quick_date_range}
     />,
   ];
-  return (
+  return fullCard ? (
     <Card>
       <CardBody>
         <FilterableToolbar
@@ -221,20 +221,18 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           filters={queryParams}
           setFilters={setFromToolbar}
           pagination={
-            fullCard && (
-              <Pagination
-                count={dataApi.result.meta.count}
-                perPageOptions={perPageOptions}
-                params={{
-                  limit: +queryParams.limit,
-                  offset: +queryParams.offset,
-                }}
-                setPagination={setFromPagination}
-                isCompact
-              />
-            )
+            <Pagination
+              count={dataApi.result.meta.count}
+              perPageOptions={perPageOptions}
+              params={{
+                limit: +queryParams.limit,
+                offset: +queryParams.offset,
+              }}
+              setPagination={setFromPagination}
+              isCompact
+            />
           }
-          {...(fullCard && (additionalControls = { additionalControls }))}
+          additionalControls={additionalControls}
         />
         {tableHeaders && (
           <ApiStatusWrapper api={dataApi}>
@@ -252,32 +250,50 @@ const ReportCard: FunctionComponent<StandardProps> = ({
                 },
               }}
             />
-            {fullCard && (
-              <Table
-                legend={dataApi.result.meta.legend}
-                headers={tableHeaders}
-                getSortParams={getSortParams}
-                expandedRowName={expandedTableRowName}
-              />
-            )}
+            <Table
+              legend={dataApi.result.meta.legend}
+              headers={tableHeaders}
+              getSortParams={getSortParams}
+              expandedRowName={expandedTableRowName}
+            />
           </ApiStatusWrapper>
         )}
       </CardBody>
       <CardFooter>
-        {fullCard && (
-          <Pagination
-            count={dataApi.result.meta.count}
-            perPageOptions={perPageOptions}
-            params={{
-              limit: +queryParams.limit,
-              offset: +queryParams.offset,
-            }}
-            setPagination={setFromPagination}
-            variant={PaginationVariant.bottom}
-          />
-        )}
+        <Pagination
+          count={dataApi.result.meta.count}
+          perPageOptions={perPageOptions}
+          params={{
+            limit: +queryParams.limit,
+            offset: +queryParams.offset,
+          }}
+          setPagination={setFromPagination}
+          variant={PaginationVariant.bottom}
+        />
       </CardFooter>
     </Card>
+  ) : (
+    <>
+      <FilterableToolbar
+        categories={options}
+        defaultSelected={defaultSelectedToolbarCategory}
+        filters={queryParams}
+        setFilters={setFromToolbar}
+      />
+      {tableHeaders && (
+        <ApiStatusWrapper api={dataApi}>
+          <Chart
+            schema={hydrateSchema(schema)({
+              label: chartParams.label,
+              y: chartParams.y,
+              xTickFormat: chartParams.xTickFormat,
+              chartType: chartParams.chartType,
+            })}
+            data={dataApi.result}
+          />
+        </ApiStatusWrapper>
+      )}
+    </>
   );
 };
 
