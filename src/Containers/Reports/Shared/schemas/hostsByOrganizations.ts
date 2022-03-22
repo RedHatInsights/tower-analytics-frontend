@@ -42,7 +42,7 @@ const defaultParams = {
   quick_date_range: 'last_30_days',
   status: [],
   org_id: [],
-  job_type: ['workflowjob', 'job'],
+  job_type: [],
   cluster_id: [],
   template_id: [],
   inventory_id: [],
