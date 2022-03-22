@@ -30,6 +30,7 @@ import { capitalize } from '../../../../Utilities/helpers';
 import { perPageOptions } from '../../Shared/constants';
 import hydrateSchema from '../../Shared/hydrateSchema';
 import { StandardProps } from '../types';
+import percentageFormatter from '../../../../Utilities/percentageFormatter';
 
 const getDateFormatByGranularity = (granularity: string): string => {
   if (granularity === 'yearly') return 'formatAsYear';
@@ -122,10 +123,10 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         val = value.toFixed(2) + ' seconds';
         break;
       case 'slow_hosts_percentage':
-        val = value.toFixed(2) + '%';
+        val = percentageFormatter(value) + '%';
         break;
       case 'template_success_rate':
-        val = value.toFixed(2) + '%';
+        val = percentageFormatter(value) + '%';
         break;
       default:
         val = value.toFixed(2);

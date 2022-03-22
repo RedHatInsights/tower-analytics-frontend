@@ -5,6 +5,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
+
 import React from 'react';
 import {
   DescriptionList,
@@ -13,6 +14,8 @@ import {
   DescriptionListTerm,
 } from '@patternfly/react-core';
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
+
+import percentageFormatter from '../../../../../../Utilities/percentageFormatter';
 
 const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
   const expandedInfo = (item: any) => {
@@ -27,11 +30,11 @@ const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
       },
       {
         label: 'Slow Hosts Percentage',
-        value: `${item.slow_hosts_percentage.toFixed(2)}%` ?? 0,
+        value: `${percentageFormatter(item.slow_hosts_percentage)}%` ?? 0,
       },
       {
         label: 'Template Success Rate',
-        value: `${item.template_success_rate.toFixed(2)}%` ?? 0,
+        value: `${percentageFormatter(item.template_success_rate)}%` ?? 0,
       },
     ];
   };
