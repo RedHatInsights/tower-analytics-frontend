@@ -369,49 +369,45 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
 
   const renderLeft = () => (
     <Card isPlain>
-      <CardHeader>
-        <CardTitle>Automation savings</CardTitle>
-      </CardHeader>
-      <CardBody>
-        {api.isLoading ? (
-          <SpinnerDiv>
-            <Spinner isSVG />
-          </SpinnerDiv>
-        ) : filterDisabled(api?.result?.items).length > 0 ? (
-          <Chart
-            schema={hydrateSchema(schema)({
-              label: chartParams.label,
-              tooltip: chartParams.tooltip,
-              field: chartParams.field,
-            })}
-            data={{
-              items: filterDisabled(api.result.items),
-            }}
-            specificFunctions={{
-              labelFormat: {
-                customTooltipFormatting,
-              },
-            }}
-          />
-        ) : (
-          <EmptyState>
-            <EmptyStateIcon icon={ExclamationTriangleIcon} />
-            <Title headingLevel="h4" size="lg">
-              You have disabled all views
-            </Title>
-            <EmptyStateBody>
-              Enable individual views in the table below or press Show all
-              button.
-            </EmptyStateBody>
-            <Button
-              variant="primary"
-              onClick={() => setEnabled(undefined)(true)}
-            >
-              Show all
-            </Button>
-          </EmptyState>
-        )}
-      </CardBody>
+      {fullCard && (
+        <CardHeader>
+          <CardTitle>Automation savings</CardTitle>
+        </CardHeader>
+      )}
+      {api.isLoading ? (
+        <SpinnerDiv>
+          <Spinner isSVG />
+        </SpinnerDiv>
+      ) : filterDisabled(api?.result?.items).length > 0 ? (
+        <Chart
+          schema={hydrateSchema(schema)({
+            label: chartParams.label,
+            tooltip: chartParams.tooltip,
+            field: chartParams.field,
+          })}
+          data={{
+            items: filterDisabled(api.result.items),
+          }}
+          specificFunctions={{
+            labelFormat: {
+              customTooltipFormatting,
+            },
+          }}
+        />
+      ) : (
+        <EmptyState>
+          <EmptyStateIcon icon={ExclamationTriangleIcon} />
+          <Title headingLevel="h4" size="lg">
+            You have disabled all views
+          </Title>
+          <EmptyStateBody>
+            Enable individual views in the table below or press Show all button.
+          </EmptyStateBody>
+          <Button variant="primary" onClick={() => setEnabled(undefined)(true)}>
+            Show all
+          </Button>
+        </EmptyState>
+      )}
     </Card>
   );
 
