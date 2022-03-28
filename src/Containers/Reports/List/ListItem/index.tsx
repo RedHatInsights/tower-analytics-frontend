@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
@@ -38,6 +38,7 @@ interface Props {
   report: ReportSchema;
   selected: string;
   setSelected: (newSelection: string) => void;
+  history: RouteComponentProps['history'];
 }
 
 const ListItem: FunctionComponent<Props> = ({
@@ -46,11 +47,17 @@ const ListItem: FunctionComponent<Props> = ({
   },
   selected,
   setSelected,
+  history,
 }) => {
   return (
     <Card
       data-testid={slug}
-      onClick={() => setSelected(slug)}
+      onClick={() => {
+        setSelected(slug);
+        history.replace({
+          search: '',
+        });
+      }}
       isSelectableRaised
       isSelected={selected === slug}
     >
