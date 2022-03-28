@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
   PageHeader,
@@ -37,6 +37,7 @@ import getComponent from '../Layouts/index';
 const List: FunctionComponent<Record<string, never>> = () => {
   const [selected, setSelected] = useState('hosts_changed_by_job_template');
   const [isOpen, setIsOpen] = useState(false);
+  const history = useHistory();
   let index = 0;
   let nextItem = '';
   let previousItem = '';
@@ -116,7 +117,12 @@ const List: FunctionComponent<Record<string, never>> = () => {
                           variant={ButtonVariant.plain}
                           aria-label="Previous report"
                           isDisabled={getAllReports().indexOf(report) === 0}
-                          onClick={() => setSelected(previousItem)}
+                          onClick={() => {
+                            setSelected(previousItem);
+                            history.replace({
+                              search: '',
+                            });
+                          }}
                         >
                           <AngleLeftIcon />
                         </Button>
@@ -124,6 +130,9 @@ const List: FunctionComponent<Record<string, never>> = () => {
                           isPlain
                           onSelect={() => {
                             setIsOpen(!isOpen);
+                            history.replace({
+                              search: '',
+                            });
                           }}
                           toggle={
                             <DropdownToggle
@@ -145,7 +154,12 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             getAllReports().indexOf(report) >=
                             getAllReports().length - 1
                           }
-                          onClick={() => setSelected(nextItem)}
+                          onClick={() => {
+                            setSelected(nextItem);
+                            history.replace({
+                              search: '',
+                            });
+                          }}
                         >
                           <AngleRightIcon />
                         </Button>
@@ -183,6 +197,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
               report={report}
               selected={selected}
               setSelected={setSelected}
+              history={history}
             />
           ))}
         </Gallery>
