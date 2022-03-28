@@ -43,7 +43,6 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
     body,
     selectedRbacGroups,
     users,
-    reportUrl,
     subject,
     additionalRecipients,
     eula,
@@ -57,7 +56,7 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
     () => readRbacGroups() as unknown as Promise<RbacGroupsDataType>,
     { data: [], meta: { count: 0 } }
   );
-
+  const reportUrl = window.location.href;
   useEffect(() => {
     fetchRbacGroups();
   }, []);
@@ -283,30 +282,30 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
           </FormHelperText>
         )}
       </FormGroup>
-      <FormGroup label="EULA Acknowledgement" fieldId="eula-field">
-        <Checkbox
-          isChecked={eula}
-          aria-label="card checkbox"
-          id="eula"
-          name="eula"
-          onChange={(newValue) =>
-            dispatchReducer({
-              type: actions.SET_EULA,
-              value: newValue,
-            })
-          }
-        />
-        {additionalRecipients && !eula && (
-          <FormHelperText
-            isError
-            icon={<ExclamationCircleIcon />}
-            isHidden={additionalRecipients === '' && !eula}
-          >
-            Please confirm the EULA acknowledgement if external e-mails are
-            being used.
-          </FormHelperText>
-        )}
-      </FormGroup>
+      {/*<FormGroup label="EULA Acknowledgement" fieldId="eula-field">*/}
+      {/*  <Checkbox*/}
+      {/*    isChecked={eula}*/}
+      {/*    aria-label="card checkbox"*/}
+      {/*    id="eula"*/}
+      {/*    name="eula"*/}
+      {/*    onChange={(newValue) =>*/}
+      {/*      dispatchReducer({*/}
+      {/*        type: actions.SET_EULA,*/}
+      {/*        value: newValue,*/}
+      {/*      })*/}
+      {/*    }*/}
+      {/*  />*/}
+      {/*  {additionalRecipients && !eula && (*/}
+      {/*    <FormHelperText*/}
+      {/*      isError*/}
+      {/*      icon={<ExclamationCircleIcon />}*/}
+      {/*      isHidden={additionalRecipients === '' && !eula}*/}
+      {/*    >*/}
+      {/*      Please confirm the EULA acknowledgement if external e-mails are*/}
+      {/*      being used.*/}
+      {/*    </FormHelperText>*/}
+      {/*  )}*/}
+      {/*</FormGroup>*/}
       <FormGroup label="Subject" fieldId="subject-field">
         <TextInput
           placeholder="Report is ready to be downloaded"

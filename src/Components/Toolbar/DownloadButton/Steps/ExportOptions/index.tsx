@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import { actions } from '../../constants';
 import { Grid, GridItem, Radio, Title } from '@patternfly/react-core';

@@ -10,7 +10,6 @@ const generateExpiryDate = () => {
   const d = new Date();
   d.setMonth(d.getMonth() + 3);
   return formatDate(d);
-  //return d.toLocaleDateString();
 };
 
 const useOptionsData = (initial, name, description) => {
@@ -29,7 +28,6 @@ const useOptionsData = (initial, name, description) => {
       `<b>${name}</b>\nThis report shows ${description[0].toLowerCase()}${description.substring(
         1
       )}`,
-    reportUrl: initial?.reportUrl || window.location.href,
     selectedRbacGroups: initial?.selectedRbacGroups || [],
     users: initial?.users || [],
     expiry: initial?.expiry || generateExpiryDate(),

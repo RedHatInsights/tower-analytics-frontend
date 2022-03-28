@@ -22,8 +22,7 @@ const parseUrl = (
 ) => {
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const params = `showExtraRows=${emailExtraRows}&token=${token}&expiry=${expiry}&slug=${slug}`;
-  const url =
-    new URL(window.location.href).search === '' ? '?' + params : '&' + params;
+  const url = new URL(reportUrl).search === '' ? '?' + params : '&' + params;
   return reportUrl.replace('/reports/', '/downloadReport/') + url;
 };
 
@@ -34,7 +33,6 @@ interface Props {
   additionalRecipients: string;
   subject: string;
   body: string;
-  reportUrl: string;
   dispatch: DispatchType;
   emailExtraRows: boolean;
   expiry: string;
@@ -47,16 +45,16 @@ const SendEmail: FC<Props> = ({
   additionalRecipients,
   subject,
   body,
-  reportUrl,
   dispatch,
   emailExtraRows,
   expiry,
 }) => {
   const all_recipients = users.map(({ usernames }) => usernames);
 
-  if (additionalRecipients !== '' && eula)
+  if (additionalRecipients !== '')
     all_recipients.push(additionalRecipients.split(','));
   const token = generateToken();
+  const reportUrl = window.location.href;
   // Dispatch the email,
   dispatch(
     emailAction(

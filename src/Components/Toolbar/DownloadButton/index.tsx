@@ -92,7 +92,6 @@ const DownloadButton: FC<Props> = ({
     additionalRecipients,
     subject,
     body,
-    reportUrl,
     emailExtraRows,
     showExtraRows,
     downloadType,
@@ -127,7 +126,6 @@ const DownloadButton: FC<Props> = ({
           additionalRecipients,
           subject,
           body,
-          reportUrl,
           dispatch,
           emailExtraRows,
           expiry,
@@ -137,21 +135,18 @@ const DownloadButton: FC<Props> = ({
   };
 
   const sendEmailButtonDisabled = () => {
-    const { eula, additionalRecipients, selectedRbacGroups, users } = formData;
-    if (eula && additionalRecipients !== '') return false;
-
-    // if additional recipient provided, eula must be checked
-    if (!eula && additionalRecipients !== '') return true;
+    const { additionalRecipients, selectedRbacGroups, users } = formData;
+    if (additionalRecipients !== '') return false;
 
     // no group selected and no additional email and eula not checked
-    if (selectedRbacGroups.length === 0 && !eula && additionalRecipients === '')
+    if (selectedRbacGroups.length === 0 && additionalRecipients === '')
       return true;
 
     // (group not selected or group selected but has no users) or additional recipients provide but eula not checked
     if (
-      users.length === 0 ||
-      (users.length === 1 && users[0].emails.length <= 0) ||
-      (!eula && additionalRecipients !== '')
+      (users.length === 0 ||
+        (users.length === 1 && users[0].emails.length <= 0)) &&
+      additionalRecipients === ''
     )
       return true;
   };
