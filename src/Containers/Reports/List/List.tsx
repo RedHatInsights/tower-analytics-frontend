@@ -10,10 +10,10 @@ import {
   ButtonVariant,
   Card,
   CardActions,
-  CardBody,
   CardFooter,
   CardHeader,
   CardTitle,
+  Divider,
   Dropdown,
   DropdownItem,
   DropdownToggle,
@@ -73,9 +73,44 @@ const List: FunctionComponent<Record<string, never>> = () => {
                 (previousItem = getAllReports()[index - 1].layoutProps.slug),
               (
                 <>
-                  <Card key="all_reports" isLarge style={{ maxWidth: '100%' }}>
-                    <CardHeader>
-                      <CardTitle>All Reports</CardTitle>
+                  <Card
+                    key={report.layoutProps.slug}
+                    style={{
+                      maxWidth: '100%',
+                      marginBottom: '25px',
+                    }}
+                    isCompact
+                  >
+                    <CardHeader
+                      style={{
+                        paddingTop: '16px',
+                        paddingBottom: '16px',
+                        paddingRight: '0px',
+                      }}
+                    >
+                      <CardTitle>
+                        <Link to={paths.getDetails(report.layoutProps.slug)}>
+                          {report.layoutProps.name}
+                        </Link>
+                      </CardTitle>
+                      <CardActions
+                        style={{ marginLeft: '15px', marginTop: '-2px' }}
+                      >
+                        {report.layoutProps.tags.map((tagKey, idx) => {
+                          const tag = TAGS.find((t) => t.key === tagKey);
+                          if (tag) {
+                            return (
+                              <Tooltip
+                                key={`tooltip_${idx}`}
+                                position={TooltipPosition.top}
+                                content={tag.description}
+                              >
+                                <Label key={idx}>{tag.name}</Label>
+                              </Tooltip>
+                            );
+                          }
+                        })}
+                      </CardActions>
                       <CardActions>
                         <Button
                           variant={ButtonVariant.plain}
@@ -116,38 +151,9 @@ const List: FunctionComponent<Record<string, never>> = () => {
                         </Button>
                       </CardActions>
                     </CardHeader>
-                  </Card>
-                  <Card
-                    key={report.layoutProps.slug}
-                    style={{ maxWidth: '100%', marginBottom: '25px' }}
-                  >
-                    <CardHeader>
-                      <CardTitle>
-                        <Link to={paths.getDetails(report.layoutProps.slug)}>
-                          {report.layoutProps.name}
-                        </Link>
-                      </CardTitle>
-                      <CardActions>
-                        {report.layoutProps.tags.map((tagKey, idx) => {
-                          const tag = TAGS.find((t) => t.key === tagKey);
-                          if (tag) {
-                            return (
-                              <Tooltip
-                                key={`tooltip_${idx}`}
-                                position={TooltipPosition.top}
-                                content={tag.description}
-                              >
-                                <Label key={idx}>{tag.name}</Label>
-                              </Tooltip>
-                            );
-                          }
-                        })}
-                      </CardActions>
-                    </CardHeader>
-
-                    <CardBody>{report.layoutProps.description}</CardBody>
-                    <CardBody>{getComponent(report, false)}</CardBody>
-                    <CardFooter>
+                    <Divider />
+                    {getComponent(report, false)}
+                    <CardFooter style={{ paddingBottom: '16px' }}>
                       <Link
                         to={paths.getDetails(report.layoutProps.slug)}
                         style={{ float: 'right' }}

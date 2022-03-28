@@ -369,49 +369,45 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
 
   const renderLeft = () => (
     <Card isPlain>
-      <CardHeader>
-        <CardTitle>Automation savings</CardTitle>
-      </CardHeader>
-      <CardBody>
-        {api.isLoading ? (
-          <SpinnerDiv>
-            <Spinner isSVG />
-          </SpinnerDiv>
-        ) : filterDisabled(api?.result?.items).length > 0 ? (
-          <Chart
-            schema={hydrateSchema(schema)({
-              label: chartParams.label,
-              tooltip: chartParams.tooltip,
-              field: chartParams.field,
-            })}
-            data={{
-              items: filterDisabled(api.result.items),
-            }}
-            specificFunctions={{
-              labelFormat: {
-                customTooltipFormatting,
-              },
-            }}
-          />
-        ) : (
-          <EmptyState>
-            <EmptyStateIcon icon={ExclamationTriangleIcon} />
-            <Title headingLevel="h4" size="lg">
-              You have disabled all views
-            </Title>
-            <EmptyStateBody>
-              Enable individual views in the table below or press Show all
-              button.
-            </EmptyStateBody>
-            <Button
-              variant="primary"
-              onClick={() => setEnabled(undefined)(true)}
-            >
-              Show all
-            </Button>
-          </EmptyState>
-        )}
-      </CardBody>
+      {fullCard && (
+        <CardHeader>
+          <CardTitle>Automation savings</CardTitle>
+        </CardHeader>
+      )}
+      {api.isLoading ? (
+        <SpinnerDiv>
+          <Spinner isSVG />
+        </SpinnerDiv>
+      ) : filterDisabled(api?.result?.items).length > 0 ? (
+        <Chart
+          schema={hydrateSchema(schema)({
+            label: chartParams.label,
+            tooltip: chartParams.tooltip,
+            field: chartParams.field,
+          })}
+          data={{
+            items: filterDisabled(api.result.items),
+          }}
+          specificFunctions={{
+            labelFormat: {
+              customTooltipFormatting,
+            },
+          }}
+        />
+      ) : (
+        <EmptyState>
+          <EmptyStateIcon icon={ExclamationTriangleIcon} />
+          <Title headingLevel="h4" size="lg">
+            You have disabled all views
+          </Title>
+          <EmptyStateBody>
+            Enable individual views in the table below or press Show all button.
+          </EmptyStateBody>
+          <Button variant="primary" onClick={() => setEnabled(undefined)(true)}>
+            Show all
+          </Button>
+        </EmptyState>
+      )}
     </Card>
   );
 
@@ -441,15 +437,15 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     </Stack>
   );
 
-  const renderContents = () => (
-    <Card>
-      <CardBody>
-        <FilterableToolbar
-          categories={options}
-          filters={queryParams}
-          setFilters={setFromToolbar}
-          pagination={
-            fullCard && (
+  const renderContents = () =>
+    fullCard ? (
+      <Card>
+        <CardBody>
+          <FilterableToolbar
+            categories={options}
+            filters={queryParams}
+            setFilters={setFromToolbar}
+            pagination={
               <Pagination
                 count={api.result.meta.count}
                 perPageOptions={perPageOptions}
@@ -460,10 +456,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 setPagination={setFromPagination}
                 isCompact
               />
-            )
-          }
-          additionalControls={[
-            fullCard && (
+            }
+            additionalControls={[
               <DownloadPdfButton
                 key="download-button"
                 slug={slug}
@@ -483,14 +477,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 endDate={queryParams.end_date}
                 dateRange={queryParams.quick_date_range}
                 inputs={{ costManual, costAutomation }}
-              />
-            ),
-          ]}
-        />
-        <Grid hasGutter>
-          <GridItem span={9}>{renderLeft()}</GridItem>
-          <GridItem span={3}>{renderRight()}</GridItem>
-          {fullCard && (
+              />,
+            ]}
+          />
+          <Grid hasGutter>
+            <GridItem span={9}>{renderLeft()}</GridItem>
+            <GridItem span={3}>{renderRight()}</GridItem>
             <GridItem span={12}>
               <p>
                 Enter the time it takes to run the following templates manually.
@@ -511,11 +503,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 />
               )}
             </GridItem>
-          )}
-        </Grid>
-      </CardBody>
-      <CardFooter>
-        {fullCard && (
+          </Grid>
+        </CardBody>
+        <CardFooter>
           <Pagination
             count={api.result.meta.count}
             perPageOptions={perPageOptions}
@@ -526,10 +516,21 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             setPagination={setFromPagination}
             variant={PaginationVariant.bottom}
           />
-        )}
-      </CardFooter>
-    </Card>
-  );
+        </CardFooter>
+      </Card>
+    ) : (
+      <>
+        <FilterableToolbar
+          categories={options}
+          filters={queryParams}
+          setFilters={setFromToolbar}
+        />
+        <Grid hasGutter>
+          <GridItem span={9}>{renderLeft()}</GridItem>
+          <GridItem span={3}>{renderRight()}</GridItem>
+        </Grid>
+      </>
+    );
   return (
     <ApiStatusWrapper api={api} customLoading={true}>
       {renderContents()}
