@@ -33,6 +33,7 @@ interface Props {
   dispatch: DispatchType;
   chartSeriesHiddenProps: QueryParams;
   showExtraRows: boolean;
+  inputs?: { automationCost: number; manualCost: number };
 }
 
 const PdfDownload: FC<Props> = ({
@@ -53,7 +54,9 @@ const PdfDownload: FC<Props> = ({
   dispatch,
   chartSeriesHiddenProps,
   showExtraRows,
+  inputs,
 }) => {
+  const allParams = inputs ? { ...queryParams, inputs } : queryParams;
   // Dispatch the start of downloading the pdf
   dispatch(
     downloadPdfAction(
@@ -68,7 +71,7 @@ const PdfDownload: FC<Props> = ({
         dataFetchingParams: {
           showExtraRows: showExtraRows,
           endpointUrl,
-          queryParams,
+          queryParams: allParams,
           selectOptions,
           chartSeriesHiddenProps,
           sortOptions,

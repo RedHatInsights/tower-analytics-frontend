@@ -48,6 +48,7 @@ interface Props {
   startDate: string;
   endDate: string;
   dateRange: string;
+  inputs?: { automationCost: number; manualCost: number };
 }
 
 const DownloadButton: FC<Props> = ({
@@ -70,6 +71,7 @@ const DownloadButton: FC<Props> = ({
   startDate,
   endDate,
   dateRange,
+  inputs,
 }) => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
   const dispatch = useAppDispatch();
@@ -118,6 +120,7 @@ const DownloadButton: FC<Props> = ({
           dispatch,
           chartSeriesHiddenProps,
           showExtraRows,
+          inputs,
         })
       : SendEmail({
           slug,
