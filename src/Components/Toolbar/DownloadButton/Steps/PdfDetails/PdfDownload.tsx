@@ -3,16 +3,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import { FC } from 'react';
-import {
-  downloadPdf as downloadPdfAction,
-  DownloadState,
-} from '../../../../../store/pdfDownloadButton';
+import { downloadPdf as downloadPdfAction } from '../../../../../store/pdfDownloadButton';
 import { Endpoint, OptionsReturnType, Params } from '../../../../../Api';
-import {
-  DispatchType,
-  useAppDispatch,
-  useAppSelector,
-} from '../../../../../store';
+import { DispatchType } from '../../../../../store';
 import { QueryParams } from '../../../../../QueryParams/types';
 
 interface Props {

@@ -142,16 +142,14 @@ export const generatePdf = async (
   params: PDFParams,
   meta: NotificationParams
 ): Promise<void> => {
-  let url = Endpoint.pdfGenerate;
+  let url = Endpoint.pdfGenerate.toString();
   if (typeof params.dataFetchingParams.token !== 'undefined')
-    // @ts-ignore
     url =
       Endpoint.pdfGenerate +
       '?token=' +
       params.dataFetchingParams.token +
       '&slug=' +
       params.slug;
-  // @ts-ignore
   return postWithFileReturn(url, params, meta);
 };
 

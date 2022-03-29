@@ -1,10 +1,32 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import { useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { actions } from './constants';
 import { formatDate } from '../../../Utilities/helpers';
+
+interface UserProps {
+  usernames: string[];
+  emails: string[];
+}
+
+interface InitialProps {
+  downloadType: string;
+  showExtraRows: boolean;
+  additionalRecipients: string;
+  eula: boolean;
+  emailExtraRows: boolean;
+  subject: string;
+  body: string;
+  selectedRbacGroups: string[];
+  users: UserProps[];
+  expiry: string;
+}
+
+interface TypeValue {
+  type: string;
+  value: string | boolean | number;
+}
 
 const generateExpiryDate = () => {
   const d = new Date();
@@ -12,7 +34,11 @@ const generateExpiryDate = () => {
   return formatDate(d);
 };
 
-const useOptionsData = (initial, name, description) => {
+const useOptionsData = (
+  initial: InitialProps,
+  name: string,
+  description: string
+) => {
   const initialData = {
     downloadType: initial?.downloadType || 'pdf',
     showExtraRows: initial?.showExtraRows || false,
@@ -20,11 +46,9 @@ const useOptionsData = (initial, name, description) => {
     eula: initial?.eula || false,
     emailExtraRows: initial?.emailExtraRows || false,
     subject:
-      // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
       initial?.subject || `The Ansible report, ${name}, is available for view`,
     body:
       initial?.body ||
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/restrict-template-expressions
       `<b>${name}</b>\nThis report shows ${description[0].toLowerCase()}${description.substring(
         1
       )}`,
@@ -33,7 +57,7 @@ const useOptionsData = (initial, name, description) => {
     expiry: initial?.expiry || generateExpiryDate(),
   };
 
-  const formReducer = (state: any, { type, value }: any) => {
+  const formReducer = (state: InitialProps, { type, value }: TypeValue) => {
     switch (type) {
       /* v1 api reducers */
       case actions.SET_DOWNLOAD_TYPE:
@@ -95,7 +119,8 @@ const useOptionsData = (initial, name, description) => {
     }
   };
 
-  const [formData, dispatchReducer] = useReducer(formReducer, initialData);
+  const [formData, dispatchReducer]: [InitialProps, React.Reducer<any, any>] =
+    useReducer(formReducer, initialData);
   return {
     formData,
     dispatchReducer,

@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 // @ts-nocheck
 import { FC } from 'react';
 import { email as emailAction } from '../../../../../store/pdfDownloadButton';
@@ -8,9 +11,7 @@ import { DispatchType } from '../../../../../store';
 import { User } from '../../../types';
 
 const generateToken = () => {
-  const min = 1000000;
-  const max = 10000000000;
-  return parseInt(String(min + Math.random() * (max - min)));
+  return Math.random(0).toString(36).substring(2, 16);
 };
 
 const parseUrl = (
@@ -20,7 +21,6 @@ const parseUrl = (
   expiry: string,
   slug: string
 ) => {
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
   const params = `showExtraRows=${emailExtraRows}&token=${token}&expiry=${expiry}&slug=${slug}`;
   const url = new URL(reportUrl).search === '' ? '?' + params : '&' + params;
   return reportUrl.replace('/reports/', '/downloadReport/') + url;
@@ -41,7 +41,6 @@ interface Props {
 const SendEmail: FC<Props> = ({
   slug,
   users,
-  eula,
   additionalRecipients,
   subject,
   body,
@@ -59,7 +58,6 @@ const SendEmail: FC<Props> = ({
   dispatch(
     emailAction(
       {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         recipient: all_recipients.flat(),
         subject: subject === '' ? 'Report is ready to be viewed' : subject,
         body: body.toString().replace(/(?:\r\n|\r|\n)/g, '<br>'),

@@ -1,6 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import React, { FC, useState } from 'react';
 import {
@@ -25,8 +23,6 @@ import PdfDownload from '../DownloadButton/Steps/PdfDetails/PdfDownload';
 import useOptionsData from '../DownloadButton/useOptionsData';
 import SendEmail from '../DownloadButton/Steps/EmailDetails/SendEmail';
 import { actions } from '../DownloadButton/constants';
-import styled from 'styled-components';
-import { Label as PFLabel } from '@patternfly/react-core/dist/esm/components/Label/Label';
 
 interface Props {
   settingsNamespace: string;
@@ -49,6 +45,24 @@ interface Props {
   endDate: string;
   dateRange: string;
   inputs?: { automationCost: number; manualCost: number };
+}
+
+interface UserProps {
+  usernames: string[];
+  emails: string[];
+}
+
+interface InitialProps {
+  downloadType: string;
+  showExtraRows: boolean;
+  additionalRecipients: string;
+  eula: boolean;
+  emailExtraRows: boolean;
+  subject: string;
+  body: string;
+  selectedRbacGroups: string[];
+  users: UserProps[];
+  expiry: string;
 }
 
 const DownloadButton: FC<Props> = ({
@@ -90,7 +104,6 @@ const DownloadButton: FC<Props> = ({
 
   const {
     users,
-    eula,
     additionalRecipients,
     subject,
     body,
@@ -125,7 +138,6 @@ const DownloadButton: FC<Props> = ({
       : SendEmail({
           slug,
           users,
-          eula,
           additionalRecipients,
           subject,
           body,
@@ -138,7 +150,8 @@ const DownloadButton: FC<Props> = ({
   };
 
   const sendEmailButtonDisabled = () => {
-    const { additionalRecipients, selectedRbacGroups, users } = formData;
+    const { additionalRecipients, selectedRbacGroups, users }: InitialProps =
+      formData;
     if (additionalRecipients !== '') return false;
 
     // no group selected and no additional email and eula not checked
@@ -159,7 +172,6 @@ const DownloadButton: FC<Props> = ({
       id: 1,
       name: 'Export format',
       component: (
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         <ExportOptions formData={formData} dispatchReducer={dispatchReducer} />
       ),
     },
@@ -169,7 +181,6 @@ const DownloadButton: FC<Props> = ({
       nextButtonText: downloadType === 'pdf' ? 'Export' : 'Send e-mail',
       component:
         downloadType === 'pdf' ? (
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           <PdfDetails
             options={{
               settingsNamespace: 'settings',
@@ -196,19 +207,16 @@ const DownloadButton: FC<Props> = ({
             dispatchReducer={dispatchReducer}
           />
         ) : (
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           <EmailDetails
             options={{ totalCount }}
             formData={formData}
             dispatchReducer={dispatchReducer}
           />
         ),
-      // canJumpTo: stepIdSelected >= 2,
     },
   ];
 
-  const onStepChange = (step) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  const onStepChange = (step: [string, string]) => {
     setStepIdSelected(stepIdSelected < step?.id ? step.id : stepIdSelected);
   };
 
