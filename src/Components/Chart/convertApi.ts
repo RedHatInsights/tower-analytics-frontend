@@ -1,4 +1,3 @@
-/* eslint-disable no-debugger */
 import { ChartData, ChartDataSerie } from 'react-json-chart-builder';
 import { v4 as uuidv4 } from 'uuid';
 import { ApiReturnType, ApiType, GroupedApi } from './types';
