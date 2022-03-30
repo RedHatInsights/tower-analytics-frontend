@@ -15,7 +15,7 @@ const slug = 'host_Anomalies';
 const name = 'Host Anomalies';
 
 const description =
-  'The slowest hosts in a given job template are identified.A host is considered to be slow if it executes tasks much slower compared to the other hosts in the same template. The host slowness could be due to several factors such as low memory, CPU slowdown, network latency issues etc.\n\n You can use this report to single out templates and hosts that run slow and drive up the automation costs due to their slow performance.';
+  'The slowest hosts in a given job template are identified. A host is considered to be slow if it executes tasks much slower compared to the other hosts in the same template. The host slowness could be due to several factors such as low memory, CPU slowdown, network latency issues etc.\n\n You can use this report to single out templates and hosts that run slow and drive up the automation costs due to their slow performance.';
 
 const tags = [
   TagName.executive,
