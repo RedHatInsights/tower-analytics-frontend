@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -29,6 +30,7 @@ import { capitalize } from '../../../../Utilities/helpers';
 import { perPageOptions } from '../../Shared/constants';
 import hydrateSchema from '../../Shared/hydrateSchema';
 import { StandardProps } from '../types';
+import percentageFormatter from '../../../../Utilities/percentageFormatter';
 
 const getDateFormatByGranularity = (granularity: string): string => {
   if (granularity === 'yearly') return 'formatAsYear';
@@ -112,6 +114,34 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         ?.value || 'Label Y',
     xTickFormat: getDateFormatByGranularity(queryParams.granularity),
     chartType: settingsQueryParams.chartType || 'line',
+  };
+
+  const formattedValue = (key: string, value: number) => {
+    let val;
+    switch (key) {
+      case 'average_duration_per_task':
+        val = value.toFixed(2) + ' seconds';
+        break;
+      case 'slow_hosts_percentage':
+        val = percentageFormatter(value) + '%';
+        break;
+      case 'template_success_rate':
+        val = percentageFormatter(value) + '%';
+        break;
+      default:
+        val = value.toFixed(2);
+    }
+    return val;
+  };
+
+  const customTooltipFormatting = ({ datum }) => {
+    const tooltip =
+      chartParams.label +
+      ' for ' +
+      datum.name +
+      ': ' +
+      formattedValue(queryParams.sort_options, datum.y);
+    return tooltip;
   };
 
   const getSortParams = (currKey: string) => {
@@ -214,6 +244,11 @@ const ReportCard: FunctionComponent<StandardProps> = ({
                 chartType: chartParams.chartType,
               })}
               data={dataApi.result}
+              specificFunctions={{
+                labelFormat: {
+                  customTooltipFormatting,
+                },
+              }}
             />
             <Table
               legend={dataApi.result.meta.legend}
