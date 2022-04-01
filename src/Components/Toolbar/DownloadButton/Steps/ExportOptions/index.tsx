@@ -53,8 +53,4 @@ const ExportOptions = ({ formData, dispatchReducer }) => {
   );
 };
 
-ExportOptions.propTypes = {
-  formData: PropTypes.object.isRequired,
-  dispatch: PropTypes.func.isRequired,
-};
 export default ExportOptions;
