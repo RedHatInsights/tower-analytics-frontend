@@ -11,6 +11,7 @@ const mubo = 'module_usage_by_organization';
 const mubjt = 'module_usage_by_job_template';
 const mubt = 'module_usage_by_task';
 const aa21m = 'aa_2_1_onboarding';
+const ha = 'host_anomalies';
 
 const allReports = [
   hcbjt,
@@ -24,6 +25,7 @@ const allReports = [
   mubjt,
   mubt,
   aa21m,
+  ha,
 ];
 
 describe('Reports page smoketests', () => {
@@ -233,6 +235,23 @@ describe('Report: AA 2.1 Migration', () => {
     cy.screenshot('report_aa21m_bar.png');
     cy.get('#line').click();
     cy.screenshot('report_aa21m_line.png');
+  });
+
+  it('Can change lookback', () => {
+    cy.get('[data-cy="quick_date_range"]').click();
+    cy.get('.pf-c-select__menu-item').contains('Past year').click();
+  });
+});
+
+describe('Report: Host Anomalies', () => {
+  beforeEach(() => {
+    cy.loginFlow();
+    cy.visit(reportsUrl + '/' + ha);
+  });
+
+  it('Renders bar chart with data', () => {
+    cy.get('#bar').click();
+    cy.screenshot('report_ha_bar.png');
   });
 
   it('Can change lookback', () => {
