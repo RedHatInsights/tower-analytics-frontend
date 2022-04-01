@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
 import React, { FC, useState } from 'react';
 import {
   Button,
@@ -23,6 +21,7 @@ import PdfDownload from '../DownloadButton/Steps/PdfDetails/PdfDownload';
 import useOptionsData from '../DownloadButton/useOptionsData';
 import SendEmail from '../DownloadButton/Steps/EmailDetails/SendEmail';
 import { actions } from '../DownloadButton/constants';
+import { EmailDetailsProps } from '../types';
 
 interface Props {
   settingsNamespace: string;
@@ -45,24 +44,6 @@ interface Props {
   endDate: string;
   dateRange: string;
   inputs?: { automationCost: number; manualCost: number };
-}
-
-interface UserProps {
-  usernames: string[];
-  emails: string[];
-}
-
-interface InitialProps {
-  downloadType: string;
-  showExtraRows: boolean;
-  additionalRecipients: string;
-  eula: boolean;
-  emailExtraRows: boolean;
-  subject: string;
-  body: string;
-  selectedRbacGroups: string[];
-  users: UserProps[];
-  expiry: string;
 }
 
 const DownloadButton: FC<Props> = ({
@@ -100,7 +81,11 @@ const DownloadButton: FC<Props> = ({
     settingsNamespace
   );
   const [stepIdSelected, setStepIdSelected] = useState(1);
-  const { formData, dispatchReducer } = useOptionsData({}, name, description);
+  const { formData, dispatchReducer } = useOptionsData(
+    {} as EmailDetailsProps,
+    name,
+    description
+  );
 
   const {
     users,
@@ -150,8 +135,11 @@ const DownloadButton: FC<Props> = ({
   };
 
   const sendEmailButtonDisabled = () => {
-    const { additionalRecipients, selectedRbacGroups, users }: InitialProps =
-      formData;
+    const {
+      additionalRecipients,
+      selectedRbacGroups,
+      users,
+    }: EmailDetailsProps = formData;
     if (additionalRecipients !== '') return false;
 
     // no group selected and no additional email and eula not checked
@@ -216,7 +204,7 @@ const DownloadButton: FC<Props> = ({
     },
   ];
 
-  const onStepChange = (step: [string, string]) => {
+  const onStepChange = (step: { id: React.SetStateAction<number> }) => {
     setStepIdSelected(stepIdSelected < step?.id ? step.id : stepIdSelected);
   };
 
@@ -277,7 +265,6 @@ const DownloadButton: FC<Props> = ({
     </WizardFooter>
   );
 
-  // const title = `Export report <font size={2}>| ${name}</font>`;
   const title = 'Export report';
 
   return (
@@ -300,8 +287,8 @@ const DownloadButton: FC<Props> = ({
           description={`${name} | ${downloadType === 'pdf' ? 'PDF' : 'E-mail'}`}
           steps={steps}
           hideClose={true}
-          onNext={onStepChange}
-          onBack={onStepChange}
+          onNext={() => onStepChange}
+          onBack={() => onStepChange}
           onSave={onSave}
           onClose={() => {
             onClose();

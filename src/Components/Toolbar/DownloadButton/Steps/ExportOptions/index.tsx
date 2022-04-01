@@ -1,15 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-// @ts-nocheck
 import React from 'react';
-import PropTypes from 'prop-types';
 import { actions } from '../../constants';
 import { Grid, GridItem, Radio, Title } from '@patternfly/react-core';
+import { EmailDetailsProps, TypeValue } from '../../../types';
 
-const ExportOptions = ({ formData, dispatchReducer }) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const ExportOptions = ({
+  formData,
+  dispatchReducer,
+}: {
+  formData: EmailDetailsProps;
+  dispatchReducer: React.Dispatch<TypeValue>;
+}) => {
   const { downloadType } = formData;
 
   return (

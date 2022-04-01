@@ -1,32 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import React, { useReducer } from 'react';
+import { useReducer } from 'react';
 import { actions } from './constants';
 import { formatDate } from '../../../Utilities/helpers';
-
-interface UserProps {
-  usernames: string[];
-  emails: string[];
-}
-
-interface InitialProps {
-  downloadType: string;
-  showExtraRows: boolean;
-  additionalRecipients: string;
-  eula: boolean;
-  emailExtraRows: boolean;
-  subject: string;
-  body: string;
-  selectedRbacGroups: string[];
-  users: UserProps[];
-  expiry: string;
-}
-
-interface TypeValue {
-  type: string;
-  value: string | boolean | number;
-}
+import { EmailDetailsProps, TypeValue } from '../types';
 
 const generateExpiryDate = () => {
   const d = new Date();
@@ -34,8 +9,9 @@ const generateExpiryDate = () => {
   return formatDate(d);
 };
 
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useOptionsData = (
-  initial: InitialProps,
+  initial: EmailDetailsProps,
   name: string,
   description: string
 ) => {
@@ -57,70 +33,72 @@ const useOptionsData = (
     expiry: initial?.expiry || generateExpiryDate(),
   };
 
-  const formReducer = (state: InitialProps, { type, value }: TypeValue) => {
-    switch (type) {
+  const formReducer = (
+    state: EmailDetailsProps,
+    action: TypeValue
+  ): EmailDetailsProps => {
+    switch (action.type) {
       /* v1 api reducers */
       case actions.SET_DOWNLOAD_TYPE:
         return {
           ...state,
-          downloadType: value,
-        };
+          downloadType: action.value,
+        } as EmailDetailsProps;
       case actions.SET_SHOW_EXTRA_ROWS:
         return {
           ...state,
-          showExtraRows: value,
-        };
+          showExtraRows: action.value,
+        } as EmailDetailsProps;
       case actions.SET_SELECTED_RBAC_GROUPS:
         return {
           ...state,
-          selectedRbacGroups: value,
-        };
+          selectedRbacGroups: action.value,
+        } as unknown as EmailDetailsProps;
       case actions.SET_ADDITIONAL_RECIPIENTS:
         return {
           ...state,
-          additionalRecipients: value,
-        };
+          additionalRecipients: action.value,
+        } as EmailDetailsProps;
       case actions.SET_EULA:
         return {
           ...state,
-          eula: value,
-        };
+          eula: action.value,
+        } as EmailDetailsProps;
       case actions.SET_EMAIL_EXTRA_ROWS:
         return {
           ...state,
-          emailExtraRows: value,
-        };
+          emailExtraRows: action.value,
+        } as EmailDetailsProps;
       case actions.SET_SUBJECT:
         return {
           ...state,
-          subject: value,
-        };
+          subject: action.value,
+        } as EmailDetailsProps;
       case actions.SET_BODY:
         return {
           ...state,
-          body: value,
-        };
+          body: action.value,
+        } as EmailDetailsProps;
       case actions.SET_USERS:
         return {
           ...state,
-          users: value,
-        };
+          users: action.value,
+        } as unknown as EmailDetailsProps;
       case actions.SET_SELECTED_EXPIRY:
         return {
           ...state,
-          expiry: value,
-        };
+          expiry: action.value,
+        } as EmailDetailsProps;
       case actions.RESET_DATA:
         return initialData;
       default:
         throw new Error(
-          `useOptionsData reducer action type ${type} was not found.`
+          `useOptionsData reducer action type ${action.type} was not found.`
         );
     }
   };
 
-  const [formData, dispatchReducer]: [InitialProps, React.Reducer<any, any>] =
-    useReducer(formReducer, initialData);
+  const [formData, dispatchReducer] = useReducer(formReducer, initialData);
   return {
     formData,
     dispatchReducer,

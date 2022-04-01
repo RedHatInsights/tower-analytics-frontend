@@ -1,12 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import { FC } from 'react';
 import { downloadPdf as downloadPdfAction } from '../../../../../store/pdfDownloadButton';
 import { Endpoint, OptionsReturnType, Params } from '../../../../../Api';
 import { DispatchType } from '../../../../../store';
-import { QueryParams } from '../../../../../QueryParams/types';
 
 interface Props {
   slug: string;
@@ -24,12 +18,31 @@ interface Props {
   endDate: string;
   dateRange: string;
   dispatch: DispatchType;
-  chartSeriesHiddenProps: QueryParams;
+  chartSeriesHiddenProps: boolean[];
   showExtraRows: boolean;
   inputs?: { automationCost: number; manualCost: number };
 }
 
-const PdfDownload: FC<Props> = ({
+const PdfDownload: ({
+  slug,
+  endpointUrl,
+  queryParams,
+  selectOptions,
+  y,
+  label,
+  xTickFormat,
+  chartType,
+  sortOptions,
+  sortOrder,
+  dateGranularity,
+  startDate,
+  endDate,
+  dateRange,
+  dispatch,
+  chartSeriesHiddenProps,
+  showExtraRows,
+  inputs,
+}: Props) => void = ({
   slug,
   endpointUrl,
   queryParams,
@@ -50,6 +63,7 @@ const PdfDownload: FC<Props> = ({
   inputs,
 }) => {
   const allParams = inputs ? { ...queryParams, inputs } : queryParams;
+  const token = '';
   // Dispatch the start of downloading the pdf
   dispatch(
     downloadPdfAction(
@@ -76,7 +90,8 @@ const PdfDownload: FC<Props> = ({
         },
       },
       dispatch,
-      slug
+      slug,
+      token
     )
   );
 };

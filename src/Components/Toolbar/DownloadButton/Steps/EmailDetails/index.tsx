@@ -1,12 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-// @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
 import { actions } from '../../constants';
 import {
   Form,
@@ -23,7 +15,13 @@ import {
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
 
-import { RbacGroupFromApi, RbacPrincipalFromApi, User } from '../../../types';
+import {
+  EmailDetailsProps,
+  RbacGroupFromApi,
+  RbacPrincipalFromApi,
+  TypeValue,
+  User,
+} from '../../../types';
 import useRequest from '../../../../../Utilities/useRequest';
 import { readRbacGroups, readRbacPrincipals } from '../../../../../Api';
 import ToolbarInput from '../../../Groups/ToolbarInput';
@@ -38,7 +36,16 @@ interface RbacPrincipalsDataType {
   data: RbacPrincipalFromApi[];
 }
 
-const EmailDetails = ({ options, formData, dispatchReducer }) => {
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+const EmailDetails = ({
+  options,
+  formData,
+  dispatchReducer,
+}: {
+  options: Record<string, number>;
+  formData: EmailDetailsProps;
+  dispatchReducer: React.Dispatch<TypeValue>;
+}) => {
   const {
     body,
     selectedRbacGroups,
@@ -47,7 +54,7 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
     additionalRecipients,
     emailExtraRows,
     expiry,
-  } = formData;
+  }: EmailDetailsProps = formData;
   const {
     result: { data: rbacGroupsFromApi },
     request: fetchRbacGroups,
@@ -76,7 +83,9 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
   }, [selectedRbacGroups]);
 
   const getGroupName = (key: string) => {
-    return rbacGroupsFromApi.find((group) => group.uuid === key)?.name;
+    return rbacGroupsFromApi.find(
+      (group: RbacGroupFromApi) => group.uuid === key
+    )?.name;
   };
 
   const updateEmailInfo = () => {
@@ -89,7 +98,9 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
       usernames: usersNamesList,
       emails: usersEmailsList,
     };
-    const index = users.findIndex((object) => object.uuid === userHash.uuid);
+    const index = users.findIndex(
+      (object: { uuid: string }) => object.uuid === userHash.uuid
+    );
     if (index === -1) {
       users.push(userHash as User);
     }
@@ -113,8 +124,8 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
 
   const [showError, setShowError] = useState(false);
 
-  const checkEmailInput = (value: string) => {
-    const emailList = value.split(',');
+  const checkEmailInput = (event: React.FocusEvent<HTMLInputElement>) => {
+    const emailList = event.target.value.split(',');
     for (let i = 0; i < emailList.length; i++) {
       const regEx = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/;
       if (!regEx.test(emailList[i])) {
@@ -139,24 +150,25 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
 
   const onSelectionChange = (field: string, groupToChange: string) => {
     let revisedGroups = [groupToChange];
+    let revisedSelectedRbacGroups: string[];
     // if checkbox unchecked, remove group from array & user info from users array
     if (selectedRbacGroups.indexOf(groupToChange) > -1) {
       revisedGroups = selectedRbacGroups.filter(
         (group) => group !== groupToChange
       );
       const usersOfChangedGroup = users.findIndex(
-        ({ uuid }) => uuid === groupToChange
+        ({ uuid }: { uuid: string }) => uuid === groupToChange
       );
       // if selected group has users
       if (usersOfChangedGroup >= 0) users.splice(usersOfChangedGroup, 1);
-      selectedRbacGroups = revisedGroups;
+      revisedSelectedRbacGroups = revisedGroups;
     } else {
       // add if checkbox checked
-      selectedRbacGroups = selectedRbacGroups.concat(revisedGroups);
+      revisedSelectedRbacGroups = selectedRbacGroups.concat(revisedGroups);
     }
     dispatchReducer({
       type: actions.SET_SELECTED_RBAC_GROUPS,
-      value: selectedRbacGroups,
+      value: revisedSelectedRbacGroups,
     });
   };
 
@@ -262,8 +274,8 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
           id="additionalRecipients"
           name="additionalRecipients"
           value={additionalRecipients}
-          onBlur={(e) => checkEmailInput(e.target.value)}
-          onFocus={(e) => checkEmailInput(e.target.value)}
+          onBlur={(e) => checkEmailInput(e)}
+          onFocus={(e) => checkEmailInput(e)}
           onChange={(newValue) =>
             dispatchReducer({
               type: actions.SET_ADDITIONAL_RECIPIENTS,
@@ -341,7 +353,7 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
         <ToolbarInput
           categoryKey="start_date"
           value={expiry}
-          setValue={(e) => onExpiryChange(e)}
+          setValue={(e) => onExpiryChange(e as string)}
         />
       </FormGroup>
       <FormGroup label="Report link" fieldId="link-field">
@@ -350,9 +362,5 @@ const EmailDetails = ({ options, formData, dispatchReducer }) => {
     </Form>
   );
 };
-EmailDetails.propTypes = {
-  options: PropTypes.object.isRequired,
-  formData: PropTypes.object.isRequired,
-  dispatchReducer: PropTypes.func.isRequired,
-};
+
 export default EmailDetails;

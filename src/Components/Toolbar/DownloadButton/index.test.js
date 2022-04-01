@@ -34,7 +34,5 @@ describe('Components/Toolbar/DownloadButton', () => {
     renderPage(DownloadButton, undefined, mockOptions);
     expect(screen.getByRole('button')).toBeTruthy();
     expect(screen.getByLabelText('Export report'));
-    // expect(screen.getByText('Top workflows'));
-    // expect(screen.getByText('Job status'));
   });
 });
