@@ -24,20 +24,14 @@ import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
 
 import Chart from '../../../../Components/Chart';
 import Table from './Table';
-import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
+import DownloadButton from '../../../../Components/Toolbar/DownloadButton';
 import { endpointFunctionMap, OptionsReturnType } from '../../../../Api';
 import { capitalize } from '../../../../Utilities/helpers';
 import { perPageOptions } from '../../Shared/constants';
 import hydrateSchema from '../../Shared/hydrateSchema';
 import { StandardProps } from '../types';
 import percentageFormatter from '../../../../Utilities/percentageFormatter';
-
-const getDateFormatByGranularity = (granularity: string): string => {
-  if (granularity === 'yearly') return 'formatAsYear';
-  if (granularity === 'monthly') return 'formatAsMonth';
-  if (granularity === 'daily') return 'formatDateAsDayMonth';
-  return '';
-};
+import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
@@ -190,7 +184,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         ))}
       </ToggleGroup>
     ),
-    <DownloadPdfButton
+    <DownloadButton
       key="download-button"
       slug={slug}
       name={name}

@@ -141,7 +141,17 @@ export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
 export const generatePdf = async (
   params: PDFParams,
   meta: NotificationParams
-): Promise<void> => postWithFileReturn(Endpoint.pdfGenerate, params, meta);
+): Promise<void> => {
+  let url = Endpoint.pdfGenerate.toString();
+  if (typeof params.dataFetchingParams.token !== 'undefined')
+    url =
+      Endpoint.pdfGenerate +
+      '?token=' +
+      params.dataFetchingParams.token +
+      '&slug=' +
+      params.slug;
+  return postWithFileReturn(url, params, meta);
+};
 
 export const sendEmail = (
   params: Params,
