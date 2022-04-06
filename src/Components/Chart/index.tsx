@@ -8,6 +8,7 @@ import ChartBuilder, {
 import { useQueryParams } from '../../QueryParams';
 import { convertApiToData } from './convertApi';
 import { ApiReturnType } from './types';
+import { ChartDataSerie } from 'react-json-chart-builder/dist/cjs';
 
 interface Props {
   schema: ChartSchemaElement[];
@@ -34,12 +35,12 @@ const customFunctions = (specificFunctions?: ChartFunctions) => ({
 
 const applyHiddenFilter = (
   chartData: ChartData,
-  chartSeriesHidden: boolean[] = []
+  chartSeriesHidden: unknown[] = []
 ): ChartData => ({
   ...chartData,
-  series: chartData.series.map((series, index) => ({
+  series: chartData.series.map((series: ChartDataSerie) => ({
     ...series,
-    hidden: !!chartSeriesHidden[index],
+    hidden: !!chartSeriesHidden.includes(series.serie[0].id.toString()),
   })),
 });
 
@@ -68,7 +69,7 @@ const Chart: FC<Props> = ({
   const setChartDataHook = (newChartData: ChartData) => {
     dispatch({
       type: 'SET_CHART_SERIES_HIDDEN_PROPS',
-      value: newChartData.series.map(({ hidden }) => hidden),
+      value: newChartData.series.map((line) => [line.serie[0].id, line.hidden]),
     });
 
     setChartData(newChartData);
@@ -78,11 +79,10 @@ const Chart: FC<Props> = ({
     setChartData(
       applyHiddenFilter(
         convertApiToData(data),
-        chartSeriesHiddenProps as boolean[]
+        chartSeriesHiddenProps as unknown[]
       )
     );
   }, [data]);
-
   return (
     <ChartBuilder
       schema={schema}
