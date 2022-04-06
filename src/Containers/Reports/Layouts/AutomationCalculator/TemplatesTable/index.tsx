@@ -20,6 +20,7 @@ interface Props {
   setEnabled: (id: number | undefined) => (enabled: boolean) => void;
   redirectToJobExplorer: (id: number) => void;
   getSortParams?: () => TableSortParams;
+  readOnly: boolean;
 }
 
 const TopTemplates: FunctionComponent<Props> = ({
@@ -29,41 +30,41 @@ const TopTemplates: FunctionComponent<Props> = ({
   setEnabled = () => () => ({}),
   redirectToJobExplorer = () => ({}),
   getSortParams = () => ({}),
+  readOnly = true,
 }) => (
-  <>
-    <p>Enter the time it takes to run the following templates manually.</p>
-    <TableComposable aria-label="ROI Table" variant={TableVariant.compact}>
-      <Thead>
-        <Tr>
-          <Th />
-          <Th>Name</Th>
-          <Th {...getSortParams()}>{variableRow.value}</Th>
-          <Th>Manual time</Th>
-          <Th>Savings</Th>
-          <Th>
-            <Switch
-              label="Show all"
-              labelOff="Show all"
-              isChecked={!data.find((d) => !d.enabled)}
-              onChange={(checked) => setEnabled(undefined)(checked)}
-            />
-          </Th>
-        </Tr>
-      </Thead>
-      <Tbody>
-        {data.map((template) => (
-          <Row
-            key={template.id}
-            template={template}
-            variableRow={variableRow}
-            setDataRunTime={setDataRunTime}
-            redirectToJobExplorer={redirectToJobExplorer}
-            setEnabled={setEnabled(template.id)}
+  <TableComposable aria-label="ROI Table" variant={TableVariant.compact}>
+    <Thead>
+      <Tr>
+        <Th />
+        <Th>Name</Th>
+        {variableRow && <Th {...getSortParams()}>{variableRow.value}</Th>}
+        <Th>Manual time</Th>
+        <Th>Savings</Th>
+        <Th>
+          <Switch
+            label="Show all"
+            labelOff="Show all"
+            isChecked={!data.find((d) => !d.enabled)}
+            onChange={(checked) => setEnabled(undefined)(checked)}
+            isDisabled={readOnly}
           />
-        ))}
-      </Tbody>
-    </TableComposable>
-  </>
+        </Th>
+      </Tr>
+    </Thead>
+    <Tbody>
+      {data.map((template) => (
+        <Row
+          key={template.id}
+          template={template}
+          variableRow={variableRow}
+          setDataRunTime={setDataRunTime}
+          redirectToJobExplorer={redirectToJobExplorer}
+          setEnabled={setEnabled(template.id)}
+          readOnly={readOnly}
+        />
+      ))}
+    </Tbody>
+  </TableComposable>
 );
 
 export default TopTemplates;

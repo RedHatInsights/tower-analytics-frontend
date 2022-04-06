@@ -8,7 +8,7 @@ import {
 import { CubesIcon } from '@patternfly/react-icons';
 
 const NoData: FunctionComponent<Record<string, never>> = () => (
-  <EmptyState variant={EmptyStateVariant.full}>
+  <EmptyState variant={EmptyStateVariant.full} style={{ minHeight: '400px' }}>
     <EmptyStateIcon icon={CubesIcon} />
     <Title headingLevel="h5" size="lg">
       No Data

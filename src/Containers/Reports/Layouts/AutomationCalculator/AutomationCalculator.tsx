@@ -22,12 +22,12 @@ import {
   CardFooter,
   PaginationVariant,
   Title,
+  Spinner,
 } from '@patternfly/react-core';
 import { ExclamationTriangleIcon as ExclamationTriangleIcon } from '@patternfly/react-icons';
 // Imports from custom components
 import FilterableToolbar from '../../../../Components/Toolbar';
 import Pagination from '../../../../Components/Pagination';
-
 // Imports from utilities
 import {
   useQueryParams,
@@ -52,12 +52,21 @@ import TemplatesTable from './TemplatesTable';
 import { Paths } from '../../../../paths';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants';
-import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
-import { endpointFunctionMap } from '../../../../Api';
+import DownloadButton from '../../../../Components/Toolbar/DownloadButton';
+import { endpointFunctionMap, saveROI } from '../../../../Api';
 import { AutmationCalculatorProps } from '../types';
 import hydrateSchema from '../../Shared/hydrateSchema';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
+import styled from 'styled-components';
+import { useDispatch } from 'react-redux';
+import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
+import { NotificationType } from '../../../../globalTypes';
 
+const SpinnerDiv = styled.div`
+  height: 400px;
+  padding-top: 200px;
+  padding-left: 400px;
+`;
 const perPageOptions = [
   ...defaultPerPageOptions,
   { title: '15', value: 15 },
@@ -86,46 +95,34 @@ const computeTotalSavings = (data) =>
 
 const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   slug,
+  name,
+  description,
   defaultParams,
   dataEndpoint,
   optionsEndpoint,
   schema,
+  fullCard = true,
 }) => {
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
 
   const redirect = useRedirect();
-  const {
-    queryParams,
-    setFromToolbar,
-    setFromPagination,
-    setFromCalculation,
-    setFromTable,
-  } = useQueryParams(defaultParams);
-  const [costManual, setCostManual] = useState(queryParams.manual_cost || '50');
-  const [costAutomation, setCostAutomation] = useState(
-    queryParams.automation_cost || '20'
-  );
+  const { queryParams, setFromToolbar, setFromPagination } =
+    useQueryParams(defaultParams);
 
-  const mapApi = ({ legend = [] }) =>
-    legend.map((el, index) => ({
+  const [costManual, setCostManual] = useState('');
+  const [costAutomation, setCostAutomation] = useState('');
+
+  const mapApi = ({ legend = [] }) => {
+    return legend.map((el) => ({
       ...el,
       delta: 0,
-      avgRunTime: queryParams.time_per_item
-        ? queryParams.time_per_item[index]
-        : 3600,
+      avgRunTime: el.manual_effort_minutes * 60 || 3600,
       manualCost: 0,
       automatedCost: 0,
-      enabled: queryParams.enabled_per_item
-        ? queryParams.enabled_per_item[index]
-        : true,
+      enabled: el.template_weigh_in,
     }));
-
-  const updateCalculationValues = (varName: string, value: number) => {
-    setFromCalculation(varName, value);
-    varName === 'manual_cost' ? setCostManual(value) : setCostAutomation(value);
   };
-
   const { result: options, request: fetchOptions } = useRequest(readOptions, {
     sort_options: [
       {
@@ -134,7 +131,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       },
     ],
   });
-
   const {
     request: fetchData,
     setValue: setApiData,
@@ -142,13 +138,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   } = useRequest(
     async (params) => {
       const response = await readData(params);
-
       return {
         ...response,
         items: updateDeltaCost(
           mapApi(response.meta),
-          costAutomation,
-          costManual
+          response.cost.hourly_manual_labor_cost,
+          response.cost.hourly_automation_cost
         ),
       };
     },
@@ -165,13 +160,61 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       ...api.result,
       items,
     });
+  const getROISaveData = (
+    items: any[],
+    manualCost?: number = costManual,
+    automationCost?: number = costAutomation
+  ) => {
+    const updatedDataApi = items.map((el) => ({
+      template_id: el.id,
+      effort_minutes: el.avgRunTime / 60,
+      template_weigh_in: el.enabled,
+    }));
+    return {
+      currency: 'USD',
+      hourly_manual_labor_cost: manualCost,
+      hourly_automation_cost: automationCost,
+      templates_manual_equivalent: updatedDataApi,
+    };
+  };
+  const dispatch = useDispatch();
+
+  const updateCalculationValues = async (varName: string, value: number) => {
+    const hourly_automation_cost =
+      varName === 'automation_cost' ? value : costAutomation;
+    const hourly_manual_labor_cost =
+      varName === 'manual_cost' ? value : costManual;
+    const humanVarName =
+      varName === 'automation_cost' ? 'Automation cost' : 'Manual cost';
+    try {
+      await saveROI(
+        getROISaveData(
+          api.result.items,
+          hourly_manual_labor_cost,
+          hourly_automation_cost
+        )
+      );
+    } catch {
+      dispatch(
+        addNotification({
+          title: `Unable to save changes to ${humanVarName}.`,
+          description: `Unable to save changes ${humanVarName}. Please try again.`,
+          variant: NotificationType.danger,
+          autoDismiss: false,
+        })
+      );
+      // don't update inputs
+      return;
+    }
+    varName === 'manual_cost' ? setCostManual(value) : setCostAutomation(value);
+  };
 
   /**
    * Modifies one elements avgRunTime in the unfilteredData
    * and updates all calculated fields.
    * Used in top templates.
    */
-  const setDataRunTime = (seconds, id) => {
+  const setDataRunTime = async (seconds, id) => {
     const updatedData = api.result.items.map((el) => {
       if (el.id === id) {
         el.avgRunTime = seconds;
@@ -185,25 +228,46 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         return el;
       }
     });
-
+    try {
+      await saveROI(getROISaveData(updatedData), dispatch);
+    } catch {
+      dispatch(
+        addNotification({
+          title: 'Unable to save changes to Manual time',
+          description:
+            'Unable to save changes to Manual time. Please try again.',
+          variant: NotificationType.danger,
+          autoDismiss: false,
+        })
+      );
+      // don't update inputs
+      return;
+    }
     setValue(updatedData);
-    setFromTable(
-      'time_per_item',
-      updatedData.map((item) => item.avgRunTime)
-    );
   };
 
-  const setEnabled = (id) => (value) => {
+  const setEnabled = (id) => async (value) => {
     const updatedData = !id
       ? api.result.items.map((el) => ({ ...el, enabled: value }))
       : api.result.items.map((el) =>
           el.id === id ? { ...el, enabled: value } : el
         );
+    try {
+      await saveROI(getROISaveData(updatedData));
+    } catch {
+      dispatch(
+        addNotification({
+          title: 'Unable to save changes to visibility',
+          description:
+            'Unable to save changes to visibility. Please try again.',
+          variant: NotificationType.danger,
+          autoDismiss: false,
+        })
+      );
+      // don't update inputs
+      return;
+    }
     setValue(updatedData);
-    setFromTable(
-      'enabled_per_item',
-      updatedData.map((item) => item.enabled)
-    );
   };
   const getSortParams = () => {
     const onSort = (_event, index, direction) => {
@@ -220,6 +284,15 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       },
     };
   };
+  /**
+   * Set cost from API on load. Don't reload it.
+   */
+  useEffect(() => {
+    if (api.result?.cost && !costAutomation && !costManual) {
+      setCostManual(api.result.cost.hourly_manual_labor_cost);
+      setCostAutomation(api.result.cost.hourly_automation_cost);
+    }
+  }, [api]);
 
   /**
    * Recalculates the delta and costs in the data after the cost is changed.
@@ -235,7 +308,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     fetchOptions(queryParams);
     fetchData(queryParams);
   }, [queryParams]);
-
   /**
    * Function to redirect to the job explorer page
    * with the same filters as is used here.
@@ -291,47 +363,51 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     return tooltip;
   };
 
+  const isReadOnly = (api) => {
+    return !api.result.rbac?.perms?.all && !api.result.rbac?.perms?.write;
+  };
+
   const renderLeft = () => (
     <Card isPlain>
-      <CardHeader>
-        <CardTitle>Automation savings</CardTitle>
-      </CardHeader>
-      <CardBody>
-        {filterDisabled(api.result.items).length > 0 ? (
-          <Chart
-            schema={hydrateSchema(schema)({
-              label: chartParams.label,
-              tooltip: chartParams.tooltip,
-              field: chartParams.field,
-            })}
-            data={{
-              items: filterDisabled(api.result.items),
-            }}
-            specificFunctions={{
-              labelFormat: {
-                customTooltipFormatting,
-              },
-            }}
-          />
-        ) : (
-          <EmptyState>
-            <EmptyStateIcon icon={ExclamationTriangleIcon} />
-            <Title headingLevel="h4" size="lg">
-              You have disabled all views
-            </Title>
-            <EmptyStateBody>
-              Enable individual views in the table below or press Show all
-              button.
-            </EmptyStateBody>
-            <Button
-              variant="primary"
-              onClick={() => setEnabled(undefined)(true)}
-            >
-              Show all
-            </Button>
-          </EmptyState>
-        )}
-      </CardBody>
+      {fullCard && (
+        <CardHeader>
+          <CardTitle>Automation savings</CardTitle>
+        </CardHeader>
+      )}
+      {api.isLoading ? (
+        <SpinnerDiv>
+          <Spinner isSVG />
+        </SpinnerDiv>
+      ) : filterDisabled(api?.result?.items).length > 0 ? (
+        <Chart
+          schema={hydrateSchema(schema)({
+            label: chartParams.label,
+            tooltip: chartParams.tooltip,
+            field: chartParams.field,
+          })}
+          data={{
+            items: filterDisabled(api.result.items),
+          }}
+          specificFunctions={{
+            labelFormat: {
+              customTooltipFormatting,
+            },
+          }}
+        />
+      ) : (
+        <EmptyState>
+          <EmptyStateIcon icon={ExclamationTriangleIcon} />
+          <Title headingLevel="h4" size="lg">
+            You have disabled all views
+          </Title>
+          <EmptyStateBody>
+            Enable individual views in the table below or press Show all button.
+          </EmptyStateBody>
+          <Button variant="primary" onClick={() => setEnabled(undefined)(true)}>
+            Show all
+          </Button>
+        </EmptyState>
+      )}
     </Card>
   );
 
@@ -340,6 +416,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       <StackItem>
         <TotalSavings
           totalSavings={computeTotalSavings(filterDisabled(api.result.items))}
+          isLoading={api.isLoading}
         />
       </StackItem>
       <StackItem>
@@ -349,6 +426,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               costManual={costManual}
               setFromCalculation={updateCalculationValues}
               costAutomation={costAutomation}
+              readOnly={isReadOnly(api)}
             />
           </StackItem>
           <StackItem>
@@ -359,72 +437,105 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     </Stack>
   );
 
-  const renderContents = () => (
-    <Card>
-      <CardBody>
+  const renderContents = () =>
+    fullCard ? (
+      <Card>
+        <CardBody>
+          <FilterableToolbar
+            categories={options}
+            filters={queryParams}
+            setFilters={setFromToolbar}
+            pagination={
+              <Pagination
+                count={api.result.meta.count}
+                perPageOptions={perPageOptions}
+                params={{
+                  limit: +queryParams.limit,
+                  offset: +queryParams.offset,
+                }}
+                setPagination={setFromPagination}
+                isCompact
+              />
+            }
+            additionalControls={[
+              <DownloadButton
+                key="download-button"
+                slug={slug}
+                name={name}
+                description={description}
+                endpointUrl={dataEndpoint}
+                queryParams={queryParams}
+                selectOptions={options}
+                y={''}
+                label={''}
+                xTickFormat={''}
+                totalCount={api.result.meta.count}
+                onPageCount={queryParams.limit}
+                sortOptions={chartParams.y}
+                sortOrder={queryParams.sort_order}
+                startDate={queryParams.start_date}
+                endDate={queryParams.end_date}
+                dateRange={queryParams.quick_date_range}
+                inputs={{ costManual, costAutomation }}
+              />,
+            ]}
+          />
+          <Grid hasGutter>
+            <GridItem span={9}>{renderLeft()}</GridItem>
+            <GridItem span={3}>{renderRight()}</GridItem>
+            <GridItem span={12}>
+              <p>
+                Enter the time it takes to run the following templates manually.
+              </p>
+              {api.isLoading ? (
+                <Spinner isSVG />
+              ) : (
+                <TemplatesTable
+                  redirectToJobExplorer={redirectToJobExplorer}
+                  data={api.result.items}
+                  variableRow={options.sort_options.find(
+                    ({ key }) => key === queryParams.sort_options
+                  )}
+                  setDataRunTime={setDataRunTime}
+                  setEnabled={setEnabled}
+                  getSortParams={getSortParams}
+                  readOnly={isReadOnly(api)}
+                />
+              )}
+            </GridItem>
+          </Grid>
+        </CardBody>
+        <CardFooter>
+          <Pagination
+            count={api.result.meta.count}
+            perPageOptions={perPageOptions}
+            params={{
+              limit: +queryParams.limit,
+              offset: +queryParams.offset,
+            }}
+            setPagination={setFromPagination}
+            variant={PaginationVariant.bottom}
+          />
+        </CardFooter>
+      </Card>
+    ) : (
+      <>
         <FilterableToolbar
           categories={options}
           filters={queryParams}
           setFilters={setFromToolbar}
-          pagination={
-            <Pagination
-              count={api.result.meta.count}
-              perPageOptions={perPageOptions}
-              params={{
-                limit: +queryParams.limit,
-                offset: +queryParams.offset,
-              }}
-              setPagination={setFromPagination}
-              isCompact
-            />
-          }
-          additionalControls={[
-            <DownloadPdfButton
-              key="download-button"
-              slug={slug}
-              endpointUrl={dataEndpoint}
-              queryParams={queryParams}
-              y={''}
-              label={''}
-              xTickFormat={''}
-              totalCount={api.result.meta.count}
-              onPageCount={queryParams.limit}
-            />,
-          ]}
         />
         <Grid hasGutter>
           <GridItem span={9}>{renderLeft()}</GridItem>
           <GridItem span={3}>{renderRight()}</GridItem>
-          <GridItem span={12}>
-            <TemplatesTable
-              redirectToJobExplorer={redirectToJobExplorer}
-              data={api.result.items}
-              variableRow={options.sort_options.find(
-                ({ key }) => key === queryParams.sort_options
-              )}
-              setDataRunTime={setDataRunTime}
-              setEnabled={setEnabled}
-              getSortParams={getSortParams}
-            />
-          </GridItem>
         </Grid>
-      </CardBody>
-      <CardFooter>
-        <Pagination
-          count={api.result.meta.count}
-          perPageOptions={perPageOptions}
-          params={{
-            limit: +queryParams.limit,
-            offset: +queryParams.offset,
-          }}
-          setPagination={setFromPagination}
-          variant={PaginationVariant.bottom}
-        />
-      </CardFooter>
-    </Card>
+      </>
+    );
+  return (
+    <ApiStatusWrapper api={api} customLoading={true}>
+      {renderContents()}
+    </ApiStatusWrapper>
   );
-
-  return <ApiStatusWrapper api={api}>{renderContents()}</ApiStatusWrapper>;
 };
 
 export default AutomationCalculator;

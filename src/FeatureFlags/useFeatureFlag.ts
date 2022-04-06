@@ -31,7 +31,6 @@ const isEnabled = (feature?: FeatureFlagType) => {
 
 const useFeatureFlag = (flag: ValidFeatureFlags): boolean => {
   const features = useContext(Context);
-
   // On beta use the beta flag which has the 'beta_flagname' format.
   const betaFlag = `beta_${flag}`;
 

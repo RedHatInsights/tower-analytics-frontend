@@ -15,7 +15,7 @@ const components = {
     () => import('./Containers/Notifications/Notifications')
   ),
   [Paths.automationCalculator]: asyncComponent(
-    () => import('./Containers/AutomationCalculator/AutomationCalculator')
+    () => import('./Containers/Reports')
   ),
   [Paths.jobExplorer]: asyncComponent(
     () => import('./Containers/JobExplorer/JobExplorer')
@@ -24,6 +24,9 @@ const components = {
     () => import('./Containers/SavingsPlanner')
   ),
   [Paths.reports]: asyncComponent(() => import('./Containers/Reports')),
+  [Paths.downloadReport]: asyncComponent(
+    () => import('./Containers/DownloadReport')
+  ),
 };
 
 const InsightsRoute = ({

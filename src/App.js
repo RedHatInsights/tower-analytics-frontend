@@ -8,6 +8,9 @@ import useRequest from './Utilities/useRequest';
 import { preflightRequest } from './Api/';
 import AuthorizationErrorPage from './Components/ApiStatus/AuthorizationErrorPage';
 
+const el = document.getElementById('global-filter');
+if (el) el.style.display = 'none';
+
 const App = () => {
   const history = useHistory();
   const { error, request: fetchPreflight } = useRequest(preflightRequest, {});

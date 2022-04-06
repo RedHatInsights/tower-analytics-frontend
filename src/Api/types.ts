@@ -25,21 +25,42 @@ export interface PDFParams {
   schemaParams: Record<string, string>;
   dataFetchingParams: {
     endpointUrl: string;
-    queryParams: Params;
+    queryParams: Params | unknown;
     selectOptions: OptionsReturnType;
     showExtraRows: boolean;
     chartSeriesHiddenProps: boolean[];
+    sortOptions: string;
+    sortOrder: 'asc' | 'desc';
+    dateGranularity: string;
+    startDate: string;
+    endDate: string;
+    dateRange: string;
+    token?: string;
+    expiry?: string;
   };
+}
+
+export interface saveROIParams {
+  currency: string;
+  hourly_manual_labor_cost: number;
+  hourly_automation_cost: number;
+  templates_manual_equivalent: {
+    template_id: number;
+    effort_minutes: number;
+    template_weigh_in: boolean;
+  }[];
 }
 
 export type NotificationAsyncFunction = (
   id: string,
+  title?: string,
   message?: string
 ) => NotificationOptions;
 
 export interface NotificationParams {
   pending: NotificationAsyncFunction;
   rejected: NotificationAsyncFunction;
+  success: NotificationAsyncFunction;
   dispatch: DispatchType;
   id: string;
 }

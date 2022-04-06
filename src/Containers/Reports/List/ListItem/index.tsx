@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
@@ -36,39 +36,57 @@ const Label = styled(PFLabel)`
 
 interface Props {
   report: ReportSchema;
+  selected: string;
+  setSelected: (newSelection: string) => void;
+  history: RouteComponentProps['history'];
 }
 
 const ListItem: FunctionComponent<Props> = ({
   report: {
     layoutProps: { slug, description, name, tags },
   },
-}) => (
-  <Card data-testid={slug}>
-    <CardHeader>
-      <CardHeaderMain>
-        <CardTitle>
-          <Link to={paths.getDetails(slug)}>{name}</Link>
-        </CardTitle>
-      </CardHeaderMain>
-    </CardHeader>
-    <CardBody>{description ? <Small>{description}</Small> : null}</CardBody>
-    <CardFooter>
-      {tags.map((tagKey, idx) => {
-        const tag = TAGS.find((t) => t.key === tagKey);
-        if (tag) {
-          return (
-            <Tooltip
-              key={`tooltip_${idx}`}
-              position={TooltipPosition.top}
-              content={tag.description}
-            >
-              <Label key={idx}>{tag.name}</Label>
-            </Tooltip>
-          );
-        }
-      })}
-    </CardFooter>
-  </Card>
-);
+  selected,
+  setSelected,
+  history,
+}) => {
+  return (
+    <Card
+      data-testid={slug}
+      onClick={() => {
+        setSelected(slug);
+        history.replace({
+          search: '',
+        });
+      }}
+      isSelectableRaised
+      isSelected={selected === slug}
+    >
+      <CardHeader>
+        <CardHeaderMain>
+          <CardTitle>
+            <Link to={paths.getDetails(slug)}>{name}</Link>
+          </CardTitle>
+        </CardHeaderMain>
+      </CardHeader>
+      <CardBody>{description ? <Small>{description}</Small> : null}</CardBody>
+      <CardFooter>
+        {tags.map((tagKey, idx) => {
+          const tag = TAGS.find((t) => t.key === tagKey);
+          if (tag) {
+            return (
+              <Tooltip
+                key={`tooltip_${idx}`}
+                position={TooltipPosition.top}
+                content={tag.description}
+              >
+                <Label key={idx}>{tag.name}</Label>
+              </Tooltip>
+            );
+          }
+        })}
+      </CardFooter>
+    </Card>
+  );
+};
 
 export default ListItem;

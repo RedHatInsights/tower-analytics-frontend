@@ -7,11 +7,7 @@ import {
   DEFAULT_NAMESPACE,
 } from './helpers';
 import redirectWithQueryParams from './redirectWithQueryParams';
-import {
-  InitialParamsFunction,
-  NamespacedQueryParams,
-  UpdateFunction,
-} from './types';
+import { NamespacedQueryParams, UpdateFunction } from './types';
 
 interface Props {
   children: React.ReactNode;
@@ -20,7 +16,6 @@ interface Props {
 const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
   const history = useHistory();
   const [queryParams, setQueryParams] = useState<NamespacedQueryParams>({});
-  const [initialParams, setInitialParams] = useState<NamespacedQueryParams>({});
 
   useEffect(() => {
     if (history.location.search.length > 0) {
@@ -48,40 +43,11 @@ const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
     setQsInUrl(q, history);
   };
 
-  const addInitialParams: InitialParamsFunction = ({
-    params,
-    namespace = DEFAULT_NAMESPACE,
-  }) => {
-    setInitialParams({
-      ...initialParams,
-      [namespace]: {
-        ...initialParams[namespace],
-        ...params,
-      },
-    });
-  };
-
-  const removeInitialParams: InitialParamsFunction = ({
-    params,
-    namespace = DEFAULT_NAMESPACE,
-  }) => {
-    const newParams = { ...initialParams[namespace] };
-    Object.keys(params).forEach((e) => delete newParams[e]);
-
-    setInitialParams({
-      ...initialParams,
-      [namespace]: newParams,
-    });
-  };
-
   return (
     <Provider
       value={{
         queryParams,
-        initialParams,
         update,
-        addInitialParams,
-        removeInitialParams,
         redirectWithQueryParams: redirectWithQueryParams(history),
       }}
     >

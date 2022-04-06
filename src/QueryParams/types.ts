@@ -12,14 +12,6 @@ export type UpdateFunction = ({
   namespace: string;
 }) => void;
 
-export type InitialParamsFunction = ({
-  params,
-  namespace,
-}: {
-  params: QueryParams;
-  namespace: string;
-}) => void;
-
 export type RedirectWithQueryParamsProps = (
   path: string,
   queryParams: NamespacedQueryParams | undefined
@@ -27,9 +19,6 @@ export type RedirectWithQueryParamsProps = (
 
 export interface ContextProps {
   queryParams: NamespacedQueryParams;
-  initialParams: NamespacedQueryParams;
   update: UpdateFunction;
-  addInitialParams: InitialParamsFunction;
-  removeInitialParams: InitialParamsFunction;
   redirectWithQueryParams: RedirectWithQueryParamsProps;
 }

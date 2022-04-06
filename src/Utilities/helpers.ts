@@ -10,7 +10,7 @@ export const formatTotalTime = (elapsed: number): string =>
 export const formatDateTime = (dateTime: string | number): string =>
   moment(new Date(dateTime).toISOString()).format('M/D/YYYY h:mm:ssa');
 
-export const formatDate = (date: string): string =>
+export const formatDate = (date: Date): string =>
   moment(date).format('YYYY-MM-DD');
 
 export const getTotal = (
@@ -59,3 +59,10 @@ export const convertSecondsToHours = (seconds: string | number): number =>
 
 export const formatJobType = (type: string): string =>
   type === 'job' ? 'Playbook run' : 'Workflow job';
+
+export const getDateFormatByGranularity = (granularity: string): string => {
+  if (granularity === 'yearly') return 'formatAsYear';
+  if (granularity === 'monthly') return 'formatAsMonth';
+  if (granularity === 'daily') return 'formatDateAsDayMonth';
+  return '';
+};

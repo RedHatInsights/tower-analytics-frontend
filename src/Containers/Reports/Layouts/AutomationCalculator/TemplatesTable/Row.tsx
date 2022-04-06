@@ -24,6 +24,7 @@ interface Props {
   setDataRunTime: (delta: number, id: number) => void;
   setEnabled: (enabled: boolean) => void;
   redirectToJobExplorer: (id: number) => void;
+  readOnly: boolean;
 }
 
 const setLabeledValue = (key: string, value: number) => {
@@ -41,7 +42,7 @@ const setLabeledValue = (key: string, value: number) => {
       label = currencyFormatter(value);
       break;
     default:
-      label = value;
+      label = (+value).toFixed(2);
   }
   return label;
 };
@@ -52,8 +53,15 @@ const Row: FunctionComponent<Props> = ({
   setDataRunTime,
   setEnabled,
   redirectToJobExplorer,
+  readOnly = true,
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(
+    window.localStorage.getItem(template.id.toString()) === 'true' || false
+  );
+  const expandedRow = (value: boolean, id: number) => {
+    window.localStorage.setItem(id.toString(), value ? 'true' : 'false');
+    setIsExpanded(value);
+  };
 
   return (
     <>
@@ -62,7 +70,7 @@ const Row: FunctionComponent<Props> = ({
           expand={{
             rowIndex: template.id,
             isExpanded: isExpanded,
-            onToggle: () => setIsExpanded(!isExpanded),
+            onToggle: () => expandedRow(!isExpanded, template.id),
           }}
         />
         <Td>
@@ -76,15 +84,32 @@ const Row: FunctionComponent<Props> = ({
             </Button>
           </Tooltip>
         </Td>
-        <Td>{setLabeledValue(variableRow.key, +template[variableRow.key])}</Td>
+        {variableRow && (
+          <Td>
+            {setLabeledValue(variableRow.key, +template[variableRow.key])}
+          </Td>
+        )}
         <Td>
           <InputGroup>
             <TextInput
+              autoFocus={
+                window.localStorage.getItem('focused') ===
+                'manual-time-' + template.id.toString()
+              }
+              id={'manual-time-' + template.id.toString()}
               style={{ maxWidth: '150px' }}
               type="number"
               aria-label="time run manually"
               value={template.avgRunTime / 60}
-              onChange={(minutes) => setDataRunTime(+minutes * 60, template.id)}
+              onBlur={() => window.localStorage.setItem('focused', '')}
+              onChange={(minutes) => {
+                window.localStorage.setItem(
+                  'focused',
+                  'manual-time-' + template.id.toString()
+                );
+                setDataRunTime(+minutes * 60, template.id);
+              }}
+              isDisabled={readOnly}
             />
             <InputGroupText>min</InputGroupText>
             <InputGroupText variant={InputGroupTextVariant.plain}>
@@ -101,6 +126,7 @@ const Row: FunctionComponent<Props> = ({
             labelOff="Hide"
             isChecked={template.enabled}
             onChange={(checked) => setEnabled(checked)}
+            isDisabled={readOnly}
           />
         </Td>
       </Tr>

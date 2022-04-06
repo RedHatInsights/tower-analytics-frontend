@@ -2,10 +2,11 @@ import { stringify } from 'query-string';
 import { saveStream } from './streamSaver';
 import {
   ApiJson,
+  NotificationParams,
   Params,
   ParamsWithPagination,
   PDFParams,
-  NotificationParams,
+  saveROIParams,
 } from './types';
 import { createWriteStream } from 'streamsaver';
 import {
@@ -66,7 +67,6 @@ export const postWithFileReturn = async (
     .then((response) => {
       // Delete pending notification when we have results.
       dispatch(removeNotification(notif.id));
-
       return response.ok
         ? // If response is ok, then continue to download the PDF
           { response, size: response.headers.get('content-length') }
@@ -76,10 +76,14 @@ export const postWithFileReturn = async (
               // Add error reporting notification if we errored out.
               dispatch(
                 addNotification(
-                  notif.rejected(notif.id, error?.detail?.name[0])
+                  notif.rejected(
+                    notif.id,
+                    error?.detail?.name
+                      ? error?.detail?.name[0]
+                      : error?.detail.toString()
+                  )
                 )
               );
-
               return Promise.reject({ status: response.status, error });
             });
     })
@@ -95,7 +99,35 @@ export const postWithFileReturn = async (
       if (response.body) return saveStream(response.body, fileStream);
     });
 };
+export const postWithEmail = async (
+  endpoint: string,
+  params: Params,
+  { dispatch, ...notif }: NotificationParams
+): Promise<void> => {
+  const url = new URL(endpoint, window.location.origin);
 
+  // Dispatch notification when starts the download.
+  dispatch(addNotification(notif.pending(notif.id, 'Processing Email')));
+  return authenticatedFetch(url.toString(), {
+    method: 'POST',
+    body: JSON.stringify(params),
+  }).then((response) => {
+    // Delete pending notification when we have results.
+    dispatch(removeNotification(notif.id));
+
+    if (response.ok)
+      dispatch(
+        addNotification(notif.success(notif.id, 'Email sent successfully'))
+      );
+    else
+      dispatch(
+        addNotification(
+          notif.rejected(notif.id, 'Error sending email, please try again.')
+        )
+      );
+    return;
+  });
+};
 export const get = (
   endpoint: string,
   params: Params = {}
@@ -111,6 +143,17 @@ export const get = (
 export const post = (
   endpoint: string,
   params: Params = {}
+): Promise<ApiJson> => {
+  const url = new URL(endpoint, window.location.origin);
+  return authenticatedFetch(url.toString(), {
+    method: 'POST',
+    body: JSON.stringify(params),
+  }).then(handleResponse);
+};
+
+export const saveROIData = (
+  endpoint: string,
+  params: saveROIParams
 ): Promise<ApiJson> => {
   const url = new URL(endpoint, window.location.origin);
   return authenticatedFetch(url.toString(), {

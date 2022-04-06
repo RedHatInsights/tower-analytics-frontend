@@ -16,6 +16,7 @@ fetchMock.config.overwriteRoutes = true;
 const jobExplorerUrl = 'path:/api/tower-analytics/v1/roi_templates/';
 const dummyRoiData = {
   response_type: '',
+  cost: { hourly_automation_cost: 20, hourly_manual_labor_cost: 50 },
   meta: {
     count: 3,
     legend: [
@@ -27,6 +28,8 @@ const dummyRoiData = {
         total_org_count: 2,
         successful_hosts_total: 10,
         total_cluster_count: 20,
+        template_weigh_in: true,
+        manual_effort_minutes: 60,
       },
       {
         id: 2,
@@ -36,6 +39,8 @@ const dummyRoiData = {
         total_org_count: 2,
         successful_hosts_total: 10,
         total_cluster_count: 20,
+        template_weigh_in: true,
+        manual_effort_minutes: 60,
       },
       {
         id: 3,
@@ -45,6 +50,8 @@ const dummyRoiData = {
         total_org_count: 2,
         successful_hosts_total: 10,
         total_cluster_count: 20,
+        template_weigh_in: true,
+        manual_effort_minutes: 60,
       },
     ],
   },
@@ -67,6 +74,13 @@ const jobExplorerOptions = {
       value: 'Template productivity score',
     },
   ],
+  meta: {
+    rbac: {
+      perms: {
+        all: true,
+      },
+    },
+  },
 };
 
 const inputManCost = (wrapper) => wrapper.find('input').at(0);
@@ -75,6 +89,7 @@ const inputsRuntime = (wrapper) => wrapper.find('input').slice(2);
 
 const pageParams = {
   slug: 'slug',
+  description: 'Foo Description',
   defaultParams: roi.defaultParams,
   defaultTableHeaders: [],
   tableAttributes: [],
@@ -192,7 +207,14 @@ describe('Containers/CustomReports/AutomationCalculator', () => {
   });
 
   it('should render no data', async () => {
-    fetchMock.post({ url: jobExplorerUrl }, { items: [], meta: { count: 0 } });
+    fetchMock.post(
+      { url: jobExplorerUrl },
+      {
+        items: [],
+        meta: { count: 0 },
+        cost: { hourly_automation_cost: 50, hourly_manual_labor_cost: 25 },
+      }
+    );
 
     await act(async () => {
       wrapper = mountPage(AutomationCalculator, pageParams);
