@@ -38,7 +38,7 @@ export PATH="$PWD/sonarqube/extract/$SONAR_SCANNER_NAME/bin:$PATH"
 COMMIT_SHORT=$(git rev-parse --short=7 HEAD)
 
 sonar-scanner \
-  -Dsonar.projectKey=tower-analytics-frontend \
+  -Dsonar.projectKey=automation-analytics-frontend \
   -Dsonar.sources=./ \
   -Dsonar.host.url=https://sonarqube.corp.redhat.com/ \
   -Dsonar.projectVersion=$COMMIT_SHORT \
