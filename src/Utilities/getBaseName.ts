@@ -1,4 +1,4 @@
-function getBaseName(pathname = window.location.pathname) {
+const getBaseName = (pathname: string = window.location.pathname): string => {
   let release = '/';
   const pathName = pathname.split('/');
 
@@ -10,6 +10,6 @@ function getBaseName(pathname = window.location.pathname) {
   }
 
   return `${release}${pathName[0]}/${pathName[1] || ''}`;
-}
+};
 
 export default getBaseName;

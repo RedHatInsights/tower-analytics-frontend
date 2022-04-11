@@ -52,7 +52,7 @@ import TemplatesTable from './TemplatesTable';
 import { Paths } from '../../../../paths';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants';
-import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
+import DownloadButton from '../../../../Components/Toolbar/DownloadButton';
 import { endpointFunctionMap, saveROI } from '../../../../Api';
 import { AutmationCalculatorProps } from '../types';
 import hydrateSchema from '../../Shared/hydrateSchema';
@@ -101,6 +101,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   dataEndpoint,
   optionsEndpoint,
   schema,
+  fullCard = true,
 }) => {
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
@@ -368,49 +369,45 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
 
   const renderLeft = () => (
     <Card isPlain>
-      <CardHeader>
-        <CardTitle>Automation savings</CardTitle>
-      </CardHeader>
-      <CardBody>
-        {api.isLoading ? (
-          <SpinnerDiv>
-            <Spinner isSVG />
-          </SpinnerDiv>
-        ) : filterDisabled(api?.result?.items).length > 0 ? (
-          <Chart
-            schema={hydrateSchema(schema)({
-              label: chartParams.label,
-              tooltip: chartParams.tooltip,
-              field: chartParams.field,
-            })}
-            data={{
-              items: filterDisabled(api.result.items),
-            }}
-            specificFunctions={{
-              labelFormat: {
-                customTooltipFormatting,
-              },
-            }}
-          />
-        ) : (
-          <EmptyState>
-            <EmptyStateIcon icon={ExclamationTriangleIcon} />
-            <Title headingLevel="h4" size="lg">
-              You have disabled all views
-            </Title>
-            <EmptyStateBody>
-              Enable individual views in the table below or press Show all
-              button.
-            </EmptyStateBody>
-            <Button
-              variant="primary"
-              onClick={() => setEnabled(undefined)(true)}
-            >
-              Show all
-            </Button>
-          </EmptyState>
-        )}
-      </CardBody>
+      {fullCard && (
+        <CardHeader>
+          <CardTitle>Automation savings</CardTitle>
+        </CardHeader>
+      )}
+      {api.isLoading ? (
+        <SpinnerDiv>
+          <Spinner isSVG />
+        </SpinnerDiv>
+      ) : filterDisabled(api?.result?.items).length > 0 ? (
+        <Chart
+          schema={hydrateSchema(schema)({
+            label: chartParams.label,
+            tooltip: chartParams.tooltip,
+            field: chartParams.field,
+          })}
+          data={{
+            items: filterDisabled(api.result.items),
+          }}
+          specificFunctions={{
+            labelFormat: {
+              customTooltipFormatting,
+            },
+          }}
+        />
+      ) : (
+        <EmptyState>
+          <EmptyStateIcon icon={ExclamationTriangleIcon} />
+          <Title headingLevel="h4" size="lg">
+            You have disabled all views
+          </Title>
+          <EmptyStateBody>
+            Enable individual views in the table below or press Show all button.
+          </EmptyStateBody>
+          <Button variant="primary" onClick={() => setEnabled(undefined)(true)}>
+            Show all
+          </Button>
+        </EmptyState>
+      )}
     </Card>
   );
 
@@ -440,86 +437,100 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     </Stack>
   );
 
-  const renderContents = () => (
-    <Card>
-      <CardBody>
+  const renderContents = () =>
+    fullCard ? (
+      <Card>
+        <CardBody>
+          <FilterableToolbar
+            categories={options}
+            filters={queryParams}
+            setFilters={setFromToolbar}
+            pagination={
+              <Pagination
+                count={api.result.meta.count}
+                perPageOptions={perPageOptions}
+                params={{
+                  limit: +queryParams.limit,
+                  offset: +queryParams.offset,
+                }}
+                setPagination={setFromPagination}
+                isCompact
+              />
+            }
+            additionalControls={[
+              <DownloadButton
+                key="download-button"
+                slug={slug}
+                name={name}
+                description={description}
+                endpointUrl={dataEndpoint}
+                queryParams={queryParams}
+                selectOptions={options}
+                y={''}
+                label={''}
+                xTickFormat={''}
+                totalCount={api.result.meta.count}
+                onPageCount={queryParams.limit}
+                sortOptions={chartParams.y}
+                sortOrder={queryParams.sort_order}
+                startDate={queryParams.start_date}
+                endDate={queryParams.end_date}
+                dateRange={queryParams.quick_date_range}
+                inputs={{ costManual, costAutomation }}
+              />,
+            ]}
+          />
+          <Grid hasGutter>
+            <GridItem span={9}>{renderLeft()}</GridItem>
+            <GridItem span={3}>{renderRight()}</GridItem>
+            <GridItem span={12}>
+              <p>
+                Enter the time it takes to run the following templates manually.
+              </p>
+              {api.isLoading ? (
+                <Spinner isSVG />
+              ) : (
+                <TemplatesTable
+                  redirectToJobExplorer={redirectToJobExplorer}
+                  data={api.result.items}
+                  variableRow={options.sort_options.find(
+                    ({ key }) => key === queryParams.sort_options
+                  )}
+                  setDataRunTime={setDataRunTime}
+                  setEnabled={setEnabled}
+                  getSortParams={getSortParams}
+                  readOnly={isReadOnly(api)}
+                />
+              )}
+            </GridItem>
+          </Grid>
+        </CardBody>
+        <CardFooter>
+          <Pagination
+            count={api.result.meta.count}
+            perPageOptions={perPageOptions}
+            params={{
+              limit: +queryParams.limit,
+              offset: +queryParams.offset,
+            }}
+            setPagination={setFromPagination}
+            variant={PaginationVariant.bottom}
+          />
+        </CardFooter>
+      </Card>
+    ) : (
+      <>
         <FilterableToolbar
           categories={options}
           filters={queryParams}
           setFilters={setFromToolbar}
-          pagination={
-            <Pagination
-              count={api.result.meta.count}
-              perPageOptions={perPageOptions}
-              params={{
-                limit: +queryParams.limit,
-                offset: +queryParams.offset,
-              }}
-              setPagination={setFromPagination}
-              isCompact
-            />
-          }
-          additionalControls={[
-            <DownloadPdfButton
-              key="download-button"
-              slug={slug}
-              name={name}
-              description={description}
-              endpointUrl={dataEndpoint}
-              queryParams={queryParams}
-              selectOptions={options}
-              y={''}
-              label={''}
-              xTickFormat={''}
-              totalCount={api.result.meta.count}
-              onPageCount={queryParams.limit}
-              sortOptions={chartParams.y}
-              sortOrder={queryParams.sort_order}
-              startDate={queryParams.start_date}
-              endDate={queryParams.end_date}
-              dateRange={queryParams.quick_date_range}
-            />,
-          ]}
         />
         <Grid hasGutter>
           <GridItem span={9}>{renderLeft()}</GridItem>
           <GridItem span={3}>{renderRight()}</GridItem>
-          <GridItem span={12}>
-            <p>
-              Enter the time it takes to run the following templates manually.
-            </p>
-            {api.isLoading ? (
-              <Spinner isSVG />
-            ) : (
-              <TemplatesTable
-                redirectToJobExplorer={redirectToJobExplorer}
-                data={api.result.items}
-                variableRow={options.sort_options.find(
-                  ({ key }) => key === queryParams.sort_options
-                )}
-                setDataRunTime={setDataRunTime}
-                setEnabled={setEnabled}
-                getSortParams={getSortParams}
-                readOnly={isReadOnly(api)}
-              />
-            )}
-          </GridItem>
         </Grid>
-      </CardBody>
-      <CardFooter>
-        <Pagination
-          count={api.result.meta.count}
-          perPageOptions={perPageOptions}
-          params={{
-            limit: +queryParams.limit,
-            offset: +queryParams.offset,
-          }}
-          setPagination={setFromPagination}
-          variant={PaginationVariant.bottom}
-        />
-      </CardFooter>
-    </Card>
-  );
+      </>
+    );
   return (
     <ApiStatusWrapper api={api} customLoading={true}>
       {renderContents()}

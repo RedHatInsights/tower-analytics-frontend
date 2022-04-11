@@ -11,6 +11,7 @@ import moduleUsageByJobTemplate from './moduleUsageByJobTemplate';
 import aa21OnboardingReport from './aa21OnboardingReport';
 import moduleUsageByTask from './moduleUsageByTask';
 import automationCalculator from './automationCalculator';
+import hostAnomalies from './hostAnomalies';
 import { ReportSchema } from '../../Layouts/types';
 
 const prodReports = [
@@ -20,6 +21,7 @@ const prodReports = [
   hostsByOrganization,
   jobsTasksByOrganization,
   templatesExplorer,
+  hostAnomalies,
 ];
 
 const moduleReports = [

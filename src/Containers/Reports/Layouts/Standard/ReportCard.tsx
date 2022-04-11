@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-plus-operands */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -23,19 +24,14 @@ import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
 
 import Chart from '../../../../Components/Chart';
 import Table from './Table';
-import DownloadPdfButton from '../../../../Components/Toolbar/DownloadPdfButton';
+import DownloadButton from '../../../../Components/Toolbar/DownloadButton';
 import { endpointFunctionMap, OptionsReturnType } from '../../../../Api';
 import { capitalize } from '../../../../Utilities/helpers';
 import { perPageOptions } from '../../Shared/constants';
 import hydrateSchema from '../../Shared/hydrateSchema';
 import { StandardProps } from '../types';
-
-const getDateFormatByGranularity = (granularity: string): string => {
-  if (granularity === 'yearly') return 'formatAsYear';
-  if (granularity === 'monthly') return 'formatAsMonth';
-  if (granularity === 'daily') return 'formatDateAsDayMonth';
-  return '';
-};
+import percentageFormatter from '../../../../Utilities/percentageFormatter';
+import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
@@ -49,6 +45,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   dataEndpoint,
   optionsEndpoint,
   schema,
+  fullCard = true,
 }) => {
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
@@ -113,6 +110,34 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     chartType: settingsQueryParams.chartType || 'line',
   };
 
+  const formattedValue = (key: string, value: number) => {
+    let val;
+    switch (key) {
+      case 'average_duration_per_task':
+        val = value.toFixed(2) + ' seconds';
+        break;
+      case 'slow_hosts_percentage':
+        val = percentageFormatter(value) + '%';
+        break;
+      case 'template_success_rate':
+        val = percentageFormatter(value) + '%';
+        break;
+      default:
+        val = value.toFixed(2);
+    }
+    return val;
+  };
+
+  const customTooltipFormatting = ({ datum }) => {
+    const tooltip =
+      chartParams.label +
+      ' for ' +
+      datum.name +
+      ': ' +
+      formattedValue(queryParams.sort_options, datum.y);
+    return tooltip;
+  };
+
   const getSortParams = (currKey: string) => {
     const onSort = (
       _event: unknown,
@@ -159,7 +184,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         ))}
       </ToggleGroup>
     ),
-    <DownloadPdfButton
+    <DownloadButton
       key="download-button"
       slug={slug}
       name={name}
@@ -181,7 +206,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       dateRange={queryParams.quick_date_range}
     />,
   ];
-  return (
+  return fullCard ? (
     <Card>
       <CardBody>
         <FilterableToolbar
@@ -213,6 +238,11 @@ const ReportCard: FunctionComponent<StandardProps> = ({
                 chartType: chartParams.chartType,
               })}
               data={dataApi.result}
+              specificFunctions={{
+                labelFormat: {
+                  customTooltipFormatting,
+                },
+              }}
             />
             <Table
               legend={dataApi.result.meta.legend}
@@ -236,6 +266,28 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         />
       </CardFooter>
     </Card>
+  ) : (
+    <>
+      <FilterableToolbar
+        categories={options}
+        defaultSelected={defaultSelectedToolbarCategory}
+        filters={queryParams}
+        setFilters={setFromToolbar}
+      />
+      {tableHeaders && (
+        <ApiStatusWrapper api={dataApi}>
+          <Chart
+            schema={hydrateSchema(schema)({
+              label: chartParams.label,
+              y: chartParams.y,
+              xTickFormat: chartParams.xTickFormat,
+              chartType: chartParams.chartType,
+            })}
+            data={dataApi.result}
+          />
+        </ApiStatusWrapper>
+      )}
+    </>
   );
 };
 

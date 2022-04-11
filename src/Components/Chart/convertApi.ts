@@ -43,7 +43,7 @@ export const convertApiToData = (result: ApiReturnType): ChartData => {
     case ApiType.nonGrouped:
       data.series = [
         {
-          serie: result.items,
+          serie: result.items || result.meta.legend,
           hidden: false,
           name: uuidv4(),
         },

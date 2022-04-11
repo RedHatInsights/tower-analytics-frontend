@@ -1,4 +1,5 @@
 import { SelectOptionObject } from '@patternfly/react-core';
+import { Endpoint, OptionsReturnType, Params } from '../../Api';
 
 export type AttributeType =
   | string
@@ -22,17 +23,12 @@ export type ApiOptionsType = Record<
   string,
   { key: string; value: AttributeType }[]
 >;
+
 export interface User {
   uuid: string;
   name: string;
   emails: string[];
-}
-export interface EmailDetailsType {
-  selectedRbacGroups: string[];
-  users: User[];
-  subject: string;
-  body: string;
-  reportUrl: string;
+  usernames: string[];
 }
 
 export interface RbacGroupFromApi {
@@ -50,4 +46,45 @@ export interface RbacGroupFromApi {
 export interface RbacPrincipalFromApi {
   username: string;
   email: string;
+}
+
+export interface EmailDetailsProps {
+  downloadType: string;
+  showExtraRows: boolean;
+  additionalRecipients: string;
+  eula: boolean;
+  emailExtraRows: boolean;
+  subject: string;
+  body: string;
+  selectedRbacGroups: string[];
+  users: User[];
+  expiry: string;
+}
+
+export interface PdfDetailsProps {
+  settingsNamespace: string;
+  slug: string;
+  name: string;
+  description: string;
+  endpointUrl: Endpoint;
+  queryParams: Params;
+  selectOptions: OptionsReturnType;
+  y: string;
+  label: string;
+  xTickFormat: string;
+  chartType: string;
+  totalCount: number;
+  onPageCount: number;
+  sortOptions: string;
+  sortOrder: 'asc' | 'desc';
+  dateGranularity: string;
+  startDate: string;
+  endDate: string;
+  dateRange: string;
+  inputs?: { automationCost: number; manualCost: number };
+}
+
+export interface TypeValue {
+  type: string;
+  value?: string | string[] | boolean | number | User[];
 }

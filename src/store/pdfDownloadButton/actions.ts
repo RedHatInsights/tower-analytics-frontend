@@ -33,7 +33,8 @@ const success = (id: string, title?: string) => ({
 export const downloadPdf = (
   params: PDFParams,
   dispatch: DispatchType,
-  slug: string
+  slug: string,
+  token: string
 ): ActionTypes => ({
   type: ReducerTypes.act,
   payload: generatePdf(params, {
@@ -43,13 +44,14 @@ export const downloadPdf = (
     dispatch,
     id: slug,
   }),
-  meta: { slug },
+  meta: { slug, token },
 });
 
 export const email = (
   params: Params,
   dispatch: DispatchType,
-  slug: string
+  slug: string,
+  token: string
 ): ActionTypes => ({
   type: ReducerTypes.act,
   payload: sendEmail(params, {
@@ -59,5 +61,5 @@ export const email = (
     dispatch,
     id: slug,
   }),
-  meta: { slug },
+  meta: { slug, token },
 });

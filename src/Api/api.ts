@@ -32,6 +32,7 @@ export enum Endpoint {
   jobExplorer = '/api/tower-analytics/v1/job_explorer/',
   hostExplorer = '/api/tower-analytics/v1/host_explorer/',
   eventExplorer = '/api/tower-analytics/v1/event_explorer/',
+  probeTemplates = '/api/tower-analytics/v1/probe_templates/',
   ROI = '/api/tower-analytics/v1/roi_templates/',
   costEffortROI = '/api/tower-analytics/v1/roi_cost_effort_data/',
   plans = '/api/tower-analytics/v1/plans/',
@@ -48,6 +49,7 @@ export enum Endpoint {
   planOptions = '/api/tower-analytics/v1/plan_options/',
   eventExplorerOptions = '/api/tower-analytics/v1/event_explorer_options/',
   hostExplorerOptions = '/api/tower-analytics/v1/host_explorer_options/',
+  probeTemplatesOptions = '/api/tower-analytics/v1/probe_templates_options/',
 
   features = '/api/featureflags/v0',
 }
@@ -129,10 +131,27 @@ export const readClustersOptions = (params: Params): Promise<ApiJson> =>
 export const readNotifications = (params: Params): Promise<ApiJson> =>
   get(Endpoint.notifications, params);
 
+export const readProbeTemplates = (
+  params: ParamsWithPagination
+): Promise<ApiJson> => post(Endpoint.probeTemplates, params);
+
+export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
+  get(Endpoint.probeTemplatesOptions, params);
+
 export const generatePdf = async (
   params: PDFParams,
   meta: NotificationParams
-): Promise<void> => postWithFileReturn(Endpoint.pdfGenerate, params, meta);
+): Promise<void> => {
+  let url = Endpoint.pdfGenerate.toString();
+  if (typeof params.dataFetchingParams.token !== 'undefined')
+    url =
+      Endpoint.pdfGenerate +
+      '?token=' +
+      params.dataFetchingParams.token +
+      '&slug=' +
+      params.slug;
+  return postWithFileReturn(url, params, meta);
+};
 
 export const sendEmail = (
   params: Params,
@@ -183,6 +202,10 @@ export const endpointFunctionMap = (endpoint: Endpoint): ReadEndpointFnc => {
       return readClustersOptions;
     case Endpoint.notifications:
       return readNotifications;
+    case Endpoint.probeTemplates:
+      return readProbeTemplates;
+    case Endpoint.probeTemplatesOptions:
+      return readProbeTemplatesOptions;
     default:
       throw new Error(`${endpoint} is not found in the api mapper.`);
   }

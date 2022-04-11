@@ -3,6 +3,7 @@ import { LegendEntry } from '../../types';
 
 export enum ExpandedTableRowName {
   templatesExplorer = 'templatesExplorer',
+  hostAnomalies = 'hostAnomalies',
 }
 
 interface ExpandedTableRowProps {

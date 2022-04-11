@@ -25,7 +25,7 @@ export interface PDFParams {
   schemaParams: Record<string, string>;
   dataFetchingParams: {
     endpointUrl: string;
-    queryParams: Params;
+    queryParams: Params | unknown;
     selectOptions: OptionsReturnType;
     showExtraRows: boolean;
     chartSeriesHiddenProps: boolean[];
@@ -35,6 +35,8 @@ export interface PDFParams {
     startDate: string;
     endDate: string;
     dateRange: string;
+    token?: string;
+    expiry?: string;
   };
 }
 

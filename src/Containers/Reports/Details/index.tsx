@@ -62,7 +62,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
               }
             })}
           </PageHeader>
-          <Main>{getComponent(report)}</Main>
+          <Main>{getComponent(report, true)}</Main>
         </>
       );
     } else
