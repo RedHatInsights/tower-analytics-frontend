@@ -17,6 +17,7 @@ interface Props {
   headers: TableHeaders;
   legend: LegendEntry[];
   expandedRowName?: ExpandedTableRowName;
+  clickableLinking?: boolean;
   getSortParams?: (currKey: string) => TableSortParams;
 }
 
@@ -25,6 +26,7 @@ const ReportTable: FunctionComponent<Props> = ({
   headers,
   getSortParams = () => ({}),
   expandedRowName,
+  clickableLinking,
 }) => {
   return (
     <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
@@ -45,6 +47,7 @@ const ReportTable: FunctionComponent<Props> = ({
             legendEntry={entry}
             headers={headers}
             expandedRowName={expandedRowName}
+            clickableLinking={clickableLinking}
           />
         ))}
       </Tbody>
