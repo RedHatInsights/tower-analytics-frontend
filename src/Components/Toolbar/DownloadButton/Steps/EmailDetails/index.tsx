@@ -58,7 +58,7 @@ const EmailDetails = ({
   const {
     result: { data: rbacGroupsFromApi },
     request: fetchRbacGroups,
-  } = useRequest<RbacGroupsDataType>(
+  } = useRequest<any, RbacGroupsDataType>(
     () => readRbacGroups() as unknown as Promise<RbacGroupsDataType>,
     { data: [], meta: { count: 0 } }
   );
@@ -70,7 +70,7 @@ const EmailDetails = ({
   const {
     result: { data: principalsFromApi },
     request: fetchRbacPrincipals,
-  } = useRequest<RbacPrincipalsDataType>(
+  } = useRequest<any, RbacPrincipalsDataType>(
     () =>
       readRbacPrincipals(
         selectedRbacGroups.at(-1) as string
