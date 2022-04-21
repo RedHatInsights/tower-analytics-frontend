@@ -19,6 +19,7 @@ import {
   PDFParams,
   NotificationParams,
   saveROIParams,
+  PDFEmailParams,
 } from './types';
 
 export enum Endpoint {
@@ -162,7 +163,17 @@ export const generatePdf = async (
 };
 
 export const sendEmail = (
-  params: Params,
+  params: {
+    pdfPostBody: PDFEmailParams;
+    payload: string;
+    subject: string;
+    recipient: any;
+    reportUrl: string;
+    expiry: string;
+    body: string;
+    slug: string;
+    token: string;
+  },
   meta: NotificationParams
 ): Promise<void> => postWithEmail(Endpoint.sendEmail, params, meta);
 
