@@ -19,6 +19,7 @@ const ephId = process.env.npm_config_eph_id ?? '1';
 const environmentSetup = {
   ...(env === 'standalone' && {
     https: false,
+    env: 'stage-beta',
     standalone: {
       apiAnalytics: {
         context: ['/api/tower-analytics'],
@@ -54,7 +55,10 @@ const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
   debug: true,
   sassPrefix: '.automation-analytics, .automationAnalytics',
-  appUrl: ['/beta/ansible/insights/', '/ansible/insights/'],
+  appUrl: [
+    '/beta/ansible/automation-analytics/',
+    '/ansible/automation-analytics/',
+  ],
   deployment: 'beta/apps',
   ...environmentSetup,
 });
