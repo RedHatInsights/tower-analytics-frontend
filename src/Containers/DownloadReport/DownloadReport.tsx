@@ -11,9 +11,13 @@ import {
   useRedirect,
 } from '../../QueryParams';
 import useRequest from '../../Utilities/useRequest';
-import { endpointFunctionMap, OptionsReturnType, Params } from '../../Api';
+import {
+  endpointFunctionMap,
+  OptionsReturnType,
+  Params,
+  readReport,
+} from '../../Api';
 import { useLocation } from 'react-router-dom';
-import { getReport } from '../Reports/Shared/schemas';
 import {
   Button,
   ButtonVariant,
@@ -28,13 +32,26 @@ import {
 import { Paths } from '../../paths';
 import { getDateFormatByGranularity } from '../../Utilities/helpers';
 import { DownloadIcon } from '@patternfly/react-icons';
+import { ReportSchema } from '../Reports/Layouts/types';
 
 const DownloadReport: FunctionComponent<Record<string, never>> = () => {
   const location = useLocation();
   const slug = location.pathname.split('/').pop() as string;
   const token = new URLSearchParams(location.search).get('token');
   const expiry = new URLSearchParams(location.search).get('expiry');
-  const report = getReport(slug);
+
+  const {
+    result: report,
+    request: fetchReport,
+    isSuccess: isReportSuccess,
+  } = useRequest(async () => {
+    const response = await readReport(slug);
+    return response.report as ReportSchema;
+  }, {} as ReportSchema);
+
+  useEffect(() => {
+    fetchReport(slug);
+  }, [slug]);
 
   const download = () => {
     const dispatch = useAppDispatch();
@@ -140,7 +157,8 @@ const DownloadReport: FunctionComponent<Record<string, never>> = () => {
       </Card>
     );
   };
-  return report ? download() : <></>;
+
+  return isReportSuccess ? download() : <></>;
 };
 
 export default DownloadReport;
