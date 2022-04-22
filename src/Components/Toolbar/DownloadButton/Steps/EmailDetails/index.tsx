@@ -118,12 +118,12 @@ const EmailDetails = ({
     if (selectedRbacGroups.length > 0) updateEmailInfo();
   }, [principalsFromApi]);
 
-  const { totalCount } = options;
+  const { totalPages } = options;
 
   const extraRowsLabel =
-    totalCount <= 100
-      ? `Download all ${totalCount} items as PDF`
-      : `Download top 100 of ${totalCount} items as PDF`;
+    totalPages <= 17
+      ? `All ${totalPages} pages`
+      : `Top 17 of ${totalPages} pages`;
 
   const [showError, setShowError] = useState(false);
 
@@ -187,40 +187,42 @@ const EmailDetails = ({
 
   return (
     <Form>
-      <FormGroup label="Select details:" fieldId="details-field">
-        <Grid md={4}>
-          <GridItem>
-            <Radio
-              onChange={() =>
-                dispatchReducer({
-                  type: actions.SET_EMAIL_EXTRA_ROWS,
-                  value: false,
-                })
-              }
-              isChecked={!emailExtraRows}
-              name="emailExtraRows"
-              label="Current page"
-              id="email-current-radio"
-              aria-label="email-current-radio"
-            />
-          </GridItem>
-          <GridItem>
-            <Radio
-              onChange={() =>
-                dispatchReducer({
-                  type: actions.SET_EMAIL_EXTRA_ROWS,
-                  value: true,
-                })
-              }
-              isChecked={emailExtraRows}
-              name="emailExtraRows"
-              label={extraRowsLabel}
-              id="email-extra-radio"
-              aria-label="email-extra-radio"
-            />
-          </GridItem>
-        </Grid>
-      </FormGroup>
+      {totalPages > 1 && (
+        <FormGroup label="Select details:" fieldId="details-field">
+          <Grid md={4}>
+            <GridItem>
+              <Radio
+                onChange={() =>
+                  dispatchReducer({
+                    type: actions.SET_EMAIL_EXTRA_ROWS,
+                    value: false,
+                  })
+                }
+                isChecked={!emailExtraRows}
+                name="emailExtraRows"
+                label="Current page"
+                id="email-current-radio"
+                aria-label="email-current-radio"
+              />
+            </GridItem>
+            <GridItem>
+              <Radio
+                onChange={() =>
+                  dispatchReducer({
+                    type: actions.SET_EMAIL_EXTRA_ROWS,
+                    value: true,
+                  })
+                }
+                isChecked={emailExtraRows}
+                name="emailExtraRows"
+                label={extraRowsLabel}
+                id="email-extra-radio"
+                aria-label="email-extra-radio"
+              />
+            </GridItem>
+          </Grid>
+        </FormGroup>
+      )}
       <FormGroup
         label="Recipient(s)"
         isRequired
