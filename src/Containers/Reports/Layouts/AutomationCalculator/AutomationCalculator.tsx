@@ -34,7 +34,10 @@ import {
   useRedirect,
   DEFAULT_NAMESPACE,
 } from '../../../../QueryParams';
-import { jobExplorer } from '../../../../Utilities/constants';
+import {
+  jobExplorer,
+  reportDefaultParams,
+} from '../../../../Utilities/constants';
 import {
   calculateDelta,
   convertSecondsToHours,
@@ -97,7 +100,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   slug,
   name,
   description,
-  defaultParams,
   dataEndpoint,
   optionsEndpoint,
   schema,
@@ -105,7 +107,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
 }) => {
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
-
+  const defaultParams = reportDefaultParams(slug);
   const redirect = useRedirect();
   const { queryParams, setFromToolbar, setFromPagination } =
     useQueryParams(defaultParams);

@@ -55,7 +55,10 @@ const { config: webpackConfig, plugins } = config({
   rootFolder: resolve(__dirname, '../'),
   debug: true,
   sassPrefix: '.automation-analytics, .automationAnalytics',
-  appUrl: ['/beta/ansible/insights/', '/ansible/insights/'],
+  appUrl: [
+    '/beta/ansible/automation-analytics/',
+    '/ansible/automation-analytics/',
+  ],
   deployment: 'beta/apps',
   ...environmentSetup,
 });
