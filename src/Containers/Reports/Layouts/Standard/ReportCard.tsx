@@ -108,7 +108,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
     xTickFormat: getDateFormatByGranularity(queryParams.granularity),
-    chartType: settingsQueryParams.chartType || 'line',
+    chartType: settingsQueryParams.chartType || availableChartTypes[0],
   };
 
   const formattedValue = (key: string, value: number) => {
@@ -168,6 +168,10 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       },
     };
   };
+  // if visibility sets chartType to undefined set it back to default value
+  if (!settingsQueryParams.chartType) {
+    settingsQueryParams.chartType = availableChartTypes[0];
+  }
 
   const additionalControls = [
     availableChartTypes.length > 1 && (
