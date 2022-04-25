@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { Endpoint, Params } from '../../../Api';
 import { TagName } from '../Shared/constants';
 import { AttributesType } from '../Shared/types';
@@ -37,14 +36,10 @@ export interface StandardProps extends BaseReportProps {
 
 export type ReportSchema =
   | {
-      layoutComponent: LayoutComponentName.Standard;
+      layoutComponent: 'standard';
       layoutProps: StandardProps;
     }
   | {
-      layoutComponent: LayoutComponentName.AutomationCalculator;
+      layoutComponent: 'automationCalculator';
       layoutProps: AutmationCalculatorProps;
     };
-
-export type ReportComponentType =
-  | FC<AutmationCalculatorProps>
-  | FC<StandardProps>;

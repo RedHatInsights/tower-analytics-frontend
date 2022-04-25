@@ -32,12 +32,12 @@ import hydrateSchema from '../../Shared/hydrateSchema';
 import { StandardProps } from '../types';
 import percentageFormatter from '../../../../Utilities/percentageFormatter';
 import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
+import { reportDefaultParams } from '../../../../Utilities/constants';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
   name,
   description,
-  defaultParams,
   tableHeaders,
   expandedTableRowName,
   defaultSelectedToolbarCategory = '',
@@ -49,6 +49,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
 }) => {
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
+  const defaultParams = reportDefaultParams(slug);
   const { queryParams, setFromPagination, setFromToolbar } =
     useQueryParams(defaultParams);
   const { queryParams: settingsQueryParams, dispatch } = useQueryParams(

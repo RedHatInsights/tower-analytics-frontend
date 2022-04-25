@@ -16,7 +16,7 @@ import {
 
 import paths from '../../paths';
 import { TAGS } from '../../Shared/constants';
-import { ReportSchema } from '../../Layouts/types';
+import { BaseReportProps } from '../../Layouts/types';
 
 const CardTitle = styled(PFCardTitle)`
   word-break: break-word;
@@ -35,16 +35,14 @@ const Label = styled(PFLabel)`
 `;
 
 interface Props {
-  report: ReportSchema;
+  report: BaseReportProps;
   selected: string;
   setSelected: (newSelection: string) => void;
   history: RouteComponentProps['history'];
 }
 
 const ListItem: FunctionComponent<Props> = ({
-  report: {
-    layoutProps: { slug, description, name, tags },
-  },
+  report: { slug, description, name, tags },
   selected,
   setSelected,
   history,

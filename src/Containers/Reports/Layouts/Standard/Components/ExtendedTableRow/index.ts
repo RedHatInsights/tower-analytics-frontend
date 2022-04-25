@@ -8,9 +8,9 @@ export const getExpandedRowComponent = (
   name?: ExpandedTableRowName
 ): ExpandedTableRowComponent | null => {
   switch (name) {
-    case ExpandedTableRowName.templatesExplorer:
+    case 'templatesExplorer':
       return TemplatesExplorer;
-    case ExpandedTableRowName.hostAnomalies:
+    case 'hostAnomalies':
       return HostAnomalies;
     default:
       return null;

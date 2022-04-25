@@ -60,7 +60,10 @@ const EmailDetails = ({
     request: fetchRbacGroups,
   } = useRequest<any, RbacGroupsDataType>(
     () => readRbacGroups() as unknown as Promise<RbacGroupsDataType>,
-    { data: [], meta: { count: 0 } }
+    {
+      data: [],
+      meta: { count: 0 },
+    }
   );
   const reportUrl = window.location.href;
   useEffect(() => {
