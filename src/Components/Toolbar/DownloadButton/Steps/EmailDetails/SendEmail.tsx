@@ -1,6 +1,7 @@
 import { email as emailAction } from '../../../../../store/pdfDownloadButton';
 import { DispatchType } from '../../../../../store';
 import { User } from '../../../types';
+import { PDFEmailParams } from '../../../../../Api';
 
 interface Props {
   slug: string;
@@ -11,11 +12,10 @@ interface Props {
   dispatch: DispatchType;
   emailExtraRows: boolean;
   expiry: string;
+  pdfPostBody: PDFEmailParams;
 }
 
-const generateToken = () => {
-  return Math.random().toString(36).substring(2, 16);
-};
+const generateToken = () => Math.random().toString(36).substring(2, 16);
 
 const parseUrl = (
   emailExtraRows: boolean,
@@ -24,9 +24,13 @@ const parseUrl = (
   expiry: string,
   slug: string
 ) => {
-  const params = `showExtraRows=${emailExtraRows.toString()}&token=${token}&expiry=${expiry}&slug=${slug}`;
-  const url = new URL(reportUrl).search === '' ? '?' + params : '&' + params;
-  return reportUrl.replace('/reports/', '/downloadReport/') + url;
+  const params = `slug=${slug}&token=${token}`;
+  const host = location.protocol + '//' + location.host;
+  const url =
+    new URL(reportUrl).search === ''
+      ? '?' + params
+      : location.search + '&' + params;
+  return host + '/api/tower-analytics/v1/generate_pdf/' + url;
 };
 
 const SendEmail: ({
@@ -38,6 +42,7 @@ const SendEmail: ({
   dispatch,
   emailExtraRows,
   expiry,
+  pdfPostBody,
 }: Props) => void = ({
   slug,
   users,
@@ -47,8 +52,10 @@ const SendEmail: ({
   dispatch,
   emailExtraRows,
   expiry,
+  pdfPostBody,
 }) => {
   const all_recipients = users.map(({ usernames }) => usernames);
+  pdfPostBody.dataFetchingParams.showExtraRows = emailExtraRows;
 
   if (additionalRecipients !== '')
     all_recipients.push(additionalRecipients.split(','));
@@ -62,10 +69,11 @@ const SendEmail: ({
         subject: subject === '' ? 'Report is ready to be viewed' : subject,
         body: body.toString().replace(/(?:\r\n|\r|\n)/g, '<br>'),
         reportUrl: parseUrl(emailExtraRows, reportUrl, token, expiry, slug),
-        expiry: expiry,
+        expiry: token,
         slug: slug,
         token: token,
         payload: 'Download',
+        pdfPostBody: pdfPostBody,
       },
       dispatch,
       slug,
