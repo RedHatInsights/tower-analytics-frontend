@@ -39,6 +39,7 @@ interface Download {
   payload: Promise<void>;
   meta: {
     slug: string;
+    token: string;
   };
 }
 

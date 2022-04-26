@@ -1,4 +1,3 @@
-import { FC } from 'react';
 import { Endpoint, Params } from '../../../Api';
 import { TagName } from '../Shared/constants';
 import { AttributesType } from '../Shared/types';
@@ -21,6 +20,7 @@ export interface AutmationCalculatorProps extends BaseReportProps {
   defaultParams: Params;
   dataEndpoint: Endpoint;
   optionsEndpoint: Endpoint;
+  fullCard?: boolean;
 }
 
 export interface StandardProps extends BaseReportProps {
@@ -31,18 +31,15 @@ export interface StandardProps extends BaseReportProps {
   defaultSelectedToolbarCategory?: string;
   dataEndpoint: Endpoint;
   optionsEndpoint: Endpoint;
+  fullCard?: boolean;
 }
 
 export type ReportSchema =
   | {
-      layoutComponent: LayoutComponentName.Standard;
+      layoutComponent: 'standard';
       layoutProps: StandardProps;
     }
   | {
-      layoutComponent: LayoutComponentName.AutomationCalculator;
+      layoutComponent: 'automationCalculator';
       layoutProps: AutmationCalculatorProps;
     };
-
-export type ReportComponentType =
-  | FC<AutmationCalculatorProps>
-  | FC<StandardProps>;

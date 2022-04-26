@@ -25,8 +25,8 @@ export interface PDFParams {
   schemaParams: Record<string, string>;
   dataFetchingParams: {
     endpointUrl: string;
-    queryParams: Params;
-    selectOptions: OptionsReturnType;
+    queryParams: Params | unknown;
+    selectOptions?: OptionsReturnType;
     showExtraRows: boolean;
     chartSeriesHiddenProps: boolean[];
     sortOptions: string;
@@ -35,6 +35,27 @@ export interface PDFParams {
     startDate: string;
     endDate: string;
     dateRange: string;
+    token?: string;
+    expiry?: string;
+  };
+}
+
+export interface PDFEmailParams {
+  slug: string;
+  schemaParams: Record<string, string>;
+  dataFetchingParams: {
+    endpointUrl: string;
+    queryParams: Params | unknown;
+    showExtraRows: boolean;
+    chartSeriesHiddenProps: boolean[];
+    sortOptions: string;
+    sortOrder: 'asc' | 'desc';
+    dateGranularity: string;
+    startDate: string;
+    endDate: string;
+    dateRange: string;
+    token?: string;
+    expiry?: string;
   };
 }
 
@@ -51,12 +72,14 @@ export interface saveROIParams {
 
 export type NotificationAsyncFunction = (
   id: string,
+  title?: string,
   message?: string
 ) => NotificationOptions;
 
 export interface NotificationParams {
   pending: NotificationAsyncFunction;
   rejected: NotificationAsyncFunction;
+  success: NotificationAsyncFunction;
   dispatch: DispatchType;
   id: string;
 }

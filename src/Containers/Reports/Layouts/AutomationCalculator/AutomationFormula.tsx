@@ -85,7 +85,7 @@ const MonetaryGainPerTemplateText: FunctionComponent<Record<string, never>> =
         template and failed hosts cost per template.
       </p>
       <br />
-      <p>The formulate for monetary gain per template:</p>
+      <p>The formula for monetary gain per template:</p>
       <CodeBlock>
         <CodeBlockCode>
           {`monetary gain per template = savings per template - failed host cost per template`}
