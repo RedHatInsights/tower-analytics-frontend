@@ -35,7 +35,7 @@ const customFunctions = (specificFunctions?: ChartFunctions) => ({
 
 const applyHiddenFilter = (
   chartData: ChartData,
-  chartSeriesHidden: unknown[] = []
+  chartSeriesHidden: string[] = []
 ): ChartData => ({
   ...chartData,
   series: chartData.series.map((series: ChartDataSerie) => ({
@@ -79,7 +79,7 @@ const Chart: FC<Props> = ({
     setChartData(
       applyHiddenFilter(
         convertApiToData(data),
-        chartSeriesHiddenProps as unknown[]
+        chartSeriesHiddenProps as string[]
       )
     );
   }, [data]);
