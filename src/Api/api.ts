@@ -19,6 +19,7 @@ import {
   PDFParams,
   NotificationParams,
   saveROIParams,
+  PDFEmailParams,
 } from './types';
 
 export enum Endpoint {
@@ -40,6 +41,8 @@ export enum Endpoint {
   sendEmail = 'api/tower-analytics/v1/send_email/',
   readRbacGroups = 'api/tower-analytics/v1/rbac_groups/',
   readRbacPrincipals = 'api/tower-analytics/v1/rbac_principals/',
+  report = '/api/tower-analytics/v1/report/',
+  reports = '/api/tower-analytics/v1/reports/',
 
   /* page options endpoints */
   jobExplorerOptions = '/api/tower-analytics/v1/job_explorer_options/',
@@ -138,6 +141,12 @@ export const readProbeTemplates = (
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
   get(Endpoint.probeTemplatesOptions, params);
 
+export const readReports = (params: ParamsWithPagination): Promise<ApiJson> =>
+  postWithPagination(Endpoint.reports, params);
+
+export const readReport = (slug: string): Promise<ApiJson> =>
+  get(`${Endpoint.report}${slug}/`);
+
 export const generatePdf = async (
   params: PDFParams,
   meta: NotificationParams
@@ -154,7 +163,17 @@ export const generatePdf = async (
 };
 
 export const sendEmail = (
-  params: Params,
+  params: {
+    pdfPostBody: PDFEmailParams;
+    payload: string;
+    subject: string;
+    recipient: any;
+    reportUrl: string;
+    expiry: string;
+    body: string;
+    slug: string;
+    token: string;
+  },
   meta: NotificationParams
 ): Promise<void> => postWithEmail(Endpoint.sendEmail, params, meta);
 

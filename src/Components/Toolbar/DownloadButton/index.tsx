@@ -11,7 +11,12 @@ import {
 } from '@patternfly/react-core';
 import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 import { DownloadState } from '../../../store/pdfDownloadButton/types';
-import { Endpoint, OptionsReturnType, Params } from '../../../Api';
+import {
+  Endpoint,
+  OptionsReturnType,
+  Params,
+  PDFEmailParams,
+} from '../../../Api';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { useReadQueryParams } from '../../../QueryParams';
 import ExportOptions from '../DownloadButton/Steps/ExportOptions';
@@ -22,6 +27,7 @@ import useOptionsData from '../DownloadButton/useOptionsData';
 import SendEmail from '../DownloadButton/Steps/EmailDetails/SendEmail';
 import { actions } from '../DownloadButton/constants';
 import { EmailDetailsProps } from '../types';
+import { getDateFormatByGranularity } from '../../../Utilities/helpers';
 
 interface Props {
   settingsNamespace: string;
@@ -99,37 +105,72 @@ const DownloadButton: FC<Props> = ({
   } = formData;
 
   const onSave = () => {
-    downloadType === 'pdf'
-      ? PdfDownload({
-          slug,
-          endpointUrl,
-          queryParams,
-          selectOptions,
-          y,
-          label,
-          xTickFormat,
-          chartType,
-          sortOptions,
-          sortOrder,
-          dateGranularity,
-          startDate,
-          endDate,
-          dateRange,
-          dispatch,
-          chartSeriesHiddenProps,
-          showExtraRows,
-          inputs,
-        })
-      : SendEmail({
-          slug,
-          users,
-          additionalRecipients,
-          subject,
-          body,
-          dispatch,
-          emailExtraRows,
-          expiry,
-        });
+    if (downloadType === 'pdf')
+      PdfDownload({
+        slug,
+        endpointUrl,
+        queryParams,
+        selectOptions,
+        y,
+        label,
+        xTickFormat,
+        chartType,
+        sortOptions,
+        sortOrder,
+        dateGranularity,
+        startDate,
+        endDate,
+        dateRange,
+        dispatch,
+        chartSeriesHiddenProps,
+        showExtraRows,
+        inputs,
+      });
+    if (downloadType === 'email') {
+      const chartParams = {
+        y: queryParams.sort_options as string,
+        label: queryParams.sort_options,
+        xTickFormat: getDateFormatByGranularity(
+          queryParams.granularity as string
+        ),
+        chartType: chartType,
+      };
+
+      const pdfPostBody: PDFEmailParams = {
+        slug,
+        schemaParams: {
+          y: chartParams.y,
+          label: chartParams.label as string,
+          xTickFormat: chartParams.xTickFormat,
+          chartType: chartParams.chartType,
+        },
+        dataFetchingParams: {
+          expiry: expiry,
+          showExtraRows: showExtraRows,
+          endpointUrl: endpointUrl,
+          queryParams: queryParams,
+          chartSeriesHiddenProps: chartSeriesHiddenProps,
+          sortOptions: queryParams.sort_options as string,
+          sortOrder: queryParams.sort_order === 'desc' ? 'desc' : 'asc',
+          dateGranularity: queryParams.granularity as string,
+          startDate: queryParams.start_date as string,
+          endDate: queryParams.end_date as string,
+          dateRange: queryParams.quick_date_range as string,
+        },
+      };
+      SendEmail({
+        slug,
+        users,
+        additionalRecipients,
+        subject,
+        body,
+        dispatch,
+        emailExtraRows,
+        expiry,
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        pdfPostBody,
+      });
+    }
     dispatchReducer({ type: actions.RESET_DATA });
     setIsExportModalOpen(false);
   };
