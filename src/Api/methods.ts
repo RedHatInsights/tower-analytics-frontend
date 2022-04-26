@@ -5,9 +5,23 @@ import {
   NotificationParams,
   Params,
   ParamsWithPagination,
+  PDFEmailParams,
   PDFParams,
   saveROIParams,
 } from './types';
+
+interface ParamsPdf {
+  pdfPostBody: PDFEmailParams;
+  payload: string;
+  subject: string;
+  recipient: any;
+  reportUrl: string;
+  expiry: string;
+  body: string;
+  slug: string;
+  token: string;
+}
+
 import { createWriteStream } from 'streamsaver';
 import {
   addNotification,
@@ -67,7 +81,6 @@ export const postWithFileReturn = async (
     .then((response) => {
       // Delete pending notification when we have results.
       dispatch(removeNotification(notif.id));
-
       return response.ok
         ? // If response is ok, then continue to download the PDF
           { response, size: response.headers.get('content-length') }
@@ -77,10 +90,14 @@ export const postWithFileReturn = async (
               // Add error reporting notification if we errored out.
               dispatch(
                 addNotification(
-                  notif.rejected(notif.id, error?.detail?.name[0])
+                  notif.rejected(
+                    notif.id,
+                    error?.detail?.name
+                      ? error?.detail?.name[0]
+                      : error?.detail.toString()
+                  )
                 )
               );
-
               return Promise.reject({ status: response.status, error });
             });
     })
@@ -98,13 +115,14 @@ export const postWithFileReturn = async (
 };
 export const postWithEmail = async (
   endpoint: string,
-  params: Params,
+  params: ParamsPdf,
   { dispatch, ...notif }: NotificationParams
 ): Promise<void> => {
   const url = new URL(endpoint, window.location.origin);
 
   // Dispatch notification when starts the download.
   dispatch(addNotification(notif.pending(notif.id, 'Processing Email')));
+
   return authenticatedFetch(url.toString(), {
     method: 'POST',
     body: JSON.stringify(params),
