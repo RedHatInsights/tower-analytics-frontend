@@ -1,9 +1,10 @@
-import { Params, PDFParams } from '../../Api/types';
+import { PDFParams } from '../../Api/types';
 import { generatePdf, sendEmail } from '../../Api/api';
 import { ReducerTypes, ActionTypes } from './types';
 // Later from the frontend component / redux when typed
 import { NotificationType } from '../../globalTypes';
 import { DispatchType } from '../';
+import { PDFEmailParams } from '../../Api/types';
 
 const pending = (id: string, title?: string) => ({
   variant: NotificationType.info,
@@ -48,7 +49,17 @@ export const downloadPdf = (
 });
 
 export const email = (
-  params: Params,
+  params: {
+    pdfPostBody: PDFEmailParams;
+    payload: string;
+    subject: string;
+    recipient: any;
+    reportUrl: string;
+    expiry: string;
+    body: string;
+    slug: string;
+    token: string;
+  },
   dispatch: DispatchType,
   slug: string,
   token: string
