@@ -24,9 +24,6 @@ const components = {
     () => import('./Containers/SavingsPlanner')
   ),
   [Paths.reports]: asyncComponent(() => import('./Containers/Reports')),
-  [Paths.downloadReport]: asyncComponent(
-    () => import('./Containers/DownloadReport')
-  ),
 };
 
 const InsightsRoute = ({

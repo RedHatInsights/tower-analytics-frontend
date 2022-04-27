@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import Error404 from '../../../Components/Error404';
@@ -16,9 +16,11 @@ import {
 } from '@patternfly/react-core';
 
 import getComponent from '../Layouts';
-import { getReport } from '../Shared/schemas';
 import paths from '../paths';
 import { TAGS } from '../Shared/constants';
+import { ReportSchema } from '../Layouts/types';
+import useRequest from '../../../Utilities/useRequest';
+import { readReport } from '../../../Api';
 
 const Description = styled.p`
   max-width: 70em;
@@ -34,12 +36,23 @@ const Label = styled(PFLabel)`
 const Details: FunctionComponent<Record<string, never>> = () => {
   const slug = location.pathname.split('/').pop() as string;
 
-  const report = getReport(slug);
+  const {
+    result: report,
+    request: fetchReport,
+    isSuccess,
+    isLoading,
+  } = useRequest(async () => {
+    const response = await readReport(slug);
+    return response.report as ReportSchema;
+  }, {} as ReportSchema);
+
+  useEffect(() => {
+    fetchReport();
+  }, []);
 
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
-
   const render = () => {
-    if (report) {
+    if (isSuccess) {
       const { name, description, tags } = report.layoutProps;
       return (
         <>
@@ -65,6 +78,8 @@ const Details: FunctionComponent<Record<string, never>> = () => {
           <Main>{getComponent(report, true)}</Main>
         </>
       );
+    } else if (isLoading) {
+      return <></>;
     } else
       return (
         <Error404
