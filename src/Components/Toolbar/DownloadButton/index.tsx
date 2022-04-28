@@ -41,8 +41,7 @@ interface Props {
   label: string;
   xTickFormat: string;
   chartType: string;
-  totalCount: number;
-  onPageCount: number;
+  totalPages: number;
   sortOptions: string;
   sortOrder: 'asc' | 'desc';
   dateGranularity: string;
@@ -64,8 +63,7 @@ const DownloadButton: FC<Props> = ({
   label,
   xTickFormat,
   chartType,
-  totalCount,
-  onPageCount,
+  totalPages,
   sortOptions,
   sortOrder,
   dateGranularity,
@@ -115,6 +113,7 @@ const DownloadButton: FC<Props> = ({
         label,
         xTickFormat,
         chartType,
+        totalPages,
         sortOptions,
         sortOrder,
         dateGranularity,
@@ -150,6 +149,7 @@ const DownloadButton: FC<Props> = ({
           endpointUrl: endpointUrl,
           queryParams: queryParams,
           chartSeriesHiddenProps: chartSeriesHiddenProps,
+          totalPages: totalPages,
           sortOptions: queryParams.sort_options as string,
           sortOrder: queryParams.sort_order === 'desc' ? 'desc' : 'asc',
           dateGranularity: queryParams.granularity as string,
@@ -223,8 +223,7 @@ const DownloadButton: FC<Props> = ({
               label,
               xTickFormat,
               chartType,
-              totalCount,
-              onPageCount,
+              totalPages,
               sortOptions,
               sortOrder,
               dateGranularity,
@@ -237,7 +236,7 @@ const DownloadButton: FC<Props> = ({
           />
         ) : (
           <EmailDetails
-            options={{ totalCount }}
+            options={{ totalPages }}
             formData={formData}
             dispatchReducer={dispatchReducer}
           />
@@ -264,10 +263,14 @@ const DownloadButton: FC<Props> = ({
                 <Button
                   variant={ButtonVariant.primary}
                   type="submit"
-                  onClick={onNext}
+                  onClick={
+                    downloadType === 'pdf' && totalPages <= 1 ? onSave : onNext
+                  }
                   isDisabled={!downloadType}
                 >
-                  Next
+                  {downloadType === 'pdf' && totalPages <= 1
+                    ? 'Export'
+                    : 'Next'}
                 </Button>
                 {activeStep.id !== 1 && (
                   <Button variant="secondary" onClick={onBack}>
