@@ -30,6 +30,7 @@ const mockOptions = {
   xTickFormat: 'xTickFormat',
   chartType: 'bar',
   totalPages: '3',
+  pageLimit: '6',
   sortOptions: 'hosts',
   sortOrder: 'asc',
   dateGranularity: 'monthly',

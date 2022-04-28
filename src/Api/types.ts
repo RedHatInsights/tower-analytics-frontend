@@ -30,6 +30,7 @@ export interface PDFParams {
     showExtraRows: boolean;
     chartSeriesHiddenProps: boolean[];
     totalPages: number;
+    pageLimit: number;
     sortOptions: string;
     sortOrder: 'asc' | 'desc';
     dateGranularity: string;
@@ -50,6 +51,7 @@ export interface PDFEmailParams {
     showExtraRows: boolean;
     chartSeriesHiddenProps: boolean[];
     totalPages: number;
+    pageLimit: number;
     sortOptions: string;
     sortOrder: 'asc' | 'desc';
     dateGranularity: string;
