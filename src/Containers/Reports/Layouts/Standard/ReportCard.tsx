@@ -197,6 +197,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       label={chartParams.label}
       xTickFormat={chartParams.xTickFormat}
       totalPages={Math.ceil(dataApi.result.meta.count / queryParams.limit)}
+      pageLimit={queryParams.limit}
       chartType={settingsQueryParams.chartType}
       sortOptions={chartParams.y}
       sortOrder={queryParams.sort_order}
