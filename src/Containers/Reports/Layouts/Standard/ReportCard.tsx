@@ -168,10 +168,6 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       },
     };
   };
-  // if visibility sets chartType to undefined set it back to default value
-  if (!settingsQueryParams.chartType) {
-    settingsQueryParams.chartType = availableChartTypes[0];
-  }
 
   const additionalControls = [
     availableChartTypes.length > 1 && (
@@ -181,7 +177,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
             key={chartType}
             text={`${capitalize(chartType)} Chart`}
             buttonId={chartType}
-            isSelected={chartType === settingsQueryParams.chartType}
+            isSelected={chartType === chartParams.chartType}
             onChange={() => {
               dispatch({ type: 'SET_CHART_TYPE', value: chartType });
             }}
@@ -202,7 +198,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       xTickFormat={chartParams.xTickFormat}
       totalPages={Math.ceil(dataApi.result.meta.count / queryParams.limit)}
       pageLimit={queryParams.limit}
-      chartType={settingsQueryParams.chartType}
+      chartType={chartParams.chartType}
       sortOptions={chartParams.y}
       sortOrder={queryParams.sort_order}
       dateGranularity={queryParams.granularity}
