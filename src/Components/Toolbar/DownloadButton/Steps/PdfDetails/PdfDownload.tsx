@@ -11,6 +11,7 @@ interface Props {
   label: string;
   xTickFormat: string;
   chartType: string;
+  totalPages: number;
   sortOptions: string;
   sortOrder: 'asc' | 'desc';
   dateGranularity: string;
@@ -32,6 +33,7 @@ const PdfDownload: ({
   label,
   xTickFormat,
   chartType,
+  totalPages,
   sortOptions,
   sortOrder,
   dateGranularity,
@@ -51,6 +53,7 @@ const PdfDownload: ({
   label,
   xTickFormat,
   chartType,
+  totalPages,
   sortOptions,
   sortOrder,
   dateGranularity,
@@ -81,6 +84,7 @@ const PdfDownload: ({
           queryParams: allParams,
           selectOptions,
           chartSeriesHiddenProps,
+          totalPages,
           sortOptions,
           sortOrder,
           dateGranularity,
