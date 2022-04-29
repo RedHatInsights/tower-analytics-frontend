@@ -329,7 +329,7 @@ const allDefaultParams: any = {
       template_id: [],
     },
   },
-  host_Anomalies: {
+  host_anomalies: {
     defaultParams: {
       limit: 6,
       offset: 0,

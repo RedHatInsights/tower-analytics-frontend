@@ -15,12 +15,12 @@ const PdfDetails = ({
   dispatchReducer: React.Dispatch<TypeValue>;
 }) => {
   const { showExtraRows } = formData;
-  const { totalCount } = options;
+  const { totalPages, pageLimit } = options;
 
   const extraRowsLabel =
-    totalCount <= 100
-      ? `Download all ${totalCount.toString()} items as PDF`
-      : `Download top 100 of ${totalCount.toString()} items as PDF`;
+    totalPages <= Math.ceil(100 / pageLimit)
+      ? `All ${totalPages.toString()} pages`
+      : `Top ${Math.ceil(100 / pageLimit)} of ${totalPages.toString()} pages`;
 
   return (
     <>

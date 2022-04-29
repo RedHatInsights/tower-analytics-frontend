@@ -29,6 +29,8 @@ export interface PDFParams {
     selectOptions?: OptionsReturnType;
     showExtraRows: boolean;
     chartSeriesHiddenProps: boolean[];
+    totalPages: number;
+    pageLimit: number;
     sortOptions: string;
     sortOrder: 'asc' | 'desc';
     dateGranularity: string;
@@ -48,6 +50,8 @@ export interface PDFEmailParams {
     queryParams: Params | unknown;
     showExtraRows: boolean;
     chartSeriesHiddenProps: boolean[];
+    totalPages: number;
+    pageLimit: number;
     sortOptions: string;
     sortOrder: 'asc' | 'desc';
     dateGranularity: string;
