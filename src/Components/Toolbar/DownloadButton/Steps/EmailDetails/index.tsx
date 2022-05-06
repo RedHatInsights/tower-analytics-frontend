@@ -118,12 +118,12 @@ const EmailDetails = ({
     if (selectedRbacGroups.length > 0) updateEmailInfo();
   }, [principalsFromApi]);
 
-  const { totalPages } = options;
+  const { totalPages, pageLimit } = options;
 
   const extraRowsLabel =
-    totalPages <= 17
+    totalPages <= Math.ceil(100 / pageLimit)
       ? `All ${totalPages} pages`
-      : `Top 17 of ${totalPages} pages`;
+      : `Top ${Math.ceil(100 / pageLimit)} of ${totalPages} pages`;
 
   const [showError, setShowError] = useState(false);
 

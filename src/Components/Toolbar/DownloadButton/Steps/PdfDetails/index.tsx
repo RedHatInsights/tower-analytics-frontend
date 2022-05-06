@@ -15,12 +15,12 @@ const PdfDetails = ({
   dispatchReducer: React.Dispatch<TypeValue>;
 }) => {
   const { showExtraRows } = formData;
-  const { totalPages } = options;
+  const { totalPages, pageLimit } = options;
 
   const extraRowsLabel =
-    totalPages <= 17
+    totalPages <= Math.ceil(100 / pageLimit)
       ? `All ${totalPages.toString()} pages`
-      : `Top 17 of ${totalPages.toString()} pages`;
+      : `Top ${Math.ceil(100 / pageLimit)} of ${totalPages.toString()} pages`;
 
   return (
     <>

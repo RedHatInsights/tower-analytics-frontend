@@ -474,6 +474,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 totalPages={Math.ceil(
                   api.result.meta.count / queryParams.limit
                 )}
+                pageLimit={queryParams.limit}
                 sortOptions={chartParams.y}
                 sortOrder={queryParams.sort_order}
                 startDate={queryParams.start_date}

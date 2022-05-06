@@ -74,6 +74,7 @@ export interface PdfDetailsProps {
   xTickFormat: string;
   chartType: string;
   totalPages: number;
+  pageLimit: number;
   sortOptions: string;
   sortOrder: 'asc' | 'desc';
   dateGranularity: string;

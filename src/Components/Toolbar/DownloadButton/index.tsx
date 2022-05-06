@@ -42,6 +42,7 @@ interface Props {
   xTickFormat: string;
   chartType: string;
   totalPages: number;
+  pageLimit: number;
   sortOptions: string;
   sortOrder: 'asc' | 'desc';
   dateGranularity: string;
@@ -64,6 +65,7 @@ const DownloadButton: FC<Props> = ({
   xTickFormat,
   chartType,
   totalPages,
+  pageLimit,
   sortOptions,
   sortOrder,
   dateGranularity,
@@ -114,6 +116,7 @@ const DownloadButton: FC<Props> = ({
         xTickFormat,
         chartType,
         totalPages,
+        pageLimit,
         sortOptions,
         sortOrder,
         dateGranularity,
@@ -150,6 +153,7 @@ const DownloadButton: FC<Props> = ({
           queryParams: queryParams,
           chartSeriesHiddenProps: chartSeriesHiddenProps,
           totalPages: totalPages,
+          pageLimit: pageLimit,
           sortOptions: queryParams.sort_options as string,
           sortOrder: queryParams.sort_order === 'desc' ? 'desc' : 'asc',
           dateGranularity: queryParams.granularity as string,
@@ -224,6 +228,7 @@ const DownloadButton: FC<Props> = ({
               xTickFormat,
               chartType,
               totalPages,
+              pageLimit,
               sortOptions,
               sortOrder,
               dateGranularity,
@@ -236,7 +241,7 @@ const DownloadButton: FC<Props> = ({
           />
         ) : (
           <EmailDetails
-            options={{ totalPages }}
+            options={{ totalPages, pageLimit }}
             formData={formData}
             dispatchReducer={dispatchReducer}
           />
