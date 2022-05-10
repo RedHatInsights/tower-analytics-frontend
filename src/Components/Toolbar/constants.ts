@@ -100,4 +100,15 @@ export const optionsForCategories: OptionsForCategories = {
     name: 'Granularity',
     hasChips: false,
   },
+  tags: {
+    type: 'select',
+    name: 'Tag',
+    placeholder: 'Filter by tag',
+    hasChips: true,
+  },
+  description: {
+    type: 'text',
+    name: 'Search by description',
+    hasChips: true,
+  },
 };

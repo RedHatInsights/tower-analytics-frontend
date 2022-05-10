@@ -35,10 +35,11 @@ import ListItem from './ListItem';
 import { TagName, TAGS } from '../Shared/constants';
 import getComponent from '../Layouts/index';
 import useRequest from '../../../Utilities/useRequest';
-import { readReport, readReports } from '../../../Api';
+import { readReport, readReports, reportOptions } from '../../../Api';
 import { ReportSchema } from '../Layouts/types';
 import { reportDefaultParams } from '../../../Utilities/constants';
 import { useQueryParams } from '../../../QueryParams';
+import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
 
 export interface Report {
   slug: string;
@@ -59,6 +60,10 @@ const List: FunctionComponent<Record<string, never>> = () => {
     reportDefaultParams('reports'),
     'allReports'
   ).queryParams;
+  const setFromToolbar = useQueryParams(
+    reportDefaultParams('reports'),
+    'allReports'
+  ).setFromToolbar;
 
   const {
     result: { reports: data },
@@ -66,8 +71,13 @@ const List: FunctionComponent<Record<string, never>> = () => {
     request: fetchReports,
   } = useRequest(readReports, { reports: [] });
 
+  const { result: options, request: fetchOptions } = useRequest(reportOptions, {
+    report_options: [],
+  });
+
   useEffect(() => {
     fetchReports(queryParams);
+    fetchOptions(queryParams);
   }, [queryParams]);
 
   const reports = data as Report[];
@@ -106,11 +116,38 @@ const List: FunctionComponent<Record<string, never>> = () => {
         );
       }),
   ];
-
+  // const tags = [] as { key: string; value: string }[];
+  // const descriptions = [] as { key: string; value: string }[];
+  // const slugs = [] as { key: string; value: string }[];
+  // reports.forEach((report) => {
+  //   slugs.push({ key: report.slug, value: report.name });
+  //   report.tags.forEach((tag: string) => {
+  //     if (!tags.map((t) => t.value).includes(tag)) {
+  //       tags.push({ key: tag, value: tag });
+  //     }
+  //   });
+  //   descriptions.push({ key: report.description, value: report.description });
+  // });
+  // console.log(queryParams);
+  // return (
+  //   <>
+  //     <PageHeader>
+  //       <PageHeaderTitle title={'Reports'} />
+  //       <FilterableToolbar
+  //         categories={{ name: slugs, tags: tags, description: descriptions }}
+  //         filters={queryParams}
+  //         setFilters={() => null}
+  //       />
+  //     </PageHeader>
   return (
     <>
       <PageHeader>
         <PageHeaderTitle title={'Reports'} />
+        <FilterableToolbar
+          categories={options}
+          filters={queryParams}
+          setFilters={setFromToolbar}
+        />
       </PageHeader>
       {isSuccess && reports.length > 0 && isReportSuccess && (
         <Main>
