@@ -88,6 +88,9 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_SORT_OPTIONS':
     case 'SET_CALCULATOR':
     case 'SET_SORT_ORDER':
+    case 'SET_TAGS':
+    case 'SET_REPORT_NAME':
+    case 'SET_DESCRIPTION':
       return { ...state, ...value };
     case 'SET_QUICK_DATE_RANGE':
       return value !== 'custom'
@@ -125,6 +128,9 @@ const actionMapper = {
   only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS',
   inventory_id: 'SET_INVENTORY',
   granularity: 'SET_GRANULARITY',
+  tags: 'SET_TAGS',
+  names: 'SET_REPORT_NAME',
+  description: 'SET_DESCRIPTION',
 };
 
 const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {

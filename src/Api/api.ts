@@ -149,7 +149,7 @@ export const readReport = (slug: string): Promise<ApiJson> =>
   get(`${Endpoint.report}${slug}/`);
 
 export const reportOptions = (params: Params): Promise<ApiJson> =>
-  post(Endpoint.reportOptions, params);
+  get(Endpoint.reportOptions, params);
 
 export const generatePdf = async (
   params: PDFParams,

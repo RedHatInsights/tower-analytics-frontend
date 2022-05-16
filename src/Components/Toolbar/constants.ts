@@ -95,6 +95,12 @@ export const optionsForCategories: OptionsForCategories = {
     name: 'Search by name',
     hasChips: true,
   },
+  names: {
+    type: 'select',
+    name: 'Name',
+    placeholder: 'Filter by name',
+    hasChips: true,
+  },
   granularity: {
     type: 'select',
     name: 'Granularity',
@@ -108,7 +114,7 @@ export const optionsForCategories: OptionsForCategories = {
   },
   description: {
     type: 'text',
-    name: 'Search by description',
+    name: 'Description',
     hasChips: true,
   },
 };

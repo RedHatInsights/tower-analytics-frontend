@@ -71,13 +71,15 @@ const List: FunctionComponent<Record<string, never>> = () => {
     request: fetchReports,
   } = useRequest(readReports, { reports: [] });
 
-  const { result: options, request: fetchOptions } = useRequest(reportOptions, {
-    report_options: [],
-  });
+  const optionsQueryParams = useQueryParams(reportDefaultParams('reports'));
+  const { result: options, request: fetchOptions } = useRequest(
+    reportOptions,
+    {}
+  );
 
   useEffect(() => {
     fetchReports(queryParams);
-    fetchOptions(queryParams);
+    fetchOptions(optionsQueryParams.queryParams);
   }, [queryParams]);
 
   const reports = data as Report[];
@@ -116,29 +118,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
         );
       }),
   ];
-  // const tags = [] as { key: string; value: string }[];
-  // const descriptions = [] as { key: string; value: string }[];
-  // const slugs = [] as { key: string; value: string }[];
-  // reports.forEach((report) => {
-  //   slugs.push({ key: report.slug, value: report.name });
-  //   report.tags.forEach((tag: string) => {
-  //     if (!tags.map((t) => t.value).includes(tag)) {
-  //       tags.push({ key: tag, value: tag });
-  //     }
-  //   });
-  //   descriptions.push({ key: report.description, value: report.description });
-  // });
-  // console.log(queryParams);
-  // return (
-  //   <>
-  //     <PageHeader>
-  //       <PageHeaderTitle title={'Reports'} />
-  //       <FilterableToolbar
-  //         categories={{ name: slugs, tags: tags, description: descriptions }}
-  //         filters={queryParams}
-  //         setFilters={() => null}
-  //       />
-  //     </PageHeader>
+
   return (
     <>
       <PageHeader>
