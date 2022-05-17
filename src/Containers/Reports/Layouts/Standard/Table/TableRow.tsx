@@ -75,7 +75,7 @@ const TableRow: FunctionComponent<Params> = ({
       },
     };
     redirect(paths.getDetails(slug), initialQueryParams);
-    history.go(0);
+    window.location.reload();
   };
 
   const getClickableText = (
