@@ -170,7 +170,7 @@ const expandedAttributes = [
   'total_count',
 ];
 
-const allDefaultParams: any = {
+const allDefaultParams: unknown = {
   reports: {
     defaultParams: {
       limit: '20',

@@ -53,7 +53,7 @@ export const email = (
     pdfPostBody: PDFEmailParams;
     payload: string;
     subject: string;
-    recipient: any;
+    recipient: unknown;
     reportUrl: string;
     expiry: string;
     body: string;

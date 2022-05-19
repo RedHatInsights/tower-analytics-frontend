@@ -18,7 +18,7 @@ interface Props {
   error: {
     status: number;
     // TODO; Get this later form the api file
-    error: string | Record<string, any>;
+    error: string | Record<string, unknown>;
   };
 }
 

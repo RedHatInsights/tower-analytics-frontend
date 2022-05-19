@@ -10,7 +10,7 @@ import { ExclamationCircleIcon } from '@patternfly/react-icons';
 import { global_danger_color_200 as globalDangerColor200 } from '@patternfly/react-tokens';
 
 interface Props {
-  message: string | Record<string, any>;
+  message: string | Record<string, unknown>;
 }
 
 const ApiErrorState: FunctionComponent<Props> = ({ message }) => (

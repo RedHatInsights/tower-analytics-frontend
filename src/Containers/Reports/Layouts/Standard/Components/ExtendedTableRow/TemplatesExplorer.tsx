@@ -65,7 +65,7 @@ const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
       }
     : null;
 
-  const taskInfo = (task: any) => {
+  const taskInfo = (task: unknown) => {
     return [
       {
         label: 'Task name',
@@ -78,7 +78,7 @@ const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
     ];
   };
 
-  const totalHostStatusCount = (task: any) => {
+  const totalHostStatusCount = (task: unknown) => {
     return (
       parseInt(task.passed_host_count) +
       parseInt(task.failed_host_count) +
@@ -86,7 +86,7 @@ const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
     );
   };
 
-  const totalTaskStatusCount = (task: any) => {
+  const totalTaskStatusCount = (task: unknown) => {
     return (
       parseInt(task.successful_count) +
       parseInt(task.failed_count) +
@@ -94,7 +94,7 @@ const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
     );
   };
 
-  const renderFailedTaskBar = (item: any) => {
+  const renderFailedTaskBar = (item: unknown) => {
     const failed_tasks = item.most_failed_tasks;
     if (failed_tasks != null) {
       return (
@@ -106,7 +106,7 @@ const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
           <Grid hasGutter>
             {failed_tasks
               .slice(0, failed_tasks.length)
-              .map((task: any, idx: number) => {
+              .map((task: unknown, idx: number) => {
                 const hostCount = {
                   passed: task?.passed_host_count ?? 0,
                   failed: task?.failed_host_count ?? 0,
@@ -174,7 +174,7 @@ const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
     }
   };
 
-  const expandedInfo = (item: any) => {
+  const expandedInfo = (item: unknown) => {
     return [
       {
         label: 'Clusters',

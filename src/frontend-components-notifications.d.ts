@@ -8,7 +8,10 @@ declare module '@redhat-cloud-services/frontend-components-notifications/redux' 
     info = 'info',
   }
 
-  export function notificationsReducer(state: any, action: any): any;
+  export function notificationsReducer(
+    state: unknown,
+    action: unknown
+  ): unknown;
 
   export interface NotificationOptions {
     id?: string;

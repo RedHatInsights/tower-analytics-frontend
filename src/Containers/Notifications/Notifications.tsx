@@ -72,7 +72,7 @@ const notificationOptions = [
 ];
 
 const formatClusterName = (
-  data: any[]
+  data: unknown[]
 ): { value: string; label: string; disabled: boolean }[] => {
   const defaultClusterOptions = [
     { value: 'please choose', label: 'Select cluster', disabled: true },
@@ -101,14 +101,14 @@ const initialQueryParams = {
 };
 
 interface NotificationDataType {
-  notifications: any[];
+  notifications: unknown[];
   meta: {
     count: number;
   };
 }
 
 interface ClusterDataType {
-  templates: any[];
+  templates: unknown[];
 }
 
 const Notifications: FC<Record<string, never>> = () => {

@@ -18,7 +18,7 @@ import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 import percentageFormatter from '../../../../../../Utilities/percentageFormatter';
 
 const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
-  const expandedInfo = (item: any) => {
+  const expandedInfo = (item: unknown) => {
     return [
       {
         label: 'Slow Hosts Count',

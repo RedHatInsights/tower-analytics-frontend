@@ -44,7 +44,7 @@ export interface Report {
   slug: string;
   name: string;
   description: string;
-  tags: any[];
+  tags: unknown[];
   tableHeaders: string[];
 }
 

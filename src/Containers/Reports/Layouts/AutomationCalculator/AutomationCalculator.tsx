@@ -163,7 +163,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       items,
     });
   const getROISaveData = (
-    items: any[],
+    items: unknown[],
     manualCost?: number = costManual,
     automationCost?: number = costAutomation
   ) => {

@@ -9,7 +9,7 @@ import { SelectOptionProps } from '@patternfly/react-core';
 // Todo: unify the interfaces better so we don't have to use any
 // and avoid accidentall wronglt passed props
 interface ComponentMapper {
-  [x: string]: React.ComponentType<any>;
+  [x: string]: React.ComponentType<unknown>;
 }
 
 const components: ComponentMapper = {
@@ -24,7 +24,7 @@ interface Props {
   selectOptions?: SelectOptionProps[];
   isVisible?: boolean;
   setValue: SetValue;
-  [x: string]: any;
+  [x: string]: unknown;
 }
 
 const ToolbarInput: FunctionComponent<Props> = ({
