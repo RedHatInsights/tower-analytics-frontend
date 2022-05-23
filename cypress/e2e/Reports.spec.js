@@ -11,7 +11,8 @@ const mubo = 'module_usage_by_organization';
 const mubjt = 'module_usage_by_job_template';
 const mubt = 'module_usage_by_task';
 const aa21m = 'aa_2_1_onboarding';
-const ha = 'host_anomalies';
+const hab = 'host_anomalies_bar';
+const has = 'host_anomalies_scatter';
 
 const allReports = [
   hcbjt,
@@ -25,7 +26,8 @@ const allReports = [
   mubjt,
   mubt,
   aa21m,
-  ha,
+  hab,
+  has,
 ];
 
 describe('Reports page smoketests', () => {
@@ -243,10 +245,10 @@ describe('Report: AA 2.1 Migration', () => {
   });
 });
 
-describe('Report: Host Anomalies', () => {
+describe('Report: Host Anomalies Bar', () => {
   beforeEach(() => {
     cy.loginFlow();
-    cy.visit(reportsUrl + '/' + ha);
+    cy.visit(reportsUrl + '/' + hab);
   });
 
   it('Renders bar chart with data', () => {
