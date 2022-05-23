@@ -7,6 +7,7 @@ import { formatDate } from '../Utilities/helpers';
 import { DEFAULT_NAMESPACE } from './helpers';
 
 const paramsReducer = (state, { type, value }) => {
+  let newValues = state.chartSeriesHiddenProps;
   switch (type) {
     /* v0 api reducers */
     case 'SET_STARTDATE':
@@ -35,7 +36,17 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_CHART_TYPE':
       return { ...state, chartType: value };
     case 'SET_CHART_SERIES_HIDDEN_PROPS':
-      return { ...state, chartSeriesHiddenProps: value };
+      // when true add to hidden ids
+      value.forEach((v) => {
+        if (v[1]) {
+          if (!newValues.includes(v[0])) {
+            newValues = newValues.concat([v[0].toString()]);
+          }
+        } else {
+          newValues = newValues.filter((i) => i !== v[0].toString());
+        }
+      });
+      return { ...state, chartSeriesHiddenProps: newValues };
     /* Settings reducers END */
     case 'SET_LIMIT':
       return isNaN(value)
