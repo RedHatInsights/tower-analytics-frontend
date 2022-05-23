@@ -1,3 +1,10 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
+import { ApiFeatureFlagReturnType } from '../FeatureFlags/types';
 import {
   get,
   post,
@@ -56,6 +63,39 @@ export enum Endpoint {
 
   features = '/api/featureflags/v0',
 }
+
+const mungeHostAnomalies = async (promise) => {
+  const res = await promise;
+  console.log(res);
+
+  return {
+    meta: {
+      count: res.meta.legend[0].peer_hosts_stats.length,
+      legend: res.meta.legend[0].peer_hosts_stats.map((item) => {
+        return {
+          name: res.meta.legend[0].name,
+          host_id: item.host_id,
+          host_name: item.host_name,
+          host_status: item.host_status,
+          last_refereneced: item.last_refereneced,
+          failed_duration: item.anomaly ? item.host_avg_duration_per_task : 0,
+          successful_duration: !item.anamoly ? 0 : host_avg_duration_per_task,
+        };
+      }),
+    },
+  };
+};
+
+export const getFeatures = async (): Promise<ApiFeatureFlagReturnType> => {
+  try {
+    const url = new URL(Endpoint.features, window.location.origin);
+    const response = await authenticatedFetch(url.toString());
+    return response.ok ? response.json() : { toggles: [] };
+  } catch (error) {
+    console.error('feature flag fetch failed', error);
+    return { toggles: [] };
+  }
+};
 
 export const preflightRequest = (): Promise<Response> =>
   authenticatedFetch(Endpoint.preflight);
@@ -125,7 +165,12 @@ export const readNotifications = (params: Params): Promise<ApiJson> =>
 
 export const readProbeTemplates = (
   params: ParamsWithPagination
-): Promise<ApiJson> => post(Endpoint.probeTemplates, params);
+): Promise<ApiJson> => {
+  if (params.chart_type === 'scatter') {
+    return mungeHostAnomalies(post(Endpoint.probeTemplates, params));
+  }
+  return post(Endpoint.probeTemplates, params);
+};
 
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
   get(Endpoint.probeTemplatesOptions, params);
