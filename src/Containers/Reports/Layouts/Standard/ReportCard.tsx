@@ -110,7 +110,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
     xTickFormat: getDateFormatByGranularity(queryParams.granularity),
-    chartType: settingsQueryParams.chartType || 'line',
+    chartType: settingsQueryParams.chartType || availableChartTypes[0],
   };
 
   const formattedValue = (key: string, value: number) => {
@@ -179,7 +179,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
             key={chartType}
             text={`${capitalize(chartType)} Chart`}
             buttonId={chartType}
-            isSelected={chartType === settingsQueryParams.chartType}
+            isSelected={chartType === chartParams.chartType}
             onChange={() => {
               dispatch({ type: 'SET_CHART_TYPE', value: chartType });
             }}
@@ -198,9 +198,9 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       y={chartParams.y}
       label={chartParams.label}
       xTickFormat={chartParams.xTickFormat}
-      totalCount={dataApi.result.meta.count}
-      onPageCount={queryParams.limit}
-      chartType={settingsQueryParams.chartType}
+      totalPages={Math.ceil(dataApi.result.meta.count / queryParams.limit)}
+      pageLimit={queryParams.limit}
+      chartType={chartParams.chartType}
       sortOptions={chartParams.y}
       sortOrder={queryParams.sort_order}
       dateGranularity={queryParams.granularity}

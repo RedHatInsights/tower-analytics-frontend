@@ -29,8 +29,8 @@ const mockOptions = {
   label: 'label',
   xTickFormat: 'xTickFormat',
   chartType: 'bar',
-  totalCount: '100',
-  onPageCount: '1',
+  totalPages: '3',
+  pageLimit: '6',
   sortOptions: 'hosts',
   sortOrder: 'asc',
   dateGranularity: 'monthly',
@@ -52,6 +52,6 @@ describe('Components/Toolbar/DownloadButton', () => {
       dispatchReducer: mockDispatchReducer,
     });
     expect(screen.getByLabelText('Current page')).toBeTruthy();
-    expect(screen.getByLabelText('Download all 100 items as PDF')).toBeTruthy();
+    expect(screen.getByLabelText('All 3 pages')).toBeTruthy();
   });
 });

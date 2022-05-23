@@ -19,7 +19,6 @@ const ephId = process.env.npm_config_eph_id ?? '1';
 const environmentSetup = {
   ...(env === 'standalone' && {
     https: false,
-    env: 'stage-beta',
     standalone: {
       apiAnalytics: {
         context: ['/api/tower-analytics'],
