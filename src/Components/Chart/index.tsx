@@ -31,6 +31,10 @@ const customFunctions = (specificFunctions?: ChartFunctions) => ({
     ...functions.labelFormat,
     ...specificFunctions?.labelFormat,
   },
+  onClick: {
+    ...functions.onClick,
+    ...specificFunctions?.onClick,
+  },
 });
 
 const applyHiddenFilter = (
@@ -88,7 +92,9 @@ const Chart: FC<Props> = ({
   return (
     <ChartBuilder
       schema={schema}
-      functions={customFunctions(specificFunctions)}
+      functions={{
+        ...customFunctions(specificFunctions),
+      }}
       dataState={[chartData, setChartDataHook]}
     />
   );
