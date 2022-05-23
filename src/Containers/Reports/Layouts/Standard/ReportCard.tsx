@@ -15,7 +15,7 @@ import {
 
 import Pagination from '../../../../Components/Pagination';
 
-import { useQueryParams } from '../../../../QueryParams';
+import { DEFAULT_NAMESPACE, useQueryParams } from '../../../../QueryParams';
 
 import useRequest from '../../../../Utilities/useRequest';
 
@@ -32,7 +32,12 @@ import hydrateSchema from '../../Shared/hydrateSchema';
 import { StandardProps } from '../types';
 import percentageFormatter from '../../../../Utilities/percentageFormatter';
 import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
-import { reportDefaultParams } from '../../../../Utilities/constants';
+import {
+  reportDefaultParams,
+  specificReportDefaultParams,
+} from '../../../../Utilities/constants';
+import { useRedirect } from '../../../../QueryParams';
+import paths from '../../paths';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
@@ -66,6 +71,18 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   const { request: fetchData, ...dataApi } = useRequest(readData, {
     meta: { count: 0, legend: [] },
   });
+
+  const redirect = useRedirect();
+
+  const redirectToHostScatter = (slug: string, templateId: any) => {
+    const initialQueryParams = {
+      [DEFAULT_NAMESPACE]: {
+        ...specificReportDefaultParams(slug),
+        template_id: [templateId],
+      },
+    };
+    redirect(paths.getDetails(slug), initialQueryParams);
+  };
 
   useEffect(() => {
     fetchData(queryParams);
@@ -128,6 +145,11 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         val = value.toFixed(2);
     }
     return val;
+  };
+
+  const handleClick = (event, props) => {
+    redirectToHostScatter('host_anomalies_scatter', props.datum.id);
+    window.location.reload();
   };
 
   const customTooltipFormatting = ({ datum }) => {
@@ -244,6 +266,9 @@ const ReportCard: FunctionComponent<StandardProps> = ({
               specificFunctions={{
                 labelFormat: {
                   customTooltipFormatting,
+                },
+                onClick: {
+                  handleClick,
                 },
               }}
             />
