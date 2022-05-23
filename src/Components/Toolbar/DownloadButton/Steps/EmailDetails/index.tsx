@@ -25,6 +25,7 @@ import {
 import useRequest from '../../../../../Utilities/useRequest';
 import { readRbacGroups, readRbacPrincipals } from '../../../../../Api';
 import ToolbarInput from '../../../Groups/ToolbarInput';
+import { today } from '../../../../../Utilities/helpers';
 
 interface RbacGroupsDataType {
   data: RbacGroupFromApi[];
@@ -359,6 +360,12 @@ const EmailDetails = ({
           categoryKey="start_date"
           value={expiry}
           setValue={(e) => onExpiryChange(e as string)}
+          validators={[
+            (date: Date) => {
+              if (date < today()) return 'Must not be before today';
+              return '';
+            },
+          ]}
         />
       </FormGroup>
       <FormGroup label="Report link" fieldId="link-field">
