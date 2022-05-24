@@ -137,7 +137,7 @@ const DownloadButton: FC<Props> = ({
         ),
         chartType: chartType,
       };
-
+      const allParams = inputs ? { ...queryParams, inputs } : queryParams;
       const pdfPostBody: PDFEmailParams = {
         slug,
         schemaParams: {
@@ -150,7 +150,7 @@ const DownloadButton: FC<Props> = ({
           expiry: expiry,
           showExtraRows: showExtraRows,
           endpointUrl: endpointUrl,
-          queryParams: queryParams,
+          queryParams: allParams,
           chartSeriesHiddenProps: chartSeriesHiddenProps,
           totalPages: totalPages,
           pageLimit: pageLimit,
