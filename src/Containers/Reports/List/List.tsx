@@ -86,7 +86,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
   }, {} as ReportSchema);
 
   useEffect(() => {
-    fetchReport();
+    if (selected != '') fetchReport();
   }, [selected]);
 
   const dropdownItems = [

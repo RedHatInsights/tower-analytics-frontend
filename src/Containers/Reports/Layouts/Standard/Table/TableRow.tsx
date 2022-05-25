@@ -22,15 +22,6 @@ const isOther = (item: Record<string, string | number>, key: string) =>
 const isNoName = (item: Record<string, string | number>, key: string) =>
   key === 'id' && item[key] === -2;
 
-const isTaskCount = (item: Record<string, string | number>, key: string) =>
-  key === 'host_task_count';
-
-const isOrgCount = (item: Record<string, string | number>, key: string) =>
-  key === 'total_org_count';
-
-const isTemplateCount = (item: Record<string, string | number>, key: string) =>
-  key === 'total_template_count';
-
 const getText = (
   item: Record<string, string | number>,
   key: string
@@ -75,45 +66,30 @@ const TableRow: FunctionComponent<Params> = ({
       },
     };
     redirect(paths.getDetails(slug), initialQueryParams);
-    window.location.reload();
   };
 
   const getClickableText = (
     item: Record<string, string | number>,
     key: string
   ) => {
+    const countMapper: { [key: string]: string } = {
+      host_task_count: 'module_usage_by_task',
+      total_org_count: 'module_usage_by_organization',
+      total_template_count: 'module_usage_by_job_template',
+    };
     if (isNoName(item, key)) return '-';
     if (isOther(item, key)) return '-';
     if (timeFields.includes(key)) return formatTotalTime(+item[key]);
     if (costFields.includes(key)) return currencyFormatter(+item[key]);
-    if (isTaskCount(item, key))
+    if (Object.keys(countMapper).includes(key) && item.id != -1) {
       return (
         <Tooltip content={`View ${item.name} usage`}>
           <a
-            onClick={() => redirectToModuleBy('module_usage_by_task', item.id)}
+            onClick={() => redirectToModuleBy(countMapper[key], item.id)}
           >{`${item[key]}`}</a>
         </Tooltip>
       );
-    if (isOrgCount(item, key))
-      return (
-        <Tooltip content={`View ${item.name} usage`}>
-          <a
-            onClick={() =>
-              redirectToModuleBy('module_usage_by_organization', item.id)
-            }
-          >{`${item[key]}`}</a>
-        </Tooltip>
-      );
-    if (isTemplateCount(item, key))
-      return (
-        <Tooltip content={`View ${item.name} usage`}>
-          <a
-            onClick={() =>
-              redirectToModuleBy('module_usage_by_job_template', item.id)
-            }
-          >{`${item[key]}`}</a>
-        </Tooltip>
-      );
+    }
     return `${item[key]}`;
   };
 
