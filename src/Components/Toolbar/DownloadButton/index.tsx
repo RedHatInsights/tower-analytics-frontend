@@ -151,7 +151,7 @@ const DownloadButton: FC<Props> = ({
           showExtraRows: showExtraRows,
           endpointUrl: endpointUrl,
           queryParams: allParams,
-          chartSeriesHiddenProps: chartSeriesHiddenProps,
+          chartSeriesHiddenProps: chartSeriesHiddenProps || [],
           totalPages: totalPages,
           pageLimit: pageLimit,
           sortOptions: queryParams.sort_options as string,
