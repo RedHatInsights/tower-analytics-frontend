@@ -4,6 +4,7 @@ import { LegendEntry } from '../../types';
 export enum ExpandedTableRowName {
   templatesExplorer = 'templatesExplorer',
   hostAnomalies = 'hostAnomalies',
+  mostUsedModules = 'mostUsedModules',
 }
 
 interface ExpandedTableRowProps {

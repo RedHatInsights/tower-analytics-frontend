@@ -41,6 +41,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
     request: fetchReport,
     isSuccess,
     isLoading,
+    error,
   } = useRequest(async () => {
     const response = await readReport(slug);
     return response.report as ReportSchema;
@@ -48,7 +49,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
 
   useEffect(() => {
     fetchReport();
-  }, []);
+  }, [slug]);
 
   const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
   const render = () => {
@@ -80,7 +81,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
       );
     } else if (isLoading) {
       return <></>;
-    } else
+    } else if (error) {
       return (
         <Error404
           title="404: Page does not exist."
@@ -89,6 +90,9 @@ const Details: FunctionComponent<Record<string, never>> = () => {
           link={paths.get}
         />
       );
+    } else {
+      return <></>;
+    }
   };
 
   return render();
