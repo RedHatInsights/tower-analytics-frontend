@@ -64,22 +64,39 @@ export enum Endpoint {
   features = '/api/featureflags/v0',
 }
 
-const mungeHostAnomalies = async (promise) => {
-  const res = await promise;
-  console.log(res);
+const mungeHostAnomalies = async (promise, params) => {
+  const response = await promise;
+  const p = await params;
+
+  const templateFromParams = response.meta.legend.find((entry) => {
+    return entry.id === parseInt(p.template_id[0]);
+  });
 
   return {
     meta: {
-      count: res.meta.legend[0].peer_hosts_stats.length,
-      legend: res.meta.legend[0].peer_hosts_stats.map((item) => {
+      count: templateFromParams.peer_hosts_stats.length,
+      legend: templateFromParams.peer_hosts_stats.map((entry) => {
+        console.log('entry', entry);
+
+        if (entry.anomaly) {
+          return {
+            name: templateFromParams.name,
+            host_id: entry.host_id,
+            host_name: entry.host_name,
+            host_status: entry.host_status,
+            last_referenced: entry.last_referenced,
+            failed_duration: entry.host_avg_duration_per_task,
+            successful_duration: 0,
+          };
+        }
         return {
-          name: res.meta.legend[0].name,
-          host_id: item.host_id,
-          host_name: item.host_name,
-          host_status: item.host_status,
-          last_refereneced: item.last_refereneced,
-          failed_duration: item.anomaly ? item.host_avg_duration_per_task : 0,
-          successful_duration: !item.anamoly ? 0 : host_avg_duration_per_task,
+          name: templateFromParams.name,
+          host_id: entry.host_id,
+          host_name: entry.host_name,
+          host_status: entry.host_status,
+          last_referenced: entry.last_referenced,
+          failed_duration: 0,
+          successful_duration: entry.host_avg_duration_per_task,
         };
       }),
     },
@@ -167,7 +184,7 @@ export const readProbeTemplates = (
   params: ParamsWithPagination
 ): Promise<ApiJson> => {
   if (params.chart_type === 'scatter') {
-    return mungeHostAnomalies(post(Endpoint.probeTemplates, params));
+    return mungeHostAnomalies(post(Endpoint.probeTemplates, params), params);
   }
   return post(Endpoint.probeTemplates, params);
 };
