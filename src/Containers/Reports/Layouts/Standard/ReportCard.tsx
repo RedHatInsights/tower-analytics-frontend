@@ -40,6 +40,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   description,
   tableHeaders,
   expandedTableRowName,
+  clickableLinking,
   defaultSelectedToolbarCategory = '',
   availableChartTypes,
   dataEndpoint,
@@ -250,6 +251,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
               headers={tableHeaders}
               getSortParams={getSortParams}
               expandedRowName={expandedTableRowName}
+              clickableLinking={clickableLinking}
             />
           </ApiStatusWrapper>
         )}

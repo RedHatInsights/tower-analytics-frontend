@@ -7,6 +7,7 @@ import { formatDate } from '../Utilities/helpers';
 import { DEFAULT_NAMESPACE } from './helpers';
 
 const paramsReducer = (state, { type, value }) => {
+  let newValues = state.chartSeriesHiddenProps;
   switch (type) {
     /* v0 api reducers */
     case 'SET_STARTDATE':
@@ -35,7 +36,17 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_CHART_TYPE':
       return { ...state, chartType: value };
     case 'SET_CHART_SERIES_HIDDEN_PROPS':
-      return { ...state, chartSeriesHiddenProps: value };
+      // when true add to hidden ids
+      value.forEach((v) => {
+        if (v[1]) {
+          if (!newValues.includes(v[0])) {
+            newValues = newValues.concat([v[0].toString()]);
+          }
+        } else {
+          newValues = newValues.filter((i) => i !== v[0].toString());
+        }
+      });
+      return { ...state, chartSeriesHiddenProps: newValues };
     /* Settings reducers END */
     case 'SET_LIMIT':
       return isNaN(value)
@@ -89,7 +100,6 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_CALCULATOR':
     case 'SET_SORT_ORDER':
     case 'SET_TAGS':
-    case 'SET_REPORT_NAME':
     case 'SET_DESCRIPTION':
       return { ...state, ...value };
     case 'SET_QUICK_DATE_RANGE':
@@ -129,7 +139,6 @@ const actionMapper = {
   inventory_id: 'SET_INVENTORY',
   granularity: 'SET_GRANULARITY',
   tags: 'SET_TAGS',
-  names: 'SET_REPORT_NAME',
   description: 'SET_DESCRIPTION',
 };
 
@@ -149,7 +158,7 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
 
   /**
    * We need to use an action queue to ensure that the url updates
-   * before the next action and we use the reducer on the lates
+   * before the next action and we use the reducer on the latest
    * queryParams. Without this more than one dispatched action after each
    * other will update the url with the previous state.
    */
@@ -162,13 +171,13 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
     queryParams: params,
     dispatch,
     setFromToolbar: (varName, value = null) => {
-      //reset pagination when filter is set
-      dispatch({ type: 'SET_OFFSET', value: 0 });
       if (!varName) {
         dispatch({ type: 'RESET_FILTER' });
       } else {
         dispatch({ type: actionMapper[varName], value: { [varName]: value } });
       }
+      //reset pagination when filter is set
+      dispatch({ type: 'SET_OFFSET', value: 0 });
     },
     setFromPagination: (offset, limit = null) => {
       dispatch({ type: 'SET_OFFSET', value: offset });

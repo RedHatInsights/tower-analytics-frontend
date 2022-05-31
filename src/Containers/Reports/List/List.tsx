@@ -40,6 +40,7 @@ import { ReportSchema } from '../Layouts/types';
 import { reportDefaultParams } from '../../../Utilities/constants';
 import { useQueryParams } from '../../../QueryParams';
 import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
+import EmptyList from '../../../Components/EmptyList';
 
 export interface Report {
   slug: string;
@@ -85,7 +86,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
   const reports = data as Report[];
 
   useEffect(() => {
-    if (isSuccess) setSelected(reports[0].slug);
+    if (isSuccess && reports.length > 0) setSelected(reports[0].slug);
   }, [reports]);
 
   const {
@@ -98,7 +99,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
   }, {} as ReportSchema);
 
   useEffect(() => {
-    fetchReport();
+    if (selected != '') fetchReport();
   }, [selected]);
 
   const dropdownItems = [
@@ -274,6 +275,17 @@ const List: FunctionComponent<Record<string, never>> = () => {
             ))}
           </Gallery>
         </Main>
+      )}
+      {isSuccess && reports.length === 0 && (
+        <EmptyList
+          label={'Clear all filters'}
+          title={'No results found'}
+          message={
+            'No results match the filter criteria. Clear all filters and try again.'
+          }
+          addButton={true}
+          path={'/reports'}
+        />
       )}
     </>
   );

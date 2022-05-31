@@ -19,6 +19,7 @@ const data = {
         cumulative_net_benefits: 1,
         total_benefits: 1,
         total_costs: 1,
+        id: 1,
       },
       {
         year: 'year1',
@@ -28,6 +29,7 @@ const data = {
         cumulative_net_benefits: 2,
         total_benefits: 2,
         total_costs: 2,
+        id: 2,
       },
       {
         year: 'year2',
@@ -37,6 +39,7 @@ const data = {
         cumulative_net_benefits: 3,
         total_benefits: 3,
         total_costs: 3,
+        id: 3,
       },
       {
         year: 'year3',
@@ -46,6 +49,7 @@ const data = {
         cumulative_net_benefits: 4,
         total_benefits: 4,
         total_costs: 4,
+        id: 4,
       },
     ],
   },
