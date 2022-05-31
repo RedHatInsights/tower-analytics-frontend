@@ -153,12 +153,27 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   };
 
   const customTooltipFormatting = ({ datum }) => {
-    const tooltip =
-      chartParams.label +
-      ' for ' +
-      datum.name +
-      ': ' +
-      formattedValue(queryParams.sort_options, datum.y);
+    console.log(datum);
+    let tooltip;
+    if (datum.host_status) {
+      tooltip =
+        datum.failed_duration > 0 && datum.successful_duration === 0
+          ? 'Failed duration for ' +
+            datum.host_name +
+            ': ' +
+            formattedValue(queryParams.sortOptions, datum.y)
+          : 'Successful duration for ' +
+            datum.host_name +
+            ': ' +
+            formattedValue(queryParams.sortOptions, datum.y);
+    } else {
+      tooltip =
+        chartParams.label +
+        ' for ' +
+        datum.name +
+        ': ' +
+        formattedValue(queryParams.sort_options, datum.y);
+    }
     return tooltip;
   };
 
