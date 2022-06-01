@@ -24,7 +24,7 @@ import {
   Title,
   Spinner,
 } from '@patternfly/react-core';
-import { ExclamationTriangleIcon as ExclamationTriangleIcon } from '@patternfly/react-icons';
+import { CubesIcon as CubesIcon } from '@patternfly/react-icons';
 // Imports from custom components
 import FilterableToolbar from '../../../../Components/Toolbar';
 import Pagination from '../../../../Components/Pagination';
@@ -398,15 +398,15 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         />
       ) : (
         <EmptyState>
-          <EmptyStateIcon icon={ExclamationTriangleIcon} />
+          <EmptyStateIcon icon={CubesIcon} />
           <Title headingLevel="h4" size="lg">
-            You have disabled all views
+            No results
           </Title>
           <EmptyStateBody>
-            Enable individual views in the table below or press Show all button.
+            The current filter has no results. Clear the filter and try again.
           </EmptyStateBody>
           <Button variant="primary" onClick={() => setEnabled(undefined)(true)}>
-            Show all
+            Clear filter
           </Button>
         </EmptyState>
       )}
