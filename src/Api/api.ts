@@ -76,7 +76,6 @@ const mungeHostAnomalies = async (promise, params) => {
     meta: {
       count: templateFromParams.peer_hosts_stats.length,
       legend: templateFromParams.peer_hosts_stats.map((entry) => {
-        console.log('entry', entry);
 
         if (entry.anomaly) {
           return {
