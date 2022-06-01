@@ -16,12 +16,14 @@ interface Props {
   };
   children: React.ReactNode;
   customLoading: boolean;
+  customEmptyState?: boolean;
 }
 
 const ApiStatusWrapper: FunctionComponent<Props> = ({
   api,
   children,
   customLoading = false,
+  customEmptyState = false,
 }) => {
   if (customLoading && api.isLoading) {
     return <>{children}</>;
@@ -30,7 +32,7 @@ const ApiStatusWrapper: FunctionComponent<Props> = ({
   if (api.error) return <ApiErrorState message={api.error.error.error} />;
 
   if (api.isSuccess) {
-    if (api.result.meta.count === 0) return <NoData />;
+    if (api.result.meta.count === 0 && !customEmptyState) return <NoData />;
     return <>{children}</>;
   }
 

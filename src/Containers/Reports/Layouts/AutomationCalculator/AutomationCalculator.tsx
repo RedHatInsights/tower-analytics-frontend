@@ -536,7 +536,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       </>
     );
   return (
-    <ApiStatusWrapper api={api} customLoading={true}>
+    <ApiStatusWrapper api={api} customLoading={true} customEmptyState={true}>
       {renderContents()}
     </ApiStatusWrapper>
   );
