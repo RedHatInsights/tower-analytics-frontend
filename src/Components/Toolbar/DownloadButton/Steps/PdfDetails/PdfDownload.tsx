@@ -70,6 +70,10 @@ const PdfDownload: ({
 }) => {
   const allParams = inputs ? { ...queryParams, inputs } : queryParams;
   const token = '';
+  // set chartSeriesHiddenProps to a default value
+  if (!chartSeriesHiddenProps) {
+    chartSeriesHiddenProps = [];
+  }
   // Dispatch the start of downloading the pdf
   dispatch(
     downloadPdfAction(
