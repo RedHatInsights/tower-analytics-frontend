@@ -2,6 +2,7 @@ import React from 'react';
 import { actions } from '../../constants';
 import { Grid, GridItem, Radio, Title } from '@patternfly/react-core';
 import { EmailDetailsProps, TypeValue } from '../../../types';
+import { useFeatureFlag, ValidFeatureFlags } from '../../../../../FeatureFlags';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const ExportOptions = ({
@@ -34,21 +35,23 @@ const ExportOptions = ({
             aria-label="pdf-radio"
           />
         </GridItem>
-        <GridItem>
-          <Radio
-            onChange={() =>
-              dispatchReducer({
-                type: actions.SET_DOWNLOAD_TYPE,
-                value: 'email',
-              })
-            }
-            isChecked={downloadType === 'email'}
-            name="optionSelected"
-            label="E-mail"
-            id="email-radio"
-            aria-label="email-radio"
-          />
-        </GridItem>
+        {useFeatureFlag(ValidFeatureFlags.sendEmail) && (
+          <GridItem>
+            <Radio
+              onChange={() =>
+                dispatchReducer({
+                  type: actions.SET_DOWNLOAD_TYPE,
+                  value: 'email',
+                })
+              }
+              isChecked={downloadType === 'email'}
+              name="optionSelected"
+              label="E-mail"
+              id="email-radio"
+              aria-label="email-radio"
+            />
+          </GridItem>
+        )}
       </Grid>
     </>
   );
