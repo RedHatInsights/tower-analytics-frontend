@@ -1,6 +1,4 @@
-import { useContext } from 'react';
-import Context from './Context';
-import { FeatureFlagType, ValidFeatureFlags } from './types';
+import { useFlag, useFlagsStatus } from '@unleash/proxy-client-react';
 
 const isBeta = () => window.location.pathname.split('/')[1] === 'beta';
 
@@ -8,39 +6,20 @@ const isBeta = () => window.location.pathname.split('/')[1] === 'beta';
 const isLocalhost = () => window.location.hostname === 'localhost';
 const isEphemeral = () => window.location.hostname.includes('ephemeral');
 
-/**
- * On ephemeral and local environments change how the flags work:
- * If not defined => enabled
- * If defined and true => enabled
- * If defined and false => disabled
- */
-const isEnabledDevel = (feature?: FeatureFlagType) => {
-  if (!feature) return true;
-  return feature?.enabled;
-};
-
-/**
- * In non developer environment enable the feature flag as:
- * If not defined => disabled
- * If defined and true => enabled
- * If defined and false => disabled
- */
-const isEnabled = (feature?: FeatureFlagType) => {
-  return !!feature && feature?.enabled;
-};
-
-const useFeatureFlag = (flag: ValidFeatureFlags): boolean => {
-  const features = useContext(Context);
+const useFeatureFlag = (flag: string): boolean => {
   // On beta use the beta flag which has the 'beta_flagname' format.
   const betaFlag = `beta_${flag}`;
 
-  const feature = features.find(
-    ({ name }) => name === (isBeta() ? betaFlag : flag)
-  );
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
+  const { flagsReady } = useFlagsStatus();
 
-  if (isLocalhost() || isEphemeral()) return isEnabledDevel(feature);
+  const flagToCheck = isBeta() ? betaFlag : flag;
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
+  const isFlagEnabled = useFlag(flagToCheck);
 
-  return isEnabled(feature);
+  if (isLocalhost() || isEphemeral()) return true;
+
+  return flagsReady ? isFlagEnabled : false;
 };
 
 export default useFeatureFlag;
