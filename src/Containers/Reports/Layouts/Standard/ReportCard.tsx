@@ -38,6 +38,7 @@ import {
 } from '../../../../Utilities/constants';
 import { useRedirect } from '../../../../QueryParams';
 import paths from '../../paths';
+import { ExclamationCircleIcon } from '@patternfly/react-icons';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
@@ -153,7 +154,6 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   };
 
   const customTooltipFormatting = ({ datum }) => {
-    console.log(datum);
     let tooltip;
     if (datum.host_status) {
       tooltip =
@@ -277,6 +277,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
                 xTickFormat: chartParams.xTickFormat,
                 chartType: chartParams.chartType,
               })}
+              dataComponent={'foobar'}
               data={dataApi.result}
               specificFunctions={{
                 labelFormat: {
