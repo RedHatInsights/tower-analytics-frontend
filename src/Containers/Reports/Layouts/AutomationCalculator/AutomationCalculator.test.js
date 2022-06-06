@@ -3,6 +3,7 @@ import { history, mountPage } from '../../../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 import AutomationCalculator from './AutomationCalculator';
 import TotalSavings from './TotalSavings';
+import { EmptyStateBody } from '@patternfly/react-core';
 import { Endpoint } from '../../../../Api';
 import { roi } from '../../../../Utilities/constants';
 import {
@@ -221,9 +222,11 @@ describe('Containers/CustomReports/AutomationCalculator', () => {
     });
     wrapper.update();
 
-    expect(wrapper.text()).toEqual(expect.stringContaining('No Data'));
-    // No data displayed
-    expect(wrapper.find('input')).toHaveLength(0);
+    expect(wrapper.find(EmptyStateBody).text()).toEqual(
+      expect.stringContaining(
+        'The current filter has no results. Clear the filter and try again.'
+      )
+    );
   });
 
   xit('should call redirect to job expoler', async () => {
