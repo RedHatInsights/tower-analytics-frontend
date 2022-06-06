@@ -1,4 +1,3 @@
-import { ApiFeatureFlagReturnType } from '../FeatureFlags/types';
 import {
   get,
   post,
@@ -57,17 +56,6 @@ export enum Endpoint {
 
   features = '/api/featureflags/v0',
 }
-
-export const getFeatures = async (): Promise<ApiFeatureFlagReturnType> => {
-  try {
-    const url = new URL(Endpoint.features, window.location.origin);
-    const response = await authenticatedFetch(url.toString());
-    return response.ok ? response.json() : { toggles: [] };
-  } catch (error) {
-    console.error('feature flag fetch failed', error);
-    return { toggles: [] };
-  }
-};
 
 export const preflightRequest = (): Promise<Response> =>
   authenticatedFetch(Endpoint.preflight);
