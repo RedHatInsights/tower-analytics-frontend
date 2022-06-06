@@ -24,7 +24,7 @@ import {
   Title,
   Spinner,
 } from '@patternfly/react-core';
-import { CubesIcon as CubesIcon } from '@patternfly/react-icons';
+import { SearchIcon as SearchIcon } from '@patternfly/react-icons';
 // Imports from custom components
 import FilterableToolbar from '../../../../Components/Toolbar';
 import Pagination from '../../../../Components/Pagination';
@@ -398,7 +398,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         />
       ) : (
         <EmptyState>
-          <EmptyStateIcon icon={CubesIcon} />
+          <EmptyStateIcon icon={SearchIcon} />
           <Title headingLevel="h4" size="lg">
             No results
           </Title>
