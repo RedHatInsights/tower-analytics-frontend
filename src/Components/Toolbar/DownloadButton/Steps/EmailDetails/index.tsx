@@ -120,7 +120,7 @@ const EmailDetails = ({
   }, [principalsFromApi]);
 
   const { totalPages, pageLimit } = options;
-
+  const showExpiryDate = additionalRecipients.length > 0;
   const extraRowsLabel =
     totalPages <= Math.ceil(100 / pageLimit)
       ? `All ${totalPages} pages`
@@ -355,19 +355,30 @@ const EmailDetails = ({
           }
         />
       </FormGroup>
-      <FormGroup label="Link expires on" isRequired fieldId="expiry-field">
-        <ToolbarInput
-          categoryKey="start_date"
-          value={expiry}
-          setValue={(e) => onExpiryChange(e as string)}
-          validators={[
-            (date: Date) => {
-              if (date < today()) return 'Must not be before today';
-              return '';
-            },
-          ]}
-        />
-      </FormGroup>
+      {showExpiryDate && (
+        <>
+          <FormGroup label="Link expires on" fieldId="expiry-field">
+            <ToolbarInput
+              categoryKey="start_date"
+              value={expiry}
+              setValue={(e) => onExpiryChange(e as string)}
+              validators={[
+                (date: Date) => {
+                  if (date < today()) return 'Must not be before today';
+                  return '';
+                },
+              ]}
+            />
+          </FormGroup>
+          <FormHelperText
+            isError
+            icon={<ExclamationCircleIcon />}
+            isHidden={!showExpiryDate}
+          >
+            Link expiry date only applies to external users
+          </FormHelperText>
+        </>
+      )}
       <FormGroup label="Report link" fieldId="link-field">
         {reportUrl}
       </FormGroup>
