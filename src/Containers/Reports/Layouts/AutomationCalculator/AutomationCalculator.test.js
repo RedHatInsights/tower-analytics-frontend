@@ -224,7 +224,7 @@ describe('Containers/CustomReports/AutomationCalculator', () => {
 
     expect(wrapper.find(EmptyStateBody).text()).toEqual(
       expect.stringContaining(
-        'The current filter has no results. Clear the filter and try again.'
+        'No results match the filter criteria. Clear all filter and try again.'
       )
     );
   });

@@ -400,10 +400,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         <EmptyState>
           <EmptyStateIcon icon={SearchIcon} />
           <Title headingLevel="h4" size="lg">
-            No results
+            No results found
           </Title>
           <EmptyStateBody>
-            The current filter has no results. Clear the filter and try again.
+            No results match the filter criteria. Clear all filter and try
+            again.
           </EmptyStateBody>
           <Button variant="primary" onClick={() => setEnabled(undefined)(true)}>
             Clear filter
