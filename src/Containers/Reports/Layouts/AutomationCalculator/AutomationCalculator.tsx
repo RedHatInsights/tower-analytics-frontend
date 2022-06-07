@@ -406,7 +406,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             No results match the filter criteria. Clear all filter and try
             again.
           </EmptyStateBody>
-          <Button variant="primary" onClick={() => setEnabled(undefined)(true)}>
+          <Button
+            variant="primary"
+            onClick={() => setFromToolbar(undefined, undefined)}
+          >
             Clear filter
           </Button>
         </EmptyState>
