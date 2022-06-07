@@ -90,14 +90,26 @@ export const optionsForCategories: OptionsForCategories = {
     placeholder: 'Filter by inventory',
     hasChips: true,
   },
-  name: {
-    type: 'text',
-    name: 'Search by name',
-    hasChips: true,
-  },
   granularity: {
     type: 'select',
     name: 'Granularity',
     hasChips: false,
+  },
+  tags: {
+    type: 'select',
+    name: 'Tag',
+    placeholder: 'Filter by tag',
+    hasChips: true,
+  },
+  name: {
+    type: 'text',
+    name: 'Name',
+    placeholder: 'Filter by name',
+    hasChips: true,
+  },
+  description: {
+    type: 'text',
+    name: 'Description',
+    hasChips: true,
   },
 };

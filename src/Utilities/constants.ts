@@ -183,8 +183,12 @@ const allDefaultParams: any = {
     defaultParams: {
       limit: '20',
       offset: '0',
-      sort_options: 'slug',
+      sort_options: 'name',
       sort_order: 'asc',
+      tags: [],
+      slug: [],
+      name: [],
+      description: '',
     },
     namespace: 'allReports',
   },
