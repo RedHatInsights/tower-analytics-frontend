@@ -16,7 +16,7 @@ interface Props {
   title?: string;
   message?: string;
   canAdd?: boolean;
-  addButton?: boolean;
+  showButton?: boolean;
   path?: string;
 }
 
@@ -25,7 +25,7 @@ const EmptyList: FunctionComponent<Props> = ({
   title = 'No items found.',
   message = '',
   canAdd = false,
-  addButton = false,
+  showButton = false,
   path = undefined,
 }) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -39,7 +39,7 @@ const EmptyList: FunctionComponent<Props> = ({
         {title}
       </Title>
       <EmptyStateBody>{message}</EmptyStateBody>
-      {(canAdd || addButton) && (
+      {(canAdd || showButton) && (
         <Button
           key="add-item-button"
           variant={ButtonVariant.primary}

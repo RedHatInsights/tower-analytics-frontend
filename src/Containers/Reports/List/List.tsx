@@ -283,7 +283,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
           message={
             'No results match the filter criteria. Clear all filters and try again.'
           }
-          addButton={true}
+          showButton={true}
           path={'/reports'}
         />
       )}

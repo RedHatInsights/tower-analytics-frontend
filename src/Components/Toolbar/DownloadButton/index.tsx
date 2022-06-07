@@ -185,8 +185,16 @@ const DownloadButton: FC<Props> = ({
       selectedRbacGroups,
       users,
     }: EmailDetailsProps = formData;
-    if (additionalRecipients !== '') return false;
-
+    if (additionalRecipients !== '') {
+      const list = additionalRecipients.split(',');
+      for (let i = 0; i < list.length; i++) {
+        const regEx = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        if (!regEx.test(list[i])) {
+          return true;
+        }
+      }
+      return false;
+    }
     // no group selected and no additional email and eula not checked
     if (selectedRbacGroups.length === 0 && additionalRecipients === '')
       return true;
