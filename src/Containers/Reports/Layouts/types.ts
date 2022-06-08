@@ -32,6 +32,7 @@ export interface StandardProps extends BaseReportProps {
   dataEndpoint: Endpoint;
   optionsEndpoint: Endpoint;
   fullCard?: boolean;
+  clickableLinking?: boolean;
 }
 
 export type ReportSchema =

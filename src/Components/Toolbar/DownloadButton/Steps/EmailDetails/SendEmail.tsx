@@ -69,7 +69,7 @@ const SendEmail: ({
         subject: subject === '' ? 'Report is ready to be viewed' : subject,
         body: body.toString().replace(/(?:\r\n|\r|\n)/g, '<br>'),
         reportUrl: parseUrl(emailExtraRows, reportUrl, token, expiry, slug),
-        expiry: token,
+        expiry: expiry,
         slug: slug,
         token: token,
         payload: 'Download',

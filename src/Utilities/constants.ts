@@ -170,13 +170,25 @@ const expandedAttributes = [
   'total_count',
 ];
 
+const mostUsedModulesExpandedAttributes = [
+  'host_task_changed_count',
+  'host_task_failed_count',
+  'host_task_ok_count',
+  'host_task_skipped_count',
+  'host_task_unreachable_count',
+];
+
 const allDefaultParams: any = {
   reports: {
     defaultParams: {
       limit: '20',
       offset: '0',
-      sort_options: 'slug',
+      sort_options: 'name',
       sort_order: 'asc',
+      tags: [],
+      slug: [],
+      name: [],
+      description: '',
     },
     namespace: 'allReports',
   },
@@ -474,11 +486,10 @@ const allDefaultParams: any = {
       offset: 0,
       attributes: [
         'host_task_count',
-        'host_task_changed_count',
-        'host_task_ok_count',
-        'host_task_failed_count',
-        'host_task_unreachable_count',
+        'total_org_count',
+        'total_template_count',
         'total_count',
+        ...mostUsedModulesExpandedAttributes,
       ],
       group_by: 'module',
       group_by_time: true,
@@ -543,4 +554,9 @@ const allDefaultParams: any = {
 export const reportDefaultParams = (slug: string): DefaultParamsProps => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   return allDefaultParams[slug].defaultParams as DefaultParamsProps;
+};
+
+export const specificReportDefaultParams = (slug: string): Params => {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+  return allDefaultParams[slug].defaultParams as Params;
 };

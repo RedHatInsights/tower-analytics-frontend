@@ -52,7 +52,7 @@ describe('Components/Toolbar/DownloadButton', () => {
       dispatchReducer: mockDispatchReducer(),
     });
     expect(screen.getAllByText(/Recipient/i));
-    expect(screen.getAllByText('Link expires on')).toBeTruthy();
+    expect(screen.getAllByText('Report link')).toBeTruthy();
     expect(screen.getAllByText('Subject'));
   });
 });

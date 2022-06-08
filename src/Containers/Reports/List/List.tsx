@@ -35,10 +35,12 @@ import ListItem from './ListItem';
 import { TagName, TAGS } from '../Shared/constants';
 import getComponent from '../Layouts/index';
 import useRequest from '../../../Utilities/useRequest';
-import { readReport, readReports } from '../../../Api';
+import { readReport, readReports, reportOptions } from '../../../Api';
 import { ReportSchema } from '../Layouts/types';
 import { reportDefaultParams } from '../../../Utilities/constants';
 import { useQueryParams } from '../../../QueryParams';
+import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
+import EmptyList from '../../../Components/EmptyList';
 
 export interface Report {
   slug: string;
@@ -59,6 +61,10 @@ const List: FunctionComponent<Record<string, never>> = () => {
     reportDefaultParams('reports'),
     'allReports'
   ).queryParams;
+  const setFromToolbar = useQueryParams(
+    reportDefaultParams('reports'),
+    'allReports'
+  ).setFromToolbar;
 
   const {
     result: { reports: data },
@@ -66,14 +72,21 @@ const List: FunctionComponent<Record<string, never>> = () => {
     request: fetchReports,
   } = useRequest(readReports, { reports: [] });
 
+  const optionsQueryParams = useQueryParams(reportDefaultParams('reports'));
+  const { result: options, request: fetchOptions } = useRequest(
+    reportOptions,
+    {}
+  );
+
   useEffect(() => {
     fetchReports(queryParams);
+    fetchOptions(optionsQueryParams.queryParams);
   }, [queryParams]);
 
   const reports = data as Report[];
 
   useEffect(() => {
-    if (isSuccess) setSelected(reports[0].slug);
+    if (isSuccess && reports.length > 0) setSelected(reports[0].slug);
   }, [reports]);
 
   const {
@@ -86,7 +99,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
   }, {} as ReportSchema);
 
   useEffect(() => {
-    fetchReport();
+    if (selected != '') fetchReport();
   }, [selected]);
 
   const dropdownItems = [
@@ -111,6 +124,11 @@ const List: FunctionComponent<Record<string, never>> = () => {
     <>
       <PageHeader>
         <PageHeaderTitle title={'Reports'} />
+        <FilterableToolbar
+          categories={options}
+          filters={queryParams}
+          setFilters={setFromToolbar}
+        />
       </PageHeader>
       {isSuccess && reports.length > 0 && isReportSuccess && (
         <Main>
@@ -257,6 +275,17 @@ const List: FunctionComponent<Record<string, never>> = () => {
             ))}
           </Gallery>
         </Main>
+      )}
+      {isSuccess && reports.length === 0 && (
+        <EmptyList
+          label={'Clear all filters'}
+          title={'No results found'}
+          message={
+            'No results match the filter criteria. Clear all filters and try again.'
+          }
+          showButton={true}
+          path={'/reports'}
+        />
       )}
     </>
   );

@@ -1,7 +1,6 @@
 import React from 'react';
 import { actions } from '../../constants';
 import { Grid, GridItem, Radio, Title } from '@patternfly/react-core';
-import { useFeatureFlag, ValidFeatureFlags } from '../../../../../FeatureFlags';
 import { EmailDetailsProps, PdfDetailsProps, TypeValue } from '../../../types';
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
@@ -43,23 +42,21 @@ const PdfDetails = ({
             aria-label="current-radio"
           />
         </GridItem>
-        {useFeatureFlag(ValidFeatureFlags.sendEmail) && (
-          <GridItem>
-            <Radio
-              onChange={() =>
-                dispatchReducer({
-                  type: actions.SET_SHOW_EXTRA_ROWS,
-                  value: true,
-                })
-              }
-              isChecked={showExtraRows}
-              name="showExtraRows"
-              label={extraRowsLabel}
-              id="extra-radio"
-              aria-label="extra-radio"
-            />
-          </GridItem>
-        )}
+        <GridItem>
+          <Radio
+            onChange={() =>
+              dispatchReducer({
+                type: actions.SET_SHOW_EXTRA_ROWS,
+                value: true,
+              })
+            }
+            isChecked={showExtraRows}
+            name="showExtraRows"
+            label={extraRowsLabel}
+            id="extra-radio"
+            aria-label="extra-radio"
+          />
+        </GridItem>
       </Grid>
     </>
   );

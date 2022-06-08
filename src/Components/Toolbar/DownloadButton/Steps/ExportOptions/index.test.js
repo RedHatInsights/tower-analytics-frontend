@@ -17,6 +17,18 @@ const mockFormData = {
 
 const mockDispatchReducer = () => {};
 
+jest.mock('../../../../../FeatureFlags', () => ({
+  useFeatureFlag: () => {
+    return true;
+  },
+  ValidFeatureFlags: () => {
+    'moduleReports';
+    'newAutomationCalculator';
+    'aa21Onboarding';
+    'sendEmail';
+  },
+}));
+
 describe('Components/Toolbar/DownloadButton/ExportOptions', () => {
   afterEach(() => {
     jest.resetAllMocks();

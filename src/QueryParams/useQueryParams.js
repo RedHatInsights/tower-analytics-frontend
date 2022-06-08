@@ -99,6 +99,8 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_SORT_OPTIONS':
     case 'SET_CALCULATOR':
     case 'SET_SORT_ORDER':
+    case 'SET_TAGS':
+    case 'SET_DESCRIPTION':
       return { ...state, ...value };
     case 'SET_QUICK_DATE_RANGE':
       return value !== 'custom'
@@ -136,6 +138,8 @@ const actionMapper = {
   only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS',
   inventory_id: 'SET_INVENTORY',
   granularity: 'SET_GRANULARITY',
+  tags: 'SET_TAGS',
+  description: 'SET_DESCRIPTION',
 };
 
 const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
@@ -154,7 +158,7 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
 
   /**
    * We need to use an action queue to ensure that the url updates
-   * before the next action and we use the reducer on the lates
+   * before the next action and we use the reducer on the latest
    * queryParams. Without this more than one dispatched action after each
    * other will update the url with the previous state.
    */
@@ -167,13 +171,13 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
     queryParams: params,
     dispatch,
     setFromToolbar: (varName, value = null) => {
-      //reset pagination when filter is set
-      dispatch({ type: 'SET_OFFSET', value: 0 });
       if (!varName) {
         dispatch({ type: 'RESET_FILTER' });
       } else {
         dispatch({ type: actionMapper[varName], value: { [varName]: value } });
       }
+      //reset pagination when filter is set
+      dispatch({ type: 'SET_OFFSET', value: 0 });
     },
     setFromPagination: (offset, limit = null) => {
       dispatch({ type: 'SET_OFFSET', value: offset });

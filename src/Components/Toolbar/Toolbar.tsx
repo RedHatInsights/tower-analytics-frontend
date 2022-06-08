@@ -44,6 +44,13 @@ const FilterableToolbar: FunctionComponent<Props> = ({
   const { quick_date_range, sort_options, granularity, ...restCategories } =
     categories;
 
+  // Sets name attribute as a dropdown if it has predefined values
+  if (Object.keys(categories).includes('name')) {
+    categories.name[0].value !== null
+      ? (optionsForCategories.name.type = 'select')
+      : (optionsForCategories.name.type = 'text');
+  }
+
   // Filter out elements which are not in the option object and in defaultParams
   const filterCategories = Object.keys(restCategories)
     .filter(

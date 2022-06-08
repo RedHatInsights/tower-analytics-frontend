@@ -1,4 +1,3 @@
-import { ApiFeatureFlagReturnType } from '../FeatureFlags/types';
 import {
   get,
   post,
@@ -53,20 +52,10 @@ export enum Endpoint {
   eventExplorerOptions = '/api/tower-analytics/v1/event_explorer_options/',
   hostExplorerOptions = '/api/tower-analytics/v1/host_explorer_options/',
   probeTemplatesOptions = '/api/tower-analytics/v1/probe_templates_options/',
+  reportOptions = '/api/tower-analytics/v1/report_options/',
 
   features = '/api/featureflags/v0',
 }
-
-export const getFeatures = async (): Promise<ApiFeatureFlagReturnType> => {
-  try {
-    const url = new URL(Endpoint.features, window.location.origin);
-    const response = await authenticatedFetch(url.toString());
-    return response.ok ? response.json() : { toggles: [] };
-  } catch (error) {
-    console.error('feature flag fetch failed', error);
-    return { toggles: [] };
-  }
-};
 
 export const preflightRequest = (): Promise<Response> =>
   authenticatedFetch(Endpoint.preflight);
@@ -147,6 +136,9 @@ export const readReports = (params: ParamsWithPagination): Promise<ApiJson> =>
 export const readReport = (slug: string): Promise<ApiJson> =>
   get(`${Endpoint.report}${slug}/`);
 
+export const reportOptions = (params: Params): Promise<ApiJson> =>
+  get(Endpoint.reportOptions, params);
+
 export const generatePdf = async (
   params: PDFParams,
   meta: NotificationParams
@@ -225,6 +217,8 @@ export const endpointFunctionMap = (endpoint: Endpoint): ReadEndpointFnc => {
       return readProbeTemplates;
     case Endpoint.probeTemplatesOptions:
       return readProbeTemplatesOptions;
+    case Endpoint.reportOptions:
+      return reportOptions;
     default:
       throw new Error(`${endpoint} is not found in the api mapper.`);
   }

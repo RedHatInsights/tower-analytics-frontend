@@ -137,7 +137,7 @@ const DownloadButton: FC<Props> = ({
         ),
         chartType: chartType,
       };
-
+      const allParams = inputs ? { ...queryParams, inputs } : queryParams;
       const pdfPostBody: PDFEmailParams = {
         slug,
         schemaParams: {
@@ -150,8 +150,8 @@ const DownloadButton: FC<Props> = ({
           expiry: expiry,
           showExtraRows: showExtraRows,
           endpointUrl: endpointUrl,
-          queryParams: queryParams,
-          chartSeriesHiddenProps: chartSeriesHiddenProps,
+          queryParams: allParams,
+          chartSeriesHiddenProps: chartSeriesHiddenProps || [],
           totalPages: totalPages,
           pageLimit: pageLimit,
           sortOptions: queryParams.sort_options as string,
@@ -185,8 +185,16 @@ const DownloadButton: FC<Props> = ({
       selectedRbacGroups,
       users,
     }: EmailDetailsProps = formData;
-    if (additionalRecipients !== '') return false;
-
+    if (additionalRecipients !== '') {
+      const list = additionalRecipients.split(',');
+      for (let i = 0; i < list.length; i++) {
+        const regEx = /^([\w-.]+@([\w-]+\.)+[\w-]{2,4})?$/;
+        if (!regEx.test(list[i])) {
+          return true;
+        }
+      }
+      return false;
+    }
     // no group selected and no additional email and eula not checked
     if (selectedRbacGroups.length === 0 && additionalRecipients === '')
       return true;
