@@ -63,6 +63,7 @@ const Row: FunctionComponent<Props> = ({
     window.localStorage.setItem(id.toString(), value ? 'true' : 'false');
     setIsExpanded(value);
   };
+  console.log(template);
 
   return (
     <>
@@ -125,7 +126,7 @@ const Row: FunctionComponent<Props> = ({
               : globalDisabledColor200.value,
           }}
         >
-          {currencyFormatter(+template.delta)}
+          {currencyFormatter(+template.monetary_gain)}
         </Td>
         <Td>
           <Switch
