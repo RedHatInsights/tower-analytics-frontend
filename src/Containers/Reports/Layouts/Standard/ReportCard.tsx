@@ -38,7 +38,6 @@ import {
 } from '../../../../Utilities/constants';
 import { useRedirect } from '../../../../QueryParams';
 import paths from '../../paths';
-import { ExclamationCircleIcon } from '@patternfly/react-icons';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
@@ -246,6 +245,8 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       dateRange={queryParams.quick_date_range}
     />,
   ];
+
+  console.log('dataApi', dataApi.result);
   return fullCard ? (
     <Card>
       <CardBody>

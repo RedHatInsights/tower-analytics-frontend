@@ -188,7 +188,7 @@ export const readProbeTemplates = (
 };
 
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
-  get(Endpoint.probeTemplatesOptions, params);
+  post(Endpoint.probeTemplatesOptions, params);
 
 export const readReports = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(Endpoint.reports, params);
