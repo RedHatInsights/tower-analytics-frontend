@@ -63,7 +63,6 @@ const Row: FunctionComponent<Props> = ({
     window.localStorage.setItem(id.toString(), value ? 'true' : 'false');
     setIsExpanded(value);
   };
-  console.log(template);
 
   return (
     <>

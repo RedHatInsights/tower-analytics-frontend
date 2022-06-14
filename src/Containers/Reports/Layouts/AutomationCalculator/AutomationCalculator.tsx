@@ -484,7 +484,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 startDate={queryParams.start_date}
                 endDate={queryParams.end_date}
                 dateRange={queryParams.quick_date_range}
-                inputs={{ costManual, costAutomation }}
+                inputs={{
+                  costManual,
+                  costAutomation,
+                  totalSavings : api.result?.monetary_gain_other_pages + api.result?.monetary_gain_current_page,
+                  currentPageSavings: api.result?.monetary_gain_current_page
+                }}
               />,
             ]}
           />
