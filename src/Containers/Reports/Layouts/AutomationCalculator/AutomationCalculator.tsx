@@ -403,14 +403,14 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             No results found
           </Title>
           <EmptyStateBody>
-            No results match the filter criteria. Clear all filter and try
+            No results match the filter criteria. Clear all filters and try
             again.
           </EmptyStateBody>
           <Button
             variant="primary"
             onClick={() => setFromToolbar(undefined, undefined)}
           >
-            Clear filter
+            Clear all filters
           </Button>
         </EmptyState>
       )}
