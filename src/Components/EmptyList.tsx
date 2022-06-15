@@ -18,6 +18,7 @@ interface Props {
   canAdd?: boolean;
   showButton?: boolean;
   path?: string;
+  onButtonClick?: () => null;
 }
 
 const EmptyList: FunctionComponent<Props> = ({
@@ -27,6 +28,7 @@ const EmptyList: FunctionComponent<Props> = ({
   canAdd = false,
   showButton = false,
   path = undefined,
+  onButtonClick = undefined,
 }) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   /* @ts-ignore */
@@ -48,6 +50,7 @@ const EmptyList: FunctionComponent<Props> = ({
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             /* @ts-ignore */
             if (path) redirect(path);
+            if (onButtonClick) onButtonClick();
           }}
         >
           {label}
