@@ -144,6 +144,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
               {templates.map(({ id, name }) => (
                 <Tr key={`template-detail-${id}`}>
                   <Td
+                    data-cy={`radio-${id}`}
                     data-testid={`radio-${id}`}
                     key={`template-detail-${id}-radio-td`}
                     select={{

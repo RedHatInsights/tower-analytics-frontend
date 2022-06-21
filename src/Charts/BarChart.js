@@ -208,7 +208,7 @@ class BarChart extends Component {
   }
 
   render() {
-    return <div id={this.props.id} data-testid="barchart" />;
+    return <div id={this.props.id} data-cy="barchart" data-testid="barchart" />;
   }
 }
 
