@@ -10,7 +10,7 @@
       "runMode": 2,
       "openMode": 0
       },
-    "baseUrl": "http://localhost:1337/beta/ansible/insights",
+    "baseUrl": "https://stage.foo.redhat.com:1337/beta/ansible/automation-analytics",
     "env": {
         "appid":"#automation-analytics-application",
         "USERNAME": "admin",
