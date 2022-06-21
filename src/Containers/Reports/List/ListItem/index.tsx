@@ -17,6 +17,7 @@ import {
 import paths from '../../paths';
 import { TAGS } from '../../Shared/constants';
 import { BaseReportProps } from '../../Layouts/types';
+import { removeFilters } from '../List';
 
 const CardTitle = styled(PFCardTitle)`
   word-break: break-word;
@@ -51,10 +52,10 @@ const ListItem: FunctionComponent<Props> = ({
     <Card
       data-testid={slug}
       onClick={() => {
-        setSelected(slug);
         history.replace({
-          search: '',
+          search: removeFilters(),
         });
+        setSelected(slug);
       }}
       isSelectableRaised
       isSelected={selected === slug}
