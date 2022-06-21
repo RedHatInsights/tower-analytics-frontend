@@ -7,6 +7,7 @@ import {
   DescriptionListTerm,
 } from '@patternfly/react-core';
 import { Template } from './types';
+import currencyFormatter from '../../../../../Utilities/currencyFormatter';
 
 interface Props {
   template: Template;
@@ -16,10 +17,6 @@ const ExpandedRowContents: FunctionComponent<Props> = ({ template }) => (
   <Td colSpan={5}>
     <ExpandableRowContent>
       <DescriptionList columnModifier={{ default: '3Col' }}>
-        <DescriptionListGroup>
-          <DescriptionListTerm>ID</DescriptionListTerm>
-          <DescriptionListDescription>{template.id}</DescriptionListDescription>
-        </DescriptionListGroup>
         <DescriptionListGroup>
           <DescriptionListTerm>Elapsed</DescriptionListTerm>
           <DescriptionListDescription>
@@ -54,6 +51,32 @@ const ExpandedRowContents: FunctionComponent<Props> = ({ template }) => (
           <DescriptionListTerm>Total inventory count</DescriptionListTerm>
           <DescriptionListDescription>
             {template.total_inventory_count}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+        <DescriptionListGroup>
+          <DescriptionListTerm>Template success rate</DescriptionListTerm>
+          <DescriptionListDescription>
+            {template.template_success_rate.toFixed(2)}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+        <DescriptionListGroup>
+          <DescriptionListTerm>
+            Savings from successful hosts
+          </DescriptionListTerm>
+          <DescriptionListDescription>
+            {currencyFormatter(template.successful_hosts_savings)}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+        <DescriptionListGroup>
+          <DescriptionListTerm>Costs from failed hosts</DescriptionListTerm>
+          <DescriptionListDescription>
+            {currencyFormatter(template.failed_hosts_costs)}
+          </DescriptionListDescription>
+        </DescriptionListGroup>
+        <DescriptionListGroup>
+          <DescriptionListTerm>Monetary gain</DescriptionListTerm>
+          <DescriptionListDescription>
+            {currencyFormatter(template.monetary_gain)}
           </DescriptionListDescription>
         </DescriptionListGroup>
       </DescriptionList>

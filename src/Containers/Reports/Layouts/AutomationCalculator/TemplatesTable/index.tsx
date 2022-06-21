@@ -1,6 +1,6 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 
-import { Switch } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import {
   TableComposable,
   TableVariant,
@@ -31,40 +31,77 @@ const TopTemplates: FunctionComponent<Props> = ({
   redirectToJobExplorer = () => ({}),
   getSortParams = () => ({}),
   readOnly = true,
-}) => (
-  <TableComposable aria-label="ROI Table" variant={TableVariant.compact}>
-    <Thead>
-      <Tr>
-        <Th />
-        <Th>Name</Th>
-        {variableRow && <Th {...getSortParams()}>{variableRow.value}</Th>}
-        <Th>Manual time</Th>
-        <Th>Savings</Th>
-        <Th>
-          <Switch
-            label="Show all"
-            labelOff="Show all"
-            isChecked={!data.find((d) => !d.enabled)}
-            onChange={(checked) => setEnabled(undefined)(checked)}
-            isDisabled={readOnly}
+}) => {
+  const [isKebabOpen, setIsKebabOpen] = useState(false);
+
+  const kebabDropdownItems = [
+    <DropdownItem
+      key="showAll"
+      component="button"
+      // onClick={!data.find((d) => !d.enabled)}
+    >
+      Show all
+    </DropdownItem>,
+    <DropdownItem key="hideAll" component="button">
+      Hide all
+    </DropdownItem>,
+    <DropdownItem key="showHiddenTemplates" component="button">
+      Show hidden templates
+    </DropdownItem>,
+    <DropdownItem key="hideHiddenTemplates" component="button">
+      Hide hidden templates
+    </DropdownItem>,
+  ];
+
+  return (
+    <TableComposable aria-label="ROI Table" variant={TableVariant.compact}>
+      <Thead>
+        <Tr>
+          <Th />
+          <Th>Name</Th>
+          {variableRow && <Th {...getSortParams()}>{variableRow.value}</Th>}
+          <Th>Manual time</Th>
+          <Th>Savings</Th>
+          <Th
+            style={{
+              float: 'right',
+            }}
+          >
+            <Dropdown
+              style={{ position: 'relative', zIndex: 300 }}
+              onSelect={() => {
+                setIsKebabOpen(true);
+              }}
+              toggle={
+                <KebabToggle
+                  style={{ paddingBottom: '0px' }}
+                  id="table-kebab"
+                  onToggle={() => setIsKebabOpen(!isKebabOpen)}
+                />
+              }
+              isOpen={isKebabOpen}
+              isPlain
+              dropdownItems={kebabDropdownItems}
+              position={'right'}
+            />
+          </Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {data.map((template) => (
+          <Row
+            key={template.id}
+            template={template}
+            variableRow={variableRow}
+            setDataRunTime={setDataRunTime}
+            redirectToJobExplorer={redirectToJobExplorer}
+            setEnabled={setEnabled(template.id)}
+            readOnly={readOnly}
           />
-        </Th>
-      </Tr>
-    </Thead>
-    <Tbody>
-      {data.map((template) => (
-        <Row
-          key={template.id}
-          template={template}
-          variableRow={variableRow}
-          setDataRunTime={setDataRunTime}
-          redirectToJobExplorer={redirectToJobExplorer}
-          setEnabled={setEnabled(template.id)}
-          readOnly={readOnly}
-        />
-      ))}
-    </Tbody>
-  </TableComposable>
-);
+        ))}
+      </Tbody>
+    </TableComposable>
+  );
+};
 
 export default TopTemplates;
