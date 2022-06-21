@@ -297,7 +297,7 @@ const allDefaultParams: any = {
       inventory_id: [],
       quick_date_range: 'roi_last_year',
       job_type: ['job'],
-      sort_options: 'template_productivity_score',
+      sort_options: 'successful_hosts_savings',
       sort_order: 'desc',
       start_date: undefined,
       end_date: undefined,

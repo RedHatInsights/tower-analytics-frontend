@@ -12,12 +12,7 @@ import {
 import { FilterIcon, CogIcon } from '@patternfly/react-icons';
 
 import { optionsForCategories } from './constants';
-import {
-  FilterCategoriesGroup,
-  QuickDateGroup,
-  SortByGroup,
-  SettingsPanel,
-} from './Groups';
+import { FilterCategoriesGroup, QuickDateGroup, SortByGroup } from './Groups';
 import { ApiOptionsType, AttributeType, SetValues } from './types';
 
 interface Props {
@@ -27,6 +22,7 @@ interface Props {
   defaultSelected?: string;
   setFilters: SetValues;
   pagination: FunctionComponent;
+  settingsPanel: FunctionComponent;
   hasSettings: boolean;
   additionalControls: FunctionComponent[];
 }
@@ -38,6 +34,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
   setFilters: setQueryParams,
   pagination = null,
   hasSettings = false,
+  settingsPanel = null,
   additionalControls = [],
 }) => {
   const [settingsExpanded, setSettingsExpanded] = useState(false);
@@ -129,14 +126,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
           </ToolbarItem>
         )}
       </ToolbarContent>
-      {settingsExpanded && (
-        <SettingsPanel
-          filters={filters}
-          setFilters={setFilters}
-          settingsExpanded={settingsExpanded}
-          setSettingsExpanded={setSettingsExpanded}
-        />
-      )}
+      {settingsExpanded && settingsPanel}
     </Toolbar>
   );
 };
