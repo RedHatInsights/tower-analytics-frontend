@@ -35,7 +35,7 @@ interface Props {
 const renderValues = (values: SelectOptionProps[]) =>
   values &&
   values.map(({ key, value, description }) => (
-    <SelectOption key={key} value={key} description={description}>
+    <SelectOption key={key} value={key} description={description} data-cy={key}>
       <Tooltip content={<div>{value}</div>}>
         <OptionSpan>{value}</OptionSpan>
       </Tooltip>
