@@ -51,7 +51,6 @@ const ListItem: FunctionComponent<Props> = ({
   return (
     <Card
       data-cy={slug}
-      data-testid={slug}
       onClick={() => {
         history.replace({
           search: removeFilters(),
