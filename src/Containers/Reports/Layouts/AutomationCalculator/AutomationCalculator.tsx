@@ -487,8 +487,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 inputs={{
                   costManual,
                   costAutomation,
-                  totalSavings : api.result?.monetary_gain_other_pages + api.result?.monetary_gain_current_page,
-                  currentPageSavings: api.result?.monetary_gain_current_page
+                  totalSavings:
+                    api.result?.monetary_gain_other_pages +
+                    api.result?.monetary_gain_current_page,
+                  currentPageSavings: api.result?.monetary_gain_current_page,
                 }}
               />,
             ]}
