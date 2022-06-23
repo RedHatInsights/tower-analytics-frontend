@@ -51,7 +51,7 @@ Cypress.Commands.add('loginFlow', () => {
 
   // If local test runs
   if (keycloakLoginUrls.some((str) => Cypress.config().baseUrl.includes(str))) {
-    cy.getUsername().then((uname) => cy.get('#username').type(`${uname}`));
+    cy.getUsername().then((uname) => cy.get('#username-verification').type(`${uname}`));
     cy.getPassword().then((password) =>
       cy.get('#password').type(`${password}{enter}`, { log: false })
     );
