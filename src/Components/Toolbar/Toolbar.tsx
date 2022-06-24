@@ -22,7 +22,10 @@ interface Props {
   defaultSelected?: string;
   setFilters: SetValues;
   pagination: FunctionComponent;
-  settingsPanel: FunctionComponent;
+  settingsPanel: (
+    setSettingsExpanded: (arg0: boolean) => void,
+    settingsExpanded: boolean
+  ) => FunctionComponent;
   hasSettings: boolean;
   additionalControls: FunctionComponent[];
 }
@@ -126,7 +129,9 @@ const FilterableToolbar: FunctionComponent<Props> = ({
           </ToolbarItem>
         )}
       </ToolbarContent>
-      {settingsExpanded && settingsPanel}
+      {settingsExpanded &&
+        settingsPanel &&
+        settingsPanel(setSettingsExpanded, settingsExpanded)}
     </Toolbar>
   );
 };

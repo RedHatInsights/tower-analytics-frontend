@@ -74,30 +74,30 @@ const JobExplorer = () => {
                   isCompact
                 />
               }
-              settingsPanel={
+              settingsPanel={(setSettingsExpanded, settingsExpanded) => (
                 <SettingsPanel
                   filters={queryParams}
                   setFilters={setFromToolbar}
-                  settingsExpanded={true}
-                  setSettingsExpanded={true}
+                  settingsExpanded={settingsExpanded}
+                  setSettingsExpanded={setSettingsExpanded}
                   id={'showRootWorkflowJobs'}
                   label={'Ignore nested workflows and jobs'}
                   labelOff={'Ignore nested workflows and jobs'}
                   isChecked={
                     queryParams.only_root_workflows_and_standalone_jobs
                   }
-                  onChange={(value) =>
+                  onChange={(value) => {
                     setFromToolbar(
                       'only_root_workflows_and_standalone_jobs',
                       value
-                    )
-                  }
+                    );
+                  }}
                   ariaLabel={'ignore nested workflow popover'}
                   bodyContent={
                     'If enabled, nested workflows and jobs will not be included in the overall totals. Enable this option to filter out duplicate entries.'
                   }
                 />
-              }
+              )}
               hasSettings
             />
             {dataIsLoading && <LoadingState />}

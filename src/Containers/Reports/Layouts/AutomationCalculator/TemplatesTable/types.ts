@@ -9,10 +9,6 @@ export interface Template {
   total_inventory_count: number;
   successful_hosts_total: number;
   successful_elapsed_total: number;
-  template_success_rate: number;
-  successful_hosts_savings: number;
-  failed_hosts_costs: number;
-  monetary_gain: number;
   // Calculated fields
   delta: number;
   avgRunTime: number;
