@@ -107,6 +107,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
               variant={ButtonVariant.plain}
               onClick={() => setSettingsExpanded(!settingsExpanded)}
               aria-label="settings"
+              data-cy={'settings'}
               isActive={settingsExpanded}
             >
               <CogIcon />
@@ -122,6 +123,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
         )}
         {pagination && (
           <ToolbarItem
+            data-cy={'top_pagination'}
             variant={ToolbarItemVariant.pagination}
             visibility={{ default: 'hidden', lg: 'visible' }}
           >

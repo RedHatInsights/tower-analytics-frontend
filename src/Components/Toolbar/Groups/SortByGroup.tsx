@@ -32,9 +32,10 @@ const SortByGroup: FunctionComponent<Props> = ({
         setValue={(value) => setFilters('sort_options', value as string)}
       />
     </ToolbarItem>
-    <ToolbarItem>
+    <ToolbarItem data-cy={'sort'}>
       <Button
         variant={ButtonVariant.control}
+        data-cy={filters.sort_order === 'asc' ? 'desc' : 'asc'}
         onClick={() =>
           setFilters(
             'sort_order',

@@ -50,6 +50,24 @@ export interface Report {
   tableHeaders: string[];
 }
 
+export const removeFilters = (): string => {
+  const currentURL = window.location.href;
+  const newURL = '';
+  if (currentURL.includes('default.attributes[]')) {
+    newURL = currentURL.substring(
+      currentURL.indexOf('?') + 1,
+      currentURL.indexOf('default.attributes[]') - 1
+    );
+  } else if (
+    currentURL.includes('?') &&
+    currentURL.includes('default.attributes[]') === false
+  ) {
+    newURL = currentURL.substring(currentURL.indexOf('?') + 1);
+  }
+
+  return newURL;
+};
+
 const List: FunctionComponent<Record<string, never>> = () => {
   const [selected, setSelected] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -85,10 +103,6 @@ const List: FunctionComponent<Record<string, never>> = () => {
 
   const reports = data as Report[];
 
-  useEffect(() => {
-    if (isSuccess && reports.length > 0) setSelected(reports[0].slug);
-  }, [reports]);
-
   const {
     result: previewReport,
     request: fetchReport,
@@ -99,8 +113,12 @@ const List: FunctionComponent<Record<string, never>> = () => {
   }, {} as ReportSchema);
 
   useEffect(() => {
-    if (selected != '') fetchReport();
-  }, [selected]);
+    if (isSuccess && reports.length > 0) {
+      const report = reports.filter(({ slug }) => selected === slug);
+      if (selected === '' || report.length === 0) setSelected(reports[0].slug);
+      fetchReport();
+    }
+  }, [reports, selected]);
 
   const dropdownItems = [
     isSuccess &&
@@ -122,7 +140,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
 
   return (
     <>
-      <PageHeader>
+      <PageHeader data-cy={'header-all_reports'}>
         <PageHeaderTitle title={'Reports'} />
         <FilterableToolbar
           categories={options}
@@ -192,10 +210,10 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             aria-label="Previous report"
                             isDisabled={reports.indexOf(report) === 0}
                             onClick={() => {
-                              setSelected(previousItem);
                               history.replace({
-                                search: '',
+                                search: removeFilters(),
                               });
+                              setSelected(previousItem);
                             }}
                           >
                             <AngleLeftIcon />
@@ -205,7 +223,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             onSelect={() => {
                               setIsOpen(!isOpen);
                               history.replace({
-                                search: '',
+                                search: removeFilters(),
                               });
                             }}
                             toggle={
@@ -228,10 +246,10 @@ const List: FunctionComponent<Record<string, never>> = () => {
                               reports.indexOf(report) >= reports.length - 1
                             }
                             onClick={() => {
-                              setSelected(nextItem);
                               history.replace({
-                                search: '',
+                                search: removeFilters(),
                               });
+                              setSelected(nextItem);
                             }}
                           >
                             <AngleRightIcon />

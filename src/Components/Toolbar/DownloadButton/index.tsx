@@ -332,10 +332,17 @@ const DownloadButton: FC<Props> = ({
           aria-label="Export report"
           onClick={() => setIsExportModalOpen(true)}
           isDanger={isError}
+          data-cy={'download-button'}
         >
-          {isLoading && <Spinner isSVG size="md" />}
-          {!isLoading && isError && <ExclamationCircleIcon />}
-          {!isLoading && !isError && <DownloadIcon />}
+          {isLoading && (
+            <Spinner data-cy={'download-button-loading'} isSVG size="md" />
+          )}
+          {!isLoading && isError && (
+            <ExclamationCircleIcon data-cy={'download-button-error'} />
+          )}
+          {!isLoading && !isError && (
+            <DownloadIcon data-cy={'download-button-icon'} />
+          )}
         </Button>
       </Tooltip>
       {isExportModalOpen && (
