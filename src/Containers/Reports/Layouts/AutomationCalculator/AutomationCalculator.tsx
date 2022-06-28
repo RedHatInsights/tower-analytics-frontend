@@ -399,7 +399,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           }
           showButton={true}
           label={'Clear all filters'}
-          onClick={() => setFromToolbar(undefined, undefined)}
+          onButtonClick={() => setFromToolbar(undefined, undefined)}
         />
       )}
     </Card>
