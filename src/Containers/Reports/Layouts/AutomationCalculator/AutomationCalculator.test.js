@@ -201,7 +201,7 @@ describe('Containers/CustomReports/AutomationCalculator', () => {
     });
     wrapper.update();
 
-    expect(wrapper.text()).toEqual(expect.stringContaining('General Error'));
+    expect(wrapper.text()).toEqual(expect.stringContaining('Error'));
     // No data displayed
     expect(wrapper.find('input')).toHaveLength(0);
   });
