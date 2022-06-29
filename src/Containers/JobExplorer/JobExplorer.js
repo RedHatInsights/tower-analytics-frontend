@@ -21,6 +21,7 @@ import { Card, CardBody, PaginationVariant } from '@patternfly/react-core';
 
 import JobExplorerList from './JobExplorerList';
 import FilterableToolbar from '../../Components/Toolbar/';
+import { SettingsPanel } from '../../Components/Toolbar/Groups';
 
 const JobExplorer = () => {
   const {
@@ -73,6 +74,30 @@ const JobExplorer = () => {
                   isCompact
                 />
               }
+              settingsPanel={(setSettingsExpanded, settingsExpanded) => (
+                <SettingsPanel
+                  filters={queryParams}
+                  setFilters={setFromToolbar}
+                  settingsExpanded={settingsExpanded}
+                  setSettingsExpanded={setSettingsExpanded}
+                  id={'showRootWorkflowJobs'}
+                  label={'Ignore nested workflows and jobs'}
+                  labelOff={'Ignore nested workflows and jobs'}
+                  isChecked={
+                    queryParams.only_root_workflows_and_standalone_jobs
+                  }
+                  onChange={(value) => {
+                    setFromToolbar(
+                      'only_root_workflows_and_standalone_jobs',
+                      value
+                    );
+                  }}
+                  ariaLabel={'ignore nested workflow popover'}
+                  bodyContent={
+                    'If enabled, nested workflows and jobs will not be included in the overall totals. Enable this option to filter out duplicate entries.'
+                  }
+                />
+              )}
               hasSettings
             />
             {dataIsLoading && <LoadingState />}

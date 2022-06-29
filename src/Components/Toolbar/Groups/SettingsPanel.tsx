@@ -27,14 +27,28 @@ interface Props {
   setFilters: SetValues;
   settingsExpanded: boolean;
   setSettingsExpanded: (expanded: boolean) => void;
+  id?: string;
+  label?: string;
+  labelOff?: string;
+  isChecked?: AttributeType;
+  onChange?: (
+    checked: boolean,
+    event: React.FormEvent<HTMLInputElement>
+  ) => void;
+  ariaLabel?: string;
+  bodyContent?: string;
 }
 
-/* TODO: For future work: make settings more modular for different pages */
 const SettingsPanel: FunctionComponent<Props> = ({
-  filters,
-  setFilters,
   settingsExpanded,
   setSettingsExpanded,
+  id,
+  label,
+  labelOff,
+  isChecked,
+  onChange,
+  ariaLabel,
+  bodyContent,
 }) => (
   <Card isFlat style={{ backgroundColor: '#EEEEEE' }}>
     <CardHeader>
@@ -50,25 +64,17 @@ const SettingsPanel: FunctionComponent<Props> = ({
     </CardHeader>
     <CardBody>
       <Switch
-        id="showRootWorkflowJobs"
-        label="Ignore nested workflows and jobs"
-        labelOff="Ignore nested workflows and jobs"
-        isChecked={!!filters.only_root_workflows_and_standalone_jobs}
-        onChange={(value) =>
-          setFilters('only_root_workflows_and_standalone_jobs', value)
-        }
+        id={id}
+        label={label}
+        labelOff={labelOff}
+        isChecked={!!isChecked}
+        onChange={onChange}
       />
       <PopoverButton variant="plain">
         <Popover
-          aria-label="ignore nested workflow popover"
+          aria-label={ariaLabel}
           position={'top'}
-          bodyContent={
-            <div>
-              If enabled, nested workflows and jobs will not be included in the
-              overall totals. Enable this option to filter out duplicate
-              entries.
-            </div>
-          }
+          bodyContent={<div> {bodyContent} </div>}
         >
           <OutlinedQuestionCircleIcon />
         </Popover>
