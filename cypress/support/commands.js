@@ -23,6 +23,7 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+import 'cypress-wait-until';
 
 Cypress.Commands.add('getBaseUrl', () => Cypress.env('baseUrl'));
 
@@ -44,6 +45,33 @@ Cypress.Commands.add('clearFeatureDialogs', () => {
   });
 });
 
+Cypress.Commands.add('acceptCookiesDialog', () => {
+
+  const getIframeDocument = () => {
+    return cy
+      .get('iframe')
+      .its('0.contentDocument').should('exist')
+  }
+
+  const getIframeBody = () => {
+    return getIframeDocument()
+      .its('body').should('not.be.undefined')
+      .then(cy.wrap)
+  }
+
+  const acceptCookies = () => {
+    return getIframeBody()
+      .find('div.pdynamicbutton')
+      .find('a.call')
+      .should('be.visible')
+      .click(true)
+  }
+
+  cy.waitUntil(() => acceptCookies());
+
+});
+
+// cy.waitUntil(() => cy.getCookie('token').then(cookie => cookie.value === '<EXPECTED_VALUE>'));
 Cypress.Commands.add('loginFlow', () => {
   cy.visit('/');
 
@@ -65,6 +93,8 @@ Cypress.Commands.add('loginFlow', () => {
       cy.get('#password').type(`${password}{enter}`, { log: false })
     );
   }
+
+  cy.acceptCookiesDialog();
 
   cy.url().should('eq', Cypress.config().baseUrl + '/');
 });
