@@ -88,9 +88,6 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
     return { ...el, delta, manualCost, automatedCost };
   });
 
-const computeTotalSavings = (data) =>
-  data.reduce((sum, curr) => sum + curr.delta, 0);
-
 const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   slug,
   name,
@@ -152,11 +149,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     }
   );
 
-  const setValue = (items) =>
+  const setValue = (items) => {
     setApiData({
       ...api.result,
       items,
     });
+  };
   const getROISaveData = (
     items: any[],
     manualCost?: number = costManual,
@@ -175,6 +173,13 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     };
   };
   const dispatch = useDispatch();
+
+  const update = async () => {
+    const res = await readData(queryParams);
+    api.result.monetary_gain_current_page = res.monetary_gain_current_page;
+    api.result.monetary_gain_other_pages = res.monetary_gain_other_pages;
+    return res;
+  };
 
   const updateCalculationValues = async (varName: string, value: number) => {
     const hourly_automation_cost =
@@ -203,6 +208,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       // don't update inputs
       return;
     }
+    await update();
     varName === 'manual_cost' ? setCostManual(value) : setCostAutomation(value);
   };
 
@@ -240,6 +246,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       // don't update inputs
       return;
     }
+    await update();
     setValue(updatedData);
   };
 
@@ -264,6 +271,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       // don't update inputs
       return;
     }
+    await update();
     setValue(updatedData);
   };
   const getSortParams = () => {
@@ -409,7 +417,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     <Stack>
       <StackItem>
         <TotalSavings
-          totalSavings={computeTotalSavings(filterDisabled(api.result.items))}
+          totalSavings={
+            api.result?.monetary_gain_other_pages +
+            api.result?.monetary_gain_current_page
+          }
+          currentPageSavings={api.result?.monetary_gain_current_page}
           isLoading={api.isLoading}
         />
       </StackItem>
@@ -472,7 +484,14 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 startDate={queryParams.start_date}
                 endDate={queryParams.end_date}
                 dateRange={queryParams.quick_date_range}
-                inputs={{ costManual, costAutomation }}
+                inputs={{
+                  costManual,
+                  costAutomation,
+                  totalSavings:
+                    api.result?.monetary_gain_other_pages +
+                    api.result?.monetary_gain_current_page,
+                  currentPageSavings: api.result?.monetary_gain_current_page,
+                }}
               />,
             ]}
           />

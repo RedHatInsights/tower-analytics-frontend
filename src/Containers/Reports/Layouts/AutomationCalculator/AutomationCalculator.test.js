@@ -242,7 +242,8 @@ describe('Containers/CustomReports/AutomationCalculator', () => {
     expect(history.location.pathname).toBe('/job-explorer');
   });
 
-  it('should compute total savings correctly', async () => {
+  // Total savings is no longer calculated locally -> skipping
+  xit('should compute total savings correctly', async () => {
     await act(async () => {
       wrapper = mountPage(AutomationCalculator, pageParams);
     });

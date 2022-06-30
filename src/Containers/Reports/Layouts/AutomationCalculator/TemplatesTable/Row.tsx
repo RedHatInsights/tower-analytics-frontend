@@ -125,7 +125,7 @@ const Row: FunctionComponent<Props> = ({
               : globalDisabledColor200.value,
           }}
         >
-          {currencyFormatter(+template.delta)}
+          {currencyFormatter(+template.monetary_gain)}
         </Td>
         <Td>
           <Switch
