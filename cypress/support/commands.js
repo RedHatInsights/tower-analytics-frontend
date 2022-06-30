@@ -95,6 +95,6 @@ Cypress.Commands.add('loginFlow', () => {
   }
 
   cy.acceptCookiesDialog();
-
+  cy.wait(5000)
   cy.url().should('eq', Cypress.config().baseUrl + '/');
 });
