@@ -95,6 +95,7 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_FREQUENCY':
     case 'SET_NAME':
     case 'SET_ROOT_WORKFLOWS_AND_JOBS':
+    case 'SET_TEMPLATE_WEIGH_IN':
     case 'SET_INVENTORY':
     case 'SET_SORT_OPTIONS':
     case 'SET_CALCULATOR':
@@ -136,6 +137,7 @@ const actionMapper = {
   frequency_period: 'SET_FREQUENCY',
   name: 'SET_NAME',
   only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS',
+  template_weigh_in: 'SET_TEMPLATE_WEIGH_IN',
   inventory_id: 'SET_INVENTORY',
   granularity: 'SET_GRANULARITY',
   tags: 'SET_TAGS',
@@ -170,7 +172,7 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
   return {
     queryParams: params,
     dispatch,
-    setFromToolbar: (varName, value = null) => {
+    setFromToolbar: (varName, value) => {
       if (!varName) {
         dispatch({ type: 'RESET_FILTER' });
       } else {

@@ -12,6 +12,8 @@ import {
 import { Template } from './types';
 import Row from './Row';
 import { TableSortParams } from '../../Standard/types';
+import { useQueryParams } from '../../../../../QueryParams';
+import { reportDefaultParams } from '../../../../../Utilities/constants';
 
 interface Props {
   data: Template[];
@@ -33,23 +35,44 @@ const TopTemplates: FunctionComponent<Props> = ({
   readOnly = true,
 }) => {
   const [isKebabOpen, setIsKebabOpen] = useState(false);
+  const defaultParams = reportDefaultParams('automation_calculator');
+  const { setFromToolbar } = useQueryParams(defaultParams);
 
   const kebabDropdownItems = [
     <DropdownItem
       key="showAll"
       component="button"
-      // onClick={!data.find((d) => !d.enabled)}
+      onClick={() => setEnabled(undefined)(true)}
     >
       Show all
     </DropdownItem>,
-    <DropdownItem key="hideAll" component="button">
+    <DropdownItem
+      key="hideAll"
+      component="button"
+      onClick={() => setEnabled(undefined)(false)}
+    >
       Hide all
     </DropdownItem>,
-    <DropdownItem key="showHiddenTemplates" component="button">
-      Show hidden templates
+    <DropdownItem
+      key="showAll"
+      component="button"
+      onClick={() => setFromToolbar('template_weigh_in', undefined)}
+    >
+      Display all template rows
     </DropdownItem>,
-    <DropdownItem key="hideHiddenTemplates" component="button">
-      Hide hidden templates
+    <DropdownItem
+      key="hideHiddenTemplates"
+      component="button"
+      onClick={() => setFromToolbar('template_weigh_in', true)}
+    >
+      Display only shown template rows
+    </DropdownItem>,
+    <DropdownItem
+      key="showHiddenTemplates"
+      component="button"
+      onClick={() => setFromToolbar('template_weigh_in', false)}
+    >
+      Display only hidden template rows
     </DropdownItem>,
   ];
 
@@ -65,10 +88,11 @@ const TopTemplates: FunctionComponent<Props> = ({
           <Th
             style={{
               float: 'right',
+              overflow: 'visible',
+              zIndex: 1,
             }}
           >
             <Dropdown
-              style={{ position: 'relative', zIndex: 300 }}
               onSelect={() => {
                 setIsKebabOpen(true);
               }}

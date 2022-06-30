@@ -140,7 +140,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
 
   return (
     <>
-      <PageHeader>
+      <PageHeader data-cy={'header-all_reports'}>
         <PageHeaderTitle title={'Reports'} />
         <FilterableToolbar
           categories={options}

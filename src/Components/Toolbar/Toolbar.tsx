@@ -12,12 +12,7 @@ import {
 import { FilterIcon, CogIcon } from '@patternfly/react-icons';
 
 import { optionsForCategories } from './constants';
-import {
-  FilterCategoriesGroup,
-  QuickDateGroup,
-  SortByGroup,
-  SettingsPanel,
-} from './Groups';
+import { FilterCategoriesGroup, QuickDateGroup, SortByGroup } from './Groups';
 import { ApiOptionsType, AttributeType, SetValues } from './types';
 
 interface Props {
@@ -27,6 +22,10 @@ interface Props {
   defaultSelected?: string;
   setFilters: SetValues;
   pagination: FunctionComponent;
+  settingsPanel: (
+    setSettingsExpanded: (arg0: boolean) => void,
+    settingsExpanded: boolean
+  ) => FunctionComponent;
   hasSettings: boolean;
   additionalControls: FunctionComponent[];
 }
@@ -38,6 +37,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
   setFilters: setQueryParams,
   pagination = null,
   hasSettings = false,
+  settingsPanel = null,
   additionalControls = [],
 }) => {
   const [settingsExpanded, setSettingsExpanded] = useState(false);
@@ -107,6 +107,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
               variant={ButtonVariant.plain}
               onClick={() => setSettingsExpanded(!settingsExpanded)}
               aria-label="settings"
+              data-cy={'settings'}
               isActive={settingsExpanded}
             >
               <CogIcon />
@@ -122,6 +123,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
         )}
         {pagination && (
           <ToolbarItem
+            data-cy={'top_pagination'}
             variant={ToolbarItemVariant.pagination}
             visibility={{ default: 'hidden', lg: 'visible' }}
           >
@@ -129,14 +131,9 @@ const FilterableToolbar: FunctionComponent<Props> = ({
           </ToolbarItem>
         )}
       </ToolbarContent>
-      {settingsExpanded && (
-        <SettingsPanel
-          filters={filters}
-          setFilters={setFilters}
-          settingsExpanded={settingsExpanded}
-          setSettingsExpanded={setSettingsExpanded}
-        />
-      )}
+      {settingsExpanded &&
+        settingsPanel &&
+        settingsPanel(setSettingsExpanded, settingsExpanded)}
     </Toolbar>
   );
 };

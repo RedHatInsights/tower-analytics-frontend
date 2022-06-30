@@ -3,6 +3,7 @@ import { history, mountPage } from '../../../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 import AutomationCalculator from './AutomationCalculator';
 import TotalSavings from './TotalSavings';
+import { EmptyStateBody } from '@patternfly/react-core';
 import { Endpoint } from '../../../../Api';
 import { roi } from '../../../../Utilities/constants';
 import {
@@ -30,6 +31,10 @@ const dummyRoiData = {
         total_cluster_count: 20,
         template_weigh_in: true,
         manual_effort_minutes: 60,
+        template_success_rate: 55.7018,
+        successful_hosts_savings: 40000,
+        failed_hosts_costs: 5,
+        monetary_gain: 40000,
       },
       {
         id: 2,
@@ -41,6 +46,10 @@ const dummyRoiData = {
         total_cluster_count: 20,
         template_weigh_in: true,
         manual_effort_minutes: 60,
+        template_success_rate: 55.7018,
+        successful_hosts_savings: 40000,
+        failed_hosts_costs: 5,
+        monetary_gain: 40000,
       },
       {
         id: 3,
@@ -52,6 +61,10 @@ const dummyRoiData = {
         total_cluster_count: 20,
         template_weigh_in: true,
         manual_effort_minutes: 60,
+        template_success_rate: 55.7018,
+        successful_hosts_savings: 40000,
+        failed_hosts_costs: 5,
+        monetary_gain: 40000,
       },
     ],
   },
@@ -70,8 +83,8 @@ const jobExplorerOptions = {
   ],
   sort_options: [
     {
-      key: 'template_productivity_score',
-      value: 'Template productivity score',
+      key: 'successful_hosts_savings',
+      value: 'Savings from successful hosts',
     },
   ],
   meta: {
@@ -168,7 +181,7 @@ const pageParams = {
   ],
 };
 
-describe('Containers/CustomReports/AutomationCalculator', () => {
+describe('Containers/Reports/AutomationCalculator', () => {
   let wrapper;
 
   beforeEach(() => {
@@ -187,7 +200,7 @@ describe('Containers/CustomReports/AutomationCalculator', () => {
     wrapper.update();
 
     expect(wrapper).toBeTruthy();
-    expect(wrapper.find('input')).toHaveLength(10);
+    expect(wrapper.find('input')).toHaveLength(9);
   });
 
   it('should render api error', async () => {
@@ -201,7 +214,7 @@ describe('Containers/CustomReports/AutomationCalculator', () => {
     });
     wrapper.update();
 
-    expect(wrapper.text()).toEqual(expect.stringContaining('General Error'));
+    expect(wrapper.text()).toEqual(expect.stringContaining('Error'));
     // No data displayed
     expect(wrapper.find('input')).toHaveLength(0);
   });
@@ -221,9 +234,11 @@ describe('Containers/CustomReports/AutomationCalculator', () => {
     });
     wrapper.update();
 
-    expect(wrapper.text()).toEqual(expect.stringContaining('No Data'));
-    // No data displayed
-    expect(wrapper.find('input')).toHaveLength(0);
+    expect(wrapper.find(EmptyStateBody).text()).toEqual(
+      expect.stringContaining(
+        'No results match the filter criteria. Clear all filters and try again.'
+      )
+    );
   });
 
   xit('should call redirect to job expoler', async () => {
@@ -239,7 +254,8 @@ describe('Containers/CustomReports/AutomationCalculator', () => {
     expect(history.location.pathname).toBe('/job-explorer');
   });
 
-  it('should compute total savings correctly', async () => {
+  // Total savings is no longer calculated locally -> skipping
+  xit('should compute total savings correctly', async () => {
     await act(async () => {
       wrapper = mountPage(AutomationCalculator, pageParams);
     });

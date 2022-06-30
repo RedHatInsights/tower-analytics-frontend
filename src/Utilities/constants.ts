@@ -304,6 +304,7 @@ const allDefaultParams: any = {
       limit: '6',
       offset: '0',
       only_root_workflows_and_standalone_jobs: true,
+      template_weigh_in: undefined,
       attributes: [
         'elapsed',
         'host_count',

@@ -57,7 +57,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
       const { name, description, tags } = report.layoutProps;
       return (
         <>
-          <PageHeader>
+          <PageHeader data-cy={`header-${slug}`}>
             <Breadcrumbs items={breadcrumbsItems} />
             <PageHeaderTitle title={name} />
             <Description>{description}</Description>
