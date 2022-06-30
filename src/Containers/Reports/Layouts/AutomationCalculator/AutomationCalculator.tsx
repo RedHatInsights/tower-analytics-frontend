@@ -7,12 +7,8 @@
 // @ts-nocheck
 import React, { useState, useEffect, FC } from 'react';
 import {
-  Button,
   Card,
   CardBody,
-  EmptyState,
-  EmptyStateIcon,
-  EmptyStateBody,
   Grid,
   GridItem,
   Stack,
@@ -21,10 +17,8 @@ import {
   CardTitle,
   CardFooter,
   PaginationVariant,
-  Title,
   Spinner,
 } from '@patternfly/react-core';
-import { ExclamationTriangleIcon as ExclamationTriangleIcon } from '@patternfly/react-icons';
 // Imports from custom components
 import FilterableToolbar from '../../../../Components/Toolbar';
 import Pagination from '../../../../Components/Pagination';
@@ -64,6 +58,7 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import { NotificationType } from '../../../../globalTypes';
+import EmptyList from '../../../../Components/EmptyList';
 
 const SpinnerDiv = styled.div`
   height: 400px;
@@ -397,18 +392,15 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           }}
         />
       ) : (
-        <EmptyState>
-          <EmptyStateIcon icon={ExclamationTriangleIcon} />
-          <Title headingLevel="h4" size="lg">
-            You have disabled all views
-          </Title>
-          <EmptyStateBody>
-            Enable individual views in the table below or press Show all button.
-          </EmptyStateBody>
-          <Button variant="primary" onClick={() => setEnabled(undefined)(true)}>
-            Show all
-          </Button>
-        </EmptyState>
+        <EmptyList
+          title={'No results found'}
+          message={
+            'No results match the filter criteria. Clear all filters and try again.'
+          }
+          showButton={true}
+          label={'Clear all filters'}
+          onButtonClick={() => setFromToolbar(undefined, undefined)}
+        />
       )}
     </Card>
   );
@@ -536,7 +528,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       </>
     );
   return (
-    <ApiStatusWrapper api={api} customLoading={true}>
+    <ApiStatusWrapper api={api} customLoading={true} customEmptyState={true}>
       {renderContents()}
     </ApiStatusWrapper>
   );
