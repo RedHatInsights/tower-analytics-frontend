@@ -45,6 +45,11 @@ Cypress.Commands.add('clearFeatureDialogs', () => {
   });
 });
 
+/* 
+ * TODO: This is a workaround and the tests runs longer than we would like.
+ * It needs to be updated in a way we don't even see the iframe,
+ * loading the cookies beforehand
+ */
 Cypress.Commands.add('acceptCookiesDialog', () => {
 
   const getIframeDocument = () => {
@@ -71,7 +76,6 @@ Cypress.Commands.add('acceptCookiesDialog', () => {
 
 });
 
-// cy.waitUntil(() => cy.getCookie('token').then(cookie => cookie.value === '<EXPECTED_VALUE>'));
 Cypress.Commands.add('loginFlow', () => {
   cy.visit('/');
 
