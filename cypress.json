@@ -5,12 +5,14 @@
     "video": false,
     "videoUploadOnPasses": false,
     "viewportWidth": 1600,
-    "defaultCommandTimeout": 10000,
+    "pageLoadTimeout": 120000,
+    "responseTimeout": 60000,
+    "chromeWebSecurity": false,
     "retries": {
       "runMode": 2,
       "openMode": 0
       },
-    "baseUrl": "http://localhost:1337/beta/ansible/insights",
+    "baseUrl": "https://stage.foo.redhat.com:1337/beta/ansible/automation-analytics",
     "env": {
         "appid":"#automation-analytics-application",
         "USERNAME": "admin",
