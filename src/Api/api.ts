@@ -64,39 +64,45 @@ export enum Endpoint {
   features = '/api/featureflags/v0',
 }
 
-const mungeHostAnomalies = async (promise, params) => {
+const mungeHostAnomalies = async (promise) => {
   const response = await promise;
-  const p = await params;
-
-  const templateFromParams = response.meta.legend.find((entry) => {
-    return entry.id === parseInt(p.template_id[0]);
-  });
-
-  return {
-    meta: {
-      count: templateFromParams.peer_hosts_stats.length,
-      legend: templateFromParams.peer_hosts_stats.map((entry) => {
-        if (entry.anomaly) {
-          return {
-            name: templateFromParams.name,
-            host_id: entry.host_id,
-            host_name: entry.host_name,
-            host_status: entry.host_status,
-            last_referenced: entry.last_referenced,
-            failed_duration: entry.host_avg_duration_per_task,
-            successful_duration: 0,
-          };
-        }
+  const templateFromParams = response.meta.legend.map((t) => {
+    return t.peer_hosts_stats.map((entry) => {
+      if (entry.anomaly) {
         return {
-          name: templateFromParams.name,
+          name: t.name,
           host_id: entry.host_id,
           host_name: entry.host_name,
           host_status: entry.host_status,
           last_referenced: entry.last_referenced,
-          failed_duration: 0,
-          successful_duration: entry.host_avg_duration_per_task,
+          failed_duration: entry.host_avg_duration_per_task,
+          successful_duration: 0,
         };
-      }),
+      }
+      return {
+        name: t.name,
+        host_id: entry.host_id,
+        host_name: entry.host_name,
+        host_status: entry.host_status,
+        last_referenced: entry.last_referenced,
+        failed_duration: 0,
+        successful_duration: entry.host_avg_duration_per_task,
+      };
+    });
+  });
+
+  const sumTotal = (templateFromParams) =>
+    templateFromParams.reduce(
+      (total, templateFromParams) =>
+        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+        total + templateFromParams.peer_hosts_stats.length,
+      0
+    );
+
+  return {
+    meta: {
+      count: sumTotal(response.meta.legend),
+      legend: templateFromParams.flat(),
     },
   };
 };
@@ -182,7 +188,7 @@ export const readProbeTemplates = (
   params: ParamsWithPagination
 ): Promise<ApiJson> => {
   if (params.chart_type === 'scatter') {
-    return mungeHostAnomalies(post(Endpoint.probeTemplates, params), params);
+    return mungeHostAnomalies(post(Endpoint.probeTemplates, params));
   }
   return post(Endpoint.probeTemplates, params);
 };

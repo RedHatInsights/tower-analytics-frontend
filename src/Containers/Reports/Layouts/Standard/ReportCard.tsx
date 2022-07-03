@@ -246,7 +246,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     />,
   ];
 
-  console.log('dataApi', dataApi.result);
+  console.log('dataApi', dataApi.result.meta.count);
   return fullCard ? (
     <Card>
       <CardBody>
