@@ -23,6 +23,7 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+import 'cypress-wait-until';
 
 Cypress.Commands.add('getBaseUrl', () => Cypress.env('baseUrl'));
 
@@ -44,6 +45,37 @@ Cypress.Commands.add('clearFeatureDialogs', () => {
   });
 });
 
+/* 
+ * TODO: This is a workaround and the tests runs longer than we would like.
+ * It needs to be updated in a way we don't even see the iframe,
+ * loading the cookies beforehand
+ */
+Cypress.Commands.add('acceptCookiesDialog', () => {
+
+  const getIframeDocument = () => {
+    return cy
+      .get('iframe')
+      .its('0.contentDocument').should('exist')
+  }
+
+  const getIframeBody = () => {
+    return getIframeDocument()
+      .its('body').should('not.be.undefined')
+      .then(cy.wrap)
+  }
+
+  const acceptCookies = () => {
+    return getIframeBody()
+      .find('div.pdynamicbutton')
+      .find('a.call')
+      .should('be.visible')
+      .click(true)
+  }
+
+  cy.waitUntil(() => acceptCookies());
+
+});
+
 Cypress.Commands.add('loginFlow', () => {
   cy.visit('/');
 
@@ -51,7 +83,7 @@ Cypress.Commands.add('loginFlow', () => {
 
   // If local test runs
   if (keycloakLoginUrls.some((str) => Cypress.config().baseUrl.includes(str))) {
-    cy.getUsername().then((uname) => cy.get('#username').type(`${uname}`));
+    cy.getUsername().then((uname) => cy.get('#username-verification').type(`${uname}`));
     cy.getPassword().then((password) =>
       cy.get('#password').type(`${password}{enter}`, { log: false })
     );
@@ -66,5 +98,7 @@ Cypress.Commands.add('loginFlow', () => {
     );
   }
 
+  cy.acceptCookiesDialog();
+  cy.wait(5000)
   cy.url().should('eq', Cypress.config().baseUrl + '/');
 });
