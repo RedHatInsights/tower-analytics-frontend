@@ -57,12 +57,12 @@ export const Routes: FunctionComponent<Record<string, never>> = () => {
     <Switch>
       {/* Catch urls with the trailing slash and remove it */}
       <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
-      {/* Redirect the root path to the clusters so it does not give 404. */}
-      <Redirect from="/" to={Paths.clusters} />
       {/* Render the valid routes */}
       {Object.keys(components).map((key) => (
         <InsightsRoute key={key} path={key} component={components[key]} />
       ))}
+      {/* Redirect the root path to the clusters so it does not give 404. */}
+      <Redirect from="/" to={Paths.clusters} exact />
       {/* Finally, catch all unmatched routes and render 404 */}
       <Route>
         <Error404 body="Sorry, we could not find what you were looking for. The page you requested may have been changed or moved." />
