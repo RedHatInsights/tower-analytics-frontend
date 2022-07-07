@@ -355,7 +355,7 @@ const allDefaultParams: any = {
       host_status: [],
       sort_options: 'average_duration_per_task',
       sort_order: 'desc',
-      quick_date_range: 'slow_hosts_last_1_week',
+      quick_date_range: 'slow_hosts_last_3_weeks',
       slow_host_view: 'templates_with_slow_hosts',
       chart_type: 'bar',
     },

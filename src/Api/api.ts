@@ -64,8 +64,12 @@ export enum Endpoint {
   features = '/api/featureflags/v0',
 }
 
-const mungeHostAnomalies = async (promise) => {
+const mungeHostAnomalies = async (promise, params) => {
   const response = await promise;
+  if (params.template_id.length === 0 && response.meta.legend.length > 0) {
+    response.meta.legend = [response.meta.legend[0]];
+    params.template_id = [response.meta.legend[0].id.toString()];
+  }
   const templateFromParams = response.meta.legend.map((t) => {
     return t.peer_hosts_stats.map((entry) => {
       console.log('entry', entry);
@@ -189,7 +193,7 @@ export const readProbeTemplates = (
   params: ParamsWithPagination
 ): Promise<ApiJson> => {
   if (params.chart_type === 'scatter') {
-    return mungeHostAnomalies(post(Endpoint.probeTemplates, params));
+    return mungeHostAnomalies(post(Endpoint.probeTemplates, params), params);
   }
   return post(Endpoint.probeTemplates, params);
 };
