@@ -31,6 +31,10 @@ const dummyRoiData = {
         total_cluster_count: 20,
         template_weigh_in: true,
         manual_effort_minutes: 60,
+        template_success_rate: 55.7018,
+        successful_hosts_savings: 40000,
+        failed_hosts_costs: 5,
+        monetary_gain: 40000,
       },
       {
         id: 2,
@@ -42,6 +46,10 @@ const dummyRoiData = {
         total_cluster_count: 20,
         template_weigh_in: true,
         manual_effort_minutes: 60,
+        template_success_rate: 55.7018,
+        successful_hosts_savings: 40000,
+        failed_hosts_costs: 5,
+        monetary_gain: 40000,
       },
       {
         id: 3,
@@ -53,6 +61,10 @@ const dummyRoiData = {
         total_cluster_count: 20,
         template_weigh_in: true,
         manual_effort_minutes: 60,
+        template_success_rate: 55.7018,
+        successful_hosts_savings: 40000,
+        failed_hosts_costs: 5,
+        monetary_gain: 40000,
       },
     ],
   },
@@ -71,8 +83,8 @@ const jobExplorerOptions = {
   ],
   sort_options: [
     {
-      key: 'template_productivity_score',
-      value: 'Template productivity score',
+      key: 'successful_hosts_savings',
+      value: 'Savings from successful hosts',
     },
   ],
   meta: {
@@ -169,7 +181,7 @@ const pageParams = {
   ],
 };
 
-describe('Containers/CustomReports/AutomationCalculator', () => {
+describe('Containers/Reports/AutomationCalculator', () => {
   let wrapper;
 
   beforeEach(() => {
@@ -188,7 +200,7 @@ describe('Containers/CustomReports/AutomationCalculator', () => {
     wrapper.update();
 
     expect(wrapper).toBeTruthy();
-    expect(wrapper.find('input')).toHaveLength(10);
+    expect(wrapper.find('input')).toHaveLength(9);
   });
 
   it('should render api error', async () => {
