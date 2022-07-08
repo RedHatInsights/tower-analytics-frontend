@@ -68,6 +68,7 @@ const mungeHostAnomalies = async (promise) => {
   const response = await promise;
   const templateFromParams = response.meta.legend.map((t) => {
     return t.peer_hosts_stats.map((entry) => {
+      console.log('entry', entry);
       if (entry.anomaly) {
         return {
           name: t.name,
@@ -76,7 +77,7 @@ const mungeHostAnomalies = async (promise) => {
           host_status: entry.host_status,
           last_referenced: entry.last_referenced,
           failed_duration: entry.host_avg_duration_per_task,
-          successful_duration: 0,
+          successful_duration: -100,
         };
       }
       return {
@@ -85,7 +86,7 @@ const mungeHostAnomalies = async (promise) => {
         host_name: entry.host_name,
         host_status: entry.host_status,
         last_referenced: entry.last_referenced,
-        failed_duration: 0,
+        failed_duration: -100,
         successful_duration: entry.host_avg_duration_per_task,
       };
     });
