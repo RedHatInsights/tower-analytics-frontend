@@ -272,7 +272,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
               );
             })}
           <Gallery
-            data-testid="all_reports"
+            data-cy="all_reports"
             hasGutter
             minWidths={{
               sm: '307px',
