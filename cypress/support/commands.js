@@ -79,23 +79,59 @@ Cypress.Commands.add('acceptCookiesDialog', () => {
 Cypress.Commands.add('loginFlow', () => {
   cy.visit('/');
 
-  const keycloakLoginUrls = ['localhost', 'front-end-aggregator'];
+  const keycloakLoginFields = {
+    'localhost': {
+      'username': '#username-verification',
+      'password': '#password',
+      'two-step': false
 
-  // If local test runs
-  if (keycloakLoginUrls.some((str) => Cypress.config().baseUrl.includes(str))) {
-    cy.getUsername().then((uname) => cy.get('#username-verification').type(`${uname}`));
-    cy.getPassword().then((password) =>
-      cy.get('#password').type(`${password}{enter}`, { log: false })
-    );
-  } else {
-    // I don't know where this is used, but would guess stage
+    },
+    'front-end-aggregator-ephemeral': {
+      'username': '#username-verification',
+      'password': '#password',
+      'two-step': false
+    },
+    'env-ephemeral': {
+      'username': '#username',
+      'password': '#password',
+      'two-step': false
+    },
+    'console.stage.redhat.com': {
+      'username': '#username-verification',
+      'password': '#password',
+      'two-step': true
+    },
+    'stage.foo.redhat.com': {
+      'username': '#username-verification',
+      'password': '#password',
+      'two-step': true
+    }    
+  }
+
+  let strategy = null;
+
+  // probably some fancy filter function for this
+  // let key = keycloakLoginUrls.filter(....)
+  for(const element of Object.keys(keycloakLoginFields)) {
+    if(Cypress.config().baseUrl.includes(element)) {
+      strategy = element;
+      break;
+    }
+  }
+
+  if(keycloakLoginFields[strategy]['two-step']) {
     cy.getUsername().then((uname) =>
-      cy.get('#username-verification').type(`${uname}`)
+      cy.get(keycloakLoginFields[strategy]['username']).type(`${uname}`)
     );
     cy.get('#login-show-step2').click();
     cy.getPassword().then((password) =>
-      cy.get('#password').type(`${password}{enter}`, { log: false })
+      cy.get(keycloakLoginFields[strategy]['password']).type(`${password}{enter}`, { log: false })
     );
+  } else {
+    cy.getUsername().then((uname) => cy.get(keycloakLoginFields[strategy]['username']).type(`${uname}`));
+    cy.getPassword().then((password) =>
+      cy.get(keycloakLoginFields[strategy]['password']).type(`${password}{enter}`, { log: false })
+    ); 
   }
 
 /* 
