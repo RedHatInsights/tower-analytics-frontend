@@ -64,7 +64,7 @@ export enum Endpoint {
   features = '/api/featureflags/v0',
 }
 
-const mungeHostAnomalies = async (promise, params) => {
+const mungeHostAnomalies = async (promise, params, dateFilter) => {
   const response = await promise;
   if (params.template_id.length === 0 && response.meta.legend.length > 0) {
     response.meta.legend = [response.meta.legend[0]];
@@ -72,7 +72,6 @@ const mungeHostAnomalies = async (promise, params) => {
   }
   const templateFromParams = response.meta.legend.map((t) => {
     return t.peer_hosts_stats.map((entry) => {
-      console.log('entry', entry);
       if (entry.anomaly) {
         return {
           name: t.name,

@@ -79,6 +79,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       [DEFAULT_NAMESPACE]: {
         ...specificReportDefaultParams(slug),
         template_id: [templateId],
+        quick_date_range: dataApi.result.meta.selected.quick_date_range,
       },
     };
     redirect(paths.getDetails(slug), initialQueryParams);
@@ -246,7 +247,6 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     />,
   ];
 
-  console.log('dataApi', dataApi.result.meta.count);
   return fullCard ? (
     <Card>
       <CardBody>
