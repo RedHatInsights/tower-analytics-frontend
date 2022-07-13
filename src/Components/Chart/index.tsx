@@ -40,7 +40,9 @@ const applyHiddenFilter = (
   ...chartData,
   series: chartData.series.map((series: ChartDataSerie) => ({
     ...series,
-    hidden: !!chartSeriesHidden.includes(series.serie[0].id.toString()),
+    hidden:
+      !!series.serie[0].id &&
+      !!chartSeriesHidden.includes(series.serie[0].id.toString()),
   })),
 });
 
