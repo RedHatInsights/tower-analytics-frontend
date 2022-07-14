@@ -23,7 +23,7 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-import { dashboardUrl } from '../support/constants'
+import { clustersUrl } from '../support/constants'
 
 Cypress.Commands.add('getBaseUrl', () => Cypress.env('baseUrl'));
 
@@ -72,7 +72,7 @@ Cypress.Commands.add('acceptCookiesDialog', () => {
       .click(true)
   }
 
-  cy.waitUntil(() => acceptCookies());
+  acceptCookies();
 
 });
 
@@ -134,20 +134,20 @@ Cypress.Commands.add('loginFlow', () => {
     ); 
   }
 
-/* 
- * TODO: This is a workaround and the tests runs longer than we would like.
- * It needs to be updated in a way we don't even see the iframe,
- * loading the cookies beforehand.
- * 
- * IF the iframe is loading in your local tests please uncomment the folowing code:
- */
+  /* 
+  * TODO: This is a workaround and the tests runs longer than we would like.
+  * It needs to be updated in a way we don't even see the iframe,
+  * loading the cookies beforehand.
+  * 
+  * IF the iframe is loading in your local tests please uncomment the folowing code:
+  */
 
   // if (cy.get('iframe').should('exist')) {
   //   cy.acceptCookiesDialog();
   // }
   // cy.wait(5000)
 
-  cy.url().should('eq', Cypress.config().baseUrl + dashboardUrl);
+  cy.url().should('eq', Cypress.config().baseUrl + clustersUrl);
 });
 
 /**
