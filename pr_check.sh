@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -e
+set +e
 set -x
 
 # ----------------------------
@@ -35,7 +35,7 @@ APP_NAME="tower-analytics"  # name of app-sre "application" folder this componen
 APP_NAME="$APP_NAME,gateway,insights-ephemeral"
 COMPONENT_NAME="tower-analytics-clowdapp"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
 IMAGE="quay.io/cloudservices/automation-analytics-api"
-AA_IMAGE_TAG="qa"
+AA_IMAGE_TAG=$(curl https://gitlab.cee.redhat.com/api/v4/projects/37507/repository/commits | jq -r '.[0].short_id' | head -c7 | tr -d '\n')
 
 # ------------------------------------
 # Wait for frontend pr-check to appear
@@ -116,7 +116,7 @@ done
 
 FRONTEND_POD=`oc get pods | grep -i front | awk '{print $1}'`
 UI_URL=`oc get route front-end-aggregator -o jsonpath='https://{.spec.host}{"\n"}' -n $NAMESPACE`
-KEYCLOCK_URL=`oc get route keycloak -o jsonpath='https://{.spec.host}{"\n"}' -n $NAMESPACE`
+KEYCLOCK_URL=`oc get route mocks-keycloak -o jsonpath='https://{.spec.host}{"\n"}' -n $NAMESPACE`
 
 KEYCLOCK_URL_CLEAN=$(echo $KEYCLOCK_URL |sed 's/https\?:\/\///')
 
