@@ -368,7 +368,7 @@ const allDefaultParams: any = {
       cluster_id: [],
       org_id: [],
       inventory_id: [],
-      template_id: [],
+      template_id: null,
       status: [],
       host_status: [],
       sort_options: 'average_duration_per_task',

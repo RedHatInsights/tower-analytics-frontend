@@ -65,52 +65,36 @@ export enum Endpoint {
 
   features = '/api/featureflags/v0',
 }
-// const mungeHostAnomalies = async (promise, params, dateFilter) => {
-//   const response = await promise;
-//   if (params.template_id.length === 0 && response.meta.legend.length > 0) {
-//     response.meta.legend = [response.meta.legend[0]];
-//     params.template_id = [response.meta.legend[0].id.toString()];
-//   }
-//   const templateFromParams = response.meta.legend.map((t) => {
-//     return t.peer_hosts_stats.map((entry) => {
-//       if (entry.anomaly) {
-//         return {
-//           name: t.name,
-//           host_id: entry.host_id,
-//           host_name: entry.host_name,
-//           host_status: entry.host_status,
-//           last_referenced: entry.last_referenced,
-//           failed_duration: entry.host_avg_duration_per_task,
-//           successful_duration: -100,
-//         };
-//       }
-//       return {
-//         name: t.name,
-//         host_id: entry.host_id,
-//         host_name: entry.host_name,
-//         host_status: entry.host_status,
-//         last_referenced: entry.last_referenced,
-//         failed_duration: -100,
-//         successful_duration: entry.host_avg_duration_per_task,
-//       };
-//     });
-//   });
+const mungeHostAnomalies = async (promise) => {
+  const response = await promise;
+  const templateFromParams = response.peer_hosts_stats.map((entry) => {
+    if (entry.anomaly) {
+      return {
+        host_id: entry.host_id,
+        host_name: entry.host_name,
+        host_status: entry.host_status,
+        last_referenced: entry.last_referenced,
+        failed_duration: entry.host_avg_duration_per_task,
+        successful_duration: -100,
+      };
+    }
+    return {
+      host_id: entry.host_id,
+      host_name: entry.host_name,
+      host_status: entry.host_status,
+      last_referenced: entry.last_referenced,
+      failed_duration: -100,
+      successful_duration: entry.host_avg_duration_per_task,
+    };
+  });
 
-//   const sumTotal = (templateFromParams) =>
-//     templateFromParams.reduce(
-//       (total, templateFromParams) =>
-//         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-//         total + templateFromParams.peer_hosts_stats.length,
-//       0
-//     );
-
-//   return {
-//     meta: {
-//       count: sumTotal(response.meta.legend),
-//       legend: templateFromParams.flat(),
-//     },
-//   };
-// };
+  return {
+    meta: {
+      count: response.meta.count,
+      legend: templateFromParams.flat(),
+    },
+  };
+};
 
 export const getFeatures = async (): Promise<ApiFeatureFlagReturnType> => {
   try {
@@ -196,8 +180,7 @@ export const readProbeTemplates = (
 };
 
 export const readProbeTemplateForHosts = (params: Params): Promise<ApiJson> => {
-  console.log(params);
-  return post(Endpoint.probeTemplateForHosts, params);
+  return mungeHostAnomalies(post(Endpoint.probeTemplateForHosts, params));
 };
 
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>

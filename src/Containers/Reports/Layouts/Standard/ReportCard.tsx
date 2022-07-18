@@ -46,6 +46,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   tableHeaders,
   expandedTableRowName,
   clickableLinking,
+  hidePagination,
   defaultSelectedToolbarCategory = '',
   availableChartTypes,
   dataEndpoint,
@@ -66,7 +67,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   );
 
   const { result: options, request: fetchOptions } =
-    useRequest<OptionsReturnType>(readOptions, { sort_options: [] });
+    useRequest<OptionsReturnType>(readOptions, {});
 
   const { request: fetchData, ...dataApi } = useRequest(readData, {
     meta: { count: 0, legend: [] },
@@ -78,7 +79,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...specificReportDefaultParams(slug),
-        template_id: [templateId],
+        template_id: templateId,
         quick_date_range: dataApi.result.meta.selected.quick_date_range,
       },
     };
@@ -89,7 +90,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     fetchData(queryParams);
     fetchOptions(queryParams);
   }, [queryParams]);
-
+  console.log('hidePagination', hidePagination);
   /**
    * The function is used because the API is not returning the value.
    * When API gets support, this function should be removed.
@@ -157,12 +158,17 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     let tooltip;
     if (datum.host_status) {
       tooltip =
+        'Host: ' +
+        datum.host_name +
+        '\nLast Referenced: ' +
+        datum.last_referenced;
+      tooltip +=
         datum.failed_duration > 0 && datum.successful_duration === 0
-          ? 'Failed duration for ' +
+          ? '\nFailed duration for ' +
             datum.host_name +
             ': ' +
             formattedValue(queryParams.sortOptions, datum.y)
-          : 'Successful duration for ' +
+          : '\nSuccessful duration for ' +
             datum.host_name +
             ': ' +
             formattedValue(queryParams.sortOptions, datum.y);
@@ -246,7 +252,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       dateRange={queryParams.quick_date_range}
     />,
   ];
-
+  console.log('chartParams.chartType', chartParams, queryParams);
   return fullCard ? (
     <Card>
       <CardBody>
@@ -256,16 +262,18 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           filters={queryParams}
           setFilters={setFromToolbar}
           pagination={
-            <Pagination
-              count={dataApi.result.meta.count}
-              perPageOptions={perPageOptions}
-              params={{
-                limit: +queryParams.limit,
-                offset: +queryParams.offset,
-              }}
-              setPagination={setFromPagination}
-              isCompact
-            />
+            !hidePagination && (
+              <Pagination
+                count={dataApi.result.meta.count}
+                perPageOptions={perPageOptions}
+                params={{
+                  limit: +queryParams.limit,
+                  offset: +queryParams.offset,
+                }}
+                setPagination={setFromPagination}
+                isCompact
+              />
+            )
           }
           additionalControls={additionalControls}
         />
@@ -300,16 +308,18 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         )}
       </CardBody>
       <CardFooter>
-        <Pagination
-          count={dataApi.result.meta.count}
-          perPageOptions={perPageOptions}
-          params={{
-            limit: +queryParams.limit,
-            offset: +queryParams.offset,
-          }}
-          setPagination={setFromPagination}
-          variant={PaginationVariant.bottom}
-        />
+        {!hidePagination && (
+          <Pagination
+            count={dataApi.result.meta.count}
+            perPageOptions={perPageOptions}
+            params={{
+              limit: +queryParams.limit,
+              offset: +queryParams.offset,
+            }}
+            setPagination={setFromPagination}
+            variant={PaginationVariant.bottom}
+          />
+        )}
       </CardFooter>
     </Card>
   ) : (
