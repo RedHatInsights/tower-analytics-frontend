@@ -68,23 +68,16 @@ export enum Endpoint {
 const mungeHostAnomalies = async (promise) => {
   const response = await promise;
   const templateFromParams = response.peer_hosts_stats.map((entry) => {
-    if (entry.anomaly) {
-      return {
-        host_id: entry.host_id,
-        host_name: entry.host_name,
-        host_status: entry.host_status,
-        last_referenced: entry.last_referenced,
-        failed_duration: entry.host_avg_duration_per_task,
-        successful_duration: -100,
-      };
-    }
     return {
       host_id: entry.host_id,
       host_name: entry.host_name,
       host_status: entry.host_status,
       last_referenced: entry.last_referenced,
-      failed_duration: -100,
-      successful_duration: entry.host_avg_duration_per_task,
+      failed_duration: entry.anomaly ? entry.host_avg_duration_per_task : -100,
+      successful_duration: entry.anomaly
+        ? -100
+        : entry.host_avg_duration_per_task,
+      anomaly: entry.anomaly,
     };
   });
 
@@ -184,11 +177,11 @@ export const readProbeTemplateForHosts = (params: Params): Promise<ApiJson> => {
 };
 
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
-  get(Endpoint.probeTemplatesOptions, params);
+  post(Endpoint.probeTemplatesOptions, params);
 
 export const readProbeTemplateForHostsOptions = (
   params: Params
-): Promise<ApiJson> => get(Endpoint.probeTemplateForHostsOptions, params);
+): Promise<ApiJson> => post(Endpoint.probeTemplateForHostsOptions, params);
 
 export const readReports = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(Endpoint.reports, params);
