@@ -75,12 +75,16 @@ const ReportCard: FunctionComponent<StandardProps> = ({
 
   const redirect = useRedirect();
 
-  const redirectToHostScatter = (slug: string, templateId: any) => {
+  const redirectToHostScatter = (
+    slug: string,
+    templateId: any,
+    quickDateRange: any
+  ) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...specificReportDefaultParams(slug),
         template_id: templateId,
-        quick_date_range: dataApi.result.meta.selected.quick_date_range,
+        quick_date_range: quickDateRange,
       },
     };
     redirect(paths.getDetails(slug), initialQueryParams);
@@ -90,7 +94,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     fetchData(queryParams);
     fetchOptions(queryParams);
   }, [queryParams]);
-  console.log('hidePagination', hidePagination);
+
   /**
    * The function is used because the API is not returning the value.
    * When API gets support, this function should be removed.
@@ -150,7 +154,11 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   };
 
   const handleClick = (event, props) => {
-    redirectToHostScatter('host_anomalies_scatter', props.datum.id);
+    redirectToHostScatter(
+      'host_anomalies_scatter',
+      props.datum.id,
+      queryParams.quick_date_range
+    );
     window.location.reload();
   };
 
@@ -252,7 +260,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       dateRange={queryParams.quick_date_range}
     />,
   ];
-  console.log('chartParams.chartType', chartParams, queryParams);
+
   return fullCard ? (
     <Card>
       <CardBody>
