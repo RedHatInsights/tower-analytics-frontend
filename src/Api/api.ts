@@ -40,6 +40,7 @@ export enum Endpoint {
   hostExplorer = '/api/tower-analytics/v1/host_explorer/',
   eventExplorer = '/api/tower-analytics/v1/event_explorer/',
   probeTemplates = '/api/tower-analytics/v1/probe_templates/',
+  probeTemplateForHosts = '/api/tower-analytics/v1/probe_template_for_hosts/',
   ROI = '/api/tower-analytics/v1/roi_templates/',
   costEffortROI = '/api/tower-analytics/v1/roi_cost_effort_data/',
   plans = '/api/tower-analytics/v1/plans/',
@@ -59,57 +60,57 @@ export enum Endpoint {
   eventExplorerOptions = '/api/tower-analytics/v1/event_explorer_options/',
   hostExplorerOptions = '/api/tower-analytics/v1/host_explorer_options/',
   probeTemplatesOptions = '/api/tower-analytics/v1/probe_templates_options/',
+  probeTemplateForHostsOptions = '/api/tower-analytics/v1/probe_template_for_hosts_options/',
   reportOptions = '/api/tower-analytics/v1/report_options/',
 
   features = '/api/featureflags/v0',
 }
+// const mungeHostAnomalies = async (promise, params, dateFilter) => {
+//   const response = await promise;
+//   if (params.template_id.length === 0 && response.meta.legend.length > 0) {
+//     response.meta.legend = [response.meta.legend[0]];
+//     params.template_id = [response.meta.legend[0].id.toString()];
+//   }
+//   const templateFromParams = response.meta.legend.map((t) => {
+//     return t.peer_hosts_stats.map((entry) => {
+//       if (entry.anomaly) {
+//         return {
+//           name: t.name,
+//           host_id: entry.host_id,
+//           host_name: entry.host_name,
+//           host_status: entry.host_status,
+//           last_referenced: entry.last_referenced,
+//           failed_duration: entry.host_avg_duration_per_task,
+//           successful_duration: -100,
+//         };
+//       }
+//       return {
+//         name: t.name,
+//         host_id: entry.host_id,
+//         host_name: entry.host_name,
+//         host_status: entry.host_status,
+//         last_referenced: entry.last_referenced,
+//         failed_duration: -100,
+//         successful_duration: entry.host_avg_duration_per_task,
+//       };
+//     });
+//   });
 
-const mungeHostAnomalies = async (promise, params, dateFilter) => {
-  const response = await promise;
-  if (params.template_id.length === 0 && response.meta.legend.length > 0) {
-    response.meta.legend = [response.meta.legend[0]];
-    params.template_id = [response.meta.legend[0].id.toString()];
-  }
-  const templateFromParams = response.meta.legend.map((t) => {
-    return t.peer_hosts_stats.map((entry) => {
-      if (entry.anomaly) {
-        return {
-          name: t.name,
-          host_id: entry.host_id,
-          host_name: entry.host_name,
-          host_status: entry.host_status,
-          last_referenced: entry.last_referenced,
-          failed_duration: entry.host_avg_duration_per_task,
-          successful_duration: -100,
-        };
-      }
-      return {
-        name: t.name,
-        host_id: entry.host_id,
-        host_name: entry.host_name,
-        host_status: entry.host_status,
-        last_referenced: entry.last_referenced,
-        failed_duration: -100,
-        successful_duration: entry.host_avg_duration_per_task,
-      };
-    });
-  });
+//   const sumTotal = (templateFromParams) =>
+//     templateFromParams.reduce(
+//       (total, templateFromParams) =>
+//         // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
+//         total + templateFromParams.peer_hosts_stats.length,
+//       0
+//     );
 
-  const sumTotal = (templateFromParams) =>
-    templateFromParams.reduce(
-      (total, templateFromParams) =>
-        // eslint-disable-next-line @typescript-eslint/restrict-plus-operands
-        total + templateFromParams.peer_hosts_stats.length,
-      0
-    );
-
-  return {
-    meta: {
-      count: sumTotal(response.meta.legend),
-      legend: templateFromParams.flat(),
-    },
-  };
-};
+//   return {
+//     meta: {
+//       count: sumTotal(response.meta.legend),
+//       legend: templateFromParams.flat(),
+//     },
+//   };
+// };
 
 export const getFeatures = async (): Promise<ApiFeatureFlagReturnType> => {
   try {
@@ -191,14 +192,20 @@ export const readNotifications = (params: Params): Promise<ApiJson> =>
 export const readProbeTemplates = (
   params: ParamsWithPagination
 ): Promise<ApiJson> => {
-  if (params.chart_type === 'scatter') {
-    return mungeHostAnomalies(post(Endpoint.probeTemplates, params), params);
-  }
   return post(Endpoint.probeTemplates, params);
 };
 
+export const readProbeTemplateForHosts = (params: Params): Promise<ApiJson> => {
+  console.log(params);
+  return post(Endpoint.probeTemplateForHosts, params);
+};
+
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
-  post(Endpoint.probeTemplatesOptions, params);
+  get(Endpoint.probeTemplatesOptions, params);
+
+export const readProbeTemplateForHostsOptions = (
+  params: Params
+): Promise<ApiJson> => get(Endpoint.probeTemplateForHostsOptions, params);
 
 export const readReports = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(Endpoint.reports, params);
@@ -285,8 +292,12 @@ export const endpointFunctionMap = (endpoint: Endpoint): ReadEndpointFnc => {
       return readNotifications;
     case Endpoint.probeTemplates:
       return readProbeTemplates;
+    case Endpoint.probeTemplateForHosts:
+      return readProbeTemplateForHosts;
     case Endpoint.probeTemplatesOptions:
       return readProbeTemplatesOptions;
+    case Endpoint.probeTemplateForHostsOptions:
+      return readProbeTemplateForHostsOptions;
     case Endpoint.reportOptions:
       return reportOptions;
     default:
