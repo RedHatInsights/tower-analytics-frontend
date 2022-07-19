@@ -26,7 +26,12 @@ const TotalSavings: FunctionComponent<Props> = ({
 }) => (
   <>
     {['Total savings', 'Current page savings'].map((title, index) => (
-      <Card isPlain isCompact key={title}>
+      <Card
+        data-cy={title.toLowerCase().replace(' ', '_')}
+        isPlain
+        isCompact
+        key={title}
+      >
         <CardTitle>{title}</CardTitle>
         <CardBody>
           <Title
@@ -36,7 +41,7 @@ const TotalSavings: FunctionComponent<Props> = ({
           >
             {isLoading ? (
               <SpinnerDiv>
-                <Spinner isSVG size="lg" />
+                <Spinner data-cy={'spinner'} isSVG size="lg" />
               </SpinnerDiv>
             ) : (
               currencyFormatter(index === 0 ? totalSavings : currentPageSavings)

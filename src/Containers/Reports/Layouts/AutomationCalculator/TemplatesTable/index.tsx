@@ -77,7 +77,11 @@ const TopTemplates: FunctionComponent<Props> = ({
   ];
 
   return (
-    <TableComposable aria-label="ROI Table" variant={TableVariant.compact}>
+    <TableComposable
+      data-cy={'table'}
+      aria-label="ROI Table"
+      variant={TableVariant.compact}
+    >
       <Thead>
         <Tr>
           <Th />
