@@ -27,7 +27,7 @@ const TotalSavings: FunctionComponent<Props> = ({
   <>
     {['Total savings', 'Current page savings'].map((title, index) => (
       <Card
-        data-cy={title.toLowerCase().replace(' ', '_')}
+        data-cy={title.toLowerCase().replace(' ', '_').replace(' ', '_')}
         isPlain
         isCompact
         key={title}
