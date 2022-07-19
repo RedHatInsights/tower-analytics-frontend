@@ -11,63 +11,63 @@ describe('Automation Calculator page', () => {
     cy.intercept('/api/tower-analytics/v1/roi_templates/*').as('roiTemplates');
   });
 
+  const waitToLoad = () => {
+    cy.wait('@roiCostEffortData');
+    cy.wait('@roiTemplates');
+  };
+
   it('can change manual cost', () => {
     cy.get('#manual-cost').clear();
-    cy.wait('@roiCostEffortData');
-    cy.wait('@roiTemplates');
+    waitToLoad();
     cy.get('#manual-cost').should('have.value', '0');
     cy.get('#manual-cost').type('5');
-    cy.wait('@roiCostEffortData');
-    cy.wait('@roiTemplates');
+    waitToLoad();
     // TODO explain trailing 0
     cy.get('#manual-cost').should('have.value', '50');
   });
   it('can change automated cost', () => {
     //let totalSavings = cy.get('[data-cy="total_savings"]').find('h3').textContent;
     cy.get('#automation-cost').clear();
-    cy.wait('@roiCostEffortData');
-    cy.wait('@roiTemplates');
+    waitToLoad();
     cy.get('#automation-cost').should('have.value', '0');
     cy.get('#automation-cost').type('2');
-    cy.wait('@roiCostEffortData');
-    cy.wait('@roiTemplates');
+    waitToLoad();
     // TODO explain trailing 0
     cy.get('#automation-cost').should('have.value', '20');
     //cy.get('[data-cy="total_savings"]').find('h3').should('not.have.text', totalSavings);
   });
   it('can change visibility', () => {
+    cy.get('#table-kebab').click();
+    cy.get('button').contains('Show all').click();
+    cy.get('#table-kebab').click();
+    waitToLoad();
+
     cy.get('tr').eq(1).find('.pf-c-switch__toggle').click();
-    cy.wait('@roiCostEffortData');
-    cy.wait('@roiTemplates');
+    waitToLoad();
     cy.get('[data-cy="savings"]').first().should('have.css', 'color', 'rgb(210, 210, 210)');
+    cy.get('tr').eq(1).get('td').contains('Hide').should('exist');
+
     cy.get('tr').eq(1).find('.pf-c-switch__toggle').click();
-    cy.wait('@roiCostEffortData');
-    cy.wait('@roiTemplates');
+    waitToLoad();
     cy.get('[data-cy="savings"]').first().should('have.css', 'color', 'rgb(30, 79, 24)')
+    cy.get('tr').eq(1).get('td').contains('Show').should('exist');
   });
   it('can change manual time', () => {
     cy.get('[data-cy="manual-time"]').first().clear();
-    cy.wait('@roiCostEffortData');
-    cy.wait('@roiTemplates');
+    waitToLoad();
     cy.get('tr').eq(1).find('input').should('have.value', '0');
     cy.get('[data-cy="manual-time"]').first().type('4');
-    cy.wait('@roiCostEffortData');
-    cy.wait('@roiTemplates');
+    waitToLoad();
     // TODO explain trailing 0
     cy.get('tr').eq(1).find('input').should('have.value', '40');
   });
   it('shows empty state when all rows are hidden', () => {
-    cy.get('.pf-c-switch__toggle').each(($el) => {
-      cy.wrap($el).click();
-      cy.wait('@roiCostEffortData');
-      cy.wait('@roiTemplates');
-    });
+   cy.get('#table-kebab').click();
+   cy.get('button').contains('Hide all').click();
+    waitToLoad();
     cy.get('.pf-c-empty-state').should('exist');
-    cy.get('.pf-c-switch__toggle').each(($el) => {
-      cy.wrap($el).click();
-      cy.wait('@roiCostEffortData');
-      cy.wait('@roiTemplates');
-    });
+    cy.get('button').contains('Show all').click();
+    waitToLoad();
     cy.get('.pf-c-empty-state').should('not.exist');
   });
   it('Query parameters are stored in the URL to enable refresh', () => {
