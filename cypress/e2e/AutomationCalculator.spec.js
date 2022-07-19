@@ -133,6 +133,12 @@ describe('Automation Calculator page', () => {
       expect(pageSavingsValue).not.to.eq('$0.00');
     });
   });
+  it('shows Automation formula', () => {
+    cy.get('[data-cy="automation_formula_button"]').click();
+    cy.get('[data-cy="automation_formula_modal"]').should('exist');
+    cy.get('[data-cy="automation_formula_cancel_button"]').click();
+    cy.get('[data-cy="automation_formula_modal"]').should('not.exist');
+  });
   it('Query parameters are stored in the URL to enable refresh', () => {
     cy.get('[data-cy="quick_date_range"]').click();
     cy.contains('Past 2 years').click();
