@@ -46,7 +46,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   tableHeaders,
   expandedTableRowName,
   clickableLinking,
-  hidePagination,
+  showPagination,
   defaultSelectedToolbarCategory = '',
   availableChartTypes,
   dataEndpoint,
@@ -270,7 +270,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           filters={queryParams}
           setFilters={setFromToolbar}
           pagination={
-            !hidePagination && (
+            showPagination && (
               <Pagination
                 count={dataApi.result.meta.count}
                 perPageOptions={perPageOptions}
@@ -316,7 +316,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         )}
       </CardBody>
       <CardFooter>
-        {!hidePagination && (
+        {showPagination && (
           <Pagination
             count={dataApi.result.meta.count}
             perPageOptions={perPageOptions}
