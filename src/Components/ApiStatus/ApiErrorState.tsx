@@ -14,7 +14,7 @@ interface Props {
 }
 
 const ApiErrorState: FunctionComponent<Props> = ({ message }) => (
-  <EmptyState variant={EmptyStateVariant.small}>
+  <EmptyState variant={EmptyStateVariant.small} data-cy={'api_error_state'}>
     <EmptyStateIcon
       icon={ExclamationCircleIcon}
       color={globalDangerColor200.value}
