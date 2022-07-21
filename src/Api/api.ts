@@ -65,40 +65,6 @@ export enum Endpoint {
 
   features = '/api/featureflags/v0',
 }
-const mungeHostAnomalies = async (promise) => {
-  const response = await promise;
-  const templateFromParams = response.peer_hosts_stats.map((entry) => {
-    return {
-      host_id: entry.host_id,
-      host_name: entry.host_name,
-      host_status: entry.host_status,
-      last_referenced: entry.last_referenced,
-      failed_duration: entry.anomaly ? entry.host_avg_duration_per_task : -100,
-      successful_duration: entry.anomaly
-        ? -100
-        : entry.host_avg_duration_per_task,
-      anomaly: entry.anomaly,
-    };
-  });
-
-  return {
-    meta: {
-      count: response.meta.count,
-      legend: templateFromParams.flat(),
-    },
-  };
-};
-
-export const getFeatures = async (): Promise<ApiFeatureFlagReturnType> => {
-  try {
-    const url = new URL(Endpoint.features, window.location.origin);
-    const response = await authenticatedFetch(url.toString());
-    return response.ok ? response.json() : { toggles: [] };
-  } catch (error) {
-    console.error('feature flag fetch failed', error);
-    return { toggles: [] };
-  }
-};
 
 export const preflightRequest = (): Promise<Response> =>
   authenticatedFetch(Endpoint.preflight);
@@ -173,7 +139,7 @@ export const readProbeTemplates = (
 };
 
 export const readProbeTemplateForHosts = (params: Params): Promise<ApiJson> => {
-  return mungeHostAnomalies(post(Endpoint.probeTemplateForHosts, params));
+  post(Endpoint.probeTemplateForHosts, params);
 };
 
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
