@@ -381,7 +381,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       )}
       {api.isLoading ? (
         <SpinnerDiv>
-          <Spinner isSVG />
+          <Spinner data-cy={'spinner'} isSVG />
         </SpinnerDiv>
       ) : filterDisabled(api?.result?.items).length > 0 ? (
         <Chart
@@ -503,7 +503,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 Enter the time it takes to run the following templates manually.
               </p>
               {api.isLoading ? (
-                <Spinner isSVG />
+                <Spinner data-cy={'spinner'} isSVG />
               ) : (
                 <TemplatesTable
                   redirectToJobExplorer={redirectToJobExplorer}

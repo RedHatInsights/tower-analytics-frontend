@@ -98,6 +98,7 @@ const Row: FunctionComponent<Props> = ({
                 'manual-time-' + template.id.toString()
               }
               id={'manual-time-' + template.id.toString()}
+              data-cy={'manual-time'}
               style={{ maxWidth: '150px' }}
               type="number"
               aria-label="time run manually"
@@ -119,6 +120,7 @@ const Row: FunctionComponent<Props> = ({
           </InputGroup>
         </Td>
         <Td
+          data-cy={'savings'}
           style={{
             color: template.enabled
               ? globalSuccessColor200.value
