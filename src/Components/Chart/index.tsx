@@ -44,12 +44,14 @@ const applyHiddenFilter = (
   ...chartData,
   series: chartData.series.map((series: ChartDataSerie) => ({
     ...series,
-    hidden: !!chartSeriesHidden.includes(
-      // eslint-disable-next-line no-prototype-builtins
-      series.serie[0].hasOwnProperty('host_id').toString() ||
+    hidden:
+      (!!series.serie[0].id || !!series.serie[0].host_id) &&
+      !!chartSeriesHidden.includes(
         // eslint-disable-next-line no-prototype-builtins
-        series.serie[0].hasOwnProperty('id').toString()
-    ),
+        series.serie[0].hasOwnProperty('host_id').toString() ||
+          // eslint-disable-next-line no-prototype-builtins
+          series.serie[0].hasOwnProperty('id').toString()
+      ),
   })),
 });
 
