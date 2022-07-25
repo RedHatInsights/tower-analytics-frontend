@@ -55,14 +55,37 @@ describe('Insights smoketests', () => {
       .url().should('eq', Cypress.config().baseUrl + notificationsUrl);
   });
 
+  // This function checks that there's no 500/404/403 warning in the UI
+  const checkPageHasNoErrors = () => {
+    cy.get('#automation-analytics-application').should('exist');
+    cy.get('[data-cy="error_page"]').should('not.exist');
+    cy.get('[data-cy="error_page_404"]').should('not.exist');
+    cy.get('[data-cy="loading"]').should('not.exist');
+    cy.get('[data-cy="api_error_state"]').should('not.exist');
+    cy.get('[data-cy="page_component"]').should('exist');
+  };
+
 // TODO: include assetion maybe with snapshots
   it('can open each page without breaking the UI', () => {
     cy.visit(orgsUrl);
+    checkPageHasNoErrors();
+
     cy.visit(jobExplorerUrl);
+    checkPageHasNoErrors();
+
     cy.visit(clustersUrl);
+    checkPageHasNoErrors();
+
     cy.visit(reportsUrl);
+    checkPageHasNoErrors();
+
     cy.visit(savingsPlannerUrl);
+    checkPageHasNoErrors();
+
     cy.visit(calculatorUrl);
+    checkPageHasNoErrors();
+
     cy.visit(notificationsUrl);
+    checkPageHasNoErrors();
   });
 });

@@ -24,7 +24,7 @@ const Error404: FunctionComponent<Props> = ({
   buttonText = 'Return to home page',
   link = Paths.clusters,
 }) => (
-  <EmptyState variant={EmptyStateVariant.xl}>
+  <EmptyState variant={EmptyStateVariant.xl} data-cy={'error_page_404'}>
     <Title
       headingLevel="h4"
       size={TitleSizes['4xl']}
