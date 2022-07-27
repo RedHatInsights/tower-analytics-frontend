@@ -171,7 +171,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         '\nLast Referenced: ' +
         datum.last_referenced;
       tooltip +=
-        datum.failed_duration > 0 && datum.successful_duration === 0
+        datum.failed_duration > 0 && datum.successful_duration === -100
           ? '\nFailed duration for ' +
             datum.host_name +
             ': ' +

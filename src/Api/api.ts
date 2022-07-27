@@ -4,7 +4,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
-import { ApiFeatureFlagReturnType } from '../FeatureFlags/types';
 import {
   get,
   post,
@@ -65,6 +64,40 @@ export enum Endpoint {
 
   features = '/api/featureflags/v0',
 }
+
+const mungeData = async (promise) => {
+  const response = await promise;
+  const peer_host_stats = response.peer_host_stats;
+  const chartData = response.meta.legend.map((item) => {
+    if (item.anomaly) {
+      return {
+        host_id: item.host_id,
+        host_name: item.host_name,
+        host_status: item.host_status,
+        last_referenced: item.last_referenced,
+        peer_host_stats,
+        failed_duration: item.host_avg_duration_per_task,
+        successful_duration: -100,
+      };
+    }
+    return {
+      host_id: item.host_id,
+      host_name: item.host_name,
+      host_status: item.host_status,
+      last_referenced: item.last_referenced,
+      peer_host_stats,
+      failed_duration: -100,
+      successful_duration: item.host_avg_duration_per_task,
+    };
+  });
+
+  return {
+    meta: {
+      count: response.peer_hosts_stats.length,
+      legend: chartData.flat(),
+    },
+  };
+};
 
 export const preflightRequest = (): Promise<Response> =>
   authenticatedFetch(Endpoint.preflight);
@@ -139,7 +172,7 @@ export const readProbeTemplates = (
 };
 
 export const readProbeTemplateForHosts = (params: Params): Promise<ApiJson> => {
-  post(Endpoint.probeTemplateForHosts, params);
+  return mungeData(post(Endpoint.probeTemplateForHosts, params));
 };
 
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
