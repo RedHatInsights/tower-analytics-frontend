@@ -37,7 +37,7 @@ describe('SavingsPlanner/Shared/Form/Templates', () => {
   });
 
   test('has rendered Templates component with data and is clickable', async () => {
-    renderPage(Templates, undefined, defaultProps);
+    const { container } = renderPage(Templates, undefined, defaultProps);
 
     await waitFor(() => expect(api.readJobExplorer).toHaveBeenCalledTimes(1));
 
@@ -46,13 +46,17 @@ describe('SavingsPlanner/Shared/Form/Templates', () => {
     expect(screen.getByText('test_template_name_0')).toBeTruthy();
     expect(screen.getByText('test_template_name_2')).toBeTruthy();
 
-    fireEvent.click(screen.getByTestId('radio-345').querySelector('input'));
+    fireEvent.click(
+      container.querySelector('[data-cy="radio-345"').querySelector('input')
+    );
     expect(mockDispatch).toHaveBeenCalledWith({
       type: 'SET_TEMPLATE_ID',
       value: 345,
     });
 
-    fireEvent.click(screen.getByTestId('radio-1').querySelector('input'));
+    fireEvent.click(
+      container.querySelector('[data-cy="radio-1"').querySelector('input')
+    );
     expect(mockDispatch).toHaveBeenCalledWith({
       type: 'SET_TEMPLATE_ID',
       value: 1,

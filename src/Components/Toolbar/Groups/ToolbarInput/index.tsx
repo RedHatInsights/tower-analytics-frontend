@@ -50,6 +50,7 @@ const ToolbarInput: FunctionComponent<Props> = ({
 
   return (
     <SelectedInput
+      data-cy={options.name}
       categoryKey={categoryKey}
       value={defaultValue()}
       selectOptions={selectOptions}

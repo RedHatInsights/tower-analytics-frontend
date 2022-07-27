@@ -1,6 +1,6 @@
-import React, { FunctionComponent } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 
-import { Switch } from '@patternfly/react-core';
+import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import {
   TableComposable,
   TableVariant,
@@ -12,6 +12,8 @@ import {
 import { Template } from './types';
 import Row from './Row';
 import { TableSortParams } from '../../Standard/types';
+import { useQueryParams } from '../../../../../QueryParams';
+import { reportDefaultParams } from '../../../../../Utilities/constants';
 
 interface Props {
   data: Template[];
@@ -31,40 +33,103 @@ const TopTemplates: FunctionComponent<Props> = ({
   redirectToJobExplorer = () => ({}),
   getSortParams = () => ({}),
   readOnly = true,
-}) => (
-  <TableComposable aria-label="ROI Table" variant={TableVariant.compact}>
-    <Thead>
-      <Tr>
-        <Th />
-        <Th>Name</Th>
-        {variableRow && <Th {...getSortParams()}>{variableRow.value}</Th>}
-        <Th>Manual time</Th>
-        <Th>Savings</Th>
-        <Th>
-          <Switch
-            label="Show all"
-            labelOff="Show all"
-            isChecked={!data.find((d) => !d.enabled)}
-            onChange={(checked) => setEnabled(undefined)(checked)}
-            isDisabled={readOnly}
+}) => {
+  const [isKebabOpen, setIsKebabOpen] = useState(false);
+  const defaultParams = reportDefaultParams('automation_calculator');
+  const { setFromToolbar } = useQueryParams(defaultParams);
+
+  const kebabDropdownItems = [
+    <DropdownItem
+      key="showAll"
+      component="button"
+      onClick={() => setEnabled(undefined)(true)}
+    >
+      Show all
+    </DropdownItem>,
+    <DropdownItem
+      key="hideAll"
+      component="button"
+      onClick={() => setEnabled(undefined)(false)}
+    >
+      Hide all
+    </DropdownItem>,
+    <DropdownItem
+      key="showAll"
+      component="button"
+      onClick={() => setFromToolbar('template_weigh_in', undefined)}
+    >
+      Display all template rows
+    </DropdownItem>,
+    <DropdownItem
+      key="hideHiddenTemplates"
+      component="button"
+      onClick={() => setFromToolbar('template_weigh_in', true)}
+    >
+      Display only shown template rows
+    </DropdownItem>,
+    <DropdownItem
+      key="showHiddenTemplates"
+      component="button"
+      onClick={() => setFromToolbar('template_weigh_in', false)}
+    >
+      Display only hidden template rows
+    </DropdownItem>,
+  ];
+
+  return (
+    <TableComposable
+      data-cy={'table'}
+      aria-label="ROI Table"
+      variant={TableVariant.compact}
+    >
+      <Thead>
+        <Tr>
+          <Th />
+          <Th>Name</Th>
+          {variableRow && <Th {...getSortParams()}>{variableRow.value}</Th>}
+          <Th>Manual time</Th>
+          <Th>Savings</Th>
+          <Th
+            style={{
+              float: 'right',
+              overflow: 'visible',
+              zIndex: 1,
+            }}
+          >
+            <Dropdown
+              onSelect={() => {
+                setIsKebabOpen(true);
+              }}
+              toggle={
+                <KebabToggle
+                  style={{ paddingBottom: '0px' }}
+                  id="table-kebab"
+                  onToggle={() => setIsKebabOpen(!isKebabOpen)}
+                />
+              }
+              isOpen={isKebabOpen}
+              isPlain
+              dropdownItems={kebabDropdownItems}
+              position={'right'}
+            />
+          </Th>
+        </Tr>
+      </Thead>
+      <Tbody>
+        {data.map((template) => (
+          <Row
+            key={template.id}
+            template={template}
+            variableRow={variableRow}
+            setDataRunTime={setDataRunTime}
+            redirectToJobExplorer={redirectToJobExplorer}
+            setEnabled={setEnabled(template.id)}
+            readOnly={readOnly}
           />
-        </Th>
-      </Tr>
-    </Thead>
-    <Tbody>
-      {data.map((template) => (
-        <Row
-          key={template.id}
-          template={template}
-          variableRow={variableRow}
-          setDataRunTime={setDataRunTime}
-          redirectToJobExplorer={redirectToJobExplorer}
-          setEnabled={setEnabled(template.id)}
-          readOnly={readOnly}
-        />
-      ))}
-    </Tbody>
-  </TableComposable>
-);
+        ))}
+      </Tbody>
+    </TableComposable>
+  );
+};
 
 export default TopTemplates;

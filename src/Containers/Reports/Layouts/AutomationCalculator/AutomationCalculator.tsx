@@ -7,12 +7,8 @@
 // @ts-nocheck
 import React, { useState, useEffect, FC } from 'react';
 import {
-  Button,
   Card,
   CardBody,
-  EmptyState,
-  EmptyStateIcon,
-  EmptyStateBody,
   Grid,
   GridItem,
   Stack,
@@ -21,10 +17,8 @@ import {
   CardTitle,
   CardFooter,
   PaginationVariant,
-  Title,
   Spinner,
 } from '@patternfly/react-core';
-import { ExclamationTriangleIcon as ExclamationTriangleIcon } from '@patternfly/react-icons';
 // Imports from custom components
 import FilterableToolbar from '../../../../Components/Toolbar';
 import Pagination from '../../../../Components/Pagination';
@@ -64,6 +58,7 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import { NotificationType } from '../../../../globalTypes';
+import EmptyList from '../../../../Components/EmptyList';
 
 const SpinnerDiv = styled.div`
   height: 400px;
@@ -92,9 +87,6 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
 
     return { ...el, delta, manualCost, automatedCost };
   });
-
-const computeTotalSavings = (data) =>
-  data.reduce((sum, curr) => sum + curr.delta, 0);
 
 const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   slug,
@@ -157,11 +149,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     }
   );
 
-  const setValue = (items) =>
+  const setValue = (items) => {
     setApiData({
       ...api.result,
       items,
     });
+  };
   const getROISaveData = (
     items: any[],
     manualCost?: number = costManual,
@@ -180,6 +173,13 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     };
   };
   const dispatch = useDispatch();
+
+  const update = async () => {
+    const res = await readData(queryParams);
+    api.result.monetary_gain_current_page = res.monetary_gain_current_page;
+    api.result.monetary_gain_other_pages = res.monetary_gain_other_pages;
+    return res;
+  };
 
   const updateCalculationValues = async (varName: string, value: number) => {
     const hourly_automation_cost =
@@ -208,6 +208,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       // don't update inputs
       return;
     }
+    await update();
     varName === 'manual_cost' ? setCostManual(value) : setCostAutomation(value);
   };
 
@@ -245,6 +246,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       // don't update inputs
       return;
     }
+    await update();
     setValue(updatedData);
   };
 
@@ -269,6 +271,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       // don't update inputs
       return;
     }
+    await update();
     setValue(updatedData);
   };
   const getSortParams = () => {
@@ -378,7 +381,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       )}
       {api.isLoading ? (
         <SpinnerDiv>
-          <Spinner isSVG />
+          <Spinner data-cy={'spinner'} isSVG />
         </SpinnerDiv>
       ) : filterDisabled(api?.result?.items).length > 0 ? (
         <Chart
@@ -397,18 +400,15 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           }}
         />
       ) : (
-        <EmptyState>
-          <EmptyStateIcon icon={ExclamationTriangleIcon} />
-          <Title headingLevel="h4" size="lg">
-            You have disabled all views
-          </Title>
-          <EmptyStateBody>
-            Enable individual views in the table below or press Show all button.
-          </EmptyStateBody>
-          <Button variant="primary" onClick={() => setEnabled(undefined)(true)}>
-            Show all
-          </Button>
-        </EmptyState>
+        <EmptyList
+          title={'No results found'}
+          message={
+            'No results match the filter criteria. Clear all filters and try again.'
+          }
+          showButton={true}
+          label={'Clear all filters'}
+          onButtonClick={() => setFromToolbar(undefined, undefined)}
+        />
       )}
     </Card>
   );
@@ -417,7 +417,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     <Stack>
       <StackItem>
         <TotalSavings
-          totalSavings={computeTotalSavings(filterDisabled(api.result.items))}
+          totalSavings={
+            api.result?.monetary_gain_other_pages +
+            api.result?.monetary_gain_current_page
+          }
+          currentPageSavings={api.result?.monetary_gain_current_page}
           isLoading={api.isLoading}
         />
       </StackItem>
@@ -480,7 +484,14 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 startDate={queryParams.start_date}
                 endDate={queryParams.end_date}
                 dateRange={queryParams.quick_date_range}
-                inputs={{ costManual, costAutomation }}
+                inputs={{
+                  costManual,
+                  costAutomation,
+                  totalSavings:
+                    api.result?.monetary_gain_other_pages +
+                    api.result?.monetary_gain_current_page,
+                  currentPageSavings: api.result?.monetary_gain_current_page,
+                }}
               />,
             ]}
           />
@@ -492,7 +503,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 Enter the time it takes to run the following templates manually.
               </p>
               {api.isLoading ? (
-                <Spinner isSVG />
+                <Spinner data-cy={'spinner'} isSVG />
               ) : (
                 <TemplatesTable
                   redirectToJobExplorer={redirectToJobExplorer}
@@ -536,7 +547,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       </>
     );
   return (
-    <ApiStatusWrapper api={api} customLoading={true}>
+    <ApiStatusWrapper api={api} customLoading={true} customEmptyState={true}>
       {renderContents()}
     </ApiStatusWrapper>
   );

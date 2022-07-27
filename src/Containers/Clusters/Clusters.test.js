@@ -38,10 +38,10 @@ describe('Containers/Clusters', () => {
     const spy = jest.spyOn(useRequest, 'default');
     spy.mockImplementation(mockUseRequestDefaultParams);
 
-    renderPage(Clusters);
+    const { container } = renderPage(Clusters);
 
     await waitFor(() => {
-      expect(screen.getByTestId('barchart'));
+      expect(container.querySelector('[data-cy="barchart"'));
     });
 
     expect(screen.getAllByText(/No Data/i)).toHaveLength(3);

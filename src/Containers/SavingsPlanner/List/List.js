@@ -164,6 +164,7 @@ const List = () => {
               ? [
                   <Button
                     key="add-plan-button"
+                    data-cy={'add-plan-button'}
                     variant="primary"
                     aria-label="Add plan"
                     onClick={() => {
@@ -177,6 +178,7 @@ const List = () => {
             canWrite && isSuccess && data.length > 0 && (
               <ToolbarDeleteButton
                 key="delete-plan-button"
+                data-cy={'delete-plan-button'}
                 onDelete={handleDelete}
                 itemsToDelete={data.filter((d) => selected.includes(d.id))}
                 pluralizedItemName={'Savings plan'}

@@ -39,7 +39,13 @@ export default function asyncComponent(importComponent) {
     render() {
       const C = this.state.component;
 
-      return C ? <C {...this.props} /> : <div>Loading...</div>;
+      return C ? (
+        <div data-cy={'page_component'}>
+          <C {...this.props} />
+        </div>
+      ) : (
+        <div data-cy="loading">Loading...</div>
+      );
     }
   }
 

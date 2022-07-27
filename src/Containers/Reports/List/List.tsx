@@ -140,7 +140,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
 
   return (
     <>
-      <PageHeader>
+      <PageHeader data-cy={'header-all_reports'}>
         <PageHeaderTitle title={'Reports'} />
         <FilterableToolbar
           categories={options}
@@ -272,7 +272,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
               );
             })}
           <Gallery
-            data-testid="all_reports"
+            data-cy="all_reports"
             hasGutter
             minWidths={{
               sm: '307px',

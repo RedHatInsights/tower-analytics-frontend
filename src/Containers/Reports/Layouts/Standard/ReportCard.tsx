@@ -178,6 +178,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         {availableChartTypes.map((chartType) => (
           <ToggleGroupItem
             key={chartType}
+            data-cy={'chart_type'}
             text={`${capitalize(chartType)} Chart`}
             buttonId={chartType}
             isSelected={chartType === chartParams.chartType}
