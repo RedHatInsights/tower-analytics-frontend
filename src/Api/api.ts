@@ -78,6 +78,7 @@ const mungeData = async (promise) => {
         peer_host_stats,
         failed_duration: item.host_avg_duration_per_task,
         successful_duration: -100,
+        anomaly: item.anomaly,
       };
     }
     return {
@@ -88,6 +89,7 @@ const mungeData = async (promise) => {
       peer_host_stats,
       failed_duration: -100,
       successful_duration: item.host_avg_duration_per_task,
+      anomaly: item.anomaly,
     };
   });
 
