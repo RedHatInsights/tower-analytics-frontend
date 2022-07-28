@@ -83,28 +83,37 @@ Cypress.Commands.add('loginFlow', () => {
     'localhost': {
       'username': '#username-verification',
       'password': '#password',
-      'two-step': false
-
+      'two-step': false,
+      'agree-cookies': false,
+      'landing-page': Cypress.config().baseUrl + clustersUrl
     },
     'front-end-aggregator-ephemeral': {
       'username': '#username-verification',
       'password': '#password',
-      'two-step': false
+      'two-step': false,
+      'agree-cookies': false,
+      'landing-page': Cypress.config().baseUrl + clustersUrl
     },
     'env-ephemeral': {
       'username': '#username',
       'password': '#password',
-      'two-step': false
+      'two-step': false,
+      'agree-cookies': true,
+      'landing-page': Cypress.config().baseUrl + "/"
     },
     'console.stage.redhat.com': {
       'username': '#username-verification',
       'password': '#password',
-      'two-step': true
+      'two-step': true,
+      'agree-cookies': false,
+      'landing-page': Cypress.config().baseUrl + clustersUrl
     },
     'stage.foo.redhat.com': {
       'username': '#username-verification',
       'password': '#password',
-      'two-step': true
+      'two-step': true,
+      'agree-cookies': false,
+      'landing-page': Cypress.config().baseUrl + clustersUrl
     }    
   }
 
@@ -134,20 +143,19 @@ Cypress.Commands.add('loginFlow', () => {
     ); 
   }
 
-  /* 
-  * TODO: This is a workaround and the tests runs longer than we would like.
-  * It needs to be updated in a way we don't even see the iframe,
-  * loading the cookies beforehand.
-  * 
-  * IF the iframe is loading in your local tests please uncomment the folowing code:
-  */
+  if(keycloakLoginFields[strategy]['agree-cookies']) {
+    /* 
+    * TODO: This is a workaround and the tests runs longer than we would like.
+    * It needs to be updated in a way we don't even see the iframe,
+    * loading the cookies beforehand.
+    */
+    if (cy.get('iframe').should('exist')) {
+      cy.acceptCookiesDialog();
+    }
+    cy.wait(5000)
+  }
 
-  // if (cy.get('iframe').should('exist')) {
-  //   cy.acceptCookiesDialog();
-  // }
-  // cy.wait(5000)
-
-  cy.url().should('eq', Cypress.config().baseUrl + clustersUrl);
+  cy.url().should('eq', keycloakLoginFields[strategy]['landing-page']);
 });
 
 /**
