@@ -154,7 +154,7 @@ const Clusters = () => {
       <Grid hasGutter>
         <GridItem span={12}>
           <Card>
-            <CardTitle>
+            <CardTitle data-cy={'card-title-job-status'}>
               <h2>Job status</h2>
             </CardTitle>
             <CardBody>
@@ -198,7 +198,7 @@ const Clusters = () => {
             jobType={'job'}
           />
         </GridItem>
-        <GridItem span={4}>
+        <GridItem span={4} data-cy={'top-modules-header'}>
           <ModulesList modules={modules} isLoading={modulesIsLoading} />
         </GridItem>
       </Grid>
@@ -207,7 +207,7 @@ const Clusters = () => {
 
   return (
     <>
-      <PageHeader>
+      <PageHeader data-cy={'header-clusters'}>
         <PageHeaderTitle title={'Clusters'} />
         <FilterableToolbar
           categories={options}
