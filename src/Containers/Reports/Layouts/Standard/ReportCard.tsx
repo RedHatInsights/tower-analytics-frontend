@@ -15,7 +15,7 @@ import {
 
 import Pagination from '../../../../Components/Pagination';
 
-import { useQueryParams } from '../../../../QueryParams';
+import { DEFAULT_NAMESPACE, useQueryParams } from '../../../../QueryParams';
 
 import useRequest from '../../../../Utilities/useRequest';
 
@@ -32,7 +32,12 @@ import hydrateSchema from '../../Shared/hydrateSchema';
 import { StandardProps } from '../types';
 import percentageFormatter from '../../../../Utilities/percentageFormatter';
 import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
-import { reportDefaultParams } from '../../../../Utilities/constants';
+import {
+  reportDefaultParams,
+  specificReportDefaultParams,
+} from '../../../../Utilities/constants';
+import { useRedirect } from '../../../../QueryParams';
+import paths from '../../paths';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
@@ -41,6 +46,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   tableHeaders,
   expandedTableRowName,
   clickableLinking,
+  showPagination,
   defaultSelectedToolbarCategory = '',
   availableChartTypes,
   dataEndpoint,
@@ -61,11 +67,28 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   );
 
   const { result: options, request: fetchOptions } =
-    useRequest<OptionsReturnType>(readOptions, { sort_options: [] });
+    useRequest<OptionsReturnType>(readOptions, {});
 
   const { request: fetchData, ...dataApi } = useRequest(readData, {
     meta: { count: 0, legend: [] },
   });
+
+  const redirect = useRedirect();
+
+  const redirectToHostScatter = (
+    slug: string,
+    templateId: any,
+    quickDateRange: any
+  ) => {
+    const initialQueryParams = {
+      [DEFAULT_NAMESPACE]: {
+        ...specificReportDefaultParams(slug),
+        template_id: templateId,
+        quick_date_range: quickDateRange,
+      },
+    };
+    redirect(paths.getDetails(slug), initialQueryParams);
+  };
 
   useEffect(() => {
     fetchData(queryParams);
@@ -130,13 +153,41 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     return val;
   };
 
+  const handleClick = (event, props) => {
+    redirectToHostScatter(
+      'host_anomalies_scatter',
+      props.datum.id,
+      queryParams.quick_date_range
+    );
+    window.location.reload();
+  };
+
   const customTooltipFormatting = ({ datum }) => {
-    const tooltip =
-      chartParams.label +
-      ' for ' +
-      datum.name +
-      ': ' +
-      formattedValue(queryParams.sort_options, datum.y);
+    let tooltip;
+    if (datum.host_status) {
+      tooltip =
+        'Host: ' +
+        datum.host_name +
+        '\nLast Referenced: ' +
+        datum.last_referenced;
+      tooltip +=
+        datum.failed_duration > 0 && datum.successful_duration === -100
+          ? '\nFailed duration for ' +
+            datum.host_name +
+            ': ' +
+            formattedValue(queryParams.sortOptions, datum.y)
+          : '\nSuccessful duration for ' +
+            datum.host_name +
+            ': ' +
+            formattedValue(queryParams.sortOptions, datum.y);
+    } else {
+      tooltip =
+        chartParams.label +
+        ' for ' +
+        datum.name +
+        ': ' +
+        formattedValue(queryParams.sort_options, datum.y);
+    }
     return tooltip;
   };
 
@@ -209,6 +260,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       dateRange={queryParams.quick_date_range}
     />,
   ];
+
   return fullCard ? (
     <Card>
       <CardBody>
@@ -218,16 +270,18 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           filters={queryParams}
           setFilters={setFromToolbar}
           pagination={
-            <Pagination
-              count={dataApi.result.meta.count}
-              perPageOptions={perPageOptions}
-              params={{
-                limit: +queryParams.limit,
-                offset: +queryParams.offset,
-              }}
-              setPagination={setFromPagination}
-              isCompact
-            />
+            showPagination && (
+              <Pagination
+                count={dataApi.result.meta.count}
+                perPageOptions={perPageOptions}
+                params={{
+                  limit: +queryParams.limit,
+                  offset: +queryParams.offset,
+                }}
+                setPagination={setFromPagination}
+                isCompact
+              />
+            )
           }
           additionalControls={additionalControls}
         />
@@ -240,10 +294,14 @@ const ReportCard: FunctionComponent<StandardProps> = ({
                 xTickFormat: chartParams.xTickFormat,
                 chartType: chartParams.chartType,
               })}
+              dataComponent={'foobar'}
               data={dataApi.result}
               specificFunctions={{
                 labelFormat: {
                   customTooltipFormatting,
+                },
+                onClick: {
+                  handleClick,
                 },
               }}
             />
@@ -258,16 +316,18 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         )}
       </CardBody>
       <CardFooter>
-        <Pagination
-          count={dataApi.result.meta.count}
-          perPageOptions={perPageOptions}
-          params={{
-            limit: +queryParams.limit,
-            offset: +queryParams.offset,
-          }}
-          setPagination={setFromPagination}
-          variant={PaginationVariant.bottom}
-        />
+        {showPagination && (
+          <Pagination
+            count={dataApi.result.meta.count}
+            perPageOptions={perPageOptions}
+            params={{
+              limit: +queryParams.limit,
+              offset: +queryParams.offset,
+            }}
+            setPagination={setFromPagination}
+            variant={PaginationVariant.bottom}
+          />
+        )}
       </CardFooter>
     </Card>
   ) : (

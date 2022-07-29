@@ -83,6 +83,11 @@ const Select: FunctionComponent<Props> = ({
   };
 
   const handleChips = (): string[] => {
+    if (
+      (Array.isArray(value) && value.length === 0) ||
+      typeof value === 'undefined'
+    )
+      return [];
     if (Array.isArray(value))
       return handleCheckboxChips(
         value.map((i) => i.toString()),

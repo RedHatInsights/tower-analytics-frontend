@@ -342,7 +342,7 @@ const allDefaultParams: any = {
       template_id: [],
     },
   },
-  host_anomalies: {
+  host_anomalies_bar: {
     defaultParams: {
       limit: 6,
       offset: 0,
@@ -355,8 +355,28 @@ const allDefaultParams: any = {
       host_status: [],
       sort_options: 'average_duration_per_task',
       sort_order: 'desc',
-      quick_date_range: 'slow_hosts_last_1_week',
+      quick_date_range: 'slow_hosts_last_3_weeks',
       slow_host_view: 'templates_with_slow_hosts',
+      chart_type: 'bar',
+    },
+  },
+  host_anomalies_scatter: {
+    defaultParams: {
+      limit: 6,
+      offset: 0,
+      attributes: ['slow_hosts_count'],
+      cluster_id: [],
+      org_id: [],
+      inventory_id: [],
+      template_id: null,
+      status: [],
+      host_status: [],
+      sort_options: 'average_duration_per_task',
+      sort_order: 'desc',
+      granularity: 'daily',
+      quick_date_range: 'slow_hosts_last_3_weeks',
+      slow_host_view: 'templates_with_slow_hosts',
+      chart_type: 'scatter',
     },
   },
   hosts_by_organization: {

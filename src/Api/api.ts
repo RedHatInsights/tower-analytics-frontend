@@ -1,3 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+// @ts-nocheck
 import {
   get,
   post,
@@ -33,6 +39,7 @@ export enum Endpoint {
   hostExplorer = '/api/tower-analytics/v1/host_explorer/',
   eventExplorer = '/api/tower-analytics/v1/event_explorer/',
   probeTemplates = '/api/tower-analytics/v1/probe_templates/',
+  probeTemplateForHosts = '/api/tower-analytics/v1/probe_template_for_hosts/',
   ROI = '/api/tower-analytics/v1/roi_templates/',
   costEffortROI = '/api/tower-analytics/v1/roi_cost_effort_data/',
   plans = '/api/tower-analytics/v1/plans/',
@@ -52,10 +59,47 @@ export enum Endpoint {
   eventExplorerOptions = '/api/tower-analytics/v1/event_explorer_options/',
   hostExplorerOptions = '/api/tower-analytics/v1/host_explorer_options/',
   probeTemplatesOptions = '/api/tower-analytics/v1/probe_templates_options/',
+  probeTemplateForHostsOptions = '/api/tower-analytics/v1/probe_template_for_hosts_options/',
   reportOptions = '/api/tower-analytics/v1/report_options/',
 
   features = '/api/featureflags/v0',
 }
+
+const mungeData = async (promise) => {
+  const response = await promise;
+  const peer_host_stats = response.peer_host_stats;
+  const chartData = response.meta.legend.map((item) => {
+    if (item.anomaly) {
+      return {
+        host_id: item.host_id,
+        host_name: item.host_name,
+        host_status: item.host_status,
+        last_referenced: item.last_referenced,
+        peer_host_stats,
+        failed_duration: item.host_avg_duration_per_task,
+        successful_duration: -100,
+        anomaly: item.anomaly,
+      };
+    }
+    return {
+      host_id: item.host_id,
+      host_name: item.host_name,
+      host_status: item.host_status,
+      last_referenced: item.last_referenced,
+      peer_host_stats,
+      failed_duration: -100,
+      successful_duration: item.host_avg_duration_per_task,
+      anomaly: item.anomaly,
+    };
+  });
+
+  return {
+    meta: {
+      count: response.peer_hosts_stats.length,
+      legend: chartData.flat(),
+    },
+  };
+};
 
 export const preflightRequest = (): Promise<Response> =>
   authenticatedFetch(Endpoint.preflight);
@@ -125,10 +169,20 @@ export const readNotifications = (params: Params): Promise<ApiJson> =>
 
 export const readProbeTemplates = (
   params: ParamsWithPagination
-): Promise<ApiJson> => post(Endpoint.probeTemplates, params);
+): Promise<ApiJson> => {
+  return post(Endpoint.probeTemplates, params);
+};
+
+export const readProbeTemplateForHosts = (params: Params): Promise<ApiJson> => {
+  return mungeData(post(Endpoint.probeTemplateForHosts, params));
+};
 
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
-  get(Endpoint.probeTemplatesOptions, params);
+  post(Endpoint.probeTemplatesOptions, params);
+
+export const readProbeTemplateForHostsOptions = (
+  params: Params
+): Promise<ApiJson> => post(Endpoint.probeTemplateForHostsOptions, params);
 
 export const readReports = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(Endpoint.reports, params);
@@ -215,8 +269,12 @@ export const endpointFunctionMap = (endpoint: Endpoint): ReadEndpointFnc => {
       return readNotifications;
     case Endpoint.probeTemplates:
       return readProbeTemplates;
+    case Endpoint.probeTemplateForHosts:
+      return readProbeTemplateForHosts;
     case Endpoint.probeTemplatesOptions:
       return readProbeTemplatesOptions;
+    case Endpoint.probeTemplateForHostsOptions:
+      return readProbeTemplateForHostsOptions;
     case Endpoint.reportOptions:
       return reportOptions;
     default:

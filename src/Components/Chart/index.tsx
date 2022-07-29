@@ -31,6 +31,10 @@ const customFunctions = (specificFunctions?: ChartFunctions) => ({
     ...functions.labelFormat,
     ...specificFunctions?.labelFormat,
   },
+  onClick: {
+    ...functions.onClick,
+    ...specificFunctions?.onClick,
+  },
 });
 
 const applyHiddenFilter = (
@@ -41,8 +45,13 @@ const applyHiddenFilter = (
   series: chartData.series.map((series: ChartDataSerie) => ({
     ...series,
     hidden:
-      !!series.serie[0].id &&
-      !!chartSeriesHidden.includes(series.serie[0].id.toString()),
+      (!!series.serie[0].id || !!series.serie[0].host_id) &&
+      !!chartSeriesHidden.includes(
+        // eslint-disable-next-line no-prototype-builtins
+        series.serie[0].hasOwnProperty('host_id').toString() ||
+          // eslint-disable-next-line no-prototype-builtins
+          series.serie[0].hasOwnProperty('id').toString()
+      ),
   })),
 });
 
@@ -88,7 +97,9 @@ const Chart: FC<Props> = ({
   return (
     <ChartBuilder
       schema={schema}
-      functions={customFunctions(specificFunctions)}
+      functions={{
+        ...customFunctions(specificFunctions),
+      }}
       dataState={[chartData, setChartDataHook]}
     />
   );
