@@ -579,5 +579,5 @@ export const reportDefaultParams = (slug: string): DefaultParamsProps => {
 
 export const specificReportDefaultParams = (slug: string): Params => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  return allDefaultParams[slug].defaultParams;
+  return allDefaultParams[slug].defaultParams as Params;
 };
