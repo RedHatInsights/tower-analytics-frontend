@@ -96,6 +96,7 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_NAME':
     case 'SET_ROOT_WORKFLOWS_AND_JOBS':
     case 'SET_TEMPLATE_WEIGH_IN':
+    case 'SET_ANOMALY':
     case 'SET_INVENTORY':
     case 'SET_SORT_OPTIONS':
     case 'SET_CALCULATOR':
@@ -138,6 +139,7 @@ const actionMapper = {
   name: 'SET_NAME',
   only_root_workflows_and_standalone_jobs: 'SET_ROOT_WORKFLOWS_AND_JOBS',
   template_weigh_in: 'SET_TEMPLATE_WEIGH_IN',
+  anomaly: 'SET_ANOMALY',
   inventory_id: 'SET_INVENTORY',
   granularity: 'SET_GRANULARITY',
   tags: 'SET_TAGS',

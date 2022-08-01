@@ -34,6 +34,7 @@ export interface StandardProps extends BaseReportProps {
   fullCard?: boolean;
   clickableLinking?: boolean;
   showPagination?: boolean;
+  showKebab?: boolean;
 }
 
 export type ReportSchema =
