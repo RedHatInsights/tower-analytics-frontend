@@ -47,6 +47,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   expandedTableRowName,
   clickableLinking,
   showPagination,
+  showKebab,
   defaultSelectedToolbarCategory = '',
   availableChartTypes,
   dataEndpoint,
@@ -311,6 +312,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
               getSortParams={getSortParams}
               expandedRowName={expandedTableRowName}
               clickableLinking={clickableLinking}
+              showKebab={showKebab}
             />
           </ApiStatusWrapper>
         )}
