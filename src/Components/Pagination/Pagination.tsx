@@ -36,6 +36,7 @@ const Pagination: FunctionComponent<Props> = ({
 
   return (
     <PFPagination
+      data-cy={props.isCompact ? 'pagination_top' : 'pagination_bottom'}
       itemCount={count}
       widgetId="aa-pagination"
       perPageOptions={perPageOptions ?? defaultPerPageOptions}
