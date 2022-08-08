@@ -70,7 +70,9 @@ const Details: FunctionComponent<Record<string, never>> = () => {
                     position={TooltipPosition.bottom}
                     content={tag.description}
                   >
-                    <Label key={idx}>{tag.name}</Label>
+                    <Label data-cy={tag.name} key={idx}>
+                      {tag.name}
+                    </Label>
                   </Tooltip>
                 );
               }
