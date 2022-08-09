@@ -69,6 +69,7 @@ const ReportTable: FunctionComponent<Props> = ({
           {headers.map(({ key, value }) =>
             showKebab && key === 'anomaly' ? (
               <Th
+                key={key}
                 style={{
                   overflow: 'visible',
                   zIndex: 1,
