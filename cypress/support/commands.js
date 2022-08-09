@@ -79,6 +79,8 @@ Cypress.Commands.add('acceptCookiesDialog', () => {
 Cypress.Commands.add('loginFlow', () => {
   cy.visit('/');
 
+  cy.log('Determining login strategy');
+
   const keycloakLoginFields = {
     'localhost': {
       'username': '#username-verification',
@@ -100,6 +102,13 @@ Cypress.Commands.add('loginFlow', () => {
       'two-step': false,
       'agree-cookies': true,
       'landing-page': Cypress.config().baseUrl + "/"
+    },
+    'mocks-keycloak-ephemeral': {
+      'username': '#username',
+      'password': '#password',
+      'two-step': false,
+      'agree-cookies': false,
+      'landing-page': Cypress.config().baseUrl + clustersUrl
     },
     'console.stage.redhat.com': {
       'username': '#username-verification',
@@ -123,12 +132,17 @@ Cypress.Commands.add('loginFlow', () => {
   // let key = keycloakLoginUrls.filter(....)
   for(const element of Object.keys(keycloakLoginFields)) {
     if(Cypress.config().baseUrl.includes(element)) {
+      cy.log('Baseurl contains: ' + element);
       strategy = element;
       break;
     }
   }
 
+  cy.log('Strategy: ');
+  cy.log(keycloakLoginFields[strategy]);
+
   if(keycloakLoginFields[strategy]['two-step']) {
+    cy.log('Two step verfication');
     cy.getUsername().then((uname) =>
       cy.get(keycloakLoginFields[strategy]['username']).type(`${uname}`)
     );
@@ -137,6 +151,7 @@ Cypress.Commands.add('loginFlow', () => {
       cy.get(keycloakLoginFields[strategy]['password']).type(`${password}{enter}`, { log: false })
     );
   } else {
+    cy.log('One step verfication');
     cy.getUsername().then((uname) => cy.get(keycloakLoginFields[strategy]['username']).type(`${uname}`));
     cy.getPassword().then((password) =>
       cy.get(keycloakLoginFields[strategy]['password']).type(`${password}{enter}`, { log: false })
@@ -144,6 +159,7 @@ Cypress.Commands.add('loginFlow', () => {
   }
 
   if(keycloakLoginFields[strategy]['agree-cookies']) {
+    cy.log('Accept cookies');
     /* 
     * TODO: This is a workaround and the tests runs longer than we would like.
     * It needs to be updated in a way we don't even see the iframe,
@@ -155,6 +171,7 @@ Cypress.Commands.add('loginFlow', () => {
     cy.wait(5000)
   }
 
+  cy.log('Checking for landing page: ' + keycloakLoginFields[strategy]['landing-page']);
   cy.url().should('eq', keycloakLoginFields[strategy]['landing-page']);
 });
 
