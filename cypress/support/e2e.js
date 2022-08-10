@@ -15,6 +15,8 @@
 
 // Import commands.js using ES2015 syntax:
 import './commands'
+import './login'
+import './pagination'
 
 // Returning false here prevents Cypress from failing the test
 Cypress.on('uncaught:exception', (err, runnable) => {
