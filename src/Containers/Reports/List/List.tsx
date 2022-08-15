@@ -108,7 +108,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
     request: fetchReport,
     isSuccess: isReportSuccess,
   } = useRequest(async () => {
-    const response = await readReport(selected);
+    const response = await readReport(selected || reports[0].slug);
     return response.report as ReportSchema;
   }, {} as ReportSchema);
 
