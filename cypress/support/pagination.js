@@ -1,3 +1,4 @@
+import './commands'
 /**
  * This command get a parent element using data-cy
  * then get's a child from it also using data-cy
@@ -9,7 +10,7 @@
  * @param {String} childBtnAction - The navigation child action: Next or Previous
  */
 Cypress.Commands.add('getPaginationArrows', (cyParent, childBtnAction, ...args) => {
-  return cy.get(`[data-cy="${cyParent}"]`, ...args)
+  return cy.getByCy(`${cyParent}`, ...args)
   .find('.pf-c-pagination__nav')
   .find(`[data-action="${childBtnAction}"]`)
 
