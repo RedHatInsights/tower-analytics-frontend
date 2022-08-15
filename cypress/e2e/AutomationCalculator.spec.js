@@ -21,20 +21,19 @@ describe('Automation Calculator page', () => {
   it('can change manual cost', () => {
     let originalTotalSavingsValue = cy.get('[data-cy="total_savings"]').find('h3').textContent;
     let originalPageSavingsValue = cy.get('[data-cy="current_page_savings"]').find('h3').textContent;
-    //let originalSavingsValues = [];
-    //cy.get('[data-cy="savings"]').each(($el) =>  originalSavingsValues.push($el.text()));
+    let originalSavingsValues = [];
+    cy.get('[data-cy="savings"]').each(($el) => originalSavingsValues.push($el.text()));
 
     cy.get('#manual-cost').clear();
     waitToLoad();
     cy.get('#manual-cost').should('have.value', '0');
-    // TODO there's a bug in UI. Savings column is not updated when inputs change
-    /*
+
     cy.get('[data-cy="savings"]').each(($el, index) => {
       const newSavingsValue = $el.text();
       // FIXME this should be not.to.be
       expect(newSavingsValue).not.to.eq(originalSavingsValues[index]);
     });
-     */
+
     cy.get('#manual-cost').type('5');
     waitToLoad();
     // TODO explain trailing 0

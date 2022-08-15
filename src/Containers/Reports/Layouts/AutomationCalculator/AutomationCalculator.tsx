@@ -178,6 +178,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     const res = await readData(queryParams);
     api.result.monetary_gain_current_page = res.monetary_gain_current_page;
     api.result.monetary_gain_other_pages = res.monetary_gain_other_pages;
+    api.result.items = api.result.items.map((item, i) =>
+      Object.assign({}, item, res.meta.legend[i])
+    );
     return res;
   };
 
