@@ -107,6 +107,21 @@ Cypress.Commands.add('getByIdLike', (selector, ...args) => {
  * @param {String} parentSelector
  * @param {String} selector - The selector value
  **/
+ Cypress.Commands.add('findFromParent', (parentSelector, selector, ...args) => {
+  cy.get(`${parentSelector}`)
+  .find(`${selector}`, ...args)
+})
+
+/**
+ * This command find an element inside a given parent with id
+ * using a partial match anywhere in the element.
+ *
+ * Example usage:
+ * cy.findByIdLike("parent-selector" "select-option-description")
+ *
+ * @param {String} parentSelector
+ * @param {String} selector - The selector value
+ **/
  Cypress.Commands.add('findByIdLike', (parentSelector, selector, ...args) => {
   cy.get(`${parentSelector}`)
   .find(`[id*="${selector}"]`, ...args)
