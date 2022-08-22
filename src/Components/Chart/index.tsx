@@ -1,4 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
+import { ExclamationCircleIcon } from '@patternfly/react-icons';
 import ChartBuilder, {
   ChartData,
   ChartFunctions,
@@ -17,6 +18,23 @@ interface Props {
   namespace?: string;
 }
 
+interface Props {
+  x?: number;
+  y?: number;
+  [key: string]: any;
+}
+
+const CustomPoint: FC<Props> = ({ x, y, disableInlineStyles, ...props }) => {
+  return x != undefined && y != undefined ? (
+    <ExclamationCircleIcon
+      x={x - 8}
+      y={y - 8}
+      {...props}
+      {...props.events}
+    ></ExclamationCircleIcon>
+  ) : null;
+};
+
 const customFunctions = (specificFunctions?: ChartFunctions) => ({
   ...functions,
   axisFormat: {
@@ -34,6 +52,9 @@ const customFunctions = (specificFunctions?: ChartFunctions) => ({
   onClick: {
     ...functions.onClick,
     ...specificFunctions?.onClick,
+  },
+  dataComponent: {
+    scatterPlot: CustomPoint,
   },
 });
 
