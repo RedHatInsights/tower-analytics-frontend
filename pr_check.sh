@@ -3,177 +3,75 @@
 set +e
 set -x
 
-# ----------------------------
-# Check for PR branch function
-# ----------------------------
+# imports
+export COMMON_BUILDER=https://raw.githubusercontent.com/jameswnl/insights-frontend-builder-common/master
+export CICD_URL=https://raw.githubusercontent.com/RedHatInsights/bonfire/master/cicd
 
-SHORT_COMMIT=$(echo $ghprbActualCommit |cut -c1-7)
-FRONTEND_BUILD_URL="https://github.com/RedHatInsights/tower-analytics-frontend-build/tree"
+# common
+export WORKSPACE=${WORKSPACE:-$APP_ROOT}
+export APP_ROOT=$(pwd)
+export NODE_BUILD_VERSION=16
+export APP_NAME="tower-analytics"
+export CLOWD_APP_NAME=automation-analytics
+export BACKUP_APP_ROOT=${WORKSPACE:-$APP_ROOT}
 
-function check_pr_branch {    
-    RET=$(curl -s -I $FRONTEND_BUILD_URL/pr-$1 | head -n 1 | awk '{print $2}' | tr -d '\n')
+# bonfire & build variables
+export BONFIRE_APP_NAME="tower-analytics" 
+export BONFIRE_COMPONENT_NAME="tower-analytics-clowdapp"
+export BONFIRE_COMPONENTS_ARG=""
 
-    if [[ $RET == "200" ]]; then
-        return 0
-    fi
+# backend
+export COMPONENT_NAME="tower-analytics-clowdapp"
+export IMAGE_BACKEND="quay.io/cloudservices/automation-analytics-api"
+export IMAGE_BACKEND_TAG=$(curl -s https://gitlab.cee.redhat.com/api/v4/projects/37507/repository/commits | jq -r ' .[0].id' | head -c7)
 
-    return 1
-}
+# frontend
+export IMAGE="quay.io/cloudservices/automation-analytics-frontend"
+export IMAGE_FRONTEND="quay.io/cloudservices/automation-analytics-frontend"
+export IMAGE_FRONTEND_TAG=$(git rev-parse --short=7 HEAD)
+export IMAGE_FRONTEND_SHA1=$(git rev-parse HEAD)
 
-# -----
-# Start
-# -----
-
-echo $(date -u) "*** To start PR check"
-echo "Building $GIT_BRANCH $ghprbActualCommit $SHORT_COMMIT"
-
-# --------------------------------------------
-# Options that must be configured by app owner
-# --------------------------------------------
-
-APP_NAME="tower-analytics"  # name of app-sre "application" folder this component lives in
-APP_NAME="$APP_NAME,gateway,insights-ephemeral"
-COMPONENT_NAME="tower-analytics-clowdapp"  # name of app-sre "resourceTemplate" in deploy.yaml for this component
-IMAGE="quay.io/cloudservices/automation-analytics-api"
-AA_IMAGE_TAG=$(curl https://gitlab.cee.redhat.com/api/v4/projects/37507/repository/commits | jq -r '.[0].short_id' | head -c7 | tr -d '\n')
-
-# ------------------------------------
-# Wait for frontend pr-check to appear
-# ------------------------------------
-
-GO=1
-WAIT_TIME=1200
-
-while [[ $WAIT_TIME -gt 0 ]]; do 
-    echo "Checking if pr-$SHORT_COMMIT is available"
-    check_pr_branch $SHORT_COMMIT
-    if [[ $? -eq 0 ]]; then
-        echo "Branch pr-$SHORT_COMMIT is available, continuing..."
-        GO=0
-        break
-    fi
-    sleep 30
-    WAIT_TIME=$(($WAIT_TIME - 30))
-done
-
-if [[ $GO -eq 1 ]]; then
-    echo "Branch pr-$SHORT_COMMIT never appeared.  Check the jenkins job on github. exiting..."
-    exit 1
-fi
-
-# ------------------------------------------------
-# If the PR branch appears then deploy the backend
-# ------------------------------------------------
-
-# Install bonfire repo/initialize
-CICD_URL=https://raw.githubusercontent.com/RedHatInsights/bonfire/master/cicd
-curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
-
-export NAMESPACE=$(bonfire namespace reserve)
+# iqe
+export IQE_PLUGINS="automation-analytics"
 export IQE_IMAGE="quay.io/cloudservices/iqe-tests:automation-analytics"
-oc project ${NAMESPACE}
-
-bonfire deploy \
-    ${APP_NAME} \
-    --no-remove-resources $COMPONENT_NAME \
-    --source appsre \
-    --set-template-ref ${COMPONENT_NAME}=main \
-    --set-image-tag $IMAGE=$AA_IMAGE_TAG \
-    --namespace ${NAMESPACE} \
-    ${COMPONENTS_ARG}
-
-# ----------------------------------------------
-# Update frotnend aggreagtor to us the pr branch
-# ----------------------------------------------
-
-rm -rf /tmp/frontend-build
-git clone --depth 1 --branch pr-$SHORT_COMMIT https://github.com/RedHatInsights/tower-analytics-frontend-build.git /tmp/frontend-build
-cd /tmp/frontend-build
-BUILD_COMMIT_ID=$(git log -n 1 --pretty=format:"%H" | tr -d '\n')
-
-cat >/tmp/app-config.yml <<EOL
----
-automation-analytics:
-    commit: $BUILD_COMMIT_ID
-EOL
-
-kubectl delete configmap aggregator-app-config
-kubectl create configmap aggregator-app-config --from-file=/tmp/app-config.yml
-kubectl rollout restart deployment/front-end-aggregator
-kubectl rollout status deployment/front-end-aggregator
-
-sleep 60
-oc exec -n ${NAMESPACE} deployment/front-end-aggregator -- /www/src/do_platform_apps.py
-
-while [ $? -ne 0 ]; do
-    sleep 30
-    oc exec -n ${NAMESPACE} deployment/front-end-aggregator -- /www/src/do_platform_apps.py
-done
-
-# -------------
-# Fix SSO proxy
-# -------------
-
-FRONTEND_POD=`oc get pods | grep -i front | awk '{print $1}'`
-UI_URL=`oc get route front-end-aggregator -o jsonpath='https://{.spec.host}{"\n"}' -n $NAMESPACE`
-KEYCLOCK_URL=`oc get route mocks-keycloak -o jsonpath='https://{.spec.host}{"\n"}' -n $NAMESPACE`
-
-KEYCLOCK_URL_CLEAN=$(echo $KEYCLOCK_URL |sed 's/https\?:\/\///')
-
-mkdir -vp /tmp/fixsso
-cat >/tmp/fixsso/fix_sso_url.sh <<EOL
-#!/bin/bash -x
-
-cd /all/code/chrome/js
-
-for f in \`ls *.js\`; do 
-	sed -i s/sso.qa.redhat.com/$KEYCLOCK_URL_CLEAN/g \$f 
-	rm \$f.gz 
-	gzip --keep \$f; 
-done
-EOL
-
-chmod +x /tmp/fixsso/fix_sso_url.sh
-oc rsync /tmp/fixsso $FRONTEND_POD:/tmp/
-
-oc exec -n ${NAMESPACE} deployment/front-end-aggregator -- /tmp/fixsso/fix_sso_url.sh
-
-
-# ------------------
-# Generate test data
-# ------------------
-
-echo $(date -u) "*** To start generating testing data"
-oc get deployments -n $NAMESPACE
-oc exec  -n $NAMESPACE deployments/automation-analytics-api-fastapi-v2 -- bash -c "./entrypoint ./tower_analytics_report/management/commands/generate_development_data.py --tenant_id 3340852"
-oc exec  -n $NAMESPACE deployments/automation-analytics-api-fastapi-v2 -- bash -c "./entrypoint ./tower_analytics_report/management/commands/process_rollups_one_time.py"
-
-
-# ---------------
-# Run smoke tests
-# ---------------
-
-export IQE_PLUGINS="automation_analytics"
+export IQE_MARKER_EXPRESSION="smoke"
 export IQE_FILTER_EXPRESSION=""
 export IQE_CJI_TIMEOUT="15m"
-export CLOWD_APP_NAME=automation-analytics
-export COMPONENT_NAME=automation-analytics
 
-echo $SEP
-echo "Create IQE Pod"
-echo $SEP
+# Build uses: IMAGE, COMPONENT, WORKSPACE, APP_ROOT & NODE_BUILD_VERSION
+set -exv
+source <(curl -sSL $COMMON_BUILDER/src/frontend-build.sh)
+
+# undo muddiness @blake
+export APP_ROOT=$BACKUP_APP_ROOT
+
+# Bonfire install and namespace reserve
+cd $WORKSPACE
+curl -s $CICD_URL/bootstrap.sh > .cicd_bootstrap.sh && source .cicd_bootstrap.sh
+export NAMESPACE=$(bonfire namespace reserve)
+oc project $NAMESPACE
+
+# Bonfire deploy
+set -exv
+bonfire deploy \
+    $BONFIRE_APP_NAME \
+    --no-remove-resources $BONFIRE_COMPONENT_NAME \
+    --source appsre \
+    --set-template-ref $BONFIRE_COMPONENT_NAME=main \
+    --set-template-ref tower-analytics-frontend=$IMAGE_FRONTEND_SHA1 \
+    --set-image-tag $IMAGE_BACKEND=$IMAGE_BACKEND_TAG \
+    --set-image-tag $IMAGE_FRONTEND=$IMAGE_FRONTEND_TAG \
+    --frontends=true \
+    --namespace $NAMESPACE \
+    $BONFIRE_COMPONENTS_ARG
+
+# genereate test data
+oc exec  -n $NAMESPACE deployments/automation-analytics-api-fastapi-v2 -- bash -c "./entrypoint ./tower_analytics_report/management/commands/generate_development_data.py --tenant_id 12345"
 
 echo $BONFIRE_NS_REQUESTER
-source ${CICD_ROOT}/cji_smoke_test.sh
-
-
-# -------
-# Cypress
-# -------
-
-set +e
-
-export UI_URL=`oc get route front-end-aggregator -o jsonpath='https://{.spec.host}{"\n"}' -n $NAMESPACE`
+export COMPONENT_NAME=automation-analytics
+export ui_container=$(oc get route | grep chrome | tail -n 1 | awk '{print $1}')
+export UI_URL=`oc get route $ui_container -o jsonpath='https://{.spec.host}' -n $NAMESPACE`
 export IQE_IMAGE="quay.io/cloudservices/automation-analytics-cypress-image:latest"
 export CYPRESS_RECORD_KEY=cfd2f4fd-402d-4da1-a3ad-f5f8e688fff2
 export IQE_SERVICE_ACCOUNT=$(oc get serviceaccount | grep iqe | awk '{print $1}')
@@ -230,39 +128,44 @@ cd /tmp/frontend
 git fetch origin pull/$ghprbPullId/head:pr-$ghprbPullId
 git checkout pr-$ghprbPullId
 
+export CYPRESS_PW=$(oc get secret env-$NAMESPACE-keycloak -o json | jq -r '.data | map_values(@base64d) | .defaultPassword')
+
+
 cat >/tmp/frontend/cypress_run.sh <<EOL
 export CYPRESS_RECORD_KEY=${CYPRESS_RECORD_KEY}
 export CYPRESS_ProjectID=wwyf7n
 export CYPRESS_RECORD=true
 export CYPRESS_USERNAME=jdoe
-export CYPRESS_PASSWORD=redhat
-export CYPRESS_defaultCommandTimeout=10000
-export CYPRESS_baseUrl=$UI_URL/beta/ansible/insights
+export CYPRESS_PASSWORD=${CYPRESS_PW}
+export CYPRESS_baseUrl=$UI_URL/ansible/insights
+
+export CYPRESS_defaultCommandTimeout=2000
+export CYPRESS_execTimeout=15000
+export CYPRESS_taskTimeout=30000
+export CYPRESS_pageLoadTimeout=20000
+export CYPRESS_requestTimeout=2000
+export CYPRESS_responseTimeout=10000
 
 cd /tmp/frontend
+sed '/pageLoadTimeout: 120000,/d' -i cypress.config.ts
+sed '/responseTimeout: 60000,/d' -i cypress.config.ts
+sed 's/runMode: 2,/runMode:1,/g' -i cypress.config.ts
+
+cat cypress.config.ts
 npm ci
-
-#echo ">>> Cypress Electron"
-#/src/node_modules/cypress/bin/cypress run integration --record --key ${CYPRESS_RECORD_KEY} --headless
-
 echo ">>> Cypress Chrome"
 /src/node_modules/cypress/bin/cypress run integration --record --key ${CYPRESS_RECORD_KEY} --browser chrome --headless
-
-echo ">>> Cypress Firefox"
-/src/node_modules/cypress/bin/cypress run integration --record --key ${CYPRESS_RECORD_KEY} --browser /opt/firefox/firefox-bin --headless
 EOL
 
 chmod +x /tmp/frontend/cypress_run.sh
 oc rsync /tmp/frontend cypress:/tmp/
-
 oc exec -n ${NAMESPACE} cypress -- bash -c "/tmp/frontend/cypress_run.sh"
 
-set -e
-
-# Stubbed out for now, will be added as tests are enabled
 mkdir -p $WORKSPACE/artifacts
 cat << EOF > $WORKSPACE/artifacts/junit-dummy.xml
-<testsuite tests="1">
-    <testcase classname="dummy" name="dummytest"/>
-</testsuite>
+	<testsuite tests="1">
+	<testcase classname="dummy" name="dummytest"/>
+	</testsuite>
 EOF
+
+exit $BUILD_RESULTS
