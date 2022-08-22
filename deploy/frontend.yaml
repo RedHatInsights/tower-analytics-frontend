@@ -1,0 +1,99 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: tower-analytics-frontend
+objects:
+  - apiVersion: cloud.redhat.com/v1alpha1
+    kind: Frontend
+    metadata:
+      name: tower-analytics
+    spec:
+      envName: ${ENV_NAME}
+      title: Automation Analytics
+      deploymentRepo: https://github.com/RedHatInsights/tower-analytics-frontend
+      API:
+        versions:
+          - v1
+      frontend:
+        paths:
+          - /apps/tower-analytics
+          - /apps/automation-analytics
+      image: ${IMAGE}:${IMAGE_TAG}
+      navItems:
+        - appId: "automationAnalytics"
+          title: "Reports"
+          href: "/ansible/insights/reports"
+          product: "Red Hat Insights"
+        - appId: "automationAnalytics"
+          title: "Savings Planner"
+          href: "/ansible/insights/savings-planner"
+          product: "Red Hat Insights"
+        - appId: "automationAnalytics"
+          title: "Automation Calculator"
+          href: "/ansible/insights/automation_calculator"
+          product: "Red Hat Insights"
+        - appId: "automationAnalytics"
+          title: "Organization Statistics"
+          href: "/ansible/insights/organization-statistics"
+          product: "Red Hat Insights"
+        - appId: "automationAnalytics"
+          title: "Job Explorer"
+          href: "/ansible/insights/job-explorer"
+          product: "Red Hat Insights"
+        - appId: "automationAnalytics"
+          title: "Clusters"
+          href: "/ansible/insights/clusters"
+          product: "Red Hat Insights"
+        - appId: "automationAnalytics"
+          title: "Notifications"
+          href: "/ansible/insights/notifications"
+          product: "Red Hat Insights"
+
+        - appId: "automationAnalytics"
+          title: "Beta Reports"
+          href: "/beta/ansible/insights/reports"
+          product: "Red Hat Insights"
+        - appId: "automationAnalytics"
+          title: "Beta Savings Planner"
+          href: "/beta/ansible/insights/savings-planner"
+          product: "Red Hat Insights"
+        - appId: "automationAnalytics"
+          title: "Beta Automation Calculator"
+          href: "/beta/ansible/insights/automation_calculator"
+          product: "Red Hat Insights"
+        - appId: "automationAnalytics"
+          title: "Beta Organization Statistics"
+          href: "/beta/ansible/insights/organization-statistics"
+          product: "Red Hat Insights"
+        - appId: "automationAnalytics"
+          title: "Beta Job Explorer"
+          href: "/beta/ansible/insights/job-explorer"
+          product: "Red Hat Insights"
+        - appId: "automationAnalytics"
+          title: "Beta Clusters"
+          href: "/beta/ansible/insights/clusters"
+          product: "Red Hat Insights"
+        - appId: "automationAnalytics"
+          title: "Beta Notifications"
+          href: "/beta/ansible/insights/notifications"
+          product: "Red Hat Insights"
+
+      module:
+        # match the fs location above
+        moduleID: automationAnalytics
+        manifestLocation: "/apps/automation-analytics/fed-mods.json"
+        modules:
+          - id: "automationAnalytics"
+            module: "./RootApp"
+            routes:
+              # cross reference againt paths above and make sure it matches
+              - pathname: /ansible/insights
+              - pathname: /beta/ansible/insights
+
+parameters:
+  - name: ENV_NAME
+    required: true
+  - name: IMAGE_TAG
+    required: true
+  - name: IMAGE
+    value: quay.io/cloudservices/automation-analytics-frontend
