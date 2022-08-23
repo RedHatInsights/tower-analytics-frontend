@@ -20,7 +20,7 @@ Cypress.Commands.add('clearFeatureDialogs', () => {
   });
 });
 
-/* 
+/*
  * TODO: This is a workaround and the tests runs longer than we would like.
  * It needs to be updated in a way we don't even see the iframe,
  * loading the cookies beforehand
@@ -98,7 +98,7 @@ Cypress.Commands.add('loginFlow', () => {
       'two-step': true,
       'agree-cookies': false,
       'landing-page': Cypress.config().baseUrl + clustersUrl
-    }    
+    }
   }
 
   let strategy = null;
@@ -130,19 +130,19 @@ Cypress.Commands.add('loginFlow', () => {
     cy.getUsername().then((uname) => cy.get(keycloakLoginFields[strategy]['username']).type(`${uname}`));
     cy.getPassword().then((password) =>
       cy.get(keycloakLoginFields[strategy]['password']).type(`${password}{enter}`, { log: false })
-    ); 
+    );
   }
 
   if(keycloakLoginFields[strategy]['agree-cookies']) {
     cy.log('Accept cookies');
-    /* 
+    /*
     * TODO: This is a workaround and the tests runs longer than we would like.
     * It needs to be updated in a way we don't even see the iframe,
     * loading the cookies beforehand.
     */
-    if (cy.get('iframe').should('exist')) {
+    /*if (cy.get('iframe').should('exist')) {
       cy.acceptCookiesDialog();
-    }
+    }*/
     cy.wait(5000)
   }
 
