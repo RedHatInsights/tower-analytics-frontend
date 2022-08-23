@@ -1,4 +1,4 @@
-import { clustersUrl } from '../support/constants'
+import { clustersUrl, reportsUrl } from '../support/constants'
 
 Cypress.Commands.add('getBaseUrl', () => Cypress.env('baseUrl'));
 
@@ -43,7 +43,7 @@ Cypress.Commands.add('login', () => {
       'username': '#username',
       'password': '#password',
       'two-step': false,
-      'landing-page': Cypress.config().baseUrl.replace('/ansible/automation-analytics','') + clustersUrl
+      'landing-page': Cypress.config().baseUrl + clustersUrl
     },
     'mocks-keycloak-ephemeral': {
       'username': '#username',
@@ -98,5 +98,13 @@ Cypress.Commands.add('login', () => {
   }
 
   cy.log('Checking for landing page: ' + keycloakLoginFields[strategy]['landing-page']);
+  cy.visit(Cypress.config().baseUrl + clustersUrl);
   cy.url().should('eq', keycloakLoginFields[strategy]['landing-page']);
+  // if (strategy == "env-ephemeral") {
+    // cy.visit(Cypress.config().baseUrl + clustersUrl);
+    // cy.url().should('eq', Cypress.config().baseUrl + clustersUrl);
+    // cy.get('[data-quickstart-id="ansible_automation-analytics_reports"]').click();
+    // cy.get('a[href="' + Cypress.config().baseUrl + reportsUrl + '"]', { timeout: 10000 }).should('be.visible');
+    // cy.get('[data-ouia-component-type="PF4/Title"]', { timeout: 10000 }).should('be.visible');    
+  // }
 });
