@@ -162,6 +162,8 @@ chmod +x /tmp/frontend/cypress_run.sh
 oc rsync /tmp/frontend cypress:/tmp/
 oc exec -n ${NAMESPACE} cypress -- bash -c "/tmp/frontend/cypress_run.sh"
 
+sleep 1800
+
 mkdir -p $WORKSPACE/artifacts
 cat << EOF > $WORKSPACE/artifacts/junit-dummy.xml
 	<testsuite tests="1">
