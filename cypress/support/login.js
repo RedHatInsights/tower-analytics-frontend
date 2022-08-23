@@ -20,39 +20,27 @@ Cypress.Commands.add('clearFeatureDialogs', () => {
   });
 });
 
-/*
- * TODO: This is a workaround and the tests runs longer than we would like.
- * It needs to be updated in a way we don't even see the iframe,
- * loading the cookies beforehand
- */
-Cypress.Commands.add('acceptCookiesDialog', () => {
-  const getIframeDocument = () => {
-    return cy.get('iframe').its('0.contentDocument').should('exist');
-  };
-
-  const getIframeBody = () => {
-    return getIframeDocument()
-      .its('body')
-      .should('not.be.undefined')
-      .then(cy.wrap);
-  };
-
-  const getAcceptBtn = () => {
-    return getIframeBody()
-      .find('a.call')
-      .contains('Agree and proceed with standard settings')
-      .should('be.visible');
-  };
-
-  const acceptCookies = () => {
-    return getAcceptBtn().click({ force: true });
-  };
-
-  acceptCookies();
-});
-
 Cypress.Commands.add('login', () => {
+
+  //  to see debug config for cookies in teh console
+  Cypress.Cookies.debug(true);
   cy.visit('/');
+
+  // these cokies should resolve the accept cookies dialog
+  cy.setCookie('cookie_3rdparty', 'enabled', {
+    domain: 'prefmgr-cookie.truste-svc.net'
+  });
+
+  cy.setCookie('token_test', 'dont matter', {
+    domain: 'consent-pref.trustarc.com'
+  });
+
+  cy.setCookie('notice_preferences', '2:');
+  cy.setCookie('notice_gdpr_prefs', '0,1,2:');
+  cy.setCookie('notice_behavior', 'expressed,eu');
+  cy.setCookie('cmapi_cookie_privacy', 'permit 1,2,3');
+  cy.setCookie('cmapi_gtm_bl', '');
+
   cy.intercept('https://consent.trustarc.com/*').as('cookies');
 
   cy.log('Determining login strategy');
@@ -65,6 +53,7 @@ Cypress.Commands.add('login', () => {
       'agree-cookies': true,
       'landing-page': Cypress.config().baseUrl + clustersUrl
     },
+    // when you login on eph, the landing page is "/"
     'front-end-aggregator-ephemeral': {
       'username': '#username-verification',
       'password': '#password',
@@ -105,7 +94,6 @@ Cypress.Commands.add('login', () => {
   let strategy = null;
 
   // probably some fancy filter function for this
-  // let key = keycloakLoginUrls.filter(....)
   for (const element of Object.keys(keycloakLoginFields)) {
     if (Cypress.config().baseUrl.includes(element)) {
       cy.log('Baseurl contains: ' + element);
@@ -115,7 +103,7 @@ Cypress.Commands.add('login', () => {
   }
 
   cy.log('Strategy: ');
-  cy.log(keycloakLoginFields[strategy]);
+  cy.log(JSON.stringify(keycloakLoginFields[strategy]));
   cy.get(keycloakLoginFields[strategy]['username']).should('be.visible');
 
   if (keycloakLoginFields[strategy]['two-step']) {
@@ -133,19 +121,6 @@ Cypress.Commands.add('login', () => {
     cy.getPassword().then((password) =>
       cy.get(keycloakLoginFields[strategy]['password']).type(`${password}{enter}`, { log: false })
     );
-  }
-
-  if (keycloakLoginFields[strategy]['agree-cookies']) {
-    cy.log('Accept cookies');
-    /*
-     * TODO: This is a workaround and the tests runs longer than we would like.
-     * It needs to be updated in a way we don't even see the iframe,
-     * loading the cookies beforehand.
-     */
-    cy.get('@cookies').then(() => {
-      cy.wait('@cookies');
-      cy.acceptCookiesDialog();
-    });
   }
 
   cy.log('Checking for landing page: ' + keycloakLoginFields[strategy]['landing-page']);

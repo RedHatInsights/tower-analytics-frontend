@@ -161,6 +161,7 @@ Cypress.Commands.add('visitReport', (pageName) => {
       if (page.name == pageName) {
         cy.intercept(page.api_call).as('apiCall')
         cy.log('Page data from fixture:', page)
+        cy.log('Reports Url:', reportsUrl)
         cy.visit(`${reportsUrl}` + '/' + pageName)
         cy.getByCy('loading').should('not.exist')
         cy.getByCy('api_error_state').should('not.exist')
@@ -173,7 +174,7 @@ Cypress.Commands.add('visitReport', (pageName) => {
 })
 
 Cypress.Commands.add('loadFixture', (name) => {
-  const fixturePath = Cypress.env('test_env') + '/' + name
+  const fixturePath = (Cypress.env('test_env') == undefined ? "ephemeral" : Cypress.env('test_env')) + '/' + name
   cy.log('fixturePath ', fixturePath)
   cy.fixture(fixturePath).then((data) => {
     return data;
