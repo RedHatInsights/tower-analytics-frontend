@@ -28,7 +28,8 @@ const ApiStatusWrapper: FunctionComponent<Props> = ({
   if (customLoading && api.isLoading) {
     return <>{children}</>;
   }
-  if (!api || api.isLoading) return <LoadingState />;
+  if (!api || api.isLoading)
+    return <LoadingState data-cy={'api_loading_state'} />;
   if (api.error)
     return <ApiErrorState message={api.error.error.error || api.error.error} />;
 
