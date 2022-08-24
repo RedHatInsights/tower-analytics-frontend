@@ -68,7 +68,7 @@ export enum Endpoint {
 const mungeData = async (promise) => {
   const response = await promise;
   const peer_host_stats = response.peer_host_stats;
-  const chartData = response.meta.legend.map((item) => {
+  const tableData = response.meta.legend.map((item) => {
     if (item.anomaly) {
       return {
         host_id: item.host_id,
@@ -76,6 +76,8 @@ const mungeData = async (promise) => {
         host_status: item.host_status,
         last_referenced: item.last_referenced,
         peer_host_stats,
+        host_avg_duration_per_task: item.host_avg_duration_per_task.toFixed(2),
+        total_tasks_executed: item.total_tasks_executed,
         failed_duration: item.host_avg_duration_per_task,
         successful_duration: -100,
         anomaly: item.anomaly,
@@ -87,6 +89,36 @@ const mungeData = async (promise) => {
       host_status: item.host_status,
       last_referenced: item.last_referenced,
       peer_host_stats,
+      host_avg_duration_per_task: item.host_avg_duration_per_task.toFixed(2),
+      total_tasks_executed: item.total_tasks_executed,
+      failed_duration: -100,
+      successful_duration: item.host_avg_duration_per_task,
+      anomaly: item.anomaly,
+    };
+  });
+  const chartData = response.peer_hosts_stats.map((item) => {
+    if (item.anomaly) {
+      return {
+        host_id: item.host_id,
+        host_name: item.host_name,
+        host_status: item.host_status,
+        last_referenced: item.last_referenced,
+        peer_host_stats,
+        host_avg_duration_per_task: item.host_avg_duration_per_task.toFixed(2),
+        total_tasks_executed: item.total_tasks_executed,
+        failed_duration: item.host_avg_duration_per_task,
+        successful_duration: -100,
+        anomaly: item.anomaly,
+      };
+    }
+    return {
+      host_id: item.host_id,
+      host_name: item.host_name,
+      host_status: item.host_status,
+      last_referenced: item.last_referenced,
+      peer_host_stats,
+      host_avg_duration_per_task: item.host_avg_duration_per_task.toFixed(2),
+      total_tasks_executed: item.total_tasks_executed,
       failed_duration: -100,
       successful_duration: item.host_avg_duration_per_task,
       anomaly: item.anomaly,
@@ -97,6 +129,7 @@ const mungeData = async (promise) => {
     meta: {
       count: response.peer_hosts_stats.length,
       legend: chartData.flat(),
+      tableData: tableData.flat(),
     },
   };
 };
@@ -170,11 +203,11 @@ export const readNotifications = (params: Params): Promise<ApiJson> =>
 export const readProbeTemplates = (
   params: ParamsWithPagination
 ): Promise<ApiJson> => {
-  return post(Endpoint.probeTemplates, params);
+  return postWithPagination(Endpoint.probeTemplates, params);
 };
 
 export const readProbeTemplateForHosts = (params: Params): Promise<ApiJson> => {
-  return mungeData(post(Endpoint.probeTemplateForHosts, params));
+  return mungeData(postWithPagination(Endpoint.probeTemplateForHosts, params));
 };
 
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>

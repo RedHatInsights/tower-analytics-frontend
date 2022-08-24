@@ -50,14 +50,14 @@ const ReportTable: FunctionComponent<Props> = ({
       component="button"
       onClick={() => setFromToolbar('anomaly', true)}
     >
-      Display only anomalous hosts
+      Display only slow host rows
     </DropdownItem>,
     <DropdownItem
       key="showNonAnomalousHosts"
       component="button"
       onClick={() => setFromToolbar('anomaly', false)}
     >
-      Display only non-anomalous hosts
+      Display only non-slow host rows
     </DropdownItem>,
   ];
 
@@ -75,7 +75,7 @@ const ReportTable: FunctionComponent<Props> = ({
                   zIndex: 1,
                 }}
               >
-                Anomalous
+                Slow
                 <Dropdown
                   onSelect={() => {
                     setIsKebabOpen(true);

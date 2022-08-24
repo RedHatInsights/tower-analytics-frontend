@@ -2,7 +2,10 @@ import React, { FunctionComponent, useState } from 'react';
 import { global_disabled_color_300 } from '@patternfly/react-tokens';
 
 import { Td, Tr } from '@patternfly/react-table';
-import { formatTotalTime } from '../../../../../Utilities/helpers';
+import {
+  avgDurationFormatter,
+  formatTotalTime,
+} from '../../../../../Utilities/helpers';
 
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
 
@@ -22,6 +25,9 @@ const isOther = (item: Record<string, string | number>, key: string) =>
 const isNoName = (item: Record<string, string | number>, key: string) =>
   key === 'id' && item[key] === -2;
 
+const isAvgDuration = (item: Record<string, string | number>, key: string) =>
+  key === 'average_duration_per_task';
+
 const getText = (
   item: Record<string, string | number>,
   key: string
@@ -30,6 +36,7 @@ const getText = (
   if (isOther(item, key)) return '-';
   if (timeFields.includes(key)) return formatTotalTime(+item[key]);
   if (costFields.includes(key)) return currencyFormatter(+item[key]);
+  if (isAvgDuration(item, key)) return avgDurationFormatter(+item[key]);
   return `${item[key]}`;
 };
 

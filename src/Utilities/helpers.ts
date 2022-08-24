@@ -66,3 +66,6 @@ export const getDateFormatByGranularity = (granularity: string): string => {
   if (granularity === 'daily') return 'formatDateAsDayMonth';
   return '';
 };
+
+export const avgDurationFormatter = (avgDuration: number): string =>
+  avgDuration.toFixed(2);
