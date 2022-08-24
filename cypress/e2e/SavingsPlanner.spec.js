@@ -2,7 +2,7 @@ import { savingsPlannerUrl } from '../support/constants';
 
 const appid = Cypress.env('appid');
 
-describe('Savings Planner page smoketests', () => {
+xdescribe('Savings Planner page smoketests', () => {
   beforeEach(() => {
     cy.loginFlow();
     cy.intercept('**/plans/*').as('getPlans')

@@ -136,6 +136,7 @@ describe('Automation Calculator page', () => {
       expect(pageSavingsValue).not.to.eq(originalPageSavingsValue);
     });
   });
+  // TODO fix it's flaky -> 1:1 fail success
   it('shows empty state when all rows are hidden', () => {
     let originalTotalSavingsValue = cy.get('[data-cy="total_savings"]').find('h3').textContent;
 

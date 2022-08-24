@@ -1,4 +1,35 @@
-import { reportsUrl, allReports } from '../support/constants';
+import { reportsUrl } from '../support/constants';
+
+const hcbjt = 'hosts_changed_by_job_template';
+const cmbjt = 'changes_made_by_job_template';
+const jtrr = 'job_template_run_rate';
+const hbo = 'hosts_by_organization';
+const jtbo = 'jobs_and_tasks_by_organization';
+const texp = 'templates_explorer';
+const mum = 'most_used_modules';
+const mubo = 'module_usage_by_organization';
+const mubjt = 'module_usage_by_job_template';
+const mubt = 'module_usage_by_task';
+//const aa21m = 'aa_2_1_onboarding';
+//const hab = 'host_anomalies_bar';
+//const has = 'host_anomalies_scatter';
+
+const allReports = [
+  hcbjt,
+  cmbjt,
+  jtrr,
+  hbo,
+  jtbo,
+  texp,
+  mum,
+  mubo,
+  mubjt,
+  mubt,
+  // TODO add once not beta exclusive
+  //aa21m,
+  //hab,
+  //has,
+];
 
 describe('Reports page smoketests', () => {
   beforeEach(() => {

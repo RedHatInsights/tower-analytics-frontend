@@ -2,7 +2,7 @@ import { jobExplorerUrl } from '../support/constants';
 
 const appid = Cypress.env('appid');
 
-describe('Job Explorer page smoketests', () => {
+xdescribe('Job Explorer page smoketests', () => {
   beforeEach(() => {
     cy.loginFlow();
     cy.visit(jobExplorerUrl);

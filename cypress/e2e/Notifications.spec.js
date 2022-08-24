@@ -52,7 +52,7 @@ async function fuzzNotificationsPage() {
   });
 }
 
-describe('Notification page smoketests', () => {
+xdescribe('Notification page smoketests', () => {
   beforeEach(() => {
     cy.loginFlow();
     cy.visit(notificationsUrl);

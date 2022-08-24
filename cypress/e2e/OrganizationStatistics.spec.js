@@ -56,7 +56,7 @@ function fuzzOrgStatsPage() {
     });
 }
 
-describe('Organization statistics page smoketests', () => {
+xdescribe('Organization statistics page smoketests', () => {
   beforeEach(() => {
     cy.loginFlow();
     cy.visit(orgsUrl);

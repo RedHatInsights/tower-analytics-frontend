@@ -56,7 +56,7 @@ async function fuzzClustersPage() {
   }
 }
 
-describe('Dashboard page smoketests', () => {
+xdescribe('Dashboard page smoketests', () => {
   beforeEach(() => {
     cy.loginFlow();
     cy.visit(dashboardUrl);
@@ -82,7 +82,7 @@ describe('Dashboard page smoketests', () => {
   });
 });
 
-describe('Dashboard page filter tests', () => {
+xdescribe('Dashboard page filter tests', () => {
   beforeEach(() => {
     cy.loginFlow();
     cy.visit(dashboardUrl);
@@ -320,7 +320,7 @@ describe('Dashboard page filter tests', () => {
   });
 });
 
-describe('Dashboard page drilldown tests', () => {
+xdescribe('Dashboard page drilldown tests', () => {
   beforeEach(() => {
     cy.loginFlow();
     cy.visit(dashboardUrl);
