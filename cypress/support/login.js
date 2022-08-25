@@ -105,8 +105,8 @@ Cypress.Commands.add('loginFlow', () => {
 
   // probably some fancy filter function for this
   // let key = keycloakLoginUrls.filter(....)
-  for(const element of Object.keys(keycloakLoginFields)) {
-    if(Cypress.config().baseUrl.includes(element)) {
+  for (const element of Object.keys(keycloakLoginFields)) {
+    if (Cypress.config().baseUrl.includes(element)) {
       cy.log('Baseurl contains: ' + element);
       strategy = element;
       break;
@@ -116,7 +116,7 @@ Cypress.Commands.add('loginFlow', () => {
   cy.log('Strategy: ');
   cy.log(keycloakLoginFields[strategy]);
 
-  if(keycloakLoginFields[strategy]['two-step']) {
+  if (keycloakLoginFields[strategy]['two-step']) {
     cy.log('Two step verfication');
     cy.getUsername().then((uname) =>
       cy.get(keycloakLoginFields[strategy]['username']).type(`${uname}`)
@@ -133,7 +133,7 @@ Cypress.Commands.add('loginFlow', () => {
     );
   }
 
-  if(keycloakLoginFields[strategy]['agree-cookies']) {
+  if (keycloakLoginFields[strategy]['agree-cookies']) {
     cy.log('Accept cookies');
     /*
     * TODO: This is a workaround and the tests runs longer than we would like.
