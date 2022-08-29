@@ -250,6 +250,14 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       return;
     }
     await update();
+    updatedData.forEach((item, i) => {
+      if (item.id === api.result.items[i].id) {
+        item.manual_effort_minutes = api.result.items[i].manual_effort_minutes;
+        item.successful_hosts_savings =
+          api.result.items[i].successful_hosts_savings;
+        item.monetary_gain = api.result.items[i].monetary_gain;
+      }
+    });
     setValue(updatedData);
   };
 
