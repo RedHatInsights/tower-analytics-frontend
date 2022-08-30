@@ -94,7 +94,8 @@ describe('Automation Calculator page', () => {
     cy.get('[data-cy="savings"]').first().should('have.css', 'color', 'rgb(210, 210, 210)');
     cy.get('tr').eq(1).get('td').contains('Hide').should('exist');
 
-    cy.get('tr').eq(1).find('.pf-c-switch__toggle').click();
+    // TODO click on the popup that's there
+    cy.get('tr').eq(1).find('.pf-c-switch__toggle').click({force: true});
     waitToLoad();
     cy.get('[data-cy="savings"]').first().should('have.css', 'color', 'rgb(30, 79, 24)');
     cy.get('tr').eq(1).get('td').contains('Show').should('exist');

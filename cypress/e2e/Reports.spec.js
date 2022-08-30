@@ -41,10 +41,10 @@ describe('Reports page smoketests', () => {
     cy.wait('@eventExplorerOptions');
     cy.get('.pf-c-empty-state__content').should('not.exist');
   });
-  afterEach(() => {
+  /*afterEach(() => {
     cy.get('#UserMenu').click();
     cy.get('button').contains('Log out').click({ force: true });
-  });
+  });*/
 
   it('All report cards are displayed on main reports page', () => {
     allReports.forEach((item) => {
