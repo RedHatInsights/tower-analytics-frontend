@@ -122,6 +122,8 @@ done
 
 oc create route edge unleash --service=env-${NAMESPACE}-featureflags --port=featureflags
 
+export
+
 rm -rf /tmp/frontend
 git clone --depth 1 --branch devel https://github.com/RedHatInsights/tower-analytics-frontend.git /tmp/frontend
 cd /tmp/frontend
