@@ -28,6 +28,8 @@ export IMAGE_BACKEND_TAG=$(curl -s https://gitlab.cee.redhat.com/api/v4/projects
 # frontend
 export IMAGE="quay.io/cloudservices/automation-analytics-frontend"
 export IMAGE_FRONTEND="quay.io/cloudservices/automation-analytics-frontend"
+echo $(git rev-parse HEAD)
+echo $(git rev-parse --short=7 HEAD)
 export IMAGE_FRONTEND_TAG=$(git rev-parse --short=7 HEAD)
 export IMAGE_FRONTEND_SHA1=$(git rev-parse HEAD)
 
@@ -127,6 +129,7 @@ git clone --depth 1 --branch devel https://github.com/RedHatInsights/tower-analy
 cd /tmp/frontend
 git fetch origin pull/$ghprbPullId/head:pr-$ghprbPullId
 git checkout pr-$ghprbPullId
+git log  --pretty=oneline | tail -n 1
 
 export CYPRESS_PW=$(oc get secret env-$NAMESPACE-keycloak -o json | jq -r '.data | map_values(@base64d) | .defaultPassword')
 
