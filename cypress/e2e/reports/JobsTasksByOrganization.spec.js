@@ -22,4 +22,16 @@ describe('Report: Jobs and Tasks By Organization Smoketests', () => {
     cy.getByCy('quick_date_range').click();
     cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
   });
+
+  it('Can navigate through the pages', () => {
+    cy.testNavArrowsFlow('top_pagination')
+    cy.testNavArrowsFlow('pagination_bottom')
+
+  });
+
+  it('Can change the number of items shown on the list', () => {
+    cy.testItemsListFlow('top_pagination', false, false, 1, 1)
+    cy.testItemsListFlow('pagination_bottom', false, false, 1, 1)
+    
+  });
 });
