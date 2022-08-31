@@ -65,7 +65,7 @@ describe('Insights smoketests', () => {
     cy.get('[data-cy="page_component"]').should('exist');
   };
 
-// TODO: include assetion maybe with snapshots
+  // TODO: include assetion maybe with snapshots
   it('can open each page without breaking the UI', () => {
     cy.visit(orgsUrl);
     checkPageHasNoErrors();

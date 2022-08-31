@@ -16,4 +16,3 @@ describe('Savings Planner page smoketests', () => {
     cy.url().should('include', 'sort_options=manual_time');
   });
 });
-

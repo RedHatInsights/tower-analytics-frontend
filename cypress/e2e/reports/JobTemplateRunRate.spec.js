@@ -9,7 +9,7 @@ describe('Report: Job Template Run Rate Smoketests', () => {
   });
   afterEach(() => {
     cy.get('#UserMenu').click();
-    cy.get('button').contains('Log out').click({force: true});
+    cy.get('button').contains('Log out').click({ force: true });
   });
 
   it('Can Switch between Line and Bar chart without breaking UI', () => {
@@ -31,6 +31,6 @@ describe('Report: Job Template Run Rate Smoketests', () => {
   it('Can change the number of items shown on the list', () => {
     cy.testItemsListFlow('top_pagination')
     cy.testItemsListFlow('pagination_bottom')
-    
+
   });
 });
