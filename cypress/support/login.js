@@ -69,14 +69,14 @@ Cypress.Commands.add('loginFlow', () => {
       'password': '#password',
       'two-step': false,
       'agree-cookies': false,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
+      'landing-page': Cypress.config().baseUrl + '/'
     },
     'env-ephemeral': {
       'username': '#username',
       'password': '#password',
       'two-step': false,
       'agree-cookies': true,
-      'landing-page': Cypress.config().baseUrl + "/"
+      'landing-page': Cypress.config().baseUrl + '/'
     },
     'mocks-keycloak-ephemeral': {
       'username': '#username',
@@ -140,9 +140,9 @@ Cypress.Commands.add('loginFlow', () => {
     * It needs to be updated in a way we don't even see the iframe,
     * loading the cookies beforehand.
     */
-    /*if (cy.get('iframe').should('exist')) {
+    if (cy.get('iframe').should('exist')) {
       cy.acceptCookiesDialog();
-    }*/
+    }
     cy.wait(5000)
   }
 
