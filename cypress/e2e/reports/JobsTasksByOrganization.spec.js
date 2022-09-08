@@ -10,7 +10,7 @@ describe('Report: Jobs and Tasks By Organization Smoketests', () => {
   });
   afterEach(() => {
     cy.get('#UserMenu').click();
-    cy.get('button').contains('Log out').click({force: true});
+    cy.get('button').contains('Log out').click({ force: true });
   });
 
   it('Can Switch between Line and Bar chart without breaking UI', () => {
@@ -30,8 +30,8 @@ describe('Report: Jobs and Tasks By Organization Smoketests', () => {
   });
 
   it('Can change the number of items shown on the list', () => {
-    cy.testItemsListFlow('top_pagination', false, false, 1, 1)
-    cy.testItemsListFlow('pagination_bottom', false, false, 1, 1)
-    
+    cy.testItemsListFlow('top_pagination', 'jtbo')
+    cy.testItemsListFlow('pagination_bottom', 'jtbo')
+
   });
 });

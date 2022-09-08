@@ -10,7 +10,7 @@ describe('Report: Templates Explorer Smoketests', () => {
   });
   afterEach(() => {
     cy.get('#UserMenu').click();
-    cy.get('button').contains('Log out').click({force: true});
+    cy.get('button').contains('Log out').click({ force: true });
   });
 
   it('Can change lookback', () => {
@@ -27,6 +27,6 @@ describe('Report: Templates Explorer Smoketests', () => {
   it('Can change the number of items shown on the list', () => {
     cy.testItemsListFlow('top_pagination', 'texp')
     cy.testItemsListFlow('pagination_bottom', 'texp')
-    
+
   });
 });

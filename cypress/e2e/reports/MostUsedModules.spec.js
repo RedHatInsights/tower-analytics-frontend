@@ -32,6 +32,6 @@ describe('Report: Most Used Modules Smoketests', () => {
   it('Can change the number of items shown on the list', () => {
     cy.testItemsListFlow('top_pagination', 'mum')
     cy.testItemsListFlow('pagination_bottom', 'mum')
-    
+
   });
 });

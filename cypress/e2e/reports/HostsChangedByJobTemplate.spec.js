@@ -9,7 +9,7 @@ describe('Report: Hosts Changed By Job Template Smoketests', () => {
   });
   afterEach(() => {
     cy.get('#UserMenu').click();
-    cy.get('button').contains('Log out').click({force: true});
+    cy.get('button').contains('Log out').click({ force: true });
   });
 
   it('Can Switch between Line and Bar chart without breaking UI', () => {
@@ -29,8 +29,8 @@ describe('Report: Hosts Changed By Job Template Smoketests', () => {
   });
 
   it('Can change the number of items shown on the list', () => {
-    cy.testItemsListFlow('top_pagination', false, false, 6, 9)
-    cy.testItemsListFlow('pagination_bottom', false, false, 6, 9)
-    
+    cy.testItemsListFlow('top_pagination', 'hcbjt')
+    cy.testItemsListFlow('pagination_bottom', 'hcbjt')
+
   });
 });
