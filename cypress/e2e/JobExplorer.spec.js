@@ -6,6 +6,17 @@ describe('Job Explorer page smoketests', () => {
   beforeEach(() => {
     cy.loginFlow();
     cy.visit(jobExplorerUrl);
+    cy.get('[data-cy="spinner"]').should('not.exist');
+    cy.get('[data-cy="loading"]').should('not.exist');
+    // cy.get('[data-cy="header-jobex"]', {
+    //   timeout: 10000,
+    // }).should('be.visible'); // TODO: create this data-cy
+    // cy.get('[data-cy="filter-toolbar"]', {
+    //   timeout: 10000,
+    // }).should('be.visible'); // TODO: create this data-cy
+    cy.get('table', {
+      timeout: 100000,
+    }).should('be.visible'); // TODO: create data-cy for this
   });
 
   it('Query parameters are stored in the URL to enable refresh', () => {
@@ -21,7 +32,7 @@ describe('Job Explorer page smoketests', () => {
   });
 
   it('Can change the number of items shown on the list', () => {
-    cy.testItemsListFlow('top_pagination', true, true)
-    cy.testItemsListFlow('pagination_bottom', true, true)
+    cy.testItemsListFlow('top_pagination', 'jbex')
+    cy.testItemsListFlow('pagination_bottom', 'jbex')
   });
 });
