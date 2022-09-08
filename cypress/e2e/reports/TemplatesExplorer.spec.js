@@ -25,8 +25,8 @@ describe('Report: Templates Explorer Smoketests', () => {
   });
 
   it('Can change the number of items shown on the list', () => {
-    cy.testItemsListFlow('top_pagination')
-    cy.testItemsListFlow('pagination_bottom')
+    cy.testItemsListFlow('top_pagination', 'texp')
+    cy.testItemsListFlow('pagination_bottom', 'texp')
     
   });
 });

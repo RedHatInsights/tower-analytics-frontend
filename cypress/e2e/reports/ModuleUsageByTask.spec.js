@@ -30,8 +30,8 @@ describe('Report: Module Usage By Task Smoketests', () => {
   });
 
   it('Can change the number of items shown on the list', () => {
-    cy.testItemsListFlow('top_pagination')
-    cy.testItemsListFlow('pagination_bottom')
+    cy.testItemsListFlow('top_pagination', 'mubt')
+    cy.testItemsListFlow('pagination_bottom', 'mubt')
     
   });
 });

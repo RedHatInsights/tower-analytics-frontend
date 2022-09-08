@@ -29,8 +29,8 @@ describe('Report: Job Template Run Rate Smoketests', () => {
   });
 
   it('Can change the number of items shown on the list', () => {
-    cy.testItemsListFlow('top_pagination')
-    cy.testItemsListFlow('pagination_bottom')
+    cy.testItemsListFlow('top_pagination', 'jtrr')
+    cy.testItemsListFlow('pagination_bottom', 'jtrr')
     
   });
 });

@@ -29,8 +29,8 @@ describe('Report: Changes Made By Job Template Smoketests', () => {
   });
 
   it('Can change the number of items shown on the list', () => {
-    cy.testItemsListFlow('top_pagination')
-    cy.testItemsListFlow('pagination_bottom')
+    cy.testItemsListFlow('top_pagination', 'cmbjt')
+    cy.testItemsListFlow('pagination_bottom', 'cmbjt')
 
   });
 });
