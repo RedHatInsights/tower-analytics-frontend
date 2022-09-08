@@ -23,7 +23,6 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
-
 /**
  * This command get an element using data-ouia-component-id
  * exact match.
@@ -98,7 +97,38 @@ Cypress.Commands.add('getByIdLike', (selector, ...args) => {
   return cy.get(`[id*="${selector}"]`, ...args)
 })
 
-/** This command allows the user to enter a locator that uses a data-ouia-component-id, a data-cy, or an id, and find that locator
+/**
+ * This command find an element inside a given parent with id
+ * using a partial match anywhere in the element.
+ *
+ * Example usage:
+ * cy.findByIdLike("parent-selector" "select-option-description")
+ *
+ * @param {String} parentSelector
+ * @param {String} selector - The selector value
+ **/
+ Cypress.Commands.add('findFromParent', (parentSelector, selector, ...args) => {
+  cy.get(`${parentSelector}`)
+  .find(`${selector}`, ...args)
+})
+
+/**
+ * This command find an element inside a given parent with id
+ * using a partial match anywhere in the element.
+ *
+ * Example usage:
+ * cy.findByIdLike("parent-selector" "select-option-description")
+ *
+ * @param {String} parentSelector
+ * @param {String} selector - The selector value
+ **/
+ Cypress.Commands.add('findByIdLike', (parentSelector, selector, ...args) => {
+  cy.get(`${parentSelector}`)
+  .find(`[id*="${selector}"]`, ...args)
+})
+
+/** This command allows the user to enter a locator that uses a data-ouia-component-id,
+ * a data-cy, id, or aria-labelledby, and find that locator
  * with the one command.
  *
  * User simply passes in the locator string and Cypress will find that locator.

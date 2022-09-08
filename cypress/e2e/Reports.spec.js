@@ -1,263 +1,84 @@
-import { reportsUrl } from '../support/constants';
-
-const hcbjt = 'hosts_changed_by_job_template';
-const cmbjt = 'changes_made_by_job_template';
-const jtrr = 'job_template_run_rate';
-const hbo = 'hosts_by_organization';
-const jtbo = 'jobs_and_tasks_by_organization';
-const texp = 'templates_explorer';
-const mum = 'most_used_modules';
-const mubo = 'module_usage_by_organization';
-const mubjt = 'module_usage_by_job_template';
-const mubt = 'module_usage_by_task';
-const aa21m = 'aa_2_1_onboarding';
-const hab = 'host_anomalies_bar';
-const has = 'host_anomalies_scatter';
-
-const allReports = [
-  hcbjt,
-  cmbjt,
-  jtrr,
-  hbo,
-  jtbo,
-  texp,
-  mum,
-  mubo,
-  mubjt,
-  mubt,
-  aa21m,
-  hab,
-  has,
-];
+import { reportsUrl, allReports } from '../support/constants';
 
 describe('Reports page smoketests', () => {
   beforeEach(() => {
     cy.loginFlow();
+    cy.intercept('/api/tower-analytics/v1/event_explorer_options/').as('eventExplorerOptions');
     cy.visit(reportsUrl);
+    cy.getByCy('loading').should('not.exist');
+    cy.getByCy('api_error_state').should('not.exist');
+    cy.wait('@eventExplorerOptions');
+    cy.get('.pf-c-empty-state__content').should('not.exist');
+  });
+  afterEach(() => {
+    cy.get('#UserMenu').click();
+    cy.get('button').contains('Log out').click({ force: true });
   });
 
   it('All report cards are displayed on main reports page', () => {
     allReports.forEach((item) => {
-      cy.get(`[data-testid="${item}"]`).should('exist');
+      cy.getByCy(item).should('exist');
     });
   });
-});
-
-describe('Report: Hosts Changed By Job Template Smoketests', () => {
-  beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + hcbjt);
+  it('All report cards have correct href in the title', () => {
+    allReports.forEach((item) => {
+      cy.getByCy(item).should('exist');
+      cy.getByCy(item).find('a')
+        .should('have.attr', 'href', '/beta/ansible/automation-analytics' + reportsUrl + '/' + item);
+    });
   });
-
-  it('Can Switch between Line and Bar chart without breaking UI', () => {
-    cy.get('#bar').click();
-    cy.screenshot('report_hcbjt_bar.png');
-    cy.get('#line').click();
-    cy.screenshot('report_hcbjt_line.png');
+  it('All report cards can be selected for the preview with correct links', () => {
+    allReports.forEach((item) => {
+      cy.getByCy(item).should('exist');
+      cy.getByCy(item).click();
+      cy.getByCy('loading').should('not.exist');
+      cy.getByCy('api_error_state').should('not.exist');
+      cy.get('.pf-c-empty-state').should('not.exist');
+      // correct card is highlighted
+      cy.getByCy(item).should('have.class', 'pf-m-selected-raised');
+      // check View full report link is correct
+      cy.get(`[data-cy="view_full_report_link"]`)
+        .should('have.attr', 'href', '/beta/ansible/automation-analytics' + reportsUrl + '/' + item);
+      // check Title link is correct
+      cy.getByCy('preview_title_link')
+        .should('have.attr', 'href', '/beta/ansible/automation-analytics' + reportsUrl + '/' + item);
+    });
   });
-
-  it('Can change lookback', () => {
-    cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click();
+  it('All report cards can appear in preview via dropdown', () => {
+    allReports.forEach((item) => {
+      cy.getByCy(item).should('exist');
+      cy.get('a').should('have.href', '/beta/ansible/automation-analytics' + reportsUrl + '/' + item);
+    });
   });
-});
-
-describe('Report: Changes Made By Job Template Smoketests', () => {
-  beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + cmbjt);
+  it('All report are accessible in preview via arrows', () => {
+    let originalTitlePreview = cy.getByCy('preview_title_link').textContent;
+    allReports.forEach(() => {
+      cy.getByCy('next_report_button').click();
+      cy.getByCy('preview_title_link').then(($previewTitle) => {
+        const newTitlePreview = $previewTitle.text();
+        expect(newTitlePreview).not.to.eq(originalTitlePreview);
+        originalTitlePreview = newTitlePreview;
+      });
+    });
+    allReports.forEach(() => {
+      cy.getByCy('previous_report_button').click();
+      cy.getByCy('preview_title_link').then(($previewTitle) => {
+        const newTitlePreview = $previewTitle.text();
+        expect(newTitlePreview).not.to.eq(originalTitlePreview);
+        originalTitlePreview = newTitlePreview;
+      });
+    });
   });
-
-  it('Can Switch between Line and Bar chart without breaking UI', () => {
-    cy.get('#bar').click();
-    cy.screenshot('report_cmbjt_bar.png');
-    cy.get('#line').click();
-    cy.screenshot('report_cmbjt_line.png');
-  });
-
-  it('Can change lookback', () => {
-    cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click();
-  });
-});
-
-describe('Report: Job Template Run Rate Smoketests', () => {
-  beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + jtrr);
-  });
-
-  it('Can Switch between Line and Bar chart without breaking UI', () => {
-    cy.get('#bar').click();
-    cy.screenshot('report_jtrr_bar.png');
-    cy.get('#line').click();
-    cy.screenshot('report_jtrr_line.png');
-  });
-
-  it('Can change lookback', () => {
-    cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click();
-  });
-});
-
-describe('Report: Hosts By Organization Smoketests', () => {
-  beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + hbo);
-  });
-
-  it('Can Switch between Line and Bar chart without breaking UI', () => {
-    cy.get('#bar').click();
-    cy.screenshot('report_hbo_bar.png');
-    cy.get('#line').click();
-    cy.screenshot('report_hbo_line.png');
-  });
-
-  it('Can change lookback', () => {
-    cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
-  });
-});
-
-describe('Report: Jobs and Tasks By Organization Smoketests', () => {
-  beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + jtbo);
-  });
-
-  it('Can Switch between Line and Bar chart without breaking UI', () => {
-    cy.get('#bar').click();
-    cy.screenshot('report_jtbo_bar.png');
-    cy.get('#line').click();
-    cy.screenshot('report_jtbo_line.png');
-  });
-
-  it('Can change lookback', () => {
-    cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
-  });
-});
-
-describe('Report: Templates Explorer Smoketests', () => {
-  beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + texp);
-  });
-
-  it('Can change lookback', () => {
-    cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click();
-  });
-});
-
-describe('Report: Most Used Modules Smoketests', () => {
-  beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + mum);
-  });
-
-  it('Can Switch between Line and Bar chart without breaking UI', () => {
-    cy.get('#bar').click();
-    cy.screenshot('report_mum_bar.png');
-    cy.get('#line').click();
-    cy.screenshot('report_mum_line.png');
-  });
-
-  it('Can change lookback', () => {
-    cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click();
-  });
-});
-
-describe('Report: Module Usage By Organization Smoketests', () => {
-  beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + mubo);
-  });
-
-  it('Can Switch between Line and Bar chart without breaking UI', () => {
-    cy.get('#bar').click();
-    cy.screenshot('report_mubo_bar.png');
-    cy.get('#line').click();
-    cy.screenshot('report_mubo_line.png');
-  });
-
-  it('Can change lookback', () => {
-    cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click();
-  });
-});
-
-describe('Report: Module Usage By Job Template Smoketests', () => {
-  beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + mubjt);
-  });
-
-  it('Can Switch between Line and Bar chart without breaking UI', () => {
-    cy.get('#bar').click();
-    cy.screenshot('report_mubjt_bar.png');
-    cy.get('#line').click();
-    cy.screenshot('report_mubjt_line.png');
-  });
-
-  it('Can change lookback', () => {
-    cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click();
-  });
-});
-
-describe('Report: Module Usage By Task Smoketests', () => {
-  beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + mubt);
-  });
-
-  it('Can Switch between Line and Bar chart without breaking UI', () => {
-    cy.get('#bar').click();
-    cy.screenshot('report_mubt_bar.png');
-    cy.get('#line').click();
-    cy.screenshot('report_mubt_line.png');
-  });
-
-  it('Can change lookback', () => {
-    cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click();
-  });
-});
-
-describe('Report: AA 2.1 Migration', () => {
-  beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + aa21m);
-  });
-
-  it('Can Switch between Line and Bar chart without breaking UI', () => {
-    cy.get('#bar').click();
-    cy.screenshot('report_aa21m_bar.png');
-    cy.get('#line').click();
-    cy.screenshot('report_aa21m_line.png');
-  });
-
-  it('Can change lookback', () => {
-    cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click();
-  });
-});
-
-describe('Report: Host Anomalies Bar', () => {
-  beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + hab);
-  });
-
-  it('Renders bar chart with data', () => {
-    cy.get('#bar').click();
-    cy.screenshot('report_ha_bar.png');
-  });
-
-  it('Can change lookback', () => {
-    cy.get('[data-cy="quick_date_range"]').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click();
+  it('All report are accessible in preview via dropdownn', () => {
+    cy.getByCy('selected_report_dropdown').should('exist');
+    allReports.forEach(($item, index) => {
+      cy.getByCy('selected_report_dropdown').click();
+      cy.get('ul.pf-c-dropdown__menu > button > li > a').should('exist');
+      cy.get('ul.pf-c-dropdown__menu > button > li > a').eq(index).click();
+      cy.getByCy('preview_title_link').invoke('text').then(($text) => {
+        cy.get('[data-cy="selected_report_dropdown"] > span.pf-c-dropdown__toggle-text')
+          .invoke('text').should('eq', $text)
+      });
+    });
   });
 });

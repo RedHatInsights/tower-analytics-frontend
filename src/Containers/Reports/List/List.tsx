@@ -168,6 +168,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                         marginBottom: '25px',
                       }}
                       isCompact
+                      data-cy={report.slug}
                     >
                       <CardHeader
                         style={{
@@ -177,7 +178,10 @@ const List: FunctionComponent<Record<string, never>> = () => {
                         }}
                       >
                         <CardTitle>
-                          <Link to={paths.getDetails(report.slug)}>
+                          <Link
+                            data-cy={'preview_title_link'}
+                            to={paths.getDetails(report.slug)}
+                          >
                             {report.name}
                           </Link>
                         </CardTitle>
@@ -208,6 +212,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                           <Button
                             variant={ButtonVariant.plain}
                             aria-label="Previous report"
+                            data-cy={'previous_report_button'}
                             isDisabled={reports.indexOf(report) === 0}
                             onClick={() => {
                               history.replace({
@@ -219,6 +224,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             <AngleLeftIcon />
                           </Button>
                           <Dropdown
+                            data-cy={'preview_dropdown'}
                             isPlain
                             onSelect={() => {
                               setIsOpen(!isOpen);
@@ -231,6 +237,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                                 onToggle={(next) => setIsOpen(next)}
                                 toggleIndicator={CaretDownIcon}
                                 id="report_list"
+                                data-cy={'selected_report_dropdown'}
                                 style={{ color: '#151515' }}
                               >
                                 {report.name}
@@ -242,6 +249,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                           <Button
                             variant={ButtonVariant.plain}
                             aria-label="Next report"
+                            data-cy="next_report_button"
                             isDisabled={
                               reports.indexOf(report) >= reports.length - 1
                             }
@@ -262,6 +270,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                         <Link
                           to={paths.getDetails(report.slug)}
                           style={{ float: 'right' }}
+                          data-cy={'view_full_report_link'}
                         >
                           View full report
                         </Link>

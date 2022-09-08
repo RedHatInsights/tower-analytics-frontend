@@ -263,7 +263,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   ];
 
   return fullCard ? (
-    <Card>
+    <Card data-cy={dataApi.isLoading ? 'toolbar_loading' : 'toolbar_loaded'}>
       <CardBody>
         <FilterableToolbar
           categories={options}
@@ -337,7 +337,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       </CardFooter>
     </Card>
   ) : (
-    <>
+    <div data-cy={dataApi.isLoading ? 'toolbar_loading' : 'toolbar_loaded'}>
       <FilterableToolbar
         categories={options}
         defaultSelected={defaultSelectedToolbarCategory}
@@ -357,7 +357,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           />
         </ApiStatusWrapper>
       )}
-    </>
+    </div>
   );
 };
 
