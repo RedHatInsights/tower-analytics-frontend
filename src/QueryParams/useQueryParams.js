@@ -104,7 +104,7 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_SORT_ORDER':
     case 'SET_TAGS':
     case 'SET_DESCRIPTION':
-      return { ...state, ...value };
+      return { ...state, ...value, offset: 0 };
     case 'SET_QUICK_DATE_RANGE':
       return value !== 'custom'
         ? { ...state, ...value, start_date: null, end_date: null }
