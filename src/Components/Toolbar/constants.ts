@@ -72,6 +72,12 @@ export const optionsForCategories: OptionsForCategories = {
     placeholder: 'Filter by automation status',
     hasChips: true,
   },
+  host_status: {
+    type: 'select',
+    name: 'Host status',
+    placeholder: 'Filter by host status',
+    hasChips: true,
+  },
   frequency_period: {
     type: 'select',
     name: 'Frequency',

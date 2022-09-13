@@ -91,6 +91,7 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_MODULE':
     case 'SET_TEMPLATE':
     case 'SET_AUTOMATION_STATUS':
+    case 'SET_HOST_STATUS':
     case 'SET_CATEGORY':
     case 'SET_FREQUENCY':
     case 'SET_NAME':
@@ -134,6 +135,7 @@ const actionMapper = {
   start_date: 'SET_START_DATE',
   end_date: 'SET_END_DATE',
   automation_status: 'SET_AUTOMATION_STATUS',
+  host_status: 'SET_HOST_STATUS',
   category: 'SET_CATEGORY',
   frequency_period: 'SET_FREQUENCY',
   name: 'SET_NAME',

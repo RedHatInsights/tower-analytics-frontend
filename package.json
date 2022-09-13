@@ -98,7 +98,7 @@
     "ts-loader": "^9.2.6",
     "ts-node": "^10.9.1",
     "typescript": "^4.2.4",
-    "victory-cursor-container": "^36.5.3",
+    "victory-cursor-container": "^36.6.6",
     "webpack": "^5.36.2",
     "webpack-bundle-analyzer": "^4.4.1",
     "webpack-cli": "^4.6.0"

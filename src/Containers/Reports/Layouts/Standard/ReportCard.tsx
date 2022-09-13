@@ -169,18 +169,18 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       tooltip =
         'Host: ' +
         datum.host_name +
+        '\nAverage duration per task: ' +
+        formattedValue(queryParams.sortOptions, datum.y) +
+        '\nHost status: ' +
+        datum.host_status +
+        '\nTotal tasks executed: ' +
+        datum.total_tasks_executed +
         '\nLast Referenced: ' +
-        datum.last_referenced;
-      tooltip +=
-        datum.failed_duration > 0 && datum.successful_duration === -100
-          ? '\nFailed duration for ' +
-            datum.host_name +
-            ': ' +
-            formattedValue(queryParams.sortOptions, datum.y)
-          : '\nSuccessful duration for ' +
-            datum.host_name +
-            ': ' +
-            formattedValue(queryParams.sortOptions, datum.y);
+        datum.last_referenced +
+        '\nSlow: ' +
+        (datum.failed_duration > 0 && datum.successful_duration === -100
+          ? 'True'
+          : 'False');
     } else {
       tooltip =
         chartParams.label +
@@ -307,7 +307,11 @@ const ReportCard: FunctionComponent<StandardProps> = ({
               }}
             />
             <Table
-              legend={dataApi.result.meta.legend}
+              legend={
+                dataApi.result.meta.tableData
+                  ? dataApi.result.meta.tableData
+                  : dataApi.result.meta.legend
+              }
               headers={tableHeaders}
               getSortParams={getSortParams}
               expandedRowName={expandedTableRowName}
