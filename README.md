@@ -11,7 +11,7 @@ Automation Analytics provides data analytics for Ansible Tower that provides vis
 1. `npm ci` - install dependencies from the lockfile
 2. get the backend running: [automation analytics backend](https://gitlab.cee.redhat.com/automation-analytics/automation-analytics-backend)
 3. `npm start` - starts standalone: webpack serves the files alongside with insights, rbac and keycloak.
-4. Go to `http://localhost:1337/beta/ansible/insights` and use the admin/admin credentials to login.
+4. Go to `http://localhost:1337/ansible/automation-analytics` and use the admin/admin credentials to login.
 
 #### Developing against a deployed backend
 

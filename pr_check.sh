@@ -137,7 +137,7 @@ export CYPRESS_ProjectID=wwyf7n
 export CYPRESS_RECORD=true
 export CYPRESS_USERNAME=jdoe
 export CYPRESS_PASSWORD=${CYPRESS_PW}
-export CYPRESS_baseUrl=$UI_URL/ansible/insights
+export CYPRESS_baseUrl=$UI_URL/ansible/automation-analytics
 
 export CYPRESS_defaultCommandTimeout=2000
 export CYPRESS_execTimeout=15000
