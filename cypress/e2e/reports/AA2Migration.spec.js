@@ -7,7 +7,7 @@ describe('Report: AA 2.1 Migration', () => {
   });
   afterEach(() => {
     cy.get('#UserMenu').click();
-    cy.get('button').contains('Log out').click({force: true});
+    cy.get('button').contains('Log out').click({ force: true });
   });
 
   it('Can Switch between Line and Bar chart without breaking UI', () => {
