@@ -96,7 +96,7 @@ Cypress.Commands.add('loginFlow', () => {
       'username': '#username-verification',
       'password': '#password',
       'two-step': true,
-      'agree-cookies': false,
+      'agree-cookies': true,
       'landing-page': Cypress.config().baseUrl + clustersUrl
     }
   }
@@ -140,9 +140,9 @@ Cypress.Commands.add('loginFlow', () => {
     * It needs to be updated in a way we don't even see the iframe,
     * loading the cookies beforehand.
     */
-    /*if (cy.get('iframe').should('exist')) {
+    if (cy.get('iframe').should('exist')) {
       cy.acceptCookiesDialog();
-    }*/
+    }
     cy.wait(5000)
   }
 
