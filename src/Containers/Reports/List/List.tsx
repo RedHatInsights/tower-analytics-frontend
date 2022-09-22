@@ -69,7 +69,6 @@ export const removeFilters = (): string => {
 };
 
 const List: FunctionComponent<Record<string, never>> = () => {
-  const [selected, setSelected] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const history = useHistory();
   let index = 0;
@@ -102,13 +101,15 @@ const List: FunctionComponent<Record<string, never>> = () => {
   }, [queryParams]);
 
   const reports = data as Report[];
+  const selected = queryParams.selected_report || reports[0]?.slug || '';
+  const setSelected = (slug: string) => setFromToolbar('selected_report', slug);
 
   const {
     result: previewReport,
     request: fetchReport,
     isSuccess: isReportSuccess,
   } = useRequest(async () => {
-    const response = await readReport(selected || reports[0].slug);
+    const response = await readReport(selected);
     return response.report as ReportSchema;
   }, {} as ReportSchema);
 

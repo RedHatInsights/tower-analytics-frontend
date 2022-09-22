@@ -104,6 +104,7 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_SORT_ORDER':
     case 'SET_TAGS':
     case 'SET_DESCRIPTION':
+    case 'SET_SELECTED_REPORT':
       return { ...state, ...value };
     case 'SET_QUICK_DATE_RANGE':
       return value !== 'custom'
@@ -146,6 +147,7 @@ const actionMapper = {
   granularity: 'SET_GRANULARITY',
   tags: 'SET_TAGS',
   description: 'SET_DESCRIPTION',
+  selected_report: 'SET_SELECTED_REPORT',
 };
 
 const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
