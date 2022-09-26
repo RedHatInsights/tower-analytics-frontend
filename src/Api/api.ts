@@ -65,9 +65,10 @@ export enum Endpoint {
   features = '/api/featureflags/v0',
 }
 
-const mungeData = async (promise) => {
+const mungeData = async (promise, params) => {
   const response = await promise;
   const peer_host_stats = response.peer_host_stats;
+  let count;
   const tableData = response.meta.legend.map((item) => {
     if (item.anomaly) {
       return {
@@ -124,10 +125,17 @@ const mungeData = async (promise) => {
       anomaly: item.anomaly,
     };
   });
+  if (Object.keys(params).includes('anomaly')) {
+    count = params.anomaly
+      ? response.peer_hosts_stats.filter((item: any) => item.anomaly).length
+      : response.peer_hosts_stats.filter((item: any) => !item.anomaly).length;
+  } else {
+    count = response.peer_hosts_stats.length;
+  }
 
   return {
     meta: {
-      count: response.peer_hosts_stats.length,
+      count: count,
       legend: chartData.flat(),
       tableData: tableData.flat(),
     },
@@ -207,7 +215,10 @@ export const readProbeTemplates = (
 };
 
 export const readProbeTemplateForHosts = (params: Params): Promise<ApiJson> => {
-  return mungeData(postWithPagination(Endpoint.probeTemplateForHosts, params));
+  return mungeData(
+    postWithPagination(Endpoint.probeTemplateForHosts, params),
+    params
+  );
 };
 
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>

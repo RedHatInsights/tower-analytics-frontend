@@ -38,11 +38,14 @@ describe('QueryParams/useQueryParams', () => {
     act(() => {
       result.current.dispatch({
         type: 'SET_ATTRIBUTES',
-        value: { attributes: ['a', 'b'] },
+        value: { attributes: ['a', 'b'], offset: '0' },
       });
     });
 
-    expect(result.current.queryParams).toEqual({ attributes: ['a', 'b'] });
+    expect(result.current.queryParams).toEqual({
+      attributes: ['a', 'b'],
+      offset: '0',
+    });
   });
 
   it('should reset the filter', () => {
@@ -52,11 +55,14 @@ describe('QueryParams/useQueryParams', () => {
     act(() => {
       result.current.dispatch({
         type: 'SET_ATTRIBUTES',
-        value: { attributes: ['a', 'b'] },
+        value: { attributes: ['a', 'b'], offset: '0' },
       });
     });
 
-    expect(result.current.queryParams).toEqual({ attributes: ['a', 'b'] });
+    expect(result.current.queryParams).toEqual({
+      attributes: ['a', 'b'],
+      offset: '0',
+    });
 
     act(() => {
       result.current.dispatch({ type: 'RESET_FILTER' });
