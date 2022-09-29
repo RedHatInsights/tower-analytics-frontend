@@ -54,14 +54,14 @@ export interface Report {
 export const removeFilters = (): string => {
   const currentURL = window.location.href;
   const newURL = '';
-  if (currentURL.includes('default.attributes[]')) {
+  if (currentURL.includes('&default.')) {
     newURL = currentURL.substring(
       currentURL.indexOf('?') + 1,
-      currentURL.indexOf('default.attributes[]') - 1
+      currentURL.indexOf('&default.') - 1
     );
   } else if (
     currentURL.includes('?') &&
-    currentURL.includes('default.attributes[]') === false
+    currentURL.includes('&default.') === false
   ) {
     newURL = currentURL.substring(currentURL.indexOf('?') + 1);
   }

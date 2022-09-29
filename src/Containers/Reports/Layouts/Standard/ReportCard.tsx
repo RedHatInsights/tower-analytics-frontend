@@ -23,6 +23,7 @@ import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper'
 import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
 
 import Chart from '../../../../Components/Chart';
+import PlotlyChart from '../../../../Components/Chart/PlotlyChart';
 import Table from './Table';
 import DownloadButton from '../../../../Components/Toolbar/DownloadButton';
 import { endpointFunctionMap, OptionsReturnType } from '../../../../Api';
@@ -299,7 +300,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           }
           additionalControls={additionalControls}
         />
-        {tableHeaders && !showKebab ? (
+        {tableHeaders && !showKebab && slug !== 'templates_by_organization' ? (
           <ApiStatusWrapper api={dataApi}>
             <Chart
               schema={hydrateSchema(schema)({
@@ -319,6 +320,24 @@ const ReportCard: FunctionComponent<StandardProps> = ({
                 },
               }}
             />
+            <Table
+              legend={
+                dataApi.result.meta.tableData
+                  ? dataApi.result.meta.tableData
+                  : dataApi.result.meta.legend
+              }
+              headers={tableHeaders}
+              getSortParams={getSortParams}
+              expandedRowName={expandedTableRowName}
+              clickableLinking={clickableLinking}
+              showKebab={showKebab}
+            />
+          </ApiStatusWrapper>
+        ) : tableHeaders &&
+          !showKebab &&
+          slug === 'templates_by_organization' ? (
+          <ApiStatusWrapper api={dataApi}>
+            <PlotlyChart data={dataApi.result.items} />
             <Table
               legend={
                 dataApi.result.meta.tableData
@@ -392,7 +411,11 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         filters={queryParams}
         setFilters={setFromToolbar}
       />
-      {tableHeaders && (
+      {tableHeaders && slug === 'templates_by_organization' ? (
+        <ApiStatusWrapper api={dataApi}>
+          <PlotlyChart data={dataApi.result.items} />
+        </ApiStatusWrapper>
+      ) : (
         <ApiStatusWrapper api={dataApi}>
           <Chart
             schema={hydrateSchema(schema)({
@@ -402,6 +425,11 @@ const ReportCard: FunctionComponent<StandardProps> = ({
               chartType: chartParams.chartType,
             })}
             data={dataApi.result}
+            specificFunctions={{
+              labelFormat: {
+                customTooltipFormatting,
+              },
+            }}
           />
         </ApiStatusWrapper>
       )}

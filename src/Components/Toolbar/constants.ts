@@ -96,6 +96,18 @@ export const optionsForCategories: OptionsForCategories = {
     placeholder: 'Filter by inventory',
     hasChips: true,
   },
+  percentile: {
+    type: 'select',
+    name: 'Percentile',
+    placeholder: 'Filter by percentile',
+    hasChips: false,
+  },
+  adoption_rate_type: {
+    type: 'select',
+    name: 'Adoption rate type',
+    placeholder: 'Filter by adoption rate type',
+    hasChips: false,
+  },
   granularity: {
     type: 'select',
     name: 'Granularity',
