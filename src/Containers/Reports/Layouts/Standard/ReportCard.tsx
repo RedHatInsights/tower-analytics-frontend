@@ -289,11 +289,15 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         {tableHeaders && !showKebab ? (
           <ApiStatusWrapper api={dataApi}>
             <Chart
-              schema={hydrateSchema(schema)({
+              schema={hydrateSchema(
+                schema,
+                dataApi
+              )({
                 label: chartParams.label,
                 y: chartParams.y,
                 xTickFormat: chartParams.xTickFormat,
                 chartType: chartParams.chartType,
+                yAxisDomainL: dataApi,
               })}
               dataComponent={'foobar'}
               data={dataApi.result}
@@ -382,7 +386,10 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       {tableHeaders && (
         <ApiStatusWrapper api={dataApi}>
           <Chart
-            schema={hydrateSchema(schema)({
+            schema={hydrateSchema(
+              schema,
+              dataApi
+            )({
               label: chartParams.label,
               y: chartParams.y,
               xTickFormat: chartParams.xTickFormat,
