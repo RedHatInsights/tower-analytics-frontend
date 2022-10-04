@@ -69,7 +69,6 @@ const mungeData = async (promise, params) => {
   const response = await promise;
   const peer_host_stats = response.peer_host_stats;
   let count;
-  console.log('222222222', JSON.stringify(response.y_axis_domain.y));
   const tableData = response.meta.legend.map((item) => {
     if (item.anomaly) {
       return {
