@@ -48,7 +48,8 @@
       "<rootDir>/src/__tests__/"
     ],
     "moduleNameMapper": {
-      "\\.(css|scss)$": "identity-obj-proxy"
+      "\\.(css|scss)$": "identity-obj-proxy",
+      "d3": "<rootDir>/node_modules/d3/dist/d3.min.js"
     },
     "transformIgnorePatterns": [
       "/node_modules/(?!@redhat-cloud-services)"
