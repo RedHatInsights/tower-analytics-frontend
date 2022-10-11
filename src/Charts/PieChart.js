@@ -79,7 +79,7 @@ class Tooltip {
     }
   }
 
-  handleMouseOver = (d) => {
+  handleMouseOver = (event, d) => {
     // treat draw() as a singleton to avoid a painted window effect
     if (this.drawn !== true) {
       this.draw(d);
@@ -90,13 +90,9 @@ class Tooltip {
     let percSuccess;
     let orgName;
     const x =
-      d3.event.pageX -
-      d3.select(this.svg).node().getBoundingClientRect().x +
-      10;
+      event.pageX - d3.select(this.svg).node().getBoundingClientRect().x + 10;
     const y =
-      d3.event.pageY -
-      d3.select(this.svg).node().getBoundingClientRect().y -
-      10;
+      event.pageY - d3.select(this.svg).node().getBoundingClientRect().y - 10;
     if (!d) {
       return;
     }
