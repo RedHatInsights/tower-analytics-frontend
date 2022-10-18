@@ -286,7 +286,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           }
           additionalControls={additionalControls}
         />
-        {tableHeaders && (
+        {tableHeaders && !showKebab ? (
           <ApiStatusWrapper api={dataApi}>
             <Chart
               schema={hydrateSchema(schema)({
@@ -319,6 +319,41 @@ const ReportCard: FunctionComponent<StandardProps> = ({
               showKebab={showKebab}
             />
           </ApiStatusWrapper>
+        ) : (
+          <>
+            <ApiStatusWrapper api={dataApi}>
+              <Chart
+                schema={hydrateSchema(schema)({
+                  label: chartParams.label,
+                  y: chartParams.y,
+                  xTickFormat: chartParams.xTickFormat,
+                  chartType: chartParams.chartType,
+                })}
+                dataComponent={'foobar'}
+                data={dataApi.result}
+                specificFunctions={{
+                  labelFormat: {
+                    customTooltipFormatting,
+                  },
+                  onClick: {
+                    handleClick,
+                  },
+                }}
+              />
+            </ApiStatusWrapper>
+            <Table
+              legend={
+                dataApi.result.meta.tableData
+                  ? dataApi.result.meta.tableData
+                  : dataApi.result.meta.legend
+              }
+              headers={tableHeaders}
+              getSortParams={getSortParams}
+              expandedRowName={expandedTableRowName}
+              clickableLinking={clickableLinking}
+              showKebab={showKebab}
+            />
+          </>
         )}
       </CardBody>
       <CardFooter>
