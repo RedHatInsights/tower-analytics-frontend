@@ -58,7 +58,7 @@ const { config: webpackConfig, plugins } = config({
     '/beta/ansible/automation-analytics/',
     '/ansible/automation-analytics/',
   ],
-  deployment: 'beta/apps',
+  ...(env === 'standalone' && { deployment: 'beta/apps' }),
   ...environmentSetup,
 });
 
