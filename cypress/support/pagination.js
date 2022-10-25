@@ -62,7 +62,7 @@ Cypress.Commands.add('testNavArrowsFlow', (selector) => {
   cy.getPaginationBtn(`${selector}`, 'previous').as('previousBtn')
 
   // cy.get('@nextBtn').should('not.be.disabled')
-  cy.get('@previousBtn').should('not.be.disabled')
+  // cy.get('@previousBtn').should('not.be.disabled')
   cy.get('@previousBtn').click()
 
 });
