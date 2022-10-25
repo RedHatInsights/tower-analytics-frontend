@@ -2,17 +2,13 @@ import { reportsUrl, allReports } from '../support/constants';
 
 describe('Reports page smoketests', () => {
   beforeEach(() => {
-    cy.loginFlow();
     cy.intercept('/api/tower-analytics/v1/event_explorer_options/').as('eventExplorerOptions');
     cy.visit(reportsUrl);
     cy.getByCy('loading').should('not.exist');
     cy.getByCy('api_error_state').should('not.exist');
+    cy.getByCy('api_loading_state').should('not.exist');
     cy.wait('@eventExplorerOptions');
     cy.get('.pf-c-empty-state__content').should('not.exist');
-  });
-  afterEach(() => {
-    cy.get('#UserMenu').click();
-    cy.get('button').contains('Log out').click({ force: true });
   });
 
   it('All report cards are displayed on main reports page', () => {

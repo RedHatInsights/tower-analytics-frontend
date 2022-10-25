@@ -1,16 +1,8 @@
-import { reportsUrl, mum } from '../../support/constants';
+import { mum as pageName } from '../../support/constants';
 
 describe('Report: Most Used Modules Smoketests', () => {
   beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + mum);
-    cy.getByCy('loading').should('not.exist');
-    cy.getByCy('api_error_state').should('not.exist');
-    cy.getByCy('api_loading_state').should('not.exist');
-  });
-  afterEach(() => {
-    cy.get('#UserMenu').click();
-    cy.get('button').contains('Log out').click({ force: true });
+    cy.visitReport(pageName)
   });
 
   it('Can Switch between Line and Bar chart without breaking UI', () => {

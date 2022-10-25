@@ -1,16 +1,11 @@
-import { reportsUrl, hab } from '../../support/constants';
+import { hab as pageName } from '../../support/constants';
 
 // swiching host anomalies off for now because it's not working on stage
 xdescribe('Report: Host Anomalies Bar', () => {
   beforeEach(() => {
-    cy.loginFlow();
-    cy.intercept('/api/tower-analytics/v1/probe_templates/').as('probeTemplates');
-    cy.visit(reportsUrl + '/' + hab);
-    cy.wait('@probeTemplates');
-  });
-  afterEach(() => {
-    cy.get('#UserMenu').click();
-    cy.get('button').contains('Log out').click({ force: true });
+    cy.visitReport(pageName)
+    cy.intercept('/api/tower-analytics/v1/probe_templates/').as('probeTemplates')
+    cy.wait('@probeTemplates')
   });
 
   it('Renders bar chart with data', () => {
