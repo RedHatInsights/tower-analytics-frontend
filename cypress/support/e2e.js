@@ -25,3 +25,13 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')
+
+beforeEach(() => {
+    cy.login();
+});
+
+after(() => {
+    cy.get('#UserMenu').click({ force: true })
+    cy.get('[aria-labelledby="UserMenu"]').find('button').as('logoutButton')
+    cy.get('@logoutButton').contains('Log out').click({ force: true })
+});
