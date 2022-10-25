@@ -16,6 +16,8 @@ import {
   DropdownItem,
   KebabToggle,
   Label,
+  Tooltip,
+  TooltipPosition,
 } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
 
@@ -195,8 +197,36 @@ const ListItem = ({
           )}
         </CardDetail>
         <CardDetail>
-          <CardLabel>Last job status</CardLabel>
-          {automation_status.status !== 'None' ? (
+          <Tooltip
+            key={'last_job_status_tooltip'}
+            position={TooltipPosition.top}
+            content={
+              automation_status.last_known_day
+                ? `Status last reported on: ${automation_status.last_known_day}`
+                : automation_status.last_known_month
+                ? `Status last reported on: ${automation_status.last_known_month}`
+                : automation_status.last_known_year
+                ? `Status last reported on: ${automation_status.last_known_year}`
+                : `Status last reported on: ${automation_status.last_known_date}`
+            }
+          >
+            <CardLabel>Last job status</CardLabel>
+          </Tooltip>
+          {Array.isArray(automation_status.status) ? (
+            automation_status.status.map((item) => {
+              return item !== 'None' ? (
+                <JobStatus status={item} />
+              ) : (
+                <Label
+                  variant="outline"
+                  color="red"
+                  icon={<ExclamationCircleIcon />}
+                >
+                  Not Running
+                </Label>
+              );
+            })
+          ) : automation_status.status !== 'None' ? (
             <JobStatus status={automation_status.status} />
           ) : (
             <Label
