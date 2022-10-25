@@ -1,13 +1,8 @@
-import { reportsUrl, aa21m } from '../../support/constants';
+import { aa21m as pageName } from '../../support/constants';
 
 describe('Report: AA 2.1 Migration', () => {
   beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + aa21m);
-  });
-  afterEach(() => {
-    cy.get('#UserMenu').click();
-    cy.get('button').contains('Log out').click({ force: true });
+    cy.visitReport(pageName)
   });
 
   it('Can Switch between Line and Bar chart without breaking UI', () => {
