@@ -3,14 +3,13 @@ import { calculatorUrl } from '../support/constants';
 
 describe('Automation Calculator page', () => {
   beforeEach(() => {
-    cy.loginFlow();
     cy.visit(calculatorUrl);
-
-    cy.get('[data-cy="header-automation_calculator"]', { timeout: 10000 }).should('be.visible');
-    cy.get('[data-cy="spinner"]').should('not.exist');
 
     cy.intercept('/api/tower-analytics/v1/roi_cost_effort_data/').as('roiCostEffortData');
     cy.intercept('/api/tower-analytics/v1/roi_templates/*').as('roiTemplates');
+
+    cy.get('[data-cy="header-automation_calculator"]').should('be.visible');
+    cy.get('[data-cy="spinner"]').should('not.exist');
   });
 
   const waitToLoad = () => {
