@@ -2,7 +2,7 @@ import { mubo as pageName } from '../../support/constants';
 
 describe('Report: Module Usage By Organization Smoketests', () => {
   beforeEach(() => {
-    cy.visitReport(pageName)
+    cy.visitReport(pageName);
   });
 
   it('Can Switch between Line and Bar chart without breaking UI', () => {
@@ -16,14 +16,12 @@ describe('Report: Module Usage By Organization Smoketests', () => {
   });
 
   it('Can navigate through the pages', () => {
-    cy.testNavArrowsFlow('top_pagination')
-    cy.testNavArrowsFlow('pagination_bottom')
-
+    cy.testNavArrowsFlow('top_pagination', pageName);
+    cy.testNavArrowsFlow('pagination_bottom', pageName);
   });
 
   it('Can change the number of items shown on the list', () => {
-    cy.testItemsListFlow('top_pagination', 'mubo')
-    cy.testItemsListFlow('pagination_bottom', 'mubo')
-
+    cy.testItemsListFlow('top_pagination', pageName);
+    cy.testItemsListFlow('pagination_bottom', pageName);
   });
 });
