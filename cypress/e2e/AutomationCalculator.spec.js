@@ -5,7 +5,9 @@ describe('Automation Calculator page', () => {
   beforeEach(() => {
     cy.visit(calculatorUrl);
 
-    cy.intercept('/api/tower-analytics/v1/roi_cost_effort_data/').as('roiCostEffortData');
+    cy.intercept('/api/tower-analytics/v1/roi_cost_effort_data/').as(
+      'roiCostEffortData'
+    );
     cy.intercept('/api/tower-analytics/v1/roi_templates/*').as('roiTemplates');
 
     cy.get('[data-cy="header-automation_calculator"]').should('be.visible');
@@ -18,10 +20,16 @@ describe('Automation Calculator page', () => {
   };
 
   it('can change manual cost', () => {
-    let originalTotalSavingsValue = cy.get('[data-cy="total_savings"]').find('h3').textContent;
-    let originalPageSavingsValue = cy.get('[data-cy="current_page_savings"]').find('h3').textContent;
+    let originalTotalSavingsValue = cy
+      .get('[data-cy="total_savings"]')
+      .find('h3').textContent;
+    let originalPageSavingsValue = cy
+      .get('[data-cy="current_page_savings"]')
+      .find('h3').textContent;
     let originalSavingsValues = [];
-    cy.get('[data-cy="savings"]').each(($el) => originalSavingsValues.push($el.text()));
+    cy.get('[data-cy="savings"]').each(($el) =>
+      originalSavingsValues.push($el.text())
+    );
 
     cy.get('#manual-cost').clear();
     waitToLoad();
@@ -38,18 +46,26 @@ describe('Automation Calculator page', () => {
     // TODO explain trailing 0
     cy.get('#manual-cost').should('have.value', '50');
 
-    cy.get('[data-cy="total_savings"]').find('h3').then(($totalSavings) => {
-      const totalSavingsValue = $totalSavings.text();
-      expect(totalSavingsValue).not.to.eq(originalTotalSavingsValue);
-    });
-    cy.get('[data-cy="current_page_savings"]').find('h3').then(($pageSavings) => {
-      const pageSavingsValue = $pageSavings.text();
-      expect(pageSavingsValue).not.to.eq(originalPageSavingsValue);
-    });
+    cy.get('[data-cy="total_savings"]')
+      .find('h3')
+      .then(($totalSavings) => {
+        const totalSavingsValue = $totalSavings.text();
+        expect(totalSavingsValue).not.to.eq(originalTotalSavingsValue);
+      });
+    cy.get('[data-cy="current_page_savings"]')
+      .find('h3')
+      .then(($pageSavings) => {
+        const pageSavingsValue = $pageSavings.text();
+        expect(pageSavingsValue).not.to.eq(originalPageSavingsValue);
+      });
   });
   it('can change automated cost', () => {
-    let originalTotalSavingsValue = cy.get('[data-cy="total_savings"]').find('h3').textContent;
-    let originalPageSavingsValue = cy.get('[data-cy="current_page_savings"]').find('h3').textContent;
+    let originalTotalSavingsValue = cy
+      .get('[data-cy="total_savings"]')
+      .find('h3').textContent;
+    let originalPageSavingsValue = cy
+      .get('[data-cy="current_page_savings"]')
+      .find('h3').textContent;
     //let originalSavingsValues = [];
     //cy.get('[data-cy="savings"]').each(($el) =>  originalSavingsValues.push($el.text()));
 
@@ -69,18 +85,26 @@ describe('Automation Calculator page', () => {
     // TODO explain trailing 0
     cy.get('#automation-cost').should('have.value', '20');
 
-    cy.get('[data-cy="total_savings"]').find('h3').then(($totalSavings) => {
-      const totalSavingsValue = $totalSavings.text();
-      expect(totalSavingsValue).not.to.eq(originalTotalSavingsValue);
-    });
-    cy.get('[data-cy="current_page_savings"]').find('h3').then(($pageSavings) => {
-      const pageSavingsValue = $pageSavings.text();
-      expect(pageSavingsValue).not.to.eq(originalPageSavingsValue);
-    });
+    cy.get('[data-cy="total_savings"]')
+      .find('h3')
+      .then(($totalSavings) => {
+        const totalSavingsValue = $totalSavings.text();
+        expect(totalSavingsValue).not.to.eq(originalTotalSavingsValue);
+      });
+    cy.get('[data-cy="current_page_savings"]')
+      .find('h3')
+      .then(($pageSavings) => {
+        const pageSavingsValue = $pageSavings.text();
+        expect(pageSavingsValue).not.to.eq(originalPageSavingsValue);
+      });
   });
   it('can change visibility', () => {
-    let originalTotalSavingsValue = cy.get('[data-cy="total_savings"]').find('h3').textContent;
-    let originalPageSavingsValue = cy.get('[data-cy="current_page_savings"]').find('h3').textContent;
+    let originalTotalSavingsValue = cy
+      .get('[data-cy="total_savings"]')
+      .find('h3').textContent;
+    let originalPageSavingsValue = cy
+      .get('[data-cy="current_page_savings"]')
+      .find('h3').textContent;
 
     cy.get('#table-kebab').click();
     cy.get('button').contains('Show all').click();
@@ -89,26 +113,38 @@ describe('Automation Calculator page', () => {
 
     cy.get('tr').eq(1).find('.pf-c-switch__toggle').click();
     waitToLoad();
-    cy.get('[data-cy="savings"]').first().should('have.css', 'color', 'rgb(210, 210, 210)');
+    cy.get('[data-cy="savings"]')
+      .first()
+      .should('have.css', 'color', 'rgb(210, 210, 210)');
     cy.get('tr').eq(1).get('td').contains('Hide').should('exist');
 
     cy.get('tr').eq(1).find('.pf-c-switch__toggle').click();
     waitToLoad();
-    cy.get('[data-cy="savings"]').first().should('have.css', 'color', 'rgb(30, 79, 24)');
+    cy.get('[data-cy="savings"]')
+      .first()
+      .should('have.css', 'color', 'rgb(30, 79, 24)');
     cy.get('tr').eq(1).get('td').contains('Show').should('exist');
 
-    cy.get('[data-cy="total_savings"]').find('h3').then(($totalSavings) => {
-      const totalSavingsValue = $totalSavings.text();
-      expect(totalSavingsValue).not.to.eq(originalTotalSavingsValue);
-    });
-    cy.get('[data-cy="current_page_savings"]').find('h3').then(($pageSavings) => {
-      const pageSavingsValue = $pageSavings.text();
-      expect(pageSavingsValue).not.to.eq(originalPageSavingsValue);
-    });
+    cy.get('[data-cy="total_savings"]')
+      .find('h3')
+      .then(($totalSavings) => {
+        const totalSavingsValue = $totalSavings.text();
+        expect(totalSavingsValue).not.to.eq(originalTotalSavingsValue);
+      });
+    cy.get('[data-cy="current_page_savings"]')
+      .find('h3')
+      .then(($pageSavings) => {
+        const pageSavingsValue = $pageSavings.text();
+        expect(pageSavingsValue).not.to.eq(originalPageSavingsValue);
+      });
   });
   it('can change manual time', () => {
-    let originalTotalSavingsValue = cy.get('[data-cy="total_savings"]').find('h3').textContent;
-    let originalPageSavingsValue = cy.get('[data-cy="current_page_savings"]').find('h3').textContent;
+    let originalTotalSavingsValue = cy
+      .get('[data-cy="total_savings"]')
+      .find('h3').textContent;
+    let originalPageSavingsValue = cy
+      .get('[data-cy="current_page_savings"]')
+      .find('h3').textContent;
     //let originalSavingsValue = cy.get('[data-cy="savings"]').first().textContent;
 
     cy.get('[data-cy="manual-time"]').first().clear();
@@ -125,38 +161,50 @@ describe('Automation Calculator page', () => {
     // TODO explain trailing 0
     cy.get('tr').eq(1).find('input').should('have.value', '40');
 
-    cy.get('[data-cy="total_savings"]').find('h3').then(($totalSavings) => {
-      const totalSavingsValue = $totalSavings.text();
-      expect(totalSavingsValue).not.to.eq(originalTotalSavingsValue);
-    });
-    cy.get('[data-cy="current_page_savings"]').find('h3').then(($pageSavings) => {
-      const pageSavingsValue = $pageSavings.text();
-      expect(pageSavingsValue).not.to.eq(originalPageSavingsValue);
-    });
+    cy.get('[data-cy="total_savings"]')
+      .find('h3')
+      .then(($totalSavings) => {
+        const totalSavingsValue = $totalSavings.text();
+        expect(totalSavingsValue).not.to.eq(originalTotalSavingsValue);
+      });
+    cy.get('[data-cy="current_page_savings"]')
+      .find('h3')
+      .then(($pageSavings) => {
+        const pageSavingsValue = $pageSavings.text();
+        expect(pageSavingsValue).not.to.eq(originalPageSavingsValue);
+      });
   });
   it('shows empty state when all rows are hidden', () => {
-    let originalTotalSavingsValue = cy.get('[data-cy="total_savings"]').find('h3').textContent;
+    let originalTotalSavingsValue = cy
+      .get('[data-cy="total_savings"]')
+      .find('h3').textContent;
 
     cy.get('#table-kebab').click();
     cy.get('button').contains('Hide all').click();
     waitToLoad();
-    cy.get('[data-cy="total_savings"]').find('h3').then(($totalSavings) => {
-      const totalSavingsValue = $totalSavings.text();
-      expect(totalSavingsValue).not.to.eq(originalTotalSavingsValue);
-    });
-    cy.get('[data-cy="current_page_savings"]').find('h3').then(($pageSavings) => {
-      const pageSavingsValue = $pageSavings.text();
-      expect(pageSavingsValue).to.eq('$0.00');
-    });
+    cy.get('[data-cy="total_savings"]')
+      .find('h3')
+      .then(($totalSavings) => {
+        const totalSavingsValue = $totalSavings.text();
+        expect(totalSavingsValue).not.to.eq(originalTotalSavingsValue);
+      });
+    cy.get('[data-cy="current_page_savings"]')
+      .find('h3')
+      .then(($pageSavings) => {
+        const pageSavingsValue = $pageSavings.text();
+        expect(pageSavingsValue).to.eq('$0.00');
+      });
     cy.get('.pf-c-empty-state').should('exist');
 
     cy.get('button').contains('Show all').click();
     waitToLoad();
     cy.get('.pf-c-empty-state').should('not.exist');
-    cy.get('[data-cy="current_page_savings"]').find('h3').then(($pageSavings) => {
-      const pageSavingsValue = $pageSavings.text();
-      expect(pageSavingsValue).not.to.eq('$0.00');
-    });
+    cy.get('[data-cy="current_page_savings"]')
+      .find('h3')
+      .then(($pageSavings) => {
+        const pageSavingsValue = $pageSavings.text();
+        expect(pageSavingsValue).not.to.eq('$0.00');
+      });
   });
   it('shows Automation formula', () => {
     cy.get('[data-cy="automation_formula_button"]').click();
