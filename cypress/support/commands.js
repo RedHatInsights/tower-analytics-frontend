@@ -1,3 +1,5 @@
+import { reportsUrl } from '../support/constants';
+
 // ***********************************************
 // This example commands.js shows you how to
 // create various custom commands and overwrite
@@ -151,4 +153,12 @@ Cypress.Commands.add('findByCustomId', (idToFind) => {
   if (resultC.length) return resultC
 
   throw `Unable to find an element by: [data-ouia-component-id="${idToFind}"] or [data-cy="${idToFind}"] or [id="${idToFind}"]`
+})
+
+Cypress.Commands.add('visitReport', (url) => {
+  cy.visit(`${reportsUrl}` + '/' + url)
+  cy.getByCy('loading').should('not.exist')
+  cy.getByCy('api_error_state').should('not.exist')
+  cy.getByCy('api_loading_state').should('not.exist')
+
 })

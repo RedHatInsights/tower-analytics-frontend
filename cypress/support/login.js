@@ -44,14 +44,14 @@ Cypress.Commands.add('acceptCookiesDialog', () => {
       .find('div.pdynamicbutton')
       .find('a.call')
       .should('be.visible')
-      .click(true)
+      .click({ force: true })
   }
 
   acceptCookies();
 
 });
 
-Cypress.Commands.add('loginFlow', () => {
+Cypress.Commands.add('login', () => {
   cy.visit('/');
 
   cy.log('Determining login strategy');
@@ -61,7 +61,7 @@ Cypress.Commands.add('loginFlow', () => {
       'username': '#username-verification',
       'password': '#password',
       'two-step': false,
-      'agree-cookies': false,
+      'agree-cookies': true,
       'landing-page': Cypress.config().baseUrl + clustersUrl
     },
     'front-end-aggregator-ephemeral': {

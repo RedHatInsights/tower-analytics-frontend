@@ -1,97 +1,97 @@
 [
   {
-    "name": "jbex",
+    "name": "job_explorer",
     "has_extra_line": false,
     "items_per_page": 5,
     "has_expanded_rows": true,
     "total_items": 392
   },
   {
-    "name": "aa21m",
+    "name": "aa_2_1_onboarding",
     "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": false,
     "total_items": 3
   },
   {
-    "name": "cmbjt",
+    "name": "changes_made_by_job_template",
     "has_extra_line": true,
     "items_per_page": 6,
     "has_expanded_rows": false,
     "total_items": 14
   },
   {
-    "name": "hajt (hab)",
+    "name": "host_anomalies_bar",
     "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": true,
     "total_items": 1
   },
   {
-    "name": "harr (has)",
+    "name": "host_anomalies_scatter",
     "has_extra_line": "No data",
     "items_per_page": null,
     "has_expanded_rows": null,
     "total_items": null
   },
   {
-    "name": "hbo",
+    "name": "hosts_by_organization",
     "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": false,
     "total_items": 2
   },
   {
-    "name": "hcbjt",
+    "name": "hosts_changed_by_job_template",
     "has_extra_line": true,
     "items_per_page": 6,
     "has_expanded_rows": false,
     "total_items": 8
   },
   {
-    "name": "jtbo",
+    "name": "jobs_and_tasks_by_organization",
     "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": false,
     "total_items": 2
   },
   {
-    "name": "jtrr",
+    "name": "job_template_run_rate",
     "has_extra_line": true,
     "items_per_page": 6,
     "has_expanded_rows": false,
     "total_items": 14
   },
   {
-    "name": "mubjt",
+    "name": "module_usage_by_job_template",
     "has_extra_line": true,
     "items_per_page": 6,
     "has_expanded_rows": false,
     "total_items": 8
   },
   {
-    "name": "mubo",
+    "name": "module_usage_by_organization",
     "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": false,
     "total_items": 2
   },
   {
-    "name": "mubt",
+    "name": "module_usage_by_task",
     "has_extra_line": true,
     "items_per_page": 6,
     "has_expanded_rows": false,
     "total_items": 16
   },
   {
-    "name": "mum",
+    "name": "most_used_modules",
     "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": true,
     "total_items": 5
   },
   {
-    "name": "texp",
+    "name": "templates_explorer",
     "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": true,

@@ -11,9 +11,6 @@ import {
 } from '../support/constants';
 
 describe('Insights smoketests', () => {
-  beforeEach(() => {
-    cy.loginFlow();
-  });
 
   it('has all the AA navigation items', () => {
     cy.visit(dashboardUrl);

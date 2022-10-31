@@ -3,9 +3,9 @@ import { jobExplorerUrl } from '../support/constants';
 const appid = Cypress.env('appid');
 
 describe('Job Explorer page smoketests', () => {
-  beforeEach(() => {
-    cy.loginFlow();
+  beforeEach(() => {    
     cy.visit(jobExplorerUrl);
+
     cy.get('[data-cy="spinner"]').should('not.exist');
     cy.get('[data-cy="loading"]').should('not.exist');
     // cy.get('[data-cy="header-jobex"]', {
