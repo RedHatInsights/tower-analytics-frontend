@@ -5,8 +5,10 @@ const appid = Cypress.env('appid');
 describe('Clusters page', () => {
   beforeEach(() => {
     cy.visit(clustersUrl);
-    
-    cy.intercept('/api/tower-analytics/v1/event_explorer/*').as('eventExplorerData');
+
+    cy.intercept('/api/tower-analytics/v1/event_explorer/*').as(
+      'eventExplorerData'
+    );
     cy.wait('@eventExplorerData');
 
     cy.get('[data-cy="spinner"]').should('not.exist');
