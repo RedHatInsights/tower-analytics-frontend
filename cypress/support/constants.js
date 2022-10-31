@@ -25,17 +25,17 @@ export const hab = 'host_anomalies_bar'
 export const has = 'host_anomalies_scatter'
 
 export const allReports = [
-    hcbjt,
-    cmbjt,
-    jtrr,
-    hbo,
-    jtbo,
-    texp,
-    mum,
-    mubo,
-    mubjt,
-    mubt,
-    aa21m,
-    hab,
-    has,
+  hcbjt,
+  cmbjt,
+  jtrr,
+  hbo,
+  jtbo,
+  texp,
+  mum,
+  mubo,
+  mubjt,
+  mubt,
+  aa21m,
+  hab,
+  has
 ]
