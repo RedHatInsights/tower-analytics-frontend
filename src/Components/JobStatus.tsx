@@ -59,7 +59,12 @@ const JobStatus: FunctionComponent<Props> = ({ status }) => {
   };
 
   return (
-    <Label variant="outline" color={getColor()} icon={getIcon()}>
+    <Label
+      variant="outline"
+      color={getColor()}
+      icon={getIcon()}
+      style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}
+    >
       {capitalize(status)}
     </Label>
   );
