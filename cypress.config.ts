@@ -26,7 +26,7 @@ export default defineConfig({
       return require('./cypress/plugins/index.js')(on, config);
     },
     baseUrl:
-      'https://stage.foo.redhat.com:1337/beta/ansible/automation-analytics',
+      'https://stage.foo.redhat.com:1337/ansible/automation-analytics',
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
   },
 });
