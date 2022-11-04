@@ -327,7 +327,10 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           <>
             <ApiStatusWrapper api={dataApi}>
               <Chart
-                schema={hydrateSchema(schema)({
+                schema={hydrateSchema(
+                  schema,
+                  dataApi
+                )({
                   label: chartParams.label,
                   y: chartParams.y,
                   xTickFormat: chartParams.xTickFormat,
