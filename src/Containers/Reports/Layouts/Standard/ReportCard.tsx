@@ -297,7 +297,6 @@ const ReportCard: FunctionComponent<StandardProps> = ({
                 y: chartParams.y,
                 xTickFormat: chartParams.xTickFormat,
                 chartType: chartParams.chartType,
-                yAxisDomainL: dataApi,
               })}
               dataComponent={'foobar'}
               data={dataApi.result}
