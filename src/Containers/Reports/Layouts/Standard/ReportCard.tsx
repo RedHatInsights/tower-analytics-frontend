@@ -178,9 +178,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         '\nLast Referenced: ' +
         datum.last_referenced +
         '\nSlow: ' +
-        (datum.failed_duration > 0 && datum.successful_duration === -100
-          ? 'True'
-          : 'False');
+        (datum.failed_duration ? 'True' : 'False');
     } else {
       tooltip =
         chartParams.label +
