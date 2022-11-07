@@ -221,6 +221,7 @@ const ListItem = ({
                   variant="outline"
                   color="red"
                   icon={<ExclamationCircleIcon />}
+                  style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}
                 >
                   Not Running
                 </Label>
@@ -233,6 +234,7 @@ const ListItem = ({
               variant="outline"
               color="red"
               icon={<ExclamationCircleIcon />}
+              style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}
             >
               Not Running
             </Label>

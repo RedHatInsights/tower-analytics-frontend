@@ -4,6 +4,7 @@ exports[`Components/JobStatus should render canceled 1`] = `
 <DocumentFragment>
   <span
     class="pf-c-label pf-m-orange pf-m-outline"
+    style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
       class="pf-c-label__content"
@@ -35,6 +36,7 @@ exports[`Components/JobStatus should render error 1`] = `
 <DocumentFragment>
   <span
     class="pf-c-label pf-m-red pf-m-outline"
+    style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
       class="pf-c-label__content"
@@ -66,6 +68,7 @@ exports[`Components/JobStatus should render failed 1`] = `
 <DocumentFragment>
   <span
     class="pf-c-label pf-m-red pf-m-outline"
+    style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
       class="pf-c-label__content"
@@ -97,6 +100,7 @@ exports[`Components/JobStatus should render new 1`] = `
 <DocumentFragment>
   <span
     class="pf-c-label pf-m-outline"
+    style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
       class="pf-c-label__content"
@@ -128,6 +132,7 @@ exports[`Components/JobStatus should render pending 1`] = `
 <DocumentFragment>
   <span
     class="pf-c-label pf-m-blue pf-m-outline"
+    style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
       class="pf-c-label__content"
@@ -159,6 +164,7 @@ exports[`Components/JobStatus should render running 1`] = `
 <DocumentFragment>
   <span
     class="pf-c-label pf-m-blue pf-m-outline"
+    style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
       class="pf-c-label__content"
@@ -190,6 +196,7 @@ exports[`Components/JobStatus should render successful 1`] = `
 <DocumentFragment>
   <span
     class="pf-c-label pf-m-green pf-m-outline"
+    style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
       class="pf-c-label__content"
@@ -221,6 +228,7 @@ exports[`Components/JobStatus should render waiting 1`] = `
 <DocumentFragment>
   <span
     class="pf-c-label pf-m-outline"
+    style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
       class="pf-c-label__content"

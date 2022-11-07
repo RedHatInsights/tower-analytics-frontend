@@ -17,6 +17,8 @@ import {
   Label,
   List,
   ListItem,
+  Tooltip,
+  TooltipPosition,
 } from '@patternfly/react-core';
 import CardActionsRow from '../../../../Components/CardActionsRow';
 import { deletePlan, readPlanOptions } from '../../../../Api/';
@@ -111,6 +113,22 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
     return fromOptionsValue?.value ?? '';
   };
 
+  const jobStatusLabel = (item, index) => {
+    return item !== 'None' ? (
+      <JobStatus key={index} status={item} />
+    ) : (
+      <Label
+        key={index}
+        variant="outline"
+        color="red"
+        icon={<ExclamationCircleIcon />}
+        style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}
+      >
+        Not Running
+      </Label>
+    );
+  };
+
   const labelsAndValues = {
     Name: name || undefined,
     'Automation type': category
@@ -125,14 +143,11 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
       ? renderOptionsBasedValue('frequency_period', frequency_period)
       : undefined,
     Template: template_id ? showTemplate(template_details) : undefined,
-    'Last job status':
-      automation_status.status && automation_status.status !== 'None' ? (
-        <JobStatus status={automation_status.status} />
-      ) : (
-        <Label variant="outline" color="red" icon={<ExclamationCircleIcon />}>
-          Not Running
-        </Label>
-      ),
+    'Last job status': Array.isArray(automation_status.status)
+      ? automation_status.status.map((item, index) =>
+          jobStatusLabel(item, index)
+        )
+      : jobStatusLabel(automation_status.status),
     'Last updated': modified ? (
       <span>{formatDateTime(modified)}</span>
     ) : undefined,
@@ -159,7 +174,25 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
                   (key, i) =>
                     labelsAndValues[key] !== undefined && (
                       <DescriptionListGroup key={i}>
-                        <DescriptionListTerm>{key}</DescriptionListTerm>
+                        {key === 'Last job status' ? (
+                          <Tooltip
+                            key={'last_job_status_tooltip'}
+                            position={TooltipPosition.top}
+                            content={
+                              automation_status.last_known_day
+                                ? `Status last reported on: ${automation_status.last_known_day}`
+                                : automation_status.last_known_month
+                                ? `Status last reported on: ${automation_status.last_known_month}`
+                                : automation_status.last_known_year
+                                ? `Status last reported on: ${automation_status.last_known_year}`
+                                : `Status last reported on: ${automation_status.last_known_date}`
+                            }
+                          >
+                            <DescriptionListTerm>{key}</DescriptionListTerm>
+                          </Tooltip>
+                        ) : (
+                          <DescriptionListTerm>{key}</DescriptionListTerm>
+                        )}
                         <DescriptionListDescription>
                           {labelsAndValues[key]}
                         </DescriptionListDescription>
