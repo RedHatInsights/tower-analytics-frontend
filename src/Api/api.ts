@@ -80,7 +80,7 @@ const mungeData = async (promise, params) => {
         host_avg_duration_per_task: item.host_avg_duration_per_task.toFixed(2),
         total_tasks_executed: item.total_tasks_executed,
         failed_duration: item.host_avg_duration_per_task,
-        successful_duration: -100,
+        successful_duration: null,
         anomaly: item.anomaly,
       };
     }
@@ -92,7 +92,7 @@ const mungeData = async (promise, params) => {
       peer_host_stats,
       host_avg_duration_per_task: item.host_avg_duration_per_task.toFixed(2),
       total_tasks_executed: item.total_tasks_executed,
-      failed_duration: -100,
+      failed_duration: null,
       successful_duration: item.host_avg_duration_per_task,
       anomaly: item.anomaly,
     };
@@ -108,7 +108,7 @@ const mungeData = async (promise, params) => {
         host_avg_duration_per_task: item.host_avg_duration_per_task.toFixed(2),
         total_tasks_executed: item.total_tasks_executed,
         failed_duration: item.host_avg_duration_per_task,
-        successful_duration: -100,
+        successful_duration: null,
         anomaly: item.anomaly,
       };
     }
@@ -120,7 +120,7 @@ const mungeData = async (promise, params) => {
       peer_host_stats,
       host_avg_duration_per_task: item.host_avg_duration_per_task.toFixed(2),
       total_tasks_executed: item.total_tasks_executed,
-      failed_duration: -100,
+      failed_duration: null,
       successful_duration: item.host_avg_duration_per_task,
       anomaly: item.anomaly,
     };
