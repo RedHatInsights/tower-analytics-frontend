@@ -79,12 +79,22 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   const redirectToHostScatter = (
     slug: string,
     templateId: any,
+    clusterId: any,
+    orgId: any,
+    inventoryId: any,
+    status: any,
+    hostStatus: any,
     quickDateRange: any
   ) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...specificReportDefaultParams(slug),
         template_id: templateId,
+        cluster_id: clusterId,
+        org_id: orgId,
+        inventory_id: inventoryId,
+        status: status,
+        host_status: hostStatus,
         quick_date_range: quickDateRange,
       },
     };
@@ -158,6 +168,11 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     redirectToHostScatter(
       'host_anomalies_scatter',
       props.datum.id,
+      queryParams.cluster_id,
+      queryParams.org_id,
+      queryParams.inventory_id,
+      queryParams.status,
+      queryParams.host_status,
       queryParams.quick_date_range
     );
     window.location.reload();
