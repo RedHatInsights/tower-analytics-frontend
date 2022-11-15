@@ -244,6 +244,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
       }
       isOpen={isOpen}
       onClose={cleanup}
+      data-cy={'modal'}
     >
       {(statsApi.isLoading || jobsApi.isLoading) && <LoadingState />}
       {(statsApi.error || jobsApi.error) && (
