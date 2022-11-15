@@ -186,6 +186,7 @@ Cypress.Commands.add('testItemsListFlow', (selector, pageName) => {
 Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
   const itemsPerPage = parseFloat(data.items_per_page);
   const totalItems = parseFloat(data.total_items);
+  cy.intercept(data.api_call).as('apiCall');
 
   let minRows = 0;
   let maxRows = 0;
@@ -206,6 +207,7 @@ Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
   maxTotalRows = data.has_extra_line ? maxTotalRows + 1 : maxTotalRows;
 
   // get table and amount of lines
+  cy.wait('@apiCall');
   cy.get('table').find('tbody').as('table');
   cy.get('@table').find('tr').should('have.length', minTotalRows);
 
