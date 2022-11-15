@@ -155,10 +155,20 @@ Cypress.Commands.add('findByCustomId', (idToFind) => {
   throw `Unable to find an element by: [data-ouia-component-id="${idToFind}"] or [data-cy="${idToFind}"] or [id="${idToFind}"]`
 })
 
-Cypress.Commands.add('visitReport', (url) => {
-  cy.visit(`${reportsUrl}` + '/' + url)
-  cy.getByCy('loading').should('not.exist')
-  cy.getByCy('api_error_state').should('not.exist')
-  cy.getByCy('api_loading_state').should('not.exist')
+Cypress.Commands.add('visitReport', (pageName) => {
+  cy.fixture('tables_pagination').then((pages) => {
+    pages.forEach((page) => {
+      if (page.name == pageName) {
+        cy.log('Page data from fixture:', page)
+        cy.visit(`${reportsUrl}` + '/' + pageName)
+        cy.getByCy('loading').should('not.exist')
+        cy.getByCy('api_error_state').should('not.exist')
+        cy.getByCy('api_loading_state').should('not.exist')
+        cy.log('Intercepting the url:', page.api_call)
+        cy.intercept(page.api_call).as('apiCall')
+        cy.wait('@apiCall')
+      }
+    })
+  })
 
 })
