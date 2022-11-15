@@ -244,6 +244,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
       }
       isOpen={isOpen}
       onClose={cleanup}
+      data-cy={'modal'}
     >
       {(statsApi.isLoading || jobsApi.isLoading) && <LoadingState />}
       {(statsApi.error || jobsApi.error) && (
@@ -317,11 +318,17 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
           onClick={() => {
             cleanup();
           }}
+          data-cy={'modal_cancel_button'}
         >
           Close
         </Button>
 
-        <Button component="a" onClick={redirectToJobExplorer} variant="link">
+        <Button
+          component="a"
+          onClick={redirectToJobExplorer}
+          variant="link"
+          data-cy={'modal_view_all_jobs_button'}
+        >
           View all jobs
         </Button>
       </ActionContainer>
