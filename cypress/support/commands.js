@@ -159,13 +159,13 @@ Cypress.Commands.add('visitReport', (pageName) => {
   cy.fixture('tables_pagination').then((pages) => {
     pages.forEach((page) => {
       if (page.name == pageName) {
+        cy.intercept(page.api_call).as('apiCall')
         cy.log('Page data from fixture:', page)
         cy.visit(`${reportsUrl}` + '/' + pageName)
         cy.getByCy('loading').should('not.exist')
         cy.getByCy('api_error_state').should('not.exist')
         cy.getByCy('api_loading_state').should('not.exist')
         cy.log('Intercepting the url:', page.api_call)
-        cy.intercept(page.api_call).as('apiCall')
         cy.wait('@apiCall')
       }
     })
