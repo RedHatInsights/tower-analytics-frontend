@@ -4,22 +4,18 @@ const appid = Cypress.env('appid');
 
 describe('Clusters page', () => {
   beforeEach(() => {
-    cy.loginFlow();
     cy.visit(clustersUrl);
-    cy.get('[data-cy="spinner"]').should('not.exist');
-    cy.get('[data-cy="loading"]').should('not.exist');
-    cy.get('[data-cy="header-clusters"]', {
-      timeout: 10000,
-    }).should('be.visible');
-    cy.get('[data-cy="filter-toolbar"]', {
-      timeout: 10000,
-    }).should('be.visible');
-    cy.get('[data-cy="card-title-job-status"]', {
-      timeout: 10000,
-    }).should('be.visible');
+
     cy.intercept('/api/tower-analytics/v1/event_explorer/*').as(
       'eventExplorerData'
     );
+    cy.wait('@eventExplorerData');
+
+    cy.get('[data-cy="spinner"]').should('not.exist');
+    cy.get('[data-cy="loading"]').should('not.exist');
+    cy.get('[data-cy="header-clusters"]').should('be.visible');
+    cy.get('[data-cy="filter-toolbar"]').should('be.visible');
+    cy.get('[data-cy="card-title-job-status"]').should('be.visible');
   });
 
   it('loads clusters page with Bar graph and other tables', () => {
@@ -63,7 +59,9 @@ describe('Clusters page', () => {
     cy.get('[data-cy="filter-toolbar"')
       .find('button')
       .contains('Clear all filters')
-      .click({ force: true });
+      .click({
+        force: true
+      });
     cy.get('.pf-c-empty-state__content').should('not.exist');
     // Add Cluster to the filters
     cy.get('[data-cy="category_selector"]').find('button').click();
@@ -78,7 +76,9 @@ describe('Clusters page', () => {
     cy.get('[data-cy="filter-toolbar"')
       .find('button')
       .contains('Clear all filters')
-      .click({ force: true });
+      .click({
+        force: true
+      });
     // Wait and check that the filter is no longer present
     cy.get('.pf-c-empty-state__content').should('not.exist');
     cy.get('.pf-c-chip-group__main').contains('Cluster').should('not.exist');
@@ -104,7 +104,9 @@ describe('Clusters page', () => {
         cy.get(appid)
           .find('#d3-bar-chart-root > svg > g > g > rect')
           .eq(ix)
-          .trigger('mouseover', { force: true });
+          .trigger('mouseover', {
+            force: true
+          });
         cy.get('[id^=svg-chart-Tooltip]').should('have.css', 'opacity', '1');
       });
   });
@@ -116,7 +118,9 @@ describe('Clusters page', () => {
         cy.get(appid)
           .find('*[class^="pf-c-data-list pf-m-grid-md"] > li > div')
           .eq(ix)
-          .trigger('mouseover', { force: true });
+          .trigger('mouseover', {
+            force: true
+          });
       });
   });
 
@@ -127,7 +131,9 @@ describe('Clusters page', () => {
         cy.get(appid)
           .find('[data-cy="top-modules-header"] > ul> li > div')
           .eq(ix)
-          .trigger('mouseover', { force: true });
+          .trigger('mouseover', {
+            force: true
+          });
       });
   });
 });

@@ -1,16 +1,8 @@
-import { reportsUrl, mum } from '../../support/constants';
+import { mum as pageName } from '../../support/constants';
 
 describe('Report: Most Used Modules Smoketests', () => {
   beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + mum);
-    cy.getByCy('loading').should('not.exist');
-    cy.getByCy('api_error_state').should('not.exist');
-    cy.getByCy('api_loading_state').should('not.exist');
-  });
-  afterEach(() => {
-    cy.get('#UserMenu').click();
-    cy.get('button').contains('Log out').click({ force: true });
+    cy.visitReport(pageName);
   });
 
   it('Can Switch between Line and Bar chart without breaking UI', () => {
@@ -24,14 +16,12 @@ describe('Report: Most Used Modules Smoketests', () => {
   });
 
   it('Can navigate through the pages', () => {
-    cy.testNavArrowsFlow('top_pagination')
-    cy.testNavArrowsFlow('pagination_bottom')
-
+    cy.testNavArrowsFlow('top_pagination', pageName);
+    cy.testNavArrowsFlow('pagination_bottom', pageName);
   });
 
   it('Can change the number of items shown on the list', () => {
-    cy.testItemsListFlow('top_pagination', 'mum')
-    cy.testItemsListFlow('pagination_bottom', 'mum')
-
+    cy.testItemsListFlow('top_pagination', pageName);
+    cy.testItemsListFlow('pagination_bottom', pageName);
   });
 });

@@ -1,16 +1,8 @@
-import { reportsUrl, mubjt } from '../../support/constants';
+import { mubjt as pageName } from '../../support/constants';
 
 describe('Report: Module Usage By Job Template Smoketests', () => {
   beforeEach(() => {
-    cy.loginFlow();
-    cy.visit(reportsUrl + '/' + mubjt);
-    cy.getByCy('loading').should('not.exist');
-    cy.getByCy('api_error_state').should('not.exist');
-    cy.getByCy('api_loading_state').should('not.exist');
-  });
-  afterEach(() => {
-    cy.get('#UserMenu').click();
-    cy.get('button').contains('Log out').click({ force: true });
+    cy.visitReport(pageName);
   });
 
   it('Can Switch between Line and Bar chart without breaking UI', () => {
@@ -24,14 +16,12 @@ describe('Report: Module Usage By Job Template Smoketests', () => {
   });
 
   it('Can navigate through the pages', () => {
-    cy.testNavArrowsFlow('top_pagination')
-    cy.testNavArrowsFlow('pagination_bottom')
-
+    cy.testNavArrowsFlow('top_pagination', pageName);
+    cy.testNavArrowsFlow('pagination_bottom', pageName);
   });
 
   it('Can change the number of items shown on the list', () => {
-    cy.testItemsListFlow('top_pagination', 'mubjt')
-    cy.testItemsListFlow('pagination_bottom', 'mubjt')
-
+    cy.testItemsListFlow('top_pagination', pageName);
+    cy.testItemsListFlow('pagination_bottom', pageName);
   });
 });
