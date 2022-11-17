@@ -44,13 +44,13 @@ Cypress.Commands.add('getPaginationBtn', (cyParent, btnAction) => {
 Cypress.Commands.add('testNavArrows', (selector, data) => {
   const itemsPerPage = parseFloat(data.items_per_page);
   const totalItems = parseFloat(data.total_items);
-  let hasSecondPage = itemsPerPage * 2 ? true : false;
+  let hasSecondPage = totalItems > itemsPerPage ? true : false;
 
   cy.getPaginationBtn(`${selector}`, 'next').as('nextBtn');
   cy.getPaginationBtn(`${selector}`, 'previous').as('previousBtn');
   cy.get('@previousBtn').should('be.disabled');
 
-  if (totalItems > itemsPerPage) {
+  if (hasSecondPage) {
     cy.get('@nextBtn').should('not.be.disabled');
     cy.get('@nextBtn').click();
   } else {
@@ -59,12 +59,16 @@ Cypress.Commands.add('testNavArrows', (selector, data) => {
 
   cy.getPaginationBtn(`${selector}`, 'next').as('nextBtn');
   cy.getPaginationBtn(`${selector}`, 'previous').as('previousBtn');
-  cy.get('@previousBtn').should('not.be.disabled');
 
   if (hasSecondPage) {
-    cy.get('@nextBtn').should('not.be.disabled');
+    cy.get('@previousBtn').should('not.be.disabled');
+    // cy.get('@nextBtn').should('not.be.disabled'); // TODO: improve this test considering all pages
+    cy.get('@previousBtn').click();
+  } else {
+    cy.get('@previousBtn').should('be.disabled');
+    cy.get('@nextBtn').should('be.disabled');
   }
-  cy.get('@previousBtn').click();
+
 });
 
 /**
@@ -129,7 +133,7 @@ Cypress.Commands.add('testSelectItemsPerPage', (selector, itemsPerPage) => {
         cy.get('@maxItems')
           .should('have.attr', 'data-action')
           .and('include', 'per-page-25');
-        cy.get('@maxItems').click();
+        cy.get('@maxItems').click({ force: true });
       });
   } else {
     if (itemsPerPage == 6) {
@@ -159,7 +163,7 @@ Cypress.Commands.add('testSelectItemsPerPage', (selector, itemsPerPage) => {
           cy.get('@maxItems')
             .should('have.attr', 'data-action')
             .and('include', 'per-page-10');
-          cy.get('@maxItems').click();
+          cy.get('@maxItems').click({ force: true });
         });
     } else {
       // throw `The amount of items per page expected was 5 or 6 and got "${itemsPerPage}" instead`
@@ -197,6 +201,9 @@ Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
   } else {
     minRows = itemsPerPage;
     maxRows = itemsPerPage == 5 ? 25 : 10;
+    if (totalItems <= maxRows) {
+      maxRows = totalItems - 1; // when showing all items the page doesn't have the extra line
+    }
   }
 
   // TODO: improve this logic
@@ -225,8 +232,12 @@ Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
   // assert the options available
   cy.testSelectItemsPerPage(selector, itemsPerPage).then(() => {
     cy.get('table').find('tbody').as('table');
-    cy.log('MAX TOTAL ROWS testPageDataWithPagination', maxTotalRows);
-    cy.get('@table').find('tr').should('have.length', maxTotalRows);
+    cy.get('@table').find('tr').as('tableLines');
+    cy.wait('@apiCall');
+    // multiple gets since the table is constantly updated and this can cause
+    // the lenght to be 0 or undefined
+
+    cy.get('@tableLines').should('have.length', maxTotalRows);
 
     // toggle back to min items
     cy.findByIdLike('@pag_option_menu', 'aa-pagination-toggle').click();
@@ -239,8 +250,8 @@ Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
     cy.get('@pag_option_menu').find('li').eq(1).as('min_items');
     // .contains('per-page-'+itemsPerPage).
     cy.get('@min_items').click();
+    cy.wait('@apiCall');
 
-    cy.get('table').find('tbody').as('table');
-    cy.get('@table').find('tr').should('have.length', minTotalRows);
+    cy.get('@tableLines').should('have.length', minTotalRows);
   });
 });
