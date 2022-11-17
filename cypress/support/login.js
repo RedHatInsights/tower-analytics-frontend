@@ -39,8 +39,8 @@ Cypress.Commands.add('acceptCookiesDialog', () => {
 
   const getAcceptBtn = () => {
     return getIframeBody()
-      .find('div.pdynamicbutton')
       .find('a.call')
+      .contains('Agree and proceed with standard settings')
       .should('be.visible');
   };
 
@@ -53,6 +53,7 @@ Cypress.Commands.add('acceptCookiesDialog', () => {
 
 Cypress.Commands.add('login', () => {
   cy.visit('/');
+  cy.intercept('https://consent.trustarc.com/*').as('cookies');
 
   cy.log('Determining login strategy');
 
@@ -136,13 +137,13 @@ Cypress.Commands.add('login', () => {
 
   if (keycloakLoginFields[strategy]['agree-cookies']) {
     cy.log('Accept cookies');
-    cy.intercept('http://trustarc.com/*').as('cookies');
     /*
      * TODO: This is a workaround and the tests runs longer than we would like.
      * It needs to be updated in a way we don't even see the iframe,
      * loading the cookies beforehand.
      */
     cy.get('@cookies').then(() => {
+      cy.wait('@cookies');
       cy.acceptCookiesDialog();
     });
   }
