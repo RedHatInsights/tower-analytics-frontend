@@ -125,6 +125,7 @@ const Notifications: FC<Record<string, never>> = () => {
     result: { notifications: notificationsData, meta },
     isLoading,
     isSuccess,
+    error,
     request: fetchNotifications,
   } = useRequest<NotificationDataType>(
     useCallback(
@@ -229,6 +230,7 @@ const Notifications: FC<Record<string, never>> = () => {
                   />
                 </NotificationDrawer>
               )}
+              {error && <NoData />}
               <Pagination
                 count={meta?.count}
                 params={{

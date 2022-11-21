@@ -41,6 +41,7 @@ import { reportDefaultParams } from '../../../Utilities/constants';
 import { useQueryParams } from '../../../QueryParams';
 import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
 import EmptyList from '../../../Components/EmptyList';
+import NoData from '../../../Components/ApiStatus/NoData';
 
 export interface Report {
   slug: string;
@@ -86,6 +87,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
   const {
     result: { reports: data },
     isSuccess: isSuccess,
+    error: error,
     request: fetchReports,
   } = useRequest(readReports, { reports: [] });
 
@@ -315,6 +317,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
           path={'/reports'}
         />
       )}
+      {error && <NoData />}
     </>
   );
 };
