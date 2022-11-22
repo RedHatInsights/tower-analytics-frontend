@@ -260,7 +260,7 @@ const OrganizationStatistics = () => {
           </Tabs>
           <CardBody>
             {orgsIsLoading && <LoadingState />}
-            {orgsError && <ApiErrorState message={orgsError.error} />}
+            {orgsError && <ApiErrorState message={orgsError.error.error} />}
             {orgsIsSuccess && orgs.dates?.length <= 0 && <NoData />}
             {orgsIsSuccess && orgs.dates?.length > 0 && (
               <GroupedBarChart
@@ -293,7 +293,7 @@ const OrganizationStatistics = () => {
           <Divider />
           <CardBody>
             {jobsIsLoading && <LoadingState />}
-            {jobsError && <ApiErrorState message={jobsError.error} />}
+            {jobsError && <ApiErrorState message={jobsError.error.error} />}
             {jobsIsSuccess && jobs.items?.length <= 0 && <NoData />}
             {jobsIsSuccess && jobs.items?.length > 0 && (
               <PieChart
@@ -314,7 +314,7 @@ const OrganizationStatistics = () => {
           <Divider />
           <CardBody>
             {tasksIsLoading && <LoadingState />}
-            {tasksError && <ApiErrorState message={tasksError.error} />}
+            {tasksError && <ApiErrorState message={tasksError.error.error} />}
             {tasksIsSuccess && tasks.items?.length <= 0 && <NoData />}
             {tasksIsSuccess && tasks.items?.length > 0 && (
               <PieChart

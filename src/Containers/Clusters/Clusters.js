@@ -145,7 +145,7 @@ const Clusters = () => {
     fetchWorkflows(topWorkflowParams);
   }, [queryParams]);
 
-  if (error) return <ApiErrorState message={error.error} />;
+  if (error) return <ApiErrorState message={error.error.error} />;
 
   const renderContent = () => {
     // Warning: we are not checking if ALL the api succeed
