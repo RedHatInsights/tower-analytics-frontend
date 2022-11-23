@@ -1,11 +1,8 @@
 import { hab as pageName } from '../../support/constants';
 
-// swiching host anomalies off for now because it's not working on stage
-xdescribe('Report: Host Anomalies Bar', () => {
+describe('Report: Slow hosts by job template (aka Host Anomalies Bar)', () => {
   beforeEach(() => {
-    cy.visitReport(pageName)
-    cy.intercept('/api/tower-analytics/v1/probe_templates/').as('probeTemplates')
-    cy.wait('@probeTemplates')
+    cy.visitReport(pageName);
   });
 
   it('Renders bar chart with data', () => {

@@ -27,11 +27,14 @@ Cypress.on('uncaught:exception', (err, runnable) => {
 // require('./commands')
 
 beforeEach(() => {
-    cy.login();
+  cy.login();
 });
 
-after(() => {
-    cy.get('#UserMenu').click({ force: true })
-    cy.get('[aria-labelledby="UserMenu"]').find('button').as('logoutButton')
-    cy.get('@logoutButton').contains('Log out').click({ force: true })
-});
+// after(() => {
+//   cy.getByIdLike('#UserMenu').as('userMenu');
+//   cy.get('@userMenu').then(() =>{
+//     cy.get('@userMenu').click({ force: true });
+//     cy.get('[aria-labelledby="UserMenu"]').find('button').as('logoutButton');
+//     cy.get('@logoutButton').contains('Log out').click({ force: true });
+//   })
+// });

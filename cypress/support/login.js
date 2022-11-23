@@ -26,33 +26,34 @@ Cypress.Commands.add('clearFeatureDialogs', () => {
  * loading the cookies beforehand
  */
 Cypress.Commands.add('acceptCookiesDialog', () => {
-
   const getIframeDocument = () => {
-    return cy
-      .get('iframe')
-      .its('0.contentDocument').should('exist')
-  }
+    return cy.get('iframe').its('0.contentDocument').should('exist');
+  };
 
   const getIframeBody = () => {
     return getIframeDocument()
-      .its('body').should('not.be.undefined')
-      .then(cy.wrap)
-  }
+      .its('body')
+      .should('not.be.undefined')
+      .then(cy.wrap);
+  };
+
+  const getAcceptBtn = () => {
+    return getIframeBody()
+      .find('a.call')
+      .contains('Agree and proceed with standard settings')
+      .should('be.visible');
+  };
 
   const acceptCookies = () => {
-    return getIframeBody()
-      .find('div.pdynamicbutton')
-      .find('a.call')
-      .should('be.visible')
-      .click({ force: true })
-  }
+    return getAcceptBtn().click({ force: true });
+  };
 
   acceptCookies();
-
 });
 
 Cypress.Commands.add('login', () => {
   cy.visit('/');
+  cy.intercept('https://consent.trustarc.com/*').as('cookies');
 
   cy.log('Determining login strategy');
 
@@ -115,6 +116,7 @@ Cypress.Commands.add('login', () => {
 
   cy.log('Strategy: ');
   cy.log(keycloakLoginFields[strategy]);
+  cy.get(keycloakLoginFields[strategy]['username']).should('be.visible');
 
   if (keycloakLoginFields[strategy]['two-step']) {
     cy.log('Two step verfication');
@@ -136,14 +138,14 @@ Cypress.Commands.add('login', () => {
   if (keycloakLoginFields[strategy]['agree-cookies']) {
     cy.log('Accept cookies');
     /*
-    * TODO: This is a workaround and the tests runs longer than we would like.
-    * It needs to be updated in a way we don't even see the iframe,
-    * loading the cookies beforehand.
-    */
-    if (cy.get('iframe').should('exist')) {
+     * TODO: This is a workaround and the tests runs longer than we would like.
+     * It needs to be updated in a way we don't even see the iframe,
+     * loading the cookies beforehand.
+     */
+    cy.get('@cookies').then(() => {
+      cy.wait('@cookies');
       cy.acceptCookiesDialog();
-    }
-    cy.wait(5000)
+    });
   }
 
   cy.log('Checking for landing page: ' + keycloakLoginFields[strategy]['landing-page']);
