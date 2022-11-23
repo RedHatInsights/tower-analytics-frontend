@@ -2,9 +2,12 @@ import { aapUrl, reportsUrl, allReports } from '../support/constants'
 
 describe('Reports page smoketests', () => {
   beforeEach(() => {
-    cy.intercept('/api/tower-analytics/v1/event_explorer_options/').as('eventExplorerOptions')
+    cy.intercept('api/tower-analytics/v1/event_explorer/*').as('eventExplorer')
     cy.visit(reportsUrl)
-    cy.wait('@eventExplorerOptions')
+    cy.getByCy('loading').should('not.exist')
+    cy.getByCy('api_error_state').should('not.exist')
+    cy.getByCy('api_loading_state').should('not.exist')
+    cy.wait('@eventExplorer')
   })
 
   it('All report cards are displayed on main reports page', () => {
