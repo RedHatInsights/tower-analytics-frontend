@@ -260,8 +260,16 @@ const OrganizationStatistics = () => {
           </Tabs>
           <CardBody>
             {orgsIsLoading && <LoadingState />}
-            {orgsError && <ApiErrorState message={orgsError.error.error} />}
-            {orgsIsSuccess && orgs.dates?.length <= 0 && <NoData />}
+            {orgsError && (
+              <ApiErrorState
+                message={orgsError?.error?.error || orgsError?.error?.msg}
+              />
+            )}
+            {orgsIsSuccess && orgs.dates?.length <= 0 && (
+              <NoData
+                message={orgsError?.error?.error || orgsError?.error?.msg}
+              />
+            )}
             {orgsIsSuccess && orgs.dates?.length > 0 && (
               <GroupedBarChart
                 margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
@@ -293,8 +301,16 @@ const OrganizationStatistics = () => {
           <Divider />
           <CardBody>
             {jobsIsLoading && <LoadingState />}
-            {jobsError && <ApiErrorState message={jobsError.error.error} />}
-            {jobsIsSuccess && jobs.items?.length <= 0 && <NoData />}
+            {jobsError && (
+              <ApiErrorState
+                message={jobsError?.error?.error || jobsError?.error?.msg}
+              />
+            )}
+            {jobsIsSuccess && jobs.items?.length <= 0 && (
+              <NoData
+                message={jobsError?.error?.error || jobsError?.error?.msg}
+              />
+            )}
             {jobsIsSuccess && jobs.items?.length > 0 && (
               <PieChart
                 margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
@@ -314,8 +330,16 @@ const OrganizationStatistics = () => {
           <Divider />
           <CardBody>
             {tasksIsLoading && <LoadingState />}
-            {tasksError && <ApiErrorState message={tasksError.error.error} />}
-            {tasksIsSuccess && tasks.items?.length <= 0 && <NoData />}
+            {tasksError && (
+              <ApiErrorState
+                message={tasksError?.error?.error || tasksError?.error?.msg}
+              />
+            )}
+            {tasksIsSuccess && tasks.items?.length <= 0 && (
+              <NoData
+                message={tasksError?.error?.error || tasksError?.error?.msg}
+              />
+            )}
             {tasksIsSuccess && tasks.items?.length > 0 && (
               <PieChart
                 margin={{ top: 20, right: 20, bottom: 0, left: 20 }}

@@ -87,6 +87,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
   const {
     result: { reports: data },
     isSuccess: isSuccess,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error: error,
     request: fetchReports,
   } = useRequest(readReports, { reports: [] });
@@ -317,7 +318,8 @@ const List: FunctionComponent<Record<string, never>> = () => {
           path={'/reports'}
         />
       )}
-      {error && <NoData />}
+      {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access*/}
+      {error && <NoData message={error?.error?.msg} />}
     </>
   );
 };

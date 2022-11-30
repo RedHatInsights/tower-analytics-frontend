@@ -7,12 +7,22 @@ import {
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons';
 
-const NoData: FunctionComponent<Record<string, never>> = () => (
+interface Props {
+  message?: string | Record<string, any> | never;
+}
+
+const NoData: FunctionComponent<Props> = ({ message }) => (
   <EmptyState variant={EmptyStateVariant.full} style={{ minHeight: '400px' }}>
     <EmptyStateIcon icon={CubesIcon} />
-    <Title headingLevel="h5" size="lg">
-      No Data
-    </Title>
+    {message === 'standby' ? (
+      <Title headingLevel="h5" size="lg">
+        Initial configuration in progress. Please try again in a few minutes.
+      </Title>
+    ) : (
+      <Title headingLevel="h5" size="lg">
+        No Data
+      </Title>
+    )}
   </EmptyState>
 );
 

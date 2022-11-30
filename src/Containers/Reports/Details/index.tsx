@@ -41,6 +41,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
     request: fetchReport,
     isSuccess,
     isLoading,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error,
   } = useRequest(async () => {
     const response = await readReport(slug);

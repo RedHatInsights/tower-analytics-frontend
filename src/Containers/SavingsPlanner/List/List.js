@@ -101,7 +101,12 @@ const List = () => {
   };
 
   const renderContent = () => {
-    if (itemsError) return <ApiErrorState message={itemsError.error.error} />;
+    if (itemsError)
+      return (
+        <ApiErrorState
+          message={itemsError?.error?.error || itemsError?.error?.msg}
+        />
+      );
     if (itemsIsLoading || deleteLoading) return <LoadingState />;
     if (
       itemsIsSuccess &&

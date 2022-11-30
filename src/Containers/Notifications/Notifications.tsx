@@ -125,6 +125,7 @@ const Notifications: FC<Record<string, never>> = () => {
     result: { notifications: notificationsData, meta },
     isLoading,
     isSuccess,
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     error,
     request: fetchNotifications,
   } = useRequest<NotificationDataType>(
@@ -221,7 +222,10 @@ const Notifications: FC<Record<string, never>> = () => {
             </CardTitle>
             <CardBody>
               {isLoading && <LoadingState />}
-              {isSuccess && notificationsData.length <= 0 && <NoData />}
+              {isSuccess && notificationsData.length <= 0 && (
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+                <NoData message={error?.error?.msg} />
+              )}
               {isSuccess && notificationsData.length > 0 && (
                 <NotificationDrawer>
                   <NotificationsList
@@ -230,7 +234,8 @@ const Notifications: FC<Record<string, never>> = () => {
                   />
                 </NotificationDrawer>
               )}
-              {error && <NoData />}
+              {/* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access*/}
+              {error && <NoData message={error?.error?.msg} />}
               <Pagination
                 count={meta?.count}
                 params={{

@@ -1,8 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { useEffect, useState } from 'react';
 import useIsMounted from './useIsMounted';
 
-type ErrorType = unknown; // TODO: When the error format is evident, use that instead of `unknown`
+interface ErrorErrorType {
+  error: {
+    msg: string | Record<string, any> | undefined;
+    error: string | Record<string, any> | undefined;
+  };
+}
 
+type ErrorType = any | ErrorErrorType;
+// TODO: When the error format is evident, use that instead of `unknown`
 /*
  * The useRequest hook accepts a request function and returns an object with
  * five values:
@@ -111,7 +119,7 @@ const useRequest = <T>(
             isSuccess: true,
           });
         }
-      } catch (error: unknown) {
+      } catch (error: any) {
         if (isMounted.current) {
           setVariables({
             isSuccess: false,

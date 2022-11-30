@@ -22,7 +22,13 @@ const ApiErrorState: FunctionComponent<Props> = ({ message }) => (
     <Title headingLevel="h2" size="lg">
       Error
     </Title>
-    <EmptyStateBody>{message}</EmptyStateBody>
+    {message === 'standby' ? (
+      <EmptyStateBody>
+        Initial configuration in progress. Please try again in a few minutes.
+      </EmptyStateBody>
+    ) : (
+      <EmptyStateBody>{message}</EmptyStateBody>
+    )}
   </EmptyState>
 );
 
