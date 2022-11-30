@@ -12,7 +12,7 @@
     "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": false,
-    "total_items": 3,
+    "total_items": 60,
     "api_call": "/api/tower-analytics/v1/event_explorer/?*"
   },
   {
@@ -20,7 +20,7 @@
     "has_extra_line": true,
     "items_per_page": 6,
     "has_expanded_rows": false,
-    "total_items": 14,
+    "total_items": 60,
     "api_call": "/api/tower-analytics/v1/job_explorer/?*"
   },
   {
@@ -36,7 +36,7 @@
     "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": false,
-    "total_items": 2,
+    "total_items": 30,
     "api_call": "/api/tower-analytics/v1/host_explorer/?*"
   },
   {
@@ -44,7 +44,7 @@
     "has_extra_line": true,
     "items_per_page": 6,
     "has_expanded_rows": false,
-    "total_items": 8,
+    "total_items": 60,
     "api_call": "/api/tower-analytics/v1/host_explorer/?*"
   },
   {
@@ -52,15 +52,15 @@
     "has_extra_line": true,
     "items_per_page": 6,
     "has_expanded_rows": false,
-    "total_items": 14,
+    "total_items": 110,
     "api_call": "/api/tower-analytics/v1/job_explorer/?*"
   },
   {
     "name": "jobs_and_tasks_by_organization",
     "has_extra_line": false,
     "items_per_page": 6,
-    "has_expanded_rows": false,
-    "total_items": 2,
+    "has_expanded_rows": true,
+    "total_items": 31,
     "only_beta": false,
     "api_call": "/api/tower-analytics/v1/job_explorer/?*"
   },
@@ -69,15 +69,15 @@
     "has_extra_line": true,
     "items_per_page": 6,
     "has_expanded_rows": false,
-    "total_items": 8,
+    "total_items": 110,
     "api_call": "/api/tower-analytics/v1/event_explorer/?*"
   },
   {
     "name": "module_usage_by_organization",
-    "has_extra_line": false,
+    "has_extra_line": true,
     "items_per_page": 6,
     "has_expanded_rows": false,
-    "total_items": 2,
+    "total_items": 30,
     "api_call": "/api/tower-analytics/v1/event_explorer/?*"
   },
   {
@@ -85,15 +85,15 @@
     "has_extra_line": true,
     "items_per_page": 6,
     "has_expanded_rows": false,
-    "total_items": 16,
+    "total_items": 92,
     "api_call": "/api/tower-analytics/v1/event_explorer/?*"
   },
   {
     "name": "most_used_modules",
-    "has_extra_line": false,
+    "has_extra_line": true,
     "items_per_page": 6,
     "has_expanded_rows": true,
-    "total_items": 5,
+    "total_items": 92,
     "api_call": "/api/tower-analytics/v1/event_explorer/?*"
   },
   {
@@ -118,6 +118,6 @@
     "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": true,
-    "total_items": 20
+    "total_items": 60
   }
 ]
