@@ -8,6 +8,7 @@ export const clustersUrl = '/clusters'
 export const reportsUrl = '/reports'
 export const savingsPlannerUrl = '/savings-planner'
 export const calculatorUrl = '/reports/automation_calculator'
+export const calculatorUrlDirect = '/automation_calculator'
 export const notificationsUrl = '/notifications'
 
 export const hcbjt = 'hosts_changed_by_job_template'

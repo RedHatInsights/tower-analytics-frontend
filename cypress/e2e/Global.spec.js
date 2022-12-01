@@ -7,6 +7,7 @@ import {
   reportsUrl,
   savingsPlannerUrl,
   calculatorUrl,
+  calculatorUrlDirect,
   notificationsUrl,
 } from '../support/constants';
 
@@ -14,6 +15,7 @@ describe('Insights smoketests', () => {
 
   it('has all the AA navigation items', () => {
     cy.visit(dashboardUrl);
+   // cy.wait(5000);
     // This is not applicable to eph. env.
     /*
     cy.getByOUIALike('OUIA-Generated-NavExpandable')
@@ -24,12 +26,14 @@ describe('Insights smoketests', () => {
 
     //cy.get('[data-quickstart-id="Automation-Analytics"]') // this is for devel or stage
     cy.get('[data-ouia-component-id="SideNavigation"]') // this is for eph. env.
-        .find('li')
+        .find('a')
       //.should('have.length', 7)
 
-      .find('[data-quickstart-id="ansible_automation-analytics_organization-statistics"]')
+        /*
+      .get('[data-quickstart-id="ansible_automation-analytics_organization-statistics"]')
       .click()
       .url().should('eq', Cypress.config().baseUrl + orgsUrl)
+         */
 
       .get('[data-quickstart-id="ansible_automation-analytics_job-explorer"]')
       .click()
@@ -47,9 +51,9 @@ describe('Insights smoketests', () => {
       .click()
       .url().should('eq', Cypress.config().baseUrl + savingsPlannerUrl)
 
-      .get('[data-quickstart-id="ansible_automation-analytics_reports_automation_calculator"]')
+      .get('[data-quickstart-id="ansible_automation-analytics_automation_calculator"]')
       .click()
-      .url().should('eq', Cypress.config().baseUrl + calculatorUrl)
+      .url().should('eq', Cypress.config().baseUrl + calculatorUrlDirect)
 
       .get('[data-quickstart-id="ansible_automation-analytics_notifications"]')
       .click()
