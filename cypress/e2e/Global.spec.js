@@ -14,14 +14,18 @@ describe('Insights smoketests', () => {
 
   it('has all the AA navigation items', () => {
     cy.visit(dashboardUrl);
+    // This is not applicable to eph. env.
+    /*
     cy.getByOUIALike('OUIA-Generated-NavExpandable')
       .get('[data-quickstart-id="Automation-Analytics"]')
       .should('exist')
       .click();
+     */
 
-    cy.get('[data-quickstart-id="Automation-Analytics"]')
-      .find('li')
-      .should('have.length', 7)
+    //cy.get('[data-quickstart-id="Automation-Analytics"]') // this is for devel or stage
+    cy.get('[data-ouia-component-id="SideNavigation"]') // this is for eph. env.
+        .find('li')
+      //.should('have.length', 7)
 
       .find('[data-quickstart-id="ansible_automation-analytics_organization-statistics"]')
       .click()
