@@ -9,7 +9,7 @@ describe('Clusters page', () => {
     cy.intercept('/api/tower-analytics/v1/event_explorer/*').as(
       'eventExplorerData'
     );
-    cy.wait('@eventExplorerData');
+    cy.wait('@eventExplorerData', {timeout: 10000});
 
     cy.get('[data-cy="spinner"]').should('not.exist');
     cy.get('[data-cy="loading"]').should('not.exist');
@@ -47,9 +47,9 @@ describe('Clusters page', () => {
     cy.get('@eventExplorerData')
       .its('response')
       .then((res) => {
-        expect(res.body.items).to.length(5);
-        expect(res.body.meta.count).to.eq(5);
-        expect(res.body.meta.legend).to.length(5);
+        expect(res.body.items).to.length(10);
+        expect(res.body.meta.count).to.eq(92);
+        expect(res.body.meta.legend).to.length(10);
       });
   });
 
@@ -67,11 +67,12 @@ describe('Clusters page', () => {
     cy.get('[data-cy="category_selector"]').find('button').click();
     cy.get('button').contains('Cluster').click();
     cy.get('[data-cy="cluster_id"]').find('button').click();
-    cy.get('[data-cy="1811"]').find('input').check();
+    cy.get('[data-cy="3"]').find('input').check();
+    cy.get('[data-cy="cluster_id"]').find('button').click();
     // Wait for loading and check the selected filter is present
     cy.get('.pf-c-empty-state__content').should('not.exist');
     cy.get('.pf-c-chip-group__main').contains('Cluster').should('exist');
-    cy.get('.pf-c-chip-group__main').contains('10.0.110.68').should('exist');
+    cy.get('.pf-c-chip-group__main').contains('ec2-52-90-106-02.compute-1.amazonaws.com').should('exist');
 
     cy.get('[data-cy="filter-toolbar"')
       .find('button')
@@ -83,7 +84,7 @@ describe('Clusters page', () => {
     cy.get('.pf-c-empty-state__content').should('not.exist');
     cy.get('.pf-c-chip-group__main').contains('Cluster').should('not.exist');
     cy.get('.pf-c-chip-group__main')
-      .contains('10.0.110.68')
+      .contains('ec2-52-90-106-02.compute-1.amazonaws.com')
       .should('not.exist');
   });
 
