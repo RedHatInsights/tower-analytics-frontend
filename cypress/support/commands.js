@@ -156,7 +156,7 @@ Cypress.Commands.add('findByCustomId', (idToFind) => {
 })
 
 Cypress.Commands.add('visitReport', (pageName) => {
-  cy.fixture('tables_pagination').then((pages) => {
+  cy.fixture('stage/tables_pagination').then((pages) => {
     pages.forEach((page) => {
       if (page.name == pageName) {
         cy.intercept(page.api_call).as('apiCall')
