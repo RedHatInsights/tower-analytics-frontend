@@ -156,7 +156,7 @@ Cypress.Commands.add('findByCustomId', (idToFind) => {
 })
 
 Cypress.Commands.add('visitReport', (pageName) => {
-  cy.fixture('stage/tables_pagination').then((pages) => {
+  cy.loadFixture('tables_pagination').then((pages) => {
     pages.forEach((page) => {
       if (page.name == pageName) {
         cy.intercept(page.api_call).as('apiCall')
@@ -166,9 +166,17 @@ Cypress.Commands.add('visitReport', (pageName) => {
         cy.getByCy('api_error_state').should('not.exist')
         cy.getByCy('api_loading_state').should('not.exist')
         cy.log('Intercepting the url:', page.api_call)
-        cy.wait('@apiCall', {timeout: 10000})
+        cy.wait('@apiCall', {timeout: 8000})
       }
     })
   })
 
+})
+
+Cypress.Commands.add('loadFixture', (name) => {
+  const fixturePath = Cypress.env('test_env') + '/' + name
+  cy.log('fixturePath ', fixturePath)
+  cy.fixture(fixturePath).then((data) => {
+    return data;
+  })
 })
