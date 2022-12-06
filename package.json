@@ -115,10 +115,11 @@
     "deploy": "npm-run-all build:prod lint test",
     "deploy-only": "npm-run-all build:prod",
     "verify": "npm-run-all build:prod lint test",
-    "integration": "cypress open",
+    "integration:stage": "cypress open --env test_env=stage",
+    "integration:eph": "cypress open --env test_env=ephemeral",
     "integration:headless": "cypress run --browser=chrome",
-    "integration:eph": "cypress run --spec 'cypress/e2e/**/*'",
-    "integration:stage": "cypress run --spec 'cypress/e2e/**/*'"
+    "integration:headless-eph": "cypress run --env test_env=ephemeral --spec 'cypress/e2e/ephemeral/**/*' --browser=chrome",
+    "integration:headless-stage": "cypress run --env test_env=stage --spec 'cypress/e2e/stage/**/*' --browser=chrome"
   },
   "insights": {
     "appname": "automation-analytics"
