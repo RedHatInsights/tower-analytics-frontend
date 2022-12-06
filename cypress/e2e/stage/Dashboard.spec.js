@@ -1,4 +1,4 @@
-import { clustersUrl as dashboardUrl } from '../support/constants';
+import { clustersUrl as dashboardUrl } from '../../support/constants';
 import moment from 'moment';
 
 const appid = Cypress.env('appid');
