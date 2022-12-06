@@ -1,5 +1,5 @@
 /* global cy */
-import { clustersUrl } from '../support/constants';
+import { clustersUrl } from '../../support/constants';
 const appid = Cypress.env('appid');
 
 describe('Clusters page', () => {

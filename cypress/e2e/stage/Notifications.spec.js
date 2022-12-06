@@ -1,5 +1,5 @@
 /* global cy, Cypress */
-import { notificationsUrl } from '../support/constants';
+import { notificationsUrl } from '../../support/constants';
 
 const appid = Cypress.env('appid');
 

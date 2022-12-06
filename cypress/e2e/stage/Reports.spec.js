@@ -1,4 +1,4 @@
-import { aapUrl, reportsUrl, allReports } from '../support/constants'
+import { aapUrl, reportsUrl, allReports } from '../../support/constants'
 
 describe('Reports page smoketests', () => {
   beforeEach(() => {

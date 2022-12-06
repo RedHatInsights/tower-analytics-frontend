@@ -9,7 +9,7 @@ import {
   calculatorUrl,
   calculatorUrlDirect,
   notificationsUrl,
-} from '../support/constants';
+} from '../../support/constants';
 
 describe('Insights smoketests', () => {
 

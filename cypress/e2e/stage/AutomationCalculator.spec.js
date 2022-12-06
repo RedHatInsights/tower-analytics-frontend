@@ -1,5 +1,5 @@
 /* global cy */
-import { calculatorUrl } from '../support/constants';
+import { calculatorUrl } from '../../support/constants';
 
 describe('Automation Calculator page', () => {
   beforeEach(() => {

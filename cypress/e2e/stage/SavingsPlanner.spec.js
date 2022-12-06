@@ -1,4 +1,4 @@
-import { savingsPlannerUrl } from '../support/constants';
+import { savingsPlannerUrl } from '../../support/constants';
 
 const appid = Cypress.env('appid');
 

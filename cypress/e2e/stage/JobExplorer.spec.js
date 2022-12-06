@@ -1,4 +1,4 @@
-import { jobExplorerUrl } from '../support/constants';
+import { jobExplorerUrl } from '../../support/constants';
 
 const appid = Cypress.env('appid');
 
