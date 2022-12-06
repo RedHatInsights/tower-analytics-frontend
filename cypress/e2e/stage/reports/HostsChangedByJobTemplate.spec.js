@@ -1,6 +1,6 @@
-import { mubo as pageName } from '../../support/constants';
+import { hcbjt as pageName } from '../../../support/constants';
 
-describe('Report: Module Usage By Organization Smoketests', () => {
+describe('Report: Hosts Changed By Job Template Smoketests', () => {
   beforeEach(() => {
     cy.visitReport(pageName);
   });

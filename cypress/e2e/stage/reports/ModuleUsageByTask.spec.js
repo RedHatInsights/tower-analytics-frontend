@@ -1,4 +1,4 @@
-import { mubt as pageName } from '../../support/constants';
+import { mubt as pageName } from '../../../support/constants';
 
 describe('Report: Module Usage By Task Smoketests', () => {
   beforeEach(() => {

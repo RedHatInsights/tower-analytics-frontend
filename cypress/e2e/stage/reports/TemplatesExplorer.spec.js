@@ -1,18 +1,13 @@
-import { jtbo as pageName } from '../../support/constants';
+import { texp as pageName } from '../../../support/constants';
 
-describe('Report: Jobs and Tasks By Organization Smoketests', () => {
+describe('Report: Templates Explorer Smoketests', () => {
   beforeEach(() => {
     cy.visitReport(pageName);
   });
 
-  it('Can Switch between Line and Bar chart without breaking UI', () => {
-    cy.get('#bar').click();
-    cy.get('#line').click();
-  });
-
   it('Can change lookback', () => {
     cy.getByCy('quick_date_range').click();
-    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+    cy.get('.pf-c-select__menu-item').contains('Past year').click();
   });
 
   it('Can navigate through the pages', () => {

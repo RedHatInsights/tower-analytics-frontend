@@ -1,4 +1,4 @@
-import { aa21m as pageName } from '../../support/constants';
+import { aa21m as pageName } from '../../../support/constants';
 
 describe('Report: AA 2.1 Migration', () => {
   beforeEach(() => {

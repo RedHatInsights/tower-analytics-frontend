@@ -1,6 +1,6 @@
-import { hcbjt as pageName } from '../../support/constants';
+import { jtbo as pageName } from '../../../support/constants';
 
-describe('Report: Hosts Changed By Job Template Smoketests', () => {
+describe('Report: Jobs and Tasks By Organization Smoketests', () => {
   beforeEach(() => {
     cy.visitReport(pageName);
   });
@@ -12,7 +12,7 @@ describe('Report: Hosts Changed By Job Template Smoketests', () => {
 
   it('Can change lookback', () => {
     cy.getByCy('quick_date_range').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click();
+    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
   });
 
   it('Can navigate through the pages', () => {
