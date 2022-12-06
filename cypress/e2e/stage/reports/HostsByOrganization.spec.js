@@ -1,4 +1,4 @@
-import { hbo as pageName } from '../../support/constants';
+import { hbo as pageName } from '../../../support/constants';
 
 describe('Report: Hosts By Organization Smoketests', () => {
   beforeEach(() => {

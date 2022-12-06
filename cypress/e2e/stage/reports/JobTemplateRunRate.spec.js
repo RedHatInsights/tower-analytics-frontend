@@ -1,8 +1,13 @@
-import { texp as pageName } from '../../support/constants';
+import { jtrr as pageName } from '../../../support/constants';
 
-describe('Report: Templates Explorer Smoketests', () => {
+describe('Report: Job Template Run Rate Smoketests', () => {
   beforeEach(() => {
     cy.visitReport(pageName);
+  });
+
+  it('Can Switch between Line and Bar chart without breaking UI', () => {
+    cy.screenshot('report_jtrr_bar.png');
+    cy.screenshot('report_jtrr_line.png');
   });
 
   it('Can change lookback', () => {

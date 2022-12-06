@@ -1,13 +1,13 @@
-import { jtrr as pageName } from '../../support/constants';
+import { cmbjt as pageName } from '../../../support/constants';
 
-describe('Report: Job Template Run Rate Smoketests', () => {
+describe('Report: Changes Made By Job Template Smoketests', () => {
   beforeEach(() => {
     cy.visitReport(pageName);
   });
 
   it('Can Switch between Line and Bar chart without breaking UI', () => {
-    cy.screenshot('report_jtrr_bar.png');
-    cy.screenshot('report_jtrr_line.png');
+    cy.get('#bar').click();
+    cy.get('#line').click();
   });
 
   it('Can change lookback', () => {

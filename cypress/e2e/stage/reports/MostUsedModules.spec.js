@@ -1,6 +1,6 @@
-import { mubjt as pageName } from '../../support/constants';
+import { mum as pageName } from '../../../support/constants';
 
-describe('Report: Module Usage By Job Template Smoketests', () => {
+describe('Report: Most Used Modules Smoketests', () => {
   beforeEach(() => {
     cy.visitReport(pageName);
   });
