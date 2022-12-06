@@ -117,8 +117,8 @@
     "verify": "npm-run-all build:prod lint test",
     "integration": "cypress open",
     "integration:headless": "cypress run --browser=chrome",
-    "integration:eph": "cypress run --spec 'cypress/e2e/**/*' --record --tag'ephemeral,local'",
-    "integration:stage": "cypress run --spec 'cypress/e2e/**/*' --record --tag'stage,local'"
+    "integration:eph": "cypress run --spec 'cypress/e2e/**/*'",
+    "integration:stage": "cypress run --spec 'cypress/e2e/**/*'"
   },
   "insights": {
     "appname": "automation-analytics"
