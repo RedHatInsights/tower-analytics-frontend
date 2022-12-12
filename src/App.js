@@ -14,7 +14,11 @@ if (el) el.style.display = 'none';
 
 const App = () => {
   const history = useHistory();
-  const { error, request: fetchPreflight } = useRequest(preflightRequest, {});
+  const {
+    error,
+    request: fetchPreflight,
+    isLoading,
+  } = useRequest(preflightRequest, {});
 
   useEffect(() => {
     insights.chrome.init();
@@ -37,7 +41,8 @@ const App = () => {
 
   const renderContent = () => {
     if (error) return <AuthorizationErrorPage error={error} />;
-    return <Routes />;
+    if (!isLoading) return <Routes />;
+    return <></>;
   };
 
   return (

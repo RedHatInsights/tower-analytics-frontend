@@ -84,7 +84,7 @@ Cypress.Commands.add('testNavArrowsFlow', (selector, pageName) => {
   // TODO: navigate through ALL pages
   // TODO2: fix the logic for nextbutton when has only 1 page
   // ref: https://issues.redhat.com/browse/AA-1388
-  cy.fixture('tables_pagination').then((pages) => {
+  cy.loadFixture('tables_pagination').then((pages) => {
     pages.forEach((page) => {
       if (page.name == pageName) {
         return cy.testNavArrows(selector, page);
@@ -177,7 +177,7 @@ Cypress.Commands.add('testSelectItemsPerPage', (selector, itemsPerPage) => {
  * @param {Boolean} pageName - Page name to query the fixture
  */
 Cypress.Commands.add('testItemsListFlow', (selector, pageName) => {
-  cy.fixture('tables_pagination').then((pages) => {
+  cy.loadFixture('tables_pagination').then((pages) => {
     pages.forEach((page) => {
       if (page.name == pageName) {
         return cy.testPageDataWithPagination(selector, page);

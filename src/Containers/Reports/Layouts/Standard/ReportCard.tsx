@@ -107,37 +107,6 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     fetchOptions(queryParams);
   }, [queryParams]);
 
-  /**
-   * The function is used because the API is not returning the value.
-   * When API gets support, this function should be removed.
-   */
-  const addTaskActionId = (
-    qp: Record<string, string | string[]>
-  ): Record<string, string | string[]> => {
-    if (
-      qp.task_action_name &&
-      qp.task_action_id.length === 0 &&
-      options?.task_action_id &&
-      Array.isArray(qp.task_action_name)
-    ) {
-      const task_action_name = qp.task_action_name;
-      const modules = options.task_action_id.filter((obj) =>
-        task_action_name.includes(obj.value)
-      );
-      qp.task_action_id = modules.map((module) => module.key?.toString());
-    }
-
-    return qp;
-  };
-
-  /**
-   * When API gets support, this effect should be removed.
-   */
-  useEffect(() => {
-    // Pass the queryParams to the function making a copy so it is not mutated.
-    fetchData(addTaskActionId(queryParams));
-  }, [options?.task_action_id]);
-
   const chartParams = {
     y: queryParams.sort_options as string,
     label:

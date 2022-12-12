@@ -1,0 +1,123 @@
+[
+  {
+    "name": "job_explorer",
+    "has_extra_line": false,
+    "items_per_page": 5,
+    "has_expanded_rows": true,
+    "total_items": 406,
+    "api_call": "/api/tower-analytics/v1/job_explorer/?*"
+  },
+  {
+    "name": "aa_2_1_onboarding",
+    "has_extra_line": false,
+    "items_per_page": 6,
+    "has_expanded_rows": false,
+    "total_items": 60,
+    "api_call": "/api/tower-analytics/v1/event_explorer/?*"
+  },
+  {
+    "name": "changes_made_by_job_template",
+    "has_extra_line": true,
+    "items_per_page": 6,
+    "has_expanded_rows": false,
+    "total_items": 60,
+    "api_call": "/api/tower-analytics/v1/job_explorer/?*"
+  },
+  {
+    "name": "host_anomalies_scatter",
+    "has_extra_line": "No data",
+    "items_per_page": null,
+    "has_expanded_rows": null,
+    "total_items": null,
+    "api_call": "/api/tower-analytics/v1/probe_template_for_hosts/?*"
+  },
+  {
+    "name": "hosts_by_organization",
+    "has_extra_line": false,
+    "items_per_page": 6,
+    "has_expanded_rows": false,
+    "total_items": 30,
+    "api_call": "/api/tower-analytics/v1/host_explorer/?*"
+  },
+  {
+    "name": "hosts_changed_by_job_template",
+    "has_extra_line": true,
+    "items_per_page": 6,
+    "has_expanded_rows": false,
+    "total_items": 60,
+    "api_call": "/api/tower-analytics/v1/host_explorer/?*"
+  },
+  {
+    "name": "job_template_run_rate",
+    "has_extra_line": true,
+    "items_per_page": 6,
+    "has_expanded_rows": false,
+    "total_items": 110,
+    "api_call": "/api/tower-analytics/v1/job_explorer/?*"
+  },
+  {
+    "name": "jobs_and_tasks_by_organization",
+    "has_extra_line": true,
+    "items_per_page": 6,
+    "has_expanded_rows": false,
+    "total_items": 31,
+    "only_beta": false,
+    "api_call": "/api/tower-analytics/v1/job_explorer/?*"
+  },
+  {
+    "name": "module_usage_by_job_template",
+    "has_extra_line": true,
+    "items_per_page": 6,
+    "has_expanded_rows": false,
+    "total_items": 110,
+    "api_call": "/api/tower-analytics/v1/event_explorer/?*"
+  },
+  {
+    "name": "module_usage_by_organization",
+    "has_extra_line": true,
+    "items_per_page": 6,
+    "has_expanded_rows": false,
+    "total_items": 30,
+    "api_call": "/api/tower-analytics/v1/event_explorer/?*"
+  },
+  {
+    "name": "module_usage_by_task",
+    "has_extra_line": true,
+    "items_per_page": 6,
+    "has_expanded_rows": false,
+    "total_items": 92,
+    "api_call": "/api/tower-analytics/v1/event_explorer/?*"
+  },
+  {
+    "name": "most_used_modules",
+    "has_extra_line": false,
+    "items_per_page": 6,
+    "has_expanded_rows": true,
+    "total_items": 92,
+    "api_call": "/api/tower-analytics/v1/event_explorer/?*"
+  },
+  {
+    "name": "templates_explorer",
+    "has_extra_line": false,
+    "items_per_page": 6,
+    "has_expanded_rows": true,
+    "total_items": 14,
+    "api_call": "/api/tower-analytics/v1/job_explorer/?*"
+  },
+  {
+    "name": "host_anomalies_bar",
+    "has_extra_line": false,
+    "items_per_page": 6,
+    "has_expanded_rows": true,
+    "total_items": 1,
+    "only_beta": false,
+    "api_call": "/api/tower-analytics/v1/probe_templates/?*"
+  },
+  {
+    "name": "automation_calculator",
+    "has_extra_line": false,
+    "items_per_page": 6,
+    "has_expanded_rows": true,
+    "total_items": 60
+  }
+]

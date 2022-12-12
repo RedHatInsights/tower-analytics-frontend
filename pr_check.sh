@@ -154,7 +154,7 @@ sed 's/runMode: 2,/runMode:1,/g' -i cypress.config.ts
 cat cypress.config.ts
 npm ci
 echo ">>> Cypress Chrome"
-/src/node_modules/cypress/bin/cypress run integration --record --key ${CYPRESS_RECORD_KEY} --browser chrome --headless
+/src/node_modules/cypress/bin/cypress run --env test_env=ephemeral --spec 'cypress/e2e/ephemeral/**/*' --record --key ${CYPRESS_RECORD_KEY} --browser chrome --headless
 EOL
 
 chmod +x /tmp/frontend/cypress_run.sh
