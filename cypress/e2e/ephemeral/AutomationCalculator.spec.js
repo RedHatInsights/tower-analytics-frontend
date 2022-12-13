@@ -1,5 +1,9 @@
-/* global cy */
 import { calculatorUrl } from '../../support/constants';
+
+const waitToLoad = () => {
+  cy.wait('@roiCostEffortData');
+  cy.wait('@roiTemplates');
+};
 
 describe('Automation Calculator page', () => {
   beforeEach(() => {
@@ -10,15 +14,17 @@ describe('Automation Calculator page', () => {
     );
     cy.intercept('/api/tower-analytics/v1/roi_templates/*').as('roiTemplates');
 
-    cy.getByCy('header-automation_calculator').should('be.visible');
+    cy.getByCy('header-automation_calculator').should(($section) => {
+      expect($section).to.be.visible;
+    });
+  });
+  after(() => {
+    cy.tableShowAll();
   });
 
-  const waitToLoad = () => {
-    cy.wait('@roiCostEffortData');
-    cy.wait('@roiTemplates');
-  };
-
   it('can change manual cost', () => {
+    cy.tableShowAll(); // make sure the 1st test show all lines
+    cy.waitSpinner();
     let originalTotalSavingsValue = cy
       .getByCy('total_savings')
       .find('h3').textContent;
@@ -110,9 +116,7 @@ describe('Automation Calculator page', () => {
       .getByCy('current_page_savings')
       .find('h3').textContent;
 
-    cy.get('#table-kebab').click();
-    cy.get('button').contains('Show all').click();
-    cy.get('#table-kebab').click();
+    cy.tableShowAll();
     waitToLoad();
 
     cy.get('tr').eq(1).find('.pf-c-switch__toggle').click();
@@ -186,36 +190,40 @@ describe('Automation Calculator page', () => {
   // });
 
   it('shows empty state when all rows are hidden', () => {
-    let originalTotalSavingsValue = cy
-      .getByCy('total_savings')
-      .find('h3').textContent;
-
-    cy.get('#table-kebab').click();
-    cy.get('button').contains('Hide all').click();
-    waitToLoad();
+    let originalTotalSavingsValue = '$';
+    cy.tableShowAll();
+    cy.waitSpinner();
     cy.getByCy('total_savings')
       .find('h3')
-      .then(($totalSavings) => {
-        const totalSavingsValue = $totalSavings.text();
-        expect(totalSavingsValue).not.to.eq(originalTotalSavingsValue);
+      .then(($el) => {
+        originalTotalSavingsValue = $el.text();
       });
-    cy.getByCy('current_page_savings')
-      .find('h3')
-      .then(($pageSavings) => {
-        const pageSavingsValue = $pageSavings.text();
-        expect(pageSavingsValue).to.eq('$0.00');
-      });
-    cy.get('.pf-c-empty-state').should('exist');
 
-    cy.get('button').contains('Show all').click();
-    waitToLoad();
-    cy.get('.pf-c-empty-state').should('not.exist');
-    cy.getByCy('current_page_savings')
-      .find('h3')
-      .then(($pageSavings) => {
-        const pageSavingsValue = $pageSavings.text();
-        expect(pageSavingsValue).not.to.eq('$0.00');
-      });
+    cy.tableHideAll().then(() => {
+      cy.get('.pf-c-empty-state').should('exist');
+      cy.getByCy('total_savings')
+        .find('h3')
+        .then(($totalSavings) => {
+          const totalSavingsValue = $totalSavings.text();
+          expect(totalSavingsValue).not.be.eq(originalTotalSavingsValue);
+        });
+      cy.getByCy('current_page_savings')
+        .find('h3')
+        .then(($pageSavingsHidenTable) => {
+          const pageSavingsValueHidenTable = $pageSavingsHidenTable.text();
+          expect(pageSavingsValueHidenTable).be.eq('$0.00');
+        });
+    });
+
+    cy.tableShowAll().then(() => {
+      cy.get('.pf-c-empty-state').should('not.exist');
+      cy.getByCy('current_page_savings')
+        .find('h3')
+        .then(($pageSavings) => {
+          const pageSavingsValue = $pageSavings.text();
+          expect(pageSavingsValue).not.be.eq('$0.00');
+        });
+    });
   });
 
   it('shows Automation formula', () => {

@@ -180,3 +180,35 @@ Cypress.Commands.add('loadFixture', (name) => {
     return data;
   })
 })
+
+Cypress.Commands.add('waitSpinner', () => {
+  cy.getByCy('spinner').should(($spinner) => {
+    expect($spinner).not.to.exist;
+  });
+});
+
+Cypress.Commands.add('tableShowAll', () => {
+  cy.get('#table-kebab')
+    .click()
+    .then(() => {
+      cy.get('.pf-c-dropdown__menu.pf-m-align-right')
+        .find('button')
+        .contains('Show all')
+        .click()
+      cy.get('#table-kebab').click()
+    });
+  cy.waitSpinner()
+  })
+
+Cypress.Commands.add('tableHideAll', () => {
+  cy.get('#table-kebab')
+    .click()
+    .then(() => {
+      cy.get('.pf-c-dropdown__menu.pf-m-align-right')
+        .find('button')
+        .contains('Hide all')
+        .click();
+      cy.get('#table-kebab').click();
+    });
+  cy.waitSpinner();
+})
