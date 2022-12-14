@@ -181,6 +181,14 @@ Cypress.Commands.add('loadFixture', (name) => {
   })
 })
 
+Cypress.Commands.add('loadPageDataFixture', (pageName) => {
+  cy.loadFixture('tables_pagination').then((pages) => {
+    pages.forEach((page) => {
+      if (page.name == pageName) {
+        return page;
+      }
+})
+
 Cypress.Commands.add('waitSpinner', () => {
   cy.getByCy('spinner').should(($spinner) => {
     expect($spinner).not.to.exist;
