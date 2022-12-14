@@ -8,8 +8,10 @@ export default defineConfig({
   videoUploadOnPasses: false,
   viewportWidth: 1600,
   pageLoadTimeout: 120000,
+  requestTimeout: 60000,
   responseTimeout: 60000,
   chromeWebSecurity: false,
+  defaultCommandTimeout: 6000,
   retries: {
     runMode: 2,
     openMode: 0,
