@@ -34,11 +34,18 @@ const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
   const update: UpdateFunction = ({
     newQueryParams,
     namespace = DEFAULT_NAMESPACE,
+    removeDefault = false,
   }) => {
-    const q = {
-      ...queryParams,
-      [namespace]: newQueryParams,
-    };
+    const q = removeDefault
+      ? {
+          ...queryParams,
+          [namespace]: newQueryParams,
+          [DEFAULT_NAMESPACE]: {},
+        }
+      : {
+          ...queryParams,
+          [namespace]: newQueryParams,
+        };
 
     setQsInUrl(q, history);
   };

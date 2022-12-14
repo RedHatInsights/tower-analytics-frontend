@@ -158,6 +158,10 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
   const executeAction = (action) => {
     if (action.type === 'RESET_FILTER') {
       update({ newQueryParams: initial, namespace });
+    } else if (action.type === 'SET_SELECTED_REPORT') {
+      const newQueryParams = paramsReducer(params, action);
+      //update params and remove everything from namespace default -> when changing selected report remove all settings for the old report
+      update({ newQueryParams, namespace, removeDefault: true });
     } else {
       const newQueryParams = paramsReducer(params, action);
       update({ newQueryParams, namespace });
