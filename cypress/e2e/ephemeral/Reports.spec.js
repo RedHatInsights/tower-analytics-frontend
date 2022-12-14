@@ -28,10 +28,11 @@ describe('Reports page smoketests', () => {
     allReports.forEach((item) => {
       cy.getByCy(item).should('exist')
       cy.getByCy(item).click()
+      cy.waitSpinner();
       // correct card is highlighted
       cy.getByCy(item).should('have.class', 'pf-m-selected-raised')
       // check View full report link is correct
-      cy.get(`[data-cy="view_full_report_link"]`)
+      cy.getByCy('view_full_report_link')
         .should('have.attr', 'href', aapUrl + reportsUrl + '/' + item)
       // check Title link is correct
       cy.getByCy('preview_title_link')
