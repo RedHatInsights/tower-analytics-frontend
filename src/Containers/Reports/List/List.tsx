@@ -51,27 +51,8 @@ export interface Report {
   tableHeaders: string[];
 }
 
-export const removeFilters = (): string => {
-  const currentURL = window.location.href;
-  const newURL = '';
-  if (currentURL.includes('default.attributes[]')) {
-    newURL = currentURL.substring(
-      currentURL.indexOf('?') + 1,
-      currentURL.indexOf('default.attributes[]') - 1
-    );
-  } else if (
-    currentURL.includes('?') &&
-    currentURL.includes('default.attributes[]') === false
-  ) {
-    newURL = currentURL.substring(currentURL.indexOf('?') + 1);
-  }
-
-  return newURL;
-};
-
 const List: FunctionComponent<Record<string, never>> = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const history = useHistory();
   let index = 0;
   let nextItem = '';
   let previousItem = '';
@@ -218,9 +199,6 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             data-cy={'previous_report_button'}
                             isDisabled={reports.indexOf(report) === 0}
                             onClick={() => {
-                              history.replace({
-                                search: removeFilters(),
-                              });
                               setSelected(previousItem);
                             }}
                           >
@@ -231,9 +209,6 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             isPlain
                             onSelect={() => {
                               setIsOpen(!isOpen);
-                              history.replace({
-                                search: removeFilters(),
-                              });
                             }}
                             toggle={
                               <DropdownToggle
@@ -257,9 +232,6 @@ const List: FunctionComponent<Record<string, never>> = () => {
                               reports.indexOf(report) >= reports.length - 1
                             }
                             onClick={() => {
-                              history.replace({
-                                search: removeFilters(),
-                              });
                               setSelected(nextItem);
                             }}
                           >
@@ -300,7 +272,6 @@ const List: FunctionComponent<Record<string, never>> = () => {
                 report={report}
                 selected={selected}
                 setSelected={setSelected}
-                history={history}
               />
             ))}
           </Gallery>
