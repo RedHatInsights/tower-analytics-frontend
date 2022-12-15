@@ -11,7 +11,7 @@ export default defineConfig({
   requestTimeout: 60000,
   responseTimeout: 60000,
   chromeWebSecurity: false,
-  defaultCommandTimeout: 6000,
+  defaultCommandTimeout: 8000,
   retries: {
     runMode: 2,
     openMode: 0,
