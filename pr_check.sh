@@ -145,6 +145,7 @@ export CYPRESS_taskTimeout=30000
 export CYPRESS_pageLoadTimeout=120000
 export CYPRESS_requestTimeout=60000
 export CYPRESS_responseTimeout=60000
+export CYPRESS_retries=2
 
 cd /tmp/frontend
 sed '/pageLoadTimeout: 120000,/d' -i cypress.config.ts
