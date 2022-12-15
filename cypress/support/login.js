@@ -76,7 +76,7 @@ Cypress.Commands.add('login', () => {
       'username': '#username',
       'password': '#password',
       'two-step': false,
-      'agree-cookies': true,
+      'agree-cookies': false,
       'landing-page': Cypress.config().baseUrl + clustersUrl
     },
     'mocks-keycloak-ephemeral': {
