@@ -206,12 +206,16 @@ Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
     }
   }
 
-  // TODO: improve this logic
+  // TODO: improve  AND simplify this logic
   let minTotalRows = data.has_expanded_rows ? minRows * 2 : minRows;
   let maxTotalRows = data.has_expanded_rows ? maxRows * 2 : maxRows;
 
   minTotalRows = data.has_extra_line ? minTotalRows + 1 : minTotalRows;
   maxTotalRows = data.has_extra_line ? maxTotalRows + 1 : maxTotalRows;
+
+  // include one more row in case the extra line also has an expanded row
+  minTotalRows = (data.has_extra_line && data.has_expanded_rows) ? minTotalRows + 1 : minTotalRows;
+  maxTotalRows = (data.has_extra_line && data.has_expanded_rows) ? maxTotalRows + 1 : maxTotalRows;
 
   // get table and amount of lines
   cy.wait('@apiCall');
