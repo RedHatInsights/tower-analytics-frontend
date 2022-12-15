@@ -139,7 +139,7 @@ export CYPRESS_USERNAME=jdoe
 export CYPRESS_PASSWORD=${CYPRESS_PW}
 export CYPRESS_baseUrl=$UI_URL/ansible/automation-analytics
 
-export CYPRESS_defaultCommandTimeout=14000
+export CYPRESS_defaultCommandTimeout=30000
 export CYPRESS_execTimeout=15000
 export CYPRESS_taskTimeout=30000
 export CYPRESS_pageLoadTimeout=120000
