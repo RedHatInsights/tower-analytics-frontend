@@ -48,10 +48,12 @@ describe('Reports page smoketests', () => {
   //   })
   // })
 
+  // FIXME: Workaround to force cypress to wait the graph to load
   it('All report are accessible in preview via arrows', () => {
     let originalTitlePreview = cy.getByCy('preview_title_link').textContent
     allReports.forEach(() => {
       cy.getByCy('next_report_button').click()
+      cy.wait(6000)
       cy.getByCy('preview_title_link').then(($previewTitle) => {
         const newTitlePreview = $previewTitle.text()
         expect(newTitlePreview).not.to.eq(originalTitlePreview)
@@ -60,6 +62,7 @@ describe('Reports page smoketests', () => {
     })
     allReports.forEach(() => {
       cy.getByCy('previous_report_button').click()
+      cy.wait(6000)
       cy.getByCy('preview_title_link').then(($previewTitle) => {
         const newTitlePreview = $previewTitle.text()
         expect(newTitlePreview).not.to.eq(originalTitlePreview)
