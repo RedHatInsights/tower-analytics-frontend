@@ -48,6 +48,7 @@ Cypress.Commands.add('testNavArrows', (selector, data) => {
 
   cy.getPaginationBtn(`${selector}`, 'next').as('nextBtn');
   cy.getPaginationBtn(`${selector}`, 'previous').as('previousBtn');
+
   cy.get('@previousBtn').should('be.disabled');
 
   if (hasSecondPage) {
@@ -57,8 +58,8 @@ Cypress.Commands.add('testNavArrows', (selector, data) => {
     cy.get('@nextBtn').should('be.disabled');
   }
 
-  cy.getPaginationBtn(`${selector}`, 'next').as('nextBtn');
-  cy.getPaginationBtn(`${selector}`, 'previous').as('previousBtn');
+  cy.get('@nextBtn');
+  cy.get('@previousBtn');
 
   if (hasSecondPage) {
     cy.get('@previousBtn').should('not.be.disabled');
