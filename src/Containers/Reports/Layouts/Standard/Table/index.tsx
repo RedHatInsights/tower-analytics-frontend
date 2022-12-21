@@ -93,7 +93,15 @@ const ReportTable: FunctionComponent<Props> = ({
                   position={'right'}
                 />
               </Th>
-            ) : (
+            ) : (key === 'total_elapsed_per_org' &&
+                typeof legend[0].total_elapsed_per_org == 'undefined') ||
+              (key === 'total_job_count_per_org' &&
+                typeof legend[0].total_job_count_per_org == 'undefined') ||
+              (key === 'total_host_count_per_org' &&
+                typeof legend[0].total_host_count_per_org == 'undefined') ||
+              (key === 'total_task_count_per_org' &&
+                typeof legend[0].total_task_count_per_org ==
+                  'undefined') ? null : (
               <Th key={key} {...getSortParams(key)} data-cy={key}>
                 {value}
               </Th>

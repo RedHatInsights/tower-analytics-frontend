@@ -151,13 +151,23 @@ const TableRow: FunctionComponent<Params> = ({
             }}
           />
         )}
-        {headers.map(({ key }) => (
-          <Td key={`${legendEntry.id}-${key}`}>
-            {clickableLinking
-              ? getClickableText(legendEntry, key)
-              : getText(legendEntry, key)}
-          </Td>
-        ))}
+        {headers.map(({ key }) =>
+          (key === 'total_elapsed_per_org' &&
+            typeof legendEntry.total_elapsed_per_org == 'undefined') ||
+          (key === 'total_job_count_per_org' &&
+            typeof legendEntry.total_job_count_per_org == 'undefined') ||
+          (key === 'total_host_count_per_org' &&
+            typeof legendEntry.total_host_count_per_org == 'undefined') ||
+          (key === 'total_task_count_per_org' &&
+            typeof legendEntry.total_task_count_per_org ==
+              'undefined') ? null : (
+            <Td key={`${legendEntry.id}-${key}`}>
+              {clickableLinking
+                ? getClickableText(legendEntry, key)
+                : getText(legendEntry, key)}
+            </Td>
+          )
+        )}
       </Tr>
       {renderExpandedRow()}
     </>
