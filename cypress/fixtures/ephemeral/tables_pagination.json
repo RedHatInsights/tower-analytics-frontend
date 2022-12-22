@@ -1,5 +1,6 @@
 [
   {
+    "short_name": "jbex",
     "name": "job_explorer",
     "has_extra_line": false,
     "items_per_page": 5,
@@ -8,6 +9,7 @@
     "api_call": "/api/tower-analytics/v1/job_explorer/?*"
   },
   {
+    "short_name": "aa21m",
     "name": "aa_2_1_onboarding",
     "has_extra_line": false,
     "items_per_page": 6,
@@ -16,6 +18,7 @@
     "api_call": "/api/tower-analytics/v1/event_explorer/?*"
   },
   {
+    "short_name": "cmbjt",
     "name": "changes_made_by_job_template",
     "has_extra_line": true,
     "items_per_page": 6,
@@ -24,6 +27,7 @@
     "api_call": "/api/tower-analytics/v1/job_explorer/?*"
   },
   {
+    "short_name": "has",
     "name": "host_anomalies_scatter",
     "has_extra_line": "No data",
     "items_per_page": null,
@@ -32,6 +36,7 @@
     "api_call": "/api/tower-analytics/v1/probe_template_for_hosts/?*"
   },
   {
+    "short_name": "hbo",
     "name": "hosts_by_organization",
     "has_extra_line": false,
     "items_per_page": 6,
@@ -40,6 +45,7 @@
     "api_call": "/api/tower-analytics/v1/host_explorer/?*"
   },
   {
+    "short_name": "hcbjt",
     "name": "hosts_changed_by_job_template",
     "has_extra_line": true,
     "items_per_page": 6,
@@ -48,6 +54,7 @@
     "api_call": "/api/tower-analytics/v1/host_explorer/?*"
   },
   {
+    "short_name": "jtrr",
     "name": "job_template_run_rate",
     "has_extra_line": true,
     "items_per_page": 6,
@@ -56,6 +63,7 @@
     "api_call": "/api/tower-analytics/v1/job_explorer/?*"
   },
   {
+    "short_name": "jtbo",
     "name": "jobs_and_tasks_by_organization",
     "has_extra_line": true,
     "items_per_page": 6,
@@ -65,6 +73,7 @@
     "api_call": "/api/tower-analytics/v1/job_explorer/?*"
   },
   {
+    "short_name": "mubjt",
     "name": "module_usage_by_job_template",
     "has_extra_line": true,
     "items_per_page": 6,
@@ -73,6 +82,7 @@
     "api_call": "/api/tower-analytics/v1/event_explorer/?*"
   },
   {
+    "short_name": "mubo",
     "name": "module_usage_by_organization",
     "has_extra_line": true,
     "items_per_page": 6,
@@ -81,6 +91,7 @@
     "api_call": "/api/tower-analytics/v1/event_explorer/?*"
   },
   {
+    "short_name": "mubt",
     "name": "module_usage_by_task",
     "has_extra_line": true,
     "items_per_page": 6,
@@ -89,14 +100,16 @@
     "api_call": "/api/tower-analytics/v1/event_explorer/?*"
   },
   {
+    "short_name": "mum",
     "name": "most_used_modules",
-    "has_extra_line": false,
+    "has_extra_line": true,
     "items_per_page": 6,
     "has_expanded_rows": true,
     "total_items": 92,
     "api_call": "/api/tower-analytics/v1/event_explorer/?*"
   },
   {
+    "short_name": "texp",
     "name": "templates_explorer",
     "has_extra_line": false,
     "items_per_page": 6,
@@ -105,7 +118,9 @@
     "api_call": "/api/tower-analytics/v1/job_explorer/?*"
   },
   {
+    "short_name": "hab",
     "name": "host_anomalies_bar",
+    "title": "Slow hosts by job template",
     "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": true,
@@ -114,6 +129,7 @@
     "api_call": "/api/tower-analytics/v1/probe_templates/?*"
   },
   {
+    "short_name": "acalc",
     "name": "automation_calculator",
     "has_extra_line": false,
     "items_per_page": 6,

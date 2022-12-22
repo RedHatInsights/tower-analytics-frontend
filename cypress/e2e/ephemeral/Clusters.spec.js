@@ -9,7 +9,7 @@ describe('Clusters page', () => {
     cy.intercept('/api/tower-analytics/v1/event_explorer/*').as(
       'eventExplorerData'
     );
-    cy.wait('@eventExplorerData', {timeout: 10000});
+    cy.wait('@eventExplorerData');
 
     cy.get('[data-cy="spinner"]').should('not.exist');
     cy.get('[data-cy="loading"]').should('not.exist');
@@ -20,7 +20,22 @@ describe('Clusters page', () => {
 
   it('loads clusters page with Bar graph and other tables', () => {
     cy.get('[data-cy="card-title-job-status"]').find('h2').textContent;
-    cy.contains('Clear all filters').should('exist');
+
+    /* FIXME
+    For some reason this element is considered not visible and cypress
+    finds 2 of them, instead of 1.
+    The code below is a workarround.
+    */
+    cy.getByCy('header-clusters')
+      .get('[data-cy="filter-toolbar"')
+      .find('.pf-c-toolbar__item')
+      .find('button')
+      .contains('Clear all filters')
+      .first()
+      .as('btnClearAllFilters');
+    cy.get('@btnClearAllFilters').should('exist');
+    // end of FIXME
+
     cy.contains('Top workflows');
     cy.contains('Top templates');
     cy.contains('Top modules');
@@ -31,7 +46,7 @@ describe('Clusters page', () => {
       .should('exist');
     cy.get('[data-cy="barchart"]').should('exist');
     cy.get('#d3-bar-chart-root').should('exist');
-    cy.get('button').contains('Clear all filters').should('exist');
+    cy.get('@btnClearAllFilters').should('exist');
     cy.get('h3').contains('Top workflows').should('exist');
     cy.get('h3').contains('Top templates').should('exist');
     cy.get('h3').contains('Top modules').should('exist');
@@ -56,12 +71,22 @@ describe('Clusters page', () => {
   it('has anchor clear filters link', () => {
     cy.get('div.pf-c-empty-state__content').should('not.exist');
 
-    cy.get('[data-cy="filter-toolbar"')
+    /* FIXME
+    For some reason this element is considered not visible and cypress
+    finds 2 of them, instead of 1.
+    The code below is a workarround.
+    */
+    cy.getByCy('header-clusters')
+      .get('[data-cy="filter-toolbar"')
+      .find('.pf-c-toolbar__item')
       .find('button')
       .contains('Clear all filters')
-      .click({
-        force: true
-      });
+      .first()
+      .as('btnClearAllFilters');
+    cy.get('@btnClearAllFilters').should('exist');
+    cy.get('@btnClearAllFilters').click({ force: true }); //FIXME
+    // end of FIXME
+
     cy.get('.pf-c-empty-state__content').should('not.exist');
     // Add Cluster to the filters
     cy.get('[data-cy="category_selector"]').find('button').click();
@@ -74,12 +99,8 @@ describe('Clusters page', () => {
     cy.get('.pf-c-chip-group__main').contains('Cluster').should('exist');
     cy.get('.pf-c-chip-group__main').contains('ec2-52-90-106-02.compute-1.amazonaws.com').should('exist');
 
-    cy.get('[data-cy="filter-toolbar"')
-      .find('button')
-      .contains('Clear all filters')
-      .click({
-        force: true
-      });
+    cy.get('@btnClearAllFilters').should('exist');
+    cy.get('@btnClearAllFilters').click({ force: true }); //FIXME
     // Wait and check that the filter is no longer present
     cy.get('.pf-c-empty-state__content').should('not.exist');
     cy.get('.pf-c-chip-group__main').contains('Cluster').should('not.exist');

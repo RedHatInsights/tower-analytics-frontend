@@ -28,10 +28,11 @@ describe('Reports page smoketests', () => {
     allReports.forEach((item) => {
       cy.getByCy(item).should('exist')
       cy.getByCy(item).click()
+      cy.waitSpinner();
       // correct card is highlighted
       cy.getByCy(item).should('have.class', 'pf-m-selected-raised')
       // check View full report link is correct
-      cy.get(`[data-cy="view_full_report_link"]`)
+      cy.getByCy('view_full_report_link')
         .should('have.attr', 'href', aapUrl + reportsUrl + '/' + item)
       // check Title link is correct
       cy.getByCy('preview_title_link')
@@ -47,10 +48,12 @@ describe('Reports page smoketests', () => {
   //   })
   // })
 
+  // FIXME: Workaround to force cypress to wait the graph to load
   it('All report are accessible in preview via arrows', () => {
     let originalTitlePreview = cy.getByCy('preview_title_link').textContent
     allReports.forEach(() => {
       cy.getByCy('next_report_button').click()
+      cy.wait(6000)
       cy.getByCy('preview_title_link').then(($previewTitle) => {
         const newTitlePreview = $previewTitle.text()
         expect(newTitlePreview).not.to.eq(originalTitlePreview)
@@ -59,6 +62,7 @@ describe('Reports page smoketests', () => {
     })
     allReports.forEach(() => {
       cy.getByCy('previous_report_button').click()
+      cy.wait(6000)
       cy.getByCy('preview_title_link').then(($previewTitle) => {
         const newTitlePreview = $previewTitle.text()
         expect(newTitlePreview).not.to.eq(originalTitlePreview)
