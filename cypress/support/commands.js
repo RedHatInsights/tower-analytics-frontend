@@ -35,7 +35,7 @@ import { reportsUrl } from '../support/constants';
  *
  * @param {String} selector - The selector value
  **/
- Cypress.Commands.add('getByOUIA', (selector, ...args) => {
+Cypress.Commands.add('getByOUIA', (selector, ...args) => {
   return cy.get(`[data-ouia-component-id="${selector}"]`, ...args)
 })
 
@@ -110,9 +110,9 @@ Cypress.Commands.add('getByIdLike', (selector, ...args) => {
  * @param {String} parentSelector
  * @param {String} selector - The selector value
  **/
- Cypress.Commands.add('findFromParent', (parentSelector, selector, ...args) => {
+Cypress.Commands.add('findFromParent', (parentSelector, selector, ...args) => {
   cy.get(`${parentSelector}`)
-  .find(`${selector}`, ...args)
+    .find(`${selector}`, ...args)
 })
 
 /**
@@ -125,9 +125,9 @@ Cypress.Commands.add('getByIdLike', (selector, ...args) => {
  * @param {String} parentSelector
  * @param {String} selector - The selector value
  **/
- Cypress.Commands.add('findByIdLike', (parentSelector, selector, ...args) => {
+Cypress.Commands.add('findByIdLike', (parentSelector, selector, ...args) => {
   cy.get(`${parentSelector}`)
-  .find(`[id*="${selector}"]`, ...args)
+    .find(`[id*="${selector}"]`, ...args)
 })
 
 /** This command allows the user to enter a locator that uses a data-ouia-component-id,
@@ -166,11 +166,10 @@ Cypress.Commands.add('visitReport', (pageName) => {
         cy.getByCy('api_error_state').should('not.exist')
         cy.getByCy('api_loading_state').should('not.exist')
         cy.log('Intercepting the url:', page.api_call)
-        cy.wait('@apiCall', {timeout: 8000})
+        cy.wait('@apiCall', { timeout: 8000 })
       }
     })
   })
-
 })
 
 Cypress.Commands.add('loadFixture', (name) => {
@@ -179,4 +178,46 @@ Cypress.Commands.add('loadFixture', (name) => {
   cy.fixture(fixturePath).then((data) => {
     return data;
   })
+})
+
+Cypress.Commands.add('loadPageDataFixture', (pageName) => {
+  cy.loadFixture('tables_pagination').then((pages) => {
+    pages.forEach((page) => {
+      if (page.name == pageName) {
+        return page;
+      }
+    })
+  })
+})
+
+Cypress.Commands.add('waitSpinner', () => {
+  cy.getByCy('spinner').should(($spinner) => {
+    expect($spinner).not.to.exist;
+  });
+});
+
+Cypress.Commands.add('tableShowAll', () => {
+  cy.get('#table-kebab')
+    .click()
+    .then(() => {
+      cy.get('.pf-c-dropdown__menu.pf-m-align-right')
+        .find('button')
+        .contains('Show all')
+        .click()
+      cy.get('#table-kebab').click()
+    });
+  cy.waitSpinner()
+})
+
+Cypress.Commands.add('tableHideAll', () => {
+  cy.get('#table-kebab')
+    .click()
+    .then(() => {
+      cy.get('.pf-c-dropdown__menu.pf-m-align-right')
+        .find('button')
+        .contains('Hide all')
+        .click();
+      cy.get('#table-kebab').click();
+    });
+  cy.waitSpinner();
 })
