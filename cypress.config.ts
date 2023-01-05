@@ -2,14 +2,15 @@ import { defineConfig } from 'cypress';
 
 export default defineConfig({
   projectId: 'wwyf7n',
-  waitForAnimations: true,
-  viewportHeight: 2000,
   video: false,
   videoUploadOnPasses: false,
-  viewportWidth: 1600,
+  viewportWidth: 1920,
+  viewportHeight: 1080,
+  waitForAnimations: true,
+  defaultCommandTimeout: 30000,
   pageLoadTimeout: 120000,
+  requestTimeout: 60000,
   responseTimeout: 60000,
-  chromeWebSecurity: false,
   retries: {
     runMode: 2,
     openMode: 0,

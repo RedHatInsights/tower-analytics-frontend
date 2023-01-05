@@ -48,6 +48,7 @@ Cypress.Commands.add('testNavArrows', (selector, data) => {
 
   cy.getPaginationBtn(`${selector}`, 'next').as('nextBtn');
   cy.getPaginationBtn(`${selector}`, 'previous').as('previousBtn');
+
   cy.get('@previousBtn').should('be.disabled');
 
   if (hasSecondPage) {
@@ -57,8 +58,8 @@ Cypress.Commands.add('testNavArrows', (selector, data) => {
     cy.get('@nextBtn').should('be.disabled');
   }
 
-  cy.getPaginationBtn(`${selector}`, 'next').as('nextBtn');
-  cy.getPaginationBtn(`${selector}`, 'previous').as('previousBtn');
+  cy.get('@nextBtn');
+  cy.get('@previousBtn');
 
   if (hasSecondPage) {
     cy.get('@previousBtn').should('not.be.disabled');
@@ -188,9 +189,10 @@ Cypress.Commands.add('testItemsListFlow', (selector, pageName) => {
 });
 
 Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
+  cy.intercept(data.api_call).as('apiCall');
+  cy.wait('@apiCall');
   const itemsPerPage = parseFloat(data.items_per_page);
   const totalItems = parseFloat(data.total_items);
-  cy.intercept(data.api_call).as('apiCall');
 
   let minRows = 0;
   let maxRows = 0;
@@ -206,15 +208,18 @@ Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
     }
   }
 
-  // TODO: improve this logic
+  // TODO: improve  AND simplify this logic
   let minTotalRows = data.has_expanded_rows ? minRows * 2 : minRows;
   let maxTotalRows = data.has_expanded_rows ? maxRows * 2 : maxRows;
 
   minTotalRows = data.has_extra_line ? minTotalRows + 1 : minTotalRows;
   maxTotalRows = data.has_extra_line ? maxTotalRows + 1 : maxTotalRows;
 
+  // include one more row in case the extra line also has an expanded row
+  minTotalRows = (data.has_extra_line && data.has_expanded_rows) ? minTotalRows + 1 : minTotalRows;
+  maxTotalRows = (data.has_extra_line && data.has_expanded_rows) ? maxTotalRows + 1 : maxTotalRows;
+
   // get table and amount of lines
-  cy.wait('@apiCall');
   cy.get('table').find('tbody').as('table');
   cy.get('@table').find('tr').should('have.length', minTotalRows);
 
