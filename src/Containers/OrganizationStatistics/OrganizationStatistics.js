@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useHistory } from 'react-router';
 
 import {
   useQueryParams,
@@ -129,7 +128,6 @@ const chartMapper = [
 ];
 
 const OrganizationStatistics = () => {
-  const history = useHistory();
   const redirect = useRedirect();
   const [activeTabKey, setActiveTabKey] = useState(0);
 
@@ -272,7 +270,6 @@ const OrganizationStatistics = () => {
                   chartMapper[activeTabKey].attr
                 )}
                 legend={orgs.meta.legend}
-                history={history}
                 colorFunc={colorFunc}
                 yLabel={chartMapper[activeTabKey].label}
                 onClick={chartMapper[activeTabKey].onClick(

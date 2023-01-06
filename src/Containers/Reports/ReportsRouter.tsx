@@ -7,12 +7,9 @@ import paths from './paths';
 const ReportsRouter: FunctionComponent<Record<string, never>> = () => {
   return (
     <Routes>
-      <Route exact path={paths.get}>
-        <List />
-      </Route>
-      <Route path={paths.details}>
-        <Details />
-      </Route>
+      <Route path={paths.get} element={<List />} />
+      <Route path={paths.details} element={<Details />} />
+      <Route path={paths.automationCalculator} element={<Details />} />
     </Routes>
   );
 };

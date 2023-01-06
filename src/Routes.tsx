@@ -26,30 +26,6 @@ const components = {
   [Paths.reports]: asyncComponent(() => import('./Containers/Reports')),
 };
 
-const InsightsRoute = ({
-  component: Component,
-  path,
-}: {
-  component: ReturnType<typeof asyncComponent>;
-  path: string;
-}) => {
-  /*
-   * We are not using page based scss/css rules as we prefer styled components
-   * therefore we don't need to add the classto the root element.
-   *
-   * Leving here for possible future usage.
-   */
-
-  // const root = document.getElementById('root');
-  // root.removeAttribute('class');
-  // root.classList.add(`page__${rootClass}`, 'pf-c-page__main');
-  // root.setAttribute('role', 'main');
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  return <Route path={path} component={Component} />;
-};
-
 export const AnalyticsRoutes: FunctionComponent<Record<string, never>> = () => {
   const { pathname } = useLocation();
 
@@ -58,21 +34,22 @@ export const AnalyticsRoutes: FunctionComponent<Record<string, never>> = () => {
       {/* Catch urls with the trailing slash and remove it */}
       <Route
         path="/:url*(/+)"
-        render={() => <Navigate to={pathname.slice(0, -1)} replace />}
+        element={<Navigate to={pathname.slice(0, -1)} replace />}
       />
-      {/* Render the valid routes */}
-      {Object.keys(components).map((key) => (
-        <InsightsRoute key={key} path={key} component={components[key]} />
-      ))}
-      {/* Redirect the root path to the clusters so it does not give 404. */}
-      <Route path="/" render={() => <Navigate to={Paths.clusters} replace />} />
       {/* Finally, catch all unmatched routes and render 404 */}
-      <Route>
-        <Error404
+      <Route path='*' element={<Error404
           data-cy={'error_page_404'}
           body="Sorry, we could not find what you were looking for. The page you requested may have been changed or moved."
-        />
-      </Route>
+      />} />
+
+      {/* Render the valid routes */}
+      {Object.keys(components).map((key) => {
+        const Component: any = components[key];
+        return (
+          <Route key={key} path={key} element={<Component />} />
+      )})}
+      {/* Redirect the root path to the clusters so it does not give 404. */}
+      <Route path="/" element={<Navigate to={Paths.clusters} replace />} />
     </Routes>
   );
 };

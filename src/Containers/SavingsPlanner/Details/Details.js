@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import {
-  useHistory,
   useParams,
   useLocation,
   Route,
@@ -30,7 +29,7 @@ import useRequest from '../../../Utilities/useRequest';
 const Details = () => {
   const { id } = useParams();
   const location = useLocation();
-  const history = useHistory();
+  //const history = useHistory();
 
   const queryParams = { id: [id] };
 
@@ -52,14 +51,9 @@ const Details = () => {
       perms: {},
     },
   });
-
   useEffect(() => {
-    const unlisten = history.listen(({ pathname }) => {
-      if (!pathname.includes('/edit')) fetchEndpoints(id);
-    });
-
-    return unlisten;
-  }, []);
+    if (!location.pathname.includes('/edit')) fetchEndpoints(id);
+  }, [location]);
 
   useEffect(() => {
     fetchEndpoints(id);

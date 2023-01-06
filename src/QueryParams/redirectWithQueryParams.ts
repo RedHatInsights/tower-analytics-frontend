@@ -1,9 +1,9 @@
-import { History } from 'history';
 import { stringifyQueryParams } from './helpers';
 import { RedirectWithQueryParamsProps } from './types';
+import { useNavigate } from 'react-router-dom';
 
 type TopLevelRedirectParams = (
-  history: History
+  navigate: any
 ) => RedirectWithQueryParamsProps;
 
 /**
@@ -14,12 +14,12 @@ type TopLevelRedirectParams = (
  * @param queryParams The namespaced query params. The top leve keys are the namespaces.
  */
 const redirectWithQueryParams: TopLevelRedirectParams =
-  (history) =>
+  (navigate) =>
   (path, queryParams = undefined) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const search: string = queryParams ? stringifyQueryParams(queryParams) : '';
 
-    history.push(`${path}${search ? '?' : ''}${search}`);
+    navigate(`${path}${search ? '?' : ''}${search}`);
   };
 
 export default redirectWithQueryParams;

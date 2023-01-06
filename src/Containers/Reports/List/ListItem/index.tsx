@@ -43,7 +43,7 @@ interface Props {
 const ListItem: FunctionComponent<Props> = ({
   report: { slug, description, name, tags },
   selected,
-  setSelected,
+  setSelected
 }) => {
   return (
     <Card

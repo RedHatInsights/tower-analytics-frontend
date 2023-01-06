@@ -1,4 +1,3 @@
-import { History } from 'history';
 import { parse, ParsedQuery, stringify } from 'query-string';
 import { NamespacedQueryParams, QueryParams } from './types';
 
@@ -54,10 +53,11 @@ export const stringifyQueryParams = (
 
 export const setQueryParams = (
   queryParams: NamespacedQueryParams,
-  history: History
+  navigate: any,
+  location: any
 ): void => {
-  history.push({
-    pathname: history.location.pathname,
+  navigate({
+    pathname: location.pathname,
     search: stringifyQueryParams(queryParams),
   });
 };

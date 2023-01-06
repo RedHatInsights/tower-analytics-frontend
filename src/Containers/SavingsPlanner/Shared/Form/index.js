@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory, useLocation, Redirect } from 'react-router-dom';
+import { useNavigate, useLocation, Redirect } from 'react-router-dom';
 
 import {
   Button,
@@ -24,7 +24,7 @@ import Tasks from './Steps/Tasks';
 import Templates from './Steps/Templates';
 
 const Form = ({ title, options, data = {} }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { hash, pathname } = useLocation();
   const [startStep, setStartStep] = useState(null);
 
@@ -92,13 +92,15 @@ const Form = ({ title, options, data = {} }) => {
     if (pathname.indexOf('/add') === -1 && hash) {
       setStartStep(steps.find((step) => `#${step.id}` === hash).step_number);
     } else {
-      if (!hash) hash.replace('#details');
+      if (!hash) navigate({hash: 'details',});
       setStartStep(1);
     }
   }, []);
 
   const onStepChange = (newStep) => {
-    hash.replace(newStep.id);
+    navigate({
+      hash: newStep.id,
+    });
   };
 
   const onSave = () => {
@@ -107,9 +109,9 @@ const Form = ({ title, options, data = {} }) => {
 
   const onClose = () => {
     if (location.pathname.indexOf('/edit') !== -1) {
-      history.push(paths.getDetails(data?.id));
+      navigate(paths.getDetails(data?.id));
     } else {
-      history.push(paths.get);
+      navigate(paths.get);
     }
   };
 

@@ -18,15 +18,10 @@ export const paths = {
 const SavingsPlannerRouter: FunctionComponent<Record<string, never>> = () => {
   return (
     <Routes>
-      <Route exact path={paths.get}>
-        <List />
-      </Route>
-      <Route exact path={paths.add}>
-        <Add />
-      </Route>
-      <Route path={[paths.edit, paths.details]}>
-        <Details />
-      </Route>
+      <Route path={paths.get} element={<List />} />
+      <Route path={paths.add} element={<Add />} />
+      <Route path={paths.edit} element={<Details />} />
+      <Route path={paths.details} element={<Details />} />
     </Routes>
   );
 };
