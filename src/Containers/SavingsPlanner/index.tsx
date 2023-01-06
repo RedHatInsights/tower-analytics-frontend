@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Route, Switch } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { Paths } from '../../paths';
 
 import Add from './Add';
@@ -17,7 +17,7 @@ export const paths = {
 
 const SavingsPlannerRouter: FunctionComponent<Record<string, never>> = () => {
   return (
-    <Switch>
+    <Routes>
       <Route exact path={paths.get}>
         <List />
       </Route>
@@ -27,7 +27,7 @@ const SavingsPlannerRouter: FunctionComponent<Record<string, never>> = () => {
       <Route path={[paths.edit, paths.details]}>
         <Details />
       </Route>
-    </Switch>
+    </Routes>
   );
 };
 

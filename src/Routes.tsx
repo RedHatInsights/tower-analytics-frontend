@@ -1,4 +1,4 @@
-import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
+import { Route, Routes, Redirect, useLocation } from 'react-router-dom';
 import React, { FunctionComponent } from 'react';
 import asyncComponent from './Utilities/asyncComponent';
 import { Paths } from './paths';
@@ -50,11 +50,11 @@ const InsightsRoute = ({
   return <Route path={path} component={Component} />;
 };
 
-export const Routes: FunctionComponent<Record<string, never>> = () => {
+export const AnalyticsRoutes: FunctionComponent<Record<string, never>> = () => {
   const { pathname } = useLocation();
 
   return (
-    <Switch>
+    <Routes>
       {/* Catch urls with the trailing slash and remove it */}
       <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
       {/* Render the valid routes */}
@@ -70,6 +70,6 @@ export const Routes: FunctionComponent<Record<string, never>> = () => {
           body="Sorry, we could not find what you were looking for. The page you requested may have been changed or moved."
         />
       </Route>
-    </Switch>
+    </Routes>
   );
 };

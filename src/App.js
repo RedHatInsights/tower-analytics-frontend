@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { Routes } from './Routes';
+import { AnalyticsRoutes } from './Routes';
 import './App.scss';
 import packageJson from '../package.json';
 
@@ -40,7 +40,7 @@ const App = () => {
 
   const renderContent = () => {
     if (error) return <AuthorizationErrorPage error={error} />;
-    if (!isLoading) return <Routes />;
+    if (!isLoading) return <AnalyticsRoutes />;
     return <></>;
   };
 

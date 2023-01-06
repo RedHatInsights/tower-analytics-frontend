@@ -4,7 +4,7 @@ import {
   useParams,
   useLocation,
   Route,
-  Switch,
+  Routes,
 } from 'react-router-dom';
 import { CaretLeftIcon } from '@patternfly/react-icons';
 import { Card } from '@patternfly/react-core';
@@ -105,7 +105,7 @@ const Details = () => {
           </PageHeader>
           <Main>
             <Card>
-              <Switch>
+              <Routes>
                 <Route exact path="/savings-planner/:id/edit">
                   <SavingsPlanEdit data={plan} />
                 </Route>
@@ -123,7 +123,7 @@ const Details = () => {
                     canWrite={canWrite}
                   />
                 </Route>
-              </Switch>
+              </Routes>
             </Card>
           </Main>
         </>
