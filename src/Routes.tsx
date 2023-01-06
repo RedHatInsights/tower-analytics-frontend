@@ -1,4 +1,4 @@
-import { Route, Routes, Redirect, useLocation } from 'react-router-dom';
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import React, { FunctionComponent } from 'react';
 import asyncComponent from './Utilities/asyncComponent';
 import { Paths } from './paths';
@@ -56,13 +56,16 @@ export const AnalyticsRoutes: FunctionComponent<Record<string, never>> = () => {
   return (
     <Routes>
       {/* Catch urls with the trailing slash and remove it */}
-      <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
+      <Route
+        path="/:url*(/+)"
+        render={() => <Navigate to={pathname.slice(0, -1)} replace />}
+      />
       {/* Render the valid routes */}
       {Object.keys(components).map((key) => (
         <InsightsRoute key={key} path={key} component={components[key]} />
       ))}
       {/* Redirect the root path to the clusters so it does not give 404. */}
-      <Redirect from="/" to={Paths.clusters} exact />
+      <Route path="/" render={() => <Navigate to={Paths.clusters} replace />} />
       {/* Finally, catch all unmatched routes and render 404 */}
       <Route>
         <Error404
