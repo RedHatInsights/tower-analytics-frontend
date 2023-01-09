@@ -10,10 +10,10 @@ import { QueryParamsProvider } from './QueryParams';
 
 const AutomationAnalytics = () => (
   <Provider store={store}>
-      <QueryParamsProvider>
-        <NotificationPortal />
-        <App />
-      </QueryParamsProvider>
+    <QueryParamsProvider>
+      <NotificationPortal />
+      <App />
+    </QueryParamsProvider>
   </Provider>
 );
 

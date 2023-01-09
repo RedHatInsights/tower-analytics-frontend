@@ -22,8 +22,6 @@ const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
     if (location.search.length > 0) {
       setQueryParams(parseQueryParams(location.search));
     }
-    return () => {
-    };
   }, []);
 
   useEffect(() => {

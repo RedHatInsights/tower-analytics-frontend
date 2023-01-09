@@ -15,15 +15,30 @@ const components = {
     () => import('./Containers/Notifications/Notifications')
   ),
   [Paths.automationCalculator]: asyncComponent(
-    () => import('./Containers/Reports')
+    () => import('./Containers/Reports/Details')
   ),
   [Paths.jobExplorer]: asyncComponent(
     () => import('./Containers/JobExplorer/JobExplorer')
   ),
   [Paths.savingsPlanner]: asyncComponent(
-    () => import('./Containers/SavingsPlanner')
+    () => import('./Containers/SavingsPlanner/List')
   ),
-  [Paths.reports]: asyncComponent(() => import('./Containers/Reports')),
+  [Paths.savingsPlannerDetails]: asyncComponent(
+    () => import('./Containers/SavingsPlanner/Details')
+  ),
+  [Paths.savingsPlannerEdit]: asyncComponent(
+    () => import('./Containers/SavingsPlanner/Details')
+  ),
+  [Paths.savingsPlannerAdd]: asyncComponent(
+    () => import('./Containers/SavingsPlanner/Add')
+  ),
+  [Paths.reports]: asyncComponent(() => import('./Containers/Reports/List')),
+  [Paths.reportsDetails]: asyncComponent(
+    () => import('./Containers/Reports/Details')
+  ),
+  [Paths.reportsAutomationCalculator]: asyncComponent(
+    () => import('./Containers/Reports/Details')
+  ),
 };
 
 export const AnalyticsRoutes: FunctionComponent<Record<string, never>> = () => {
@@ -37,17 +52,21 @@ export const AnalyticsRoutes: FunctionComponent<Record<string, never>> = () => {
         element={<Navigate to={pathname.slice(0, -1)} replace />}
       />
       {/* Finally, catch all unmatched routes and render 404 */}
-      <Route path='*' element={<Error404
-          data-cy={'error_page_404'}
-          body="Sorry, we could not find what you were looking for. The page you requested may have been changed or moved."
-      />} />
+      <Route
+        path="*"
+        element={
+          <Error404
+            data-cy={'error_page_404'}
+            body="Sorry, we could not find what you were looking for. The page you requested may have been changed or moved."
+          />
+        }
+      />
 
       {/* Render the valid routes */}
       {Object.keys(components).map((key) => {
         const Component: any = components[key];
-        return (
-          <Route key={key} path={key} element={<Component />} />
-      )})}
+        return <Route key={key} path={key} element={<Component />} />;
+      })}
       {/* Redirect the root path to the clusters so it does not give 404. */}
       <Route path="/" element={<Navigate to={Paths.clusters} replace />} />
     </Routes>

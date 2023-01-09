@@ -48,22 +48,29 @@ const ListItem: FunctionComponent<Props> = ({
   return (
     <Card
       data-cy={slug}
+      isSelectableRaised
+      isSelected={selected === slug}
       onClick={() => {
         setSelected(slug);
       }}
-      isSelectableRaised
-      isSelected={selected === slug}
     >
       <CardHeader>
         <CardHeaderMain>
-          <CardTitle>
+          <CardTitle onClick={(event) => event.stopPropagation()>
             <Tooltip content={<div>Click to go to report details</div>}>
               <Link to={paths.getDetails(slug)}>{name}</Link>
             </Tooltip>
           </CardTitle>
         </CardHeaderMain>
       </CardHeader>
-      <CardBody>
+      <CardBody
+              onClick={() => {
+              navigate({
+              search: removeFilters(),
+              });
+              setSelected(slug);
+              }}
+              >
         {description ? (
           <Tooltip
             content={<div>Show report in preview</div>}

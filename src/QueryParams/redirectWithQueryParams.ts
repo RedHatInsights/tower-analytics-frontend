@@ -1,10 +1,7 @@
 import { stringifyQueryParams } from './helpers';
 import { RedirectWithQueryParamsProps } from './types';
-import { useNavigate } from 'react-router-dom';
 
-type TopLevelRedirectParams = (
-  navigate: any
-) => RedirectWithQueryParamsProps;
+type TopLevelRedirectParams = (navigate: any) => RedirectWithQueryParamsProps;
 
 /**
  * The function helps to serielize query params to string and

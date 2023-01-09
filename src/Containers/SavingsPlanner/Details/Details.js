@@ -1,10 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  useParams,
-  useLocation,
-  Route,
-  Routes,
-} from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { CaretLeftIcon } from '@patternfly/react-icons';
 import { Card } from '@patternfly/react-core';
 import Main from '@redhat-cloud-services/frontend-components/Main';
@@ -99,25 +94,24 @@ const Details = () => {
           </PageHeader>
           <Main>
             <Card>
-              <Routes>
-                <Route exact path="/savings-planner/:id/edit">
-                  <SavingsPlanEdit data={plan} />
-                </Route>
-                <Route exact path="/savings-planner/:id/statistics">
-                  <StatisticsTab
-                    tabsArray={tabsArray}
-                    plan={plan}
-                    queryParams={queryParams}
-                  />
-                </Route>
-                <Route exact path={savingsPaths.details}>
+              {location.pathname.includes('edit') && (
+                <SavingsPlanEdit data={plan} />
+              )}
+              {location.pathname.includes('statistics') && (
+                <StatisticsTab
+                  tabsArray={tabsArray}
+                  plan={plan}
+                  queryParams={queryParams}
+                />
+              )}
+              {!location.pathname.includes('statistics') &&
+                !location.pathname.includes('edit') && (
                   <DetailsTab
                     plan={plan}
                     tabsArray={tabsArray}
                     canWrite={canWrite}
                   />
-                </Route>
-              </Routes>
+                )}
             </Card>
           </Main>
         </>

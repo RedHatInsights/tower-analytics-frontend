@@ -92,7 +92,7 @@ const Form = ({ title, options, data = {} }) => {
     if (pathname.indexOf('/add') === -1 && hash) {
       setStartStep(steps.find((step) => `#${step.id}` === hash).step_number);
     } else {
-      if (!hash) navigate({hash: 'details',});
+      if (!hash) navigate({ hash: 'details' });
       setStartStep(1);
     }
   }, []);
