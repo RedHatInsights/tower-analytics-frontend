@@ -96,7 +96,7 @@ const ListItem = ({
       },
     };
 
-    redirect(Paths.jobExplorer, initialQueryParams);
+    navigate(Paths.jobExplorer.replace('/', ''), initialQueryParams);
   };
 
   const renderTemplateLink = (template) => {

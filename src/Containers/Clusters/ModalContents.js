@@ -153,7 +153,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
       },
     };
 
-    redirect(Paths.jobExplorer, initialQueryParams);
+    redirect(Paths.jobExplorer.replace('/', ''), initialQueryParams);
   };
 
   useEffect(() => {

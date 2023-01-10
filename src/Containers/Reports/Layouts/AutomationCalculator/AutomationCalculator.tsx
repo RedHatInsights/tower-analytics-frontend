@@ -326,7 +326,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       },
     };
 
-    redirect(Paths.jobExplorer, initialQueryParams);
+    redirect(Paths.jobExplorer.replace('/', ''), initialQueryParams);
   };
 
   const chartParams = {

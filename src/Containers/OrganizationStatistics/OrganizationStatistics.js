@@ -107,7 +107,7 @@ const redirectToJobExplorer =
       },
     };
 
-    redirect(Paths.jobExplorer, initialQueryParams);
+    redirect(Paths.jobExplorer.replace('/', ''), initialQueryParams);
   };
 
 const chartMapper = [
