@@ -4,15 +4,22 @@ import {
   EmptyState,
   EmptyStateVariant,
   EmptyStateIcon,
+  EmptyStateBody,
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons';
 
-const NoData: FunctionComponent<Record<string, never>> = () => (
+interface Props {
+  title?: string | Record<string, any>;
+  subtext?: string | Record<string, any>;
+}
+
+const NoData: FunctionComponent<Props> = ({ title, subtext }) => (
   <EmptyState variant={EmptyStateVariant.full} style={{ minHeight: '400px' }}>
     <EmptyStateIcon icon={CubesIcon} />
     <Title headingLevel="h5" size="lg">
-      No Data
+      {title ? title : 'No Data'}
     </Title>
+    {subtext && <EmptyStateBody>{subtext}</EmptyStateBody>}
   </EmptyState>
 );
 
