@@ -29,8 +29,15 @@ const environmentSetup = {
     },
     registry: [
       ({ app }) =>
-        app.get('(/beta)?/config/chrome/ansible-navigation.json', (_req, res) =>
-          res.sendFile(resolve(__dirname, './ansible-navigation.json'))
+        app.get('/api/featureflags/v0', (_req, res) => {
+          res.send({ toggles: [] });
+        }),
+      ({ app }) =>
+        app.get(
+          '(/beta)?/config/chrome/ansible-navigation.json',
+          (_req, res) => {
+            res.sendFile(resolve(__dirname, './ansible-navigation.json'));
+          }
         ),
     ],
   }),
