@@ -7,7 +7,6 @@ import Main from '@redhat-cloud-services/frontend-components/Main';
 import DetailsTab from './DetailsTab';
 import StatisticsTab from './StatisticsTab';
 import ApiErrorState from '../../../Components/ApiStatus/ApiErrorState';
-import { paths as savingsPaths } from '../index';
 
 import {
   PageHeader,
@@ -24,7 +23,6 @@ import useRequest from '../../../Utilities/useRequest';
 const Details = () => {
   const { id } = useParams();
   const location = useLocation();
-  //const history = useHistory();
 
   const queryParams = { id: [id] };
 
@@ -66,20 +64,20 @@ const Details = () => {
           {'Back to Plans'}
         </>
       ),
-      link: savingsPaths.get,
+      link: '../savings-planner',
     },
-    { id: 1, name: 'Details', link: savingsPaths.getDetails(id) },
+    { id: 1, name: 'Details', link: `../savings-planner/${id}` },
     {
       id: 2,
       name: 'Statistics',
-      link: `${savingsPaths.getDetails(id)}/statistics`,
+      link: 'statistics',
     },
   ];
 
   const breadcrumbsItems = dataSuccess
     ? [
-        { title: 'Savings Planner', navigate: savingsPaths.get },
-        { title: plan.name, navigate: savingsPaths.getDetails(id) },
+        { title: 'Savings Planner', navigate: '../savings-planner' },
+        { title: plan.name, navigate: `../savings-planner/${id}` },
       ]
     : [];
 

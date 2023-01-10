@@ -6,9 +6,10 @@ export const Paths = {
   jobExplorer: '/job-explorer',
   savingsPlanner: '/savings-planner',
   savingsPlannerDetails: '/savings-planner/:id',
+  savingsPlannerDetailsTabs: '/savings-planner/:id/:tab',
   savingsPlannerEdit: '/savings-planner/:id/edit',
   savingsPlannerAdd: '/savings-planner/add',
   reports: '/reports',
   reportsDetails: '/reports/:slug',
-  reportsAutomationCalculator: 'reports/automation_calculator',
+  reportsAutomationCalculator: '/reports/automation_calculator',
 };

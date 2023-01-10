@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Link, useRouteMatch } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import {
@@ -78,13 +78,13 @@ const ListItem = ({
   } = plan;
 
   const redirect = useRedirect();
+  const navigate = useNavigate();
 
   const projectedSavings =
     projections?.series_stats[projections.series_stats.length - 1]
       .cumulative_net_benefits;
 
   const [isCardKebabOpen, setIsCardKebabOpen] = useState(false);
-  const match = useRouteMatch();
 
   const redirectToJobExplorer = (templateId) => {
     const initialQueryParams = {
@@ -115,21 +115,21 @@ const ListItem = ({
     <React.Fragment key={id}>
       <DropdownItem
         key="edit"
-        onClick={() => redirect(`${match.url}/${id}/edit`)}
+        onClick={() => navigate(`savings-planner/${id}/edit`)}
         position="right"
       >
         Edit
       </DropdownItem>
       <DropdownItem
         key="link"
-        onClick={() => redirect(`${match.url}/${id}/edit#tasks`)}
+        onClick={() => navigate(`savings-planner/${id}/edit#tasks`)}
         position="right"
       >
         Manage tasks
       </DropdownItem>
       <DropdownItem
         key="link"
-        onClick={() => redirect(`${match.url}/${id}/edit#link_template`)}
+        onClick={() => navigate(`savings-planner/${id}/edit#link_template`)}
         position="right"
       >
         Link template
@@ -142,7 +142,7 @@ const ListItem = ({
       <CardHeader>
         <CardHeaderMain>
           <CardTitle>
-            <Link to={`${match.url}/${id}`}>{name}</Link>
+            <Link to={`${id}`}>{name}</Link>
           </CardTitle>
         </CardHeaderMain>
         {canWrite && (
@@ -185,14 +185,7 @@ const ListItem = ({
             renderTemplateLink(template_details)
           ) : (
             <span>
-              None -{' '}
-              <a
-                onClick={() =>
-                  redirect(`${match.url}/${id}/edit#link_template`)
-                }
-              >
-                Link template
-              </a>
+              None - <Link to={`${id}/edit#link_template`}>Link template</Link>
             </span>
           )}
         </CardDetail>
@@ -243,9 +236,9 @@ const ListItem = ({
         {projectedSavings && (
           <CardDetail>
             <CardLabel>Projected savings</CardLabel>
-            <a onClick={() => redirect(`${match.url}/${id}/statistics`)}>
+            <Link to={`${id}/statistics`}>
               {currencyFormatter(+projectedSavings)}
-            </a>
+            </Link>
           </CardDetail>
         )}
         <CardDetail>

@@ -26,6 +26,9 @@ const components = {
   [Paths.savingsPlannerDetails]: asyncComponent(
     () => import('./Containers/SavingsPlanner/Details')
   ),
+  [Paths.savingsPlannerDetailsTabs]: asyncComponent(
+    () => import('./Containers/SavingsPlanner/Details')
+  ),
   [Paths.savingsPlannerEdit]: asyncComponent(
     () => import('./Containers/SavingsPlanner/Details')
   ),
