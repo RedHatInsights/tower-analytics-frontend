@@ -79,7 +79,10 @@ const TableRow: FunctionComponent<Params> = ({
         task_action_id: [moduleId],
       },
     };
-    redirect(paths.getDetails(slug), initialQueryParams);
+    redirect(
+      'reports/' + paths.getDetails(slug).replace('/', ''),
+      initialQueryParams
+    );
   };
   const redirectToTemplatesExplorer = (slug: string, yPercentileList: any) => {
     const initialQueryParams = {

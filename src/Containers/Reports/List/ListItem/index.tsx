@@ -43,7 +43,7 @@ interface Props {
 const ListItem: FunctionComponent<Props> = ({
   report: { slug, description, name, tags },
   selected,
-  setSelected
+  setSelected,
 }) => {
   return (
     <Card
@@ -79,7 +79,6 @@ const ListItem: FunctionComponent<Props> = ({
             <Small>{description}</Small>
           </Tooltip>
         ) : null}
-      </CardBody>
       <CardFooter>
         {tags.map((tagKey, idx) => {
           const tag = TAGS.find((t) => t.key === tagKey);
