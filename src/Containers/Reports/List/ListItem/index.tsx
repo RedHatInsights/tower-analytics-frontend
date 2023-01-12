@@ -57,7 +57,9 @@ const ListItem: FunctionComponent<Props> = ({
       <CardHeader>
         <CardHeaderMain>
           <CardTitle>
-            <Link to={paths.getDetails(slug)}>{name}</Link>
+            <Tooltip content={<div>Click to go to report details.</div>}>
+              <Link to={paths.getDetails(slug)}>{name}</Link>
+            </Tooltip>
           </CardTitle>
         </CardHeaderMain>
       </CardHeader>
