@@ -10,8 +10,11 @@ const RoutedTabs = ({ tabsArray, defaultTabId = 1 }) => {
 
   const getActiveTabId = (defaultTabId) => {
     return (
-      tabsArray.find((tab) => tab.link === location.pathname)?.id ||
-      defaultTabId
+      tabsArray.find(
+        (tab) =>
+          typeof tab.name === 'string' &&
+          location.pathname.includes(tab.name.toLowerCase())
+      )?.id || defaultTabId
     );
   };
 
