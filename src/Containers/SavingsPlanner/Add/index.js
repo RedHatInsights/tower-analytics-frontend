@@ -39,7 +39,7 @@ const Add = () => {
     <>
       <PageHeader>
         <Breadcrumbs
-          items={[{ title: 'Savings Planner', navigate: '/savings-planner' }]}
+          items={[{ title: 'Savings Planner', navigate: '../savings-planner' }]}
         />
         <PageHeaderTitle title={title} />
       </PageHeader>

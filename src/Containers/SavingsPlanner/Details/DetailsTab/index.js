@@ -89,7 +89,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
       },
     };
 
-    redirect(Paths.jobExplorer, initialQueryParams);
+    redirect(Paths.jobExplorer.replace('/', ''), initialQueryParams);
   };
 
   const showTemplate = (template_details) => {

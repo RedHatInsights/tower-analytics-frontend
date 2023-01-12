@@ -95,8 +95,7 @@ const ListItem = ({
         template_id: [templateId],
       },
     };
-
-    navigate(Paths.jobExplorer.replace('/', ''), initialQueryParams);
+    redirect(Paths.jobExplorer.replace('/', ''), initialQueryParams);
   };
 
   const renderTemplateLink = (template) => {
@@ -115,21 +114,21 @@ const ListItem = ({
     <React.Fragment key={id}>
       <DropdownItem
         key="edit"
-        onClick={() => navigate(`savings-planner/${id}/edit`)}
+        onClick={() => navigate(`${id}/edit`)}
         position="right"
       >
         Edit
       </DropdownItem>
       <DropdownItem
         key="link"
-        onClick={() => navigate(`savings-planner/${id}/edit#tasks`)}
+        onClick={() => navigate(`${id}/edit#tasks`)}
         position="right"
       >
         Manage tasks
       </DropdownItem>
       <DropdownItem
         key="link"
-        onClick={() => navigate(`savings-planner/${id}/edit#link_template`)}
+        onClick={() => navigate(`${id}/edit#link_template`)}
         position="right"
       >
         Link template

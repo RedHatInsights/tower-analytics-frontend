@@ -70,7 +70,7 @@ const Details = () => {
     {
       id: 2,
       name: 'Statistics',
-      link: 'statistics',
+      link: `../savings-planner/${id}/statistics`,
     },
   ];
 
