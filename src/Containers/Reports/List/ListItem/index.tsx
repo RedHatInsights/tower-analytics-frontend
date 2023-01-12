@@ -63,7 +63,13 @@ const ListItem: FunctionComponent<Props> = ({
           </CardTitle>
         </CardHeaderMain>
       </CardHeader>
-      <CardBody>{description ? <Small>{description}</Small> : null}</CardBody>
+      <CardBody>
+        {description ? (
+          <Tooltip content={<div>Open report preview</div>} position="bottom">
+            <Small>{description}</Small>
+          </Tooltip>
+        ) : null}
+      </CardBody>
       <CardFooter>
         {tags.map((tagKey, idx) => {
           const tag = TAGS.find((t) => t.key === tagKey);
