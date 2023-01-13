@@ -57,7 +57,7 @@ const ListItem: FunctionComponent<Props> = ({
       <CardHeader>
         <CardHeaderMain>
           <CardTitle>
-            <Tooltip content={<div>Click to go to report details.</div>}>
+            <Tooltip content={<div>Click to go to report details</div>}>
               <Link to={paths.getDetails(slug)}>{name}</Link>
             </Tooltip>
           </CardTitle>
@@ -65,7 +65,10 @@ const ListItem: FunctionComponent<Props> = ({
       </CardHeader>
       <CardBody>
         {description ? (
-          <Tooltip content={<div>Open report preview</div>} position="bottom">
+          <Tooltip
+            content={<div>Show report in preview</div>}
+            position="bottom"
+          >
             <Small>{description}</Small>
           </Tooltip>
         ) : null}
