@@ -19,4 +19,5 @@ export default {
     template_details: {},
     template_id: null,
   },
+  rbac: { perms: { all: true } },
 };

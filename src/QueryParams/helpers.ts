@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { parse, ParsedQuery, stringify } from 'query-string';
 import { NamespacedQueryParams, QueryParams } from './types';
 

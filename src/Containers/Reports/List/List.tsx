@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
   PageHeader,
@@ -53,7 +53,6 @@ export interface Report {
 
 const List: FunctionComponent<Record<string, never>> = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const navigate = useNavigate();
   let index = 0;
   let nextItem = '';
   let previousItem = '';

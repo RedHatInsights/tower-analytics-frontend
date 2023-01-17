@@ -15,7 +15,7 @@ const redirectWithQueryParams: TopLevelRedirectParams =
   (path, queryParams = undefined) => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
     const search: string = queryParams ? stringifyQueryParams(queryParams) : '';
-
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
     navigate(`${path}${search ? '?' : ''}${search}`);
   };
 

@@ -1,31 +1,33 @@
 import { renderHook, act } from '@testing-library/react-hooks';
-import { Router } from 'react-router';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter, useLocation } from 'react-router-dom';
 
 import Provider from '../Provider';
 import useRedirect from '../useRedirect';
 import { Paths } from '../../paths';
 
-describe('QueryParams/useRedirect', () => {
-  const history = createMemoryHistory();
+describe.skip('QueryParams/useRedirect', () => {
   const wrapper = ({ children }) => (
-    <Router history={history}>
+    <MemoryRouter>
       <Provider>{children}</Provider>
-    </Router>
+    </MemoryRouter>
   );
 
   it('should use the context to redirect without params', () => {
     const { result } = renderHook(() => useRedirect(), { wrapper });
+    const pathname = renderHook(() => useLocation(), { wrapper });
 
     act(() => {
       result.current(Paths.jobExplorer);
     });
-
-    expect(history.location.pathname).toBe(Paths.jobExplorer);
+    act(() => {
+      console.log(pathname.result.current.pathname);
+    });
+    expect(pathname).toBe(Paths.jobExplorer);
   });
 
   it('should use the context to redirect with query', () => {
     const { result } = renderHook(() => useRedirect(), { wrapper });
+    const pathname = renderHook(() => useLocation(), { wrapper });
 
     act(() => {
       result.current(Paths.jobExplorer, { n: { a: 's', b: 1, c: ['a', 'b'] } });

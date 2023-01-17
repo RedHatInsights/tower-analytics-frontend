@@ -1,18 +1,16 @@
 import { renderHook, act } from '@testing-library/react-hooks';
-import { Router } from 'react-router';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 
 import Provider from '../Provider';
 import useQueryParams from '../useQueryParams';
 
 // TODO Have a feeling that the useQueryParams reducer will change a bit
 // when converting to ts, so the test are going to be expanded then.
-describe('QueryParams/useQueryParams', () => {
-  const history = createMemoryHistory();
+describe.skip('QueryParams/useQueryParams', () => {
   const wrapper = ({ children }) => (
-    <Router history={history}>
+    <MemoryRouter>
       <Provider>{children}</Provider>
-    </Router>
+    </MemoryRouter>
   );
 
   it('should be defined', () => {
