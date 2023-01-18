@@ -70,6 +70,7 @@ const JobExplorer = () => {
   }, [queryParams]);
 
   if (error) return <ApiErrorState message={error.error.error} />;
+
   const setSort = (idx) => {
     if (idx !== queryParams.sort_options) {
       queryParamsDispatch({
@@ -178,6 +179,7 @@ const JobExplorer = () => {
           unreachable: item?.unreachable_host_count ?? 0,
         }
       : null;
+
   const expandedInfo = (item) => [
     {
       label: 'Created',
@@ -196,6 +198,85 @@ const JobExplorer = () => {
       value: item.host_task_count ?? 0,
     },
   ];
+
+  const jobExplorerTableColumns = [
+    {
+      header: 'ID/Name',
+      sort: 'id',
+      type: 'text',
+      cell: (item) => <TextCell text={item.id.id} iconSize="sm" />,
+      value: (item) => {
+        return (
+          <a href={item.id.tower_link}>
+            {`${item.id.id} - ${item.id.template_name}`}
+          </a>
+        );
+      },
+    },
+    {
+      header: 'Status',
+      sort: 'status',
+      type: 'label',
+      cell: (item) => <JobStatus status={item?.status} />,
+      value: (item) => {
+        return <JobStatus status={item?.status} />;
+      },
+    },
+    {
+      header: 'Cluster',
+      type: 'text',
+      cell: (item) => <TextCell text={item.cluster_name} iconSize="sm" />,
+      value: (item) => {
+        return item.cluster_name;
+      },
+    },
+    {
+      header: 'Organization',
+      type: 'text',
+      cell: (item) => <TextCell text={item.org_name} iconSize="sm" />,
+      value: (item) => {
+        return item.org_name;
+      },
+    },
+    {
+      header: 'Type',
+      sort: 'job_type',
+      type: 'text',
+      cell: (item) => <TextCell text={item.job_type} iconSize="sm" />,
+      value: (item) => {
+        return formatJobType(item?.job_type);
+      },
+    },
+  ];
+
+  const expandedRowContent = (item) => (
+    <ExpandableRowContent>
+      <Flex>
+        <FlexItem>
+          <strong>Host status</strong>
+        </FlexItem>
+        <FlexItem align={{ default: 'alignRight' }}>
+          <strong>Hosts</strong>
+          {'  '}
+          {item?.host_count ?? 0}
+        </FlexItem>
+      </Flex>
+      <Breakdown
+        categoryCount={categoryCount(item)}
+        categoryColor={categoryColor}
+        showPercent
+      />
+      {renderFailedTaskBar(item.most_failed_tasks)}
+      <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
+        {expandedInfo(item).map(({ label, value }) => (
+          <DescriptionListGroup key={label}>
+            <DescriptionListTerm>{label}</DescriptionListTerm>
+            <DescriptionListDescription>{value}</DescriptionListDescription>
+          </DescriptionListGroup>
+        ))}
+      </DescriptionList>
+    </ExpandableRowContent>
+  );
 
   return (
     <React.Fragment>
@@ -250,92 +331,8 @@ const JobExplorer = () => {
               pageItems={data}
               itemCount={meta.count}
               autoHidePagination
-              tableColumns={[
-                {
-                  header: 'ID/Name',
-                  sort: 'id',
-                  type: 'text',
-                  cell: (item) => <TextCell text={item.id.id} iconSize="sm" />,
-                  value: (item) => {
-                    return (
-                      <a href={item.id.tower_link}>
-                        {`${item.id.id} - ${item.id.template_name}`}
-                      </a>
-                    );
-                  },
-                },
-                {
-                  header: 'Status',
-                  sort: 'status',
-                  type: 'label',
-                  cell: (item) => <JobStatus status={item?.status} />,
-                  value: (item) => {
-                    return <JobStatus status={item?.status} />;
-                  },
-                },
-                {
-                  header: 'Cluster',
-                  type: 'text',
-                  cell: (item) => (
-                    <TextCell text={item.cluster_name} iconSize="sm" />
-                  ),
-                  value: (item) => {
-                    return item.cluster_name;
-                  },
-                },
-                {
-                  header: 'Organization',
-                  type: 'text',
-                  cell: (item) => (
-                    <TextCell text={item.org_name} iconSize="sm" />
-                  ),
-                  value: (item) => {
-                    return item.org_name;
-                  },
-                },
-                {
-                  header: 'Type',
-                  sort: 'job_type',
-                  type: 'text',
-                  cell: (item) => (
-                    <TextCell text={item.job_type} iconSize="sm" />
-                  ),
-                  value: (item) => {
-                    return formatJobType(item?.job_type);
-                  },
-                },
-              ]}
-              expandedRow={(item) => (
-                <ExpandableRowContent>
-                  <Flex>
-                    <FlexItem>
-                      <strong>Host status</strong>
-                    </FlexItem>
-                    <FlexItem align={{ default: 'alignRight' }}>
-                      <strong>Hosts</strong>
-                      {'  '}
-                      {item?.host_count ?? 0}
-                    </FlexItem>
-                  </Flex>
-                  <Breakdown
-                    categoryCount={categoryCount(item)}
-                    categoryColor={categoryColor}
-                    showPercent
-                  />
-                  {renderFailedTaskBar(item.most_failed_tasks)}
-
-                  <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
-                    {expandedInfo(item).map(({ label, value }) => (
-                      <DescriptionListGroup key={label}>
-                        <DescriptionListTerm>{label}</DescriptionListTerm>
-                        <DescriptionListDescription>
-                          {value}
-                        </DescriptionListDescription>
-                      </DescriptionListGroup>
-                    ))}
-                  </DescriptionList>
-                </ExpandableRowContent>
-              )}
+              tableColumns={jobExplorerTableColumns}
+              expandedRow={expandedRowContent}
               errorStateTitle={'Error loading templates'}
               emptyStateTitle={'No Templates yet'}
               emptyStateDescription={'To get started, create a template.'}
@@ -343,7 +340,6 @@ const JobExplorer = () => {
               sortDirection={queryParams.sort_order}
               setSort={(e) => setSort(e)}
             />
-
             <Pagination
               count={meta.count}
               params={{
