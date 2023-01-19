@@ -150,7 +150,7 @@ const JobExplorerListRow = ({ job }) => {
           <a
             href={job.id.tower_link}
             target="_blank"
-            rel="noreferrer"
+            rel="noopener noreferrer"
           >{`${job.id.id} - ${job.id.template_name}`}</a>
         </Td>
         <Td>
