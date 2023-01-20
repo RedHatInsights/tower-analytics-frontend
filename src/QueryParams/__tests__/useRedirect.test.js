@@ -27,7 +27,6 @@ describe.skip('QueryParams/useRedirect', () => {
 
   it('should use the context to redirect with query', () => {
     const { result } = renderHook(() => useRedirect(), { wrapper });
-    const pathname = renderHook(() => useLocation(), { wrapper });
 
     act(() => {
       result.current(Paths.jobExplorer, { n: { a: 's', b: 1, c: ['a', 'b'] } });

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { useNavigate, useLocation, Redirect } from 'react-router-dom';
+import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 
 import {
   Button,
@@ -10,7 +10,6 @@ import {
   WizardContextConsumer,
 } from '@patternfly/react-core';
 
-import { paths } from '../../index';
 import useRequest from '../../../../Utilities/useRequest';
 import usePlanData from '../usePlanData';
 
@@ -25,7 +24,7 @@ import Templates from './Steps/Templates';
 
 const Form = ({ title, options, data = {} }) => {
   const navigate = useNavigate();
-  const { hash, pathname } = useLocation();
+  const { hash } = useLocation();
   const [startStep, setStartStep] = useState(null);
 
   const {
@@ -89,18 +88,24 @@ const Form = ({ title, options, data = {} }) => {
   ];
 
   useEffect(() => {
-    if (pathname.indexOf('/add') === -1 && hash) {
+    if (hash) {
       setStartStep(steps.find((step) => `#${step.id}` === hash).step_number);
     } else {
-      if (!hash) navigate({ hash: 'details' });
+      window.history.pushState(
+        null,
+        null,
+        window.location.pathname + '#details'
+      );
       setStartStep(1);
     }
   }, []);
 
   const onStepChange = (newStep) => {
-    navigate({
-      hash: newStep.id,
-    });
+    window.history.pushState(
+      null,
+      null,
+      window.location.pathname + `#${newStep.id}`
+    );
   };
 
   const onSave = () => {
@@ -109,9 +114,9 @@ const Form = ({ title, options, data = {} }) => {
 
   const onClose = () => {
     if (location.pathname.indexOf('/edit') !== -1) {
-      navigate(paths.getDetails(data?.id));
+      navigate('../savings-planner/' + data?.id);
     } else {
-      navigate(paths.get);
+      navigate('../savings-planner');
     }
   };
 
@@ -172,12 +177,7 @@ const Form = ({ title, options, data = {} }) => {
   return (
     <>
       {isSuccess && (
-        <Redirect
-          to={{
-            pathname: paths.getDetails(apiResponse.plan_created.id),
-            state: { reload: true },
-          }}
-        />
+        <Navigate to={'../savings-planner/' + apiResponse.plan_created.id} />
       )}
       {startStep && (
         <Wizard
