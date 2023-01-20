@@ -99,7 +99,7 @@ describe('Containers/JobExplorer', () => {
     });
     wrapper.update();
 
-    expect(wrapper.text()).toEqual(expect.stringContaining('No results found'));
+    expect(wrapper.text()).toEqual(expect.stringContaining('No templates yet'));
   });
 
   it('should send the default queryParams', async () => {
@@ -244,7 +244,7 @@ describe('Containers/JobExplorer', () => {
     });
     wrapper.update();
 
-    expect(wrapper.text()).toEqual(expect.stringContaining('No results found'));
+    expect(wrapper.text()).toEqual(expect.stringContaining('No templates yet'));
     spy.mockRestore();
   });
 });

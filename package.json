@@ -54,7 +54,6 @@
       "\\.(css|scss)$": "identity-obj-proxy"
     },
     "transformIgnorePatterns": [
-      "/node_modules/(?!@redhat-cloud-services)"
     ]
   },
   "devDependencies": {

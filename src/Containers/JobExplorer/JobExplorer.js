@@ -207,7 +207,11 @@ const JobExplorer = () => {
       cell: (item) => <TextCell text={item.id.id} iconSize="sm" />,
       value: (item) => {
         return (
-          <a href={item.id.tower_link}>
+          <a
+            href={item.id.tower_link}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             {`${item.id.id} - ${item.id.template_name}`}
           </a>
         );
@@ -334,7 +338,7 @@ const JobExplorer = () => {
               tableColumns={jobExplorerTableColumns}
               expandedRow={expandedRowContent}
               errorStateTitle={'Error loading templates'}
-              emptyStateTitle={'No Templates yet'}
+              emptyStateTitle={'No templates yet'}
               emptyStateDescription={'To get started, create a template.'}
               sort={queryParams.sort_options}
               sortDirection={queryParams.sort_order}
