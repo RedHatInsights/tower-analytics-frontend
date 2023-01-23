@@ -9,7 +9,6 @@ import {
 
 import { jobExplorer } from '../../Utilities/constants';
 
-import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
   PageHeader,
   PageHeaderTitle,
@@ -21,6 +20,7 @@ import {
   CardTitle,
   Grid,
   GridItem,
+  PageSection,
 } from '@patternfly/react-core';
 
 import BarChart from '../../Charts/BarChart';
@@ -215,7 +215,7 @@ const Clusters = () => {
           setFilters={setFromToolbar}
         />
       </PageHeader>
-      <Main>{renderContent()}</Main>
+      <PageSection>{renderContent()}</PageSection>
     </>
   );
 };

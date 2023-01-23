@@ -7,8 +7,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import { CaretLeftIcon } from '@patternfly/react-icons';
-import { Card } from '@patternfly/react-core';
-import Main from '@redhat-cloud-services/frontend-components/Main';
+import { Card, PageSection } from '@patternfly/react-core';
 
 import DetailsTab from './DetailsTab';
 import StatisticsTab from './StatisticsTab';
@@ -103,7 +102,7 @@ const Details = () => {
             <Breadcrumbs items={breadcrumbsItems} />
             <PageHeaderTitle title={pageTitle} />
           </PageHeader>
-          <Main>
+          <PageSection>
             <Card>
               <Switch>
                 <Route exact path="/savings-planner/:id/edit">
@@ -125,7 +124,7 @@ const Details = () => {
                 </Route>
               </Switch>
             </Card>
-          </Main>
+          </PageSection>
         </>
       )}
     </>

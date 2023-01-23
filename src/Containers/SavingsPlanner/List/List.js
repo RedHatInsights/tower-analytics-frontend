@@ -1,12 +1,17 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useLocation } from 'react-router-dom';
-import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
-import { Button, Gallery, PaginationVariant } from '@patternfly/react-core';
+import {
+  Button,
+  Gallery,
+  PageSection as FrameworkPageSection,
+  PaginationVariant,
+} from '@patternfly/react-core';
+import { PageLayout } from '@ansible/ansible-ui-framework';
 
 import { deletePlans, readPlanOptions, readPlans } from '../../../Api/';
 import FilterableToolbar from '../../../Components/Toolbar';
@@ -24,18 +29,12 @@ import useRequest, { useDeleteItems } from '../../../Utilities/useRequest';
 import ErrorDetail from '../../../Components/ErrorDetail';
 import AlertModal from '../../../Components/AlertModal';
 
-const PageContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 76px);
+const PageSection = styled(FrameworkPageSection)`
+  height: calc(100vh - 303px);
 `;
 
 const Footer = styled.div`
   flex-shrink: 0;
-`;
-
-const FlexMain = styled(Main)`
-  flex-grow: 1;
 `;
 
 const List = () => {
@@ -152,7 +151,7 @@ const List = () => {
   };
 
   return (
-    <PageContainer>
+    <PageLayout>
       <PageHeader>
         <PageHeaderTitle title={'Savings Planner'} />
         <FilterableToolbar
@@ -200,7 +199,7 @@ const List = () => {
           }
         />
       </PageHeader>
-      <FlexMain>{renderContent()}</FlexMain>
+      <PageSection hasOverflowScroll>{renderContent()}</PageSection>
       {data.length > 0 && !(itemsIsLoading || deleteLoading) && (
         <Footer>
           <Pagination
@@ -226,7 +225,7 @@ const List = () => {
           <ErrorDetail error={deletionError.detail} />
         </AlertModal>
       )}
-    </PageContainer>
+    </PageLayout>
   );
 };
 

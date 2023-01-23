@@ -1,9 +1,8 @@
 import React, { useEffect } from 'react';
 import { Redirect } from 'react-router-dom';
 
-import { Card, CardBody } from '@patternfly/react-core';
+import { Card, CardBody, PageSection } from '@patternfly/react-core';
 
-import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
   PageHeader,
   PageHeaderTitle,
@@ -43,13 +42,13 @@ const Add = () => {
         />
         <PageHeaderTitle title={title} />
       </PageHeader>
-      <Main>
+      <PageSection>
         <Card>
           <CardBody>
             <Form title={title} options={options} />
           </CardBody>
         </Card>
-      </Main>
+      </PageSection>
     </>
   );
   if (isSuccess) {
