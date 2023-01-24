@@ -15,6 +15,7 @@ import {
   deleteByIds,
   postWithFileReturn,
   postWithEmail,
+  handleResponse,
 } from './methods';
 import {
   ReadEndpointFnc,
@@ -144,8 +145,11 @@ const mungeData = async (promise, params) => {
   };
 };
 
-export const preflightRequest = (): Promise<Response> =>
-  authenticatedFetch(Endpoint.preflight);
+export const preflightRequest = (): Promise<Response> => {
+  return authenticatedFetch(Endpoint.preflight, {
+    method: 'GET',
+  }).then(handleResponse);
+};
 
 export const readJobExplorer = (
   params: ParamsWithPagination

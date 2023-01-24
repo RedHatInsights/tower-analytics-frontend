@@ -7,9 +7,11 @@ export type NamespacedQueryParams = Record<string, QueryParams>;
 export type UpdateFunction = ({
   newQueryParams,
   namespace,
+  removeDefault,
 }: {
   newQueryParams: QueryParams;
   namespace: string;
+  removeDefault: boolean;
 }) => void;
 
 export type RedirectWithQueryParamsProps = (

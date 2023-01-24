@@ -40,7 +40,7 @@ declare global {
   }
 }
 
-const handleResponse = (response: Response): Promise<ApiJson> =>
+export const handleResponse = (response: Response): Promise<ApiJson> =>
   response.json().then((json: ApiJson) => {
     if (response.ok) return Promise.resolve(json);
 
