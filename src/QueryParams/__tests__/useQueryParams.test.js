@@ -6,7 +6,7 @@ import useQueryParams from '../useQueryParams';
 
 // TODO Have a feeling that the useQueryParams reducer will change a bit
 // when converting to ts, so the test are going to be expanded then.
-describe.skip('QueryParams/useQueryParams', () => {
+describe('QueryParams/useQueryParams', () => {
   const wrapper = ({ children }) => (
     <MemoryRouter>
       <Provider>{children}</Provider>
@@ -74,7 +74,10 @@ describe.skip('QueryParams/useQueryParams', () => {
     });
 
     act(() => {
-      result.current.setFromToolbar('org_id', 1);
+      result.current.dispatch({
+        type: 'SET_ORG',
+        value: { org_id: '1', offset: '0' },
+      });
     });
 
     expect(result.current.queryParams).toEqual({ offset: '0', org_id: '1' });
