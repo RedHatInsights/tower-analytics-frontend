@@ -100,7 +100,7 @@ export const optionsForCategories: OptionsForCategories = {
     type: 'select',
     name: 'Percentile',
     placeholder: 'Filter by percentile',
-    hasChips: false,
+    hasChips: true,
   },
   adoption_rate_type: {
     type: 'select',
