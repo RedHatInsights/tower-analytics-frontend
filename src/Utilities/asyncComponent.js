@@ -50,7 +50,6 @@ export default function asyncComponent(importComponent) {
           <C {...this.props} />
         </div>
       ) : (
-        //<div data-cy="loading">Loading...</div>
         <EmptyState>
           <EmptyStateIcon variant="container" component={Spinner} />
           <Title size="lg" headingLevel="h4">
