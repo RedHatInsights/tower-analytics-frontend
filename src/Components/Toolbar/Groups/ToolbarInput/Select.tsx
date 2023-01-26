@@ -59,6 +59,8 @@ const Select: FunctionComponent<Props> = ({
     })
   );
 
+  let selectOptionsFiltered = selectOptions.slice(0, 500);
+
   const onDelete = (chip: string) => {
     if (Array.isArray(value)) {
       const keyToDelete = selectOptions.find(
@@ -74,12 +76,14 @@ const Select: FunctionComponent<Props> = ({
   };
 
   const onFilter = (_: unknown, textInput: string) => {
-    if (textInput === '') return renderValues(selectOptions);
-    return renderValues(
-      selectOptions.filter(({ value }) =>
+    if (textInput === '') return renderValues(selectOptionsFiltered);
+    const filtered = selectOptions
+      .filter(({ value }) =>
         value.toString().toLowerCase().includes(textInput.toLowerCase())
       )
-    );
+      .slice(0, 500);
+    selectOptionsFiltered = selectOptions.concat(filtered);
+    return renderValues(filtered);
   };
 
   const handleChips = (): string[] => {
