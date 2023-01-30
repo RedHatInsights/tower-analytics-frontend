@@ -15,7 +15,8 @@ import { LegendEntry, TableHeaders } from '../types';
 import { ExpandedTableRowName, getExpandedRowComponent } from '../Components';
 import paths from '../../../paths';
 import { Tooltip } from '@patternfly/react-core';
-import { DEFAULT_NAMESPACE, useRedirect } from '../../../../../QueryParams';
+import { DEFAULT_NAMESPACE, createUrl } from '../../../../../QueryParams';
+import { useNavigate } from 'react-router-dom';
 import { specificReportDefaultParams } from '../../../../../Utilities/constants';
 
 const timeFields: string[] = ['elapsed'];
@@ -71,17 +72,20 @@ const TableRow: FunctionComponent<Params> = ({
       return array[i];
     }
   };
+  const navigate = useNavigate();
 
-  const redirectToModuleBy = (slug: string, moduleId: any) => {
+  const navigateToModuleBy = (slug: string, moduleId: any) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...specificReportDefaultParams(slug),
         task_action_id: [moduleId],
       },
     };
-    redirect(
-      'reports/' + paths.getDetails(slug).replace('/', ''),
-      initialQueryParams
+    navigate(
+      createUrl(
+        'reports/' + paths.getDetails(slug).replace('/', ''),
+        initialQueryParams
+      )
     );
   };
   const redirectToTemplatesExplorer = (slug: string, yPercentileList: any) => {
@@ -112,7 +116,7 @@ const TableRow: FunctionComponent<Params> = ({
       return (
         <Tooltip content={`View ${item.name} usage`}>
           <a
-            onClick={() => redirectToModuleBy(countMapper[key], item.id)}
+            onClick={() => navigateToModuleBy(countMapper[key], item.id)}
           >{`${item[key]}`}</a>
         </Tooltip>
       );

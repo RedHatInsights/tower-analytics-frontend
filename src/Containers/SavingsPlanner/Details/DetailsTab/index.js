@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 
 import styled from 'styled-components';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import { Button } from '@patternfly/react-core';
 
@@ -33,7 +33,7 @@ import AlertModal from '../../../../Components/AlertModal/AlertModal';
 import ErrorDetail from '../../../../Components/ErrorDetail/ErrorDetail';
 import JobStatus from '../../../../Components/JobStatus';
 
-import { useRedirect, DEFAULT_NAMESPACE } from '../../../../QueryParams/';
+import { createUrl, DEFAULT_NAMESPACE } from '../../../../QueryParams/';
 import { jobExplorer } from '../../../../Utilities/constants';
 import { Paths } from '../../../../paths';
 
@@ -53,7 +53,7 @@ const Divider = styled(PFDivider)`
 
 const DetailsTab = ({ tabsArray, plan, canWrite }) => {
   const { pathname } = useLocation();
-  const redirect = useRedirect();
+  const navigate = useNavigate();
   const {
     id,
     automation_status,
@@ -79,7 +79,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
     fetchOptions({});
   }, []);
 
-  const redirectToJobExplorer = (templateId) => {
+  const navigateToJobExplorer = (templateId) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...jobExplorer.defaultParams,
@@ -89,7 +89,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
       },
     };
 
-    redirect(Paths.jobExplorer.replace('/', ''), initialQueryParams);
+    navigate(createUrl(Paths.jobExplorer.replace('/', ''), initialQueryParams));
   };
 
   const showTemplate = (template_details) => {
@@ -98,7 +98,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
     }
 
     return (
-      <a onClick={() => redirectToJobExplorer(template_details.id)}>
+      <a onClick={() => navigateToJobExplorer(template_details.id)}>
         {template_details.name}
       </a>
     );
@@ -156,7 +156,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
   const { request: deletePlans, error: deleteError } = useRequest(
     async (props) => {
       await deletePlan(props);
-      redirect(Paths.savingsPlanner);
+      navigate(createUrl(Paths.savingsPlanner));
     }
   );
 
@@ -225,7 +225,9 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
                   variant="primary"
                   aria-label="Edit plan"
                   onClick={() => {
-                    redirect(`${pathname.split('/details')[0]}/edit`);
+                    navigate(
+                      createUrl(`${pathname.split('/details')[0]}/edit`)
+                    );
                   }}
                 >
                   Edit

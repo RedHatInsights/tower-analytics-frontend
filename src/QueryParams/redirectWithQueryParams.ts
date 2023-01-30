@@ -19,4 +19,12 @@ const redirectWithQueryParams: TopLevelRedirectParams =
     navigate(`${path}${search ? '?' : ''}${search}`);
   };
 
+export const createUrl = (
+  path: string,
+  queryParams: any = undefined
+): string => {
+  const search: string = queryParams ? stringifyQueryParams(queryParams) : '';
+  return `${path}${search ? '?' : ''}${search}`;
+};
+
 export default redirectWithQueryParams;

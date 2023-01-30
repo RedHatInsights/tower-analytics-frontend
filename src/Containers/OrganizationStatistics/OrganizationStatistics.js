@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import {
   useQueryParams,
-  useRedirect,
+  createUrl,
   DEFAULT_NAMESPACE,
 } from '../../QueryParams/';
 import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
@@ -16,7 +16,7 @@ import {
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
 
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   Card,
   CardBody,
@@ -59,6 +59,8 @@ const Divider = styled('hr')`
 
 const colorFunc = scaleOrdinal(pfmulti);
 
+const navigate = useNavigate();
+
 const orgsChartMapper = (data = [], meta, attrName) => {
   const dates = data.map(({ date, items }) => ({
     date,
@@ -85,8 +87,8 @@ const pieChartMapper = (items = [], attrName) => {
   return data;
 };
 
-const redirectToJobExplorer =
-  (redirect, queryParams) =>
+const navigateToJobExplorer =
+  (queryParams) =>
   ({ date, id }) => {
     if (id === -1) {
       // disable clicking on "others" block
@@ -107,7 +109,7 @@ const redirectToJobExplorer =
       },
     };
 
-    redirect(Paths.jobExplorer.replace('/', ''), initialQueryParams);
+    navigate(createUrl(Paths.jobExplorer.replace('/', ''), initialQueryParams));
   };
 
 const chartMapper = [
@@ -115,7 +117,7 @@ const chartMapper = [
     api: readJobExplorer,
     attr: 'total_count',
     label: 'Jobs across organizations',
-    onClick: redirectToJobExplorer,
+    onClick: navigateToJobExplorer,
     tooltip: OrgsTooltip,
   },
   {
@@ -128,7 +130,6 @@ const chartMapper = [
 ];
 
 const OrganizationStatistics = () => {
-  const redirect = useRedirect();
   const [activeTabKey, setActiveTabKey] = useState(0);
 
   // params from toolbar/searchbar
@@ -281,10 +282,7 @@ const OrganizationStatistics = () => {
                 legend={orgs.meta.legend}
                 colorFunc={colorFunc}
                 yLabel={chartMapper[activeTabKey].label}
-                onClick={chartMapper[activeTabKey].onClick(
-                  redirect,
-                  queryParams
-                )}
+                onClick={chartMapper[activeTabKey].onClick(queryParams)}
                 TooltipClass={chartMapper[activeTabKey].tooltip}
               />
             )}

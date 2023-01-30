@@ -24,7 +24,7 @@ interface Props {
   variableRow: { key: string; value: string };
   setDataRunTime: (delta: number, id: number) => void;
   setEnabled: (enabled: boolean) => void;
-  redirectToJobExplorer: (id: number) => void;
+  navigateToJobExplorer: (id: number) => void;
   readOnly: boolean;
 }
 
@@ -53,7 +53,7 @@ const Row: FunctionComponent<Props> = ({
   variableRow,
   setDataRunTime,
   setEnabled,
-  redirectToJobExplorer,
+  navigateToJobExplorer,
   readOnly = true,
 }) => {
   const [isExpanded, setIsExpanded] = useState(
@@ -77,7 +77,7 @@ const Row: FunctionComponent<Props> = ({
         <Td>
           <Tooltip content={'List of jobs for this template for past 30 days'}>
             <Button
-              onClick={() => redirectToJobExplorer(template.id)}
+              onClick={() => navigateToJobExplorer(template.id)}
               variant={ButtonVariant.link}
               style={{ padding: '0px' }}
             >

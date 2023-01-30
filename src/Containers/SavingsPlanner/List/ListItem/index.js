@@ -22,7 +22,7 @@ import {
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
 
 import { Paths } from '../../../../paths';
-import { useRedirect, DEFAULT_NAMESPACE } from '../../../../QueryParams/';
+import { createUrl, DEFAULT_NAMESPACE } from '../../../../QueryParams/';
 import { jobExplorer } from '../../../../Utilities/constants';
 
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
@@ -77,7 +77,6 @@ const ListItem = ({
     projections,
   } = plan;
 
-  const redirect = useRedirect();
   const navigate = useNavigate();
 
   const projectedSavings =
@@ -86,7 +85,7 @@ const ListItem = ({
 
   const [isCardKebabOpen, setIsCardKebabOpen] = useState(false);
 
-  const redirectToJobExplorer = (templateId) => {
+  const navigateToJobExplorer = (templateId) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...jobExplorer.defaultParams,
@@ -95,12 +94,12 @@ const ListItem = ({
         template_id: [templateId],
       },
     };
-    redirect(Paths.jobExplorer.replace('/', ''), initialQueryParams);
+    navigate(createUrl(Paths.jobExplorer.replace('/', ''), initialQueryParams));
   };
 
   const renderTemplateLink = (template) => {
     return template && isSuccess ? (
-      <a onClick={() => redirectToJobExplorer(template.id)}>{template.name}</a>
+      <a onClick={() => navigateToJobExplorer(template.id)}>{template.name}</a>
     ) : null;
   };
 

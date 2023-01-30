@@ -43,8 +43,9 @@ import {
   Td,
 } from '@patternfly/react-table';
 import useRequest from '../../Utilities/useRequest';
-import { DEFAULT_NAMESPACE, useRedirect } from '../../QueryParams';
+import { DEFAULT_NAMESPACE, createUrl } from '../../QueryParams';
 import { jobExplorer } from '../../Utilities/constants';
+import { useNavigate } from 'react-router-dom';
 
 const ActionContainer = styled.div`
   display: flex;
@@ -76,7 +77,7 @@ const formatAvgRun = (elapsed, totalCount) =>
   new Date(Math.ceil(elapsed / totalCount) * 1000).toISOString().substr(11, 8);
 
 const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
-  const redirect = useRedirect();
+  const navigate = useNavigate();
 
   const relatedTemplateJobsParams = {
     ...qp,
@@ -138,7 +139,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
     ...jobsApi
   } = useRequest(readJobExplorer, {});
 
-  const redirectToJobExplorer = () => {
+  const navigateToJobExplorer = () => {
     const { start_date, end_date, quick_date_range } = qp;
 
     const initialQueryParams = {
@@ -153,7 +154,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
       },
     };
 
-    redirect(Paths.jobExplorer.replace('/', ''), initialQueryParams);
+    navigate(createUrl(Paths.jobExplorer.replace('/', ''), initialQueryParams));
   };
 
   useEffect(() => {
@@ -325,7 +326,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
 
         <Button
           component="a"
-          onClick={redirectToJobExplorer}
+          onClick={navigateToJobExplorer}
           variant="link"
           data-cy={'modal_view_all_jobs_button'}
         >

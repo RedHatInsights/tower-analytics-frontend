@@ -37,8 +37,9 @@ import {
   reportDefaultParams,
   specificReportDefaultParams,
 } from '../../../../Utilities/constants';
-import { useRedirect } from '../../../../QueryParams';
+import { createUrl } from '../../../../QueryParams';
 import paths from '../../paths';
+import { useNavigate } from 'react-router-dom';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
@@ -75,9 +76,9 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     meta: { count: 0, legend: [] },
   });
 
-  const redirect = useRedirect();
+  const navigate = useNavigate();
 
-  const redirectToHostScatter = (
+  const navigateToHostScatter = (
     slug: string,
     templateId: any,
     clusterId: any,
@@ -99,7 +100,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         quick_date_range: quickDateRange,
       },
     };
-    redirect(paths.getDetails(slug), initialQueryParams);
+    navigate(createUrl(paths.getDetails(slug), initialQueryParams));
   };
 
   useEffect(() => {
@@ -135,7 +136,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   };
 
   const handleClick = (event, props) => {
-    redirectToHostScatter(
+    navigateToHostScatter(
       'host_anomalies_scatter',
       props.datum.id,
       queryParams.cluster_id,
