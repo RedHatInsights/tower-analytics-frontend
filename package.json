@@ -117,7 +117,9 @@
     "build": "NODE_ENV=production webpack --config config/prod.webpack.config.js",
     "deploy": "npm-run-all build:prod lint test",
     "deploy-only": "npm-run-all build:prod",
-    "verify": "npm-run-all build:prod lint test"
+    "verify": "npm-run-all build:prod lint test",
+    "cy:open": "DEBUG=cypress cypress open",
+    "cy:headless": "DEBUG=cypress cypress run --browser=chrome"
   },
   "insights": {
     "appname": "automation-analytics"
