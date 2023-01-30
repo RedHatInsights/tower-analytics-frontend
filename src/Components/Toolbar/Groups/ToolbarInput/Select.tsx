@@ -51,7 +51,7 @@ const Select: FunctionComponent<Props> = ({
 }) => {
   const [expanded, setExpanded] = useState(false);
   const options = optionsForCategories[categoryKey];
-  const selectOptions = nonTypedSelectOptions.map(
+  let selectOptions = nonTypedSelectOptions.map(
     ({ key, value, description }) => ({
       key: key?.toString(),
       value: value?.toString(),
@@ -59,11 +59,13 @@ const Select: FunctionComponent<Props> = ({
     })
   );
 
-  let selectOptionsFiltered = selectOptions.slice(0, 500);
+  const selectOptionsMasterCopy = selectOptions;
+
+  selectOptions = selectOptions.slice(0, 500);
 
   const onDelete = (chip: string) => {
     if (Array.isArray(value)) {
-      const keyToDelete = selectOptions.find(
+      const keyToDelete = selectOptionsMasterCopy.find(
         ({ value }) => value === chip
       )?.key;
 
@@ -76,14 +78,14 @@ const Select: FunctionComponent<Props> = ({
   };
 
   const onFilter = (_: unknown, textInput: string) => {
-    if (textInput === '') return renderValues(selectOptionsFiltered);
-    const filtered = selectOptions
-      .filter(({ value }) =>
-        value.toString().toLowerCase().includes(textInput.toLowerCase())
-      )
-      .slice(0, 500);
-    selectOptionsFiltered = selectOptions.concat(filtered);
-    return renderValues(filtered);
+    if (textInput === '') return renderValues(selectOptions);
+    return renderValues(
+      selectOptionsMasterCopy
+        .filter(({ value }) =>
+          value.toString().toLowerCase().includes(textInput.toLowerCase())
+        )
+        .slice(0, 50)
+    );
   };
 
   const handleChips = (): string[] => {
@@ -95,7 +97,7 @@ const Select: FunctionComponent<Props> = ({
     if (Array.isArray(value))
       return handleCheckboxChips(
         value.map((i) => i.toString()),
-        selectOptions
+        selectOptionsMasterCopy
       );
     return handleSingleChips(value.toString(), selectOptions);
   };
