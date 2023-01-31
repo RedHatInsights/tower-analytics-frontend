@@ -1,23 +1,10 @@
 import { stringifyQueryParams } from './helpers';
-import { RedirectWithQueryParamsProps } from './types';
-
-type TopLevelRedirectParams = (navigate: any) => RedirectWithQueryParamsProps;
-
 /**
- * The function helps to serielize query params to string and
- * redirecting with query params.
+ * The function helps to serialize query params to string.
  *
  * @param path The path to redirect to
- * @param queryParams The namespaced query params. The top leve keys are the namespaces.
+ * @param queryParams The namespaced query params. The top level keys are the namespaces.
  */
-const redirectWithQueryParams: TopLevelRedirectParams =
-  (navigate) =>
-  (path, queryParams = undefined) => {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
-    const search: string = queryParams ? stringifyQueryParams(queryParams) : '';
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-    navigate(`${path}${search ? '?' : ''}${search}`);
-  };
 
 export const createUrl = (
   path: string,
@@ -26,5 +13,3 @@ export const createUrl = (
   const search: string = queryParams ? stringifyQueryParams(queryParams) : '';
   return `${path}${search ? '?' : ''}${search}`;
 };
-
-export default redirectWithQueryParams;

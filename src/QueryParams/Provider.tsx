@@ -6,7 +6,6 @@ import {
   setQueryParams as setQsInUrl,
   DEFAULT_NAMESPACE,
 } from './helpers';
-import redirectWithQueryParams from './redirectWithQueryParams';
 import { NamespacedQueryParams, UpdateFunction } from './types';
 
 interface Props {
@@ -52,7 +51,6 @@ const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
       value={{
         queryParams,
         update,
-        redirectWithQueryParams: redirectWithQueryParams(navigate),
       }}
     >
       {children}
