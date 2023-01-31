@@ -12,7 +12,6 @@ To make sure we update UI and its integration tests in the same PR this folder w
 
 
 ## Testing Ansible Automation Analytics
-
 ### Deploy
 
 #### Deploy backend and frontend locally
@@ -26,6 +25,26 @@ To make sure we update UI and its integration tests in the same PR this folder w
 3. Then run `npm start --env=stage` - to start local frontend while proxying all the request to the stage environment.
 4. The link the proxy outputs to the terminal is your local frontend deployment. You need valid stage credentials to be able to log in.
 5. Wait until you see a message similar to `webpack compiled successfully`.
+
+#### Set variables
+
+You can either just expoort those values or add them to your `.bashrc` or `.zshrc` files.
+*Currently the best and easiest way to set up cypress for different environments is exporting those values*
+*In the future we would implement some .env file for each environment*
+
+```bash
+export CYPRESS_test_env=1
+export CYPRESS_USERNAME="jdoe"
+export CYPRESS_PASSWORD="password"
+export CYPRESS_baseUrl=https://stage.foo.redhat.com:1337/ansible/automation-analytics
+```
+
+test_env possible values:
+<!-- do we really need/want to run locally? -->
+   * LOCAL: 0, 
+   * EPHEMERAL: 1,
+   * STAGE: 2
+
 
 #### Run the tests
 1. Open a new terminal in the root folder of this repo.
