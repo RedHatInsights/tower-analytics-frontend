@@ -23,8 +23,6 @@ Cypress.Commands.add('clearFeatureDialogs', () => {
 Cypress.Commands.add('login', () => {
   cy.visit('/');
 
-  // cy.intercept('https://consent.trustarc.com/*').as('cookies');
-
   cy.log('Determining login strategy');
 
   const keycloakLoginFields = {
