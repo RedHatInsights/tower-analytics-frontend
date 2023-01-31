@@ -1,31 +1,21 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import reactRouterDom from 'react-router-dom';
-const pushMock = jest.fn();
-reactRouterDom.useHistory = jest.fn().mockReturnValue({ push: pushMock });
-
-jest.mock('react-router-dom', () => ({
-  useLocation: jest.fn().mockReturnValue({
-    pathname: '/another-route',
-    search: '',
-    hash: '',
-    state: null,
-    key: '5nvxpbdafa',
-  }),
-}));
+import { MemoryRouter } from 'react-router-dom';
 
 import EmptyList from './EmptyList';
 
 describe('EmptyList', () => {
   it('should render successfully', async () => {
     render(
-      <EmptyList
-        label={'Add plan'}
-        title={'No plans added'}
-        message={'No plans have been added yet. Add your first plan.'}
-        canAdd={true}
-        path={'/some_link'}
-      />
+      <MemoryRouter initialEntries={['/']}>
+        <EmptyList
+          label={'Add plan'}
+          title={'No plans added'}
+          message={'No plans have been added yet. Add your first plan.'}
+          canAdd={true}
+          path={'/some_link'}
+        />
+      </MemoryRouter>
     );
     expect(screen.getByText('No plans added')).toBeTruthy;
     expect(screen.getByRole('button')).toBeTruthy;

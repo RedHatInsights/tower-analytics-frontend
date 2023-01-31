@@ -59,8 +59,6 @@ const Divider = styled('hr')`
 
 const colorFunc = scaleOrdinal(pfmulti);
 
-const navigate = useNavigate();
-
 const orgsChartMapper = (data = [], meta, attrName) => {
   const dates = data.map(({ date, items }) => ({
     date,
@@ -90,6 +88,7 @@ const pieChartMapper = (items = [], attrName) => {
 const navigateToJobExplorer =
   (queryParams) =>
   ({ date, id }) => {
+    const navigate = useNavigate();
     if (id === -1) {
       // disable clicking on "others" block
       return;
