@@ -192,9 +192,10 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
       dispatch({ type: 'SET_OFFSET', value: 0 });
     },
     setFromPagination: (offset, limit = null) => {
-      dispatch({ type: 'SET_OFFSET', value: offset });
       if (limit) {
         dispatch({ type: 'SET_LIMIT', value: limit });
+      } else {
+        dispatch({ type: 'SET_OFFSET', value: offset });
       }
     },
     /* v0 api usage after this line */
