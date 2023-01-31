@@ -18,7 +18,7 @@ export default defineConfig({
   env: {
     appid: '#automation-analytics-application',
     USERNAME: 'admin',
-    PASSWORD: 'admin',
+    PASSWORD: 'admin'
   },
   e2e: {
     // We've imported your old cypress plugins here.
@@ -26,8 +26,6 @@ export default defineConfig({
     setupNodeEvents(on, config) {
       return require('./cypress/plugins/index.js')(on, config);
     },
-    baseUrl:
-      'https://stage.foo.redhat.com:1337/ansible/automation-analytics',
-    specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
+    specPattern: 'cypress/e2e/**/*'
   },
 });
