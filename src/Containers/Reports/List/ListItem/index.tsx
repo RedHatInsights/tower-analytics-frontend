@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
@@ -45,6 +45,8 @@ const ListItem: FunctionComponent<Props> = ({
   selected,
   setSelected,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <Card
       data-cy={slug}
@@ -56,7 +58,7 @@ const ListItem: FunctionComponent<Props> = ({
     >
       <CardHeader>
         <CardHeaderMain>
-          <CardTitle onClick={(event) => event.stopPropagation()>
+          <CardTitle onClick={(event) => event.stopPropagation()}>
             <Tooltip content={<div>Click to go to report details</div>}>
               <Link to={paths.getDetails(slug)}>{name}</Link>
             </Tooltip>
@@ -64,13 +66,13 @@ const ListItem: FunctionComponent<Props> = ({
         </CardHeaderMain>
       </CardHeader>
       <CardBody
-              onClick={() => {
-              navigate({
-              search: removeFilters(),
-              });
-              setSelected(slug);
-              }}
-              >
+        onClick={() => {
+          navigate({
+            search: '',
+          });
+          setSelected(slug);
+        }}
+      >
         {description ? (
           <Tooltip
             content={<div>Show report in preview</div>}
@@ -79,6 +81,7 @@ const ListItem: FunctionComponent<Props> = ({
             <Small>{description}</Small>
           </Tooltip>
         ) : null}
+      </CardBody>
       <CardFooter>
         {tags.map((tagKey, idx) => {
           const tag = TAGS.find((t) => t.key === tagKey);

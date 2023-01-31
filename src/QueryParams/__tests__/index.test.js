@@ -1,8 +1,4 @@
-import {
-  useQueryParams,
-  QueryParamsProvider,
-  DEFAULT_NAMESPACE,
-} from '../';
+import { useQueryParams, QueryParamsProvider, DEFAULT_NAMESPACE } from '../';
 
 describe('QueryParams/index', () => {
   it('should have exported members', () => {
