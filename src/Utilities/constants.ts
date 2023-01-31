@@ -579,6 +579,24 @@ const allDefaultParams: any = {
       template_id: [],
     },
   },
+  templates_by_organization: {
+    defaultParams: {
+      limit: 6,
+      offset: 0,
+      cluster_id: [],
+      org_id: [],
+      inventory_id: [],
+      template_id: [],
+      status: [],
+      sort_options: 'total_templates_per_org',
+      sort_order: 'desc',
+      adoption_rate_type: 'elapsed_of_templates_by_org',
+      percentile: 'above_0',
+      granularity: 'monthly',
+      quick_date_range: 'last_3_months',
+      chart_type: 'scatter',
+    },
+  },
 };
 
 export const reportDefaultParams = (slug: string): DefaultParamsProps => {

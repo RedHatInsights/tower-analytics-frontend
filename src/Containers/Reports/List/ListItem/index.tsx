@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
@@ -17,7 +17,6 @@ import {
 import paths from '../../paths';
 import { TAGS } from '../../Shared/constants';
 import { BaseReportProps } from '../../Layouts/types';
-import { removeFilters } from '../List';
 
 const CardTitle = styled(PFCardTitle)`
   word-break: break-word;
@@ -39,22 +38,17 @@ interface Props {
   report: BaseReportProps;
   selected: string;
   setSelected: (newSelection: string) => void;
-  history: RouteComponentProps['history'];
 }
 
 const ListItem: FunctionComponent<Props> = ({
   report: { slug, description, name, tags },
   selected,
   setSelected,
-  history,
 }) => {
   return (
     <Card
       data-cy={slug}
       onClick={() => {
-        history.replace({
-          search: removeFilters(),
-        });
         setSelected(slug);
       }}
       isSelectableRaised
@@ -63,11 +57,22 @@ const ListItem: FunctionComponent<Props> = ({
       <CardHeader>
         <CardHeaderMain>
           <CardTitle>
-            <Link to={paths.getDetails(slug)}>{name}</Link>
+            <Tooltip content={<div>Click to go to report details</div>}>
+              <Link to={paths.getDetails(slug)}>{name}</Link>
+            </Tooltip>
           </CardTitle>
         </CardHeaderMain>
       </CardHeader>
-      <CardBody>{description ? <Small>{description}</Small> : null}</CardBody>
+      <CardBody>
+        {description ? (
+          <Tooltip
+            content={<div>Show report in preview</div>}
+            position="bottom"
+          >
+            <Small>{description}</Small>
+          </Tooltip>
+        ) : null}
+      </CardBody>
       <CardFooter>
         {tags.map((tagKey, idx) => {
           const tag = TAGS.find((t) => t.key === tagKey);

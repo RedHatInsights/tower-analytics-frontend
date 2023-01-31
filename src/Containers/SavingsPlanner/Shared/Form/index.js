@@ -92,17 +92,13 @@ const Form = ({ title, options, data = {} }) => {
     if (pathname.indexOf('/add') === -1 && hash) {
       setStartStep(steps.find((step) => `#${step.id}` === hash).step_number);
     } else {
-      history.replace({
-        hash: 'details',
-      });
+      if (!hash) hash.replace('#details');
       setStartStep(1);
     }
   }, []);
 
   const onStepChange = (newStep) => {
-    history.replace({
-      hash: newStep.id,
-    });
+    hash.replace(newStep.id);
   };
 
   const onSave = () => {

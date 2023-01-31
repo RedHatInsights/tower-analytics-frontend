@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import React, { FunctionComponent, useState } from 'react';
 import { global_disabled_color_300 } from '@patternfly/react-tokens';
 
@@ -64,12 +66,26 @@ const TableRow: FunctionComponent<Params> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const redirect = useRedirect();
+  const readArray = (array: any[]) => {
+    for (let i = 0; i < array.length; i++) {
+      return array[i];
+    }
+  };
 
   const redirectToModuleBy = (slug: string, moduleId: any) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...specificReportDefaultParams(slug),
         task_action_id: [moduleId],
+      },
+    };
+    redirect(paths.getDetails(slug), initialQueryParams);
+  };
+  const redirectToTemplatesExplorer = (slug: string, yPercentileList: any) => {
+    const initialQueryParams = {
+      [DEFAULT_NAMESPACE]: {
+        ...specificReportDefaultParams(slug),
+        template_id: readArray([yPercentileList]),
       },
     };
     redirect(paths.getDetails(slug), initialQueryParams);
@@ -83,16 +99,31 @@ const TableRow: FunctionComponent<Params> = ({
       host_task_count: 'module_usage_by_task',
       total_org_count: 'module_usage_by_organization',
       total_template_count: 'module_usage_by_job_template',
+      total_templates_per_org: 'templates_explorer',
     };
     if (isNoName(item, key)) return '-';
     if (isOther(item, key)) return '-';
     if (timeFields.includes(key)) return formatTotalTime(+item[key]);
     if (costFields.includes(key)) return currencyFormatter(+item[key]);
-    if (Object.keys(countMapper).includes(key) && item.id != -1) {
+    if (Object.keys(countMapper).includes(key) && item.id != -1 && item.name) {
       return (
         <Tooltip content={`View ${item.name} usage`}>
           <a
             onClick={() => redirectToModuleBy(countMapper[key], item.id)}
+          >{`${item[key]}`}</a>
+        </Tooltip>
+      );
+    }
+    if (Object.keys(countMapper).includes(key) && item.y_percentile_list) {
+      return (
+        <Tooltip content={`View ${item.org_name} usage`}>
+          <a
+            onClick={() =>
+              redirectToTemplatesExplorer(
+                countMapper[key],
+                item.y_percentile_list
+              )
+            }
           >{`${item[key]}`}</a>
         </Tooltip>
       );
@@ -120,13 +151,23 @@ const TableRow: FunctionComponent<Params> = ({
             }}
           />
         )}
-        {headers.map(({ key }) => (
-          <Td key={`${legendEntry.id}-${key}`}>
-            {clickableLinking
-              ? getClickableText(legendEntry, key)
-              : getText(legendEntry, key)}
-          </Td>
-        ))}
+        {headers.map(({ key }) =>
+          (key === 'total_elapsed_per_org' &&
+            typeof legendEntry.total_elapsed_per_org == 'undefined') ||
+          (key === 'total_job_count_per_org' &&
+            typeof legendEntry.total_job_count_per_org == 'undefined') ||
+          (key === 'total_host_count_per_org' &&
+            typeof legendEntry.total_host_count_per_org == 'undefined') ||
+          (key === 'total_task_count_per_org' &&
+            typeof legendEntry.total_task_count_per_org ==
+              'undefined') ? null : (
+            <Td key={`${legendEntry.id}-${key}`}>
+              {clickableLinking
+                ? getClickableText(legendEntry, key)
+                : getText(legendEntry, key)}
+            </Td>
+          )
+        )}
       </Tr>
       {renderExpandedRow()}
     </>
