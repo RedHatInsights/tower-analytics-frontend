@@ -130,6 +130,7 @@ git checkout pr-$ghprbPullId
 
 export CYPRESS_PW=$(oc get secret env-$NAMESPACE-keycloak -o json | jq -r '.data | map_values(@base64d) | .defaultPassword')
 
+export
 
 cat >/tmp/frontend/cypress_run.sh <<EOL
 export CYPRESS_RECORD_KEY=${CYPRESS_RECORD_KEY}
@@ -155,9 +156,10 @@ sed 's/runMode: 2,/runMode:1,/g' -i cypress.config.ts
 cat cypress.config.ts
 npm ci
 echo ">>> Cypress Chrome"
-/src/node_modules/cypress/bin/cypress run --env test_env=ephemeral --spec 'cypress/e2e/ephemeral/**/*' --record --key ${CYPRESS_RECORD_KEY} --browser chrome --headless
+/src/node_modules/cypress/bin/cypress run --env test_env=1 --spec 'cypress/e2e/**/*' --record --key ${CYPRESS_RECORD_KEY} --browser chrome --headless
 EOL
 
+cat /tmp/frontend/cypress_run.sh
 chmod +x /tmp/frontend/cypress_run.sh
 oc rsync /tmp/frontend cypress:/tmp/
 oc exec -n ${NAMESPACE} cypress -- bash -c "/tmp/frontend/cypress_run.sh"
