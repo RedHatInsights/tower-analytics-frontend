@@ -83,6 +83,7 @@ const TableRow: FunctionComponent<Params> = ({
     navigate(
       createUrl(
         'reports/' + paths.getDetails(slug).replace('/', ''),
+        true,
         initialQueryParams
       )
     );
@@ -94,7 +95,13 @@ const TableRow: FunctionComponent<Params> = ({
         template_id: readArray([yPercentileList]),
       },
     };
-    navigate(createUrl(paths.getDetails(slug), initialQueryParams));
+    navigate(
+      createUrl(
+        'reports/' + paths.getDetails(slug).replace('/', ''),
+        true,
+        initialQueryParams
+      )
+    );
   };
 
   const getClickableText = (

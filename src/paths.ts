@@ -13,3 +13,4 @@ export const Paths = {
   reportsDetails: '/reports/:slug',
   reportsAutomationCalculator: '/reports/automation_calculator',
 };
+export const prefixPath = '/ansible/automation-analytics/';

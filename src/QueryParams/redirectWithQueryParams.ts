@@ -1,4 +1,5 @@
 import { stringifyQueryParams } from './helpers';
+import { prefixPath } from '../paths';
 /**
  * The function helps to serialize query params to string.
  *
@@ -8,8 +9,9 @@ import { stringifyQueryParams } from './helpers';
 
 export const createUrl = (
   path: string,
+  newPage = false,
   queryParams: any = undefined
 ): string => {
   const search: string = queryParams ? stringifyQueryParams(queryParams) : '';
-  return `${path}${search ? '?' : ''}${search}`;
+  return `${newPage ? prefixPath + path : path}${search ? '?' : ''}${search}`;
 };

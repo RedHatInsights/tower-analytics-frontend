@@ -23,7 +23,11 @@ import {
 import FilterableToolbar from '../../../../Components/Toolbar';
 import Pagination from '../../../../Components/Pagination';
 // Imports from utilities
-import { useQueryParams, DEFAULT_NAMESPACE } from '../../../../QueryParams';
+import {
+  useQueryParams,
+  DEFAULT_NAMESPACE,
+  createUrl,
+} from '../../../../QueryParams';
 import {
   jobExplorer,
   reportDefaultParams,
@@ -324,7 +328,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       },
     };
 
-    navigate(Paths.jobExplorer.replace('/', ''), initialQueryParams);
+    navigate(createUrl(Paths.jobExplorer, true, initialQueryParams));
   };
 
   const chartParams = {

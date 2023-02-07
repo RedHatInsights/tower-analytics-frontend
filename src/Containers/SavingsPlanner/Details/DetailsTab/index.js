@@ -89,7 +89,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
       },
     };
 
-    navigate(createUrl(Paths.jobExplorer.replace('/', ''), initialQueryParams));
+    navigate(createUrl(Paths.jobExplorer, true, initialQueryParams));
   };
 
   const showTemplate = (template_details) => {
@@ -156,7 +156,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
   const { request: deletePlans, error: deleteError } = useRequest(
     async (props) => {
       await deletePlan(props);
-      navigate(createUrl(Paths.savingsPlanner));
+      navigate(createUrl(Paths.savingsPlanner, true));
     }
   );
 

@@ -36,9 +36,7 @@ class BarChart extends Component {
       },
     };
 
-    this.props.navigate(
-      createUrl(Paths.jobExplorer.replace('/', ''), initialQueryParams)
-    );
+    this.props.navigate(createUrl(Paths.jobExplorer, true, initialQueryParams));
   }
 
   resize() {

@@ -38,7 +38,6 @@ import {
   specificReportDefaultParams,
 } from '../../../../Utilities/constants';
 import { createUrl } from '../../../../QueryParams';
-import paths from '../../paths';
 import { useNavigate } from 'react-router-dom';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
@@ -100,7 +99,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         quick_date_range: quickDateRange,
       },
     };
-    navigate(createUrl(paths.getDetails(slug), initialQueryParams));
+    navigate(createUrl(`reports\\${slug}`, true, initialQueryParams));
   };
 
   useEffect(() => {

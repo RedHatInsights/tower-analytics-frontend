@@ -94,7 +94,7 @@ const ListItem = ({
         template_id: [templateId],
       },
     };
-    navigate(createUrl(Paths.jobExplorer.replace('/', ''), initialQueryParams));
+    navigate(createUrl(Paths.jobExplorer, true, initialQueryParams));
   };
 
   const renderTemplateLink = (template) => {
