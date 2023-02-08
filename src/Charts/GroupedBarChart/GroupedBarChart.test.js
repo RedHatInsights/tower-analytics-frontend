@@ -1,5 +1,6 @@
 import { shallow } from 'enzyme';
 import { GroupedBarChart, HostsTooltip, OrgsTooltip } from './index';
+import { MemoryRouter } from 'react-router-dom';
 
 describe('Charts/GroupedBarChart', () => {
   it('GroupedBarChart loads', () => {
@@ -7,10 +8,18 @@ describe('Charts/GroupedBarChart', () => {
   });
 
   it('should render successfully with Orgs Tooltip', () => {
-    shallow(<GroupedBarChart TooltipClass={OrgsTooltip} />);
+    shallow(
+      <MemoryRouter initialEntries={['/']}>
+        <GroupedBarChart TooltipClass={OrgsTooltip} />
+      </MemoryRouter>
+    );
   });
 
   it('should render successfully with Hosts Tooltip', () => {
-    shallow(<GroupedBarChart TooltipClass={HostsTooltip} />);
+    shallow(
+      <MemoryRouter initialEntries={['/']}>
+        <GroupedBarChart TooltipClass={HostsTooltip} />
+      </MemoryRouter>
+    );
   });
 });

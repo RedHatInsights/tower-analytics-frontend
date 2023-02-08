@@ -7,15 +7,18 @@ import mockResponses from '../../../__tests__/fixtures/';
 import * as api from '../../../Api/';
 jest.mock('../../../Api');
 
-describe.skip('SavingsPlanner/List', () => {
+describe('SavingsPlanner/List', () => {
   beforeEach(() => {
     api.preflightRequest.mockResolvedValue(mockResponses.preflightRequest200);
     api.readPlanOptions.mockResolvedValue(mockResponses.readPlansOptions);
-    api.readPlans.mockResolvedValue(mockResponses.readPlans);
   });
 
   it('user can see a empty list message with add plan button', async () => {
-    api.readPlans.mockResolvedValue({ items: [] });
+    api.readPlans.mockResolvedValue({
+      items: [],
+      rbac: { perms: { all: true } },
+      meta: { count: 0 },
+    });
     await act(async () => {
       renderPage(List);
     });
@@ -25,11 +28,13 @@ describe.skip('SavingsPlanner/List', () => {
   });
 
   it('user can see a list of plans', async () => {
+    api.readPlans.mockResolvedValue(mockResponses.readPlans);
     await act(async () => {
       renderPage(List);
     });
     expect(screen.getAllByText(/Savings Planner/i));
     const planName = mockResponses.readPlans.items[0].name;
+    //console.log(mockResponses.readPlans.items[0].name);
     expect(screen.getByText(planName));
   });
 });

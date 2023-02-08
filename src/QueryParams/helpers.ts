@@ -1,4 +1,6 @@
-import { History } from 'history';
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { parse, ParsedQuery, stringify } from 'query-string';
 import { NamespacedQueryParams, QueryParams } from './types';
 
@@ -54,10 +56,11 @@ export const stringifyQueryParams = (
 
 export const setQueryParams = (
   queryParams: NamespacedQueryParams,
-  history: History
+  navigate: any,
+  location: any
 ): void => {
-  history.push({
-    pathname: history.location.pathname,
+  navigate({
+    pathname: location.pathname,
     search: stringifyQueryParams(queryParams),
   });
 };

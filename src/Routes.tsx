@@ -1,4 +1,4 @@
-import { Route, Switch, Redirect, useLocation } from 'react-router-dom';
+import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import React, { FunctionComponent } from 'react';
 import asyncComponent from './Utilities/asyncComponent';
 import { Paths } from './paths';
@@ -15,61 +15,63 @@ const components = {
     () => import('./Containers/Notifications/Notifications')
   ),
   [Paths.automationCalculator]: asyncComponent(
-    () => import('./Containers/Reports')
+    () => import('./Containers/Reports/Details')
   ),
   [Paths.jobExplorer]: asyncComponent(
     () => import('./Containers/JobExplorer/JobExplorer')
   ),
   [Paths.savingsPlanner]: asyncComponent(
-    () => import('./Containers/SavingsPlanner')
+    () => import('./Containers/SavingsPlanner/List')
   ),
-  [Paths.reports]: asyncComponent(() => import('./Containers/Reports')),
+  [Paths.savingsPlannerDetails]: asyncComponent(
+    () => import('./Containers/SavingsPlanner/Details')
+  ),
+  [Paths.savingsPlannerDetailsTabs]: asyncComponent(
+    () => import('./Containers/SavingsPlanner/Details')
+  ),
+  [Paths.savingsPlannerEdit]: asyncComponent(
+    () => import('./Containers/SavingsPlanner/Details')
+  ),
+  [Paths.savingsPlannerAdd]: asyncComponent(
+    () => import('./Containers/SavingsPlanner/Add')
+  ),
+  [Paths.reports]: asyncComponent(() => import('./Containers/Reports/List')),
+  [Paths.reportsDetails]: asyncComponent(
+    () => import('./Containers/Reports/Details')
+  ),
+  [Paths.reportsAutomationCalculator]: asyncComponent(
+    () => import('./Containers/Reports/Details')
+  ),
 };
 
-const InsightsRoute = ({
-  component: Component,
-  path,
-}: {
-  component: ReturnType<typeof asyncComponent>;
-  path: string;
-}) => {
-  /*
-   * We are not using page based scss/css rules as we prefer styled components
-   * therefore we don't need to add the classto the root element.
-   *
-   * Leving here for possible future usage.
-   */
-
-  // const root = document.getElementById('root');
-  // root.removeAttribute('class');
-  // root.classList.add(`page__${rootClass}`, 'pf-c-page__main');
-  // root.setAttribute('role', 'main');
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  return <Route path={path} component={Component} />;
-};
-
-export const Routes: FunctionComponent<Record<string, never>> = () => {
+export const AnalyticsRoutes: FunctionComponent<Record<string, never>> = () => {
   const { pathname } = useLocation();
 
   return (
-    <Switch>
+    <Routes>
       {/* Catch urls with the trailing slash and remove it */}
-      <Redirect from="/:url*(/+)" to={pathname.slice(0, -1)} />
-      {/* Render the valid routes */}
-      {Object.keys(components).map((key) => (
-        <InsightsRoute key={key} path={key} component={components[key]} />
-      ))}
-      {/* Redirect the root path to the clusters so it does not give 404. */}
-      <Redirect from="/" to={Paths.clusters} exact />
+      <Route
+        path="/:url*(/+)"
+        element={<Navigate to={pathname.slice(0, -1)} replace />}
+      />
       {/* Finally, catch all unmatched routes and render 404 */}
-      <Route>
-        <Error404
-          data-cy={'error_page_404'}
-          body="Sorry, we could not find what you were looking for. The page you requested may have been changed or moved."
-        />
-      </Route>
-    </Switch>
+      <Route
+        path="*"
+        element={
+          <Error404
+            data-cy={'error_page_404'}
+            body="Sorry, we could not find what you were looking for. The page you requested may have been changed or moved."
+          />
+        }
+      />
+
+      {/* Render the valid routes */}
+      {Object.keys(components).map((key) => {
+        const Component: any = components[key];
+        return <Route key={key} path={key} element={<Component />} />;
+      })}
+      {/* Redirect the root path to the clusters so it does not give 404. */}
+      <Route path="/" element={<Navigate to={Paths.clusters} replace />} />
+    </Routes>
   );
 };

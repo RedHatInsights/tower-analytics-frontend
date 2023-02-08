@@ -198,18 +198,14 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             aria-label="Previous report"
                             data-cy={'previous_report_button'}
                             isDisabled={reports.indexOf(report) === 0}
-                            onClick={() => {
-                              setSelected(previousItem);
-                            }}
+                            onClick={() => setSelected(previousItem)}
                           >
                             <AngleLeftIcon />
                           </Button>
                           <Dropdown
                             data-cy={'preview_dropdown'}
                             isPlain
-                            onSelect={() => {
-                              setIsOpen(!isOpen);
-                            }}
+                            onSelect={() => setIsOpen(!isOpen)}
                             toggle={
                               <DropdownToggle
                                 onToggle={(next) => setIsOpen(next)}
@@ -231,9 +227,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             isDisabled={
                               reports.indexOf(report) >= reports.length - 1
                             }
-                            onClick={() => {
-                              setSelected(nextItem);
-                            }}
+                            onClick={() => setSelected(nextItem)}
                           >
                             <AngleRightIcon />
                           </Button>

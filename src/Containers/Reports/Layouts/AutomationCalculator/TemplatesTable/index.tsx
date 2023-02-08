@@ -20,7 +20,7 @@ interface Props {
   variableRow: { key: string; value: string };
   setDataRunTime: (delta: number, id: number) => void;
   setEnabled: (id: number | undefined) => (enabled: boolean) => void;
-  redirectToJobExplorer: (id: number) => void;
+  navigateToJobExplorer: (id: number) => void;
   getSortParams?: () => TableSortParams;
   readOnly: boolean;
 }
@@ -30,7 +30,7 @@ const TopTemplates: FunctionComponent<Props> = ({
   variableRow,
   setDataRunTime = () => ({}),
   setEnabled = () => () => ({}),
-  redirectToJobExplorer = () => ({}),
+  navigateToJobExplorer = () => ({}),
   getSortParams = () => ({}),
   readOnly = true,
 }) => {
@@ -122,7 +122,7 @@ const TopTemplates: FunctionComponent<Props> = ({
             template={template}
             variableRow={variableRow}
             setDataRunTime={setDataRunTime}
-            redirectToJobExplorer={redirectToJobExplorer}
+            navigateToJobExplorer={navigateToJobExplorer}
             setEnabled={setEnabled(template.id)}
             readOnly={readOnly}
           />
