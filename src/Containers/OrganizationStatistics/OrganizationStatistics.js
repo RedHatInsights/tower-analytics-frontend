@@ -10,7 +10,6 @@ import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
 
 import { readJobExplorer, readHostExplorer, readOrgOptions } from '../../Api/';
 
-import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
   PageHeader,
   PageHeaderTitle,
@@ -28,6 +27,7 @@ import {
   Alert,
   AlertVariant,
   AlertActionLink,
+  PageSection,
 } from '@patternfly/react-core';
 
 import {
@@ -343,7 +343,7 @@ const OrganizationStatistics = () => {
           setFilters={setFromToolbar}
         />
       </PageHeader>
-      <Main>{renderContent()}</Main>
+      <PageSection>{renderContent()}</PageSection>
     </>
   );
 };

@@ -3,6 +3,7 @@
   "version": "1.1.0",
   "private": false,
   "dependencies": {
+    "@ansible/ansible-ui-framework": "^0.0.532",
     "@babel/runtime": "^7.16.0",
     "@patternfly/patternfly": "^4.152.0",
     "@patternfly/react-charts": "^6.21.11",
@@ -20,6 +21,7 @@
     "query-string": "^7.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-i18next": "^12.1.4",
     "react-json-chart-builder": "^1.13.0",
     "react-plotly.js": "^2.6.0",
     "react-redux": "^7.2.5",
@@ -52,9 +54,7 @@
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy"
     },
-    "transformIgnorePatterns": [
-      "/node_modules/(?!@redhat-cloud-services)"
-    ]
+    "transformIgnorePatterns": []
   },
   "devDependencies": {
     "@babel/core": "^7.15.5",

@@ -11,13 +11,17 @@ import Pagination from '../../Components/Pagination';
 import { readJobExplorer, readJobExplorerOptions } from '../../Api/';
 import { jobExplorer } from '../../Utilities/constants';
 
-import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
   PageHeader,
   PageHeaderTitle,
 } from '@redhat-cloud-services/frontend-components/PageHeader';
 
-import { Card, CardBody, PaginationVariant } from '@patternfly/react-core';
+import {
+  Card,
+  CardBody,
+  PageSection,
+  PaginationVariant,
+} from '@patternfly/react-core';
 
 import JobExplorerList from './JobExplorerList';
 import FilterableToolbar from '../../Components/Toolbar/';
@@ -56,7 +60,7 @@ const JobExplorer = () => {
       <PageHeader>
         <PageHeaderTitle title={'Job Explorer'} />
       </PageHeader>
-      <Main>
+      <PageSection>
         <Card>
           <CardBody>
             <FilterableToolbar
@@ -120,7 +124,7 @@ const JobExplorer = () => {
             />
           </CardBody>
         </Card>
-      </Main>
+      </PageSection>
     </React.Fragment>
   );
 };
