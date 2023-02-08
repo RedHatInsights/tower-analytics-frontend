@@ -8,7 +8,6 @@ import NoData from '../../Components/ApiStatus/NoData';
 import { Params, readClusters, readNotifications } from '../../Api/';
 import useRequest from '../../Utilities/useRequest';
 
-import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
   PageHeader,
   PageHeaderTitle,
@@ -22,6 +21,7 @@ import {
   FormSelectOption,
   PaginationVariant,
   NotificationDrawer,
+  PageSection,
 } from '@patternfly/react-core';
 
 import NotificationsList from './NotificationsList';
@@ -161,7 +161,7 @@ const Notifications: FC<Record<string, never>> = () => {
         <PageHeaderTitle title={'Notifications'} />
       </PageHeader>
       <>
-        <Main>
+        <PageSection>
           <Card>
             <CardTitle>
               <DropdownGroup>
@@ -244,7 +244,7 @@ const Notifications: FC<Record<string, never>> = () => {
               />
             </CardBody>
           </Card>
-        </Main>
+        </PageSection>
       </>
     </>
   );

@@ -1,6 +1,5 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import styled from 'styled-components';
-import Main from '@redhat-cloud-services/frontend-components/Main';
 import Error404 from '../../../Components/Error404';
 
 import {
@@ -11,6 +10,7 @@ import {
 import Breadcrumbs from '../../../Components/Breadcrumbs';
 import {
   Label as PFLabel,
+  PageSection,
   Tooltip,
   TooltipPosition,
 } from '@patternfly/react-core';
@@ -77,7 +77,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
               }
             })}
           </PageHeader>
-          <Main>{getComponent(report, true)}</Main>
+          <PageSection>{getComponent(report, true)}</PageSection>
         </>
       );
     } else if (isLoading) {

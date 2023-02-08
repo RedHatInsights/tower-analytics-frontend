@@ -2,7 +2,6 @@
 // @ts-nocheck
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import Main from '@redhat-cloud-services/frontend-components/Main';
 import {
   PageHeader,
   PageHeaderTitle,
@@ -21,6 +20,7 @@ import {
   DropdownToggle,
   Gallery,
   Label,
+  PageSection,
   Tooltip,
   TooltipPosition,
 } from '@patternfly/react-core';
@@ -133,7 +133,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
         />
       </PageHeader>
       {isSuccess && reports.length > 0 && isReportSuccess && (
-        <Main>
+        <PageSection>
           {reports
             .filter((report: Report) => report.slug === selected)
             .map((report) => {
@@ -269,7 +269,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
               />
             ))}
           </Gallery>
-        </Main>
+        </PageSection>
       )}
       {isSuccess && reports.length === 0 && (
         <EmptyList
