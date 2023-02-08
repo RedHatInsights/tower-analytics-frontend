@@ -1,12 +1,11 @@
 import React, { useState, useEffect, FunctionComponent } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { QueryParamsProvider as Provider } from './Context';
 import {
   parseQueryParams,
   setQueryParams as setQsInUrl,
   DEFAULT_NAMESPACE,
 } from './helpers';
-import redirectWithQueryParams from './redirectWithQueryParams';
 import { NamespacedQueryParams, UpdateFunction } from './types';
 
 interface Props {
@@ -14,22 +13,19 @@ interface Props {
 }
 
 const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
-  const history = useHistory();
+  const location = useLocation();
+  const navigate = useNavigate();
   const [queryParams, setQueryParams] = useState<NamespacedQueryParams>({});
 
   useEffect(() => {
-    if (history.location.search.length > 0) {
+    if (location.search.length > 0) {
       setQueryParams(parseQueryParams(location.search));
     }
-
-    const unlisten = history.listen((location) => {
-      setQueryParams(parseQueryParams(location.search));
-    });
-
-    return () => {
-      unlisten();
-    };
   }, []);
+
+  useEffect(() => {
+    setQueryParams(parseQueryParams(location.search));
+  }, [location]);
 
   const update: UpdateFunction = ({
     newQueryParams,
@@ -47,7 +43,7 @@ const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
           [namespace]: newQueryParams,
         };
 
-    setQsInUrl(q, history);
+    setQsInUrl(q, navigate, location);
   };
 
   return (
@@ -55,7 +51,6 @@ const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
       value={{
         queryParams,
         update,
-        redirectWithQueryParams: redirectWithQueryParams(history),
       }}
     >
       {children}

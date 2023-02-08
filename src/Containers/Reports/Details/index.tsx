@@ -16,7 +16,6 @@ import {
 } from '@patternfly/react-core';
 
 import getComponent from '../Layouts';
-import paths from '../paths';
 import { TAGS } from '../Shared/constants';
 import { ReportSchema } from '../Layouts/types';
 import useRequest from '../../../Utilities/useRequest';
@@ -51,7 +50,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
     fetchReport();
   }, [slug]);
 
-  const breadcrumbsItems = [{ title: 'Reports', navigate: paths.get }];
+  const breadcrumbsItems = [{ title: 'Reports', navigate: '../reports' }];
   const render = () => {
     if (isSuccess) {
       const { name, description, tags } = report.layoutProps;
@@ -89,7 +88,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
           title="404: Page does not exist."
           body="The report you are looking for does not exist."
           buttonText="Return to Reports page"
-          link={paths.get}
+          link={'../reports'}
         />
       );
     } else {

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import {
   PageHeader,
   PageHeaderTitle,
@@ -20,7 +20,7 @@ import LoadingState from '../../../Components/ApiStatus/LoadingState';
 import EmptyList from '../../../Components/EmptyList';
 import Pagination from '../../../Components/Pagination';
 import PlanCard from './ListItem';
-import { useQueryParams, useRedirect } from '../../../QueryParams/';
+import { useQueryParams, createUrl } from '../../../QueryParams/';
 import { savingsPlanner } from '../../../Utilities/constants';
 
 import ToolbarDeleteButton from '../../../Components/Toolbar/ToolbarDeleteButton';
@@ -38,7 +38,7 @@ const Footer = styled.div`
 `;
 
 const List = () => {
-  const redirect = useRedirect();
+  const navigate = useNavigate();
   const { pathname } = useLocation();
 
   // params from toolbar/searchbar
@@ -167,7 +167,7 @@ const List = () => {
                     variant="primary"
                     aria-label="Add plan"
                     onClick={() => {
-                      redirect(`${pathname}/add`);
+                      navigate(createUrl(`${pathname}/add`));
                     }}
                   >
                     Add plan

@@ -43,7 +43,7 @@ Cypress.Commands.add('login', () => {
       'username': '#username',
       'password': '#password',
       'two-step': false,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
+      'landing-page': Cypress.config().baseUrl.replace('/ansible/automation-analytics','') + clustersUrl
     },
     'mocks-keycloak-ephemeral': {
       'username': '#username',

@@ -21,4 +21,6 @@ export default {
       template_id: null,
     },
   ],
+  rbac: { perms: { all: true } },
+  meta: { count: 1 },
 };

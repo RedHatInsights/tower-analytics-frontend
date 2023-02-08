@@ -5,7 +5,7 @@ import Tooltip from './Utilities/Tooltip';
 import { Paths } from '../paths';
 import { formatDate } from '../Utilities/helpers';
 import * as d3 from 'd3';
-import { DEFAULT_NAMESPACE } from '../QueryParams/';
+import { DEFAULT_NAMESPACE, createUrl } from '../QueryParams/';
 import { jobExplorer } from '../Utilities/constants';
 
 class LineChart extends Component {
@@ -15,14 +15,14 @@ class LineChart extends Component {
     this.draw = this.draw.bind(this);
     this.resize = this.resize.bind(this);
     this.updateCluster = this.updateCluster.bind(this);
-    this.redirectToJobExplorer = this.redirectToJobExplorer.bind(this);
+    this.navigateToJobExplorer = this.navigateToJobExplorer.bind(this);
     this.state = {
       formattedData: [],
       timeout: null,
     };
   }
 
-  redirectToJobExplorer({ DATE: date }) {
+  navigateToJobExplorer({ DATE: date }) {
     const formattedDate = formatDate(date);
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
@@ -38,7 +38,7 @@ class LineChart extends Component {
       },
     };
 
-    this.props.redirect(Paths.jobExplorer, initialQueryParams);
+    this.props.navigate(createUrl(Paths.jobExplorer, true, initialQueryParams));
   }
 
   resize() {
@@ -272,7 +272,7 @@ class LineChart extends Component {
       .on('mouseover', handleMouseOver)
       .on('mousemove', handleMouseMove)
       .on('mouseout', handleMouseOut)
-      .on('click', this.redirectToJobExplorer);
+      .on('click', this.navigateToJobExplorer);
     // create our failLine circles
     svg
       .selectAll('dot')
@@ -291,7 +291,7 @@ class LineChart extends Component {
       .on('mouseover', handleMouseOver)
       .on('mousemove', handleMouseMove)
       .on('mouseout', handleMouseOut)
-      .on('click', this.redirectToJobExplorer);
+      .on('click', this.navigateToJobExplorer);
   }
 
   componentDidMount() {
@@ -324,7 +324,7 @@ LineChart.propTypes = {
   margin: PropTypes.object,
   getHeight: PropTypes.func,
   getWidth: PropTypes.func,
-  redirect: PropTypes.func,
+  navigate: PropTypes.func,
 };
 
 export default initializeChart(LineChart);

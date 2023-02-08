@@ -1,11 +1,10 @@
 import { act } from 'react-dom/test-utils';
-import reactRouterDom from 'react-router-dom';
-const pushMock = jest.fn();
-reactRouterDom.useHistory = jest.fn().mockReturnValue({ push: pushMock });
 
 import DetailsTab from '.';
 
 jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => jest.fn(),
   useLocation: jest.fn().mockReturnValue({
     pathname: '/another-route',
     search: '',

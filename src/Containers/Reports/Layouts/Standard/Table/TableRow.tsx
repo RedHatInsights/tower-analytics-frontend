@@ -15,7 +15,8 @@ import { LegendEntry, TableHeaders } from '../types';
 import { ExpandedTableRowName, getExpandedRowComponent } from '../Components';
 import paths from '../../../paths';
 import { Tooltip } from '@patternfly/react-core';
-import { DEFAULT_NAMESPACE, useRedirect } from '../../../../../QueryParams';
+import { DEFAULT_NAMESPACE, createUrl } from '../../../../../QueryParams';
+import { useNavigate } from 'react-router-dom';
 import { specificReportDefaultParams } from '../../../../../Utilities/constants';
 
 const timeFields: string[] = ['elapsed'];
@@ -65,30 +66,42 @@ const TableRow: FunctionComponent<Params> = ({
   clickableLinking,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const redirect = useRedirect();
   const readArray = (array: any[]) => {
     for (let i = 0; i < array.length; i++) {
       return array[i];
     }
   };
+  const navigate = useNavigate();
 
-  const redirectToModuleBy = (slug: string, moduleId: any) => {
+  const navigateToModuleBy = (slug: string, moduleId: any) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...specificReportDefaultParams(slug),
         task_action_id: [moduleId],
       },
     };
-    redirect(paths.getDetails(slug), initialQueryParams);
+    navigate(
+      createUrl(
+        'reports/' + paths.getDetails(slug).replace('/', ''),
+        true,
+        initialQueryParams
+      )
+    );
   };
-  const redirectToTemplatesExplorer = (slug: string, yPercentileList: any) => {
+  const navigateToTemplatesExplorer = (slug: string, yPercentileList: any) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...specificReportDefaultParams(slug),
         template_id: readArray([yPercentileList]),
       },
     };
-    redirect(paths.getDetails(slug), initialQueryParams);
+    navigate(
+      createUrl(
+        'reports/' + paths.getDetails(slug).replace('/', ''),
+        true,
+        initialQueryParams
+      )
+    );
   };
 
   const getClickableText = (
@@ -109,7 +122,7 @@ const TableRow: FunctionComponent<Params> = ({
       return (
         <Tooltip content={`View ${item.name} usage`}>
           <a
-            onClick={() => redirectToModuleBy(countMapper[key], item.id)}
+            onClick={() => navigateToModuleBy(countMapper[key], item.id)}
           >{`${item[key]}`}</a>
         </Tooltip>
       );
@@ -119,7 +132,7 @@ const TableRow: FunctionComponent<Params> = ({
         <Tooltip content={`View ${item.org_name} usage`}>
           <a
             onClick={() =>
-              redirectToTemplatesExplorer(
+              navigateToTemplatesExplorer(
                 countMapper[key],
                 item.y_percentile_list
               )

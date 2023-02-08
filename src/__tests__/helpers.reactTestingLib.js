@@ -1,14 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router-dom';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import { QueryParamsProvider } from '../QueryParams';
 import store from '../store';
-
-export const history = {
-  ...createMemoryHistory(),
-};
 
 const defaultParams = {
   search: '',
@@ -17,10 +12,16 @@ const defaultParams = {
 export const renderPage = (Component, { search } = defaultParams, props = {}) =>
   render(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter>
         <QueryParamsProvider>
-          <Component location={{ search }} {...props} />
+          <Routes>
+            <Route
+              path={'/'}
+              element={<Component location={{ search }} {...props} />}
+            />
+            <Route path={'*'} element={<></>} />
+          </Routes>
         </QueryParamsProvider>
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
