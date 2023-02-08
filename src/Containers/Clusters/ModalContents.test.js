@@ -1,6 +1,8 @@
 import { act } from 'react-dom/test-utils';
 import ModalContents from './ModalContents';
 import fetchMock from 'fetch-mock-jest';
+import { MemoryRouter } from 'react-router-dom';
+import React from 'react';
 
 const jobExplorerUrl = 'path:/api/tower-analytics/v1/job_explorer/';
 
@@ -81,13 +83,15 @@ describe('Components/ModalContents', () => {
   it('should render successfully', async () => {
     await act(async () => {
       wrapper = mount(
-        <ModalContents
-          isOpen={true}
-          handleModal={() => {}}
-          selectedId={1}
-          qp={mockQueryParams}
-          jobType={'Foo'}
-        />
+        <MemoryRouter initialEntries={['/']}>
+          <ModalContents
+            isOpen={true}
+            handleModal={() => {}}
+            selectedId={1}
+            qp={mockQueryParams}
+            jobType={'Foo'}
+          />
+        </MemoryRouter>
       );
     });
 
@@ -97,13 +101,15 @@ describe('Components/ModalContents', () => {
   it('should display the correct Template name', async () => {
     await act(async () => {
       wrapper = mount(
-        <ModalContents
-          isOpen={true}
-          handleModal={() => {}}
-          selectedId={1}
-          qp={mockQueryParams}
-          jobType={'Foo'}
-        />
+        <MemoryRouter initialEntries={['/']}>
+          <ModalContents
+            isOpen={true}
+            handleModal={() => {}}
+            selectedId={1}
+            qp={mockQueryParams}
+            jobType={'Foo'}
+          />
+        </MemoryRouter>
       );
     });
 
@@ -115,13 +121,15 @@ describe('Components/ModalContents', () => {
   it('should display the the correct number of total jobs ran', async () => {
     await act(async () => {
       wrapper = mount(
-        <ModalContents
-          isOpen={true}
-          handleModal={() => {}}
-          selectedId={1}
-          qp={mockQueryParams}
-          jobType={'Foo'}
-        />
+        <MemoryRouter initialEntries={['/']}>
+          <ModalContents
+            isOpen={true}
+            handleModal={() => {}}
+            selectedId={1}
+            qp={mockQueryParams}
+            jobType={'Foo'}
+          />
+        </MemoryRouter>
       );
     });
 
@@ -135,13 +143,15 @@ describe('Components/ModalContents', () => {
       Math.ceil((successCount / totalCount) * 100) + '%';
     await act(async () => {
       wrapper = mount(
-        <ModalContents
-          isOpen={true}
-          handleModal={() => {}}
-          selectedId={1}
-          qp={mockQueryParams}
-          jobType={'Foo'}
-        />
+        <MemoryRouter initialEntries={['/']}>
+          <ModalContents
+            isOpen={true}
+            handleModal={() => {}}
+            selectedId={1}
+            qp={mockQueryParams}
+            jobType={'Foo'}
+          />
+        </MemoryRouter>
       );
     });
 

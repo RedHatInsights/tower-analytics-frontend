@@ -1,4 +1,21 @@
 /* global Cypress */
+
+// When executing in eph "/ansible/automation-analytics" doesn't seem to be in the path
+// the below change foreces this in the url
+// https://env-ephemeral-kehfbd-hwwsn2eu.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com/ansible/automation-analytics/reports/aa_2_1_onboarding
+
+// local
+// ephemeral
+// stage
+
+export const ENVS = {
+	LOCAL: 0,
+	EPHEMERAL: 1,
+	STAGE: 2
+}
+
+export const ENV = (Cypress.env('test_env') == undefined ? ENVS.LOCAL : parseInt(Cypress.env('test_env')))
+
 export const appid = Cypress.env('appid')
 export const aapUrl = '/ansible/automation-analytics'
 export const dashboardUrl = '/ansible-dashboard'
@@ -24,6 +41,7 @@ export const mubt = 'module_usage_by_task'
 export const aa21m = 'aa_2_1_onboarding'
 export const hab = 'host_anomalies_bar'
 export const has = 'host_anomalies_scatter'
+export const tbo = 'templates_by_organization'
 
 export const allReports = [
   hcbjt,
@@ -38,5 +56,6 @@ export const allReports = [
   mubt,
   aa21m,
   hab,
-  has
+  has,
+  tbo
 ]

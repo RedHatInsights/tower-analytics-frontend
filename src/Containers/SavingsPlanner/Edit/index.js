@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import { readPlanOptions } from '../../../Api/';
@@ -7,10 +7,11 @@ import { paths } from '../index';
 
 import Form from '../Shared/Form';
 import useRequest from '../../../Utilities/useRequest';
-import redirectWithQueryParams from '../../../QueryParams/redirectWithQueryParams';
+import { createUrl } from '../../../QueryParams/';
 
 const Edit = ({ data }) => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const {
     result: options,
@@ -33,7 +34,7 @@ const Edit = ({ data }) => {
   }, []);
 
   useEffect(() => {
-    if (isSuccess && !canWrite) redirectWithQueryParams(paths.getDetails(id));
+    if (isSuccess && !canWrite) navigate(createUrl(paths.getDetails(id)));
   }, [canWrite]);
 
   const renderContent = () => {

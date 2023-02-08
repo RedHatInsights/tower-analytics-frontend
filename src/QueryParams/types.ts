@@ -14,13 +14,7 @@ export type UpdateFunction = ({
   removeDefault: boolean;
 }) => void;
 
-export type RedirectWithQueryParamsProps = (
-  path: string,
-  queryParams: NamespacedQueryParams | undefined
-) => void;
-
 export interface ContextProps {
   queryParams: NamespacedQueryParams;
   update: UpdateFunction;
-  redirectWithQueryParams: RedirectWithQueryParamsProps;
 }

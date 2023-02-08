@@ -1,11 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  useHistory,
-  useParams,
-  useLocation,
-  Route,
-  Switch,
-} from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import { CaretLeftIcon } from '@patternfly/react-icons';
 import { Card } from '@patternfly/react-core';
 import Main from '@redhat-cloud-services/frontend-components/Main';
@@ -13,7 +7,6 @@ import Main from '@redhat-cloud-services/frontend-components/Main';
 import DetailsTab from './DetailsTab';
 import StatisticsTab from './StatisticsTab';
 import ApiErrorState from '../../../Components/ApiStatus/ApiErrorState';
-import { paths as savingsPaths } from '../index';
 
 import {
   PageHeader,
@@ -30,7 +23,6 @@ import useRequest from '../../../Utilities/useRequest';
 const Details = () => {
   const { id } = useParams();
   const location = useLocation();
-  const history = useHistory();
 
   const queryParams = { id: [id] };
 
@@ -52,14 +44,9 @@ const Details = () => {
       perms: {},
     },
   });
-
   useEffect(() => {
-    const unlisten = history.listen(({ pathname }) => {
-      if (!pathname.includes('/edit')) fetchEndpoints(id);
-    });
-
-    return unlisten;
-  }, []);
+    if (!location.pathname.includes('/edit')) fetchEndpoints(id);
+  }, [location]);
 
   useEffect(() => {
     fetchEndpoints(id);
@@ -77,20 +64,20 @@ const Details = () => {
           {'Back to Plans'}
         </>
       ),
-      link: savingsPaths.get,
+      link: '../savings-planner',
     },
-    { id: 1, name: 'Details', link: savingsPaths.getDetails(id) },
+    { id: 1, name: 'Details', link: `../savings-planner/${id}` },
     {
       id: 2,
       name: 'Statistics',
-      link: `${savingsPaths.getDetails(id)}/statistics`,
+      link: `../savings-planner/${id}/statistics`,
     },
   ];
 
   const breadcrumbsItems = dataSuccess
     ? [
-        { title: 'Savings Planner', navigate: savingsPaths.get },
-        { title: plan.name, navigate: savingsPaths.getDetails(id) },
+        { title: 'Savings Planner', navigate: '../savings-planner' },
+        { title: plan.name, navigate: `../savings-planner/${id}` },
       ]
     : [];
 
@@ -105,25 +92,24 @@ const Details = () => {
           </PageHeader>
           <Main>
             <Card>
-              <Switch>
-                <Route exact path="/savings-planner/:id/edit">
-                  <SavingsPlanEdit data={plan} />
-                </Route>
-                <Route exact path="/savings-planner/:id/statistics">
-                  <StatisticsTab
-                    tabsArray={tabsArray}
-                    plan={plan}
-                    queryParams={queryParams}
-                  />
-                </Route>
-                <Route exact path={savingsPaths.details}>
+              {location.pathname.includes('edit') && (
+                <SavingsPlanEdit data={plan} />
+              )}
+              {location.pathname.includes('statistics') && (
+                <StatisticsTab
+                  tabsArray={tabsArray}
+                  plan={plan}
+                  queryParams={queryParams}
+                />
+              )}
+              {!location.pathname.includes('statistics') &&
+                !location.pathname.includes('edit') && (
                   <DetailsTab
                     plan={plan}
                     tabsArray={tabsArray}
                     canWrite={canWrite}
                   />
-                </Route>
-              </Switch>
+                )}
             </Card>
           </Main>
         </>

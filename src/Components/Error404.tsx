@@ -34,7 +34,7 @@ const Error404: FunctionComponent<Props> = ({
     </Title>
     <EmptyStateIcon icon={PathMissingIcon} />
     <EmptyStateBody>{body}</EmptyStateBody>
-    <Link to={link}>{buttonText}</Link>
+    <Link to={link.replace('/', '')}>{buttonText}</Link>
   </EmptyState>
 );
 

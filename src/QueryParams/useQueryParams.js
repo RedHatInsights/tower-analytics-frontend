@@ -99,6 +99,8 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_TEMPLATE_WEIGH_IN':
     case 'SET_ANOMALY':
     case 'SET_INVENTORY':
+    case 'SET_PERCENTILE':
+    case 'SET_ADOPTION_RATE_TYPE':
     case 'SET_SORT_OPTIONS':
     case 'SET_CALCULATOR':
     case 'SET_SORT_ORDER':
@@ -144,6 +146,8 @@ const actionMapper = {
   template_weigh_in: 'SET_TEMPLATE_WEIGH_IN',
   anomaly: 'SET_ANOMALY',
   inventory_id: 'SET_INVENTORY',
+  percentile: 'SET_PERCENTILE',
+  adoption_rate_type: 'SET_ADOPTION_RATE_TYPE',
   granularity: 'SET_GRANULARITY',
   tags: 'SET_TAGS',
   description: 'SET_DESCRIPTION',
@@ -192,9 +196,10 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
       dispatch({ type: 'SET_OFFSET', value: 0 });
     },
     setFromPagination: (offset, limit = null) => {
-      dispatch({ type: 'SET_OFFSET', value: offset });
       if (limit) {
         dispatch({ type: 'SET_LIMIT', value: limit });
+      } else {
+        dispatch({ type: 'SET_OFFSET', value: offset });
       }
     },
     /* v0 api usage after this line */

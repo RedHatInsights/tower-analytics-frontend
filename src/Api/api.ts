@@ -41,6 +41,7 @@ export enum Endpoint {
   eventExplorer = '/api/tower-analytics/v1/event_explorer/',
   probeTemplates = '/api/tower-analytics/v1/probe_templates/',
   probeTemplateForHosts = '/api/tower-analytics/v1/probe_template_for_hosts/',
+  adoptionRate = '/api/tower-analytics/v1/adoption_rate/',
   ROI = '/api/tower-analytics/v1/roi_templates/',
   costEffortROI = '/api/tower-analytics/v1/roi_cost_effort_data/',
   plans = '/api/tower-analytics/v1/plans/',
@@ -61,6 +62,7 @@ export enum Endpoint {
   hostExplorerOptions = '/api/tower-analytics/v1/host_explorer_options/',
   probeTemplatesOptions = '/api/tower-analytics/v1/probe_templates_options/',
   probeTemplateForHostsOptions = '/api/tower-analytics/v1/probe_template_for_hosts_options/',
+  adoptionRateOptions = '/api/tower-analytics/v1/adoption_rate_options/',
   reportOptions = '/api/tower-analytics/v1/report_options/',
 
   features = '/api/featureflags/v0',
@@ -232,6 +234,15 @@ export const readProbeTemplateForHostsOptions = (
   params: Params
 ): Promise<ApiJson> => post(Endpoint.probeTemplateForHostsOptions, params);
 
+export const readAdoptionRate = (
+  params: ParamsWithPagination
+): Promise<ApiJson> => {
+  return postWithPagination(Endpoint.adoptionRate, params);
+};
+
+export const readAdoptionRateOptions = (params: Params): Promise<ApiJson> =>
+  post(Endpoint.adoptionRateOptions, params);
+
 export const readReports = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(Endpoint.reports, params);
 
@@ -323,6 +334,10 @@ export const endpointFunctionMap = (endpoint: Endpoint): ReadEndpointFnc => {
       return readProbeTemplatesOptions;
     case Endpoint.probeTemplateForHostsOptions:
       return readProbeTemplateForHostsOptions;
+    case Endpoint.adoptionRate:
+      return readAdoptionRate;
+    case Endpoint.adoptionRateOptions:
+      return readAdoptionRateOptions;
     case Endpoint.reportOptions:
       return reportOptions;
     default:

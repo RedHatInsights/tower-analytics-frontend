@@ -9,7 +9,8 @@ import {
   ButtonVariant,
 } from '@patternfly/react-core';
 import { AddCircleOIcon, SearchIcon } from '@patternfly/react-icons';
-import { useRedirect } from '../QueryParams/';
+import { createUrl } from '../QueryParams/';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   label?: string;
@@ -32,7 +33,7 @@ const EmptyList: FunctionComponent<Props> = ({
 }) => {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   /* @ts-ignore */
-  const redirect = useRedirect() as undefined;
+  const navigate = useNavigate();
 
   return (
     <EmptyState variant={EmptyStateVariant.full}>
@@ -49,7 +50,7 @@ const EmptyList: FunctionComponent<Props> = ({
           onClick={() => {
             // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             /* @ts-ignore */
-            if (path) redirect(path);
+            if (path) navigate(createUrl(path));
             if (onButtonClick) onButtonClick();
           }}
         >

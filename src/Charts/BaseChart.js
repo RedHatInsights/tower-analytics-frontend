@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import { useRedirect } from '../QueryParams';
+import { useNavigate } from 'react-router-dom';
 
 const initializeChart = (Chart) => {
   const BaseChart = (props) => {
@@ -25,14 +25,14 @@ const initializeChart = (Chart) => {
       return height;
     };
 
-    const redirect = useRedirect();
+    const navigate = useNavigate();
 
     return (
       <Chart
         {...props}
         getWidth={getWidth}
         getHeight={getHeight}
-        redirect={redirect}
+        navigate={navigate}
       />
     );
   };
