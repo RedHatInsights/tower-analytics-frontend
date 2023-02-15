@@ -11,6 +11,11 @@ plugins.push(
   require('@redhat-cloud-services/frontend-components-config/federated-modules')(
     {
       root: resolve(__dirname, '../'),
+      shared: [
+        {
+          'react-router-dom': { singleton: true, requiredVersion: '*' },
+        },
+      ],
     }
   )
 );

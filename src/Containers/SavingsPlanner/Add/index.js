@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Redirect } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
 import { Card, CardBody, PageSection } from '@patternfly/react-core';
 
@@ -38,7 +38,7 @@ const Add = () => {
     <>
       <PageHeader>
         <Breadcrumbs
-          items={[{ title: 'Savings Planner', navigate: '/savings-planner' }]}
+          items={[{ title: 'Savings Planner', navigate: '../savings-planner' }]}
         />
         <PageHeaderTitle title={title} />
       </PageHeader>
@@ -52,7 +52,7 @@ const Add = () => {
     </>
   );
   if (isSuccess) {
-    return canWrite ? showAdd() : <Redirect to={Paths.savingsPlanner} />;
+    return canWrite ? showAdd() : <Navigate to={Paths.savingsPlanner} />;
   }
   return null;
 };

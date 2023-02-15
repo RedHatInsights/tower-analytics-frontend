@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import Tooltip from './Utilities/Tooltip';
 import { Paths } from '../paths';
 import { formatDate } from '../Utilities/helpers';
-import { DEFAULT_NAMESPACE } from '../QueryParams/';
+import { DEFAULT_NAMESPACE, createUrl } from '../QueryParams/';
 import { jobExplorer } from '../Utilities/constants';
 
 class BarChart extends Component {
@@ -14,14 +14,14 @@ class BarChart extends Component {
     this.draw = this.draw.bind(this);
     this.init = this.init.bind(this);
     this.resize = this.resize.bind(this);
-    this.redirectToJobExplorer = this.redirectToJobExplorer.bind(this);
+    this.navigateToJobExplorer = this.navigateToJobExplorer.bind(this);
     this.state = {
       formattedData: [],
       timeout: null,
     };
   }
 
-  redirectToJobExplorer({ data: { DATE: date } }) {
+  navigateToJobExplorer({ data: { DATE: date } }) {
     const formattedDate = formatDate(date);
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
@@ -36,7 +36,7 @@ class BarChart extends Component {
       },
     };
 
-    this.props.redirect(Paths.jobExplorer, initialQueryParams);
+    this.props.navigate(createUrl(Paths.jobExplorer, true, initialQueryParams));
   }
 
   resize() {
@@ -186,7 +186,7 @@ class BarChart extends Component {
       .on('mouseover', barTooltip.handleMouseOver)
       .on('mousemove', barTooltip.handleMouseOver)
       .on('mouseout', barTooltip.handleMouseOut)
-      .on('click', this.redirectToJobExplorer);
+      .on('click', this.navigateToJobExplorer);
   }
 
   componentDidMount() {
@@ -219,7 +219,7 @@ BarChart.propTypes = {
   margin: PropTypes.object,
   getHeight: PropTypes.func,
   getWidth: PropTypes.func,
-  redirect: PropTypes.func,
+  navigate: PropTypes.func,
 };
 
 export default initializeChart(BarChart);

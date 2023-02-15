@@ -1,20 +1,17 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-import { Router } from 'react-router';
-import { createMemoryHistory } from 'history';
+import { MemoryRouter } from 'react-router-dom';
 import { QueryParamsProvider } from '../QueryParams';
 import store from '../store';
-
-export const history = createMemoryHistory();
 
 export const mountPage = (Component, params = {}) =>
   mount(
     <Provider store={store}>
-      <Router history={history}>
+      <MemoryRouter>
         <QueryParamsProvider>
           <Component {...params} />
         </QueryParamsProvider>
-      </Router>
+      </MemoryRouter>
     </Provider>
   );
 

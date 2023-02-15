@@ -2,23 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { shape, string, number, arrayOf, node, oneOfType } from 'prop-types';
 import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const RoutedTabs = ({ tabsArray, defaultTabId = 1 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 
   const getActiveTabId = (defaultTabId) => {
     return (
-      tabsArray.find((tab) => tab.link === location.pathname)?.id ||
-      defaultTabId
+      tabsArray.find(
+        (tab) =>
+          typeof tab.name === 'string' &&
+          location.pathname.includes(tab.name.toLowerCase())
+      )?.id || defaultTabId
     );
   };
 
   const handleTabSelect = (_, eventKey) => {
     const match = tabsArray.find((tab) => tab.id === eventKey);
     if (match) {
-      history.push(match.link);
+      navigate(match.link);
     }
   };
 

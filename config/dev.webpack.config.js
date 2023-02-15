@@ -83,6 +83,11 @@ plugins.push(
         '@redhat-cloud-services/frontend-components-utilities',
         '@redhat-cloud-services/frontend-components-notifications',
       ],
+      shared: [
+        {
+          'react-router-dom': { singleton: true, requiredVersion: '*' },
+        },
+      ],
     }
   )
 );

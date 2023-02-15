@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
@@ -45,25 +45,34 @@ const ListItem: FunctionComponent<Props> = ({
   selected,
   setSelected,
 }) => {
+  const navigate = useNavigate();
+
   return (
     <Card
       data-cy={slug}
+      isSelectableRaised
+      isSelected={selected === slug}
       onClick={() => {
         setSelected(slug);
       }}
-      isSelectableRaised
-      isSelected={selected === slug}
     >
       <CardHeader>
         <CardHeaderMain>
-          <CardTitle>
+          <CardTitle onClick={(event) => event.stopPropagation()}>
             <Tooltip content={<div>Click to go to report details</div>}>
               <Link to={paths.getDetails(slug)}>{name}</Link>
             </Tooltip>
           </CardTitle>
         </CardHeaderMain>
       </CardHeader>
-      <CardBody>
+      <CardBody
+        onClick={() => {
+          navigate({
+            search: '',
+          });
+          setSelected(slug);
+        }}
+      >
         {description ? (
           <Tooltip
             content={<div>Show report in preview</div>}

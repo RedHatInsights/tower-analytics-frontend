@@ -25,8 +25,8 @@ import Pagination from '../../../../Components/Pagination';
 // Imports from utilities
 import {
   useQueryParams,
-  useRedirect,
   DEFAULT_NAMESPACE,
+  createUrl,
 } from '../../../../QueryParams';
 import {
   jobExplorer,
@@ -59,6 +59,8 @@ import { useDispatch } from 'react-redux';
 import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
 import { NotificationType } from '../../../../globalTypes';
 import EmptyList from '../../../../Components/EmptyList';
+
+import { useNavigate } from 'react-router-dom';
 
 const SpinnerDiv = styled.div`
   height: 400px;
@@ -100,7 +102,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
   const defaultParams = reportDefaultParams(slug);
-  const redirect = useRedirect();
+  const navigate = useNavigate();
   const { queryParams, setFromToolbar, setFromPagination } =
     useQueryParams(defaultParams);
 
@@ -314,10 +316,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     fetchData(queryParams);
   }, [queryParams]);
   /**
-   * Function to redirect to the job explorer page
+   * Function to navigate to the job explorer page
    * with the same filters as is used here.
    */
-  const redirectToJobExplorer = (templateId) => {
+  const navigateToJobExplorer = (templateId) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...jobExplorer.defaultParams,
@@ -326,7 +328,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       },
     };
 
-    redirect(Paths.jobExplorer, initialQueryParams);
+    navigate(createUrl(Paths.jobExplorer, true, initialQueryParams));
   };
 
   const chartParams = {
@@ -506,7 +508,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 <Spinner data-cy={'spinner'} isSVG />
               ) : (
                 <TemplatesTable
-                  redirectToJobExplorer={redirectToJobExplorer}
+                  navigateToJobExplorer={navigateToJobExplorer}
                   data={api.result.items}
                   variableRow={options.sort_options.find(
                     ({ key }) => key === queryParams.sort_options
