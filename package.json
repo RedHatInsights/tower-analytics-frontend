@@ -13,6 +13,7 @@
     "@redhat-cloud-services/frontend-components": "^3.4.2",
     "@redhat-cloud-services/frontend-components-notifications": "^3.2.5",
     "@redhat-cloud-services/frontend-components-utilities": "^3.2.4",
+    "@sinclair/typebox": "^0.25.11",
     "@unleash/proxy-client-react": "^1.0.4",
     "d3": "^5.9.2",
     "eslint-plugin-cypress": "^2.12.1",
