@@ -36,7 +36,7 @@ const App = () => {
 
   useEffect(() => {
     fetchPreflight();
-  }, [location]);
+  }, [location.pathname]);
 
   const renderContent = () => {
     if (error) return <AuthorizationErrorPage error={error} />;
