@@ -6,7 +6,7 @@
             "appId": "ansibleDashboard",
             "title": "Overview",
             "filterable": false,
-            "href": "/ansible/ansible-dashboard"
+            "href": "/ansible/automation-analytics"
         },
         {
             "title": "Automation Hub",
