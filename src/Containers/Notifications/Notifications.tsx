@@ -8,10 +8,7 @@ import NoData from '../../Components/ApiStatus/NoData';
 import { Params, readClusters, readNotifications } from '../../Api/';
 import useRequest from '../../Utilities/useRequest';
 
-import {
-  PageHeader,
-  PageHeaderTitle,
-} from '@redhat-cloud-services/frontend-components/PageHeader';
+import { PageHeader } from '@ansible/ansible-ui-framework';
 
 import {
   Card,
@@ -157,9 +154,7 @@ const Notifications: FC<Record<string, never>> = () => {
 
   return (
     <>
-      <PageHeader>
-        <PageHeaderTitle title={'Notifications'} />
-      </PageHeader>
+      <PageHeader title={'Notifications'} />
       <>
         <PageSection>
           <Card>

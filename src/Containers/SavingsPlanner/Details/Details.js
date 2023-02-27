@@ -7,12 +7,7 @@ import DetailsTab from './DetailsTab';
 import StatisticsTab from './StatisticsTab';
 import ApiErrorState from '../../../Components/ApiStatus/ApiErrorState';
 
-import {
-  PageHeader,
-  PageHeaderTitle,
-} from '@redhat-cloud-services/frontend-components/PageHeader';
-
-import Breadcrumbs from '../../../Components/Breadcrumbs';
+import { PageHeader } from '@ansible/ansible-ui-framework';
 
 import { readPlan } from '../../../Api/';
 
@@ -75,8 +70,14 @@ const Details = () => {
 
   const breadcrumbsItems = dataSuccess
     ? [
-        { title: 'Savings Planner', navigate: '../savings-planner' },
-        { title: plan.name, navigate: `../savings-planner/${id}` },
+        {
+          label: 'Savings Planner',
+          to: 'ansible/automation-analytics/savings-planner',
+        },
+        {
+          label: plan.name,
+          to: `ansible/automation-analytics/savings-planner/${id}`,
+        },
       ]
     : [];
 
@@ -85,10 +86,7 @@ const Details = () => {
       {dataError && <ApiErrorState message={dataError.error} />}
       {dataSuccess && (
         <>
-          <PageHeader>
-            <Breadcrumbs items={breadcrumbsItems} />
-            <PageHeaderTitle title={pageTitle} />
-          </PageHeader>
+          <PageHeader breadcrumbs={breadcrumbsItems} title={pageTitle} />
           <PageSection>
             <Card>
               {location.pathname.includes('edit') && (

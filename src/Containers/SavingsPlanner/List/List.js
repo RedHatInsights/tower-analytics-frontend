@@ -2,16 +2,12 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
 import {
-  PageHeader,
-  PageHeaderTitle,
-} from '@redhat-cloud-services/frontend-components/PageHeader';
-import {
   Button,
   Gallery,
   PageSection as FrameworkPageSection,
   PaginationVariant,
 } from '@patternfly/react-core';
-import { PageLayout } from '@ansible/ansible-ui-framework';
+import { PageHeader, PageLayout } from '@ansible/ansible-ui-framework';
 
 import { deletePlans, readPlanOptions, readPlans } from '../../../Api/';
 import FilterableToolbar from '../../../Components/Toolbar';
@@ -30,7 +26,7 @@ import ErrorDetail from '../../../Components/ErrorDetail';
 import AlertModal from '../../../Components/AlertModal';
 
 const PageSection = styled(FrameworkPageSection)`
-  height: calc(100vh - 303px);
+  height: calc(100vh - 290px);
 `;
 
 const Footer = styled.div`
@@ -152,53 +148,51 @@ const List = () => {
 
   return (
     <PageLayout>
-      <PageHeader>
-        <PageHeaderTitle title={'Savings Planner'} />
-        <FilterableToolbar
-          categories={combinedOptions}
-          filters={queryParams}
-          setFilters={setFromToolbar}
-          additionalControls={[
-            ...(canWrite
-              ? [
-                  <Button
-                    key="add-plan-button"
-                    data-cy={'add-plan-button'}
-                    variant="primary"
-                    aria-label="Add plan"
-                    onClick={() => {
-                      navigate(createUrl(`${pathname}/add`));
-                    }}
-                  >
-                    Add plan
-                  </Button>,
-                ]
-              : []),
-            canWrite && isSuccess && data.length > 0 && (
-              <ToolbarDeleteButton
-                key="delete-plan-button"
-                data-cy={'delete-plan-button'}
-                onDelete={handleDelete}
-                itemsToDelete={data.filter((d) => selected.includes(d.id))}
-                pluralizedItemName={'Savings plan'}
-              />
-            ),
-          ]}
-          pagination={
-            itemsIsSuccess && data.length > 0 ? (
-              <Pagination
-                count={meta.count}
-                params={{
-                  limit: +queryParams.limit,
-                  offset: +queryParams.offset,
-                }}
-                setPagination={setFromPagination}
-                isCompact
-              />
-            ) : null
-          }
-        />
-      </PageHeader>
+      <PageHeader title={'Savings Planner'} />
+      <FilterableToolbar
+        categories={combinedOptions}
+        filters={queryParams}
+        setFilters={setFromToolbar}
+        additionalControls={[
+          ...(canWrite
+            ? [
+                <Button
+                  key="add-plan-button"
+                  data-cy={'add-plan-button'}
+                  variant="primary"
+                  aria-label="Add plan"
+                  onClick={() => {
+                    navigate(createUrl(`${pathname}/add`));
+                  }}
+                >
+                  Add plan
+                </Button>,
+              ]
+            : []),
+          canWrite && isSuccess && data.length > 0 && (
+            <ToolbarDeleteButton
+              key="delete-plan-button"
+              data-cy={'delete-plan-button'}
+              onDelete={handleDelete}
+              itemsToDelete={data.filter((d) => selected.includes(d.id))}
+              pluralizedItemName={'Savings plan'}
+            />
+          ),
+        ]}
+        pagination={
+          itemsIsSuccess && data.length > 0 ? (
+            <Pagination
+              count={meta.count}
+              params={{
+                limit: +queryParams.limit,
+                offset: +queryParams.offset,
+              }}
+              setPagination={setFromPagination}
+              isCompact
+            />
+          ) : null
+        }
+      />
       <PageSection hasOverflowScroll>{renderContent()}</PageSection>
       {data.length > 0 && !(itemsIsLoading || deleteLoading) && (
         <Footer>
