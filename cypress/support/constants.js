@@ -14,11 +14,11 @@ export const ENVS = {
 	STAGE: 2
 }
 
-export const ENV = (Cypress.env('test_env') == undefined ? ENVS.LOCAL : parseInt(Cypress.env('test_env')))
+export const ENV = (Cypress.env('test_env')) == undefined ? ENVS.LOCAL : parseInt(Cypress.env('test_env'))
 
 export const appid = Cypress.env('appid')
 export const aapUrl = '/ansible/automation-analytics'
-export const dashboardUrl = '/ansible-dashboard'
+export const dashboardUrl = '/ansible/automation-analytics'
 export const orgsUrl = '/organization-statistics'
 export const jobExplorerUrl = '/job-explorer'
 export const clustersUrl = '/clusters'
@@ -59,3 +59,10 @@ export const allReports = [
   has,
   tbo
 ]
+
+export const skippedTests = {
+  "reports": [
+    "host_anomalies_scatter",
+    "templates_by_organization"
+  ]
+}

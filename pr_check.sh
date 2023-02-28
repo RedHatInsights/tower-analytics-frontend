@@ -93,12 +93,12 @@ cat <<EOF
 			"name": "cypress",
 			"resources": {
 				"limits": {
-					"cpu": "1",
-					"memory": "2Gi"
+					"cpu": "4",
+					"memory": "4Gi"
 				},
 				"requests": {
-					"cpu": "500m",
-					"memory": "1Gi"
+					"cpu": "2000m",
+					"memory": "4Gi"
                 }
 			},
 			"stdin": true,
@@ -138,8 +138,8 @@ export CYPRESS_ProjectID=wwyf7n
 export CYPRESS_RECORD=true
 export CYPRESS_USERNAME=jdoe
 export CYPRESS_PASSWORD=${CYPRESS_PW}
+export CYPRESS_test_env=1
 export CYPRESS_baseUrl=$UI_URL/ansible/automation-analytics
-
 export CYPRESS_defaultCommandTimeout=30000
 export CYPRESS_execTimeout=15000
 export CYPRESS_taskTimeout=30000
@@ -156,7 +156,7 @@ sed 's/runMode: 2,/runMode:1,/g' -i cypress.config.ts
 cat cypress.config.ts
 npm ci
 echo ">>> Cypress Chrome"
-/src/node_modules/cypress/bin/cypress run --env test_env=1 --spec 'cypress/e2e/**/*' --record --key ${CYPRESS_RECORD_KEY} --browser chrome --headless
+/src/node_modules/cypress/bin/cypress run --record --key ${CYPRESS_RECORD_KEY} --browser chrome --headless
 EOL
 
 cat /tmp/frontend/cypress_run.sh
