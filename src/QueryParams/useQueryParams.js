@@ -200,7 +200,6 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
       } else {
         dispatch({ type: 'SET_OFFSET', value: offset });
       }
-      
     },
     /* v0 api usage after this line */
     setSeverity: (severity) =>
