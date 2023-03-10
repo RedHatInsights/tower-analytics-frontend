@@ -8,6 +8,7 @@ import { DEFAULT_NAMESPACE } from './helpers';
 
 const paramsReducer = (state, { type, value }) => {
   let newValues = state.chartSeriesHiddenProps;
+  if (type !== 'SET_OFFSET') state.offset = '0';
   switch (type) {
     /* v0 api reducers */
     case 'SET_STARTDATE':
@@ -192,8 +193,6 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
       } else {
         dispatch({ type: actionMapper[varName], value: { [varName]: value } });
       }
-      //reset pagination when filter is set
-      dispatch({ type: 'SET_OFFSET', value: 0 });
     },
     setFromPagination: (offset, limit = null) => {
       if (limit) {
