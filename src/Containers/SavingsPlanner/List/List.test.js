@@ -1,5 +1,5 @@
 import { act } from 'react-dom/test-utils';
-import { screen, waitFor } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { renderPage } from '../../../__tests__/helpers.reactTestingLib';
 import List from './List';
 
@@ -11,6 +11,11 @@ describe('SavingsPlanner/List', () => {
   beforeEach(() => {
     api.preflightRequest.mockResolvedValue(mockResponses.preflightRequest200);
     api.readPlanOptions.mockResolvedValue(mockResponses.readPlansOptions);
+    api.readPlans.mockResolvedValue(mockResponses.readPlans);
+  });
+
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   it('user can see a empty list message with add plan button', async () => {
@@ -36,5 +41,19 @@ describe('SavingsPlanner/List', () => {
     const planName = mockResponses.readPlans.items[0].name;
     //console.log(mockResponses.readPlans.items[0].name);
     expect(screen.getByText(planName));
+  });
+
+  it('should verify count of api requests made when name filter button is selected', async () => {
+    await act(async () => {
+      renderPage(List);
+    });
+
+    await waitFor(() => {
+      fireEvent.click(
+        screen.getByRole('button', { name: 'Search button for Name' })
+      );
+    });
+    expect(api.readPlans).toHaveBeenCalledTimes(2);
+    expect(api.readPlanOptions).toHaveBeenCalledTimes(1);
   });
 });

@@ -11,11 +11,13 @@ describe('Report: Templates Explorer Smoketests', () => {
   });
 
   it('Can navigate through the pages', () => {
+    cy.log(pageName);
     cy.testNavArrowsFlow('top_pagination', pageName);
     cy.testNavArrowsFlow('pagination_bottom', pageName);
   });
 
   it('Can change the number of items shown on the list', () => {
+    cy.log(pageName);
     cy.testItemsListFlow('top_pagination', pageName);
     cy.testItemsListFlow('pagination_bottom', pageName);
   });

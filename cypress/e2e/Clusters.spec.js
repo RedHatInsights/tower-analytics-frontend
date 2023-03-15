@@ -107,7 +107,7 @@ describe('Clusters page', () => {
     cy.get('button').contains('Cluster').click();
     cy.get('[data-cy="cluster_id"]').find('button').click();
     cy.get('[data-cy="3"]').find('input').check();
-    cy.get('[data-cy="cluster_id"]').find('button').click();
+    // cy.get('[data-cy="cluster_id"]').find('button').click();
     // Wait for loading and check the selected filter is present
     cy.get('.pf-c-empty-state__content').should('not.exist');
     cy.get('.pf-c-chip-group__main').contains('Cluster').should('exist');
