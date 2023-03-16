@@ -25,6 +25,7 @@ const App = () => {
   useEffect(() => {
     identifyApp('automation-analytics');
     updateDocumentTitle(APPLICATION_NAME);
+    fetchPreflight();
   }, []);
 
   useEffect(() => {
