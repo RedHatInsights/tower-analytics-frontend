@@ -10,10 +10,7 @@ import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
 
 import { readJobExplorer, readHostExplorer, readOrgOptions } from '../../Api/';
 
-import {
-  PageHeader,
-  PageHeaderTitle,
-} from '@redhat-cloud-services/frontend-components/PageHeader';
+import { PageHeader } from '@ansible/ansible-ui-framework';
 
 import { Link, useNavigate } from 'react-router-dom';
 import {
@@ -335,14 +332,12 @@ const OrganizationStatistics = () => {
 
   return (
     <>
-      <PageHeader>
-        <PageHeaderTitle title={'Organization Statistics'} />
-        <FilterableToolbar
-          categories={options}
-          filters={queryParams}
-          setFilters={setFromToolbar}
-        />
-      </PageHeader>
+      <PageHeader title={'Organization Statistics'} />
+      <FilterableToolbar
+        categories={options}
+        filters={queryParams}
+        setFilters={setFromToolbar}
+      />
       <PageSection>{renderContent()}</PageSection>
     </>
   );

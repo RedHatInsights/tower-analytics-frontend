@@ -9,10 +9,7 @@ import {
 
 import { jobExplorer } from '../../Utilities/constants';
 
-import {
-  PageHeader,
-  PageHeaderTitle,
-} from '@redhat-cloud-services/frontend-components/PageHeader';
+import { PageHeader } from '@ansible/ansible-ui-framework';
 
 import {
   Card,
@@ -207,14 +204,12 @@ const Clusters = () => {
 
   return (
     <>
-      <PageHeader data-cy={'header-clusters'}>
-        <PageHeaderTitle title={'Clusters'} />
-        <FilterableToolbar
-          categories={options}
-          filters={queryParams}
-          setFilters={setFromToolbar}
-        />
-      </PageHeader>
+      <PageHeader data-cy={'header-clusters'} title={'Clusters'} />
+      <FilterableToolbar
+        categories={options}
+        filters={queryParams}
+        setFilters={setFromToolbar}
+      />
       <PageSection>{renderContent()}</PageSection>
     </>
   );
