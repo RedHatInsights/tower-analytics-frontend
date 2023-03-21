@@ -3,12 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 import { Card, CardBody, PageSection } from '@patternfly/react-core';
 
-import {
-  PageHeader,
-  PageHeaderTitle,
-} from '@redhat-cloud-services/frontend-components/PageHeader';
-
-import Breadcrumbs from '../../../Components/Breadcrumbs';
+import { PageHeader } from '@ansible/ansible-ui-framework';
 
 import { readPlanOptions } from '../../../Api/';
 
@@ -36,12 +31,15 @@ const Add = () => {
 
   const showAdd = () => (
     <>
-      <PageHeader>
-        <Breadcrumbs
-          items={[{ title: 'Savings Planner', navigate: '../savings-planner' }]}
-        />
-        <PageHeaderTitle title={title} />
-      </PageHeader>
+      <PageHeader
+        breadcrumbs={[
+          {
+            label: 'Savings Planner',
+            to: 'ansible/automation-analytics/savings-planner',
+          },
+        ]}
+        title={title}
+      />
       <PageSection>
         <Card>
           <CardBody>

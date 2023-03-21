@@ -13,11 +13,6 @@ import { readJobExplorer, readJobExplorerOptions } from '../../Api/';
 import { jobExplorer } from '../../Utilities/constants';
 
 import {
-  PageHeader,
-  PageHeaderTitle,
-} from '@redhat-cloud-services/frontend-components/PageHeader';
-
-import {
   Button,
   Card,
   CardBody,
@@ -43,7 +38,7 @@ import { ExpandableRowContent } from '@patternfly/react-table';
 
 import FilterableToolbar from '../../Components/Toolbar/';
 import { SettingsPanel } from '../../Components/Toolbar/Groups';
-import { PageTable, TextCell } from '@ansible/ansible-ui-framework';
+import { PageHeader, PageTable, TextCell } from '@ansible/ansible-ui-framework';
 
 const JobExplorer = () => {
   const {
@@ -284,9 +279,7 @@ const JobExplorer = () => {
 
   return (
     <React.Fragment>
-      <PageHeader>
-        <PageHeaderTitle title={'Job Explorer'} />
-      </PageHeader>
+      <PageHeader title={'Job Explorer'} />
       <PageSection>
         <Card>
           <CardBody>

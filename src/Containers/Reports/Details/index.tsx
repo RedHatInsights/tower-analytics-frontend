@@ -1,15 +1,10 @@
 import React, { FunctionComponent, useEffect } from 'react';
-import styled from 'styled-components';
 import Error404 from '../../../Components/Error404';
 
+import { PageHeader } from '@ansible/ansible-ui-framework';
 import {
-  PageHeader,
-  PageHeaderTitle,
-} from '@redhat-cloud-services/frontend-components/PageHeader';
-
-import Breadcrumbs from '../../../Components/Breadcrumbs';
-import {
-  Label as PFLabel,
+  Label,
+  LabelGroup,
   PageSection,
   Tooltip,
   TooltipPosition,
@@ -20,17 +15,6 @@ import { TAGS } from '../Shared/constants';
 import { ReportSchema } from '../Layouts/types';
 import useRequest from '../../../Utilities/useRequest';
 import { readReport } from '../../../Api';
-
-const Description = styled.p`
-  max-width: 70em;
-  padding-top: 8px;
-`;
-
-const Label = styled(PFLabel)`
-  margin-top: 16px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-`;
 
 const Details: FunctionComponent<Record<string, never>> = () => {
   const slug = location.pathname.split('/').pop() as string;
@@ -50,33 +34,42 @@ const Details: FunctionComponent<Record<string, never>> = () => {
     fetchReport();
   }, [slug]);
 
-  const breadcrumbsItems = [{ title: 'Reports', navigate: '../reports' }];
+  const breadcrumbsItems = [
+    { label: 'Reports', to: 'ansible/automation-analytics/reports' },
+  ];
+
   const render = () => {
     if (isSuccess) {
       const { name, description, tags } = report.layoutProps;
+      const reportTags = (
+        <LabelGroup numLabels={6}>
+          {tags.map((tagKey, idx) => {
+            const tag = TAGS.find((t) => t.key === tagKey);
+            if (tag) {
+              return (
+                <Tooltip
+                  key={`tooltip_${idx}`}
+                  position={TooltipPosition.bottom}
+                  content={tag.description}
+                >
+                  <Label data-cy={tag.name} key={idx}>
+                    {tag.name}
+                  </Label>
+                </Tooltip>
+              );
+            }
+          })}
+        </LabelGroup>
+      );
       return (
         <>
-          <PageHeader data-cy={`header-${slug}`}>
-            <Breadcrumbs items={breadcrumbsItems} />
-            <PageHeaderTitle title={name} />
-            <Description>{description}</Description>
-            {tags.map((tagKey, idx) => {
-              const tag = TAGS.find((t) => t.key === tagKey);
-              if (tag) {
-                return (
-                  <Tooltip
-                    key={`tooltip_${idx}`}
-                    position={TooltipPosition.bottom}
-                    content={tag.description}
-                  >
-                    <Label data-cy={tag.name} key={idx}>
-                      {tag.name}
-                    </Label>
-                  </Tooltip>
-                );
-              }
-            })}
-          </PageHeader>
+          <PageHeader
+            data-cy={`header-${slug}`}
+            breadcrumbs={breadcrumbsItems}
+            title={name}
+            description={description}
+            footer={reportTags}
+          />
           <PageSection>{getComponent(report, true)}</PageSection>
         </>
       );

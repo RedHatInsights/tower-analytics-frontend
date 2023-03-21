@@ -2,10 +2,7 @@
 // @ts-nocheck
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  PageHeader,
-  PageHeaderTitle,
-} from '@redhat-cloud-services/frontend-components/PageHeader';
+import { PageHeader } from '@ansible/ansible-ui-framework';
 import {
   Button,
   ButtonVariant,
@@ -124,14 +121,12 @@ const List: FunctionComponent<Record<string, never>> = () => {
 
   return (
     <>
-      <PageHeader data-cy={'header-all_reports'}>
-        <PageHeaderTitle title={'Reports'} />
-        <FilterableToolbar
-          categories={options}
-          filters={queryParams}
-          setFilters={setFromToolbar}
-        />
-      </PageHeader>
+      <PageHeader data-cy={'header-all_reports'} title={'Reports'} />
+      <FilterableToolbar
+        categories={options}
+        filters={queryParams}
+        setFilters={setFromToolbar}
+      />
       {isSuccess && reports.length > 0 && isReportSuccess && (
         <PageSection>
           {reports
