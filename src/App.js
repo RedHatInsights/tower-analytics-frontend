@@ -22,11 +22,12 @@ const App = () => {
   } = useRequest(preflightRequest, {});
   const location = useLocation();
   const { identifyApp, updateDocumentTitle } = useChrome();
+
   useEffect(() => {
     identifyApp('automation-analytics');
     updateDocumentTitle(APPLICATION_NAME);
     fetchPreflight();
-  }, [location.pathname]);
+  }, []);
 
   useEffect(() => {
     fetchPreflight();
