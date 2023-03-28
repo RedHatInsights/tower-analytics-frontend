@@ -24,10 +24,9 @@ const App = () => {
   const { identifyApp, updateDocumentTitle } = useChrome();
 
   useEffect(() => {
-    identifyApp('automation-analytics');
+    identifyApp(APPLICATION_NAME);
     updateDocumentTitle(APPLICATION_NAME);
     fetchPreflight();
-    console.log(identifyApp('automation-analytics'));
   }, []);
 
   useEffect(() => {
