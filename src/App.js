@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { AnalyticsRoutes } from './Routes';
 import './App.scss';
 import packageJson from '../package.json';
+import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 
 import useRequest from './Utilities/useRequest';
 import { preflightRequest } from './Api/';
@@ -11,27 +12,21 @@ import AuthorizationErrorPage from './Components/ApiStatus/AuthorizationErrorPag
 const el = document.getElementById('global-filter');
 if (el) el.style.display = 'none';
 
+let APPLICATION_NAME = 'automation-analytics';
+
 const App = () => {
-  const navigate = useNavigate();
   const {
     error,
     request: fetchPreflight,
     isLoading,
   } = useRequest(preflightRequest, {});
   const location = useLocation();
+  const { identifyApp, updateDocumentTitle } = useChrome();
 
   useEffect(() => {
-    insights.chrome.init();
-    insights.chrome.identifyApp('automation-analytics');
-    const appNav = insights.chrome.on('APP_NAVIGATION', (event) => {
-      navigate(`/${event.navId}`);
-    });
-
-    // Fetch on first load and then on page changes
+    identifyApp(APPLICATION_NAME);
+    updateDocumentTitle(APPLICATION_NAME);
     fetchPreflight();
-    return () => {
-      appNav();
-    };
   }, []);
 
   useEffect(() => {

@@ -3,6 +3,13 @@ import { act } from 'react-dom/test-utils';
 import { mountPage } from './__tests__/helpers';
 import packageJson from '../package.json';
 
+jest.mock('@redhat-cloud-services/frontend-components/useChrome', () => {
+  return jest.fn().mockReturnValue({
+    identifyApp: jest.fn(),
+    updateDocumentTitle: jest.fn(),
+  });
+});
+
 describe('App', () => {
   it('should have function', () => {
     expect(App).toBeTruthy();
