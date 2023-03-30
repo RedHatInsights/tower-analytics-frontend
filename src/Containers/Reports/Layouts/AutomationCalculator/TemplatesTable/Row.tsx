@@ -102,14 +102,22 @@ const Row: FunctionComponent<Props> = ({
               style={{ maxWidth: '150px' }}
               type="number"
               aria-label="time run manually"
-              value={template.avgRunTime / 60}
-              onBlur={() => window.localStorage.setItem('focused', '')}
-              onChange={(minutes) => {
+              defaultValue={template.avgRunTime / 60}
+              onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
+                const minutes = +event.target.value;
+                if (minutes <= 0 || isNaN(minutes)) {
+                  event.target.value = '60';
+                  setDataRunTime(+event.target.value * 60, template.id);
+                } else {
+                  setDataRunTime(minutes * 60, template.id);
+                }
+                window.localStorage.setItem('focused', '');
+              }}
+              onChange={() => {
                 window.localStorage.setItem(
                   'focused',
                   'manual-time-' + template.id.toString()
                 );
-                setDataRunTime(+minutes * 60, template.id);
               }}
               isDisabled={readOnly}
             />
