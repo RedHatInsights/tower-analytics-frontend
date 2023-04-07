@@ -28,6 +28,9 @@ describe('Utilities/helpers/formatDate', () => {
   it('handles stringy ISO formats with timestamps', () => {
     expect(formatDate('2020-10-01T00:00:00')).toBe('2020-10-01');
   });
+  it('handle date objects', () => {
+    expect(formatDate(new Date('2020-10-01'))).toBe('2020-10-01');
+  });
 });
 
 describe('Utilities/helpers/getTotal', () => {
