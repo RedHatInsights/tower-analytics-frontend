@@ -10,8 +10,10 @@ export const formatTotalTime = (elapsed: number): string =>
 export const formatDateTime = (dateTime: string | number): string =>
   moment(new Date(dateTime).toISOString()).format('M/D/YYYY h:mm:ssa');
 
-export const formatDate = (date: Date | string): string =>
-  moment(date).format('YYYY-MM-DD');
+export const formatDate = (date: Date | string): string => {
+  console.log('xxxxxxxxxxx', typeof date, moment(date), moment.version);
+  return moment(date).format('YYYY-MM-DD');
+};
 
 export const getTotal = (
   data: { count: number | string }[]
