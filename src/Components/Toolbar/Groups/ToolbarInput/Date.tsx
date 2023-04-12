@@ -19,11 +19,21 @@ const DateInput: FunctionComponent<Props> = ({
   otherProps = {},
 }) => {
   const options = optionsForCategories[categoryKey];
+  const handleSetValue = (category: string, newValue: string) => {
+    console.log(
+      'xxxxxxxxx in Date.tsx',
+      options.name,
+      newValue,
+      JSON.stringify(options),
+      category
+    );
+    setValue(newValue);
+  };
   return (
     <DatePicker
       aria-label={options.name}
       value={value}
-      onChange={setValue}
+      onChange={(e) => handleSetValue('start_date', e)}
       inputProps={{
         isReadOnly: true,
       }}
@@ -40,3 +50,4 @@ DateInput.propTypes = {
 };
 
 export default DateInput;
+console.log(DateInput);
