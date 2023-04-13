@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from 'react';
+import React, { FormEvent, FunctionComponent } from 'react';
 import PropTypes from 'prop-types';
 import { DatePicker } from '@patternfly/react-core';
 import { optionsForCategories } from '../../constants';
@@ -19,16 +19,17 @@ const DateInput: FunctionComponent<Props> = ({
   otherProps = {},
 }) => {
   const options = optionsForCategories[categoryKey];
-  const handleSetValue = (event: string | Date | undefined) => {
-    if (typeof event !== 'undefined') setValue(new Date(event));
+  const handleSetValue = (
+    event: FormEvent<HTMLInputElement>,
+    value: string | Date | undefined
+  ) => {
+    setValue(value);
   };
   return (
     <DatePicker
       aria-label={options.name}
-      id={categoryKey}
-      key={categoryKey}
       value={value}
-      onChange={(event, value) => handleSetValue(value)}
+      onChange={(_event, value) => handleSetValue(_event, value)}
       inputProps={{
         isReadOnly: true,
       }}
