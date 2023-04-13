@@ -21,17 +21,18 @@ const DateInput: FunctionComponent<Props> = ({
   const options = optionsForCategories[categoryKey];
   const handleSetValue = (category: string, newValue: string) => {
     console.log(
-      'xxxxxxxxx in Date.tsx',
-      options.name,
-      newValue,
+      '1111111111 in DateInput',
+      categoryKey,
       JSON.stringify(options),
-      category
+      options.name
     );
     setValue(newValue);
   };
   return (
     <DatePicker
       aria-label={options.name}
+      id={categoryKey}
+      key={categoryKey}
       value={value}
       onChange={(e) => handleSetValue('start_date', e)}
       inputProps={{
