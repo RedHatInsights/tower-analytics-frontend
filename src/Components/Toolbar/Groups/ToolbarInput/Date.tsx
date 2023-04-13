@@ -21,10 +21,10 @@ const DateInput: FunctionComponent<Props> = ({
   const options = optionsForCategories[categoryKey];
   const handleSetValue = (category: string, newValue: string) => {
     console.log(
-      '1111111111 in DateInput',
+      '2222222 in DateInput',
       categoryKey,
-      JSON.stringify(options),
-      options.name
+      newValue,
+      JSON.stringify(options)
     );
     setValue(newValue);
   };
@@ -34,7 +34,7 @@ const DateInput: FunctionComponent<Props> = ({
       id={categoryKey}
       key={categoryKey}
       value={value}
-      onChange={(e) => handleSetValue('start_date', e)}
+      onChange={(e) => handleSetValue(categoryKey, e)}
       inputProps={{
         isReadOnly: true,
       }}
