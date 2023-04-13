@@ -6,7 +6,7 @@ import { optionsForCategories } from '../../constants';
 interface Props {
   categoryKey: string;
   value?: string;
-  setValue?: (value: string | Date | undefined) => void;
+  setValue?: (value: string | Date) => void;
   otherProps?: {
     [x: string]: unknown;
   };
@@ -21,7 +21,7 @@ const DateInput: FunctionComponent<Props> = ({
   const options = optionsForCategories[categoryKey];
   const handleSetValue = (
     event: FormEvent<HTMLInputElement>,
-    value: string | Date | undefined
+    value: string | Date
   ) => {
     setValue(value);
   };
@@ -29,7 +29,7 @@ const DateInput: FunctionComponent<Props> = ({
     <DatePicker
       aria-label={options.name}
       value={value}
-      onChange={(_event, value) => handleSetValue(_event, value)}
+      onChange={(event, value) => handleSetValue(event, value)}
       inputProps={{
         isReadOnly: true,
       }}
