@@ -1,4 +1,4 @@
-import React, { FormEvent, FunctionComponent } from 'react';
+import React, { FunctionComponent } from 'react';
 import PropTypes from 'prop-types';
 import { DatePicker } from '@patternfly/react-core';
 import { optionsForCategories } from '../../constants';
