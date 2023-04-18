@@ -6,7 +6,7 @@ import { optionsForCategories } from '../../constants';
 interface Props {
   categoryKey: string;
   value?: string;
-  setValue?: (value: string | Date | undefined) => void;
+  setValue?: (value: string | Date) => void;
   otherProps?: {
     [x: string]: unknown;
   };
@@ -19,8 +19,8 @@ const DateInput: FunctionComponent<Props> = ({
   otherProps = {},
 }) => {
   const options = optionsForCategories[categoryKey];
-  const handleSetValue = (value: string | Date | undefined) => {
-    if (value !== undefined) setValue(value);
+  const handleSetValue = (value: string | Date) => {
+    setValue(value);
   };
   return (
     <DatePicker
@@ -28,7 +28,7 @@ const DateInput: FunctionComponent<Props> = ({
       id={categoryKey}
       key={categoryKey}
       value={value}
-      onChange={() => handleSetValue(value)}
+      onChange={(_event, value) => handleSetValue(value)}
       inputProps={{
         isReadOnly: true,
       }}
