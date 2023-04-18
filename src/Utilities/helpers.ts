@@ -11,6 +11,7 @@ export const formatDateTime = (dateTime: string | number): string =>
   moment(new Date(dateTime).toISOString()).format('M/D/YYYY h:mm:ssa');
 
 export const formatDate = (date: Date | string): string => {
+  console.log('xxxxxxxxxxx', typeof date, date, moment.version);
   return moment(date).format('YYYY-MM-DD');
 };
 
