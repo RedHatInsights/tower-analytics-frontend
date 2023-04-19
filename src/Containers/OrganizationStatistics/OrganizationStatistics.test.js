@@ -135,6 +135,10 @@ describe('Containers/OrganizationStatistics', () => {
   });
 
   it('should render without any errors', async () => {
+    fetchMock.post(
+      { url: jobExplorerUrl, overwriteRoutes: true },
+      { items: [] }
+    );
     await act(async () => {
       wrapper = mountPage(OrganizationStatistics);
     });
