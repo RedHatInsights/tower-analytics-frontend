@@ -14,8 +14,11 @@ import {
   Stack,
   StackItem,
   CardHeader,
+  CardActions,
   CardTitle,
   CardFooter,
+  ToggleGroup,
+  ToggleGroupItem,
   PaginationVariant,
   Spinner,
 } from '@patternfly/react-core';
@@ -61,6 +64,7 @@ import { NotificationType } from '../../../../globalTypes';
 import EmptyList from '../../../../Components/EmptyList';
 
 import { useNavigate } from 'react-router-dom';
+import { ChartThemeColor } from 'react-json-chart-builder';
 
 const SpinnerDiv = styled.div`
   height: 400px;
@@ -90,6 +94,21 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
     return { ...el, delta, manualCost, automatedCost };
   });
 
+const constants = (isMoney: boolean) => ({
+  cost: {
+    key: isMoney ? 'total_costs' : 'total_hours_spent_risk_adjusted',
+    color: '#8B8D8F',
+  },
+  benefit: {
+    key: isMoney ? 'total_benefits' : 'total_hours_saved',
+    color: isMoney ? 'var(--pf-global--success-color--100)' : '#0063CF',
+  },
+  net: {
+    key: isMoney ? 'cumulative_net_benefits' : 'cumulative_time_net_benefits',
+    color: '#EE7A00',
+  },
+});
+
 const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   slug,
   name,
@@ -108,6 +127,15 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
 
   const [costManual, setCostManual] = useState('');
   const [costAutomation, setCostAutomation] = useState('');
+  const [isMoney, setIsMoney] = useState(true);
+
+  const customTooltipFormatting: ChartLabelFormatFunction = ({ datum }) =>
+    isMoney ? currencyFormatter(+datum.y) : hoursFormatter(+datum.y);
+
+  const computeTotalSavings = (d: Data): number =>
+    isMoney
+      ? d.projections.series_stats[3].cumulative_net_benefits
+      : d.projections.series_stats[3].cumulative_time_net_benefits;
 
   const mapApi = ({ legend = [] }) => {
     return legend.map((el) => ({
@@ -338,8 +366,14 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     label:
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
+    yAxis: {
+      label: isMoney
+        ? 'Money saved from successful hosts'
+        : 'Hours saved from successful hosts',
+    },
   };
 
+  console.log(chartParams);
   const formattedValue = (key: string, value: number) => {
     let val;
     switch (key) {
@@ -379,6 +413,22 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       {fullCard && (
         <CardHeader>
           <CardTitle>Automation savings</CardTitle>
+          <CardActions>
+            <ToggleGroup aria-label="toggleButton">
+              <ToggleGroupItem
+                text="Money"
+                buttonId="money"
+                isSelected={isMoney}
+                onChange={() => setIsMoney(true)}
+              />
+              <ToggleGroupItem
+                text="Time"
+                buttonId="time"
+                isSelected={!isMoney}
+                onChange={() => setIsMoney(false)}
+              />
+            </ToggleGroup>
+          </CardActions>
         </CardHeader>
       )}
       {api.isLoading ? (
@@ -391,6 +441,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             label: chartParams.label,
             tooltip: chartParams.tooltip,
             field: chartParams.field,
+            yAxis: chartParams.yAxis,
           })}
           data={{
             items: filterDisabled(api.result.items),
