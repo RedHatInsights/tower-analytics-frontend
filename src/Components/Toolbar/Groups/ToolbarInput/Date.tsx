@@ -6,7 +6,7 @@ import { optionsForCategories } from '../../constants';
 interface Props {
   categoryKey: string;
   value?: string;
-  setValue?: (value: string | Date) => void;
+  setValue?: (value: string | Date | undefined) => void;
   otherProps?: {
     [x: string]: unknown;
   };
@@ -19,7 +19,7 @@ const DateInput: FunctionComponent<Props> = ({
   otherProps = {},
 }) => {
   const options = optionsForCategories[categoryKey];
-  const handleSetValue = (value: string | Date) => {
+  const handleSetValue = (value: string | Date | undefined) => {
     setValue(value);
   };
   return (
@@ -45,4 +45,3 @@ DateInput.propTypes = {
 };
 
 export default DateInput;
-console.log(DateInput);
