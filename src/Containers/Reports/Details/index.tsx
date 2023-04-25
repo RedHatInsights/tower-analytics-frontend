@@ -35,7 +35,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
   }, [slug]);
 
   const breadcrumbsItems = [
-    { label: 'Reports', to: 'ansible/automation-analytics/reports' },
+    { label: 'Reports', to: '/ansible/automation-analytics/reports' },
   ];
 
   const render = () => {

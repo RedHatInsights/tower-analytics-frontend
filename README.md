@@ -11,7 +11,7 @@ Automation Analytics provides data analytics for Ansible Tower that provides vis
 1. `npm ci` - install dependencies from the lockfile
 2. get the backend running: [automation analytics backend](https://gitlab.cee.redhat.com/automation-analytics/automation-analytics-backend)
 3. `npm start` - starts standalone: webpack serves the files alongside with insights, rbac and keycloak.
-4. Go to `http://localhost:1337/beta/ansible/automation-analytics` and use the admin/admin credentials to login.
+4. Go to `http://localhost:1337/preview/ansible/automation-analytics` and use the admin/admin credentials to login.
 
 When you have M1 Mac:
 - `npm ci` - install dependencies from the lockfile
@@ -31,7 +31,7 @@ docker run -p 4001:8080 -e KEYCLOAK_USER=admin -e KEYCLOAK_PASSWORD=admin -e DB_
 - in `node_modules/@redhat-cloud-services/frontend-components-config-utilities/standalone/services/rbac.js` change `redis:5.0.4` to `redis:latest`
 - in `node_modules/@redhat-cloud-services/frontend-components-config-utilities/standalone/services/default/chrome.js` change whole `args` for keycloak to `node` (must be a container that will build and run without errors and not consume port 4001)
 - `npm run start`
-- Go to `http://localhost:1337/beta/ansible/automation-analytics` and use the admin/admin credentials to login.
+- Go to `http://localhost:1337/preview/ansible/automation-analytics` and use the admin/admin credentials to login.
 
 Note that after running `npm install` or `npm ci` changes in `node_modules` will be lost. You can use this script to do it
 ```

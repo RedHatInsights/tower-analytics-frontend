@@ -51,31 +51,31 @@ objects:
 
         - appId: "automationAnalytics"
           title: "Beta Reports"
-          href: "/beta/ansible/automation-analytics/reports"
+          href: "/preview/ansible/automation-analytics/reports"
           product: "Red Hat Insights"
         - appId: "automationAnalytics"
           title: "Beta Savings Planner"
-          href: "/beta/ansible/automation-analytics/savings-planner"
+          href: "/preview/ansible/automation-analytics/savings-planner"
           product: "Red Hat Insights"
         - appId: "automationAnalytics"
           title: "Beta Automation Calculator"
-          href: "/beta/ansible/automation-analytics/automation_calculator"
+          href: "/preview/ansible/automation-analytics/automation_calculator"
           product: "Red Hat Insights"
         - appId: "automationAnalytics"
           title: "Beta Organization Statistics"
-          href: "/beta/ansible/automation-analytics/organization-statistics"
+          href: "/preview/ansible/automation-analytics/organization-statistics"
           product: "Red Hat Insights"
         - appId: "automationAnalytics"
           title: "Beta Job Explorer"
-          href: "/beta/ansible/automation-analytics/job-explorer"
+          href: "/preview/ansible/automation-analytics/job-explorer"
           product: "Red Hat Insights"
         - appId: "automationAnalytics"
           title: "Beta Clusters"
-          href: "/beta/ansible/automation-analytics/clusters"
+          href: "/preview/ansible/automation-analytics/clusters"
           product: "Red Hat Insights"
         - appId: "automationAnalytics"
           title: "Beta Notifications"
-          href: "/beta/ansible/automation-analytics/notifications"
+          href: "/preview/ansible/automation-analytics/notifications"
           product: "Red Hat Insights"
 
       module:
@@ -89,6 +89,7 @@ objects:
               # cross reference againt paths above and make sure it matches
               - pathname: /ansible/automation-analytics
               - pathname: /beta/ansible/automation-analytics
+              - pathname: /preview/ansible/automation-analytics
 
 parameters:
   - name: ENV_NAME

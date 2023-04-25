@@ -72,11 +72,11 @@ const Details = () => {
     ? [
         {
           label: 'Savings Planner',
-          to: 'ansible/automation-analytics/savings-planner',
+          to: '/ansible/automation-analytics/savings-planner',
         },
         {
           label: plan.name,
-          to: `ansible/automation-analytics/savings-planner/${id}`,
+          to: `/ansible/automation-analytics/savings-planner/${id}`,
         },
       ]
     : [];

@@ -63,6 +63,7 @@ const { config: webpackConfig, plugins } = config({
   sassPrefix: '.automation-analytics, .automationAnalytics',
   appUrl: [
     '/beta/ansible/automation-analytics/',
+    '/preview/ansible/automation-analytics/',
     '/ansible/automation-analytics/',
   ],
   ...(env === 'standalone' && { deployment: 'beta/apps' }),
