@@ -35,7 +35,7 @@ const Add = () => {
         breadcrumbs={[
           {
             label: 'Savings Planner',
-            to: 'ansible/automation-analytics/savings-planner',
+            to: '/ansible/automation-analytics/savings-planner',
           },
         ]}
         title={title}
