@@ -84,6 +84,7 @@ export interface PdfDetailsProps {
   endDate: string;
   dateRange: string;
   inputs?: { automationCost: number; manualCost: number };
+  adoptionRateType: string;
 }
 
 export interface TypeValue {
