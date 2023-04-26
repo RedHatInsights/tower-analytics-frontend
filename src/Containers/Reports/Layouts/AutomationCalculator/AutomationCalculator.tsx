@@ -304,6 +304,14 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       : api.result?.successful_hosts_saved_hours_current_page +
         api.result?.successful_hosts_saved_hours_other_pages;
 
+  const constants = (isMoney: boolean) => ({
+    currentPageSavings: {
+      value: isMoney
+        ? api.result?.monetary_gain_current_page
+        : api.result?.successful_hosts_saved_hours_current_page,
+    },
+  });
+
   /**
    * Set cost from API on load. Don't reload it.
    */
@@ -462,7 +470,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         <TotalSavings
           isMoney={isMoney}
           totalSavings={computeTotalSavings()}
-          currentPageSavings={api.result?.monetary_gain_current_page}
+          currentPageSavings={constants(isMoney).currentPageSavings.value}
           isLoading={api.isLoading}
         />
       </StackItem>
