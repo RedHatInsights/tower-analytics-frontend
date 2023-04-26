@@ -9,7 +9,6 @@ import { DEFAULT_NAMESPACE } from './helpers';
 const paramsReducer = (state, { type, value }) => {
   let newValues = state.chartSeriesHiddenProps;
   if (type !== 'SET_OFFSET') state.offset = '0';
-  console.log('xxxxxxxxx in paramsReducer', type, value);
   switch (type) {
     /* v0 api reducers */
     case 'SET_STARTDATE':
