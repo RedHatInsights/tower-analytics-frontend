@@ -8,11 +8,13 @@ import {
 } from '@patternfly/react-core';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
 import styled from 'styled-components';
+import hoursFormatter from '../../../../Utilities/hoursFormatter';
 
 interface Props {
   totalSavings: number;
   currentPageSavings: number;
   isLoading: boolean;
+  isMoney: boolean;
 }
 const SpinnerDiv = styled.div`
   height: 46.8px;
@@ -23,6 +25,7 @@ const TotalSavings: FunctionComponent<Props> = ({
   totalSavings = 0,
   currentPageSavings = 0,
   isLoading = false,
+  isMoney = true,
 }) => (
   <>
     {['Total savings', 'Current page savings'].map((title, index) => (
@@ -43,8 +46,10 @@ const TotalSavings: FunctionComponent<Props> = ({
               <SpinnerDiv>
                 <Spinner data-cy={'spinner'} isSVG size="lg" />
               </SpinnerDiv>
-            ) : (
+            ) : isMoney ? (
               currencyFormatter(index === 0 ? totalSavings : currentPageSavings)
+            ) : (
+              hoursFormatter(index === 0 ? totalSavings : currentPageSavings)
             )}
           </Title>
         </CardBody>

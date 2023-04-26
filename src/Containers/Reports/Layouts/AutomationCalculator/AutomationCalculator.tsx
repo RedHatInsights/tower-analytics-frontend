@@ -57,6 +57,7 @@ import { endpointFunctionMap, saveROI } from '../../../../Api';
 import { AutmationCalculatorProps } from '../types';
 import hydrateSchema from '../../Shared/hydrateSchema';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
+import hoursFormatter from '../../../../Utilities/hoursFormatter';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
@@ -64,7 +65,6 @@ import { NotificationType } from '../../../../globalTypes';
 import EmptyList from '../../../../Components/EmptyList';
 
 import { useNavigate } from 'react-router-dom';
-import { ChartThemeColor } from 'react-json-chart-builder';
 
 const SpinnerDiv = styled.div`
   height: 400px;
@@ -94,21 +94,6 @@ const updateDeltaCost = (data, costAutomation, costManual) =>
     return { ...el, delta, manualCost, automatedCost };
   });
 
-const constants = (isMoney: boolean) => ({
-  cost: {
-    key: isMoney ? 'total_costs' : 'total_hours_spent_risk_adjusted',
-    color: '#8B8D8F',
-  },
-  benefit: {
-    key: isMoney ? 'total_benefits' : 'total_hours_saved',
-    color: isMoney ? 'var(--pf-global--success-color--100)' : '#0063CF',
-  },
-  net: {
-    key: isMoney ? 'cumulative_net_benefits' : 'cumulative_time_net_benefits',
-    color: '#EE7A00',
-  },
-});
-
 const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   slug,
   name,
@@ -128,14 +113,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const [costManual, setCostManual] = useState('');
   const [costAutomation, setCostAutomation] = useState('');
   const [isMoney, setIsMoney] = useState(true);
-
-  const customTooltipFormatting: ChartLabelFormatFunction = ({ datum }) =>
-    isMoney ? currencyFormatter(+datum.y) : hoursFormatter(+datum.y);
-
-  const computeTotalSavings = (d: Data): number =>
-    isMoney
-      ? d.projections.series_stats[3].cumulative_net_benefits
-      : d.projections.series_stats[3].cumulative_time_net_benefits;
 
   const mapApi = ({ legend = [] }) => {
     return legend.map((el) => ({
@@ -319,6 +296,14 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       },
     };
   };
+
+  const computeTotalSavings = () =>
+    isMoney
+      ? api.result?.monetary_gain_other_pages +
+        api.result?.monetary_gain_current_page
+      : api.result?.successful_hosts_saved_hours_current_page +
+        api.result?.successful_hosts_saved_hours_other_pages;
+
   /**
    * Set cost from API on load. Don't reload it.
    */
@@ -387,6 +372,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       case 'failed_hosts_costs':
       case 'monetary_gain':
         val = currencyFormatter(value);
+        break;
+      case 'successful_hosts_saved_hours':
+      case 'successful_hosts_saved_hours_current_page':
+      case 'successful_hosts_saved_hours_other_pages':
+        val = hoursFormatter(value);
         break;
       default:
         val = value.toFixed(2);
@@ -470,10 +460,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     <Stack>
       <StackItem>
         <TotalSavings
-          totalSavings={
-            api.result?.monetary_gain_other_pages +
-            api.result?.monetary_gain_current_page
-          }
+          isMoney={isMoney}
+          totalSavings={computeTotalSavings()}
           currentPageSavings={api.result?.monetary_gain_current_page}
           isLoading={api.isLoading}
         />
