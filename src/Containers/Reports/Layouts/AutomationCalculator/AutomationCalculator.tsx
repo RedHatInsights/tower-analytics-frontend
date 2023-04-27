@@ -304,13 +304,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       : api.result?.successful_hosts_saved_hours_current_page +
         api.result?.successful_hosts_saved_hours_other_pages;
 
-  const constants = (isMoney: boolean) => ({
-    currentPageSavings: {
-      value: isMoney
-        ? api.result?.monetary_gain_current_page
-        : api.result?.successful_hosts_saved_hours_current_page,
-    },
-  });
+  const computeCurrentPageSavings = () =>
+    isMoney
+      ? api.result?.monetary_gain_current_page
+      : api.result?.successful_hosts_saved_hours_current_page;
 
   /**
    * Set cost from API on load. Don't reload it.
@@ -366,7 +363,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     },
   };
 
-  console.log(chartParams);
   const formattedValue = (key: string, value: number) => {
     let val;
     switch (key) {
@@ -470,7 +466,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         <TotalSavings
           isMoney={isMoney}
           totalSavings={computeTotalSavings()}
-          currentPageSavings={constants(isMoney).currentPageSavings.value}
+          currentPageSavings={computeCurrentPageSavings()}
           isLoading={api.isLoading}
         />
       </StackItem>
@@ -536,10 +532,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 inputs={{
                   costManual,
                   costAutomation,
-                  totalSavings:
-                    api.result?.monetary_gain_other_pages +
-                    api.result?.monetary_gain_current_page,
-                  currentPageSavings: api.result?.monetary_gain_current_page,
+                  totalSavings: computeTotalSavings(),
+                  currentPageSavings: computeCurrentPageSavings(),
                 }}
               />,
             ]}
