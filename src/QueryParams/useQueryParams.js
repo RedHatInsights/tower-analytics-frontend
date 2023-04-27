@@ -191,11 +191,6 @@ const useQueryParams = (initial, namespace = DEFAULT_NAMESPACE) => {
       if (!varName) {
         dispatch({ type: 'RESET_FILTER' });
       } else {
-        console.log(
-          'xxxxxxxxx in useQueryParams - setFromToolbar',
-          varName,
-          value
-        );
         dispatch({ type: actionMapper[varName], value: { [varName]: value } });
       }
     },
