@@ -172,12 +172,28 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       effort_minutes: el.avgRunTime / 60,
       template_weigh_in: el.enabled,
     }));
+    const res = isMoney
+      ? {
+          currency: 'USD',
+          hourly_manual_labor_cost: manualCost,
+          hourly_automation_cost: automationCost,
+          templates_manual_equivalent: updatedDataApi,
+        }
+      : {
+          currency: 'USD',
+          hourly_manual_labor_cost: manualCost,
+          hourly_automation_cost: automationCost,
+          templates_manual_equivalent: updatedDataApi,
+        };
+    return res;
+    /*
     return {
       currency: 'USD',
       hourly_manual_labor_cost: manualCost,
       hourly_automation_cost: automationCost,
       templates_manual_equivalent: updatedDataApi,
     };
+    */
   };
   const dispatch = useDispatch();
 
@@ -185,6 +201,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     const res = await readData(queryParams);
     api.result.monetary_gain_current_page = res.monetary_gain_current_page;
     api.result.monetary_gain_other_pages = res.monetary_gain_other_pages;
+    api.result.successful_hosts_saved_hours_current_page =
+      res.successful_hosts_saved_hours_current_page;
+    api.result.successful_hosts_saved_hours_other_pages =
+      res.successful_hosts_saved_hours_other_pages;
     setValue(mapApi(res.meta));
     return res;
   };
@@ -226,6 +246,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
    * Used in top templates.
    */
   const setDataRunTime = async (seconds, id) => {
+    console.log('setDataRunTime');
     const updatedData = api.result.items.map((el) => {
       if (el.id === id) {
         el.avgRunTime = seconds;
@@ -239,6 +260,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         return el;
       }
     });
+    console.log(updatedData);
     try {
       await saveROI(getROISaveData(updatedData), dispatch);
     } catch {
