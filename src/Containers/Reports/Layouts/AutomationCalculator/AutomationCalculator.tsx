@@ -132,7 +132,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       },
     ],
   });
-  console.log({ result: options, request: fetchOptions });
   const {
     request: fetchData,
     setValue: setApiData,
@@ -231,7 +230,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
    * Used in top templates.
    */
   const setDataRunTime = async (seconds, id) => {
-    console.log('setDataRunTime');
     const updatedData = api.result.items.map((el) => {
       if (el.id === id) {
         el.avgRunTime = seconds;
@@ -245,7 +243,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         return el;
       }
     });
-    console.log(updatedData);
     try {
       await saveROI(getROISaveData(updatedData), dispatch);
     } catch {
@@ -369,7 +366,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         : 'Hours saved from successful hosts',
     },
   };
-  console.log('chartParams label: ', chartParams.label);
   const formattedValue = (key: string, value: number) => {
     let val;
     switch (key) {
