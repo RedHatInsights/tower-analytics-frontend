@@ -18,6 +18,7 @@ import timeFormatter from '../../../../../Utilities/timeFormatter';
 import percentageFormatter from '../../../../../Utilities/percentageFormatter';
 import { Template } from './types';
 import ExpandedRowContents from './ExplandedRowContents';
+import hoursFormatter from '../../../../../Utilities/hoursFormatter';
 
 interface Props {
   template: Template;
@@ -30,9 +31,13 @@ interface Props {
 
 const setLabeledValue = (key: string, value: number) => {
   let label;
+  console.log('key: ', key, ' value: ', value);
   switch (key) {
     case 'elapsed':
       label = timeFormatter(value) + ' seconds';
+      break;
+    case 'successful_hosts_saved_hours':
+      label = hoursFormatter(value);
       break;
     case 'template_automation_percentage':
       label = percentageFormatter(value) + '%';
@@ -56,6 +61,7 @@ const Row: FunctionComponent<Props> = ({
   navigateToJobExplorer,
   readOnly = true,
 }) => {
+  console.log(variableRow);
   const [isExpanded, setIsExpanded] = useState(
     window.localStorage.getItem(template.id.toString()) === 'true' || false
   );
