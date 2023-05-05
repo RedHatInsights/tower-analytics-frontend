@@ -112,7 +112,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
 
   const [costManual, setCostManual] = useState('');
   const [costAutomation, setCostAutomation] = useState('');
-  const [isMoney, setIsMoney] = useState(true);
+  const [isMoney, setIsMoney] = useState('');
 
   const mapApi = ({ legend = [] }) => {
     return legend.map((el) => ({
@@ -132,6 +132,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       },
     ],
   });
+  console.log({ result: options, request: fetchOptions });
   const {
     request: fetchData,
     setValue: setApiData,
@@ -172,28 +173,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       effort_minutes: el.avgRunTime / 60,
       template_weigh_in: el.enabled,
     }));
-    const res = isMoney
-      ? {
-          currency: 'USD',
-          hourly_manual_labor_cost: manualCost,
-          hourly_automation_cost: automationCost,
-          templates_manual_equivalent: updatedDataApi,
-        }
-      : {
-          currency: 'USD',
-          hourly_manual_labor_cost: manualCost,
-          hourly_automation_cost: automationCost,
-          templates_manual_equivalent: updatedDataApi,
-        };
-    return res;
-    /*
     return {
       currency: 'USD',
       hourly_manual_labor_cost: manualCost,
       hourly_automation_cost: automationCost,
       templates_manual_equivalent: updatedDataApi,
     };
-    */
   };
   const dispatch = useDispatch();
 
@@ -384,7 +369,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         : 'Hours saved from successful hosts',
     },
   };
-
+  console.log('chartParams label: ', chartParams.label);
   const formattedValue = (key: string, value: number) => {
     let val;
     switch (key) {
@@ -409,7 +394,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     }
     return val;
   };
-
   const customTooltipFormatting = ({ datum }) => {
     const tooltip =
       chartParams.label +
@@ -435,13 +419,19 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 text="Money"
                 buttonId="money"
                 isSelected={isMoney}
-                onChange={() => setIsMoney(true)}
+                onChange={() => {
+                  setIsMoney(true);
+                  queryParams.sort_options = 'successful_hosts_savings';
+                }}
               />
               <ToggleGroupItem
                 text="Time"
                 buttonId="time"
                 isSelected={!isMoney}
-                onChange={() => setIsMoney(false)}
+                onChange={() => {
+                  setIsMoney(false);
+                  queryParams.sort_options = 'successful_hosts_saved_hours';
+                }}
               />
             </ToggleGroup>
           </CardActions>
