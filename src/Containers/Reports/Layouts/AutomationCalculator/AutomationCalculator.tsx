@@ -107,12 +107,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const readOptions = endpointFunctionMap(optionsEndpoint);
   const defaultParams = reportDefaultParams(slug);
   const navigate = useNavigate();
-  const { queryParams, setFromToolbar, setFromPagination } =
-    useQueryParams(defaultParams);
 
   const [costManual, setCostManual] = useState('');
   const [costAutomation, setCostAutomation] = useState('');
-  const [isMoney, setIsMoney] = useState('');
+  const [isMoney, setIsMoney] = useState(true);
+  const { queryParams, setFromToolbar, setFromPagination } =
+    useQueryParams(defaultParams);
 
   const mapApi = ({ legend = [] }) => {
     return legend.map((el) => ({
@@ -125,12 +125,19 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     }));
   };
   const { result: options, request: fetchOptions } = useRequest(readOptions, {
-    sort_options: [
-      {
-        key: defaultParams.sort_options,
-        value: defaultParams.sort_options,
-      },
-    ],
+    sort_options: isMoney
+      ? [
+          {
+            key: defaultParams.sort_options,
+            value: defaultParams.sort_options,
+          },
+        ]
+      : [
+          {
+            key: 'successful_saved_hours',
+            value: 'successful_saved_hours',
+          },
+        ],
   });
   const {
     request: fetchData,
@@ -360,11 +367,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     label:
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
-    yAxis: {
-      label: isMoney
-        ? 'Money saved from successful hosts'
-        : 'Hours saved from successful hosts',
-    },
   };
   const formattedValue = (key: string, value: number) => {
     let val;
@@ -417,7 +419,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 isSelected={isMoney}
                 onChange={() => {
                   setIsMoney(true);
-                  queryParams.sort_options = 'successful_hosts_savings';
+                  queryParams.sort_options = 'successful_hosts_savings'
                 }}
               />
               <ToggleGroupItem
@@ -495,6 +497,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       </StackItem>
     </Stack>
   );
+
+  console.log(options);
 
   const renderContents = () =>
     fullCard ? (
