@@ -27,6 +27,7 @@ interface Props {
   setEnabled: (enabled: boolean) => void;
   navigateToJobExplorer: (id: number) => void;
   readOnly: boolean;
+  isMoney: boolean;
 }
 
 const setLabeledValue = (key: string, value: number) => {
@@ -59,6 +60,7 @@ const Row: FunctionComponent<Props> = ({
   setEnabled,
   navigateToJobExplorer,
   readOnly = true,
+  isMoney,
 }) => {
   const [isExpanded, setIsExpanded] = useState(
     window.localStorage.getItem(template.id.toString()) === 'true' || false
@@ -67,7 +69,7 @@ const Row: FunctionComponent<Props> = ({
     window.localStorage.setItem(id.toString(), value ? 'true' : 'false');
     setIsExpanded(value);
   };
-
+  console.log('isMoney: ', isMoney);
   return (
     <>
       <Tr>
@@ -152,7 +154,7 @@ const Row: FunctionComponent<Props> = ({
         </Td>
       </Tr>
       <Tr isExpanded={isExpanded}>
-        <ExpandedRowContents template={template} />
+        <ExpandedRowContents template={template} isMoney={isMoney} />
       </Tr>
     </>
   );
