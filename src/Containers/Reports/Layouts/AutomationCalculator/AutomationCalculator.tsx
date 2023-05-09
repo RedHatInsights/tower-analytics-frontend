@@ -570,6 +570,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                   setEnabled={setEnabled}
                   getSortParams={getSortParams}
                   readOnly={isReadOnly(api)}
+                  isMoney={isMoney}
                 />
               )}
             </GridItem>

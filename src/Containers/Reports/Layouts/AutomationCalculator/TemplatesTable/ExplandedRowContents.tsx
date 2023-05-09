@@ -8,12 +8,17 @@ import {
 } from '@patternfly/react-core';
 import { Template } from './types';
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
+import hoursFormatter from '../../../../../Utilities/hoursFormatter';
 
 interface Props {
   template: Template;
+  isMoney: boolean;
 }
 
-const ExpandedRowContents: FunctionComponent<Props> = ({ template }) => (
+const ExpandedRowContents: FunctionComponent<Props> = ({
+  template,
+  isMoney,
+}) => (
   <Td colSpan={5}>
     <ExpandableRowContent>
       <DescriptionList columnModifier={{ default: '3Col' }}>
@@ -61,10 +66,14 @@ const ExpandedRowContents: FunctionComponent<Props> = ({ template }) => (
         </DescriptionListGroup>
         <DescriptionListGroup>
           <DescriptionListTerm>
-            Savings from successful hosts
+            {isMoney
+              ? 'Savings from successful hosts'
+              : 'Savings in hours from successful hosts'}
           </DescriptionListTerm>
           <DescriptionListDescription>
-            {currencyFormatter(template.successful_hosts_savings)}
+            {isMoney
+              ? currencyFormatter(template.successful_hosts_savings)
+              : hoursFormatter(template.successful_hosts_saved_hours)}
           </DescriptionListDescription>
         </DescriptionListGroup>
         <DescriptionListGroup>
@@ -82,6 +91,6 @@ const ExpandedRowContents: FunctionComponent<Props> = ({ template }) => (
       </DescriptionList>
     </ExpandableRowContent>
   </Td>
-);
+)
 
 export default ExpandedRowContents;
