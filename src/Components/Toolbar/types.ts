@@ -14,10 +14,10 @@ export interface SelectOptionProps {
   key: string;
 }
 
-export type SetValue = (value: AttributeType | undefined) => void;
+export type SetValue = (value: AttributeType | null) => void;
 export type SetValues = (
-  type: string | undefined,
-  value: AttributeType | undefined
+  type: string | null,
+  value: AttributeType | null
 ) => void;
 export type ApiOptionsType = Record<
   string,

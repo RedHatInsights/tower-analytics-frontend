@@ -73,7 +73,7 @@ const Select: FunctionComponent<Props> = ({
       const filteredArr = stringValues.filter((item) => item !== keyToDelete);
       setValue(filteredArr);
     } else {
-      setValue(undefined);
+      setValue(null);
     }
   };
 

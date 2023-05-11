@@ -63,17 +63,14 @@ const FilterableToolbar: FunctionComponent<Props> = ({
       return obj;
     }, {});
 
-  const setFilters = (
-    key: string | undefined,
-    value: AttributeType | undefined
-  ) => {
+  const setFilters = (key: string | null, value: AttributeType | null) => {
     setQueryParams(key, value);
   };
 
   return (
     <Toolbar
       className="pf-m-toggle-group-container"
-      clearAllFilters={() => setFilters(undefined, undefined)}
+      clearAllFilters={() => setFilters(null, null)}
       collapseListedFiltersBreakpoint="xl"
       data-cy={'filter-toolbar'}
     >

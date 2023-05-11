@@ -53,7 +53,7 @@ const QuickDateGroup: FunctionComponent<Props> = ({
         selectOptions={values.quick_date_range}
         setValue={(value) => setFilters('quick_date_range', value)}
       />
-      {['custom', 'roi_custom'].includes(
+      {['custom', 'roi_custom', 'slow_hosts_custom'].includes(
         filters.quick_date_range as string
       ) && (
         <Split hasGutter>
