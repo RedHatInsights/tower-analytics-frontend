@@ -22,6 +22,7 @@ import {
   PaginationVariant,
   Spinner,
 } from '@patternfly/react-core';
+import { ChartThemeColor } from 'react-json-chart-builder';
 // Imports from custom components
 import FilterableToolbar from '../../../../Components/Toolbar';
 import Pagination from '../../../../Components/Pagination';
@@ -139,6 +140,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           },
         ],
   });
+
   const {
     request: fetchData,
     setValue: setApiData,
@@ -367,7 +369,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     label:
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
+    props: {
+      themeColor: ChartThemeColor.gold,
+    },
   };
+
+  console.log('chartParams props: ', chartParams.props);
   const formattedValue = (key: string, value: number) => {
     let val;
     switch (key) {
@@ -419,7 +426,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 isSelected={isMoney}
                 onChange={() => {
                   setIsMoney(true);
-                  queryParams.sort_options = 'successful_hosts_savings'
+                  queryParams.sort_options = 'successful_hosts_savings';
+                  schema[0].props.themeColor = 'blue';
                 }}
               />
               <ToggleGroupItem
@@ -429,6 +437,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 onChange={() => {
                   setIsMoney(false);
                   queryParams.sort_options = 'successful_hosts_saved_hours';
+                  schema[0].props.themeColor = 'green';
                 }}
               />
             </ToggleGroup>
@@ -446,6 +455,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             tooltip: chartParams.tooltip,
             field: chartParams.field,
             yAxis: chartParams.yAxis,
+            props: chartParams.props,
           })}
           data={{
             items: filterDisabled(api.result.items),
@@ -497,8 +507,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       </StackItem>
     </Stack>
   );
-
-  console.log(options);
 
   const renderContents = () =>
     fullCard ? (
