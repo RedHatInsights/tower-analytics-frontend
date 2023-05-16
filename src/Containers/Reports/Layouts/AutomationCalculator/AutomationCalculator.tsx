@@ -374,7 +374,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     },
   };
 
-  console.log('chartParams props: ', chartParams.props);
   const formattedValue = (key: string, value: number) => {
     let val;
     switch (key) {
