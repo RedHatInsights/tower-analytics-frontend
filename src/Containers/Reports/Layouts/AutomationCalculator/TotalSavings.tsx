@@ -14,7 +14,7 @@ interface Props {
   totalSavings: number;
   currentPageSavings: number;
   isLoading: boolean;
-  isMoney: boolean;
+  isMoneyView: boolean;
 }
 const SpinnerDiv = styled.div`
   height: 46.8px;
@@ -25,7 +25,7 @@ const TotalSavings: FunctionComponent<Props> = ({
   totalSavings = 0,
   currentPageSavings = 0,
   isLoading = false,
-  isMoney = true,
+  isMoneyView = true,
 }) => (
   <>
     {['Total savings', 'Current page savings'].map((title, index) => (
@@ -46,7 +46,7 @@ const TotalSavings: FunctionComponent<Props> = ({
               <SpinnerDiv>
                 <Spinner data-cy={'spinner'} isSVG size="lg" />
               </SpinnerDiv>
-            ) : isMoney ? (
+            ) : isMoneyView ? (
               currencyFormatter(index === 0 ? totalSavings : currentPageSavings)
             ) : (
               hoursFormatter(index === 0 ? totalSavings : currentPageSavings)

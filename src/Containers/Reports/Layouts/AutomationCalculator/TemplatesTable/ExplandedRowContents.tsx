@@ -12,12 +12,12 @@ import hoursFormatter from '../../../../../Utilities/hoursFormatter';
 
 interface Props {
   template: Template;
-  isMoney: boolean;
+  isMoneyView: boolean;
 }
 
 const ExpandedRowContents: FunctionComponent<Props> = ({
   template,
-  isMoney,
+  isMoneyView,
 }) => (
   <Td colSpan={5}>
     <ExpandableRowContent>
@@ -66,12 +66,12 @@ const ExpandedRowContents: FunctionComponent<Props> = ({
         </DescriptionListGroup>
         <DescriptionListGroup>
           <DescriptionListTerm>
-            {isMoney
+            {isMoneyView
               ? 'Savings from successful hosts'
               : 'Savings in hours from successful hosts'}
           </DescriptionListTerm>
           <DescriptionListDescription>
-            {isMoney
+            {isMoneyView
               ? currencyFormatter(template.successful_hosts_savings)
               : hoursFormatter(template.successful_hosts_saved_hours)}
           </DescriptionListDescription>

@@ -23,7 +23,7 @@ interface Props {
   navigateToJobExplorer: (id: number) => void;
   getSortParams?: () => TableSortParams;
   readOnly: boolean;
-  isMoney: boolean;
+  isMoneyView: boolean;
 }
 
 const TopTemplates: FunctionComponent<Props> = ({
@@ -34,7 +34,7 @@ const TopTemplates: FunctionComponent<Props> = ({
   navigateToJobExplorer = () => ({}),
   getSortParams = () => ({}),
   readOnly = true,
-  isMoney,
+  isMoneyView,
 }) => {
   const [isKebabOpen, setIsKebabOpen] = useState(false);
   const defaultParams = reportDefaultParams('automation_calculator');
@@ -127,7 +127,7 @@ const TopTemplates: FunctionComponent<Props> = ({
             navigateToJobExplorer={navigateToJobExplorer}
             setEnabled={setEnabled(template.id)}
             readOnly={readOnly}
-            isMoney={isMoney}
+            isMoneyView={isMoneyView}
           />
         ))}
       </Tbody>
