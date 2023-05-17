@@ -111,7 +111,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
 
   const [costManual, setCostManual] = useState('');
   const [costAutomation, setCostAutomation] = useState('');
-  const [isMoney, setIsMoney] = useState(true);
+  const [isMoneyView, setisMoneyView] = useState(true);
   const { queryParams, setFromToolbar, setFromPagination } =
     useQueryParams(defaultParams);
 
@@ -126,7 +126,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     }));
   };
   const { result: options, request: fetchOptions } = useRequest(readOptions, {
-    sort_options: isMoney
+    sort_options: isMoneyView
       ? [
           {
             key: defaultParams.sort_options,
@@ -311,14 +311,14 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   };
 
   const computeTotalSavings = () =>
-    isMoney
+    isMoneyView
       ? api.result?.monetary_gain_other_pages +
         api.result?.monetary_gain_current_page
       : api.result?.successful_hosts_saved_hours_current_page +
         api.result?.successful_hosts_saved_hours_other_pages;
 
   const computeCurrentPageSavings = () =>
-    isMoney
+    isMoneyView
       ? api.result?.monetary_gain_current_page
       : api.result?.successful_hosts_saved_hours_current_page;
 
@@ -422,9 +422,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               <ToggleGroupItem
                 text="Money"
                 buttonId="money"
-                isSelected={isMoney}
+                isSelected={isMoneyView}
                 onChange={() => {
-                  setIsMoney(true);
+                  setisMoneyView(true);
                   queryParams.sort_options = 'successful_hosts_savings';
                   schema[0].props.themeColor = 'blue';
                 }}
@@ -432,9 +432,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               <ToggleGroupItem
                 text="Time"
                 buttonId="time"
-                isSelected={!isMoney}
+                isSelected={!isMoneyView}
                 onChange={() => {
-                  setIsMoney(false);
+                  setisMoneyView(false);
                   queryParams.sort_options = 'successful_hosts_saved_hours';
                   schema[0].props.themeColor = 'green';
                 }}
@@ -483,7 +483,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     <Stack>
       <StackItem>
         <TotalSavings
-          isMoney={isMoney}
+          isMoneyView={isMoneyView}
           totalSavings={computeTotalSavings()}
           currentPageSavings={computeCurrentPageSavings()}
           isLoading={api.isLoading}
@@ -577,7 +577,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                   setEnabled={setEnabled}
                   getSortParams={getSortParams}
                   readOnly={isReadOnly(api)}
-                  isMoney={isMoney}
+                  isMoneyView={isMoneyView}
                 />
               )}
             </GridItem>
