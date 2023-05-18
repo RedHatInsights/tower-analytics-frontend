@@ -4,6 +4,7 @@ import { DispatchType } from '../../../../../store';
 
 interface Props {
   slug: string;
+  isMoneyView: boolean;
   endpointUrl: Endpoint;
   queryParams: Params;
   selectOptions: OptionsReturnType;
@@ -27,6 +28,7 @@ interface Props {
 
 const PdfDownload: ({
   slug,
+  isMoneyView,
   endpointUrl,
   queryParams,
   selectOptions,
@@ -48,6 +50,7 @@ const PdfDownload: ({
   inputs,
 }: Props) => void = ({
   slug,
+  isMoneyView,
   endpointUrl,
   queryParams,
   selectOptions,
@@ -86,6 +89,7 @@ const PdfDownload: ({
           chartType,
         },
         dataFetchingParams: {
+          isMoneyView,
           showExtraRows: showExtraRows,
           endpointUrl,
           queryParams: allParams,

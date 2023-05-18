@@ -35,6 +35,12 @@ const CustomPoint: FC<Props> = ({ x, y, disableInlineStyles, ...props }) => {
   ) : null;
 };
 
+/*
+const CustomColor: FC<Props> = ({schema}) => {
+  if schema[0].props.themeColor
+}
+*/
+
 const customFunctions = (specificFunctions?: ChartFunctions) => ({
   ...functions,
   axisFormat: {
@@ -82,6 +88,9 @@ const Chart: FC<Props> = ({
   specificFunctions,
   namespace = 'settings',
 }) => {
+  console.log(schema);
+  console.log(data);
+  console.log(specificFunctions);
   const {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     queryParams: { chartSeriesHiddenProps },
