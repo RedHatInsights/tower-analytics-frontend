@@ -242,6 +242,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       startDate={queryParams.start_date}
       endDate={queryParams.end_date}
       dateRange={queryParams.quick_date_range}
+      adoptionRateType={queryParams.adoption_rate_type}
     />,
   ];
 

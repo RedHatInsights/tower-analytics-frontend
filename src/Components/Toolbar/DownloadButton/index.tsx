@@ -49,6 +49,7 @@ interface Props {
   startDate: string;
   endDate: string;
   dateRange: string;
+  adoptionRateType: string;
   inputs?: { automationCost: number; manualCost: number };
 }
 
@@ -72,6 +73,7 @@ const DownloadButton: FC<Props> = ({
   startDate,
   endDate,
   dateRange,
+  adoptionRateType,
   inputs,
 }) => {
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
@@ -123,6 +125,7 @@ const DownloadButton: FC<Props> = ({
         startDate,
         endDate,
         dateRange,
+        adoptionRateType,
         dispatch,
         chartSeriesHiddenProps,
         showExtraRows,
@@ -160,6 +163,7 @@ const DownloadButton: FC<Props> = ({
           startDate: queryParams.start_date as string,
           endDate: queryParams.end_date as string,
           dateRange: queryParams.quick_date_range as string,
+          adoptionRateType: queryParams.adoption_rate_type as string,
         },
       };
       SendEmail({
@@ -243,6 +247,7 @@ const DownloadButton: FC<Props> = ({
               startDate,
               endDate,
               dateRange,
+              adoptionRateType,
             }}
             formData={formData}
             dispatchReducer={dispatchReducer}
