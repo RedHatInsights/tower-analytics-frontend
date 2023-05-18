@@ -19,6 +19,7 @@ interface Props {
   startDate: string;
   endDate: string;
   dateRange: string;
+  adoptionRateType: string;
   dispatch: DispatchType;
   chartSeriesHiddenProps: boolean[];
   showExtraRows: boolean;
@@ -42,6 +43,7 @@ const PdfDownload: ({
   startDate,
   endDate,
   dateRange,
+  adoptionRateType,
   dispatch,
   chartSeriesHiddenProps,
   showExtraRows,
@@ -63,6 +65,7 @@ const PdfDownload: ({
   startDate,
   endDate,
   dateRange,
+  adoptionRateType,
   dispatch,
   chartSeriesHiddenProps,
   showExtraRows,
@@ -99,6 +102,7 @@ const PdfDownload: ({
           startDate,
           endDate,
           dateRange,
+          adoptionRateType,
         },
       },
       dispatch,

@@ -61,6 +61,22 @@ const ReportTable: FunctionComponent<Props> = ({
     </DropdownItem>,
   ];
 
+  const skipHeader = (key: string): boolean => {
+    switch (true) {
+      case key == 'total_elapsed_per_org' &&
+        typeof legend[0].total_elapsed_per_org == 'undefined':
+      case key == 'total_job_count_per_org' &&
+        typeof legend[0].total_job_count_per_org == 'undefined':
+      case key == 'total_host_count_per_org' &&
+        typeof legend[0].total_host_count_per_org == 'undefined':
+      case key == 'total_task_count_per_org' &&
+        typeof legend[0].total_task_count_per_org == 'undefined':
+        return true;
+      default:
+        return false;
+    }
+  };
+
   return (
     <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
       <Thead>
@@ -93,15 +109,7 @@ const ReportTable: FunctionComponent<Props> = ({
                   position={'right'}
                 />
               </Th>
-            ) : (key === 'total_elapsed_per_org' &&
-                typeof legend[0].total_elapsed_per_org == 'undefined') ||
-              (key === 'total_job_count_per_org' &&
-                typeof legend[0].total_job_count_per_org == 'undefined') ||
-              (key === 'total_host_count_per_org' &&
-                typeof legend[0].total_host_count_per_org == 'undefined') ||
-              (key === 'total_task_count_per_org' &&
-                typeof legend[0].total_task_count_per_org ==
-                  'undefined') ? null : (
+            ) : skipHeader(key) ? null : (
               <Th key={key} {...getSortParams(key)} data-cy={key}>
                 {value}
               </Th>

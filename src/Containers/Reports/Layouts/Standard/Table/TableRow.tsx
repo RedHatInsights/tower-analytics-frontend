@@ -152,6 +152,22 @@ const TableRow: FunctionComponent<Params> = ({
     ) : null;
   };
 
+  const skipRow = (key: string): boolean => {
+    switch (true) {
+      case key == 'total_elapsed_per_org' &&
+        typeof legendEntry.total_elapsed_per_org == 'undefined':
+      case key == 'total_job_count_per_org' &&
+        typeof legendEntry.total_job_count_per_org == 'undefined':
+      case key == 'total_host_count_per_org' &&
+        typeof legendEntry.total_host_count_per_org == 'undefined':
+      case key == 'total_task_count_per_org' &&
+        typeof legendEntry.total_task_count_per_org == 'undefined':
+        return true;
+      default:
+        return false;
+    }
+  };
+
   return (
     <>
       <Tr style={getOthersStyle(legendEntry, 'id')}>
@@ -165,15 +181,7 @@ const TableRow: FunctionComponent<Params> = ({
           />
         )}
         {headers.map(({ key }) =>
-          (key === 'total_elapsed_per_org' &&
-            typeof legendEntry.total_elapsed_per_org == 'undefined') ||
-          (key === 'total_job_count_per_org' &&
-            typeof legendEntry.total_job_count_per_org == 'undefined') ||
-          (key === 'total_host_count_per_org' &&
-            typeof legendEntry.total_host_count_per_org == 'undefined') ||
-          (key === 'total_task_count_per_org' &&
-            typeof legendEntry.total_task_count_per_org ==
-              'undefined') ? null : (
+          skipRow(key) ? null : (
             <Td key={`${legendEntry.id}-${key}`}>
               {clickableLinking
                 ? getClickableText(legendEntry, key)
