@@ -22,7 +22,6 @@ import {
   PaginationVariant,
   Spinner,
 } from '@patternfly/react-core';
-import { ChartThemeColor } from 'react-json-chart-builder';
 // Imports from custom components
 import FilterableToolbar from '../../../../Components/Toolbar';
 import Pagination from '../../../../Components/Pagination';
@@ -369,9 +368,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     label:
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
-    props: {
-      themeColor: ChartThemeColor.gold,
-    },
   };
 
   const formattedValue = (key: string, value: number) => {
@@ -408,6 +404,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     return tooltip;
   };
 
+  const customChartColor = (isMoneyView) => {
+    if (isMoneyView) return 'blue';
+    if (!isMoneyView) return 'green';
+  };
+
   const isReadOnly = (api) => {
     return !api.result.rbac?.perms?.all && !api.result.rbac?.perms?.write;
   };
@@ -424,9 +425,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 buttonId="money"
                 isSelected={isMoneyView}
                 onChange={() => {
+                  //customChartColor(isMoneyView);
                   setisMoneyView(true);
                   queryParams.sort_options = 'successful_hosts_savings';
-                  schema[0].props.themeColor = 'blue';
                 }}
               />
               <ToggleGroupItem
@@ -436,7 +437,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 onChange={() => {
                   setisMoneyView(false);
                   queryParams.sort_options = 'successful_hosts_saved_hours';
-                  schema[0].props.themeColor = 'green';
+                  //customChartColor(isMoneyView);
                 }}
               />
             </ToggleGroup>
@@ -454,7 +455,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             tooltip: chartParams.tooltip,
             field: chartParams.field,
             yAxis: chartParams.yAxis,
-            props: chartParams.props,
           })}
           data={{
             items: filterDisabled(api.result.items),
@@ -462,6 +462,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           specificFunctions={{
             labelFormat: {
               customTooltipFormatting,
+            },
+            themeColor: {
+              customChartColor,
             },
           }}
         />
@@ -531,6 +534,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               <DownloadButton
                 key="download-button"
                 slug={slug}
+                isMoneyView={isMoneyView}
                 name={name}
                 description={description}
                 endpointUrl={dataEndpoint}

@@ -64,6 +64,7 @@ export interface EmailDetailsProps {
 export interface PdfDetailsProps {
   settingsNamespace: string;
   slug: string;
+  isMoneyView: boolean;
   name: string;
   description: string;
   endpointUrl: Endpoint;

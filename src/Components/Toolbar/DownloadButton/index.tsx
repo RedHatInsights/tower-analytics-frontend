@@ -32,6 +32,7 @@ import { getDateFormatByGranularity } from '../../../Utilities/helpers';
 interface Props {
   settingsNamespace: string;
   slug: string;
+  isMoneyView: boolean;
   name: string;
   description: string;
   endpointUrl: Endpoint;
@@ -55,6 +56,7 @@ interface Props {
 const DownloadButton: FC<Props> = ({
   settingsNamespace = 'settings',
   slug,
+  isMoneyView,
   name,
   description,
   endpointUrl,
@@ -108,6 +110,7 @@ const DownloadButton: FC<Props> = ({
     if (downloadType === 'pdf')
       PdfDownload({
         slug,
+        isMoneyView,
         endpointUrl,
         queryParams,
         selectOptions,
@@ -153,6 +156,7 @@ const DownloadButton: FC<Props> = ({
           queryParams: allParams,
           chartSeriesHiddenProps: chartSeriesHiddenProps || [],
           totalPages: totalPages,
+          isMoneyView: isMoneyView,
           pageLimit: pageLimit,
           sortOptions: queryParams.sort_options as string,
           sortOrder: queryParams.sort_order === 'desc' ? 'desc' : 'asc',
@@ -226,6 +230,7 @@ const DownloadButton: FC<Props> = ({
             options={{
               settingsNamespace: 'settings',
               slug,
+              isMoneyView,
               name,
               description,
               endpointUrl,
