@@ -274,7 +274,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
             'No results match the filter criteria. Clear all filters and try again.'
           }
           showButton={true}
-          path={'/reports'}
+          path={'/ansible/automation-analytics/reports'}
         />
       )}
       {error && <NoData />}
