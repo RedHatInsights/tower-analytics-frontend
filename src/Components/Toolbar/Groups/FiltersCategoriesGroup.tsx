@@ -38,7 +38,7 @@ const FilterCategoriesGroup: FunctionComponent<Props> = ({
         <ToolbarInput
           key={key}
           categoryKey={key}
-          value={filters[key]}
+          value={filterCategories[key].length > 0 ? filters[key] : ''}
           selectOptions={filterCategories[key]}
           isVisible={currentCategory === key}
           setValue={(value) => setFilters(key, value)}
