@@ -597,6 +597,31 @@ const allDefaultParams: any = {
       chart_type: 'scatter',
     },
   },
+  most_used_collections: {
+    defaultParams: {
+      limit: 6,
+      offset: 0,
+      attributes: [
+        'total_count',
+        'total_collection_version_count',
+        'total_org_count',
+        'total_template_count',
+        // 'total_inventory_count',
+      ],
+      group_by: 'collection_name',
+      group_by_time: true,
+      granularity: 'monthly',
+      quick_date_range: 'last_6_months',
+      sort_options: 'total_count',
+      sort_order: 'desc',
+      cluster_id: [],
+      inventory_id: [],
+      org_id: [],
+      template_id: [],
+      collection_name: [],
+      collection_version: [],
+    },
+  },
 };
 
 export const reportDefaultParams = (slug: string): DefaultParamsProps => {

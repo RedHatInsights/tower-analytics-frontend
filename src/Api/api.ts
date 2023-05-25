@@ -39,6 +39,7 @@ export enum Endpoint {
   jobExplorer = '/api/tower-analytics/v1/job_explorer/',
   hostExplorer = '/api/tower-analytics/v1/host_explorer/',
   eventExplorer = '/api/tower-analytics/v1/event_explorer/',
+  contentExplorer = '/api/tower-analytics/v1/content_explorer/',
   probeTemplates = '/api/tower-analytics/v1/probe_templates/',
   probeTemplateForHosts = '/api/tower-analytics/v1/probe_template_for_hosts/',
   adoptionRate = '/api/tower-analytics/v1/adoption_rate/',
@@ -59,6 +60,7 @@ export enum Endpoint {
   clustersOptions = '/api/tower-analytics/v1/dashboard_clusters_options/',
   planOptions = '/api/tower-analytics/v1/plan_options/',
   eventExplorerOptions = '/api/tower-analytics/v1/event_explorer_options/',
+  contentExplorerOptions = '/api/tower-analytics/v1/content_explorer_options/',
   hostExplorerOptions = '/api/tower-analytics/v1/host_explorer_options/',
   probeTemplatesOptions = '/api/tower-analytics/v1/probe_templates_options/',
   probeTemplateForHostsOptions = '/api/tower-analytics/v1/probe_template_for_hosts_options/',
@@ -164,6 +166,13 @@ export const readEventExplorer = (
 
 export const readEventExplorerOptions = (params: Params): Promise<ApiJson> =>
   post(Endpoint.eventExplorerOptions, params);
+
+export const readContentExplorer = (
+  params: ParamsWithPagination
+): Promise<ApiJson> => postWithPagination(Endpoint.contentExplorer, params);
+
+export const readContentExplorerOptions = (params: Params): Promise<ApiJson> =>
+  post(Endpoint.contentExplorerOptions, params);
 
 export const readROI = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(Endpoint.ROI, params);
@@ -308,6 +317,10 @@ export const endpointFunctionMap = (endpoint: Endpoint): ReadEndpointFnc => {
       return readEventExplorer;
     case Endpoint.eventExplorerOptions:
       return readEventExplorerOptions;
+    case Endpoint.contentExplorer:
+      return readContentExplorer;
+    case Endpoint.contentExplorerOptions:
+      return readContentExplorerOptions;
     case Endpoint.ROI:
       return readROI;
     case Endpoint.ROIOptions:

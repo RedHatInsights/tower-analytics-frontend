@@ -100,6 +100,8 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_TEMPLATE_WEIGH_IN':
     case 'SET_ANOMALY':
     case 'SET_INVENTORY':
+    case 'SET_COLLECTION_NAME':
+    case 'SET_COLLECTION_VERSION':
     case 'SET_PERCENTILE':
     case 'SET_ADOPTION_RATE_TYPE':
     case 'SET_SORT_OPTIONS':
@@ -147,6 +149,8 @@ const actionMapper = {
   template_weigh_in: 'SET_TEMPLATE_WEIGH_IN',
   anomaly: 'SET_ANOMALY',
   inventory_id: 'SET_INVENTORY',
+  collection_name: 'SET_COLLECTION_NAME',
+  collection_version: 'SET_COLLECTION_VERSION',
   percentile: 'SET_PERCENTILE',
   adoption_rate_type: 'SET_ADOPTION_RATE_TYPE',
   granularity: 'SET_GRANULARITY',

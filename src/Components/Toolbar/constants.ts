@@ -96,6 +96,42 @@ export const optionsForCategories: OptionsForCategories = {
     placeholder: 'Filter by inventory',
     hasChips: true,
   },
+  collection_name: {
+    type: 'select',
+    name: 'Collection name',
+    placeholder: 'Filter by collection name',
+    hasChips: true,
+  },
+  collection_version: {
+    type: 'select',
+    name: 'Collection version',
+    placeholder: 'Filter by collection version',
+    hasChips: true,
+  },
+  role_collection_name: {
+    type: 'select',
+    name: 'Role collection name',
+    placeholder: 'Filter by role collection name',
+    hasChips: true,
+  },
+  role_collection_version: {
+    type: 'select',
+    name: 'Role collection version',
+    placeholder: 'Filter by role collection version',
+    hasChips: true,
+  },
+  module_name: {
+    type: 'select',
+    name: 'Module name',
+    placeholder: 'Filter by module name',
+    hasChips: true,
+  },
+  role_name: {
+    type: 'select',
+    name: 'Role name',
+    placeholder: 'Filter by role name',
+    hasChips: true,
+  },
   percentile: {
     type: 'select',
     name: 'Percentile',
