@@ -36,8 +36,8 @@ const CustomPoint: FC<Props> = ({ x, y, disableInlineStyles, ...props }) => {
 };
 
 /*
-const CustomColor: FC<Props> = ({schema}) => {
-  if schema[0].props.themeColor
+const CustomColor: FC<Props> = () => {
+  
 }
 */
 
@@ -55,6 +55,16 @@ const customFunctions = (specificFunctions?: ChartFunctions) => ({
     ...functions.labelFormat,
     ...specificFunctions?.labelFormat,
   },
+  /*
+  themeColor: {
+    ...functions.themeColor,
+    ...specificFunctions?.themeColor,
+  },
+  
+  themeColor: {
+    themeColor: customChartColor(isMoney),
+  },
+  */
   onClick: {
     ...functions.onClick,
     ...specificFunctions?.onClick,

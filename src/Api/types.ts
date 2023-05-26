@@ -30,7 +30,7 @@ export interface PDFParams {
     showExtraRows: boolean;
     chartSeriesHiddenProps: boolean[];
     totalPages: number;
-    isMoneyView: boolean;
+    isMoney: boolean;
     pageLimit: number;
     sortOptions: string;
     sortOrder: 'asc' | 'desc';
@@ -52,7 +52,7 @@ export interface PDFEmailParams {
     showExtraRows: boolean;
     chartSeriesHiddenProps: boolean[];
     totalPages: number;
-    isMoneyView: boolean;
+    isMoney: boolean;
     pageLimit: number;
     sortOptions: string;
     sortOrder: 'asc' | 'desc';
