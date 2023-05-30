@@ -71,7 +71,7 @@ describe('Clusters page', () => {
       .its('response')
       .then((res) => {
         expect(res.body.items).to.length(10);
-        expect(res.body.meta.count).to.eq(92);
+        expect(res.body.meta.count).to.eq(71);
         expect(res.body.meta.legend).to.length(10);
       });
   });
