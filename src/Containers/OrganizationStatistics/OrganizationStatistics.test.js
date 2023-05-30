@@ -131,7 +131,7 @@ describe('Containers/OrganizationStatistics', () => {
     });
 
     fetchMock.restore();
-    wrapper = null;
+    wrapper.unmount();
   });
 
   it('should render without any errors', async () => {
