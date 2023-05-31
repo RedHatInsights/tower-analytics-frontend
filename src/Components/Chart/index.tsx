@@ -4,6 +4,7 @@ import ChartBuilder, {
   ChartData,
   ChartFunctions,
   ChartSchemaElement,
+  ChartThemeColor,
   functions,
 } from 'react-json-chart-builder';
 import { useQueryParams } from '../../QueryParams';
@@ -36,9 +37,9 @@ const CustomPoint: FC<Props> = ({ x, y, disableInlineStyles, ...props }) => {
 };
 
 /*
-const CustomColor: FC<Props> = () => {
-  
-}
+const CustomChartColor: FC<Props> = ({}) => {
+
+};
 */
 
 const customFunctions = (specificFunctions?: ChartFunctions) => ({
@@ -62,9 +63,10 @@ const customFunctions = (specificFunctions?: ChartFunctions) => ({
   },
   
   themeColor: {
-    themeColor: customChartColor(isMoney),
+    themeColor: customChartColor(data.isMoney),
   },
   */
+
   onClick: {
     ...functions.onClick,
     ...specificFunctions?.onClick,
