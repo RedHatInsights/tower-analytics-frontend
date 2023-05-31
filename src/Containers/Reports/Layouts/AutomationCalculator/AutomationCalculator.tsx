@@ -368,6 +368,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     label:
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
+    themeColor: isMoney ? 'green' : 'blue',
   };
 
   const formattedValue = (key: string, value: number) => {
@@ -404,10 +405,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     return tooltip;
   };
 
+  /*
   const customChartColor = (isMoney) => {
     if (isMoney) return 'blue';
     if (!isMoney) return 'green';
   };
+  */
 
   const isReadOnly = (api) => {
     return !api.result.rbac?.perms?.all && !api.result.rbac?.perms?.write;
@@ -449,6 +452,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       ) : filterDisabled(api?.result?.items).length > 0 ? (
         <Chart
           schema={hydrateSchema(schema)({
+            themeColor: chartParams.themeColor,
             label: chartParams.label,
             tooltip: chartParams.tooltip,
             field: chartParams.field,
@@ -461,9 +465,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             labelFormat: {
               customTooltipFormatting,
             },
+            /*
             themeColor: {
               customChartColor,
             },
+            */
           }}
         />
       ) : (

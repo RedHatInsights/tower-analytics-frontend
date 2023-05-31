@@ -91,6 +91,6 @@ const ExpandedRowContents: FunctionComponent<Props> = ({
       </DescriptionList>
     </ExpandableRowContent>
   </Td>
-)
+);
 
 export default ExpandedRowContents;
