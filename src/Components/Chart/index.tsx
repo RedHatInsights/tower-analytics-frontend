@@ -56,16 +56,6 @@ const customFunctions = (specificFunctions?: ChartFunctions) => ({
     ...functions.labelFormat,
     ...specificFunctions?.labelFormat,
   },
-  /*
-  themeColor: {
-    ...functions.themeColor,
-    ...specificFunctions?.themeColor,
-  },
-  
-  themeColor: {
-    themeColor: customChartColor(data.isMoney),
-  },
-  */
 
   onClick: {
     ...functions.onClick,
