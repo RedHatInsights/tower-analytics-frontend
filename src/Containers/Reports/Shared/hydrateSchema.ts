@@ -18,15 +18,11 @@ const hydrateSchema =
     if (!props) {
       return schema;
     }
-    console.log(props);
     let hydratedSchema = JSON.stringify(schema);
     Object.entries(props).forEach((arr) => {
-      console.log(arr);
       const regVar = new RegExp(`VAR_${arr[0]}`, 'g');
-      console.log(regVar);
       hydratedSchema = hydratedSchema.replace(regVar, `${arr[1]}`);
     });
-    console.log(hydratedSchema);
     return JSON.parse(hydratedSchema) as ChartSchemaElement[];
   };
 

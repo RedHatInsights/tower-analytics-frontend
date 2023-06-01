@@ -64,7 +64,6 @@ export interface EmailDetailsProps {
 export interface PdfDetailsProps {
   settingsNamespace: string;
   slug: string;
-  isMoney: boolean;
   name: string;
   description: string;
   endpointUrl: Endpoint;
@@ -73,6 +72,7 @@ export interface PdfDetailsProps {
   y: string;
   label: string;
   xTickFormat: string;
+  themeColor: string;
   chartType: string;
   totalPages: number;
   pageLimit: number;

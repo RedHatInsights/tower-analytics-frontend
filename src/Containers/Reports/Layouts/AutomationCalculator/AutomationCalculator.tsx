@@ -356,6 +356,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         quick_date_range: 'last_30_days',
         template_id: [templateId],
       },
+      isMoney: true,
     };
 
     navigate(createUrl(Paths.jobExplorer, true, initialQueryParams));
@@ -404,13 +405,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       formattedValue(queryParams.sort_options, datum.y);
     return tooltip;
   };
-
-  /*
-  const customChartColor = (isMoney) => {
-    if (isMoney) return 'blue';
-    if (!isMoney) return 'green';
-  };
-  */
 
   const isReadOnly = (api) => {
     return !api.result.rbac?.perms?.all && !api.result.rbac?.perms?.write;
@@ -538,7 +532,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               <DownloadButton
                 key="download-button"
                 slug={slug}
-                isMoney={isMoney}
                 name={name}
                 description={description}
                 endpointUrl={dataEndpoint}
@@ -547,6 +540,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 y={''}
                 label={''}
                 xTickFormat={''}
+                themeColor={chartParams.themeColor}
                 totalPages={Math.ceil(
                   api.result.meta.count / queryParams.limit
                 )}
