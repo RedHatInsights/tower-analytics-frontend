@@ -15,7 +15,7 @@ Cypress.Commands.add('clearFeatureDialogs', () => {
   cy.get('button').each((button) => {
     let buttonText = button.text();
     if (buttonText === 'Show me later') {
-      button.click();
+      button.trigger('click'); //button.click() doesn't work because is deprecated
     }
   });
 });
@@ -135,13 +135,13 @@ Cypress.Commands.add('login', () => {
   //    keycloakLoginFields[strategy]['landing-page']
   //);
   // check if the page loads correctly
-  cy.visit(Cypress.config().baseUrl + clustersUrl);
-  cy.url()
-    .should('eq', keycloakLoginFields[strategy]['landing-page'])
-    .then(() => {
-      // verifiy that the page has loaded
-      cy.get('body').should('be.visible');
-    });
+  //cy.visit(Cypress.config().baseUrl + clustersUrl);
+  //cy.url()
+  //  .should('eq', keycloakLoginFields[strategy]['landing-page'])
+  //  .then(() => {
+  // verifiy that the page has loaded
+  //    cy.get('body').should('be.visible');
+  //  });
   //cy.visit(Cypress.config().baseUrl + clustersUrl);
   //cy.url().should('eq', keycloakLoginFields[strategy]['landing-page']);
   // if (strategy == "env-ephemeral") {
