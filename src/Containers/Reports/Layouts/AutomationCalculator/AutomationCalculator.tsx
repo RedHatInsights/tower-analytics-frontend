@@ -40,6 +40,7 @@ import {
   convertSecondsToHours,
 } from '../../../../Utilities/helpers';
 import useRequest from '../../../../Utilities/useRequest';
+import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
 
 // Chart
 import Chart from '../../../../Components/Chart';
@@ -370,6 +371,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
     themeColor: isMoney ? 'green' : 'blue',
+    xTickFormat: getDateFormatByGranularity(queryParams.granularity),
   };
 
   const formattedValue = (key: string, value: number) => {
@@ -532,14 +534,15 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               <DownloadButton
                 key="download-button"
                 slug={slug}
+                isMoney={isMoney}
                 name={name}
                 description={description}
                 endpointUrl={dataEndpoint}
                 queryParams={queryParams}
                 selectOptions={options}
-                y={''}
-                label={''}
-                xTickFormat={''}
+                y={chartParams.y}
+                label={chartParams.label}
+                xTickFormat={chartParams.xTickFormat}
                 themeColor={chartParams.themeColor}
                 totalPages={Math.ceil(
                   api.result.meta.count / queryParams.limit
