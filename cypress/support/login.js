@@ -1,4 +1,5 @@
-import { clustersUrl, reportsUrl } from '../support/constants'
+import keycloakLoginFields from '../fixtures/keycloakLoginFields.json';
+import { clustersUrl } from '../support/constants';
 
 Cypress.Commands.add('getBaseUrl', () => Cypress.env('baseUrl'));
 
@@ -25,58 +26,19 @@ Cypress.Commands.add('login', () => {
 
   cy.log('Determining login strategy');
 
-  const keycloakLoginFields = {
-    'localhost': {
-      'username': '#username-verification',
-      'password': '#password',
-      'two-step': false,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
-    },
-    // when you login on eph, the landing page is "/"
-    'front-end-aggregator-ephemeral': {
-      'username': '#username-verification',
-      'password': '#password',
-      'two-step': false,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
-    },
-    'env-ephemeral': {
-      'username': '#username',
-      'password': '#password',
-      'two-step': false,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
-    },
-    'mocks-keycloak-ephemeral': {
-      'username': '#username',
-      'password': '#password',
-      'two-step': false,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
-    },
-    'console.stage.redhat.com': {
-      'username': '#username-verification',
-      'password': '#password',
-      'two-step': true,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
-    },
-    'stage.foo.redhat.com': {
-      'username': '#username-verification',
-      'password': '#password',
-      'two-step': true,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
-    }
-  }
+  cy.log(JSON.stringify(keycloakLoginFields));
 
   let strategy = null;
 
-  // probably some fancy filter function for this
-  for (const element of Object.keys(keycloakLoginFields)) {
-    if (Cypress.config().baseUrl.includes(element)) {
-      cy.log('Baseurl contains: ' + element);
-      strategy = element;
+  for (const index of Object.keys(keycloakLoginFields)) {
+    if (Cypress.config().baseUrl.includes(index)) {
+      cy.log('Baseurl contains: ' + index);
+      strategy = index;
       break;
     }
   }
 
-  cy.log('Strategy: ');
+  cy.log('Strategy:');
   cy.log(JSON.stringify(keycloakLoginFields[strategy]));
   cy.get(keycloakLoginFields[strategy]['username']).should('be.visible');
 
@@ -87,24 +49,36 @@ Cypress.Commands.add('login', () => {
     );
     cy.get('#login-show-step2').click();
     cy.getPassword().then((password) =>
-      cy.get(keycloakLoginFields[strategy]['password']).type(`${password}{enter}`, { log: false })
+      cy
+        .get(keycloakLoginFields[strategy]['password'])
+        .type(`${password}`, { log: false })
     );
+    cy.get('#rh-password-verification-submit-button').click();
   } else {
     cy.log('One step verfication');
-    cy.getUsername().then((uname) => cy.get(keycloakLoginFields[strategy]['username']).type(`${uname}`));
-    cy.getPassword().then((password) =>
-      cy.get(keycloakLoginFields[strategy]['password']).type(`${password}{enter}`, { log: false })
+    cy.getUsername().then((uname) =>
+      cy.get(keycloakLoginFields[strategy]['username']).type(`${uname}`)
     );
+    cy.get('#login-show-step2').click();
+    cy.getPassword().then((password) =>
+      cy
+        .get(keycloakLoginFields[strategy]['password'])
+        .type(`${password}`, { log: false })
+    );
+    cy.get('#rh-password-verification-submit-button').click();
   }
 
-  cy.log('Checking for landing page: ' + keycloakLoginFields[strategy]['landing-page']);
+  cy.log(
+    'Checking for landing page: ' +
+      keycloakLoginFields[strategy]['landing-page']
+  );
   cy.visit(Cypress.config().baseUrl + clustersUrl);
   cy.url().should('eq', keycloakLoginFields[strategy]['landing-page']);
   // if (strategy == "env-ephemeral") {
-    // cy.visit(Cypress.config().baseUrl + clustersUrl);
-    // cy.url().should('eq', Cypress.config().baseUrl + clustersUrl);
-    // cy.get('[data-quickstart-id="ansible_automation-analytics_reports"]').click();
-    // cy.get('a[href="' + Cypress.config().baseUrl + reportsUrl + '"]', { timeout: 10000 }).should('be.visible');
-    // cy.get('[data-ouia-component-type="PF4/Title"]', { timeout: 10000 }).should('be.visible');    
+  // cy.visit(Cypress.config().baseUrl + clustersUrl);
+  // cy.url().should('eq', Cypress.config().baseUrl + clustersUrl);
+  // cy.get('[data-quickstart-id="ansible_automation-analytics_reports"]').click();
+  // cy.get('a[href="' + Cypress.config().baseUrl + reportsUrl + '"]', { timeout: 10000 }).should('be.visible');
+  // cy.get('[data-ouia-component-type="PF4/Title"]', { timeout: 10000 }).should('be.visible');
   // }
 });
