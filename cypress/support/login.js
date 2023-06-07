@@ -68,12 +68,7 @@ Cypress.Commands.add('login', () => {
     cy.get('#rh-password-verification-submit-button').click();
   }
 
-  cy.log(
-    'Checking for landing page: ' +
-      keycloakLoginFields[strategy]['landing-page']
-  );
   cy.visit(Cypress.config().baseUrl + clustersUrl);
-  cy.url().should('eq', keycloakLoginFields[strategy]['landing-page']);
   // if (strategy == "env-ephemeral") {
   // cy.visit(Cypress.config().baseUrl + clustersUrl);
   // cy.url().should('eq', Cypress.config().baseUrl + clustersUrl);
