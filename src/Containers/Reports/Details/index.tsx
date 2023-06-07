@@ -62,7 +62,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
         </LabelGroup>
       );
       return (
-        <>
+        <div data-cy={`header-${slug}`}>
           <PageHeader
             data-cy={`header-${slug}`}
             breadcrumbs={breadcrumbsItems}
@@ -71,7 +71,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
             footer={reportTags}
           />
           <PageSection>{getComponent(report, true)}</PageSection>
-        </>
+        </div>
       );
     } else if (isLoading) {
       return <></>;
