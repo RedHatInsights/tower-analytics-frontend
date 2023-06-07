@@ -42,7 +42,7 @@ Cypress.Commands.add('login', () => {
   cy.log(JSON.stringify(keycloakLoginFields[strategy]));
   cy.get(keycloakLoginFields[strategy]['username']).should('be.visible');
 
-  if (keycloakLoginFields[strategy]['two-step']) {
+  if (keycloakLoginFields[strategy]['2step']) {
     cy.log('Two step verfication');
     cy.getUsername().then((uname) =>
       cy.get(keycloakLoginFields[strategy]['username']).type(`${uname}`)
@@ -59,7 +59,6 @@ Cypress.Commands.add('login', () => {
     cy.getUsername().then((uname) =>
       cy.get(keycloakLoginFields[strategy]['username']).type(`${uname}`)
     );
-    cy.get('#login-show-step2').click();
     cy.getPassword().then((password) =>
       cy
         .get(keycloakLoginFields[strategy]['password'])
@@ -69,11 +68,4 @@ Cypress.Commands.add('login', () => {
   }
 
   cy.visit(Cypress.config().baseUrl + clustersUrl);
-  // if (strategy == "env-ephemeral") {
-  // cy.visit(Cypress.config().baseUrl + clustersUrl);
-  // cy.url().should('eq', Cypress.config().baseUrl + clustersUrl);
-  // cy.get('[data-quickstart-id="ansible_automation-analytics_reports"]').click();
-  // cy.get('a[href="' + Cypress.config().baseUrl + reportsUrl + '"]', { timeout: 10000 }).should('be.visible');
-  // cy.get('[data-ouia-component-type="PF4/Title"]', { timeout: 10000 }).should('be.visible');
-  // }
 });
