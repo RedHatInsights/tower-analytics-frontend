@@ -11,7 +11,6 @@ import {
 } from '@patternfly/react-core';
 import { Tr, Td } from '@patternfly/react-table';
 import { global_success_color_200 as globalSuccessColor200 } from '@patternfly/react-tokens';
-import { global_disabled_color_200 as globalDisabledColor200 } from '@patternfly/react-tokens';
 import { global_palette_red_200 } from '@patternfly/react-tokens';
 
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
@@ -140,16 +139,6 @@ const Row: FunctionComponent<Props> = ({
               x {template.successful_hosts_total} host runs
             </InputGroupText>
           </InputGroup>
-        </Td>
-        <Td
-          data-cy={'savings'}
-          style={{
-            color: template.enabled
-              ? globalSuccessColor200.value
-              : globalDisabledColor200.value,
-          }}
-        >
-          {currencyFormatter(+template.monetary_gain)}
         </Td>
         <Td>
           <Switch
