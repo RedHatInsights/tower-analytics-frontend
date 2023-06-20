@@ -12,6 +12,7 @@ import {
 import { Tr, Td } from '@patternfly/react-table';
 import { global_success_color_200 as globalSuccessColor200 } from '@patternfly/react-tokens';
 import { global_disabled_color_200 as globalDisabledColor200 } from '@patternfly/react-tokens';
+import { global_palette_red_200 } from '@patternfly/react-tokens';
 
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
 import timeFormatter from '../../../../../Utilities/timeFormatter';
@@ -91,7 +92,15 @@ const Row: FunctionComponent<Props> = ({
           </Tooltip>
         </Td>
         {variableRow && (
-          <Td>
+          <Td
+            style={{
+              color:
+                template.successful_hosts_savings &&
+                template.successful_hosts_saved_hours > 0
+                  ? globalSuccessColor200.value
+                  : global_palette_red_200.value,
+            }}
+          >
             {setLabeledValue(variableRow.key, +template[variableRow.key])}
           </Td>
         )}
