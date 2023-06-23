@@ -416,11 +416,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     <Card isPlain>
       {fullCard && (
         <CardHeader>
-          <CardTitle>
-            {isMoney
-              ? 'Automation savings in currency'
-              : 'Automation savings in hours'}
-          </CardTitle>
+          <CardTitle>Automation savings</CardTitle>
           <CardActions>
             <ToggleGroup aria-label="toggleButton">
               <ToggleGroupItem
