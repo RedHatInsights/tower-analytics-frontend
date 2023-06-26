@@ -11,6 +11,7 @@ import {
 } from '@patternfly/react-core';
 import { Tr, Td } from '@patternfly/react-table';
 import { global_success_color_200 as globalSuccessColor200 } from '@patternfly/react-tokens';
+import { global_disabled_color_200 as globalDisabledColor200 } from '@patternfly/react-tokens';
 import { global_palette_red_200 } from '@patternfly/react-tokens';
 
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
@@ -53,6 +54,15 @@ const setLabeledValue = (key: string, value: number) => {
   return label;
 };
 
+const setColumnColor = (template: Template) => {
+  if (
+    template.successful_hosts_savings > 0 &&
+    template.successful_hosts_saved_hours > 0
+  )
+    return globalSuccessColor200.value;
+  else return global_palette_red_200.value;
+};
+
 const Row: FunctionComponent<Props> = ({
   template,
   variableRow,
@@ -93,11 +103,7 @@ const Row: FunctionComponent<Props> = ({
         {variableRow && (
           <Td
             style={{
-              color:
-                template.successful_hosts_savings &&
-                template.successful_hosts_saved_hours > 0
-                  ? globalSuccessColor200.value
-                  : global_palette_red_200.value,
+              color: setColumnColor(template),
             }}
           >
             {setLabeledValue(variableRow.key, +template[variableRow.key])}
@@ -139,6 +145,16 @@ const Row: FunctionComponent<Props> = ({
               x {template.successful_hosts_total} host runs
             </InputGroupText>
           </InputGroup>
+        </Td>
+        <Td
+          data-cy={'savings'}
+          style={{
+            color: template.enabled
+              ? setColumnColor(template)
+              : globalDisabledColor200.value,
+          }}
+        >
+          {currencyFormatter(+template.successful_hosts_savings)}
         </Td>
         <Td>
           <Switch

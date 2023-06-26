@@ -90,6 +90,7 @@ const TopTemplates: FunctionComponent<Props> = ({
           <Th>Name</Th>
           {variableRow && <Th {...getSortParams()}>{variableRow.value}</Th>}
           <Th>Manual time</Th>
+          <Th>Savings</Th>
           <Th
             style={{
               float: 'right',
