@@ -101,11 +101,7 @@ const Row: FunctionComponent<Props> = ({
           </Tooltip>
         </Td>
         {variableRow && (
-          <Td
-            style={{
-              color: setColumnColor(template),
-            }}
-          >
+          <Td>
             {setLabeledValue(variableRow.key, +template[variableRow.key])}
           </Td>
         )}
