@@ -108,9 +108,7 @@ const Row: FunctionComponent<Props> = ({
         {variableRow && (
           <Td
             style={{
-              color: template.enabled
-                ? setColumnColor(variableRow.key, template)
-                : globalDisabledColor200.value,
+              color: setColumnColor(variableRow.key, template),
             }}
           >
             {setLabeledValue(variableRow.key, +template[variableRow.key])}
