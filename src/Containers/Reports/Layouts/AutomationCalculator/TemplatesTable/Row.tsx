@@ -54,13 +54,18 @@ const setLabeledValue = (key: string, value: number) => {
   return label;
 };
 
-const setColumnColor = (template: Template) => {
+const setColumnColor = (key: string, template: Template) => {
   if (
-    template.successful_hosts_savings > 0 &&
-    template.successful_hosts_saved_hours > 0
-  )
-    return globalSuccessColor200.value;
-  else return global_palette_red_200.value;
+    key === 'successful_hosts_savings' ||
+    key === 'successful_hosts_saved_hours'
+  ) {
+    if (
+      template.successful_hosts_savings > 0 &&
+      template.successful_hosts_saved_hours > 0
+    )
+      return globalSuccessColor200.value;
+    else return global_palette_red_200.value;
+  }
 };
 
 const Row: FunctionComponent<Props> = ({
@@ -101,7 +106,13 @@ const Row: FunctionComponent<Props> = ({
           </Tooltip>
         </Td>
         {variableRow && (
-          <Td>
+          <Td
+            style={{
+              color: template.enabled
+                ? setColumnColor(variableRow.key, template)
+                : globalDisabledColor200.value,
+            }}
+          >
             {setLabeledValue(variableRow.key, +template[variableRow.key])}
           </Td>
         )}
@@ -146,7 +157,10 @@ const Row: FunctionComponent<Props> = ({
           data-cy={'savings'}
           style={{
             color: template.enabled
-              ? setColumnColor(template)
+              ? template.successful_hosts_savings > 0 ||
+                template.successful_hosts_saved_hours > 0
+                ? globalSuccessColor200.value
+                : global_palette_red_200.value
               : globalDisabledColor200.value,
           }}
         >
