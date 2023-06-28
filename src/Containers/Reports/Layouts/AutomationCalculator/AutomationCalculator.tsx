@@ -425,7 +425,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 isSelected={isMoney}
                 onChange={() => {
                   setisMoney(true);
-                  queryParams.sort_options = 'successful_hosts_savings';
+                  setFromToolbar('sort_options', 'successful_hosts_savings');
                 }}
               />
               <ToggleGroupItem
@@ -434,7 +434,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 isSelected={!isMoney}
                 onChange={() => {
                   setisMoney(false);
-                  queryParams.sort_options = 'successful_hosts_saved_hours';
+                  setFromToolbar(
+                    'sort_options',
+                    'successful_hosts_saved_hours'
+                  );
                 }}
               />
             </ToggleGroup>
@@ -614,6 +617,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         </Grid>
       </>
     );
+  console.log('sort options: ', queryParams.sort_options);
   return (
     <ApiStatusWrapper api={api} customLoading={true} customEmptyState={true}>
       {renderContents()}
