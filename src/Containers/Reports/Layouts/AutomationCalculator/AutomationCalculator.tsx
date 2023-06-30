@@ -420,6 +420,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           <CardActions>
             <ToggleGroup aria-label="toggleButton">
               <ToggleGroupItem
+                id="toggleIsMoneyTrue"
                 text="Money"
                 buttonId="money"
                 isSelected={isMoney}
@@ -429,6 +430,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 }}
               />
               <ToggleGroupItem
+                id="toggleIsMoneyFalse"
                 text="Time"
                 buttonId="time"
                 isSelected={!isMoney}
@@ -617,7 +619,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         </Grid>
       </>
     );
-  console.log('sort options: ', queryParams.sort_options);
   return (
     <ApiStatusWrapper api={api} customLoading={true} customEmptyState={true}>
       {renderContents()}

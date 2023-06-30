@@ -90,9 +90,6 @@ const Chart: FC<Props> = ({
   specificFunctions,
   namespace = 'settings',
 }) => {
-  console.log(schema);
-  console.log(data);
-  console.log(specificFunctions);
   const {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     queryParams: { chartSeriesHiddenProps },

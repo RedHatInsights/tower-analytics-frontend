@@ -3,7 +3,12 @@ import { history, mountPage } from '../../../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
 import AutomationCalculator from './AutomationCalculator';
 import TotalSavings from './TotalSavings';
-import { EmptyStateBody } from '@patternfly/react-core';
+import {
+  EmptyStateBody,
+  ToggleGroup,
+  ToggleGroupItem,
+  //ToggleGroupItem,
+} from '@patternfly/react-core';
 import { Endpoint } from '../../../../Api';
 import { roi } from '../../../../Utilities/constants';
 import {
@@ -18,6 +23,7 @@ const jobExplorerUrl = 'path:/api/tower-analytics/v1/roi_templates/';
 const dummyRoiData = {
   response_type: '',
   cost: { hourly_automation_cost: 20, hourly_manual_labor_cost: 50 },
+  isMoney: true,
   meta: {
     count: 3,
     legend: [
@@ -33,6 +39,7 @@ const dummyRoiData = {
         manual_effort_minutes: 60,
         template_success_rate: 55.7018,
         successful_hosts_savings: 40000,
+        successful_hosts_saved_hours: 900,
         failed_hosts_costs: 5,
         monetary_gain: 40000,
       },
@@ -48,6 +55,7 @@ const dummyRoiData = {
         manual_effort_minutes: 60,
         template_success_rate: 55.7018,
         successful_hosts_savings: 40000,
+        successful_hosts_saved_hours: 900,
         failed_hosts_costs: 5,
         monetary_gain: 40000,
       },
@@ -63,6 +71,7 @@ const dummyRoiData = {
         manual_effort_minutes: 60,
         template_success_rate: 55.7018,
         successful_hosts_savings: 40000,
+        successful_hosts_saved_hours: 900,
         failed_hosts_costs: 5,
         monetary_gain: 40000,
       },
@@ -239,6 +248,51 @@ describe('Containers/Reports/AutomationCalculator', () => {
         'No results match the filter criteria. Clear all filters and try again.'
       )
     );
+  });
+
+  it('toggle should render', async () => {
+    await act(async () => {
+      wrapper = mountPage(AutomationCalculator, pageParams);
+    });
+    wrapper.update();
+
+    const toggleButton = wrapper.find(ToggleGroup);
+    const toggleButtonMoney = wrapper.find('.toggleIsMoneyTrue');
+    const toggleButtonTime = wrapper.find('.toggleIsMoneyFalse');
+
+    // expect toggle to exist
+    expect(toggleButton).toBeTruthy();
+    expect(toggleButtonMoney).toBeTruthy();
+    expect(toggleButtonTime).toBeTruthy();
+  });
+
+  it('toggle should render', async () => {
+    await act(async () => {
+      wrapper = mountPage(AutomationCalculator, pageParams);
+    });
+    wrapper.update();
+
+    const toggleButton = wrapper.find(ToggleGroup);
+    const toggleButtonMoney = wrapper.find('.toggleIsMoneyTrue');
+    const toggleButtonTime = wrapper.find('.toggleIsMoneyFalse');
+
+    // expect toggle to exist
+    expect(toggleButton).toBeTruthy();
+    expect(toggleButtonMoney).toBeTruthy();
+    expect(toggleButtonTime).toBeTruthy();
+  });
+
+  it('toggle should render correct money values', async () => {
+    await act(async () => {
+      wrapper = mountPage(AutomationCalculator, pageParams);
+    });
+    wrapper.update();
+
+    //expect(dummyRoiData.isMoney).toBe(true);
+    //expect(screen.getByText('$40,000.00')).toBeTruthy();
+    console.log('testing console log');
+    expect(dummyRoiData.isMoney).toBe(false);
+    expect(screen.getByText('900 hours')).toBeTruthy();
   });
 
   xit('should call redirect to job expoler', async () => {
