@@ -203,7 +203,7 @@ const Clusters = () => {
   };
 
   return (
-    <>
+    <div data-cy={'header-clusters'}>
       <PageHeader data-cy={'header-clusters'} title={'Clusters'} />
       <FilterableToolbar
         categories={options}
@@ -211,7 +211,7 @@ const Clusters = () => {
         setFilters={setFromToolbar}
       />
       <PageSection>{renderContent()}</PageSection>
-    </>
+    </div>
   );
 };
 
