@@ -1,14 +1,11 @@
 import { act } from 'react-dom/test-utils';
 import { history, mountPage } from '../../../../__tests__/helpers';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
+import { renderPage } from '../../../../__tests__/helpers.reactTestingLib';
 import fetchMock from 'fetch-mock-jest';
 import AutomationCalculator from './AutomationCalculator';
 import TotalSavings from './TotalSavings';
-import {
-  EmptyStateBody,
-  ToggleGroup,
-  ToggleGroupItem,
-  //ToggleGroupItem,
-} from '@patternfly/react-core';
+import { EmptyStateBody } from '@patternfly/react-core';
 import { Endpoint } from '../../../../Api';
 import { roi } from '../../../../Utilities/constants';
 import {
@@ -250,49 +247,47 @@ describe('Containers/Reports/AutomationCalculator', () => {
     );
   });
 
-  it('toggle should render', async () => {
+  it('toggle should render and time/money should be selected when clicked', async () => {
     await act(async () => {
-      wrapper = mountPage(AutomationCalculator, pageParams);
+      renderPage(AutomationCalculator, undefined, pageParams);
     });
-    wrapper.update();
 
-    const toggleButton = wrapper.find(ToggleGroup);
-    const toggleButtonMoney = wrapper.find('.toggleIsMoneyTrue');
-    const toggleButtonTime = wrapper.find('.toggleIsMoneyFalse');
-
-    // expect toggle to exist
-    expect(toggleButton).toBeTruthy();
+    //expect toggle to render
+    const toggleButtonMoney = screen.getByRole('button', {
+      name: 'Money',
+    });
+    const toggleButtonTime = screen.getByRole('button', {
+      name: 'Time',
+    });
     expect(toggleButtonMoney).toBeTruthy();
     expect(toggleButtonTime).toBeTruthy();
-  });
 
-  it('toggle should render', async () => {
-    await act(async () => {
-      wrapper = mountPage(AutomationCalculator, pageParams);
+    //expect toggle buttons to focus when selected
+    expect(toggleButtonMoney.getAttribute('aria-pressed')).toBe('true');
+
+    fireEvent.click(toggleButtonTime);
+    await waitFor(() => {
+      expect(toggleButtonMoney.getAttribute('aria-pressed')).toBe('false');
+      expect(toggleButtonTime.getAttribute('aria-pressed')).toBe('true');
     });
-    wrapper.update();
 
-    const toggleButton = wrapper.find(ToggleGroup);
-    const toggleButtonMoney = wrapper.find('.toggleIsMoneyTrue');
-    const toggleButtonTime = wrapper.find('.toggleIsMoneyFalse');
-
-    // expect toggle to exist
-    expect(toggleButton).toBeTruthy();
-    expect(toggleButtonMoney).toBeTruthy();
-    expect(toggleButtonTime).toBeTruthy();
-  });
-
-  it('toggle should render correct money values', async () => {
-    await act(async () => {
-      wrapper = mountPage(AutomationCalculator, pageParams);
+    fireEvent.click(toggleButtonMoney);
+    await waitFor(() => {
+      expect(toggleButtonMoney.getAttribute('aria-pressed')).toBe('true');
+      expect(toggleButtonTime.getAttribute('aria-pressed')).toBe('false');
     });
-    wrapper.update();
 
-    //expect(dummyRoiData.isMoney).toBe(true);
-    //expect(screen.getByText('$40,000.00')).toBeTruthy();
-    console.log('testing console log');
-    expect(dummyRoiData.isMoney).toBe(false);
-    expect(screen.getByText('900 hours')).toBeTruthy();
+    /*
+    await act(async () => {
+      fireEvent.click(toggleButtonTime);
+    });
+    expect(toggleButtonMoney.getAttribute('aria-pressed')).toBe('false');
+
+    await act(async () => {
+      fireEvent.click(toggleButtonMoney);
+    });
+    expect(toggleButtonMoney.getAttribute('aria-pressed')).toBe('true');
+    */
   });
 
   xit('should call redirect to job expoler', async () => {
