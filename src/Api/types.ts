@@ -38,6 +38,7 @@ export interface PDFParams {
     startDate: string;
     endDate: string;
     dateRange: string;
+    adoptionRateType: string;
     token?: string;
     expiry?: string;
   };
@@ -60,6 +61,7 @@ export interface PDFEmailParams {
     startDate: string;
     endDate: string;
     dateRange: string;
+    adoptionRateType: string;
     token?: string;
     expiry?: string;
   };
