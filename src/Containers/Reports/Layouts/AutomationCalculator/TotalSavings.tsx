@@ -27,8 +27,6 @@ const TotalSavings: FunctionComponent<Props> = ({
   isLoading = false,
   isMoney = true,
 }) => {
-  console.log('total savings', JSON.stringify(totalSavings));
-  console.log('current page savings', JSON.stringify(currentPageSavings));
   return (
     <>
       {['Total savings', 'Current page savings'].map((title, index) => (

@@ -21,6 +21,10 @@ const dummyRoiData = {
   response_type: '',
   cost: { hourly_automation_cost: 20, hourly_manual_labor_cost: 50 },
   isMoney: true,
+  monetary_gain_other_pages: 0,
+  monetary_gain_current_page: 40000,
+  successful_hosts_saved_hours_other_pages: 0,
+  successful_hosts_saved_hours_current_page: 900,
   meta: {
     count: 3,
     legend: [
@@ -35,10 +39,10 @@ const dummyRoiData = {
         template_weigh_in: true,
         manual_effort_minutes: 60,
         template_success_rate: 55.7018,
-        successful_hosts_savings: 40000,
-        successful_hosts_saved_hours: 900,
+        successful_hosts_savings: 60000,
+        successful_hosts_saved_hours: 600,
         failed_hosts_costs: 5,
-        monetary_gain: 40000,
+        monetary_gain: 60000,
       },
       {
         id: 2,
@@ -51,10 +55,10 @@ const dummyRoiData = {
         template_weigh_in: true,
         manual_effort_minutes: 60,
         template_success_rate: 55.7018,
-        successful_hosts_savings: 40000,
-        successful_hosts_saved_hours: 900,
+        successful_hosts_savings: 70000,
+        successful_hosts_saved_hours: 700,
         failed_hosts_costs: 5,
-        monetary_gain: 40000,
+        monetary_gain: 70000,
       },
       {
         id: 3,
@@ -67,10 +71,10 @@ const dummyRoiData = {
         template_weigh_in: true,
         manual_effort_minutes: 60,
         template_success_rate: 55.7018,
-        successful_hosts_savings: 40000,
-        successful_hosts_saved_hours: 900,
+        successful_hosts_savings: 80000,
+        successful_hosts_saved_hours: 800,
         failed_hosts_costs: 5,
-        monetary_gain: 40000,
+        monetary_gain: 80000,
       },
     ],
   },
@@ -269,15 +273,16 @@ describe('Containers/Reports/AutomationCalculator', () => {
     await waitFor(() => {
       expect(toggleButtonMoney.getAttribute('aria-pressed')).toBe('false');
       expect(toggleButtonTime.getAttribute('aria-pressed')).toBe('true');
-      expect(screen.getAllByText('900 hours')).toHaveLength(3);
+      expect(screen.getAllByText('900 hours')).toHaveLength(2);
+      expect(screen.queryByText('$40,000.00')).toBeFalsy();
     });
 
     fireEvent.click(toggleButtonMoney);
     await waitFor(() => {
       expect(toggleButtonMoney.getAttribute('aria-pressed')).toBe('true');
       expect(toggleButtonTime.getAttribute('aria-pressed')).toBe('false');
-      expect(screen.getAllByText('$40,000')).toHaveLength(3);
-      expect(screen.getAllByText('900 hours')).toHaveLength(3);
+      expect(screen.getAllByText('$40,000.00')).toHaveLength(2);
+      expect(screen.queryByText('900 hours')).toBeFalsy();
     });
   });
 

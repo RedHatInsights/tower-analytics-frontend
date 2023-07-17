@@ -111,7 +111,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
 
   const [costManual, setCostManual] = useState('');
   const [costAutomation, setCostAutomation] = useState('');
-  const [isMoney, setisMoney] = useState(true);
+  const [isMoney, setIsMoney] = useState(true);
   const { queryParams, setFromToolbar, setFromPagination } =
     useQueryParams(defaultParams);
 
@@ -425,7 +425,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 buttonId="money"
                 isSelected={isMoney}
                 onChange={() => {
-                  setisMoney(true);
+                  setIsMoney(true);
                   setFromToolbar('sort_options', 'successful_hosts_savings');
                 }}
               />
@@ -435,7 +435,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 buttonId="time"
                 isSelected={!isMoney}
                 onChange={() => {
-                  setisMoney(false);
+                  setIsMoney(false);
                   setFromToolbar(
                     'sort_options',
                     'successful_hosts_saved_hours'
@@ -510,7 +510,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     </Stack>
   );
 
-  console.log('isMoney', isMoney);
   const renderContents = () =>
     fullCard ? (
       <Card>
