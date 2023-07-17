@@ -77,7 +77,6 @@ const TopTemplates: FunctionComponent<Props> = ({
       Display only hidden template rows
     </DropdownItem>,
   ];
-
   return (
     <TableComposable
       data-cy={'table'}
@@ -88,7 +87,11 @@ const TopTemplates: FunctionComponent<Props> = ({
         <Tr>
           <Th />
           <Th>Name</Th>
-          {variableRow && <Th {...getSortParams()}>{variableRow.value}</Th>}
+          {variableRow && (
+            <Th {...getSortParams()} tooltip={null}>
+              {variableRow.value}
+            </Th>
+          )}
           <Th>Manual time</Th>
           <Th>Savings</Th>
           <Th
