@@ -276,18 +276,6 @@ describe('Containers/Reports/AutomationCalculator', () => {
       expect(toggleButtonMoney.getAttribute('aria-pressed')).toBe('true');
       expect(toggleButtonTime.getAttribute('aria-pressed')).toBe('false');
     });
-
-    /*
-    await act(async () => {
-      fireEvent.click(toggleButtonTime);
-    });
-    expect(toggleButtonMoney.getAttribute('aria-pressed')).toBe('false');
-
-    await act(async () => {
-      fireEvent.click(toggleButtonMoney);
-    });
-    expect(toggleButtonMoney.getAttribute('aria-pressed')).toBe('true');
-    */
   });
 
   xit('should call redirect to job expoler', async () => {

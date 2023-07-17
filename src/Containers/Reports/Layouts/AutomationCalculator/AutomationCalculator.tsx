@@ -466,11 +466,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             labelFormat: {
               customTooltipFormatting,
             },
-            /*
-            themeColor: {
-              customChartColor,
-            },
-            */
           }}
         />
       ) : (
