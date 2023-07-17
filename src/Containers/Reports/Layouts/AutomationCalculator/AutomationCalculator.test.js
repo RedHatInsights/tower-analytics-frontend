@@ -269,12 +269,15 @@ describe('Containers/Reports/AutomationCalculator', () => {
     await waitFor(() => {
       expect(toggleButtonMoney.getAttribute('aria-pressed')).toBe('false');
       expect(toggleButtonTime.getAttribute('aria-pressed')).toBe('true');
+      expect(screen.getAllByText('900 hours')).toHaveLength(3);
     });
 
     fireEvent.click(toggleButtonMoney);
     await waitFor(() => {
       expect(toggleButtonMoney.getAttribute('aria-pressed')).toBe('true');
       expect(toggleButtonTime.getAttribute('aria-pressed')).toBe('false');
+      expect(screen.getAllByText('$40,000')).toHaveLength(3);
+      expect(screen.getAllByText('900 hours')).toHaveLength(3);
     });
   });
 
