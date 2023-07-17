@@ -36,12 +36,6 @@ const CustomPoint: FC<Props> = ({ x, y, disableInlineStyles, ...props }) => {
   ) : null;
 };
 
-/*
-const CustomChartColor: FC<Props> = ({}) => {
-
-};
-*/
-
 const customFunctions = (specificFunctions?: ChartFunctions) => ({
   ...functions,
   axisFormat: {
