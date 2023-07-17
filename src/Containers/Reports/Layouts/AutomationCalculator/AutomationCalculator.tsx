@@ -510,6 +510,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     </Stack>
   );
 
+  console.log('isMoney', isMoney);
   const renderContents = () =>
     fullCard ? (
       <Card>

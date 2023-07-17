@@ -26,36 +26,42 @@ const TotalSavings: FunctionComponent<Props> = ({
   currentPageSavings = 0,
   isLoading = false,
   isMoney = true,
-}) => (
-  <>
-    {['Total savings', 'Current page savings'].map((title, index) => (
-      <Card
-        data-cy={title.toLowerCase().replace(' ', '_').replace(' ', '_')}
-        isPlain
-        isCompact
-        key={title}
-      >
-        <CardTitle>{title}</CardTitle>
-        <CardBody>
-          <Title
-            headingLevel="h3"
-            size={index === 0 ? '4xl' : 'xl'}
-            style={{ color: 'var(--pf-global--success-color--200)' }}
-          >
-            {isLoading ? (
-              <SpinnerDiv>
-                <Spinner data-cy={'spinner'} isSVG size="lg" />
-              </SpinnerDiv>
-            ) : isMoney ? (
-              currencyFormatter(index === 0 ? totalSavings : currentPageSavings)
-            ) : (
-              hoursFormatter(index === 0 ? totalSavings : currentPageSavings)
-            )}
-          </Title>
-        </CardBody>
-      </Card>
-    ))}
-  </>
-);
+}) => {
+  console.log('total savings', JSON.stringify(totalSavings));
+  console.log('current page savings', JSON.stringify(currentPageSavings));
+  return (
+    <>
+      {['Total savings', 'Current page savings'].map((title, index) => (
+        <Card
+          data-cy={title.toLowerCase().replace(' ', '_').replace(' ', '_')}
+          isPlain
+          isCompact
+          key={title}
+        >
+          <CardTitle>{title}</CardTitle>
+          <CardBody>
+            <Title
+              headingLevel="h3"
+              size={index === 0 ? '4xl' : 'xl'}
+              style={{ color: 'var(--pf-global--success-color--200)' }}
+            >
+              {isLoading ? (
+                <SpinnerDiv>
+                  <Spinner data-cy={'spinner'} isSVG size="lg" />
+                </SpinnerDiv>
+              ) : isMoney ? (
+                currencyFormatter(
+                  index === 0 ? totalSavings : currentPageSavings
+                )
+              ) : (
+                hoursFormatter(index === 0 ? totalSavings : currentPageSavings)
+              )}
+            </Title>
+          </CardBody>
+        </Card>
+      ))}
+    </>
+  );
+}
 
 export default TotalSavings;
