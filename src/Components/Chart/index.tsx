@@ -4,7 +4,6 @@ import ChartBuilder, {
   ChartData,
   ChartFunctions,
   ChartSchemaElement,
-  ChartThemeColor,
   functions,
 } from 'react-json-chart-builder';
 import { useQueryParams } from '../../QueryParams';

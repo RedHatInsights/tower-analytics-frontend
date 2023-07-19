@@ -60,6 +60,6 @@ const TotalSavings: FunctionComponent<Props> = ({
       ))}
     </>
   );
-}
+};
 
 export default TotalSavings;
