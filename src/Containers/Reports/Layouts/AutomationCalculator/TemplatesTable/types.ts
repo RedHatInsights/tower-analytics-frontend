@@ -2,6 +2,7 @@ export interface Template {
   name: string;
   id: number;
   elapsed: number;
+  successful_hosts_saved_hours: number;
   host_count: number;
   total_count: number;
   total_org_count: number;

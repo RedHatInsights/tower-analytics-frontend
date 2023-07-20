@@ -6,6 +6,7 @@ export type SchemaFnc = (props: {
   label?: string;
   y?: string;
   xTickFormat?: string;
+  themeColor?: string;
   chartType?: ChartType;
 }) => ChartSchemaElement[];
 

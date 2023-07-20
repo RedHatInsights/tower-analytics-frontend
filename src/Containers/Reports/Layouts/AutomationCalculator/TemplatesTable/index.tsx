@@ -23,6 +23,7 @@ interface Props {
   navigateToJobExplorer: (id: number) => void;
   getSortParams?: () => TableSortParams;
   readOnly: boolean;
+  isMoney: boolean;
 }
 
 const TopTemplates: FunctionComponent<Props> = ({
@@ -33,6 +34,7 @@ const TopTemplates: FunctionComponent<Props> = ({
   navigateToJobExplorer = () => ({}),
   getSortParams = () => ({}),
   readOnly = true,
+  isMoney,
 }) => {
   const [isKebabOpen, setIsKebabOpen] = useState(false);
   const defaultParams = reportDefaultParams('automation_calculator');
@@ -75,7 +77,6 @@ const TopTemplates: FunctionComponent<Props> = ({
       Display only hidden template rows
     </DropdownItem>,
   ];
-
   return (
     <TableComposable
       data-cy={'table'}
@@ -86,7 +87,11 @@ const TopTemplates: FunctionComponent<Props> = ({
         <Tr>
           <Th />
           <Th>Name</Th>
-          {variableRow && <Th {...getSortParams()}>{variableRow.value}</Th>}
+          {variableRow && (
+            <Th {...getSortParams()} tooltip={null}>
+              {variableRow.value}
+            </Th>
+          )}
           <Th>Manual time</Th>
           <Th>Savings</Th>
           <Th
@@ -125,6 +130,7 @@ const TopTemplates: FunctionComponent<Props> = ({
             navigateToJobExplorer={navigateToJobExplorer}
             setEnabled={setEnabled(template.id)}
             readOnly={readOnly}
+            isMoney={isMoney}
           />
         ))}
       </Tbody>

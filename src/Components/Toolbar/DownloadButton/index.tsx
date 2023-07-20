@@ -32,6 +32,7 @@ import { getDateFormatByGranularity } from '../../../Utilities/helpers';
 interface Props {
   settingsNamespace: string;
   slug: string;
+  isMoney: boolean;
   name: string;
   description: string;
   endpointUrl: Endpoint;
@@ -40,6 +41,7 @@ interface Props {
   y: string;
   label: string;
   xTickFormat: string;
+  themeColor?: string;
   chartType: string;
   totalPages: number;
   pageLimit: number;
@@ -56,6 +58,7 @@ interface Props {
 const DownloadButton: FC<Props> = ({
   settingsNamespace = 'settings',
   slug,
+  isMoney,
   name,
   description,
   endpointUrl,
@@ -64,6 +67,7 @@ const DownloadButton: FC<Props> = ({
   y,
   label,
   xTickFormat,
+  themeColor,
   chartType,
   totalPages,
   pageLimit,
@@ -81,7 +85,6 @@ const DownloadButton: FC<Props> = ({
   const status = useAppSelector((state) => state?.pdfDownloadButton[slug]);
   const isLoading = status === DownloadState.pending;
   const isError = status === DownloadState.rejected;
-
   const { chartSeriesHiddenProps } = useReadQueryParams(
     {
       chartSeriesHiddenProps: [],
@@ -110,12 +113,14 @@ const DownloadButton: FC<Props> = ({
     if (downloadType === 'pdf')
       PdfDownload({
         slug,
+        isMoney,
         endpointUrl,
         queryParams,
         selectOptions,
         y,
         label,
         xTickFormat,
+        themeColor: themeColor ? themeColor : '',
         chartType,
         totalPages,
         pageLimit,
@@ -138,6 +143,7 @@ const DownloadButton: FC<Props> = ({
         xTickFormat: getDateFormatByGranularity(
           queryParams.granularity as string
         ),
+        themeColor: themeColor,
         chartType: chartType,
       };
       const allParams = inputs ? { ...queryParams, inputs } : queryParams;
@@ -147,6 +153,7 @@ const DownloadButton: FC<Props> = ({
           y: chartParams.y,
           label: chartParams.label as string,
           xTickFormat: chartParams.xTickFormat,
+          themeColor: chartParams.themeColor ? chartParams.themeColor : '',
           chartType: chartParams.chartType,
         },
         dataFetchingParams: {
@@ -156,6 +163,7 @@ const DownloadButton: FC<Props> = ({
           queryParams: allParams,
           chartSeriesHiddenProps: chartSeriesHiddenProps || [],
           totalPages: totalPages,
+          isMoney: isMoney,
           pageLimit: pageLimit,
           sortOptions: queryParams.sort_options as string,
           sortOrder: queryParams.sort_order === 'desc' ? 'desc' : 'asc',
@@ -230,6 +238,7 @@ const DownloadButton: FC<Props> = ({
             options={{
               settingsNamespace: 'settings',
               slug,
+              isMoney,
               name,
               description,
               endpointUrl,
@@ -238,6 +247,7 @@ const DownloadButton: FC<Props> = ({
               y,
               label,
               xTickFormat,
+              themeColor: themeColor ? themeColor : '',
               chartType,
               totalPages,
               pageLimit,

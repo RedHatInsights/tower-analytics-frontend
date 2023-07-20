@@ -4,12 +4,14 @@ import { DispatchType } from '../../../../../store';
 
 interface Props {
   slug: string;
+  isMoney: boolean;
   endpointUrl: Endpoint;
   queryParams: Params;
   selectOptions: OptionsReturnType;
   y: string;
   label: string;
   xTickFormat: string;
+  themeColor: string;
   chartType: string;
   totalPages: number;
   pageLimit: number;
@@ -28,12 +30,14 @@ interface Props {
 
 const PdfDownload: ({
   slug,
+  isMoney,
   endpointUrl,
   queryParams,
   selectOptions,
   y,
   label,
   xTickFormat,
+  themeColor,
   chartType,
   totalPages,
   pageLimit,
@@ -50,12 +54,14 @@ const PdfDownload: ({
   inputs,
 }: Props) => void = ({
   slug,
+  isMoney,
   endpointUrl,
   queryParams,
   selectOptions,
   y,
   label,
   xTickFormat,
+  themeColor,
   chartType,
   totalPages,
   pageLimit,
@@ -86,9 +92,11 @@ const PdfDownload: ({
           y,
           label,
           xTickFormat,
+          themeColor,
           chartType,
         },
         dataFetchingParams: {
+          isMoney,
           showExtraRows: showExtraRows,
           endpointUrl,
           queryParams: allParams,

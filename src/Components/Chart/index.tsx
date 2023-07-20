@@ -49,6 +49,7 @@ const customFunctions = (specificFunctions?: ChartFunctions) => ({
     ...functions.labelFormat,
     ...specificFunctions?.labelFormat,
   },
+
   onClick: {
     ...functions.onClick,
     ...specificFunctions?.onClick,

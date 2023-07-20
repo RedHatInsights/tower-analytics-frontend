@@ -17,6 +17,7 @@ export interface BaseReportProps {
 }
 
 export interface AutmationCalculatorProps extends BaseReportProps {
+  isMoney: boolean;
   defaultParams: Params;
   dataEndpoint: Endpoint;
   optionsEndpoint: Endpoint;
