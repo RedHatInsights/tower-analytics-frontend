@@ -543,7 +543,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 y={chartParams.y}
                 label={chartParams.label}
                 xTickFormat={chartParams.xTickFormat}
-                //themeColor={chartParams.themeColor}
                 totalPages={Math.ceil(
                   api.result.meta.count / queryParams.limit
                 )}
