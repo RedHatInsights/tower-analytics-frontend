@@ -73,7 +73,7 @@ export interface PdfDetailsProps {
   y: string;
   label: string;
   xTickFormat: string;
-  themeColor: string;
+  //themeColor: string;
   chartType: string;
   totalPages: number;
   pageLimit: number;
