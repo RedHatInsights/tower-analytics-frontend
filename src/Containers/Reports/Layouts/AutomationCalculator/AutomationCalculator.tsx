@@ -370,7 +370,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     label:
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
-    themeColor: isMoney ? 'green' : 'blue',
+    //themeColor: isMoney ? 'green' : 'blue',
     xTickFormat: getDateFormatByGranularity(queryParams.granularity),
   };
 
@@ -543,7 +543,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 y={chartParams.y}
                 label={chartParams.label}
                 xTickFormat={chartParams.xTickFormat}
-                themeColor={chartParams.themeColor}
+                //themeColor={chartParams.themeColor}
                 totalPages={Math.ceil(
                   api.result.meta.count / queryParams.limit
                 )}

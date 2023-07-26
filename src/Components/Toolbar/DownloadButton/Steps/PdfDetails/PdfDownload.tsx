@@ -11,7 +11,7 @@ interface Props {
   y: string;
   label: string;
   xTickFormat: string;
-  themeColor: string;
+  //themeColor: string;
   chartType: string;
   totalPages: number;
   pageLimit: number;
@@ -37,7 +37,7 @@ const PdfDownload: ({
   y,
   label,
   xTickFormat,
-  themeColor,
+  //themeColor,
   chartType,
   totalPages,
   pageLimit,
@@ -61,7 +61,7 @@ const PdfDownload: ({
   y,
   label,
   xTickFormat,
-  themeColor,
+  //themeColor,
   chartType,
   totalPages,
   pageLimit,
@@ -92,7 +92,7 @@ const PdfDownload: ({
           y,
           label,
           xTickFormat,
-          themeColor,
+          //themeColor,
           chartType,
         },
         dataFetchingParams: {

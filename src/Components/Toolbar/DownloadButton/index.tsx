@@ -41,7 +41,7 @@ interface Props {
   y: string;
   label: string;
   xTickFormat: string;
-  themeColor?: string;
+  //themeColor?: string;
   chartType: string;
   totalPages: number;
   pageLimit: number;
@@ -67,7 +67,7 @@ const DownloadButton: FC<Props> = ({
   y,
   label,
   xTickFormat,
-  themeColor,
+  //themeColor,
   chartType,
   totalPages,
   pageLimit,
@@ -120,7 +120,7 @@ const DownloadButton: FC<Props> = ({
         y,
         label,
         xTickFormat,
-        themeColor: themeColor ? themeColor : '',
+        //themeColor: themeColor ? themeColor : '',
         chartType,
         totalPages,
         pageLimit,
@@ -143,7 +143,7 @@ const DownloadButton: FC<Props> = ({
         xTickFormat: getDateFormatByGranularity(
           queryParams.granularity as string
         ),
-        themeColor: themeColor,
+        //themeColor: themeColor,
         chartType: chartType,
       };
       const allParams = inputs ? { ...queryParams, inputs } : queryParams;
@@ -153,7 +153,7 @@ const DownloadButton: FC<Props> = ({
           y: chartParams.y,
           label: chartParams.label as string,
           xTickFormat: chartParams.xTickFormat,
-          themeColor: chartParams.themeColor ? chartParams.themeColor : '',
+          //themeColor: chartParams.themeColor ? chartParams.themeColor : '',
           chartType: chartParams.chartType,
         },
         dataFetchingParams: {
@@ -247,7 +247,7 @@ const DownloadButton: FC<Props> = ({
               y,
               label,
               xTickFormat,
-              themeColor: themeColor ? themeColor : '',
+              //themeColor: themeColor ? themeColor : '',
               chartType,
               totalPages,
               pageLimit,
