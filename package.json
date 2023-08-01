@@ -132,5 +132,8 @@
   },
   "insights": {
     "appname": "automation-analytics"
+  },
+  "overrides": {
+    "tough-cookie": "^4.1.3"
   }
 }
