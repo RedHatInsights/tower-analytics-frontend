@@ -29,8 +29,7 @@ describe('Reports page smoketests', () => {
       cy.log(item)
       if (skippedTests["reports"].includes(item)) return;
 
-      cy.getByCy(item).should('exist')
-      cy.getByCy(item).click()
+      cy.getByCy(item).click().should('exist');
       if (ENV != ENVS.STAGE) {
         cy.waitSpinner();
       }
@@ -79,7 +78,7 @@ describe('Reports page smoketests', () => {
       cy.log(report)
       if (skippedTests["reports"].includes(report)) return;
       cy.getByCy('previous_report_button').click()
-      cy.wait(250);
+
       cy.getByCy('preview_title_link').then((previewTitle) => {
         cy.log(previewTitle)
         const newTitlePreview = previewTitle.text()

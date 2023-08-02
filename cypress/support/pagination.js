@@ -52,8 +52,7 @@ Cypress.Commands.add('testNavArrows', (selector, data) => {
   cy.get('@previousBtn').should('be.disabled');
 
   if (hasSecondPage) {
-    cy.get('@nextBtn').should('not.be.disabled');
-    cy.get('@nextBtn').click();
+    cy.get('@nextBtn').click().should('not.be.disabled');
   } else {
     cy.get('@nextBtn').should('be.disabled');
   }
@@ -62,14 +61,12 @@ Cypress.Commands.add('testNavArrows', (selector, data) => {
   cy.get('@previousBtn');
 
   if (hasSecondPage) {
-    cy.get('@previousBtn').should('not.be.disabled');
     // cy.get('@nextBtn').should('not.be.disabled'); // TODO: improve this test considering all pages
-    cy.get('@previousBtn').click();
+    cy.get('@previousBtn').click().should('not.be.disabled');
   } else {
     cy.get('@previousBtn').should('be.disabled');
     cy.get('@nextBtn').should('be.disabled');
   }
-
 });
 
 /**
@@ -248,12 +245,9 @@ Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
     cy.get('@tableLines').should('have.length.greaterThan', 1)
 
     // toggle back to min items
-    cy.findByIdLike('@pag_option_menu', 'aa-pagination-').click();
-    cy.findByIdLike('@pag_option_menu', 'aa-pagination-').should(
-      'have.attr',
-      'aria-expanded',
-      'true'
-    );
+    cy.findByIdLike('@pag_option_menu', 'aa-pagination-')
+      .click()
+      .should('have.attr', 'aria-expanded', 'true');
 
     cy.get('@pag_option_menu').find('li').eq(1).as('min_items');
     // .contains('per-page-'+itemsPerPage).
