@@ -28,20 +28,24 @@ function setCookiesForUILogin() {
 }
 
 function uiLogin(strategy, username, password) {
-  const usernameField = kcLoginFields[strategy]['username'];
-  const passwordField = kcLoginFields[strategy]['password'];
-  const loginStrategy = JSON.stringify(kcLoginFields[strategy]);
+  cy.log('Strategy:', JSON.stringify(kcLoginFields[strategy]));
 
-  cy.log('Strategy:', loginStrategy);
-  cy.get(usernameField).should('be.visible');
+  cy.get(kcLoginFields[strategy]['username']).as('usernameField');
+  cy.get('@usernameField').should('be.visible');
+  cy.get('@usernameField').type(`${username}`);
 
-  cy.get(usernameField).type(`${username}`);
   if (kcLoginFields[strategy]['2step']) {
     cy.log('Two step verfication');
-    cy.get('#login-show-step2').click();
+    cy.get('#login-show-step2').as('showStep2');
+    cy.get('@showStep2').click().should('be.visible');
   }
-  cy.get(passwordField).type(`${password}`, { log: false });
-  cy.get('#rh-password-verification-submit-button').click();
+
+  cy.get(kcLoginFields[strategy]['password']).as('passwordField');
+  cy.get('@passwordField').should('be.visible');
+  cy.get('@passwordField').type(`${password}`, { log: false });
+
+  cy.get('#rh-password-verification-submit-button').as('submitButton');
+  cy.get('@submitButton').click().should('be.visible');
 
   cy.visit(Cypress.config().baseUrl + clustersUrl);
 }
