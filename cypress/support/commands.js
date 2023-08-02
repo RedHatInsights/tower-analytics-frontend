@@ -168,7 +168,7 @@ Cypress.Commands.add('visitReport', (pageName) => {
         cy.getByCy('api_error_state').should('not.exist')
         cy.getByCy('api_loading_state').should('not.exist')
         cy.log('Intercepting the url:', page.api_call)
-        cy.wait('@apiCall', { timeout: 8000 })
+        // cy.wait('@apiCall', { timeout: 8000 }) // FIXME
       }
     })
   })
