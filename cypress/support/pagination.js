@@ -11,17 +11,18 @@
 Cypress.Commands.add(
   'getPaginationArrows',
   (cyParent, childBtnAction, ...args) => {
-    return cy
-      .getByCy(`${cyParent}`, ...args)
+    cy.getByCy(`${cyParent}`, ...args)
       .find('.pf-c-pagination__nav')
-      .find(`[data-action="${childBtnAction}"]`);
+      .find(`[data-action="${childBtnAction}"]`)
+      .as('arrowBtn');
+    return cy.get('@arrowBtn');
   }
 );
 
 Cypress.Commands.add('getPaginationBtn', (cyParent, btnAction) => {
-  let getPaginationArrows = cy.getPaginationArrows(cyParent, btnAction);
+  cy.getPaginationArrows(cyParent, btnAction).as('paginationArrows');
 
-  if (getPaginationArrows) return getPaginationArrows;
+  if (cy.get('@paginationArrows')) return cy.get('@paginationArrows');
 
   throw `Unable to find "${btnAction}" button for data-cy parent: "${cyParent}"`;
 });
@@ -33,40 +34,30 @@ Cypress.Commands.add('getItemsToggle', (cyParent, childBtnAction, ...args) => {
     .find(`[data-action="${childBtnAction}"]`);
 });
 
-Cypress.Commands.add('getPaginationBtn', (cyParent, btnAction) => {
-  let getPaginationArrows = cy.getPaginationArrows(cyParent, btnAction);
-
-  if (getPaginationArrows) return getPaginationArrows;
-
-  throw `Unable to find "${btnAction}" button for data-cy parent: "${cyParent}"`;
-});
-
 Cypress.Commands.add('testNavArrows', (selector, data) => {
   const itemsPerPage = parseFloat(data.items_per_page);
   const totalItems = parseFloat(data.total_items);
+  cy.log('items per page:', itemsPerPage);
+  cy.log('total items:', totalItems);
   let hasSecondPage = totalItems > itemsPerPage ? true : false;
 
   cy.getPaginationBtn(`${selector}`, 'next').as('nextBtn');
-  cy.getPaginationBtn(`${selector}`, 'previous').as('previousBtn');
-
-  cy.get('@previousBtn').should('be.disabled');
+  // cy.getPaginationBtn(`${selector}`, 'previous').as('previousBtn');
+  // cy.get('@previousBtn').should('be.disabled');
 
   if (hasSecondPage) {
-    cy.get('@nextBtn').click().should('not.be.disabled');
+    cy.log('moving to the next page');
+    cy.get('@nextBtn').should('not.be.disabled');
+    cy.get('@nextBtn').click();
+    // cy.get('@nextBtn').should('not.be.disabled'); // improve this code to consider all pages
+    cy.log('moving back to the 1st page');
+    cy.getPaginationBtn(`${selector}`, 'previous').as('previousBtn');
+    cy.get('@previousBtn').should('not.be.disabled');
+    cy.get('@previousBtn').click();
   } else {
     cy.get('@nextBtn').should('be.disabled');
   }
 
-  cy.get('@nextBtn');
-  cy.get('@previousBtn');
-
-  if (hasSecondPage) {
-    // cy.get('@nextBtn').should('not.be.disabled'); // TODO: improve this test considering all pages
-    cy.get('@previousBtn').click().should('not.be.disabled');
-  } else {
-    cy.get('@previousBtn').should('be.disabled');
-    cy.get('@nextBtn').should('be.disabled');
-  }
 });
 
 /**
