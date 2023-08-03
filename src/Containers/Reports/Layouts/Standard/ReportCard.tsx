@@ -135,17 +135,21 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   };
 
   const handleClick = (event, props) => {
-    navigateToHostScatter(
-      'host_anomalies_scatter',
-      props.datum.id,
-      queryParams.cluster_id,
-      queryParams.org_id,
-      queryParams.inventory_id,
-      queryParams.status,
-      queryParams.host_status,
-      queryParams.quick_date_range
-    );
-    window.location.reload();
+    if (props.slug === 'host_anomalies_scatter') {
+      console.log('clicking on scatter');
+    } else {
+      navigateToHostScatter(
+        'host_anomalies_scatter',
+        props.datum.id,
+        queryParams.cluster_id,
+        queryParams.org_id,
+        queryParams.inventory_id,
+        queryParams.status,
+        queryParams.host_status,
+        queryParams.quick_date_range
+      );
+      window.location.reload();
+    }
   };
 
   const customTooltipFormatting = ({ datum }) => {
@@ -319,6 +323,27 @@ const ReportCard: FunctionComponent<StandardProps> = ({
               expandedRowName={expandedTableRowName}
               clickableLinking={clickableLinking}
               showKebab={showKebab}
+            />
+          </ApiStatusWrapper>
+        ) : slug === 'host_anomalies_scatter' ? (
+          <ApiStatusWrapper api={dataApi}>
+            <Chart
+              schema={hydrateSchema(schema)({
+                label: chartParams.label,
+                y: chartParams.y,
+                xTickFormat: chartParams.xTickFormat,
+                chartType: chartParams.chartType,
+              })}
+              dataComponent={'foobar'}
+              data={dataApi.result}
+              specificFunctions={{
+                labelFormat: {
+                  customTooltipFormatting,
+                },
+                onClick: {
+                  handleClick,
+                },
+              }}
             />
           </ApiStatusWrapper>
         ) : (
