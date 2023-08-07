@@ -14,7 +14,7 @@ describe('SavingsPlanner/Add', () => {
   test('can see the Add component', async () => {
     api.preflightRequest.mockResolvedValue(mockResponses.preflightRequest200);
     api.readPlanOptions.mockResolvedValue(mockResponses.readPlansOptions);
-    renderPage(Add);
+    let wrapper = renderPage(Add);
 
     await waitFor(() => {
       return expect(api.readPlanOptions).toHaveBeenCalledTimes(1);
@@ -26,6 +26,7 @@ describe('SavingsPlanner/Add', () => {
     expect(screen.getAllByText('Details')).toHaveLength(2);
     expect(screen.getByText('Tasks')).toBeTruthy();
     expect(screen.getByText('Link template')).toBeTruthy();
+    wrapper.unmount();
   });
 
   test('redirects upon 403', async () => {
@@ -40,5 +41,6 @@ describe('SavingsPlanner/Add', () => {
     });
 
     expect(wrapper.container).toBeEmptyDOMElement();
+    wrapper.unmount();
   });
 });
