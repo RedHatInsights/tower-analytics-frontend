@@ -325,27 +325,6 @@ const ReportCard: FunctionComponent<StandardProps> = ({
               showKebab={showKebab}
             />
           </ApiStatusWrapper>
-        ) : slug === 'host_anomalies_scatter' ? (
-          <ApiStatusWrapper api={dataApi}>
-            <Chart
-              schema={hydrateSchema(schema)({
-                label: chartParams.label,
-                y: chartParams.y,
-                xTickFormat: chartParams.xTickFormat,
-                chartType: chartParams.chartType,
-              })}
-              dataComponent={'foobar'}
-              data={dataApi.result}
-              specificFunctions={{
-                labelFormat: {
-                  customTooltipFormatting,
-                },
-                onClick: {
-                  handleClick,
-                },
-              }}
-            />
-          </ApiStatusWrapper>
         ) : (
           <>
             <ApiStatusWrapper api={dataApi}>
@@ -423,6 +402,9 @@ const ReportCard: FunctionComponent<StandardProps> = ({
             specificFunctions={{
               labelFormat: {
                 customTooltipFormatting,
+              },
+              onClick: {
+                handleClick,
               },
             }}
           />
