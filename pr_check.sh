@@ -4,7 +4,7 @@ set +e
 set -x
 
 # imports
-export COMMON_BUILDER=https://raw.githubusercontent.com/jameswnl/insights-frontend-builder-common/master
+export COMMON_BUILDER=https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master
 export CICD_URL=https://raw.githubusercontent.com/RedHatInsights/bonfire/master/cicd
 
 # common
