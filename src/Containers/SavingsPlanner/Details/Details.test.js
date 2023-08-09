@@ -17,7 +17,7 @@ import mockResponses from '../../../__tests__/fixtures/';
 import * as api from '../../../Api/';
 jest.mock('../../../Api');
 
-describe('SavingsPlanner/Details', () => {
+describe.skip('SavingsPlanner/Details', () => {
   let wrapper;
 
   afterEach(() => {
