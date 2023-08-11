@@ -41,6 +41,7 @@ export enum Endpoint {
   eventExplorer = '/api/tower-analytics/v1/event_explorer/',
   probeTemplates = '/api/tower-analytics/v1/probe_templates/',
   probeTemplateForHosts = '/api/tower-analytics/v1/probe_template_for_hosts/',
+  probeTemplateHostForTasks = '/api/tower-analytics/v1/probe_template_host_for_tasks/',
   adoptionRate = '/api/tower-analytics/v1/adoption_rate/',
   ROI = '/api/tower-analytics/v1/roi_templates/',
   costEffortROI = '/api/tower-analytics/v1/roi_cost_effort_data/',
@@ -62,6 +63,7 @@ export enum Endpoint {
   hostExplorerOptions = '/api/tower-analytics/v1/host_explorer_options/',
   probeTemplatesOptions = '/api/tower-analytics/v1/probe_templates_options/',
   probeTemplateForHostsOptions = '/api/tower-analytics/v1/probe_template_for_hosts_options/',
+  probeTemplateHostForTasksOptions = '/api/tower-analytics/v1/probe_template_host_for_tasks_options/',
   adoptionRateOptions = '/api/tower-analytics/v1/adoption_rate_options/',
   reportOptions = '/api/tower-analytics/v1/report_options/',
 
@@ -227,12 +229,25 @@ export const readProbeTemplateForHosts = (params: Params): Promise<ApiJson> => {
   );
 };
 
+export const readProbeTemplateHostForTasks = (
+  params: Params
+): Promise<ApiJson> => {
+  return mungeData(
+    postWithPagination(Endpoint.probeTemplateHostForTasks, params),
+    params
+  );
+};
+
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
   post(Endpoint.probeTemplatesOptions, params);
 
 export const readProbeTemplateForHostsOptions = (
   params: Params
 ): Promise<ApiJson> => post(Endpoint.probeTemplateForHostsOptions, params);
+
+export const readProbeTemplateHostForTasksOptions = (
+  params: Params
+): Promise<ApiJson> => post(Endpoint.probeTemplateHostForTasksOptions, params);
 
 export const readAdoptionRate = (
   params: ParamsWithPagination
@@ -330,10 +345,14 @@ export const endpointFunctionMap = (endpoint: Endpoint): ReadEndpointFnc => {
       return readProbeTemplates;
     case Endpoint.probeTemplateForHosts:
       return readProbeTemplateForHosts;
+    case Endpoint.probeTemplateHostForTasks:
+      return readProbeTemplateHostForTasks;
     case Endpoint.probeTemplatesOptions:
       return readProbeTemplatesOptions;
     case Endpoint.probeTemplateForHostsOptions:
       return readProbeTemplateForHostsOptions;
+    case Endpoint.probeTemplateHostForTasksOptions:
+      return readProbeTemplateHostForTasksOptions;
     case Endpoint.adoptionRate:
       return readAdoptionRate;
     case Endpoint.adoptionRateOptions:

@@ -388,6 +388,29 @@ const allDefaultParams: any = {
       chart_type: 'scatter',
     },
   },
+  tasks_by_host_bar: {
+    defaultParams: {
+      limit: 6,
+      offset: 0,
+      attributes: [
+        'host_status',
+        'average_duration_per_task',
+        'last_referenced',
+      ],
+      cluster_id: [],
+      org_id: [],
+      inventory_id: [],
+      template_id: null,
+      status: [],
+      host_status: [],
+      sort_options: 'average_duration_per_task',
+      sort_order: 'desc',
+      granularity: 'daily',
+      quick_date_range: 'slow_hosts_last_3_weeks',
+      slow_host_view: 'templates_with_any_hosts',
+      chart_type: 'scatter',
+    },
+  },
   hosts_by_organization: {
     defaultParams: {
       limit: 6,

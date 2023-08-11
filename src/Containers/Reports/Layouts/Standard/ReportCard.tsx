@@ -102,6 +102,31 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     navigate(createUrl(`reports\\${slug}`, true, initialQueryParams));
   };
 
+  const navigateToTaskBar = (
+    slug: string,
+    templateId: any,
+    clusterId: any,
+    orgId: any,
+    inventoryId: any,
+    status: any,
+    hostStatus: any,
+    quickDateRange: any
+  ) => {
+    const initialQueryParams = {
+      [DEFAULT_NAMESPACE]: {
+        ...specificReportDefaultParams(slug),
+        template_id: templateId,
+        cluster_id: clusterId,
+        org_id: orgId,
+        inventory_id: inventoryId,
+        status: status,
+        host_status: hostStatus,
+        quick_date_range: quickDateRange,
+      },
+    };
+    navigate(createUrl(`reports\\${slug}`, true, initialQueryParams));
+  };
+
   useEffect(() => {
     fetchData(queryParams);
     fetchOptions(queryParams);
@@ -135,9 +160,22 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   };
 
   const handleClick = (event, props) => {
-    if (props.slug === 'host_anomalies_scatter') {
-      console.log('clicking on scatter');
+    if (slug === 'host_anomalies_scatter') {
+      console.log('slug: ', slug);
+      console.log('navigating to new report');
+      navigateToTaskBar(
+        'tasks_by_host_bar',
+        props.datum.id,
+        queryParams.cluster_id,
+        queryParams.org_id,
+        queryParams.inventory_id,
+        queryParams.status,
+        queryParams.host_status,
+        queryParams.quick_date_range
+      );
     } else {
+      console.log('slug: ', slug);
+      console.log('navigating to new report');
       navigateToHostScatter(
         'host_anomalies_scatter',
         props.datum.id,
@@ -148,8 +186,8 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         queryParams.host_status,
         queryParams.quick_date_range
       );
-      window.location.reload();
     }
+    window.location.reload();
   };
 
   const customTooltipFormatting = ({ datum }) => {
