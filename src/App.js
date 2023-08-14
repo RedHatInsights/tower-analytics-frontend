@@ -45,7 +45,7 @@ const App = () => {
       <Alert
         isInline
         variant="info"
-        title="Automation Analytics is experiencing performance issues. Displayed data will be delayed. We apologize for the inconvenience."
+        title="Automation Analytics may be experiencing performance issues due to database upgrade. Displayed data may be delayed. We apologize for the inconvenience."
       />
       {renderContent()}
     </div>
