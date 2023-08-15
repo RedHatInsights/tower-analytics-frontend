@@ -1,7 +1,7 @@
 import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import React, { FunctionComponent } from 'react';
 import asyncComponent from './Utilities/asyncComponent';
-import { Paths } from './paths';
+import { prefixPath, Paths } from './paths';
 import Error404 from './Components/Error404';
 
 const components = {
@@ -71,7 +71,10 @@ export const AnalyticsRoutes: FunctionComponent<Record<string, never>> = () => {
         return <Route key={key} path={key} element={<Component />} />;
       })}
       {/* Redirect the root path to the clusters so it does not give 404. */}
-      <Route path="/" element={<Navigate to={Paths.clusters} replace />} />
+      <Route
+        path="/"
+        element={<Navigate to={prefixPath + Paths.clusters} replace />}
+      />
     </Routes>
   );
 };
