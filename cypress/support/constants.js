@@ -42,6 +42,7 @@ export const aa21m = 'aa_2_1_onboarding'
 export const hab = 'host_anomalies_bar'
 export const has = 'host_anomalies_scatter'
 export const tbo = 'templates_by_organization'
+export const muc = 'most_used_collections'
 
 export const allReports = [
   hcbjt,
@@ -57,7 +58,8 @@ export const allReports = [
   aa21m,
   hab,
   has,
-  tbo
+  tbo,
+  muc,
 ]
 
 export const skippedTests = {

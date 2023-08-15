@@ -135,5 +135,14 @@
     "items_per_page": 6,
     "has_expanded_rows": true,
     "total_items": 60
+  },
+  {
+    "short_name": "muc",
+    "name": "most_used_collections",
+    "has_extra_line": true,
+    "items_per_page": 6,
+    "has_expanded_rows": false,
+    "total_items": 92,
+    "api_call": "/api/tower-analytics/v1/content_explorer/?*"
   }
 ]
