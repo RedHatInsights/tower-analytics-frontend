@@ -52,48 +52,49 @@ automation cost = automation time * configurable automated process cost`}
   </>
 );
 
-const FailedHostPerTemplateText: FunctionComponent<Record<string, never>> =
-  () => (
-    <>
-      <p>
-        <strong>Failed hosts cost per template</strong>
-      </p>
-      <p>
-        Failed hosts cost per template is the total amount of time spent on
-        failed automated job runs multiplied by the configured automated process
-        cost.
-      </p>
-      <br />
-      <p>The formula used to calculate failed host cost per template:</p>
-      <CodeBlock>
-        <CodeBlockCode>
-          {`failed cost per template = (failed elapsed total / 3600) * configurable automated process cost`}
-        </CodeBlockCode>
-      </CodeBlock>
-      <br />
-    </>
-  );
+const FailedHostPerTemplateText: FunctionComponent<
+  Record<string, never>
+> = () => (
+  <>
+    <p>
+      <strong>Failed hosts cost per template</strong>
+    </p>
+    <p>
+      Failed hosts cost per template is the total amount of time spent on failed
+      automated job runs multiplied by the configured automated process cost.
+    </p>
+    <br />
+    <p>The formula used to calculate failed host cost per template:</p>
+    <CodeBlock>
+      <CodeBlockCode>
+        {`failed cost per template = (failed elapsed total / 3600) * configurable automated process cost`}
+      </CodeBlockCode>
+    </CodeBlock>
+    <br />
+  </>
+);
 
-const MonetaryGainPerTemplateText: FunctionComponent<Record<string, never>> =
-  () => (
-    <>
-      <p>
-        <strong>Monetary gain per template</strong>
-      </p>
-      <p>
-        Monetary gain per template is the difference between total savings per
-        template and failed hosts cost per template.
-      </p>
-      <br />
-      <p>The formula for monetary gain per template:</p>
-      <CodeBlock>
-        <CodeBlockCode>
-          {`monetary gain per template = savings per template - failed host cost per template`}
-        </CodeBlockCode>
-      </CodeBlock>
-      <br />
-    </>
-  );
+const MonetaryGainPerTemplateText: FunctionComponent<
+  Record<string, never>
+> = () => (
+  <>
+    <p>
+      <strong>Monetary gain per template</strong>
+    </p>
+    <p>
+      Monetary gain per template is the difference between total savings per
+      template and failed hosts cost per template.
+    </p>
+    <br />
+    <p>The formula for monetary gain per template:</p>
+    <CodeBlock>
+      <CodeBlockCode>
+        {`monetary gain per template = savings per template - failed host cost per template`}
+      </CodeBlockCode>
+    </CodeBlock>
+    <br />
+  </>
+);
 
 const AutomationFormula: FunctionComponent<Record<string, never>> = () => {
   const [isOpen, setIsOpen] = useState(false);
