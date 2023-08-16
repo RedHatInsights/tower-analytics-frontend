@@ -11,6 +11,13 @@ plugins.push(
   require('@redhat-cloud-services/frontend-components-config/federated-modules')(
     {
       root: resolve(__dirname, '../'),
+      exclude: [
+        'react-router-dom',
+        '@patternfly/react-core',
+        '@ansible/ansible-ui-framework',
+        '@patternfly/react-icons',
+        '@patternfly/react-tokens',
+      ],
       shared: [
         {
           'react-router-dom': { singleton: true, requiredVersion: '*' },
