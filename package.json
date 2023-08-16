@@ -3,7 +3,7 @@
   "version": "1.1.0",
   "private": false,
   "dependencies": {
-    "@ansible/ansible-ui-framework": "^0.0.761",
+    "@ansible/ansible-ui-framework": "0.0.563",
     "@babel/runtime": "^7.22.10",
     "@patternfly/patternfly": "^4.224.5",
     "@patternfly/react-charts": "^6.94.21",
