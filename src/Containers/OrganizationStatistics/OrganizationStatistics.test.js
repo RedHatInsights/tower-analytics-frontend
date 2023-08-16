@@ -131,6 +131,7 @@ describe('Containers/OrganizationStatistics', () => {
     });
 
     fetchMock.restore();
+    wrapper.unmount();
   });
 
   it('should render without any errors', async () => {
@@ -144,7 +145,6 @@ describe('Containers/OrganizationStatistics', () => {
     wrapper.update();
 
     expect(wrapper).toBeTruthy();
-    wrapper.unmount();
   });
 
   it('should render with data', async () => {
@@ -156,7 +156,6 @@ describe('Containers/OrganizationStatistics', () => {
 
     expect(wrapper.text()).not.toEqual(expect.stringContaining('*No Data*'));
     expect(wrapper.text()).not.toEqual(expect.stringContaining('*Loading*'));
-    wrapper.unmount();
   });
 
   it('should render api error', async () => {
@@ -171,7 +170,6 @@ describe('Containers/OrganizationStatistics', () => {
     });
     wrapper.update();
     expect(wrapper.text()).toEqual(expect.stringContaining('Error'));
-    wrapper.unmount();
   });
 
   it('should render with empty response', async () => {
@@ -185,7 +183,6 @@ describe('Containers/OrganizationStatistics', () => {
     });
     wrapper.update();
     expect(wrapper.text()).toEqual(expect.stringContaining('No Data'));
-    wrapper.unmount();
   });
 
   it('should send the default queryParams', async () => {
@@ -195,7 +192,6 @@ describe('Containers/OrganizationStatistics', () => {
     wrapper.update();
 
     expect(lastCallBody(jobExplorerUrl)).toEqual(defaultQueryParamsForPie);
-    wrapper.unmount();
   });
 
   it('should handle the tab switching correctly', async () => {
@@ -222,7 +218,6 @@ describe('Containers/OrganizationStatistics', () => {
     });
 
     expect(lastCallBody(jobExplorerUrl)).toEqual(defaultQueryParamsForBar);
-    wrapper.unmount();
   });
 
   it('should render with default api values', async () => {
@@ -237,6 +232,5 @@ describe('Containers/OrganizationStatistics', () => {
     expect(wrapper.text()).toEqual(expect.stringContaining('Job Runs'));
     expect(wrapper.text()).toEqual(expect.stringContaining('Usage by'));
     spy.mockRestore();
-    wrapper.unmount();
   });
 });
