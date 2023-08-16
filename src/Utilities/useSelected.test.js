@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import useSelected from './useSelected';
