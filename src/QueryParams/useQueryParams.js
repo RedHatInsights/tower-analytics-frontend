@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import moment from 'moment';
+import * as moment from 'moment';
 import { QueryParamsContext } from './Context';
 import useAsyncActionQueue from '../Utilities/useAsyncActionQueue';
 
