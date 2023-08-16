@@ -4,7 +4,7 @@ We should review the duplicated code/tests and merge it with the clusters one.
 */
 
 // import { clustersUrl as dashboardUrl } from '../../support/constants';
-// import moment from 'moment';
+// import * as moment from 'moment';
 
 // const appid = Cypress.env('appid');
 

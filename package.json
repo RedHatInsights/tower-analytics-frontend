@@ -36,6 +36,10 @@
   },
   "jest": {
     "testEnvironment": "jsdom",
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest",
+      "^.+\\.tsx?$": "ts-jest"
+    },
     "coverageDirectory": "./coverage/",
     "collectCoverage": true,
     "collectCoverageFrom": [
@@ -55,7 +59,7 @@
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy"
     },
-    "transformIgnorePatterns": []
+    "transformIgnorePatterns": ["@ansible/ansible-ui-framework"]
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
@@ -100,6 +104,7 @@
     "stylelint": "^13.13.1",
     "stylelint-config-recommended-scss": "^4.3.0",
     "stylelint-scss": "^3.21.0",
+    "ts-jest": "^27.1.5",
     "ts-loader": "^9.4.4",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5",
@@ -109,7 +114,7 @@
     "webpack-cli": "^4.10.0"
   },
   "scripts": {
-    "test": "TZ=UTC jest --verbose --no-cache",
+    "test": "TZ=UTC jest --verbose",
     "test:watch": "jest --coverage=false --watch",
     "lint": "(eslint config src) && (stylelint 'src/**/*.scss' --config .stylelintrc.json)",
     "lint:fix": "eslint config src --fix",
