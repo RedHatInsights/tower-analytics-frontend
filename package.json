@@ -59,7 +59,9 @@
     "moduleNameMapper": {
       "\\.(css|scss)$": "identity-obj-proxy"
     },
-    "transformIgnorePatterns": ["@ansible/ansible-ui-framework"]
+    "transformIgnorePatterns": [
+      "@ansible/ansible-ui-framework"
+    ]
   },
   "devDependencies": {
     "@babel/core": "^7.22.10",
