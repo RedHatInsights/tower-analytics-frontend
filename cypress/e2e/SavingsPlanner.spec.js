@@ -1,10 +1,8 @@
 import { savingsPlannerUrl } from '../support/constants';
 
-const appid = Cypress.env('appid');
-
 describe('Savings Planner page smoketests', () => {
-  beforeEach(() => {    
-    cy.intercept('**/plans/*').as('getPlans')
+  beforeEach(() => {
+    cy.intercept('**/plans/*').as('getPlans');
     cy.visit(savingsPlannerUrl);
     cy.wait('@getPlans');
   });
@@ -15,4 +13,3 @@ describe('Savings Planner page smoketests', () => {
     cy.url().should('include', 'sort_options=manual_time');
   });
 });
-

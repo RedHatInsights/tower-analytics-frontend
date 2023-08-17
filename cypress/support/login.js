@@ -45,7 +45,8 @@ function uiLogin(strategy, username, password) {
   cy.get('@passwordField').type(`${password}`, { log: false });
 
   cy.get('#rh-password-verification-submit-button').as('submitButton');
-  cy.get('@submitButton').click().should('be.visible');
+  cy.get('@submitButton').should('be.visible');
+  cy.get('@submitButton').click();
 
   cy.visit(Cypress.config().baseUrl + clustersUrl);
 }

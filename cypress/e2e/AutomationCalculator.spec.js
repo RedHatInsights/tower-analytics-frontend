@@ -41,9 +41,7 @@ describe('Automation Calculator page', () => {
       .getByCy('current_page_savings')
       .find('h3').textContent;
     let originalSavingsValues = [];
-    cy.getByCy('savings').each(($el) =>
-      originalSavingsValues.push($el.text())
-    );
+    cy.getByCy('savings').each(($el) => originalSavingsValues.push($el.text()));
 
     cy.get('#manual-cost').clear();
     waitToLoad();
@@ -207,9 +205,10 @@ describe('Automation Calculator page', () => {
   it('shows empty state when all rows are hidden', () => {
     // most of this is dupplicated code and should be merged
 
-    let originalTotalSavingsValue = ENV != ENVS.STAGE ? '$' : cy
-      .getByCy('total_savings')
-      .find('h3').textContent;
+    let originalTotalSavingsValue =
+      ENV != ENVS.STAGE
+        ? '$'
+        : cy.getByCy('total_savings').find('h3').textContent;
 
     if (ENV != ENVS.STAGE) {
       cy.tableShowAll();

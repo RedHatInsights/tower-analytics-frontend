@@ -62,7 +62,7 @@ We should review the duplicated code/tests and merge it with the clusters one.
 // }
 
 // describe('Dashboard page smoketests', () => {
-//   beforeEach(() => {    
+//   beforeEach(() => {
 //     cy.visit(dashboardUrl);
 //   });
 

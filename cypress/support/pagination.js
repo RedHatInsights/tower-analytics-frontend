@@ -57,7 +57,6 @@ Cypress.Commands.add('testNavArrows', (selector, data) => {
   } else {
     cy.get('@nextBtn').should('be.disabled');
   }
-
 });
 
 /**
@@ -97,7 +96,7 @@ Cypress.Commands.add('testSelectItemsPerPage', (selector, itemsPerPage) => {
         const n = parseFloat($ul.text());
         expect(n).to.be.eq(5);
       })
-      .within(($ul) => {
+      .within(() => {
         cy.get('li').eq(4).find('button').as('maxItems');
         cy.get('li')
           .eq(0)
@@ -132,7 +131,7 @@ Cypress.Commands.add('testSelectItemsPerPage', (selector, itemsPerPage) => {
           const n = parseFloat($ul.text());
           expect(n).to.be.eq(4);
         })
-        .within(($ul) => {
+        .within(() => {
           cy.get('li').eq(3).find('button').as('maxItems');
           cy.get('li')
             .eq(0)
@@ -183,14 +182,14 @@ Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
   const itemsPerPage = parseFloat(data.items_per_page);
   const totalItems = parseFloat(data.total_items);
 
-  let minRows = 0;
+  // let minRows = 0;
   let maxRows = 0;
 
   if (totalItems <= itemsPerPage) {
-    minRows = totalItems;
+    // minRows = totalItems;
     maxRows = totalItems;
   } else {
-    minRows = itemsPerPage;
+    // minRows = itemsPerPage;
     maxRows = itemsPerPage == 5 ? 25 : 10;
     if (totalItems <= maxRows) {
       maxRows = totalItems - 1; // when showing all items the page doesn't have the extra line
@@ -198,25 +197,31 @@ Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
   }
 
   // TODO: improve  AND simplify this logic
-  let minTotalRows = data.has_expanded_rows ? minRows * 2 : minRows;
-  let maxTotalRows = data.has_expanded_rows ? maxRows * 2 : maxRows;
+  // let minTotalRows = data.has_expanded_rows ? minRows * 2 : minRows;
+  // let maxTotalRows = data.has_expanded_rows ? maxRows * 2 : maxRows;
 
-  minTotalRows = data.has_extra_line ? minTotalRows + 1 : minTotalRows;
-  maxTotalRows = data.has_extra_line ? maxTotalRows + 1 : maxTotalRows;
+  // minTotalRows = data.has_extra_line ? minTotalRows + 1 : minTotalRows;
+  // maxTotalRows = data.has_extra_line ? maxTotalRows + 1 : maxTotalRows;
 
-  // include one more row in case the extra line also has an expanded row
-  minTotalRows = (data.has_extra_line && data.has_expanded_rows) ? minTotalRows + 1 : minTotalRows;
-  maxTotalRows = (data.has_extra_line && data.has_expanded_rows) ? maxTotalRows + 1 : maxTotalRows;
+  // // include one more row in case the extra line also has an expanded row
+  // minTotalRows =
+  //   data.has_extra_line && data.has_expanded_rows
+  //     ? minTotalRows + 1
+  //     : minTotalRows;
+  // maxTotalRows =
+  //   data.has_extra_line && data.has_expanded_rows
+  //     ? maxTotalRows + 1
+  //     : maxTotalRows;
 
   // get table and amount of lines
   cy.get('table').find('tbody').as('table');
   // cy.get('@table').find('tr').should('have.length', minTotalRows);
-  cy.get('@table').find('tr').should('have.length.greaterThan', 1)
+  cy.get('@table').find('tr').should('have.length.greaterThan', 1);
 
   // toggle the list
   cy.getByCy(`${selector}`).find('.pf-c-options-menu').as('pag_option_menu');
   cy.findByIdLike('@pag_option_menu', 'aa-pagination-').click({
-    force: true
+    force: true,
   });
   cy.findByIdLike('@pag_option_menu', 'aa-pagination-').should(
     'have.attr',
@@ -233,12 +238,12 @@ Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
     // the lenght to be 0 or undefined
 
     // cy.get('@tableLines').should('have.length', maxTotalRows);
-    cy.get('@tableLines').should('have.length.greaterThan', 1)
+    cy.get('@tableLines').should('have.length.greaterThan', 1);
 
     // toggle back to min items
-    cy.findByIdLike('@pag_option_menu', 'aa-pagination-')
-      .click()
-      .should('have.attr', 'aria-expanded', 'true');
+    cy.findByIdLike('@pag_option_menu', 'aa-pagination-').as('pagMenu1');
+    cy.get('@pagMenu1').should('have.attr', 'aria-expanded', 'true');
+    cy.get('@pagMenu1').click;
 
     cy.get('@pag_option_menu').find('li').eq(1).as('min_items');
     // .contains('per-page-'+itemsPerPage).
@@ -246,6 +251,6 @@ Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
     cy.wait('@apiCall');
 
     // cy.get('@tableLines').should('have.length', minTotalRows);
-    cy.get('@tableLines').should('have.length.greaterThan', 1)
+    cy.get('@tableLines').should('have.length.greaterThan', 1);
   });
 });
