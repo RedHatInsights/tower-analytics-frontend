@@ -128,7 +128,9 @@
     "deploy-only": "npm-run-all build:prod",
     "verify": "npm-run-all build:prod lint test",
     "cy:open": "DEBUG=cypress cypress open",
-    "cy:headless": "DEBUG=cypress cypress run --browser=chrome"
+    "cy:headless": "DEBUG=cypress cypress run --browser=chrome",
+    "cy:lint": "eslint config cypress",
+    "cy:lint-fix": "eslint config cypress --fix"
   },
   "insights": {
     "appname": "automation-analytics"
