@@ -1,5 +1,3 @@
-/* global Cypress */
-
 // When executing in eph "/ansible/automation-analytics" doesn't seem to be in the path
 // the below change foreces this in the url
 // https://env-ephemeral-kehfbd-hwwsn2eu.apps.c-rh-c-eph.8p0c.p1.openshiftapps.com/ansible/automation-analytics/reports/aa_2_1_onboarding

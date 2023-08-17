@@ -82,7 +82,7 @@ describe('Reports page smoketests', () => {
       cy.log(report);
       if (skippedTests['reports'].includes(report)) return;
       cy.getByCy('next_report_button').click();
-      cy.wait(250);
+      // cy.wait(250);
       cy.getByCy('preview_title_link').then((previewTitle) => {
         cy.log(previewTitle);
         const newTitlePreview = previewTitle.text();
