@@ -11,6 +11,7 @@ import currencyFormatter from '../../../../../Utilities/currencyFormatter';
 
 interface Props {
   template: Template;
+  isMoney: boolean;
 }
 
 const ExpandedRowContents: FunctionComponent<Props> = ({ template }) => (
@@ -57,14 +58,6 @@ const ExpandedRowContents: FunctionComponent<Props> = ({ template }) => (
           <DescriptionListTerm>Template success rate</DescriptionListTerm>
           <DescriptionListDescription>
             {template.template_success_rate.toFixed(2)}
-          </DescriptionListDescription>
-        </DescriptionListGroup>
-        <DescriptionListGroup>
-          <DescriptionListTerm>
-            Savings from successful hosts
-          </DescriptionListTerm>
-          <DescriptionListDescription>
-            {currencyFormatter(template.successful_hosts_savings)}
           </DescriptionListDescription>
         </DescriptionListGroup>
         <DescriptionListGroup>

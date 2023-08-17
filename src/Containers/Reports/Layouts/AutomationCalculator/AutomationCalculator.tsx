@@ -14,8 +14,11 @@ import {
   Stack,
   StackItem,
   CardHeader,
+  CardActions,
   CardTitle,
   CardFooter,
+  ToggleGroup,
+  ToggleGroupItem,
   PaginationVariant,
   Spinner,
 } from '@patternfly/react-core';
@@ -37,6 +40,7 @@ import {
   convertSecondsToHours,
 } from '../../../../Utilities/helpers';
 import useRequest from '../../../../Utilities/useRequest';
+import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
 
 // Chart
 import Chart from '../../../../Components/Chart';
@@ -54,6 +58,7 @@ import { endpointFunctionMap, saveROI } from '../../../../Api';
 import { AutmationCalculatorProps } from '../types';
 import hydrateSchema from '../../Shared/hydrateSchema';
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
+import hoursFormatter from '../../../../Utilities/hoursFormatter';
 import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
@@ -103,11 +108,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const readOptions = endpointFunctionMap(optionsEndpoint);
   const defaultParams = reportDefaultParams(slug);
   const navigate = useNavigate();
-  const { queryParams, setFromToolbar, setFromPagination } =
-    useQueryParams(defaultParams);
 
   const [costManual, setCostManual] = useState('');
   const [costAutomation, setCostAutomation] = useState('');
+  const [isMoney, setIsMoney] = useState(true);
+  const { queryParams, setFromToolbar, setFromPagination } =
+    useQueryParams(defaultParams);
 
   const mapApi = ({ legend = [] }) => {
     return legend.map((el) => ({
@@ -120,13 +126,21 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     }));
   };
   const { result: options, request: fetchOptions } = useRequest(readOptions, {
-    sort_options: [
-      {
-        key: defaultParams.sort_options,
-        value: defaultParams.sort_options,
-      },
-    ],
+    sort_options: isMoney
+      ? [
+          {
+            key: defaultParams.sort_options,
+            value: defaultParams.sort_options,
+          },
+        ]
+      : [
+          {
+            key: 'successful_saved_hours',
+            value: 'successful_saved_hours',
+          },
+        ],
   });
+
   const {
     request: fetchData,
     setValue: setApiData,
@@ -180,6 +194,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     const res = await readData(queryParams);
     api.result.monetary_gain_current_page = res.monetary_gain_current_page;
     api.result.monetary_gain_other_pages = res.monetary_gain_other_pages;
+    api.result.successful_hosts_saved_hours_current_page =
+      res.successful_hosts_saved_hours_current_page;
+    api.result.successful_hosts_saved_hours_other_pages =
+      res.successful_hosts_saved_hours_other_pages;
     setValue(mapApi(res.meta));
     return res;
   };
@@ -291,6 +309,19 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       },
     };
   };
+
+  const computeTotalSavings = () =>
+    isMoney
+      ? api.result?.monetary_gain_other_pages +
+        api.result?.monetary_gain_current_page
+      : api.result?.successful_hosts_saved_hours_current_page +
+        api.result?.successful_hosts_saved_hours_other_pages;
+
+  const computeCurrentPageSavings = () =>
+    isMoney
+      ? api.result?.monetary_gain_current_page
+      : api.result?.successful_hosts_saved_hours_current_page;
+
   /**
    * Set cost from API on load. Don't reload it.
    */
@@ -326,6 +357,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         quick_date_range: 'last_30_days',
         template_id: [templateId],
       },
+      isMoney: true,
     };
 
     navigate(createUrl(Paths.jobExplorer, true, initialQueryParams));
@@ -338,6 +370,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     label:
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
+    themeColor: isMoney ? 'green' : 'blue',
+    xTickFormat: getDateFormatByGranularity(queryParams.granularity),
   };
 
   const formattedValue = (key: string, value: number) => {
@@ -354,12 +388,16 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       case 'monetary_gain':
         val = currencyFormatter(value);
         break;
+      case 'successful_hosts_saved_hours':
+      case 'successful_hosts_saved_hours_current_page':
+      case 'successful_hosts_saved_hours_other_pages':
+        val = hoursFormatter(value);
+        break;
       default:
         val = value.toFixed(2);
     }
     return val;
   };
-
   const customTooltipFormatting = ({ datum }) => {
     const tooltip =
       chartParams.label +
@@ -379,6 +417,33 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       {fullCard && (
         <CardHeader>
           <CardTitle>Automation savings</CardTitle>
+          <CardActions>
+            <ToggleGroup aria-label="toggleButton">
+              <ToggleGroupItem
+                id="toggleIsMoneyTrue"
+                text="Money"
+                buttonId="money"
+                isSelected={isMoney}
+                onChange={() => {
+                  setIsMoney(true);
+                  setFromToolbar('sort_options', 'successful_hosts_savings');
+                }}
+              />
+              <ToggleGroupItem
+                id="toggleIsMoneyFalse"
+                text="Time"
+                buttonId="time"
+                isSelected={!isMoney}
+                onChange={() => {
+                  setIsMoney(false);
+                  setFromToolbar(
+                    'sort_options',
+                    'successful_hosts_saved_hours'
+                  );
+                }}
+              />
+            </ToggleGroup>
+          </CardActions>
         </CardHeader>
       )}
       {api.isLoading ? (
@@ -388,9 +453,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       ) : filterDisabled(api?.result?.items).length > 0 ? (
         <Chart
           schema={hydrateSchema(schema)({
+            themeColor: chartParams.themeColor,
             label: chartParams.label,
             tooltip: chartParams.tooltip,
             field: chartParams.field,
+            yAxis: chartParams.yAxis,
           })}
           data={{
             items: filterDisabled(api.result.items),
@@ -419,11 +486,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     <Stack>
       <StackItem>
         <TotalSavings
-          totalSavings={
-            api.result?.monetary_gain_other_pages +
-            api.result?.monetary_gain_current_page
-          }
-          currentPageSavings={api.result?.monetary_gain_current_page}
+          isMoney={isMoney}
+          totalSavings={computeTotalSavings()}
+          currentPageSavings={computeCurrentPageSavings()}
           isLoading={api.isLoading}
         />
       </StackItem>
@@ -469,14 +534,15 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               <DownloadButton
                 key="download-button"
                 slug={slug}
+                isMoney={isMoney}
                 name={name}
                 description={description}
                 endpointUrl={dataEndpoint}
                 queryParams={queryParams}
                 selectOptions={options}
-                y={''}
-                label={''}
-                xTickFormat={''}
+                y={chartParams.y}
+                label={chartParams.label}
+                xTickFormat={chartParams.xTickFormat}
                 totalPages={Math.ceil(
                   api.result.meta.count / queryParams.limit
                 )}
@@ -489,10 +555,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 inputs={{
                   costManual,
                   costAutomation,
-                  totalSavings:
-                    api.result?.monetary_gain_other_pages +
-                    api.result?.monetary_gain_current_page,
-                  currentPageSavings: api.result?.monetary_gain_current_page,
+                  totalSavings: computeTotalSavings(),
+                  currentPageSavings: computeCurrentPageSavings(),
                 }}
               />,
             ]}
@@ -517,6 +581,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                   setEnabled={setEnabled}
                   getSortParams={getSortParams}
                   readOnly={isReadOnly(api)}
+                  isMoney={isMoney}
                 />
               )}
             </GridItem>

@@ -15,9 +15,14 @@ import { LegendEntry, TableHeaders } from '../types';
 import { ExpandedTableRowName, getExpandedRowComponent } from '../Components';
 import paths from '../../../paths';
 import { Tooltip } from '@patternfly/react-core';
-import { DEFAULT_NAMESPACE, createUrl } from '../../../../../QueryParams';
+import {
+  DEFAULT_NAMESPACE,
+  createUrl,
+  useQueryParams,
+} from '../../../../../QueryParams';
 import { useNavigate } from 'react-router-dom';
 import { specificReportDefaultParams } from '../../../../../Utilities/constants';
+import { QueryParams } from '../../../../../QueryParams/types';
 
 const timeFields: string[] = ['elapsed'];
 const costFields: string[] = [];
@@ -66,11 +71,7 @@ const TableRow: FunctionComponent<Params> = ({
   clickableLinking,
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const readArray = (array: any[]) => {
-    for (let i = 0; i < array.length; i++) {
-      return array[i];
-    }
-  };
+
   const navigate = useNavigate();
 
   const navigateToModuleBy = (slug: string, moduleId: any) => {
@@ -88,11 +89,22 @@ const TableRow: FunctionComponent<Params> = ({
       )
     );
   };
-  const navigateToTemplatesExplorer = (slug: string, yPercentileList: any) => {
+  const navigateToTemplatesExplorer = (
+    slug: string,
+    org_id: any,
+    queryParams: QueryParams
+  ) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...specificReportDefaultParams(slug),
-        template_id: readArray([yPercentileList]),
+        org_id: [org_id],
+        template_id: queryParams.template_id,
+        cluster_id: queryParams.cluster_id,
+        inventory_id: queryParams.inventory_id,
+        status: queryParams.status,
+        limit: queryParams.limit,
+        granularity: queryParams.granularity,
+        quick_date_range: queryParams.quick_date_range,
       },
     };
     navigate(
@@ -108,6 +120,10 @@ const TableRow: FunctionComponent<Params> = ({
     item: Record<string, string | number>,
     key: string
   ) => {
+    const { queryParams } = useQueryParams(
+      specificReportDefaultParams('templates_by_organization')
+    );
+
     const countMapper: { [key: string]: string } = {
       host_task_count: 'module_usage_by_task',
       total_org_count: 'module_usage_by_organization',
@@ -127,14 +143,15 @@ const TableRow: FunctionComponent<Params> = ({
         </Tooltip>
       );
     }
-    if (Object.keys(countMapper).includes(key) && item.y_percentile_list) {
+    if (Object.keys(countMapper).includes(key) && item.org_id) {
       return (
         <Tooltip content={`View ${item.org_name} usage`}>
           <a
             onClick={() =>
               navigateToTemplatesExplorer(
                 countMapper[key],
-                item.y_percentile_list
+                item.org_id,
+                queryParams
               )
             }
           >{`${item[key]}`}</a>
@@ -152,6 +169,22 @@ const TableRow: FunctionComponent<Params> = ({
     ) : null;
   };
 
+  const skipRow = (key: string): boolean => {
+    switch (true) {
+      case key == 'total_elapsed_per_org' &&
+        typeof legendEntry.total_elapsed_per_org == 'undefined':
+      case key == 'total_job_count_per_org' &&
+        typeof legendEntry.total_job_count_per_org == 'undefined':
+      case key == 'total_host_count_per_org' &&
+        typeof legendEntry.total_host_count_per_org == 'undefined':
+      case key == 'total_task_count_per_org' &&
+        typeof legendEntry.total_task_count_per_org == 'undefined':
+        return true;
+      default:
+        return false;
+    }
+  };
+
   return (
     <>
       <Tr style={getOthersStyle(legendEntry, 'id')}>
@@ -165,15 +198,7 @@ const TableRow: FunctionComponent<Params> = ({
           />
         )}
         {headers.map(({ key }) =>
-          (key === 'total_elapsed_per_org' &&
-            typeof legendEntry.total_elapsed_per_org == 'undefined') ||
-          (key === 'total_job_count_per_org' &&
-            typeof legendEntry.total_job_count_per_org == 'undefined') ||
-          (key === 'total_host_count_per_org' &&
-            typeof legendEntry.total_host_count_per_org == 'undefined') ||
-          (key === 'total_task_count_per_org' &&
-            typeof legendEntry.total_task_count_per_org ==
-              'undefined') ? null : (
+          skipRow(key) ? null : (
             <Td key={`${legendEntry.id}-${key}`}>
               {clickableLinking
                 ? getClickableText(legendEntry, key)

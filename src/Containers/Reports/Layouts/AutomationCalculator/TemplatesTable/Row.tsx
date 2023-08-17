@@ -12,12 +12,14 @@ import {
 import { Tr, Td } from '@patternfly/react-table';
 import { global_success_color_200 as globalSuccessColor200 } from '@patternfly/react-tokens';
 import { global_disabled_color_200 as globalDisabledColor200 } from '@patternfly/react-tokens';
+import { global_palette_red_200 } from '@patternfly/react-tokens';
 
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
 import timeFormatter from '../../../../../Utilities/timeFormatter';
 import percentageFormatter from '../../../../../Utilities/percentageFormatter';
 import { Template } from './types';
 import ExpandedRowContents from './ExplandedRowContents';
+import hoursFormatter from '../../../../../Utilities/hoursFormatter';
 
 interface Props {
   template: Template;
@@ -26,6 +28,7 @@ interface Props {
   setEnabled: (enabled: boolean) => void;
   navigateToJobExplorer: (id: number) => void;
   readOnly: boolean;
+  isMoney: boolean;
 }
 
 const setLabeledValue = (key: string, value: number) => {
@@ -33,6 +36,9 @@ const setLabeledValue = (key: string, value: number) => {
   switch (key) {
     case 'elapsed':
       label = timeFormatter(value) + ' seconds';
+      break;
+    case 'successful_hosts_saved_hours':
+      label = hoursFormatter(value);
       break;
     case 'template_automation_percentage':
       label = percentageFormatter(value) + '%';
@@ -48,6 +54,20 @@ const setLabeledValue = (key: string, value: number) => {
   return label;
 };
 
+const setColumnColor = (key: string, template: Template) => {
+  if (
+    key === 'successful_hosts_savings' ||
+    key === 'successful_hosts_saved_hours'
+  ) {
+    if (
+      template.successful_hosts_savings > 0 &&
+      template.successful_hosts_saved_hours > 0
+    )
+      return globalSuccessColor200.value;
+    else return global_palette_red_200.value;
+  }
+};
+
 const Row: FunctionComponent<Props> = ({
   template,
   variableRow,
@@ -55,6 +75,7 @@ const Row: FunctionComponent<Props> = ({
   setEnabled,
   navigateToJobExplorer,
   readOnly = true,
+  isMoney,
 }) => {
   const [isExpanded, setIsExpanded] = useState(
     window.localStorage.getItem(template.id.toString()) === 'true' || false
@@ -63,7 +84,6 @@ const Row: FunctionComponent<Props> = ({
     window.localStorage.setItem(id.toString(), value ? 'true' : 'false');
     setIsExpanded(value);
   };
-
   return (
     <>
       <Tr>
@@ -86,7 +106,11 @@ const Row: FunctionComponent<Props> = ({
           </Tooltip>
         </Td>
         {variableRow && (
-          <Td>
+          <Td
+            style={{
+              color: setColumnColor(variableRow.key, template),
+            }}
+          >
             {setLabeledValue(variableRow.key, +template[variableRow.key])}
           </Td>
         )}
@@ -131,11 +155,16 @@ const Row: FunctionComponent<Props> = ({
           data-cy={'savings'}
           style={{
             color: template.enabled
-              ? globalSuccessColor200.value
+              ? template.successful_hosts_savings > 0 ||
+                template.successful_hosts_saved_hours > 0
+                ? globalSuccessColor200.value
+                : global_palette_red_200.value
               : globalDisabledColor200.value,
           }}
         >
-          {currencyFormatter(+template.monetary_gain)}
+          {isMoney
+            ? currencyFormatter(+template.successful_hosts_savings)
+            : hoursFormatter(+template.successful_hosts_saved_hours)}
         </Td>
         <Td>
           <Switch
@@ -148,7 +177,7 @@ const Row: FunctionComponent<Props> = ({
         </Td>
       </Tr>
       <Tr isExpanded={isExpanded}>
-        <ExpandedRowContents template={template} />
+        <ExpandedRowContents template={template} isMoney={isMoney} />
       </Tr>
     </>
   );

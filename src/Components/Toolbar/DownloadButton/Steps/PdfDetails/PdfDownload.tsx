@@ -4,6 +4,7 @@ import { DispatchType } from '../../../../../store';
 
 interface Props {
   slug: string;
+  isMoney: boolean;
   endpointUrl: Endpoint;
   queryParams: Params;
   selectOptions: OptionsReturnType;
@@ -19,6 +20,7 @@ interface Props {
   startDate: string;
   endDate: string;
   dateRange: string;
+  adoptionRateType: string;
   dispatch: DispatchType;
   chartSeriesHiddenProps: boolean[];
   showExtraRows: boolean;
@@ -27,6 +29,7 @@ interface Props {
 
 const PdfDownload: ({
   slug,
+  isMoney,
   endpointUrl,
   queryParams,
   selectOptions,
@@ -42,12 +45,14 @@ const PdfDownload: ({
   startDate,
   endDate,
   dateRange,
+  adoptionRateType,
   dispatch,
   chartSeriesHiddenProps,
   showExtraRows,
   inputs,
 }: Props) => void = ({
   slug,
+  isMoney,
   endpointUrl,
   queryParams,
   selectOptions,
@@ -63,6 +68,7 @@ const PdfDownload: ({
   startDate,
   endDate,
   dateRange,
+  adoptionRateType,
   dispatch,
   chartSeriesHiddenProps,
   showExtraRows,
@@ -86,6 +92,7 @@ const PdfDownload: ({
           chartType,
         },
         dataFetchingParams: {
+          isMoney,
           showExtraRows: showExtraRows,
           endpointUrl,
           queryParams: allParams,
@@ -99,6 +106,7 @@ const PdfDownload: ({
           startDate,
           endDate,
           dateRange,
+          adoptionRateType,
         },
       },
       dispatch,

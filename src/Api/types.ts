@@ -30,6 +30,7 @@ export interface PDFParams {
     showExtraRows: boolean;
     chartSeriesHiddenProps: boolean[];
     totalPages: number;
+    isMoney: boolean;
     pageLimit: number;
     sortOptions: string;
     sortOrder: 'asc' | 'desc';
@@ -37,6 +38,7 @@ export interface PDFParams {
     startDate: string;
     endDate: string;
     dateRange: string;
+    adoptionRateType: string;
     token?: string;
     expiry?: string;
   };
@@ -51,6 +53,7 @@ export interface PDFEmailParams {
     showExtraRows: boolean;
     chartSeriesHiddenProps: boolean[];
     totalPages: number;
+    isMoney: boolean;
     pageLimit: number;
     sortOptions: string;
     sortOrder: 'asc' | 'desc';
@@ -58,6 +61,7 @@ export interface PDFEmailParams {
     startDate: string;
     endDate: string;
     dateRange: string;
+    adoptionRateType: string;
     token?: string;
     expiry?: string;
   };

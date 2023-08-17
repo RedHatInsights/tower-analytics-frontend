@@ -55,6 +55,8 @@ export const authenticatedFetch = (
   endpoint: RequestInfo,
   options = {}
 ): Promise<Response> =>
+  // FIXME: Use chrome hook
+  // eslint-disable-next-line rulesdir/no-chrome-api-call-from-window
   window.insights.chrome.auth.getUser().then(() =>
     fetch(endpoint, {
       ...options,

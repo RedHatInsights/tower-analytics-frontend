@@ -8,6 +8,7 @@ import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 import useRequest from './Utilities/useRequest';
 import { preflightRequest } from './Api/';
 import AuthorizationErrorPage from './Components/ApiStatus/AuthorizationErrorPage';
+import { Alert } from '@patternfly/react-core';
 
 const el = document.getElementById('global-filter');
 if (el) el.style.display = 'none';
@@ -41,6 +42,11 @@ const App = () => {
 
   return (
     <div id="automation-analytics-application" version={packageJson.version}>
+      <Alert
+        isInline
+        variant="info"
+        title="Automation Analytics may be experiencing performance issues due to database upgrade. Displayed data may be delayed. We apologize for the inconvenience."
+      />
       {renderContent()}
     </div>
   );

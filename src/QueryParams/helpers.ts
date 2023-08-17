@@ -16,6 +16,8 @@ const parseNamespace = (
 
     if (!(namespace in retObj)) retObj[namespace] = {};
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     retObj[namespace][attributes] = obj[key];
   });
 
