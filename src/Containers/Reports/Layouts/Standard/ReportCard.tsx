@@ -105,6 +105,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   const navigateToTaskBar = (
     slug: string,
     templateId: any,
+    hostId: any,
     clusterId: any,
     orgId: any,
     inventoryId: any,
@@ -116,6 +117,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       [DEFAULT_NAMESPACE]: {
         ...specificReportDefaultParams(slug),
         template_id: templateId,
+        host_id: hostId,
         cluster_id: clusterId,
         org_id: orgId,
         inventory_id: inventoryId,
@@ -166,6 +168,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       navigateToTaskBar(
         'tasks_by_host_bar',
         props.datum.id,
+        queryParams.host_id,
         queryParams.cluster_id,
         queryParams.org_id,
         queryParams.inventory_id,

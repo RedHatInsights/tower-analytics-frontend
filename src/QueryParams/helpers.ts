@@ -16,7 +16,7 @@ const parseNamespace = (
 
     if (!(namespace in retObj)) retObj[namespace] = {};
 
-    retObj[namespace][attributes] = obj[key];
+    retObj[namespace][attributes] = obj[key] as string | boolean;
   });
 
   return retObj;
