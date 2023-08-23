@@ -168,7 +168,6 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       navigateToTaskBar(
         'tasks_by_host_bar',
         props.datum.id,
-        queryParams.host_id,
         queryParams.cluster_id,
         queryParams.org_id,
         queryParams.inventory_id,

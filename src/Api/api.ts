@@ -232,11 +232,19 @@ export const readProbeTemplateForHosts = (params: Params): Promise<ApiJson> => {
 export const readProbeTemplateHostForTasks = (
   params: Params
 ): Promise<ApiJson> => {
+  return post(Endpoint.probeTemplateHostForTasks, params);
+};
+
+/*
+export const readProbeTemplateHostForTasks = (
+  params: Params
+): Promise<ApiJson> => {
   return mungeData(
     postWithPagination(Endpoint.probeTemplateHostForTasks, params),
     params
   );
 };
+*/
 
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
   post(Endpoint.probeTemplatesOptions, params);
