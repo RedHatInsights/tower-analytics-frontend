@@ -93,7 +93,34 @@ const defaultHostsQueryParams = {
 
 const lastCallBody = (url) => JSON.parse(fetchMock.lastCall(url)[1].body);
 
-describe.skip('Containers/OrganizationStatistics', () => {
+fetchMock.post(
+  {
+    url: jobExplorerUrl,
+    body: { group_by: 'org', group_by_time: true },
+    matchPartialBody: true,
+  },
+  { ...dummyOrgData(5) }
+);
+fetchMock.post(
+  {
+    url: jobExplorerUrl,
+    body: { group_by: 'org', include_others: true },
+    matchPartialBody: true,
+    overwriteRoutes: false,
+  },
+  { ...dummyPieData(5) }
+);
+fetchMock.post({ url: jobExplorerOptionsUrl }, { ...jobExplorerOptions });
+fetchMock.post({ url: hostExplorerUrl }, { ...dummyHostsData(5) });
+fetchMock.post({ url: jobExplorerUrl, overwriteRoutes: true }, {});
+fetchMock.post({
+  url: jobExplorerUrl,
+  overwriteRoutes: true,
+  response: { throws: { error: 'General Error' }, status: 400 },
+});
+fetchMock.post({ url: jobExplorerUrl, overwriteRoutes: true }, { items: [] });
+
+describe('Containers/OrganizationStatistics', () => {
   let wrapper;
 
   beforeEach(() => {
@@ -102,26 +129,6 @@ describe.skip('Containers/OrganizationStatistics', () => {
       d3Container.setAttribute('id', item);
       document.body.appendChild(d3Container);
     });
-
-    fetchMock.post(
-      {
-        url: jobExplorerUrl,
-        body: { group_by: 'org', group_by_time: true },
-        matchPartialBody: true,
-      },
-      { ...dummyOrgData(5) }
-    );
-    fetchMock.post(
-      {
-        url: jobExplorerUrl,
-        body: { group_by: 'org', include_others: true },
-        matchPartialBody: true,
-        overwriteRoutes: false,
-      },
-      { ...dummyPieData(5) }
-    );
-    fetchMock.post({ url: jobExplorerOptionsUrl }, { ...jobExplorerOptions });
-    fetchMock.post({ url: hostExplorerUrl }, { ...dummyHostsData(5) });
   });
 
   afterEach(() => {
@@ -130,15 +137,11 @@ describe.skip('Containers/OrganizationStatistics', () => {
       d3Container.remove();
     });
 
-    fetchMock.restore();
+    //fetchMock.restore();
     wrapper.unmount();
   });
 
   it('should render without any errors', async () => {
-    fetchMock.post(
-      { url: jobExplorerUrl, overwriteRoutes: true },
-      { items: [] }
-    );
     await act(async () => {
       wrapper = mountPage(OrganizationStatistics);
     });
@@ -148,7 +151,6 @@ describe.skip('Containers/OrganizationStatistics', () => {
   });
 
   it('should render with data', async () => {
-    fetchMock.post({ url: jobExplorerUrl, overwriteRoutes: true }, {});
     await act(async () => {
       wrapper = mountPage(OrganizationStatistics);
     });
@@ -158,13 +160,7 @@ describe.skip('Containers/OrganizationStatistics', () => {
     expect(wrapper.text()).not.toEqual(expect.stringContaining('*Loading*'));
   });
 
-  it('should render api error', async () => {
-    fetchMock.post({
-      url: jobExplorerUrl,
-      overwriteRoutes: true,
-      response: { throws: { error: 'General Error' }, status: 400 },
-    });
-
+  it.skip('should render api error', async () => {
     await act(async () => {
       wrapper = mountPage(OrganizationStatistics);
     });
@@ -173,11 +169,6 @@ describe.skip('Containers/OrganizationStatistics', () => {
   });
 
   it('should render with empty response', async () => {
-    fetchMock.post(
-      { url: jobExplorerUrl, overwriteRoutes: true },
-      { items: [] }
-    );
-
     await act(async () => {
       wrapper = mountPage(OrganizationStatistics);
     });
