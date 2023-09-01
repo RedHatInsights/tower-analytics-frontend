@@ -5,11 +5,11 @@ import ChartBuilder, {
   ChartFunctions,
   ChartSchemaElement,
   functions,
-} from 'react-json-chart-builder';
+} from '@ansible/react-json-chart-builder';
 import { useQueryParams } from '../../QueryParams';
 import { convertApiToData } from './convertApi';
 import { ApiReturnType } from './types';
-import { ChartDataSerie } from 'react-json-chart-builder/dist/cjs';
+import { ChartDataSerie } from '@ansible/react-json-chart-builder/dist/cjs';
 
 interface Props {
   schema: ChartSchemaElement[];
