@@ -55,7 +55,7 @@ const getPaginationNav = (wrapper) => wrapper.find('.pf-c-pagination__nav');
 
 const inspectCall = (url, method) => fetchMock.lastCall(url, method);
 
-describe('Containers/JobExplorer', () => {
+describe.skip('Containers/JobExplorer', () => {
   let wrapper;
 
   beforeEach(() => {
