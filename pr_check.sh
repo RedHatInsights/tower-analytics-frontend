@@ -28,7 +28,7 @@ export IMAGE_BACKEND_TAG=$(curl -s https://gitlab.cee.redhat.com/api/v4/projects
 # frontend
 export IMAGE="quay.io/cloudservices/automation-analytics-frontend"
 export IMAGE_FRONTEND="quay.io/cloudservices/automation-analytics-frontend"
-export IMAGE_FRONTEND_TAG=$(git rev-parse --short=7 HEAD)
+#export IMAGE_FRONTEND_TAG=$(git rev-parse --short=7 HEAD)
 export IMAGE_FRONTEND_SHA1=$(git rev-parse HEAD)
 
 # iqe
@@ -60,7 +60,7 @@ bonfire deploy \
     --set-template-ref $BONFIRE_COMPONENT_NAME=main \
     --set-template-ref tower-analytics-frontend=$IMAGE_FRONTEND_SHA1 \
     --set-image-tag $IMAGE_BACKEND=$IMAGE_BACKEND_TAG \
-    --set-image-tag $IMAGE_FRONTEND=$IMAGE_FRONTEND_TAG \
+    --set-image-tag $IMAGE_FRONTEND=$IMAGE_TAG \
     --frontends=true \
     --namespace $NAMESPACE \
     $BONFIRE_COMPONENTS_ARG
