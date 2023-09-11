@@ -42,11 +42,13 @@ function uiLogin(strategy, username, password) {
 
   cy.get(kcLoginFields[strategy]['password']).as('passwordField');
   cy.get('@passwordField').should('be.visible');
-  cy.get('@passwordField').type(`${password}`, { log: false });
+  cy.get('@passwordField').type('`${password}`', { log: false });
+  cy.get('@passwordField').type('{enter}');
 
-  cy.get('#rh-password-verification-submit-button').as('submitButton');
-  cy.get('@submitButton').should('be.visible');
-  cy.get('@submitButton').click();
+  // FIXME: update the button name to be found in ephemera;
+  // cy.get('#rh-password-verification-submit-button').as('submitButton');
+  // cy.get('@submitButton').should('be.visible');
+  // cy.get('@submitButton').click();
 
   cy.visit(Cypress.config().baseUrl + clustersUrl);
 }
