@@ -1,4 +1,4 @@
-import { ChartSchemaElement } from 'react-json-chart-builder';
+import { ChartSchemaElement } from '@ansible/react-json-chart-builder';
 import { SchemaFnc } from './types';
 
 /**
