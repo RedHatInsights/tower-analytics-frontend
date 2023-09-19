@@ -10,7 +10,7 @@ export CICD_URL=https://raw.githubusercontent.com/RedHatInsights/bonfire/master/
 # common
 export WORKSPACE=${WORKSPACE:-$APP_ROOT}
 export APP_ROOT=$(pwd)
-export NODE_BUILD_VERSION=16
+export NODE_BUILD_VERSION=18
 export APP_NAME="tower-analytics"
 export CLOWD_APP_NAME=automation-analytics
 export BACKUP_APP_ROOT=${WORKSPACE:-$APP_ROOT}

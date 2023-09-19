@@ -12,7 +12,7 @@ import {
   ChartTopLevelType,
   ChartKind,
   ChartType,
-} from 'react-json-chart-builder';
+} from '@ansible/react-json-chart-builder';
 
 fetchMock.config.overwriteRoutes = true;
 

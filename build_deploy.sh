@@ -8,7 +8,7 @@ export IMAGE="quay.io/cloudservices/automation-analytics-frontend"
 export COMPONENT="automation-analytics" 
 export WORKSPACE=${WORKSPACE:-$APP_ROOT}
 export APP_ROOT=$(pwd)
-export NODE_BUILD_VERSION=16
+export NODE_BUILD_VERSION=18
 export COMMON_BUILDER=https://raw.githubusercontent.com/RedHatInsights/insights-frontend-builder-common/master
 
 # source is preferred to | bash -s in this case to avoid a subshell

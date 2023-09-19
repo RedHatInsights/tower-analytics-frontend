@@ -1,3 +1,4 @@
+dist: jammy
 branches:
   only:
   - devel
@@ -10,7 +11,7 @@ services:
 notifications:
   email: false
 node_js:
-  - '15'
+  - '18'
 install:
   - npm ci
 jobs:
