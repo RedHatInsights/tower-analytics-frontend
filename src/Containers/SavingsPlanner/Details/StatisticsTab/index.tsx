@@ -21,7 +21,7 @@ import {
   ChartTopLevelType,
   ChartSchemaElement,
   ChartLabelFormatFunction,
-} from 'react-json-chart-builder';
+} from '@ansible/react-json-chart-builder';
 
 import RoutedTabs from '../../../../Components/RoutedTabs';
 
