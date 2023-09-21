@@ -8,6 +8,7 @@ import {
   ButtonVariant,
   Card,
   CardActions,
+  CardBody,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -89,11 +90,13 @@ const List: FunctionComponent<Record<string, never>> = () => {
     request: fetchReport,
     isSuccess: isReportSuccess,
   } = useRequest(async () => {
+    console.log('reading report');
     const response = await readReport(selected);
     return response.report as ReportSchema;
   }, {} as ReportSchema);
 
   useEffect(() => {
+    console.log('useeffect');
     if (isSuccess && reports.length > 0) {
       const report = reports.filter(({ slug }) => selected === slug);
       if (selected === '' || report.length === 0) setSelected(reports[0].slug);
@@ -193,7 +196,11 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             aria-label="Previous report"
                             data-cy={'previous_report_button'}
                             isDisabled={reports.indexOf(report) === 0}
-                            onClick={() => setSelected(previousItem)}
+                            onClick={() => {
+                              console.log('clicked on previous button');
+                              console.log('calling setSelected');
+                              setSelected(previousItem);
+                            }}
                           >
                             <AngleLeftIcon />
                           </Button>
@@ -222,7 +229,11 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             isDisabled={
                               reports.indexOf(report) >= reports.length - 1
                             }
-                            onClick={() => setSelected(nextItem)}
+                            onClick={() => {
+                              console.log('clicked on next button');
+                              console.log('calling setSelected');
+                              setSelected(nextItem);
+                            }}
                           >
                             <AngleRightIcon />
                           </Button>

@@ -53,6 +53,7 @@ const ListItem: FunctionComponent<Props> = ({
       isSelectableRaised
       isSelected={selected === slug}
       onClick={() => {
+        console.log('clicked somewhere on card');
         setSelected(slug);
       }}
     >
@@ -66,12 +67,13 @@ const ListItem: FunctionComponent<Props> = ({
         </CardHeaderMain>
       </CardHeader>
       <CardBody
-        onClick={() => {
-          navigate({
-            search: '',
-          });
-          setSelected(slug);
-        }}
+      //onClick={() => {
+      //  navigate({
+      //    search: '',
+      //  });
+      //  console.log('clicked on card description');
+      //  setSelected(slug);
+      //}}
       >
         {description ? (
           <Tooltip
