@@ -82,7 +82,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
   }, [queryParams]);
 
   const reports = data as Report[];
-  const selected = queryParams.selected_report || reports[0]?.slug || '';
+  const selected = queryParams.selected_report || reports[0]?.slug;
   const setSelected = (slug: string) => setFromToolbar('selected_report', slug);
 
   const {
@@ -90,14 +90,11 @@ const List: FunctionComponent<Record<string, never>> = () => {
     request: fetchReport,
     isSuccess: isReportSuccess,
   } = useRequest(async () => {
-    console.log('reading report');
     const response = await readReport(selected);
     return response.report as ReportSchema;
   }, {} as ReportSchema);
 
   useEffect(() => {
-    console.log('useeffect');
-    console.log('selected: ', selected);
     if (isSuccess && reports.length > 0) {
       fetchReport();
     }
