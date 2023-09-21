@@ -97,12 +97,11 @@ const List: FunctionComponent<Record<string, never>> = () => {
 
   useEffect(() => {
     console.log('useeffect');
+    console.log('selected: ', selected);
     if (isSuccess && reports.length > 0) {
-      const report = reports.filter(({ slug }) => selected === slug);
-      if (selected === '' || report.length === 0) setSelected(reports[0].slug);
       fetchReport();
     }
-  }, [reports, selected]);
+  }, [selected]);
 
   const dropdownItems = [
     isSuccess &&
@@ -197,8 +196,6 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             data-cy={'previous_report_button'}
                             isDisabled={reports.indexOf(report) === 0}
                             onClick={() => {
-                              console.log('clicked on previous button');
-                              console.log('calling setSelected');
                               setSelected(previousItem);
                             }}
                           >
@@ -230,8 +227,6 @@ const List: FunctionComponent<Record<string, never>> = () => {
                               reports.indexOf(report) >= reports.length - 1
                             }
                             onClick={() => {
-                              console.log('clicked on next button');
-                              console.log('calling setSelected');
                               setSelected(nextItem);
                             }}
                           >
