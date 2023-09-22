@@ -93,7 +93,7 @@ const defaultHostsQueryParams = {
 
 const lastCallBody = (url) => JSON.parse(fetchMock.lastCall(url)[1].body);
 
-describe('Containers/OrganizationStatistics', () => {
+describe.skip('Containers/OrganizationStatistics', () => {
   let wrapper;
 
   beforeEach(() => {

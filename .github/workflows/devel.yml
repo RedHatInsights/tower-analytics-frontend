@@ -6,12 +6,17 @@ on:
 
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          node-version: '15'
+          node-version: '18'
+          check-latest: true
+      
+      # npm 9 causes an issue while using node 18 preventing pr image build to finish
+      - name: Force npm downgrade to v8
+        run: npm i -g npm@8
 
       - name: Install modules
         run: npm ci
@@ -21,16 +26,21 @@ jobs:
 
 
   jest-tests:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: lint
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 2 # For codecov action it has to be != 1
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '15'
+          node-version: '18'
+          check-latest: true
+      
+      # npm 9 causes an issue while using node 18 preventing pr image build to finish
+      - name: Force npm downgrade to v8
+        run: npm i -g npm@8
 
       - name: Install modules
         run: npm ci
