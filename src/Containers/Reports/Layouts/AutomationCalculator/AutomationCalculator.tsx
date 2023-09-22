@@ -359,8 +359,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       },
       isMoney: true,
     };
-
-    navigate(createUrl(Paths.jobExplorer, true, initialQueryParams));
+    navigate(
+      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams)
+    );
   };
 
   const chartParams = {
