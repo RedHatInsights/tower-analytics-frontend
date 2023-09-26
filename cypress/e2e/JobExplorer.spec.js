@@ -1,9 +1,7 @@
 import { jobExplorerUrl } from '../support/constants';
 
-const appid = Cypress.env('appid');
-
 describe('Job Explorer page smoketests', () => {
-  beforeEach(() => {    
+  beforeEach(() => {
     cy.visit(jobExplorerUrl);
 
     cy.get('[data-cy="spinner"]').should('not.exist');
@@ -27,12 +25,12 @@ describe('Job Explorer page smoketests', () => {
   });
 
   it('Can navigate through the pages', () => {
-    cy.testNavArrowsFlow('top_pagination')
-    cy.testNavArrowsFlow('pagination_bottom')
+    cy.testNavArrowsFlow('top_pagination');
+    cy.testNavArrowsFlow('pagination_bottom');
   });
 
   it('Can change the number of items shown on the list', () => {
-    cy.testItemsListFlow('top_pagination', 'jbex')
-    cy.testItemsListFlow('pagination_bottom', 'jbex')
+    cy.testItemsListFlow('top_pagination', 'jbex');
+    cy.testItemsListFlow('pagination_bottom', 'jbex');
   });
 });

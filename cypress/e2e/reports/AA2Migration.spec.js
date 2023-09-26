@@ -2,7 +2,7 @@ import { aa21m as pageName } from '../../support/constants';
 
 describe('Report: AA 2.1 Migration', () => {
   beforeEach(() => {
-    cy.visitReport(pageName)
+    cy.visitReport(pageName);
   });
 
   it('Can Switch between Line and Bar chart without breaking UI', () => {
