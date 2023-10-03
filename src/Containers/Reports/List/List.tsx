@@ -194,9 +194,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             aria-label="Previous report"
                             data-cy={'previous_report_button'}
                             isDisabled={reports.indexOf(report) === 0}
-                            onClick={() => {
-                              setSelected(previousItem);
-                            }}
+                            onClick={() => setSelected(previousItem)}
                           >
                             <AngleLeftIcon />
                           </Button>
