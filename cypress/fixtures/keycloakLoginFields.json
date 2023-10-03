@@ -1,0 +1,38 @@
+{
+  "localhost": {
+    "username": "#username-verification",
+    "password": "#password",
+    "2step": false,
+    "landing-page": "/clusters"
+  },
+  "front-end-aggregator-ephemeral": {
+    "username": "#username-verification",
+    "password": "#password",
+    "2step": false,
+    "landing-page": "/clusters"
+  },
+  "env-ephemeral": {
+    "username": "#username",
+    "password": "#password",
+    "2step": false,
+    "landing-page": "/clusters"
+  },
+  "mocks-keycloak-ephemeral": {
+    "username": "#username",
+    "password": "#password",
+    "2step": false,
+    "landing-page": "/clusters"
+  },
+  "console.stage.redhat.com": {
+    "username": "#username-verification",
+    "password": "#password",
+    "2step": true,
+    "landing-page": "/clusters"
+  },
+  "stage.foo.redhat.com": {
+    "username": "#username-verification",
+    "password": "#password",
+    "2step": true,
+    "landing-page": "/clusters"
+  }
+}

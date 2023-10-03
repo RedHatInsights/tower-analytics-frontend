@@ -10,8 +10,9 @@ services:
   - docker
 notifications:
   email: false
-node_js:
-  - '18'
+# npm 9 causes an issue while using node 18 preventing pr image build to finish
+before_install:
+  - npm install -g npm@8
 install:
   - npm ci
 jobs:

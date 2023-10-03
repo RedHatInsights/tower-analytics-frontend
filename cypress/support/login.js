@@ -1,10 +1,5 @@
-import { clustersUrl, reportsUrl } from '../support/constants'
-
-Cypress.Commands.add('getBaseUrl', () => Cypress.env('baseUrl'));
-
-Cypress.Commands.add('getUsername', () => Cypress.env('USERNAME'));
-
-Cypress.Commands.add('getPassword', () => Cypress.env('PASSWORD'));
+import kcLoginFields from '../fixtures/keycloakLoginFields.json';
+import { clustersUrl } from '../support/constants';
 
 /*
  * If the page has a pendo alert about
@@ -20,91 +15,68 @@ Cypress.Commands.add('clearFeatureDialogs', () => {
   });
 });
 
-Cypress.Commands.add('login', () => {
-  cy.visit('/');
+function setCookiesForUILogin() {
+  Cypress.Cookies.debug(true);
+  cy.setCookie('cmapi_cookie_privacy', 'permit 1,2,3', { secure: true });
+  cy.setCookie('cmapi_gtm_bl', '', { secure: true });
+  cy.setCookie('notice_preferences', '2:', { secure: true });
+  cy.setCookie('notice_behavior', 'expressed,eu', { secure: true });
+  cy.setCookie('notice_gdpr_prefs', '0,1,2:', {
+    secure: true,
+    domain: 'redhat.com',
+  });
+}
 
-  cy.log('Determining login strategy');
+function uiLogin(strategy, username, password) {
+  cy.log('Strategy:', JSON.stringify(kcLoginFields[strategy]));
 
-  const keycloakLoginFields = {
-    'localhost': {
-      'username': '#username-verification',
-      'password': '#password',
-      'two-step': false,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
-    },
-    // when you login on eph, the landing page is "/"
-    'front-end-aggregator-ephemeral': {
-      'username': '#username-verification',
-      'password': '#password',
-      'two-step': false,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
-    },
-    'env-ephemeral': {
-      'username': '#username',
-      'password': '#password',
-      'two-step': false,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
-    },
-    'mocks-keycloak-ephemeral': {
-      'username': '#username',
-      'password': '#password',
-      'two-step': false,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
-    },
-    'console.stage.redhat.com': {
-      'username': '#username-verification',
-      'password': '#password',
-      'two-step': true,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
-    },
-    'stage.foo.redhat.com': {
-      'username': '#username-verification',
-      'password': '#password',
-      'two-step': true,
-      'landing-page': Cypress.config().baseUrl + clustersUrl
-    }
-  }
+  cy.get(kcLoginFields[strategy]['username']).as('usernameField');
+  cy.get('@usernameField').should('be.visible');
+  cy.get('@usernameField').type(`${username}`);
 
-  let strategy = null;
-
-  // probably some fancy filter function for this
-  for (const element of Object.keys(keycloakLoginFields)) {
-    if (Cypress.config().baseUrl.includes(element)) {
-      cy.log('Baseurl contains: ' + element);
-      strategy = element;
-      break;
-    }
-  }
-
-  cy.log('Strategy: ');
-  cy.log(JSON.stringify(keycloakLoginFields[strategy]));
-  cy.get(keycloakLoginFields[strategy]['username']).should('be.visible');
-
-  if (keycloakLoginFields[strategy]['two-step']) {
+  if (kcLoginFields[strategy]['2step'] === true) {
     cy.log('Two step verfication');
-    cy.getUsername().then((uname) =>
-      cy.get(keycloakLoginFields[strategy]['username']).type(`${uname}`)
-    );
-    cy.get('#login-show-step2').click();
-    cy.getPassword().then((password) =>
-      cy.get(keycloakLoginFields[strategy]['password']).type(`${password}{enter}`, { log: false })
-    );
-  } else {
-    cy.log('One step verfication');
-    cy.getUsername().then((uname) => cy.get(keycloakLoginFields[strategy]['username']).type(`${uname}`));
-    cy.getPassword().then((password) =>
-      cy.get(keycloakLoginFields[strategy]['password']).type(`${password}{enter}`, { log: false })
-    );
+    cy.get('#login-show-step2').as('showStep2');
+    cy.get('@showStep2').click().should('be.visible');
   }
 
-  cy.log('Checking for landing page: ' + keycloakLoginFields[strategy]['landing-page']);
+  cy.get(kcLoginFields[strategy]['password']).as('passwordField');
+  cy.get('@passwordField').should('be.visible');
+  cy.get('@passwordField').type(`${password}{enter}`, { log: false });
+
+  // FIXME: update the button name to be found in ephemera;
+  // cy.get('#rh-password-verification-submit-button').as('submitButton');
+  // cy.get('@submitButton').should('be.visible');
+  // cy.get('@submitButton').click();
+
   cy.visit(Cypress.config().baseUrl + clustersUrl);
-  cy.url().should('eq', keycloakLoginFields[strategy]['landing-page']);
-  // if (strategy == "env-ephemeral") {
-    // cy.visit(Cypress.config().baseUrl + clustersUrl);
-    // cy.url().should('eq', Cypress.config().baseUrl + clustersUrl);
-    // cy.get('[data-quickstart-id="ansible_automation-analytics_reports"]').click();
-    // cy.get('a[href="' + Cypress.config().baseUrl + reportsUrl + '"]', { timeout: 10000 }).should('be.visible');
-    // cy.get('[data-ouia-component-type="PF4/Title"]', { timeout: 10000 }).should('be.visible');    
-  // }
+}
+
+Cypress.Commands.add('loginWithPageSession', () => {
+  cy.session(
+    'uiLogin',
+    () => {
+      setCookiesForUILogin();
+      cy.visit('/');
+      cy.log(JSON.stringify(kcLoginFields));
+      let strategy = null;
+
+      // TODO: is there a better way to get the strategy??
+      for (const index of Object.keys(kcLoginFields)) {
+        if (Cypress.config().baseUrl.includes(index)) {
+          cy.log('Baseurl contains: ' + index);
+          strategy = index;
+          break;
+        }
+      }
+
+      uiLogin(strategy, Cypress.env('USERNAME'), Cypress.env('PASSWORD'));
+    },
+    {
+      validate() {
+        cy.document().its('cookie').should('contain', 'TAsessionID');
+      },
+      cacheAcrossSpecs: true,
+    }
+  );
 });

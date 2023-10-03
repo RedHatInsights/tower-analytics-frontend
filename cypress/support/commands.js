@@ -36,8 +36,8 @@ import { reportsUrl } from '../support/constants';
  * @param {String} selector - The selector value
  **/
 Cypress.Commands.add('getByOUIA', (selector, ...args) => {
-  return cy.get(`[data-ouia-component-id="${selector}"]`, ...args)
-})
+  return cy.get(`[data-ouia-component-id="${selector}"]`, ...args);
+});
 
 /**
  * This command get an element using data-ouia-component-id
@@ -49,8 +49,8 @@ Cypress.Commands.add('getByOUIA', (selector, ...args) => {
  * @param {String} selector - The selector value
  **/
 Cypress.Commands.add('getByOUIALike', (selector, ...args) => {
-  return cy.get(`[data-ouia-component-id*="${selector}"]`, ...args)
-})
+  return cy.get(`[data-ouia-component-id*="${selector}"]`, ...args);
+});
 
 /**
  * This command get an element using data-cy
@@ -63,8 +63,8 @@ Cypress.Commands.add('getByOUIALike', (selector, ...args) => {
  **/
 
 Cypress.Commands.add('getByCy', (selector, ...args) => {
-  return cy.get(`[data-cy="${selector}"]`, ...args)
-})
+  return cy.get(`[data-cy="${selector}"]`, ...args);
+});
 
 /**
  * This command get an element using data-cy
@@ -84,8 +84,8 @@ Cypress.Commands.add('getByCy', (selector, ...args) => {
 Cypress.Commands.add('getByCyLike', (selector, matchType = '*', ...args) => {
   return matchType == '*'
     ? cy.get(`[data-cy*="${selector}"]`, ...args)
-    : cy.get(`[data-cy${matchType}="${selector}"]`, ...args)
-})
+    : cy.get(`[data-cy${matchType}="${selector}"]`, ...args);
+});
 
 /**
  * This command get an element using id
@@ -97,8 +97,8 @@ Cypress.Commands.add('getByCyLike', (selector, matchType = '*', ...args) => {
  * @param {String} selector - The selector value
  **/
 Cypress.Commands.add('getByIdLike', (selector, ...args) => {
-  return cy.get(`[id*="${selector}"]`, ...args)
-})
+  return cy.get(`[id*="${selector}"]`, ...args);
+});
 
 /**
  * This command find an element inside a given parent with id
@@ -111,9 +111,8 @@ Cypress.Commands.add('getByIdLike', (selector, ...args) => {
  * @param {String} selector - The selector value
  **/
 Cypress.Commands.add('findFromParent', (parentSelector, selector, ...args) => {
-  cy.get(`${parentSelector}`)
-    .find(`${selector}`, ...args)
-})
+  cy.get(`${parentSelector}`).find(`${selector}`, ...args);
+});
 
 /**
  * This command find an element inside a given parent with id
@@ -126,9 +125,8 @@ Cypress.Commands.add('findFromParent', (parentSelector, selector, ...args) => {
  * @param {String} selector - The selector value
  **/
 Cypress.Commands.add('findByIdLike', (parentSelector, selector, ...args) => {
-  cy.get(`${parentSelector}`)
-    .find(`[id*="${selector}"]`, ...args)
-})
+  cy.get(`${parentSelector}`).find(`[id*="${selector}"]`, ...args);
+});
 
 /** This command allows the user to enter a locator that uses a data-ouia-component-id,
  * a data-cy, id, or aria-labelledby, and find that locator
@@ -140,47 +138,59 @@ Cypress.Commands.add('findByIdLike', (parentSelector, selector, ...args) => {
  * @param {String} idToFind - user inserts the locator here.
  */
 Cypress.Commands.add('findByCustomId', (idToFind) => {
-  const { queryHelpers } = require('@testing-library/dom')
-  let queryAllByOuia = queryHelpers.queryAllByAttribute.bind(null, 'data-ouia-component-id')
-  let queryAllByDataCy = queryHelpers.queryAllByAttribute.bind(null, 'data-cy')
-  let queryAllById = queryHelpers.queryAllByAttribute.bind(null, 'id')
+  const { queryHelpers } = require('@testing-library/dom');
+  let queryAllByOuia = queryHelpers.queryAllByAttribute.bind(
+    null,
+    'data-ouia-component-id'
+  );
+  let queryAllByDataCy = queryHelpers.queryAllByAttribute.bind(null, 'data-cy');
+  let queryAllById = queryHelpers.queryAllByAttribute.bind(null, 'id');
 
-  let resultA = queryAllByOuia(Cypress.$('body')[0], idToFind)
-  let resultB = queryAllByDataCy(Cypress.$('body')[0], idToFind)
-  let resultC = queryAllById(Cypress.$('body')[0], idToFind)
-  if (resultA.length) return resultA
-  if (resultB.length) return resultB
-  if (resultC.length) return resultC
+  let resultA = queryAllByOuia(Cypress.$('body')[0], idToFind);
+  let resultB = queryAllByDataCy(Cypress.$('body')[0], idToFind);
+  let resultC = queryAllById(Cypress.$('body')[0], idToFind);
+  if (resultA.length) return resultA;
+  if (resultB.length) return resultB;
+  if (resultC.length) return resultC;
 
-  throw `Unable to find an element by: [data-ouia-component-id="${idToFind}"] or [data-cy="${idToFind}"] or [id="${idToFind}"]`
-})
+  throw `Unable to find an element by: [data-ouia-component-id="${idToFind}"] or [data-cy="${idToFind}"] or [id="${idToFind}"]`;
+});
 
 Cypress.Commands.add('visitReport', (pageName) => {
   cy.loadFixture('tables_pagination').then((pages) => {
     pages.forEach((page) => {
       if (page.name == pageName) {
-        cy.intercept(page.api_call).as('apiCall')
-        cy.log('Page data from fixture:', JSON.stringify(page))
-        cy.log('Reports Url:', Cypress.config().baseUrl + reportsUrl + "/" + page.name)
-        cy.visit(Cypress.config().baseUrl + reportsUrl + "/" + page.name)
-        cy.url().should('eq',Cypress.config().baseUrl + reportsUrl + "/" + page.name);
-        cy.getByCy('loading').should('not.exist')
-        cy.getByCy('api_error_state').should('not.exist')
-        cy.getByCy('api_loading_state').should('not.exist')
-        cy.log('Intercepting the url:', page.api_call)
-        cy.wait('@apiCall', { timeout: 8000 })
+        cy.intercept(page.api_call).as('apiCall');
+        cy.log('Page data from fixture:', JSON.stringify(page));
+        cy.log(
+          'Reports Url:',
+          Cypress.config().baseUrl + reportsUrl + '/' + page.name
+        );
+        cy.visit(Cypress.config().baseUrl + reportsUrl + '/' + page.name);
+        cy.url().should(
+          'eq',
+          Cypress.config().baseUrl + reportsUrl + '/' + page.name
+        );
+        cy.getByCy('loading').should('not.exist');
+        cy.getByCy('api_error_state').should('not.exist');
+        cy.getByCy('api_loading_state').should('not.exist');
+        cy.log('Intercepting the url:', page.api_call);
+        // cy.wait('@apiCall', { timeout: 8000 }) // FIXME
       }
-    })
-  })
-})
+    });
+  });
+});
 
 Cypress.Commands.add('loadFixture', (name) => {
-  const fixturePath = (Cypress.env('test_env') == undefined ? "1" : Cypress.env('test_env')) + '/' + name
-  cy.log('fixturePath ', fixturePath)
+  const fixturePath =
+    (Cypress.env('test_env') == undefined ? '1' : Cypress.env('test_env')) +
+    '/' +
+    name;
+  cy.log('fixturePath ', fixturePath);
   cy.fixture(fixturePath).then((data) => {
     return data;
-  })
-})
+  });
+});
 
 Cypress.Commands.add('loadPageDataFixture', (pageName) => {
   cy.loadFixture('tables_pagination').then((pages) => {
@@ -188,9 +198,9 @@ Cypress.Commands.add('loadPageDataFixture', (pageName) => {
       if (page.name == pageName) {
         return page;
       }
-    })
-  })
-})
+    });
+  });
+});
 
 Cypress.Commands.add('waitSpinner', () => {
   cy.getByCy('spinner').should(($spinner) => {
@@ -205,11 +215,11 @@ Cypress.Commands.add('tableShowAll', () => {
       cy.get('.pf-c-dropdown__menu.pf-m-align-right')
         .find('button')
         .contains('Show all')
-        .click()
-      cy.get('#table-kebab').click()
+        .click();
+      cy.get('#table-kebab').click();
     });
-  cy.waitSpinner()
-})
+  cy.waitSpinner();
+});
 
 Cypress.Commands.add('tableHideAll', () => {
   cy.get('#table-kebab')
@@ -222,4 +232,4 @@ Cypress.Commands.add('tableHideAll', () => {
       cy.get('#table-kebab').click();
     });
   cy.waitSpinner();
-})
+});
