@@ -223,9 +223,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             isDisabled={
                               reports.indexOf(report) >= reports.length - 1
                             }
-                            onClick={() => {
-                              setSelected(nextItem);
-                            }}
+                            onClick={() => setSelected(nextItem)}
                           >
                             <AngleRightIcon />
                           </Button>
