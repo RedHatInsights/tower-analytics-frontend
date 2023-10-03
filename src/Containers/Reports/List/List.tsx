@@ -82,7 +82,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
   }, [queryParams]);
 
   const reports = data as Report[];
-  const selected = queryParams.selected_report || reports[0]?.slug;
+  const selected = queryParams.selected_report || reports[0]?.slug || '';
   const setSelected = (slug: string) => setFromToolbar('selected_report', slug);
 
   const {
@@ -96,6 +96,8 @@ const List: FunctionComponent<Record<string, never>> = () => {
 
   useEffect(() => {
     if (isSuccess && reports.length > 0) {
+      const report = reports.filter(({ slug }) => selected === slug);
+      if (selected === '' || report.length === 0) setSelected(reports[0].slug);
       fetchReport();
     }
   }, [reports]);
