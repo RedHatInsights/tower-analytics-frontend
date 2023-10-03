@@ -98,7 +98,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
     if (isSuccess && reports.length > 0) {
       fetchReport();
     }
-  }, [selected]);
+  }, [reports]);
 
   const dropdownItems = [
     isSuccess &&
