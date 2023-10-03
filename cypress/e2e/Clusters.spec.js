@@ -1,4 +1,3 @@
-/* global cy */
 import { clustersUrl, ENV, ENVS } from '../support/constants';
 const appid = Cypress.env('appid');
 
@@ -9,7 +8,7 @@ describe('Clusters page', () => {
     cy.intercept('/api/tower-analytics/v1/event_explorer/*').as(
       'eventExplorerData'
     );
-    cy.wait('@eventExplorerData', ENV == ENVS.STAGE ? {timeout: 10000}: {});
+    cy.wait('@eventExplorerData', ENV == ENVS.STAGE ? { timeout: 10000 } : {});
 
     cy.get('[data-cy="spinner"]').should('not.exist');
     cy.get('[data-cy="loading"]').should('not.exist');
@@ -21,11 +20,11 @@ describe('Clusters page', () => {
   it('loads clusters page with Bar graph and other tables', () => {
     cy.get('[data-cy="card-title-job-status"]').find('h2').textContent;
 
-    if(ENV == ENVS.STAGE) {
+    if (ENV == ENVS.STAGE) {
       cy.contains('Clear all filters').should('exist');
     }
 
-    if(ENV != ENVS.STAGE) {
+    if (ENV != ENVS.STAGE) {
       /* FIXME
       For some reason this element is considered not visible and cypress
       finds 2 of them, instead of 1.
@@ -52,7 +51,7 @@ describe('Clusters page', () => {
       .should('exist');
     cy.get('[data-cy="barchart"]').should('exist');
     cy.get('#d3-bar-chart-root').should('exist');
-    if(ENV == ENVS.STAGE) {
+    if (ENV == ENVS.STAGE) {
       cy.get('@btnClearAllFilters').should('exist');
     }
     cy.get('h3').contains('Top workflows').should('exist');
@@ -79,11 +78,11 @@ describe('Clusters page', () => {
   it('has anchor clear filters link', () => {
     cy.get('div.pf-c-empty-state__content').should('not.exist');
 
-    if(ENV == ENVS.STAGE) {
-      cy.get('[data-cy="filter-toolbar"')
+    if (ENV == ENVS.STAGE) {
+      cy.get('[data-cy="filter-toolbar"');
     }
 
-    if(ENV != ENVS.STAGE) {
+    if (ENV != ENVS.STAGE) {
       /* FIXME
       For some reason this element is considered not visible and cypress
       finds 2 of them, instead of 1.
@@ -111,18 +110,20 @@ describe('Clusters page', () => {
     // Wait for loading and check the selected filter is present
     cy.get('.pf-c-empty-state__content').should('not.exist');
     cy.get('.pf-c-chip-group__main').contains('Cluster').should('exist');
-    cy.get('.pf-c-chip-group__main').contains('ec2-52-90-106-02.compute-1.amazonaws.com').should('exist');
+    cy.get('.pf-c-chip-group__main')
+      .contains('ec2-52-90-106-02.compute-1.amazonaws.com')
+      .should('exist');
 
-    if(ENV == ENVS.STAGE) {
+    if (ENV == ENVS.STAGE) {
       cy.get('[data-cy="filter-toolbar"')
-      .find('button')
-      .contains('Clear all filters')
-      .click({
-        force: true
-      });
+        .find('button')
+        .contains('Clear all filters')
+        .click({
+          force: true,
+        });
     }
 
-    if(ENV != ENVS.STAGE) {
+    if (ENV != ENVS.STAGE) {
       cy.get('@btnClearAllFilters').should('exist');
       cy.get('@btnClearAllFilters').click({ force: true }); //FIXME
     }
@@ -155,7 +156,7 @@ describe('Clusters page', () => {
           .find('#d3-bar-chart-root > svg > g > g > rect')
           .eq(ix)
           .trigger('mouseover', {
-            force: true
+            force: true,
           });
         cy.get('[id^=svg-chart-Tooltip]').should('have.css', 'opacity', '1');
       });
@@ -169,7 +170,7 @@ describe('Clusters page', () => {
           .find('*[class^="pf-c-data-list pf-m-grid-md"] > li > div')
           .eq(ix)
           .trigger('mouseover', {
-            force: true
+            force: true,
           });
       });
   });
@@ -182,7 +183,7 @@ describe('Clusters page', () => {
           .find('[data-cy="top-modules-header"] > ul> li > div')
           .eq(ix)
           .trigger('mouseover', {
-            force: true
+            force: true,
           });
       });
   });

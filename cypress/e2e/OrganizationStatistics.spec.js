@@ -1,4 +1,3 @@
-/* global cy, Cypress */
 import { orgsUrl } from '../support/constants';
 
 const appid = Cypress.env('appid');

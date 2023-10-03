@@ -2,7 +2,7 @@ import { hbo as pageName } from '../../support/constants';
 
 describe('Report: Hosts By Organization Smoketests', () => {
   beforeEach(() => {
-    cy.visitReport(pageName)
+    cy.visitReport(pageName);
   });
 
   it('Can Switch between Line and Bar chart without breaking UI', () => {

@@ -65,10 +65,10 @@
   {
     "short_name": "jtbo",
     "name": "jobs_and_tasks_by_organization",
-    "has_extra_line": true,
+    "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": false,
-    "total_items": 31,
+    "total_items": 2,
     "only_beta": false,
     "api_call": "/api/tower-analytics/v1/job_explorer/?*"
   },
@@ -84,10 +84,10 @@
   {
     "short_name": "mubo",
     "name": "module_usage_by_organization",
-    "has_extra_line": true,
+    "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": false,
-    "total_items": 30,
+    "total_items": 2,
     "api_call": "/api/tower-analytics/v1/event_explorer/?*"
   },
   {
@@ -102,10 +102,10 @@
   {
     "short_name": "mum",
     "name": "most_used_modules",
-    "has_extra_line": true,
+    "has_extra_line": false,
     "items_per_page": 6,
     "has_expanded_rows": true,
-    "total_items": 92,
+    "total_items": 5,
     "api_call": "/api/tower-analytics/v1/event_explorer/?*"
   },
   {
