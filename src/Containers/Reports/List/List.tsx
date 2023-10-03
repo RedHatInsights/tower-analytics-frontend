@@ -232,7 +232,9 @@ const List: FunctionComponent<Record<string, never>> = () => {
                         </CardActions>
                       </CardHeader>
                       <Divider />
-                      {getComponent(previewReport, false)}
+                      {report.slug === previewReport.slug
+                        ? getComponent(previewReport, false)
+                        : ''}
                       <CardFooter style={{ paddingBottom: '16px' }}>
                         <Link
                           to={paths.getDetails(report.slug)}
