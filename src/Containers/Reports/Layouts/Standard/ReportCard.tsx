@@ -105,7 +105,6 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   const navigateToTaskBar = (
     slug: string,
     templateId: any,
-    hostId: any,
     clusterId: any,
     orgId: any,
     inventoryId: any,
@@ -117,7 +116,6 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       [DEFAULT_NAMESPACE]: {
         ...specificReportDefaultParams(slug),
         template_id: templateId,
-        host_id: hostId,
         cluster_id: clusterId,
         org_id: orgId,
         inventory_id: inventoryId,
@@ -177,7 +175,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       );
     } else {
       console.log('slug: ', slug);
-      console.log('navigating to new report');
+      console.log('navigating to host scatter');
       navigateToHostScatter(
         'host_anomalies_scatter',
         props.datum.id,
