@@ -153,7 +153,9 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
         end_date,
       },
     };
-    navigate(createUrl(Paths.jobExplorer, true, initialQueryParams));
+    navigate(
+      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams)
+    );
   };
 
   useEffect(() => {
