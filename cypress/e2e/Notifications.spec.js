@@ -1,4 +1,4 @@
-import { notificationsUrl } from '../support/constants';
+import { notificationsUrl, ENV, ENVS } from '../support/constants';
 
 const appid = Cypress.env('appid');
 
@@ -41,7 +41,7 @@ async function fuzzNotificationsPage() {
     .eq(0)
     .select('All Clusters');
 
-  // try all message type filters ...
+  // try all message type filters ...  
   let levels = ['View Critical', 'View Warning', 'View Notice', 'View All'];
   levels.forEach((level) => {
     cy.get(appid)
@@ -56,7 +56,11 @@ describe('Notification page smoketests', () => {
     cy.visit(notificationsUrl);
   });
 
-  it('can interact with the notifications page without breaking the UI', () => {
-    fuzzNotificationsPage();
-  });
+  if (ENV != ENVS.EPHEMERAL) {
+    // no data
+    // does not work on ephemeral
+    it('can interact with the notifications page without breaking the UI', () => {      
+        fuzzNotificationsPage();
+    });
+  }
 });
