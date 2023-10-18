@@ -128,8 +128,10 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   };
 
   useEffect(() => {
+    console.log('query params: ', queryParams);
     fetchData(queryParams);
     fetchOptions(queryParams);
+    console.log('dataAPI: ', dataApi);
   }, [queryParams]);
 
   const chartParams = {
@@ -161,8 +163,6 @@ const ReportCard: FunctionComponent<StandardProps> = ({
 
   const handleClick = (event, props) => {
     if (slug === 'host_anomalies_scatter') {
-      console.log('slug: ', slug);
-      console.log('navigating to new report');
       navigateToTaskBar(
         'tasks_by_host_bar',
         props.datum.id,
@@ -174,8 +174,6 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         queryParams.quick_date_range
       );
     } else {
-      console.log('slug: ', slug);
-      console.log('navigating to host scatter');
       navigateToHostScatter(
         'host_anomalies_scatter',
         props.datum.id,
@@ -350,6 +348,36 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           slug === 'templates_by_organization' ? (
           <ApiStatusWrapper api={dataApi}>
             <PlotlyChart data={dataApi.result.items} />
+            <Table
+              legend={
+                dataApi.result.meta.tableData
+                  ? dataApi.result.meta.tableData
+                  : dataApi.result.meta.legend
+              }
+              headers={tableHeaders}
+              getSortParams={getSortParams}
+              expandedRowName={expandedTableRowName}
+              clickableLinking={clickableLinking}
+              showKebab={showKebab}
+            />
+          </ApiStatusWrapper>
+        ) : tableHeaders && !showKebab && slug === 'tasks_by_host_bar' ? (
+          <ApiStatusWrapper api={dataApi}>
+            <Chart
+              schema={hydrateSchema(schema)({
+                label: chartParams.label,
+                y: chartParams.y,
+                xTickFormat: chartParams.xTickFormat,
+                chartType: chartParams.chartType,
+              })}
+              dataComponent={'foobar'}
+              data={dataApi.result}
+              specificFunctions={{
+                labelFormat: {
+                  customTooltipFormatting,
+                },
+              }}
+            />
             <Table
               legend={
                 dataApi.result.meta.tableData
