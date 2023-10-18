@@ -392,28 +392,20 @@ const allDefaultParams: any = {
     defaultParams: {
       limit: 6,
       offset: 0,
-      /*
-      attributes: [
-        'host_status',
-        'average_duration_per_task',
-        'last_referenced',
-      ],
-      */
+      attributes: ['average_duration', 'last_known_task_created'],
       cluster_id: [],
       org_id: [],
       inventory_id: [],
       template_id: null,
-      host_id: 1375,
+      host_id: null,
       status: [],
       host_status: [],
       sort_options: 'average_duration',
       sort_order: 'desc',
       start_date: undefined,
       end_date: undefined,
-      task_status: ['ok'],
-      granularity: 'daily',
+      task_status: [],
       quick_date_range: 'slow_hosts_last_1_week',
-      //slow_host_view: 'templates_with_any_hosts',
     },
   },
   hosts_by_organization: {

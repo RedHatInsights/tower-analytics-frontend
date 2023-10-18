@@ -104,24 +104,14 @@ const ReportCard: FunctionComponent<StandardProps> = ({
 
   const navigateToTaskBar = (
     slug: string,
-    templateId: any,
-    clusterId: any,
-    orgId: any,
-    inventoryId: any,
-    status: any,
-    hostStatus: any,
-    quickDateRange: any
+    hostId: number,
+    templateId: number
   ) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...specificReportDefaultParams(slug),
+        host_id: hostId,
         template_id: templateId,
-        cluster_id: clusterId,
-        org_id: orgId,
-        inventory_id: inventoryId,
-        status: status,
-        host_status: hostStatus,
-        quick_date_range: quickDateRange,
       },
     };
     navigate(createUrl(`reports\\${slug}`, true, initialQueryParams));
@@ -165,13 +155,8 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     if (slug === 'host_anomalies_scatter') {
       navigateToTaskBar(
         'tasks_by_host_bar',
-        props.datum.id,
-        queryParams.cluster_id,
-        queryParams.org_id,
-        queryParams.inventory_id,
-        queryParams.status,
-        queryParams.host_status,
-        queryParams.quick_date_range
+        props.datum.host_id,
+        queryParams.template_id
       );
     } else {
       navigateToHostScatter(
