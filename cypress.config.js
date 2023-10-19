@@ -1,6 +1,6 @@
-import { defineConfig } from 'cypress';
+const { defineConfig } = require('cypress')
 
-export default defineConfig({
+module.exports = defineConfig({
   projectId: 'wwyf7n',
   video: false,
   videoUploadOnPasses: false,
@@ -21,4 +21,4 @@ export default defineConfig({
   e2e: {
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
   },
-});
+})
