@@ -8,7 +8,6 @@ import {
   ButtonVariant,
   Card,
   CardActions,
-  CardBody,
   CardFooter,
   CardHeader,
   CardTitle,
