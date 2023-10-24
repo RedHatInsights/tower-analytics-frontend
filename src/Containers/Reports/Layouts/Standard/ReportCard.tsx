@@ -305,7 +305,9 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           }
           additionalControls={additionalControls}
         />
-        {slug === 'tasks_by_host_bar' ? customCardTitle('host name') : ''}
+        {slug === 'tasks_by_host_bar'
+          ? customCardTitle(queryParams.host_name)
+          : ''}
         {tableHeaders && !showKebab && slug !== 'templates_by_organization' ? (
           <ApiStatusWrapper api={dataApi}>
             <Chart
