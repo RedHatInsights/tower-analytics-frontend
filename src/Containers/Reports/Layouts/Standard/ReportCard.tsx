@@ -7,6 +7,7 @@ import React, { FunctionComponent, useEffect } from 'react';
 import {
   Card,
   CardBody,
+  CardTitle,
   CardFooter,
   PaginationVariant,
   ToggleGroup,
@@ -39,6 +40,8 @@ import {
 } from '../../../../Utilities/constants';
 import { createUrl } from '../../../../QueryParams';
 import { useNavigate } from 'react-router-dom';
+import { defaultFormatUtc } from 'moment';
+import { defaultMethod } from 'react-router-dom/dist/dom';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
@@ -102,26 +105,31 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     navigate(createUrl(`reports\\${slug}`, true, initialQueryParams));
   };
 
+  const customCardTitle = (host_name: string) => {
+    const title = 'Tasks for host: ' + host_name;
+    return <CardTitle>{title}</CardTitle>;
+  };
+
   const navigateToTaskBar = (
     slug: string,
     hostId: number,
-    templateId: number
+    templateId: number,
+    hostName: string
   ) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
         ...specificReportDefaultParams(slug),
         host_id: hostId,
         template_id: templateId,
+        host_name: hostName,
       },
     };
     navigate(createUrl(`reports\\${slug}`, true, initialQueryParams));
   };
 
   useEffect(() => {
-    console.log('query params: ', queryParams);
     fetchData(queryParams);
     fetchOptions(queryParams);
-    console.log('dataAPI: ', dataApi);
   }, [queryParams]);
 
   const chartParams = {
@@ -156,8 +164,10 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       navigateToTaskBar(
         'tasks_by_host_bar',
         props.datum.host_id,
-        queryParams.template_id
+        queryParams.template_id,
+        props.datum.host_name
       );
+      //set a slow host name variable here?
     } else {
       navigateToHostScatter(
         'host_anomalies_scatter',
@@ -295,6 +305,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           }
           additionalControls={additionalControls}
         />
+        {slug === 'tasks_by_host_bar' ? customCardTitle('host name') : ''}
         {tableHeaders && !showKebab && slug !== 'templates_by_organization' ? (
           <ApiStatusWrapper api={dataApi}>
             <Chart

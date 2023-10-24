@@ -398,6 +398,7 @@ const allDefaultParams: any = {
       inventory_id: [],
       template_id: null,
       host_id: null,
+      host_name: '',
       status: [],
       host_status: [],
       sort_options: 'average_duration',
