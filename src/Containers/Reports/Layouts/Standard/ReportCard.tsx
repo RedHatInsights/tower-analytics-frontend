@@ -199,6 +199,19 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         datum.last_referenced +
         '\nSlow: ' +
         (datum.failed_duration ? 'True' : 'False');
+    } else if (slug === 'tasks_by_host_bar') {
+      tooltip =
+        'Task name: ' +
+        datum.task_name +
+        '\nTask executed: ' +
+        datum.executed_count +
+        ' time(s)' +
+        '\nModule: ' +
+        datum.module_name +
+        '\nAverage duration: ' +
+        datum.average_duration +
+        '\nLast known task status: ' +
+        datum.last_known_task_status;
     } else {
       tooltip =
         chartParams.label +
