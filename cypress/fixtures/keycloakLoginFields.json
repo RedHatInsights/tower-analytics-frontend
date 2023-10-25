@@ -11,7 +11,7 @@
     "2step": false,
     "landing-page": "/clusters"
   },
-  "env-ephemeral": {
+  "apps.c-rh-c-eph.8p0c.p1.openshiftapps.com": {
     "username": "#username",
     "password": "#password",
     "2step": false,
