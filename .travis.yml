@@ -1,3 +1,7 @@
+# Specify dist and OS until Travis CI default runner OS updates
+# to one with glibc version required by newer Node versions
+# See: https://github.com/nodejs/node/issues/42351#issuecomment-1068424442
+# os: linux
 dist: jammy
 branches:
   only:
