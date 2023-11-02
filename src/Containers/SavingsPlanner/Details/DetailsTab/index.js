@@ -89,7 +89,9 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
       },
     };
 
-    navigate(createUrl(Paths.jobExplorer, true, initialQueryParams));
+    navigate(
+      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams)
+    );
   };
 
   const showTemplate = (template_details) => {
