@@ -45,7 +45,6 @@ const ListItem: FunctionComponent<Props> = ({
   selected,
   setSelected,
 }) => {
-
   return (
     <Card
       data-cy={slug}
