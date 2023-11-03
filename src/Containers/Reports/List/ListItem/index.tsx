@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 
 import {
@@ -45,7 +45,6 @@ const ListItem: FunctionComponent<Props> = ({
   selected,
   setSelected,
 }) => {
-  const navigate = useNavigate();
 
   return (
     <Card
@@ -65,14 +64,7 @@ const ListItem: FunctionComponent<Props> = ({
           </CardTitle>
         </CardHeaderMain>
       </CardHeader>
-      <CardBody
-        onClick={() => {
-          navigate({
-            search: '',
-          });
-          setSelected(slug);
-        }}
-      >
+      <CardBody>
         {description ? (
           <Tooltip
             content={<div>Show report in preview</div>}
