@@ -99,7 +99,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
       if (selected === '' || report.length === 0) setSelected(reports[0].slug);
       fetchReport();
     }
-  }, [reports, selected]);
+  }, [reports]);
 
   const dropdownItems = [
     isSuccess &&
@@ -229,7 +229,9 @@ const List: FunctionComponent<Record<string, never>> = () => {
                         </CardActions>
                       </CardHeader>
                       <Divider />
-                      {getComponent(previewReport, false)}
+                      {report.slug === previewReport.slug
+                        ? getComponent(previewReport, false)
+                        : ''}
                       <CardFooter style={{ paddingBottom: '16px' }}>
                         <Link
                           to={paths.getDetails(report.slug)}
