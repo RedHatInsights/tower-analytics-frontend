@@ -231,7 +231,8 @@ export const readProbeTemplateForHosts = (params: Params): Promise<ApiJson> => {
 
 export const readProbeTemplateHostForTasks = (
   params: ParamsWithPagination
-): Promise<ApiJson> => post(Endpoint.probeTemplateHostForTasks, params);
+): Promise<ApiJson> =>
+  postWithPagination(Endpoint.probeTemplateHostForTasks, params);
 
 export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
   post(Endpoint.probeTemplatesOptions, params);
