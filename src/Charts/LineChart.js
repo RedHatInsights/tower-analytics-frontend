@@ -38,7 +38,9 @@ class LineChart extends Component {
       },
     };
 
-    this.props.navigate(createUrl(Paths.jobExplorer, true, initialQueryParams));
+    this.props.navigate(
+      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams)
+    );
   }
 
   resize() {
