@@ -73,7 +73,9 @@ export const AnalyticsRoutes: FunctionComponent<Record<string, never>> = () => {
       {/* Redirect the root path to the clusters so it does not give 404. */}
       <Route
         path="/"
-        element={<Navigate to={prefixPath + Paths.clusters} replace />}
+        element={
+          <Navigate to={prefixPath + Paths.clusters.replace('/', '')} replace />
+        }
       />
     </Routes>
   );
