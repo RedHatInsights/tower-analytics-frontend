@@ -68,3 +68,5 @@ jobs:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
           FROM_BRANCH: "devel"
           TO_BRANCH: "master"
+          PULL_REQUEST_AUTO_MERGE_METHOD: rebase
+
