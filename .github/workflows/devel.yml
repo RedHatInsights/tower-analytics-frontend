@@ -69,4 +69,6 @@ jobs:
           FROM_BRANCH: "devel"
           TO_BRANCH: "master"
           PULL_REQUEST_AUTO_MERGE_METHOD: rebase
+          PULL_REQUEST_TITLE: "Sync devel -> master"
+          PULL_REQUEST_BODY: "Automatically syncing devel with master"
 
