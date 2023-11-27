@@ -10,6 +10,9 @@ objects:
     spec:
       envName: ${ENV_NAME}
       title: Automation Analytics
+      frontend:
+        paths:
+          - /apps/automation-analytics
       deploymentRepo: https://github.com/RedHatInsights/tower-analytics-frontend
       API:
         versions:
