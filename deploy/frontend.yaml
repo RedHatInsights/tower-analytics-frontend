@@ -6,7 +6,7 @@ objects:
   - apiVersion: cloud.redhat.com/v1alpha1
     kind: Frontend
     metadata:
-      name: tower-analytics
+      name: automation-analytics
     spec:
       envName: ${ENV_NAME}
       title: Automation Analytics
@@ -14,10 +14,6 @@ objects:
       API:
         versions:
           - v1
-      frontend:
-        paths:
-          - /apps/tower-analytics
-          - /apps/automation-analytics
       image: ${IMAGE}:${IMAGE_TAG}
       navItems:
         - appId: "automationAnalytics"
