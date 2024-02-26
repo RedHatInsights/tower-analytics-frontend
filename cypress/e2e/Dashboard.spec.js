@@ -9,8 +9,8 @@ We should review the duplicated code/tests and merge it with the clusters one.
 // const appid = Cypress.env('appid');
 
 // // const toolBarCatSelector =
-// // 'div[id="filterable-toolbar-with-chip-groups"] > .pf-c-toolbar__content > .pf-c-toolbar__content-section > div[class="pf-c-toolbar__group pf-m-filter-group"]';
-// const toolBarChipGroup = '.pf-c-chip-group';
+// // 'div[id="filterable-toolbar-with-chip-groups"] > .pf-v5-c-toolbar__content > .pf-v5-c-toolbar__content-section > div[class="pf-v5-c-toolbar__group pf-m-filter-group"]';
+// const toolBarChipGroup = '.pf-v5-c-chip-group';
 
 // const setDate = (input, value) => {
 //   const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
@@ -80,7 +80,7 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //   });
 
 //   it('There is a filter toolbar on the Clusters page', () => {
-//     cy.get('.pf-c-toolbar__content-section').should((toolbar) => {
+//     cy.get('.pf-v5-c-toolbar__content-section').should((toolbar) => {
 //       expect(toolbar).to.have.length(1);
 //     });
 //   });
@@ -91,8 +91,8 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //     cy.visit(dashboardUrl);
 //   });
 //   it('Can filter by organization', () => {
-//     cy.get('button[class="pf-c-select__toggle"]').eq(0).click();
-//     cy.get('button[class*="pf-c-select__menu-item"]')
+//     cy.get('button[class="pf-v5-c-select__toggle"]').eq(0).click();
+//     cy.get('button[class*="pf-v5-c-select__menu-item"]')
 //       .contains('Organization')
 //       .click();
 //     cy.get('button[id^="pf-select-toggle-id-"]')
@@ -100,7 +100,7 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //       .parent()
 //       .parent()
 //       .click();
-//     cy.get('div[class="pf-c-select__menu"]')
+//     cy.get('div[class="pf-v5-c-select__menu"]')
 //       .find('span')
 //       .contains('No organization')
 //       .parent()
@@ -128,7 +128,7 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //       .format('M/DD');
 
 //     cy.get('div[data-cy="quick_date_range"]').click();
-//     cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+//     cy.get('.pf-v5-c-select__menu-item').contains('Past 62 days').click();
 //     // Verify the date range filter is reflected in the barchart
 //     cy.get('#d3-bar-chart-root > svg')
 //       .find('.x-axis')
@@ -160,7 +160,7 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //       .format('M/D');
 
 //     cy.get('div[data-cy="quick_date_range"]').click();
-//     cy.get('.pf-c-select__menu-item').contains('Custom').click();
+//     cy.get('.pf-v5-c-select__menu-item').contains('Custom').click();
 //     cy.get('[aria-label="Start date"]').then((input) =>
 //       setDate(input[0], oneWeekAgo)
 //     );
@@ -183,8 +183,8 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //   });
 
 //   it('Can filter by cluster', () => {
-//     cy.get('button[class="pf-c-select__toggle"]').eq(0).click();
-//     cy.get('button[class*="pf-c-select__menu-item"]')
+//     cy.get('button[class="pf-v5-c-select__toggle"]').eq(0).click();
+//     cy.get('button[class*="pf-v5-c-select__menu-item"]')
 //       .contains('Cluster')
 //       .click();
 //     cy.get('button[id^="pf-select-toggle-id-"]')
@@ -192,7 +192,7 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //       .parent()
 //       .parent()
 //       .click();
-//     cy.get('div[class="pf-c-select__menu"]')
+//     cy.get('div[class="pf-v5-c-select__menu"]')
 //       .find('span')
 //       .first()
 //       .siblings('input')
@@ -207,14 +207,14 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //   });
 
 //   it('Can filter by job type', () => {
-//     cy.get('button[class="pf-c-select__toggle"]').eq(0).click();
-//     cy.get('button[class*="pf-c-select__menu-item"]').contains('Job').click();
+//     cy.get('button[class="pf-v5-c-select__toggle"]').eq(0).click();
+//     cy.get('button[class*="pf-v5-c-select__menu-item"]').contains('Job').click();
 //     cy.get('button[id^="pf-select-toggle-id-"]')
 //       .contains('Filter by job type')
 //       .parent()
 //       .parent()
 //       .click();
-//     cy.get('div[class="pf-c-select__menu"]')
+//     cy.get('div[class="pf-v5-c-select__menu"]')
 //       .find('span')
 //       .contains('Workflow job')
 //       .parent()
@@ -232,8 +232,8 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //   });
 
 //   it('Can filter by template', () => {
-//     cy.get('button[class="pf-c-select__toggle"]').eq(0).click();
-//     cy.get('button[class*="pf-c-select__menu-item"]')
+//     cy.get('button[class="pf-v5-c-select__toggle"]').eq(0).click();
+//     cy.get('button[class*="pf-v5-c-select__menu-item"]')
 //       .contains('Template')
 //       .click();
 //     cy.get('button[id^="pf-select-toggle-id-"]')
@@ -241,7 +241,7 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //       .parent()
 //       .parent()
 //       .click();
-//     cy.get('div[class="pf-c-select__menu"]')
+//     cy.get('div[class="pf-v5-c-select__menu"]')
 //       .find('span')
 //       .first()
 //       .siblings('input')
@@ -253,8 +253,8 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //   });
 
 //   it('Can filter by entering text in typeAhead', () => {
-//     cy.get('button[class="pf-c-select__toggle"]').eq(0).click();
-//     cy.get('button[class*="pf-c-select__menu-item"]')
+//     cy.get('button[class="pf-v5-c-select__toggle"]').eq(0).click();
+//     cy.get('button[class*="pf-v5-c-select__menu-item"]')
 //       .contains('Organization')
 //       .click();
 //     cy.get('button[id^="pf-select-toggle-id-"]')
@@ -263,13 +263,13 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //       .parent()
 //       .click();
 //     // Enter text in filter search input and verify that the search is successful
-//     cy.get('div[class="pf-c-select__menu"]')
+//     cy.get('div[class="pf-v5-c-select__menu"]')
 //       .find('input[type="search"]')
 //       .type('No organization');
-//     cy.get('div[class="pf-c-select__menu"]')
-//       .find('span[class="pf-c-check__label"]')
+//     cy.get('div[class="pf-v5-c-select__menu"]')
+//       .find('span[class="pf-v5-c-check__label"]')
 //       .should('have.length', 1);
-//     cy.get('div[class="pf-c-select__menu"]')
+//     cy.get('div[class="pf-v5-c-select__menu"]')
 //       .find('span')
 //       .contains('No organization')
 //       .parent()
@@ -288,10 +288,10 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //   });
 
 //   it('Can clear filters', () => {
-//     cy.get('button[class="pf-c-select__toggle"]', { timeout: 6000 })
+//     cy.get('button[class="pf-v5-c-select__toggle"]', { timeout: 6000 })
 //       .eq(0)
 //       .click();
-//     cy.get('button[class*="pf-c-select__menu-item"]')
+//     cy.get('button[class*="pf-v5-c-select__menu-item"]')
 //       .contains('Organization')
 //       .click();
 //     cy.get('button[id^="pf-select-toggle-id-"]')
@@ -299,7 +299,7 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //       .parent()
 //       .parent()
 //       .click();
-//     cy.get('div[class="pf-c-select__menu"]')
+//     cy.get('div[class="pf-v5-c-select__menu"]')
 //       .find('span')
 //       .contains('No organization')
 //       .parent()
@@ -314,7 +314,7 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //       .find('span')
 //       .contains('No organization');
 //     cy.get(
-//       '#pf-random-id-0 > :nth-child(2) > :nth-child(2) > .pf-c-button'
+//       '#pf-random-id-0 > :nth-child(2) > :nth-child(2) > .pf-v5-c-button'
 //     ).click();
 //     // Verify the filter is removed from the Chip group
 //     cy.get(toolBarChipGroup).find('span').should('not.contain', 'Organization');
@@ -333,14 +333,14 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //       .subtract(1, 'day')
 //       .format('YYYY-MM-DD');
 //     // Filter by Job type
-//     cy.get('button[class="pf-c-select__toggle"]').eq(0).click();
-//     cy.get('button[class*="pf-c-select__menu-item"]').contains('Job').click();
+//     cy.get('button[class="pf-v5-c-select__toggle"]').eq(0).click();
+//     cy.get('button[class*="pf-v5-c-select__menu-item"]').contains('Job').click();
 //     cy.get('button[id^="pf-select-toggle-id-"]')
 //       .contains('Filter by job type')
 //       .parent()
 //       .parent()
 //       .click();
-//     cy.get('div[class="pf-c-select__menu"]')
+//     cy.get('div[class="pf-v5-c-select__menu"]')
 //       .find('span')
 //       .contains('Workflow job')
 //       .parent()
@@ -355,7 +355,7 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //     // Click on the bar for today minus one ( 4th from the last rect)
 //     cy.get(appid).find('rect').eq(-4).click({ force: true });
 //     // Verify the redirect to Job explorer
-//     cy.get(appid).find('.pf-c-title').contains('Job Explorer');
+//     cy.get(appid).find('.pf-v5-c-title').contains('Job Explorer');
 //     // Verify the job type filter and date filter is carried correctly to Job Explorer page
 //     cy.get(toolBarChipGroup)
 //       .find('span')
@@ -374,7 +374,7 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //   Find a fix to the following error:
 
 //   CypressError: Timed out retrying after 4050ms: `cy.click()` failed because this element:
-//   `<button id="pf-select-toggle-id-14" aria-labelledby=" pf-select-toggle-id-14" aria-expanded="false" aria-haspopup="listbox" type="button" class="pf-c-select__toggle" aria-label="Options menu">...</button>`
+//   `<button id="pf-select-toggle-id-14" aria-labelledby=" pf-select-toggle-id-14" aria-expanded="false" aria-haspopup="listbox" type="button" class="pf-v5-c-select__toggle" aria-label="Options menu">...</button>`
 //   is being covered by another element:
 //   `<div id="pop-div05579753963372409" class="truste_overlay"></div>`
 //   Fix this problem, or use {force: true} to disable error checking.
@@ -388,14 +388,14 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //   //     .format('M/D');
 
 //   //   // Filter by Job Type
-//   //   cy.get('button[class="pf-c-select__toggle"]').eq(0).click();
-//   //   cy.get('button[class*="pf-c-select__menu-item"]').contains('Job').click();
+//   //   cy.get('button[class="pf-v5-c-select__toggle"]').eq(0).click();
+//   //   cy.get('button[class*="pf-v5-c-select__menu-item"]').contains('Job').click();
 //   //   cy.get('button[id^="pf-select-toggle-id-"]')
 //   //     .contains('Filter by job type')
 //   //     .parent()
 //   //     .parent()
 //   //     .click();
-//   //   cy.get('div[class="pf-c-select__menu"]')
+//   //   cy.get('div[class="pf-v5-c-select__menu"]')
 //   //     .find('span')
 //   //     .contains('Workflow job')
 //   //     .parent()
@@ -412,7 +412,7 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //   //     .should('be.visible');
 //   //   // Filter by Date range
 //   //   cy.get('div[data-cy="quick_date_range"]').click();
-//   //   cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+//   //   cy.get('.pf-v5-c-select__menu-item').contains('Past 62 days').click();
 //   //   cy.get('#d3-bar-chart-root > svg')
 //   //     .find('.x-axis')
 //   //     .find('g')
@@ -423,14 +423,14 @@ We should review the duplicated code/tests and merge it with the clusters one.
 //   //     .contains(twoMonthssAgo);
 //   //   // Open Top Workflows modal and click on View all jobs
 //   //   cy.get('[aria-label="Top templates"]')
-//   //     .find('.pf-c-data-list__item')
+//   //     .find('.pf-v5-c-data-list__item')
 //   //     .eq(1)
-//   //     .find('.pf-c-data-list__cell')
+//   //     .find('.pf-v5-c-data-list__cell')
 //   //     .eq(0)
 //   //     .click();
 //   //   cy.get('#pf-modal-part-0').find('a').contains('View all jobs').click();
 //   //   // Verify the redirect to Job explorer
-//   //   cy.get(appid).find('.pf-c-title').contains('Job Explorer');
+//   //   cy.get(appid).find('.pf-v5-c-title').contains('Job Explorer');
 //   //   cy.get('div[data-cy="quick_date_range"]').contains('Past 62 days');
 //   //   cy.get(toolBarChipGroup).find('span').contains('Template');
 //   //   const screenshotFilename = 'clusters_drilldown_top_templates.png';

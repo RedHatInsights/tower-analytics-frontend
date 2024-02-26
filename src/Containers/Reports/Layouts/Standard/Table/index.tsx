@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useState } from 'react';
 
 import {
-  TableComposable,
+  Table /* data-codemods */,
   TableVariant,
   Tbody,
   Th,
@@ -12,7 +12,11 @@ import {
 import TableRow from './TableRow';
 import { LegendEntry, TableHeaders, TableSortParams } from '../types';
 import { ExpandedTableRowName } from '../Components';
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
+import {
+	Dropdown,
+	DropdownItem,
+	KebabToggle
+} from '@patternfly/react-core/deprecated';
 import { useQueryParams } from '../../../../../QueryParams';
 import { reportDefaultParams } from '../../../../../Utilities/constants';
 
@@ -78,7 +82,7 @@ const ReportTable: FunctionComponent<Props> = ({
   };
 
   return (
-    <TableComposable aria-label="Report Table" variant={TableVariant.compact}>
+    <Table aria-label="Report Table" variant={TableVariant.compact}>
       <Thead>
         <Tr>
           {expandedRowName && <Th />}
@@ -128,7 +132,7 @@ const ReportTable: FunctionComponent<Props> = ({
           />
         ))}
       </Tbody>
-    </TableComposable>
+    </Table>
   );
 };
 export default ReportTable;

@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useState } from 'react';
 import {
   Card,
-  CardActions,
   CardBody,
   CardHeader,
   CardTitle,
@@ -255,9 +254,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
 
   const renderLeft = () => (
     <Card isPlain>
-      <CardHeader>
-        <CardActions>
-          <ToggleGroup aria-label="toggleButton">
+      <CardHeader actions={{ actions: <><ToggleGroup aria-label="toggleButton">
             <ToggleGroupItem
               text="Money"
               buttonId="money"
@@ -270,8 +267,8 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
               isSelected={!isMoney}
               onChange={() => setIsMoney(false)}
             />
-          </ToggleGroup>
-        </CardActions>
+          </ToggleGroup></>, hasNoOffset: false, className: undefined}} >
+        
         <CardTitle>{statsPlan.name}</CardTitle>
       </CardHeader>
       <CardBody>

@@ -4,23 +4,24 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PageHeader } from '@ansible/ansible-ui-framework';
 import {
-  Button,
-  ButtonVariant,
-  Card,
-  CardActions,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  Divider,
-  Dropdown,
-  DropdownItem,
-  DropdownToggle,
-  Gallery,
-  Label,
-  PageSection,
-  Tooltip,
-  TooltipPosition,
+	Button,
+	ButtonVariant,
+	Card,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+	Divider,
+	Gallery,
+	Label,
+	PageSection,
+	Tooltip,
+	TooltipPosition
 } from '@patternfly/react-core';
+import {
+	Dropdown,
+	DropdownItem,
+	DropdownToggle
+} from '@patternfly/react-core/deprecated';
 import {
   AngleLeftIcon,
   AngleRightIcon,
@@ -149,46 +150,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                       isCompact
                       data-cy={report.slug}
                     >
-                      <CardHeader
-                        style={{
-                          paddingTop: '16px',
-                          paddingBottom: '16px',
-                          paddingRight: '0px',
-                        }}
-                      >
-                        <CardTitle>
-                          <Link
-                            data-cy={'preview_title_link'}
-                            to={paths.getDetails(report.slug)}
-                          >
-                            {report.name}
-                          </Link>
-                        </CardTitle>
-                        <CardActions
-                          style={{ marginLeft: '15px', marginTop: '-2px' }}
-                        >
-                          {report.tags.map(
-                            (
-                              tagKey: TagName,
-                              idx: React.Key | null | undefined
-                            ) => {
-                              const tag = TAGS.find((t) => t.key === tagKey);
-                              if (tag) {
-                                return (
-                                  <Tooltip
-                                    key={`tooltip_${idx as string}`}
-                                    position={TooltipPosition.top}
-                                    content={tag.description}
-                                  >
-                                    <Label key={idx}>{tag.name}</Label>
-                                  </Tooltip>
-                                );
-                              }
-                            }
-                          )}
-                        </CardActions>
-                        <CardActions>
-                          <Button
+                      <CardHeader actions={{ actions: <><Button
                             variant={ButtonVariant.plain}
                             aria-label="Previous report"
                             data-cy={'previous_report_button'}
@@ -203,7 +165,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             onSelect={() => setIsOpen(!isOpen)}
                             toggle={
                               <DropdownToggle
-                                onToggle={(next) => setIsOpen(next)}
+                                onToggle={(_event, next) => setIsOpen(next)}
                                 toggleIndicator={CaretDownIcon}
                                 id="report_list"
                                 data-cy={'selected_report_dropdown'}
@@ -225,8 +187,41 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             onClick={() => setSelected(nextItem)}
                           >
                             <AngleRightIcon />
-                          </Button>
-                        </CardActions>
+                          </Button></>, hasNoOffset: false, className: undefined}}  actions={{ actions: <>{report.tags.map(
+                            (
+                              tagKey: TagName,
+                              idx: React.Key | null | undefined
+                            ) => {
+                              const tag = TAGS.find((t) => t.key === tagKey);
+                              if (tag) {
+                                return (
+                                  <Tooltip
+                                    key={`tooltip_${idx as string}`}
+                                    position={TooltipPosition.top}
+                                    content={tag.description}
+                                  >
+                                    <Label key={idx}>{tag.name}</Label>
+                                  </Tooltip>
+                                );
+                              }
+                            }
+                          )}</>, hasNoOffset: false, className: undefined}} 
+                        style={{
+                          paddingTop: '16px',
+                          paddingBottom: '16px',
+                          paddingRight: '0px',
+                        }}
+                      >
+                        <CardTitle>
+                          <Link
+                            data-cy={'preview_title_link'}
+                            to={paths.getDetails(report.slug)}
+                          >
+                            {report.name}
+                          </Link>
+                        </CardTitle>
+                        
+                        
                       </CardHeader>
                       <Divider />
                       {report.slug === previewReport.slug

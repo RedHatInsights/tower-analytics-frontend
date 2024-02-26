@@ -1,19 +1,15 @@
 import React, { FunctionComponent } from 'react';
 import {
-  Title,
   EmptyState,
   EmptyStateVariant,
   EmptyStateIcon,
-  EmptyStateBody,
+  EmptyStateBody, EmptyStateHeader,
 } from '@patternfly/react-core';
 import { CubesIcon } from '@patternfly/react-icons';
 
 const LoadingState: FunctionComponent<Record<string, never>> = () => (
   <EmptyState variant={EmptyStateVariant.full} style={{ minHeight: '400px' }}>
-    <EmptyStateIcon icon={CubesIcon} />
-    <Title headingLevel="h5" size="lg">
-      Loading...
-    </Title>
+    <EmptyStateHeader titleText="Loading..." icon={<EmptyStateIcon icon={CubesIcon} />} headingLevel="h5" />
     <EmptyStateBody>Please wait.</EmptyStateBody>
   </EmptyState>
 );

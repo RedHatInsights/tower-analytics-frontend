@@ -163,7 +163,7 @@ const Notifications: FC<Record<string, never>> = () => {
                 <FormSelect
                   name="selectedCluster"
                   value={selectedCluster}
-                  onChange={(value) => {
+                  onChange={(_event, value) => {
                     setSelectedCluster(value);
                     setId(value);
                     setFromPagination(0);
@@ -184,7 +184,7 @@ const Notifications: FC<Record<string, never>> = () => {
                 <FormSelect
                   name="selectedNotification"
                   value={severity || ''}
-                  onChange={(value) => {
+                  onChange={(_event, value) => {
                     setSeverity(value);
                     setFromPagination(0);
                   }}

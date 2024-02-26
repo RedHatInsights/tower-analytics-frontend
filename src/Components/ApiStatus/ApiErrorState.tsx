@@ -3,9 +3,8 @@ import {
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
-  EmptyStateVariant,
-  Title,
-} from '@patternfly/react-core';
+  EmptyStateVariant, EmptyStateHeader,
+  } from '@patternfly/react-core';
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
 import { global_danger_color_200 as globalDangerColor200 } from '@patternfly/react-tokens';
 
@@ -14,14 +13,11 @@ interface Props {
 }
 
 const ApiErrorState: FunctionComponent<Props> = ({ message }) => (
-  <EmptyState variant={EmptyStateVariant.small} data-cy={'api_error_state'}>
-    <EmptyStateIcon
+  <EmptyState variant={EmptyStateVariant.sm} data-cy={'api_error_state'}>
+    <EmptyStateHeader titleText="Error" icon={<EmptyStateIcon
       icon={ExclamationCircleIcon}
       color={globalDangerColor200.value}
-    />
-    <Title headingLevel="h2" size="lg">
-      Error
-    </Title>
+    />} headingLevel="h2" />
     <EmptyStateBody>{message}</EmptyStateBody>
   </EmptyState>
 );

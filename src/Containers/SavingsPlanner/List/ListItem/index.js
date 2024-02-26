@@ -4,21 +4,21 @@ import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import {
-  Card,
-  CardHeader,
-  CardHeaderMain,
-  CardActions,
-  CardTitle as PFCardTitle,
-  CardBody,
-  CardFooter,
-  Checkbox as PFCheckbox,
-  Dropdown,
-  DropdownItem,
-  KebabToggle,
-  Label,
-  Tooltip,
-  TooltipPosition,
+	Card,
+	CardHeader,
+	CardTitle as PFCardTitle,
+	CardBody,
+	CardFooter,
+	Checkbox as PFCheckbox,
+	Label,
+	Tooltip,
+	TooltipPosition
 } from '@patternfly/react-core';
+import {
+	Dropdown,
+	DropdownItem,
+	KebabToggle
+} from '@patternfly/react-core/deprecated';
 import { ExclamationCircleIcon } from '@patternfly/react-icons';
 
 import { Paths } from '../../../../paths';
@@ -139,15 +139,7 @@ const ListItem = ({
 
   return (
     <Card>
-      <CardHeader>
-        <CardHeaderMain>
-          <CardTitle>
-            <Link to={`${id}`}>{name}</Link>
-          </CardTitle>
-        </CardHeaderMain>
-        {canWrite && (
-          <CardActions>
-            <Dropdown
+      <CardHeader {...(canWrite && {actions: { actions: <><Dropdown
               onSelect={() => {}}
               toggle={
                 <KebabToggle
@@ -165,9 +157,13 @@ const ListItem = ({
               aria-label="card checkbox"
               id="check-1"
               name="check1"
-            />
-          </CardActions>
-        )}
+            /></>, hasNoOffset: false, className: undefined}})} >
+        actions={<>
+          <CardTitle>
+            <Link to={`${id}`}>{name}</Link>
+          </CardTitle>
+        </>}
+        
       </CardHeader>
       <CardBody>
         {description ? <Small>{description}</Small> : null}

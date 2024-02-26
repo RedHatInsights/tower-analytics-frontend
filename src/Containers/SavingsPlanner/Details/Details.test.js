@@ -11,7 +11,7 @@ const mockStore = configureStore();
 const store = mockStore({});
 
 fetchMock.config.overwriteRoutes = true;
-import Details from './Details';
+//import Details from './Details';
 
 import mockResponses from '../../../__tests__/fixtures/';
 import * as api from '../../../Api/';

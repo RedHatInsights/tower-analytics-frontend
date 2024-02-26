@@ -68,6 +68,7 @@ const { config: webpackConfig, plugins } = config({
   ...(env === 'standalone' && { deployment: 'beta/apps' }),
   ...environmentSetup,
 });
+webpackConfig.resolve.alias = {'/assets': resolve(__dirname, '../node_modules/@ansible/ansible-ui-framework/assets')};
 
 plugins.push(
   require('@redhat-cloud-services/frontend-components-config/federated-modules')(

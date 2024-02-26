@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect } from 'react';
-import Error404 from '../../../Components/Error404';
+import { Error404 } from '../../../Components/Error404';
 
 import { PageHeader } from '@ansible/ansible-ui-framework';
 import {

@@ -3,12 +3,14 @@ import PropTypes from 'prop-types';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 
 import {
-  Button,
-  ButtonVariant,
-  Wizard,
-  WizardFooter,
-  WizardContextConsumer,
+	Button,
+	ButtonVariant
 } from '@patternfly/react-core';
+import {
+	Wizard,
+	WizardFooter,
+	WizardContextConsumer
+} from '@patternfly/react-core/deprecated';
 
 import useRequest from '../../../../Utilities/useRequest';
 import usePlanData from '../usePlanData';

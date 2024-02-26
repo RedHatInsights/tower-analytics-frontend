@@ -2,7 +2,7 @@ import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import React, { FunctionComponent } from 'react';
 import asyncComponent from './Utilities/asyncComponent';
 import { prefixPath, Paths } from './paths';
-import Error404 from './Components/Error404';
+import { Error404 } from './Components/Error404';
 
 const components = {
   [Paths.clusters]: asyncComponent(
