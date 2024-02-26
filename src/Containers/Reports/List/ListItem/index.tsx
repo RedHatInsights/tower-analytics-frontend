@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import {
   Card,
   CardHeader,
-  CardHeaderMain,
   CardTitle as PFCardTitle,
   CardBody,
   CardFooter,
@@ -48,20 +47,20 @@ const ListItem: FunctionComponent<Props> = ({
   return (
     <Card
       data-cy={slug}
-      isSelectableRaised
+      isSelectable
       isSelected={selected === slug}
       onClick={() => {
         setSelected(slug);
       }}
     >
       <CardHeader>
-        <CardHeaderMain>
+        actions={<>
           <CardTitle onClick={(event) => event.stopPropagation()}>
             <Tooltip content={<div>Click to go to report details</div>}>
               <Link to={paths.getDetails(slug)}>{name}</Link>
             </Tooltip>
           </CardTitle>
-        </CardHeaderMain>
+        </>}
       </CardHeader>
       <CardBody>
         {description ? (

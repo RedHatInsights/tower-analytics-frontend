@@ -6,7 +6,7 @@ import {
   EmptyStateVariant,
   EmptyStateIcon,
   EmptyStateBody,
-  ButtonVariant,
+  ButtonVariant, EmptyStateHeader, EmptyStateFooter,
 } from '@patternfly/react-core';
 import { WrenchIcon } from '@patternfly/react-icons';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -24,8 +24,7 @@ interface Props {
 
 const AuthorizationErrorPage: FunctionComponent<Props> = ({ error }) => (
   <EmptyState variant={EmptyStateVariant.full} data-cy={'error_page'}>
-    <EmptyStateIcon icon={WrenchIcon} />
-    {error.status === 404 && (
+    <EmptyStateHeader icon={<EmptyStateIcon icon={WrenchIcon} />} /><EmptyStateFooter>{error.status === 404 && (
       <>
         <Title headingLevel="h5" size="lg">
           No data found
@@ -67,7 +66,7 @@ const AuthorizationErrorPage: FunctionComponent<Props> = ({ error }) => (
         </Button>
       </>
     )}
-  </EmptyState>
+  </EmptyStateFooter></EmptyState>
 );
 
 export default AuthorizationErrorPage;

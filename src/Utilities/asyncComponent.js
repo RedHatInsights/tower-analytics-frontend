@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import {
-  Title,
   EmptyState,
   EmptyStateIcon,
-  Spinner,
+  Spinner, EmptyStateHeader,
 } from '@patternfly/react-core';
 
 /**
@@ -51,10 +50,7 @@ export default function asyncComponent(importComponent) {
         </div>
       ) : (
         <EmptyState>
-          <EmptyStateIcon variant="container" component={Spinner} />
-          <Title size="lg" headingLevel="h4">
-            Loading
-          </Title>
+          <EmptyStateHeader titleText="Loading" icon={<EmptyStateIcon  icon={Spinner} />} headingLevel="h4" />
         </EmptyState>
       );
     }

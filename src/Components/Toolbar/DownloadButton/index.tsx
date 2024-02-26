@@ -1,14 +1,16 @@
 import React, { FC, useState } from 'react';
 import {
-  Button,
-  ButtonVariant,
-  Spinner,
-  Tooltip,
-  TooltipPosition,
-  Wizard,
-  WizardContextConsumer,
-  WizardFooter,
+	Button,
+	ButtonVariant,
+	Spinner,
+	Tooltip,
+	TooltipPosition
 } from '@patternfly/react-core';
+import {
+	Wizard,
+	WizardContextConsumer,
+	WizardFooter
+} from '@patternfly/react-core/deprecated';
 import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
 import { DownloadState } from '../../../store/pdfDownloadButton/types';
 import {
@@ -344,7 +346,7 @@ const DownloadButton: FC<Props> = ({
           data-cy={'download-button'}
         >
           {isLoading && (
-            <Spinner data-cy={'download-button-loading'} isSVG size="md" />
+            <Spinner data-cy={'download-button-loading'}  size="md" />
           )}
           {!isLoading && isError && (
             <ExclamationCircleIcon data-cy={'download-button-error'} />

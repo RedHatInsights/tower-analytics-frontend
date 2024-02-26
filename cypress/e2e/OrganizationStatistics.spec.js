@@ -28,10 +28,10 @@ function fuzzOrgStatsPage() {
 
   // toggle each org off/on
   cy.get(appid)
-    .find('span[class="pf-c-switch__toggle"]')
+    .find('span[class="pf-v5-c-switch__toggle"]')
     .each((_toggle, ix) => {
-      cy.get(appid).find('span[class="pf-c-switch__toggle"]').eq(ix).click();
-      cy.get(appid).find('span[class="pf-c-switch__toggle"]').eq(ix).click();
+      cy.get(appid).find('span[class="pf-v5-c-switch__toggle"]').eq(ix).click();
+      cy.get(appid).find('span[class="pf-v5-c-switch__toggle"]').eq(ix).click();
     });
 
   // hover over each donut1 pie slice ...

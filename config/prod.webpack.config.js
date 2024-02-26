@@ -6,6 +6,7 @@ const { config: webpackConfig, plugins } = config({
   sassPrefix: '.automation-analytics, .automationAnalytics',
   useCloud: true,
 });
+webpackConfig.resolve.alias = {'/assets': resolve(__dirname, '../node_modules/@ansible/ansible-ui-framework/assets')};
 
 plugins.push(
   require('@redhat-cloud-services/frontend-components-config/federated-modules')(

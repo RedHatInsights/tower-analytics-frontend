@@ -35,7 +35,7 @@ import {
 } from '@patternfly/react-core';
 
 import {
-  TableComposable,
+  Table /* data-codemods */,
   Thead,
   Tbody,
   Tr,
@@ -285,7 +285,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
               <strong>Last 5 jobs</strong>
             </p>
 
-            <TableComposable
+            <Table
               aria-label="Template information table"
               variant="compact"
             >
@@ -309,7 +309,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
                   </Tr>
                 ))}
               </Tbody>
-            </TableComposable>
+            </Table>
           </>
         )}
 

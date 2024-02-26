@@ -30,7 +30,7 @@ const DateInput: FunctionComponent<Props> = ({
       value={value}
       onChange={(_event, value) => handleSetValue(value)}
       inputProps={{
-        isReadOnly: true,
+        readOnly: true,
       }}
       {...otherProps}
     />

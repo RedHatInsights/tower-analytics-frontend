@@ -212,7 +212,7 @@ Cypress.Commands.add('tableShowAll', () => {
   cy.get('#table-kebab')
     .click()
     .then(() => {
-      cy.get('.pf-c-dropdown__menu.pf-m-align-right')
+      cy.get('.pf-v5-c-dropdown__menu.pf-m-align-right')
         .find('button')
         .contains('Show all')
         .click();
@@ -225,7 +225,7 @@ Cypress.Commands.add('tableHideAll', () => {
   cy.get('#table-kebab')
     .click()
     .then(() => {
-      cy.get('.pf-c-dropdown__menu.pf-m-align-right')
+      cy.get('.pf-v5-c-dropdown__menu.pf-m-align-right')
         .find('button')
         .contains('Hide all')
         .click();

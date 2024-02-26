@@ -17,7 +17,7 @@ import {
   Grid,
   InputGroup,
   TextInput,
-  Title,
+  Title, InputGroupItem,
 } from '@patternfly/react-core';
 import { PlusIcon, TimesIcon } from '@patternfly/react-icons';
 
@@ -101,23 +101,23 @@ const Tasks = ({ tasks, dispatch }) => {
             fieldId="task-field"
           >
             <InputGroup>
-              <TextInput
+              <InputGroupItem isFill ><TextInput
                 placeholder="Enter a description of each task"
                 type="text"
                 id="task-field"
                 name="task"
                 value={taskToAdd}
-                onChange={(newTaskName) => setTaskToAdd(newTaskName)}
+                onChange={(_event, newTaskName) => setTaskToAdd(newTaskName)}
                 onKeyDown={handleTextKeyDown}
-              />
-              <Button
+              /></InputGroupItem>
+              <InputGroupItem><Button
                 onClick={appendTask}
                 isDisabled={taskToAdd.trim() === ''}
                 variant="control"
                 aria-label="Add task"
               >
                 <PlusIcon />
-              </Button>
+              </Button></InputGroupItem>
             </InputGroup>
           </FormGroup>
         </Grid>
@@ -130,11 +130,11 @@ const Tasks = ({ tasks, dispatch }) => {
           <DataList
             aria-label="Draggable list to reorder and remove tasks."
             isCompact
-            onDragFinish={onDragFinish}
-            onDragStart={onDragStart}
-            onDragMove={onDragMove}
-            onDragCancel={onDragCancel}
-            itemOrder={tasks.map((val, idx) => `${val}-${idx}`)}
+            
+            
+            
+            
+            
           >
             {tasks.map((task, index) => (
               <DataListItem

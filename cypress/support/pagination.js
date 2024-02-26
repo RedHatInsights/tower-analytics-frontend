@@ -12,7 +12,7 @@ Cypress.Commands.add(
   'getPaginationArrows',
   (cyParent, childBtnAction, ...args) => {
     cy.getByCy(`${cyParent}`, ...args)
-      .find('.pf-c-pagination__nav')
+      .find('.pf-v5-c-pagination__nav')
       .find(`[data-action="${childBtnAction}"]`)
       .as('arrowBtn');
     return cy.get('@arrowBtn');
@@ -30,7 +30,7 @@ Cypress.Commands.add('getPaginationBtn', (cyParent, btnAction) => {
 Cypress.Commands.add('getItemsToggle', (cyParent, childBtnAction, ...args) => {
   return cy
     .getByCy(`${cyParent}`, ...args)
-    .find('.pf-c-pagination__nav')
+    .find('.pf-v5-c-pagination__nav')
     .find(`[data-action="${childBtnAction}"]`);
 });
 
@@ -88,7 +88,7 @@ Cypress.Commands.add('testNavArrowsFlow', (selector, pageName) => {
  * @param {String} selector - The parent data-cy element
  */
 Cypress.Commands.add('testSelectItemsPerPage', (selector, itemsPerPage) => {
-  cy.getByCy(`${selector}`).find('.pf-c-options-menu').as('pag_option_menu');
+  cy.getByCy(`${selector}`).find('.pf-v5-c-options-menu').as('pag_option_menu');
   if (itemsPerPage == 5) {
     cy.get('@pag_option_menu')
       .find('ul', 'per-page-5')
@@ -219,7 +219,7 @@ Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
   cy.get('@table').find('tr').should('have.length.greaterThan', 1);
 
   // toggle the list
-  cy.getByCy(`${selector}`).find('.pf-c-options-menu').as('pag_option_menu');
+  cy.getByCy(`${selector}`).find('.pf-v5-c-options-menu').as('pag_option_menu');
   cy.findByIdLike('@pag_option_menu', 'aa-pagination-').click({
     force: true,
   });

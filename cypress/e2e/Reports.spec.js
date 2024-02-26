@@ -56,13 +56,13 @@ describe("Reports' navigation on Reports page - smoketests", () => {
       if (skippedTests['reports'].includes(item)) return;
 
       cy.getByCy('selected_report_dropdown').click();
-      cy.get('ul.pf-c-dropdown__menu > button > li > a').should('exist');
-      cy.get('ul.pf-c-dropdown__menu > button > li > a').eq(index).click();
+      cy.get('ul.pf-v5-c-dropdown__menu > button > li > a').should('exist');
+      cy.get('ul.pf-v5-c-dropdown__menu > button > li > a').eq(index).click();
       cy.getByCy('preview_title_link')
         .invoke('text')
         .then((item) => {
           cy.get(
-            '[data-cy="selected_report_dropdown"] > span.pf-c-dropdown__toggle-text'
+            '[data-cy="selected_report_dropdown"] > span.pf-v5-c-dropdown__toggle-text'
           )
             .invoke('text')
             .should('eq', item);

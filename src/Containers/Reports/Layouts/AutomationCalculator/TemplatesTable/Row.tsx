@@ -5,9 +5,8 @@ import {
   InputGroupText,
   TextInput,
   Tooltip,
-  InputGroupTextVariant,
   Switch,
-  ButtonVariant,
+  ButtonVariant, InputGroupItem,
 } from '@patternfly/react-core';
 import { Tr, Td } from '@patternfly/react-table';
 import { global_success_color_200 as globalSuccessColor200 } from '@patternfly/react-tokens';
@@ -116,7 +115,7 @@ const Row: FunctionComponent<Props> = ({
         )}
         <Td>
           <InputGroup>
-            <TextInput
+            <InputGroupItem isFill ><TextInput
               autoFocus={
                 window.localStorage.getItem('focused') ===
                 'manual-time-' + template.id.toString()
@@ -144,9 +143,9 @@ const Row: FunctionComponent<Props> = ({
                 );
               }}
               isDisabled={readOnly}
-            />
+            /></InputGroupItem>
             <InputGroupText>min</InputGroupText>
-            <InputGroupText variant={InputGroupTextVariant.plain}>
+            <InputGroupText >
               x {template.successful_hosts_total} host runs
             </InputGroupText>
           </InputGroup>
@@ -171,7 +170,7 @@ const Row: FunctionComponent<Props> = ({
             label="Show"
             labelOff="Hide"
             isChecked={template.enabled}
-            onChange={(checked) => setEnabled(checked)}
+            onChange={(_event, checked) => setEnabled(checked)}
             isDisabled={readOnly}
           />
         </Td>

@@ -1,5 +1,5 @@
 import React from 'react';
-import StandardReport from './Standard';
+import StandardReport from './Standard/ReportCard';
 import AutomationCalculator from './AutomationCalculator';
 import { ReportSchema } from './types';
 
