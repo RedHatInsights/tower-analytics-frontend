@@ -136,14 +136,14 @@ describe('Automation Calculator page', () => {
     }
     waitToLoad();
 
-    cy.get('tr').eq(1).find('.pf-c-switch__toggle').click();
+    cy.get('tr').eq(1).find('.pf-v5-c-switch__toggle').click();
     waitToLoad();
     cy.getByCy('savings')
       .first()
       .should('have.css', 'color', 'rgb(210, 210, 210)');
     cy.get('tr').eq(1).get('td').contains('Hide').should('exist');
 
-    cy.get('tr').eq(1).find('.pf-c-switch__toggle').click();
+    cy.get('tr').eq(1).find('.pf-v5-c-switch__toggle').click();
     waitToLoad();
     cy.getByCy('savings')
       .first()
@@ -232,7 +232,7 @@ describe('Automation Calculator page', () => {
 
     if (ENV != ENVS.STAGE) {
       cy.tableHideAll().then(() => {
-        cy.get('.pf-c-empty-state').should('exist');
+        cy.get('.pf-v5-c-empty-state').should('exist');
         cy.getByCy('total_savings')
           .find('h3')
           .then(($totalSavings) => {
@@ -247,7 +247,7 @@ describe('Automation Calculator page', () => {
           });
 
         cy.tableShowAll().then(() => {
-          cy.get('.pf-c-empty-state').should('not.exist');
+          cy.get('.pf-v5-c-empty-state').should('not.exist');
           cy.getByCy('current_page_savings')
             .find('h3')
             .then(($pageSavings) => {
@@ -270,12 +270,12 @@ describe('Automation Calculator page', () => {
           const pageSavingsValue = $pageSavings.text();
           expect(pageSavingsValue).to.eq('$0.00');
         });
-      cy.get('.pf-c-empty-state').should('exist');
+      cy.get('.pf-v5-c-empty-state').should('exist');
 
       cy.get('button').contains('Show all').click();
       waitToLoad();
 
-      cy.get('.pf-c-empty-state').should('not.exist');
+      cy.get('.pf-v5-c-empty-state').should('not.exist');
       cy.getByCy('current_page_savings')
         .find('h3')
         .then(($pageSavings) => {

@@ -4,7 +4,6 @@ import {
   Card,
   CardTitle,
   CardBody,
-  CardActions,
   CardHeader,
 } from '@patternfly/react-core';
 import PFOutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon';
@@ -31,8 +30,8 @@ interface Props {
   labelOff?: string;
   isChecked?: AttributeType;
   onChange?: (
-    checked: boolean,
-    event: React.FormEvent<HTMLInputElement>
+    event: React.FormEvent<HTMLInputElement>,
+    checked: boolean
   ) => void;
   ariaLabel?: string;
   bodyContent?: string;
@@ -50,15 +49,13 @@ const SettingsPanel: FunctionComponent<Props> = ({
   bodyContent,
 }) => (
   <Card isFlat style={{ backgroundColor: '#EEEEEE' }}>
-    <CardHeader>
-      <CardActions>
-        <Button
+    <CardHeader actions={{ actions: <><Button
           variant="plain"
           onClick={() => setSettingsExpanded(!settingsExpanded)}
         >
           <TimesIcon />
-        </Button>
-      </CardActions>
+        </Button></>, hasNoOffset: false, className: undefined}} >
+
       <CardTitle>Settings</CardTitle>
     </CardHeader>
     <CardBody>

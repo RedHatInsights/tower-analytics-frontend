@@ -9,7 +9,7 @@ import {
   PaginationVariant,
 } from '@patternfly/react-core';
 import {
-  TableComposable,
+  Table /* data-codemods */,
   Thead,
   Tbody,
   Tr,
@@ -133,7 +133,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
         {templatesIsLoading && <LoadingState />}
         {templatesIsSuccess && templates.length <= 0 && <NoResults />}
         {templatesIsSuccess && templates.length > 0 && (
-          <TableComposable aria-label="Template link table" variant="compact">
+          <Table aria-label="Template link table" variant="compact">
             <Thead>
               <Tr>
                 <Th />
@@ -162,7 +162,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
                 </Tr>
               ))}
             </Tbody>
-          </TableComposable>
+          </Table>
         )}
         <ListFooter>
           <div>

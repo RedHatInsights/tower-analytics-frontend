@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  Form,
-  FormGroup,
-  Grid,
-  Select,
-  SelectOption,
-  TextInput,
-  NumberInput,
-  FormHelperText,
+	Form,
+	FormGroup,
+	Grid,
+	TextInput,
+	NumberInput,
+	FormHelperText
 } from '@patternfly/react-core';
-
-import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import {
+	Select,
+	SelectOption
+} from '@patternfly/react-core/deprecated';
 
 import { actions } from '../../../constants';
 
@@ -43,7 +43,7 @@ const Details = ({ options, formData, dispatch }) => {
               id="name-field"
               name="name"
               value={name}
-              onChange={(newName) =>
+              onChange={(_event, newName) =>
                 dispatch({
                   type: actions.SET_NAME,
                   value: newName,
@@ -53,11 +53,7 @@ const Details = ({ options, formData, dispatch }) => {
               onBlur={() => setShowError(!name)}
             />
             {!formData.name && showError && (
-              <FormHelperText
-                isError
-                icon={<ExclamationCircleIcon />}
-                isHidden={!showError}
-              >
+              <FormHelperText>
                 Name is required
               </FormHelperText>
             )}
@@ -96,7 +92,7 @@ const Details = ({ options, formData, dispatch }) => {
               id="description-field"
               name="description"
               value={description}
-              onChange={(newDescription) =>
+              onChange={(_event, newDescription) =>
                 dispatch({
                   type: actions.SET_DESCRIPTION,
                   value: newDescription,

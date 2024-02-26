@@ -4,7 +4,7 @@ import {
   mockUseRequestDefaultParams,
 } from '../../__tests__/helpers';
 import fetchMock from 'fetch-mock-jest';
-import JobExplorer from './JobExplorer';
+//import JobExplorer from './JobExplorer';
 import { jobExplorer } from '../../Utilities/constants';
 import * as useRequest from '../../Utilities/useRequest';
 

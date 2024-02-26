@@ -1,8 +1,12 @@
 import React, { FunctionComponent, useState } from 'react';
 
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import {
-  TableComposable,
+	Dropdown,
+	DropdownItem,
+	KebabToggle
+} from '@patternfly/react-core/deprecated';
+import {
+  Table /* data-codemods */,
   TableVariant,
   Tbody,
   Th,
@@ -78,7 +82,7 @@ const TopTemplates: FunctionComponent<Props> = ({
     </DropdownItem>,
   ];
   return (
-    <TableComposable
+    <Table
       data-cy={'table'}
       aria-label="ROI Table"
       variant={TableVariant.compact}
@@ -134,7 +138,7 @@ const TopTemplates: FunctionComponent<Props> = ({
           />
         ))}
       </Tbody>
-    </TableComposable>
+    </Table>
   );
 };
 

@@ -15,7 +15,6 @@ import {
   Stack,
   StackItem,
   CardHeader,
-  CardActions,
   CardTitle,
   CardFooter,
   ToggleGroup,
@@ -417,10 +416,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const renderLeft = () => (
     <Card isPlain>
       {fullCard && (
-        <CardHeader>
-          <CardTitle>Automation savings</CardTitle>
-          <CardActions>
-            <ToggleGroup aria-label="toggleButton">
+        <CardHeader actions={{ actions: <><ToggleGroup aria-label="toggleButton">
               <ToggleGroupItem
                 id="toggleIsMoneyTrue"
                 text="Money"
@@ -444,13 +440,14 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                   );
                 }}
               />
-            </ToggleGroup>
-          </CardActions>
+            </ToggleGroup></>, hasNoOffset: false, className: undefined}} >
+          <CardTitle>Automation savings</CardTitle>
+          
         </CardHeader>
       )}
       {api.isLoading ? (
         <SpinnerDiv>
-          <Spinner data-cy={'spinner'} isSVG />
+          <Spinner data-cy={'spinner'}  />
         </SpinnerDiv>
       ) : filterDisabled(api?.result?.items).length > 0 ? (
         <Chart
@@ -571,7 +568,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 Enter the time it takes to run the following templates manually.
               </p>
               {api.isLoading ? (
-                <Spinner data-cy={'spinner'} isSVG />
+                <Spinner data-cy={'spinner'}  />
               ) : (
                 <TemplatesTable
                   navigateToJobExplorer={navigateToJobExplorer}

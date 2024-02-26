@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { actions } from '../../constants';
 import {
-  Form,
-  FormGroup,
-  FormHelperText,
-  Grid,
-  GridItem,
-  Radio,
-  Select,
-  SelectOption,
-  SelectVariant,
-  TextArea,
-  TextInput,
+	Form,
+	FormGroup,
+	FormHelperText,
+	Grid,
+	GridItem,
+	Radio,
+	TextArea,
+	TextInput
 } from '@patternfly/react-core';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import {
+	Select,
+	SelectOption,
+	SelectVariant
+} from '@patternfly/react-core/deprecated';
 
 import {
   EmailDetailsProps,
@@ -282,7 +284,7 @@ const EmailDetails = ({
           value={additionalRecipients}
           onBlur={(e) => checkEmailInput(e)}
           onFocus={(e) => checkEmailInput(e)}
-          onChange={(newValue) =>
+          onChange={(_event, newValue) =>
             dispatchReducer({
               type: actions.SET_ADDITIONAL_RECIPIENTS,
               value: newValue,
@@ -291,9 +293,9 @@ const EmailDetails = ({
         />
         {additionalRecipients && showError && (
           <FormHelperText
-            isError
-            icon={<ExclamationCircleIcon />}
-            isHidden={!showError}
+            
+            
+            
           >
             The email format must be valid and comma separated.
           </FormHelperText>
@@ -330,7 +332,7 @@ const EmailDetails = ({
           id="subject"
           name="subject"
           value={subject}
-          onChange={(newValue) =>
+          onChange={(_event, newValue) =>
             dispatchReducer({
               type: actions.SET_SUBJECT,
               value: newValue,
@@ -347,7 +349,7 @@ const EmailDetails = ({
           id="body"
           name="body"
           value={body}
-          onChange={(newValue) =>
+          onChange={(_event, newValue) =>
             dispatchReducer({
               type: actions.SET_BODY,
               value: newValue,
@@ -371,9 +373,9 @@ const EmailDetails = ({
             />
           </FormGroup>
           <FormHelperText
-            isError
-            icon={<ExclamationCircleIcon />}
-            isHidden={!showExpiryDate}
+            
+            
+            
           >
             Link expiry date only applies to external users
           </FormHelperText>

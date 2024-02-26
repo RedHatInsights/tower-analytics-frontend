@@ -1,12 +1,11 @@
 import React, { FunctionComponent } from 'react';
 import {
-  Title,
   EmptyState,
   EmptyStateIcon,
   EmptyStateBody,
   Button,
   EmptyStateVariant,
-  ButtonVariant,
+  ButtonVariant, EmptyStateHeader, EmptyStateFooter,
 } from '@patternfly/react-core';
 import AddCircleOIcon from '@patternfly/react-icons/dist/esm/icons/add-circle-o-icon';
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
@@ -38,11 +37,8 @@ const EmptyList: FunctionComponent<Props> = ({
 
   return (
     <EmptyState variant={EmptyStateVariant.full}>
-      <EmptyStateIcon icon={canAdd ? AddCircleOIcon : SearchIcon} />
-      <Title size="lg" headingLevel="h3">
-        {title}
-      </Title>
-      <EmptyStateBody>{message}</EmptyStateBody>
+      <EmptyStateHeader titleText={<>{title}</>} icon={<EmptyStateIcon icon={canAdd ? AddCircleOIcon : SearchIcon} />} headingLevel="h3" />
+      <EmptyStateBody>{message}</EmptyStateBody><EmptyStateFooter>
       {(canAdd || showButton) && (
         <Button
           key="add-item-button"
@@ -58,7 +54,7 @@ const EmptyList: FunctionComponent<Props> = ({
           {label}
         </Button>
       )}
-    </EmptyState>
+    </EmptyStateFooter></EmptyState>
   );
 };
 

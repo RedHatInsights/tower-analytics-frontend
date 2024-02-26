@@ -1,14 +1,16 @@
 import React, { FunctionComponent } from 'react';
 import {
-  ToolbarGroup,
-  Button,
-  SelectOptionProps,
-  ButtonVariant,
-  ToolbarGroupVariant,
-  ToolbarItem,
+	ToolbarGroup,
+	Button,
+	ButtonVariant,
+	ToolbarGroupVariant,
+	ToolbarItem
 } from '@patternfly/react-core';
 import SortAmountDownIcon from '@patternfly/react-icons/dist/esm/icons/sort-amount-down-icon';
 import SortAmountUpIcon from '@patternfly/react-icons/dist/esm/icons/sort-amount-up-icon';
+import {
+	SelectOptionProps
+} from '@patternfly/react-core/deprecated';
 
 import ToolbarInput from './ToolbarInput';
 import { SetValues, AttributeType } from '../types';

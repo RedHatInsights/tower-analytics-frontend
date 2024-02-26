@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect } from 'react';
-import Error404 from '../../../Components/Error404';
+import { Error404 } from '../../../Components/Error404';
 
 import { PageHeader } from '../../../framework/PageHeader';
 import {

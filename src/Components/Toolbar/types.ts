@@ -1,4 +1,6 @@
-import { SelectOptionObject } from '@patternfly/react-core';
+import {
+	SelectOptionObject
+} from '@patternfly/react-core/deprecated';
 import { Endpoint, OptionsReturnType, Params } from '../../Api';
 
 export type AttributeType =

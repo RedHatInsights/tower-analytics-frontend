@@ -3,21 +3,21 @@
 exports[`Components/JobStatus should render canceled 1`] = `
 <DocumentFragment>
   <span
-    class="pf-c-label pf-m-orange pf-m-outline"
+    class="pf-v5-c-label pf-m-orange pf-m-outline"
     style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
-      class="pf-c-label__content"
+      class="pf-v5-c-label__content"
     >
       <span
-        class="pf-c-label__icon"
+        class="pf-v5-c-label__icon"
       >
         <svg
           aria-hidden="true"
+          class="pf-v5-svg"
           fill="currentColor"
           height="1em"
           role="img"
-          style="vertical-align: -0.125em;"
           viewBox="0 0 576 512"
           width="1em"
         >
@@ -26,7 +26,11 @@ exports[`Components/JobStatus should render canceled 1`] = `
           />
         </svg>
       </span>
-      Canceled
+      <span
+        class="pf-v5-c-label__text"
+      >
+        Canceled
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -35,21 +39,21 @@ exports[`Components/JobStatus should render canceled 1`] = `
 exports[`Components/JobStatus should render error 1`] = `
 <DocumentFragment>
   <span
-    class="pf-c-label pf-m-red pf-m-outline"
+    class="pf-v5-c-label pf-m-red pf-m-outline"
     style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
-      class="pf-c-label__content"
+      class="pf-v5-c-label__content"
     >
       <span
-        class="pf-c-label__icon"
+        class="pf-v5-c-label__icon"
       >
         <svg
           aria-hidden="true"
+          class="pf-v5-svg"
           fill="currentColor"
           height="1em"
           role="img"
-          style="vertical-align: -0.125em;"
           viewBox="0 0 512 512"
           width="1em"
         >
@@ -58,7 +62,11 @@ exports[`Components/JobStatus should render error 1`] = `
           />
         </svg>
       </span>
-      Error
+      <span
+        class="pf-v5-c-label__text"
+      >
+        Error
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -67,21 +75,21 @@ exports[`Components/JobStatus should render error 1`] = `
 exports[`Components/JobStatus should render failed 1`] = `
 <DocumentFragment>
   <span
-    class="pf-c-label pf-m-red pf-m-outline"
+    class="pf-v5-c-label pf-m-red pf-m-outline"
     style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
-      class="pf-c-label__content"
+      class="pf-v5-c-label__content"
     >
       <span
-        class="pf-c-label__icon"
+        class="pf-v5-c-label__icon"
       >
         <svg
           aria-hidden="true"
+          class="pf-v5-svg"
           fill="currentColor"
           height="1em"
           role="img"
-          style="vertical-align: -0.125em;"
           viewBox="0 0 512 512"
           width="1em"
         >
@@ -90,7 +98,11 @@ exports[`Components/JobStatus should render failed 1`] = `
           />
         </svg>
       </span>
-      Failed
+      <span
+        class="pf-v5-c-label__text"
+      >
+        Failed
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -99,21 +111,21 @@ exports[`Components/JobStatus should render failed 1`] = `
 exports[`Components/JobStatus should render new 1`] = `
 <DocumentFragment>
   <span
-    class="pf-c-label pf-m-outline"
+    class="pf-v5-c-label pf-m-outline"
     style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
-      class="pf-c-label__content"
+      class="pf-v5-c-label__content"
     >
       <span
-        class="pf-c-label__icon"
+        class="pf-v5-c-label__icon"
       >
         <svg
           aria-hidden="true"
+          class="pf-v5-svg"
           fill="currentColor"
           height="1em"
           role="img"
-          style="vertical-align: -0.125em;"
           viewBox="0 0 512 512"
           width="1em"
         >
@@ -122,7 +134,11 @@ exports[`Components/JobStatus should render new 1`] = `
           />
         </svg>
       </span>
-      New
+      <span
+        class="pf-v5-c-label__text"
+      >
+        New
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -131,21 +147,21 @@ exports[`Components/JobStatus should render new 1`] = `
 exports[`Components/JobStatus should render pending 1`] = `
 <DocumentFragment>
   <span
-    class="pf-c-label pf-m-blue pf-m-outline"
+    class="pf-v5-c-label pf-m-blue pf-m-outline"
     style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
-      class="pf-c-label__content"
+      class="pf-v5-c-label__content"
     >
       <span
-        class="pf-c-label__icon"
+        class="pf-v5-c-label__icon"
       >
         <svg
           aria-hidden="true"
+          class="pf-v5-svg"
           fill="currentColor"
           height="1em"
           role="img"
-          style="vertical-align: -0.125em;"
           viewBox="0 0 512 512"
           width="1em"
         >
@@ -154,7 +170,11 @@ exports[`Components/JobStatus should render pending 1`] = `
           />
         </svg>
       </span>
-      Pending
+      <span
+        class="pf-v5-c-label__text"
+      >
+        Pending
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -163,21 +183,21 @@ exports[`Components/JobStatus should render pending 1`] = `
 exports[`Components/JobStatus should render running 1`] = `
 <DocumentFragment>
   <span
-    class="pf-c-label pf-m-blue pf-m-outline"
+    class="pf-v5-c-label pf-m-blue pf-m-outline"
     style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
-      class="pf-c-label__content"
+      class="pf-v5-c-label__content"
     >
       <span
-        class="pf-c-label__icon"
+        class="pf-v5-c-label__icon"
       >
         <svg
           aria-hidden="true"
+          class="pf-v5-svg"
           fill="currentColor"
           height="1em"
           role="img"
-          style="vertical-align: -0.125em;"
           viewBox="0 0 512 512"
           width="1em"
         >
@@ -186,7 +206,11 @@ exports[`Components/JobStatus should render running 1`] = `
           />
         </svg>
       </span>
-      Running
+      <span
+        class="pf-v5-c-label__text"
+      >
+        Running
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -195,21 +219,21 @@ exports[`Components/JobStatus should render running 1`] = `
 exports[`Components/JobStatus should render successful 1`] = `
 <DocumentFragment>
   <span
-    class="pf-c-label pf-m-green pf-m-outline"
+    class="pf-v5-c-label pf-m-green pf-m-outline"
     style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
-      class="pf-c-label__content"
+      class="pf-v5-c-label__content"
     >
       <span
-        class="pf-c-label__icon"
+        class="pf-v5-c-label__icon"
       >
         <svg
           aria-hidden="true"
+          class="pf-v5-svg"
           fill="currentColor"
           height="1em"
           role="img"
-          style="vertical-align: -0.125em;"
           viewBox="0 0 512 512"
           width="1em"
         >
@@ -218,7 +242,11 @@ exports[`Components/JobStatus should render successful 1`] = `
           />
         </svg>
       </span>
-      Successful
+      <span
+        class="pf-v5-c-label__text"
+      >
+        Successful
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -227,21 +255,21 @@ exports[`Components/JobStatus should render successful 1`] = `
 exports[`Components/JobStatus should render waiting 1`] = `
 <DocumentFragment>
   <span
-    class="pf-c-label pf-m-outline"
+    class="pf-v5-c-label pf-m-outline"
     style="margin-right: 0.5rem; margin-bottom: 0.5rem;"
   >
     <span
-      class="pf-c-label__content"
+      class="pf-v5-c-label__content"
     >
       <span
-        class="pf-c-label__icon"
+        class="pf-v5-c-label__icon"
       >
         <svg
           aria-hidden="true"
+          class="pf-v5-svg"
           fill="currentColor"
           height="1em"
           role="img"
-          style="vertical-align: -0.125em;"
           viewBox="0 0 512 512"
           width="1em"
         >
@@ -250,7 +278,11 @@ exports[`Components/JobStatus should render waiting 1`] = `
           />
         </svg>
       </span>
-      Waiting
+      <span
+        class="pf-v5-c-label__text"
+      >
+        Waiting
+      </span>
     </span>
   </span>
 </DocumentFragment>
