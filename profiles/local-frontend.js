@@ -7,7 +7,7 @@ routes[`/apps/${APP_ID}`] = { host: `https://localhost:${FRONTEND_PORT}` };
 routes[`/ansible/automation-analytics`] = {
   host: `https://localhost:${FRONTEND_PORT}`,
 };
-routes[`/beta/ansible/automation-analytics`] = {
+routes[`/preview/ansible/automation-analytics`] = {
   host: `https://localhost:${FRONTEND_PORT}`,
 };
 

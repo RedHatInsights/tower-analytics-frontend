@@ -134,7 +134,7 @@ describe.skip('Containers/OrganizationStatistics', () => {
     wrapper.unmount();
   });
 
-  it('should render without any errors', async () => {
+  xit('should render without any errors', async () => {
     fetchMock.post(
       { url: jobExplorerUrl, overwriteRoutes: true },
       { items: [] }

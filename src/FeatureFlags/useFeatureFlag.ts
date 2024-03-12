@@ -1,6 +1,6 @@
 import { useFlag, useFlagsStatus } from '@unleash/proxy-client-react';
 
-const isBeta = () => window.location.pathname.split('/')[1] === 'beta';
+const isBeta = () => window.location.pathname.split('/')[1] === 'preview';
 
 // Devel environment checks
 const isLocalhost = () => window.location.hostname === 'localhost';
