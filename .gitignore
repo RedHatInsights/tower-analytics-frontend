@@ -24,3 +24,5 @@ sitemap.xml
 cypress/screenshots
 cypress/videos
 cypress/downloads
+
+.cache
