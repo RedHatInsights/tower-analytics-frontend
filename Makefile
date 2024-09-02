@@ -17,10 +17,3 @@ start:
 	tmux select-pane -D
 	tmux set mouse on
 	tmux attach -t aa
-
-scan_project:
-	./sonarqube.sh
-
-clamscan:
-	./clamscan.sh
-
