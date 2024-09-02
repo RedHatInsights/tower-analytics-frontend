@@ -110,8 +110,8 @@
   },
   "scripts": {
     "test": "TZ=UTC jest --verbose",
-    "test:watch": "jest --coverage=false --watch",
-    "lint": "(eslint config src) && (stylelint 'src/**/*.scss' --config .stylelintrc.json)",
+    "test:watch": "TZ=UTC jest --coverage=false --watch",
+    "lint": "eslint config src && stylelint 'src/**/*.scss' --config .stylelintrc.json",
     "lint:fix": "eslint config src --fix",
     "start": "fec dev",
     "build": "fec build",
