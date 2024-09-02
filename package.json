@@ -40,13 +40,6 @@
       "^.+\\.jsx?$": "babel-jest",
       "^.+\\.tsx?$": "ts-jest"
     },
-    "coverageDirectory": "./coverage/",
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*{.js,.ts,.tsx}",
-      "!src/__tests__/**/*",
-      "!src/**/types.ts"
-    ],
     "setupFiles": [
       "<rootDir>/config/setupTests.js"
     ],
