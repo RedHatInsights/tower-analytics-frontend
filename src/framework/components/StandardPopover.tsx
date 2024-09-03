@@ -45,7 +45,7 @@ function StandardPopover(props: {
         aria-label={ariaLabel ?? "More information"}
         aria-haspopup="true"
         className="pf-c-form__group-label-help"
-        onClick={(e: any) => e.preventDefault()}
+        onClick={(e: Event) => e.preventDefault()}
         type="button"
       >
         <HelpIcon noVerticalAlign />

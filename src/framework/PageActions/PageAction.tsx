@@ -1,5 +1,5 @@
 import { ButtonVariant } from "@patternfly/react-core";
-import React, { ComponentClass } from "react";
+import { ComponentClass } from "react";
 import { PageActionType } from "./PageActionType";
 
 export type IPageAction<T extends object> =

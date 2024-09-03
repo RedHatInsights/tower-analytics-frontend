@@ -4,7 +4,7 @@ import mdBreakpoint from "@patternfly/react-tokens/dist/esm/global_breakpoint_md
 import smBreakpoint from "@patternfly/react-tokens/dist/esm/global_breakpoint_sm";
 import xlBreakpoint from "@patternfly/react-tokens/dist/esm/global_breakpoint_xl";
 import xsBreakpoint from "@patternfly/react-tokens/dist/esm/global_breakpoint_xs";
-import React, { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 const breakpoints: Record<string, number> = {
   xs: Number(xsBreakpoint.value.replace("px", "")),

@@ -37,20 +37,19 @@
       "plugins": ["@typescript-eslint"],
       "rules": {
         "@typescript-eslint/no-explicit-any": "off",
-        "@typescript-eslint/no-misused-promises": 1,
         "@typescript-eslint/no-unsafe-argument": "off",
-        "no-unused-vars": "off",
         "@typescript-eslint/no-unused-vars": [
           "error",
           {
             "vars": "all",
             "args": "after-used",
             "ignoreRestSiblings": true,
-            "argsIgnorePattern": "^_"
+            "argsIgnorePattern": "^_",
+            "varsIgnorePattern": "^_"
           }
         ],
+        "no-unused-vars": "off",
         "no-use-before-define": "off",
-        "@typescript-eslint/no-use-before-define": ["error"],
         "react/prop-types": "off"
       }
     }
