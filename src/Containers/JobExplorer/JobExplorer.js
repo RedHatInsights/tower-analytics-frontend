@@ -38,7 +38,9 @@ import { ExpandableRowContent } from '@patternfly/react-table';
 
 import FilterableToolbar from '../../Components/Toolbar/';
 import { SettingsPanel } from '../../Components/Toolbar/Groups';
-import { PageHeader, PageTable, TextCell } from '@ansible/ansible-ui-framework';
+import { PageHeader } from '../../framework/PageHeader';
+import { PageTable } from '../../framework/PageTable/PageTable';
+import { TextCell } from '../../framework/PageCells/TextCell';
 
 const JobExplorer = () => {
   const {

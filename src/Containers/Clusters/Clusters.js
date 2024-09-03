@@ -9,7 +9,7 @@ import {
 
 import { jobExplorer } from '../../Utilities/constants';
 
-import { PageHeader } from '@ansible/ansible-ui-framework';
+import { PageHeader } from '../../framework/PageHeader';
 
 import {
   Card,

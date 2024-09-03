@@ -10,7 +10,7 @@ import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
 
 import { readJobExplorer, readHostExplorer, readOrgOptions } from '../../Api/';
 
-import { PageHeader } from '@ansible/ansible-ui-framework';
+import { PageHeader } from '../../framework/PageHeader';
 
 import { Link, useNavigate } from 'react-router-dom';
 import {

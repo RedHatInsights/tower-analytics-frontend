@@ -2,7 +2,7 @@
 // @ts-nocheck
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { PageHeader } from '@ansible/ansible-ui-framework';
+import { PageHeader } from '../../../framework/PageHeader';
 import {
   Button,
   ButtonVariant,

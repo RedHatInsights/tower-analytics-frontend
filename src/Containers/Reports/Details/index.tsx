@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import Error404 from '../../../Components/Error404';
 
-import { PageHeader } from '@ansible/ansible-ui-framework';
+import { PageHeader } from '../../../framework/PageHeader';
 import {
   Label,
   LabelGroup,

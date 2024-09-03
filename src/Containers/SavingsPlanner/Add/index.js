@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 import { Card, CardBody, PageSection } from '@patternfly/react-core';
 
-import { PageHeader } from '@ansible/ansible-ui-framework';
+import { PageHeader } from '../../../framework/PageHeader';
 
 import { readPlanOptions } from '../../../Api/';
 

@@ -7,7 +7,8 @@ import {
   PageSection as FrameworkPageSection,
   PaginationVariant,
 } from '@patternfly/react-core';
-import { PageHeader, PageLayout } from '@ansible/ansible-ui-framework';
+import { PageHeader } from '../../../framework/PageHeader';
+import { PageLayout } from '../../../framework/PageLayout';
 
 import { deletePlans, readPlanOptions, readPlans } from '../../../Api/';
 import FilterableToolbar from '../../../Components/Toolbar';

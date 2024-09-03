@@ -7,7 +7,7 @@ import DetailsTab from './DetailsTab';
 import StatisticsTab from './StatisticsTab';
 import ApiErrorState from '../../../Components/ApiStatus/ApiErrorState';
 
-import { PageHeader } from '@ansible/ansible-ui-framework';
+import { PageHeader } from '../../../framework/PageHeader';
 
 import { readPlan } from '../../../Api/';
 

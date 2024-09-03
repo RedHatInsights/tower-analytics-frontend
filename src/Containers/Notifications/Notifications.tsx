@@ -8,7 +8,7 @@ import NoData from '../../Components/ApiStatus/NoData';
 import { Params, readClusters, readNotifications } from '../../Api/';
 import useRequest from '../../Utilities/useRequest';
 
-import { PageHeader } from '@ansible/ansible-ui-framework';
+import { PageHeader } from '../../framework/PageHeader';
 
 import {
   Card,
