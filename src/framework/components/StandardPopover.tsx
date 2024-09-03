@@ -2,7 +2,7 @@
 // @ts-nocheck
 import React, { ReactNode } from "react";
 import { Popover } from "@patternfly/react-core";
-import { HelpIcon } from "@patternfly/react-icons";
+import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
 import styled from "styled-components";
 
 const PopoverButton = styled.button`

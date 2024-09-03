@@ -9,7 +9,8 @@ import {
   WizardContextConsumer,
   WizardFooter,
 } from '@patternfly/react-core';
-import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
+import DownloadIcon from '@patternfly/react-icons/dist/esm/icons/download-icon';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import { DownloadState } from '../../../store/pdfDownloadButton/types';
 import {
   Endpoint,

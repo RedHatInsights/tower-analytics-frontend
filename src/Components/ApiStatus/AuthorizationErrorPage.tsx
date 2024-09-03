@@ -8,7 +8,7 @@ import {
   EmptyStateBody,
   ButtonVariant,
 } from '@patternfly/react-core';
-import { WrenchIcon } from '@patternfly/react-icons';
+import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';

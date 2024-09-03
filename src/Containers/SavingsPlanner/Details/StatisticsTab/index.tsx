@@ -12,7 +12,7 @@ import {
   ToggleGroup,
   ToggleGroupItem,
 } from '@patternfly/react-core';
-import { SquareFullIcon } from '@patternfly/react-icons';
+import SquareFullIcon from '@patternfly/react-icons/dist/esm/icons/square-full-icon';
 
 import {
   ChartKind,

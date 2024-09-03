@@ -10,7 +10,7 @@ import {
   NotificationDrawerListItemHeader,
 } from '@patternfly/react-core';
 
-import { ExternalLinkAltIcon as PFExternalLinkAltIcon } from '@patternfly/react-icons';
+import PFExternalLinkAltIcon from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import { capitalize } from '../../Utilities/helpers';
 

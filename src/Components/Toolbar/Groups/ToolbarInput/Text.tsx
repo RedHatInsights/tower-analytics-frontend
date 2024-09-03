@@ -7,7 +7,7 @@ import {
   Button,
 } from '@patternfly/react-core';
 
-import { SearchIcon } from '@patternfly/react-icons';
+import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 import { optionsForCategories } from '../../constants';
 
 import { SetValue } from '../../types';

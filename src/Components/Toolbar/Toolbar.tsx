@@ -9,7 +9,8 @@ import {
   ButtonVariant,
   ToolbarToggleGroup,
 } from '@patternfly/react-core';
-import { FilterIcon, CogIcon } from '@patternfly/react-icons';
+import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
+import CogIcon from '@patternfly/react-icons/dist/esm/icons/cog-icon';
 
 import { optionsForCategories } from './constants';
 import { FilterCategoriesGroup, QuickDateGroup, SortByGroup } from './Groups';

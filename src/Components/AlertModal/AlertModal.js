@@ -2,13 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import { Modal, Title } from '@patternfly/react-core';
-import {
-  CheckCircleIcon as PFCheckCircleIcon,
-  ExclamationCircleIcon as PFExclamationCircleIcon,
-  ExclamationTriangleIcon as PFExclamationTriangleIcon,
-  InfoCircleIcon as PFInfoCircleIcon,
-  TimesCircleIcon as PFTimesCircleIcon,
-} from '@patternfly/react-icons';
+import PFCheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
+import PFExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import PFExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
+import PFInfoCircleIcon from '@patternfly/react-icons/dist/esm/icons/info-circle-icon';
+import PFTimesCircleIcon from '@patternfly/react-icons/dist/esm/icons/times-circle-icon';
+
 import styled from 'styled-components';
 
 const ExclamationCircleIcon = styled(PFExclamationCircleIcon)`

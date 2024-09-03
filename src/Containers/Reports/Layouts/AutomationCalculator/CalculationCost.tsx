@@ -7,7 +7,7 @@ import {
   InputGroupText,
   TextInput,
 } from '@patternfly/react-core';
-import { DollarSignIcon } from '@patternfly/react-icons';
+import DollarSignIcon from '@patternfly/react-icons/dist/esm/icons/dollar-sign-icon';
 import styled from 'styled-components';
 
 const InputGroup = styled(PFInputGroup)`

@@ -19,7 +19,8 @@ import {
   TextInput,
   Title,
 } from '@patternfly/react-core';
-import { PlusIcon, TimesIcon } from '@patternfly/react-icons';
+import PlusIcon from '@patternfly/react-icons/dist/esm/icons/plus-icon';
+import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
 
 import { actions } from '../../../constants';
 

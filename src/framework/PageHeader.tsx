@@ -17,10 +17,8 @@ import {
   Title,
   Truncate,
 } from "@patternfly/react-core";
-import {
-  ExternalLinkAltIcon,
-  OutlinedQuestionCircleIcon,
-} from "@patternfly/react-icons";
+import ExternalLinkAltIcon from "@patternfly/react-icons/dist/esm/icons/external-link-alt-icon";
+import OutlinedQuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon";
 import React, { CSSProperties, Fragment, ReactNode } from "react";
 import { useBreakpoint } from "./components/useBreakPoint";
 import { usePageNavigate } from "./components/usePageNavigate";

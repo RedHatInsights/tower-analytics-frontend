@@ -26,7 +26,7 @@ import useRequest, {
   useDismissableError,
 } from '../../../../Utilities/useRequest';
 import DeleteButton from '../../../../Components/DeleteButton/DeleteButton';
-import { ExclamationCircleIcon } from '@patternfly/react-icons';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import { formatDateTime } from '../../../../Utilities/helpers';
 import RoutedTabs from '../../../../Components/RoutedTabs';
 import AlertModal from '../../../../Components/AlertModal/AlertModal';

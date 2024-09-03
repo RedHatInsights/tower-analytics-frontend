@@ -21,11 +21,9 @@ import {
   Tooltip,
   TooltipPosition,
 } from '@patternfly/react-core';
-import {
-  AngleLeftIcon,
-  AngleRightIcon,
-  CaretDownIcon,
-} from '@patternfly/react-icons';
+import AngleLeftIcon from '@patternfly/react-icons/dist/esm/icons/angle-left-icon';
+import AngleRightIcon from '@patternfly/react-icons/dist/esm/icons/angle-right-icon';
+import CaretDownIcon from '@patternfly/react-icons/dist/esm/icons/caret-down-icon';
 
 import paths from '../paths';
 import ListItem from './ListItem';

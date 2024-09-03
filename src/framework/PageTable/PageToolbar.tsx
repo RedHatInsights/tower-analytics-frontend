@@ -25,15 +25,13 @@ import {
   ToolbarToggleGroup,
   Tooltip,
 } from "@patternfly/react-core";
-import {
-  ArrowRightIcon,
-  ColumnsIcon,
-  FilterIcon,
-  ListIcon,
-  TableIcon,
-  ThLargeIcon,
-  TimesIcon,
-} from "@patternfly/react-icons";
+import ArrowRightIcon from "@patternfly/react-icons/dist/esm/icons/arrow-right-icon";
+import ColumnsIcon from "@patternfly/react-icons/dist/esm/icons/columns-icon";
+import FilterIcon from "@patternfly/react-icons/dist/esm/icons/filter-icon";
+import ListIcon from "@patternfly/react-icons/dist/esm/icons/list-icon";
+import TableIcon from "@patternfly/react-icons/dist/esm/icons/table-icon";
+import ThLargeIcon from "@patternfly/react-icons/dist/esm/icons/th-large-icon";
+import TimesIcon from "@patternfly/react-icons/dist/esm/icons/times-icon";
 import React, {
   Dispatch,
   Fragment,

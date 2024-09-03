@@ -12,11 +12,9 @@ import {
   Spinner,
   Title,
 } from "@patternfly/react-core";
-import {
-  ExclamationCircleIcon,
-  PlusCircleIcon,
-  SearchIcon,
-} from "@patternfly/react-icons";
+import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
+import PlusCircleIcon from "@patternfly/react-icons/dist/esm/icons/plus-circle-icon";
+import SearchIcon from "@patternfly/react-icons/dist/esm/icons/search-icon";
 import {
   CollapseColumn,
   SortByDirection,

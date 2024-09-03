@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { useParams, useLocation } from 'react-router-dom';
-import { CaretLeftIcon } from '@patternfly/react-icons';
+import CaretLeftIcon from '@patternfly/react-icons/dist/esm/icons/caret-left-icon';
 import { Card, PageSection } from '@patternfly/react-core';
 
 import DetailsTab from './DetailsTab';

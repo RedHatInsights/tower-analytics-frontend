@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useState } from 'react';
-import { ExclamationCircleIcon } from '@patternfly/react-icons';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import ChartBuilder, {
   ChartData,
   ChartFunctions,

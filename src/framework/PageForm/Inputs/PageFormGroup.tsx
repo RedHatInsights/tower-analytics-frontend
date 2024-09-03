@@ -4,7 +4,7 @@ import {
   FormGroupProps,
   Popover,
 } from "@patternfly/react-core";
-import { OutlinedQuestionCircleIcon } from "@patternfly/react-icons";
+import OutlinedQuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon";
 import React, { ReactNode } from "react";
 
 export type PageFormGroupProps = Pick<

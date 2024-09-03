@@ -6,7 +6,7 @@ import {
   EmptyStateIcon,
   EmptyStateBody,
 } from '@patternfly/react-core';
-import { CubesIcon } from '@patternfly/react-icons';
+import CubesIcon from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 
 const LoadingState: FunctionComponent<Record<string, never>> = () => (
   <EmptyState variant={EmptyStateVariant.full} style={{ minHeight: '400px' }}>

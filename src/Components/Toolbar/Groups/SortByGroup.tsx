@@ -7,7 +7,8 @@ import {
   ToolbarGroupVariant,
   ToolbarItem,
 } from '@patternfly/react-core';
-import { SortAmountDownIcon, SortAmountUpIcon } from '@patternfly/react-icons';
+import SortAmountDownIcon from '@patternfly/react-icons/dist/esm/icons/sort-amount-down-icon';
+import SortAmountUpIcon from '@patternfly/react-icons/dist/esm/icons/sort-amount-up-icon';
 
 import ToolbarInput from './ToolbarInput';
 import { SetValues, AttributeType } from '../types';

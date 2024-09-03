@@ -1,12 +1,10 @@
 import React, { FunctionComponent } from 'react';
 import { Label } from '@patternfly/react-core';
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-  ClockIcon,
-  SyncAltIcon,
-  ExclamationTriangleIcon,
-} from '@patternfly/react-icons';
+import CheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import ClockIcon from '@patternfly/react-icons/dist/esm/icons/clock-icon';
+import SyncAltIcon from '@patternfly/react-icons/dist/esm/icons/sync-alt-icon';
+import ExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
 
 import { capitalize } from '../Utilities/helpers';
 

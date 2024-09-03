@@ -7,10 +7,9 @@ import {
   CardActions,
   CardHeader,
 } from '@patternfly/react-core';
-import {
-  OutlinedQuestionCircleIcon as PFOutlinedQuestionCircleIcon,
-  TimesIcon,
-} from '@patternfly/react-icons';
+import PFOutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon';
+import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
+
 import { SetValues, AttributeType } from '../types';
 import styled from 'styled-components';
 

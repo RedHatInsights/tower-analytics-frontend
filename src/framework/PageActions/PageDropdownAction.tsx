@@ -7,7 +7,7 @@ import {
   KebabToggle,
   Tooltip,
 } from "@patternfly/react-core";
-import { CircleIcon } from "@patternfly/react-icons";
+import CircleIcon from "@patternfly/react-icons/dist/esm/icons/circle-icon";
 import React, {
   ComponentClass,
   FunctionComponent,

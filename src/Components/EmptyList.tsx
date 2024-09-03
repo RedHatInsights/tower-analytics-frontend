@@ -8,7 +8,8 @@ import {
   EmptyStateVariant,
   ButtonVariant,
 } from '@patternfly/react-core';
-import { AddCircleOIcon, SearchIcon } from '@patternfly/react-icons';
+import AddCircleOIcon from '@patternfly/react-icons/dist/esm/icons/add-circle-o-icon';
+import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 import { createUrl } from '../QueryParams/';
 import { useNavigate } from 'react-router-dom';
 
