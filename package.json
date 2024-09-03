@@ -102,6 +102,7 @@
     "test:watch": "TZ=UTC jest --coverage=false --watch",
     "lint": "eslint config src && stylelint 'src/**/*.scss' --config .stylelintrc.json",
     "lint:fix": "eslint config src --fix",
+    "prettier": "prettier -w config/ cypress/ src/",
     "start": "fec dev",
     "build": "fec build",
     "deploy": "npm-run-all build lint test",
