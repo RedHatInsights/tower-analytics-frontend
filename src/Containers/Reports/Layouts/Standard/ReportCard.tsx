@@ -7,6 +7,7 @@ import React, { FunctionComponent, useEffect } from 'react';
 import {
   Card,
   CardBody,
+  CardTitle,
   CardFooter,
   PaginationVariant,
   ToggleGroup,
@@ -39,6 +40,8 @@ import {
 } from '../../../../Utilities/constants';
 import { createUrl } from '../../../../QueryParams';
 import { useNavigate } from 'react-router-dom';
+import { defaultFormatUtc } from 'moment';
+import { defaultMethod } from 'react-router-dom/dist/dom';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
@@ -102,6 +105,28 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     navigate(createUrl(`reports\\${slug}`, true, initialQueryParams));
   };
 
+  const customCardTitle = (host_name: string) => {
+    const title = 'Tasks for host: ' + host_name;
+    return <CardTitle>{title}</CardTitle>;
+  };
+
+  const navigateToTaskBar = (
+    slug: string,
+    hostId: number,
+    templateId: number,
+    hostName: string
+  ) => {
+    const initialQueryParams = {
+      [DEFAULT_NAMESPACE]: {
+        ...specificReportDefaultParams(slug),
+        host_id: hostId,
+        template_id: templateId,
+        host_name: hostName,
+      },
+    };
+    navigate(createUrl(`reports\\${slug}`, true, initialQueryParams));
+  };
+
   useEffect(() => {
     fetchData(queryParams);
     fetchOptions(queryParams);
@@ -135,16 +160,26 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   };
 
   const handleClick = (event, props) => {
-    navigateToHostScatter(
-      'host_anomalies_scatter',
-      props.datum.id,
-      queryParams.cluster_id,
-      queryParams.org_id,
-      queryParams.inventory_id,
-      queryParams.status,
-      queryParams.host_status,
-      queryParams.quick_date_range
-    );
+    if (slug === 'host_anomalies_scatter') {
+      navigateToTaskBar(
+        'tasks_by_host_bar',
+        props.datum.host_id,
+        queryParams.template_id,
+        props.datum.host_name
+      );
+      //set a slow host name variable here?
+    } else {
+      navigateToHostScatter(
+        'host_anomalies_scatter',
+        props.datum.id,
+        queryParams.cluster_id,
+        queryParams.org_id,
+        queryParams.inventory_id,
+        queryParams.status,
+        queryParams.host_status,
+        queryParams.quick_date_range
+      );
+    }
     window.location.reload();
   };
 
@@ -164,6 +199,19 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         datum.last_referenced +
         '\nSlow: ' +
         (datum.failed_duration ? 'True' : 'False');
+    } else if (slug === 'tasks_by_host_bar') {
+      tooltip =
+        'Task name: ' +
+        datum.task_name +
+        '\nTask executed: ' +
+        datum.executed_count +
+        ' time(s)' +
+        '\nModule: ' +
+        datum.module_name +
+        '\nAverage duration: ' +
+        datum.average_duration +
+        '\nLast known task status: ' +
+        datum.last_known_task_status;
     } else {
       tooltip =
         chartParams.label +
@@ -270,6 +318,9 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           }
           additionalControls={additionalControls}
         />
+        {slug === 'tasks_by_host_bar'
+          ? customCardTitle(queryParams.host_name)
+          : ''}
         {tableHeaders && !showKebab && slug !== 'templates_by_organization' ? (
           <ApiStatusWrapper api={dataApi}>
             <Chart
@@ -398,6 +449,9 @@ const ReportCard: FunctionComponent<StandardProps> = ({
             specificFunctions={{
               labelFormat: {
                 customTooltipFormatting,
+              },
+              onClick: {
+                handleClick,
               },
             }}
           />
