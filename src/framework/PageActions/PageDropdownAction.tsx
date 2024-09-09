@@ -1,3 +1,4 @@
+import { Tooltip } from '@patternfly/react-core';
 import {
   Dropdown,
   DropdownItem,
@@ -5,8 +6,7 @@ import {
   DropdownSeparator,
   DropdownToggle,
   KebabToggle,
-  Tooltip,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import CircleIcon from '@patternfly/react-icons/dist/esm/icons/circle-icon';
 import React, {
   ComponentClass,

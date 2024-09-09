@@ -3,7 +3,7 @@ import {
   SelectOptionObject,
   SelectProps,
   SelectVariant,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
 import React, { ChangeEvent, ReactElement, useCallback, useState } from 'react';
 import { PageFormGroup, PageFormGroupProps } from './PageFormGroup';
 

@@ -1,10 +1,5 @@
-import {
-  Button,
-  Form,
-  Modal,
-  ModalVariant,
-  SelectOption,
-} from '@patternfly/react-core';
+import { Button, Form, Modal, ModalVariant } from '@patternfly/react-core';
+import { SelectOption } from '@patternfly/react-core/deprecated';
 import React, {
   createContext,
   ReactNode,

@@ -98,8 +98,6 @@ export function useColumnModal<T extends object>(
         aria-label='Table column management'
         id='table-column-management'
         isCompact
-        onDragFinish={onDragFinish}
-        itemOrder={managedColumns.map((column) => column.header)}
         gridBreakpoint='none'
         style={{ borderTopWidth: 'thin' }}
       >

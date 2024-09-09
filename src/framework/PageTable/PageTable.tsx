@@ -1,24 +1,25 @@
 import {
   Bullseye,
   Button,
-  DropdownPosition,
   EmptyState,
   EmptyStateBody,
   EmptyStateIcon,
-  EmptyStateSecondaryActions,
   EmptyStateVariant,
   PageSection,
   Skeleton,
   Spinner,
-  Title,
+  EmptyStateActions,
+  EmptyStateHeader,
+  EmptyStateFooter,
 } from '@patternfly/react-core';
+import { DropdownPosition } from '@patternfly/react-core/deprecated';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 import {
   CollapseColumn,
   SortByDirection,
-  TableComposable,
+  Table /* data-codemods */,
   Tbody,
   Td,
   Th,
@@ -171,18 +172,22 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
   if (error) {
     return (
       <div className='dark-2' style={{ height: '100%' }}>
-        <EmptyState
-          variant={EmptyStateVariant.small}
-          style={{ paddingTop: 48 }}
-        >
-          <EmptyStateIcon
-            icon={ExclamationCircleIcon}
-            color='var(--pf-global--danger-color--100)'
+        <EmptyState variant={EmptyStateVariant.sm} style={{ paddingTop: 48 }}>
+          <EmptyStateHeader
+            titleText={
+              <>
+                {/* Unable to connect */}
+                {props.errorStateTitle}
+              </>
+            }
+            icon={
+              <EmptyStateIcon
+                icon={ExclamationCircleIcon}
+                color='var(--pf-global--danger-color--100)'
+              />
+            }
+            headingLevel='h2'
           />
-          <Title headingLevel='h2' size='lg'>
-            {/* Unable to connect */}
-            {props.errorStateTitle}
-          </Title>
           {/* <EmptyStateBody>There was an error retrieving data. Check your connection and reload the page.</EmptyStateBody> */}
           <EmptyStateBody>{error.message}</EmptyStateBody>
         </EmptyState>
@@ -193,28 +198,30 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
   if (itemCount === 0 && Object.keys(filters ?? {}).length === 0) {
     return (
       <PageSection>
-        <EmptyState
-          variant={EmptyStateVariant.large}
-          style={{ paddingTop: 48 }}
-        >
-          <EmptyStateIcon icon={props.emptyStateIcon ?? PlusCircleIcon} />
-          <Title headingLevel='h4' size='lg'>
-            {props.emptyStateTitle}
-          </Title>
-          {props.emptyStateDescription && (
-            <EmptyStateBody>{props.emptyStateDescription}</EmptyStateBody>
-          )}
-          {props.emptyStateButtonClick && (
-            <Button
-              variant='primary'
-              onClick={props.emptyStateButtonClick}
-              icon={
-                props.emptyStateButtonIcon ? props.emptyStateButtonIcon : null
-              }
-            >
-              {props.emptyStateButtonText}
-            </Button>
-          )}
+        <EmptyState variant={EmptyStateVariant.lg} style={{ paddingTop: 48 }}>
+          <EmptyStateHeader
+            titleText={<>{props.emptyStateTitle}</>}
+            icon={
+              <EmptyStateIcon icon={props.emptyStateIcon ?? PlusCircleIcon} />
+            }
+            headingLevel='h4'
+          />
+          <EmptyStateFooter>
+            {props.emptyStateDescription && (
+              <EmptyStateBody>{props.emptyStateDescription}</EmptyStateBody>
+            )}
+            {props.emptyStateButtonClick && (
+              <Button
+                variant='primary'
+                onClick={props.emptyStateButtonClick}
+                icon={
+                  props.emptyStateButtonIcon ? props.emptyStateButtonIcon : null
+                }
+              >
+                {props.emptyStateButtonText}
+              </Button>
+            )}
+          </EmptyStateFooter>
         </EmptyState>
       </PageSection>
     );
@@ -338,7 +345,7 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
       ref={containerRef}
       onScroll={onScroll}
     >
-      <TableComposable
+      <Table
         aria-label='Simple table'
         variant={
           props.compact
@@ -412,25 +419,28 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
                 />
               ))}
         </Tbody>
-      </TableComposable>
+      </Table>
       {itemCount === 0 && (
         <EmptyState style={{ paddingTop: 48 }}>
-          <EmptyStateIcon icon={SearchIcon} />
-          <Title headingLevel='h2' size='lg'>
-            {t('No results found')}
-          </Title>
+          <EmptyStateHeader
+            titleText={<>{t('No results found')}</>}
+            icon={<EmptyStateIcon icon={SearchIcon} />}
+            headingLevel='h2'
+          />
           <EmptyStateBody>
             {t(
               'No results match this filter criteria. Clear all filters and try again.'
             )}
           </EmptyStateBody>
-          {clearAllFilters && (
-            <EmptyStateSecondaryActions>
-              <Button variant='primary' onClick={clearAllFilters}>
-                {t('Clear all filters')}
-              </Button>
-            </EmptyStateSecondaryActions>
-          )}
+          <EmptyStateFooter>
+            {clearAllFilters && (
+              <EmptyStateActions>
+                <Button variant='primary' onClick={clearAllFilters}>
+                  {t('Clear all filters')}
+                </Button>
+              </EmptyStateActions>
+            )}
+          </EmptyStateFooter>
         </EmptyState>
       )}
     </div>

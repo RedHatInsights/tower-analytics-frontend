@@ -7,10 +7,6 @@ import {
   OnSetPage,
   Pagination,
   PaginationVariant,
-  Select,
-  SelectOption,
-  SelectOptionObject,
-  SelectVariant,
   Skeleton,
   TextInputGroup,
   TextInputGroupMain,
@@ -24,7 +20,14 @@ import {
   ToolbarItem,
   ToolbarToggleGroup,
   Tooltip,
+  InputGroupItem,
 } from '@patternfly/react-core';
+import {
+  Select,
+  SelectOption,
+  SelectOptionObject,
+  SelectVariant,
+} from '@patternfly/react-core/deprecated';
 import ArrowRightIcon from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
 import ColumnsIcon from '@patternfly/react-icons/dist/esm/icons/columns-icon';
 import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
@@ -479,36 +482,38 @@ function ToolbarTextFilter(props: {
   const [value, setValue] = useState('');
   return (
     <InputGroup>
-      <TextInputGroup style={{ minWidth: 220 }}>
-        <TextInputGroupMain
-          id={props.id}
-          // ref={ref}
-          value={value}
-          onChange={(e, v) => setValue(v)}
-          onKeyUp={(event) => {
-            if (value && event.key === 'Enter') {
-              props.addFilter(value);
-              setValue('');
-              // ref.current?.focus() // Does not work because PF does not expose ref
-            }
-          }}
-          placeholder={props.placeholder}
-        />
-        {value !== '' && (
-          <TextInputGroupUtilities>
-            <Button
-              variant='plain'
-              aria-label='clear filter'
-              onClick={() => setValue('')}
-              style={{ opacity: value ? undefined : 0 }}
-              // tabIndex={value ? undefined : -1}
-              tabIndex={-1}
-            >
-              <TimesIcon />
-            </Button>
-          </TextInputGroupUtilities>
-        )}
-      </TextInputGroup>
+      <InputGroupItem>
+        <TextInputGroup style={{ minWidth: 220 }}>
+          <TextInputGroupMain
+            id={props.id}
+            // ref={ref}
+            value={value}
+            onChange={(e, v) => setValue(v)}
+            onKeyUp={(event) => {
+              if (value && event.key === 'Enter') {
+                props.addFilter(value);
+                setValue('');
+                // ref.current?.focus() // Does not work because PF does not expose ref
+              }
+            }}
+            placeholder={props.placeholder}
+          />
+          {value !== '' && (
+            <TextInputGroupUtilities>
+              <Button
+                variant='plain'
+                aria-label='clear filter'
+                onClick={() => setValue('')}
+                style={{ opacity: value ? undefined : 0 }}
+                // tabIndex={value ? undefined : -1}
+                tabIndex={-1}
+              >
+                <TimesIcon />
+              </Button>
+            </TextInputGroupUtilities>
+          )}
+        </TextInputGroup>
+      </InputGroupItem>
 
       {!value ? (
         <></>
@@ -555,7 +560,7 @@ function ToolbarSelectFilter(props: {
       <Select
         variant={SelectVariant.checkbox}
         isOpen={open}
-        onToggle={setOpen}
+        onToggle={(_event, val) => setOpen(val)}
         selections={selections}
         onSelect={onSelect}
         placeholderText={

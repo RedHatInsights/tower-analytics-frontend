@@ -30,7 +30,6 @@ export function PageFormGroup(props: PageFormGroupProps) {
             headerContent={props.labelHelpTitle}
             bodyContent={props.labelHelp}
             position='bottom-start'
-            removeFindDomNode
           >
             <Button variant='link' isInline>
               <OutlinedQuestionCircleIcon />

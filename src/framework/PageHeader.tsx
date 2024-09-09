@@ -208,7 +208,6 @@ export function PageHeader(props: PageHeaderProps) {
                       </Stack>
                     }
                     position='bottom-start'
-                    removeFindDomNode
                   >
                     <Title headingLevel='h1'>
                       {title}

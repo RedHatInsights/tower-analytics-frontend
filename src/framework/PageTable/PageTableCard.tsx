@@ -3,14 +3,12 @@
 import {
   Alert,
   Card,
-  CardActions,
   CardBody,
   CardFooter,
   CardHeader,
   CardTitle,
   Checkbox,
   DescriptionList,
-  DropdownPosition,
   FlexItem,
   Label,
   LabelGroup,
@@ -18,6 +16,7 @@ import {
   Text,
   Truncate,
 } from '@patternfly/react-core';
+import { DropdownPosition } from '@patternfly/react-core/deprecated';
 import React, { ReactNode, useCallback, useMemo } from 'react';
 import { IconWrapper } from '../components/IconWrapper';
 import { LabelColor } from '../components/pfcolors';
@@ -99,6 +98,34 @@ export function PageTableCard<T extends object>(props: {
       }}
     >
       <CardHeader
+        {...(showActions && {
+          actions: {
+            actions: (
+              <>
+                {itemActions && itemActions.length && (
+                  <PageActions
+                    actions={itemActions}
+                    position={DropdownPosition.right}
+                    selectedItem={item}
+                    iconOnly
+                    collapse='always'
+                  />
+                )}
+                {showSelect && (
+                  <Checkbox
+                    isChecked={isSelected?.(item)}
+                    onChange={onSelectClick}
+                    // aria-label="card checkbox example"
+                    id='check-1'
+                    // name="check1"
+                  />
+                )}
+              </>
+            ),
+            hasNoOffset: false,
+            className: undefined,
+          },
+        })}
         style={{ display: 'flex', flexWrap: 'nowrap', maxWidth: '100%' }}
       >
         <div style={{ display: 'flex', flexWrap: 'nowrap', maxWidth: '100%' }}>
@@ -135,7 +162,6 @@ export function PageTableCard<T extends object>(props: {
                 <Popover
                   headerContent={card.badgeTooltipTitle}
                   bodyContent={card.badgeTooltip}
-                  removeFindDomNode
                 >
                   <Label color={card.badgeColor}>{card.badge}</Label>
                 </Popover>
@@ -148,28 +174,6 @@ export function PageTableCard<T extends object>(props: {
             </FlexItem>
           )}
         </div>
-        {showActions && (
-          <CardActions>
-            {itemActions && itemActions.length && (
-              <PageActions
-                actions={itemActions}
-                position={DropdownPosition.right}
-                selectedItem={item}
-                iconOnly
-                collapse='always'
-              />
-            )}
-            {showSelect && (
-              <Checkbox
-                isChecked={isSelected?.(item)}
-                onChange={onSelectClick}
-                // aria-label="card checkbox example"
-                id='check-1'
-                // name="check1"
-              />
-            )}
-          </CardActions>
-        )}
       </CardHeader>
       {card.cardBody}
       {card.labels && (

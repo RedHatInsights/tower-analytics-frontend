@@ -1,9 +1,5 @@
-import {
-  ButtonVariant,
-  DropdownPosition,
-  Split,
-  SplitItem,
-} from '@patternfly/react-core';
+import { ButtonVariant, Split, SplitItem } from '@patternfly/react-core';
+import { DropdownPosition } from '@patternfly/react-core/deprecated';
 import React, { ComponentClass, FunctionComponent, useMemo } from 'react';
 import { useBreakpoint, WindowSize } from '../components/useBreakPoint';
 import { IPageAction } from './PageAction';
