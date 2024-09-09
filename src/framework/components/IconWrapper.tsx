@@ -3,13 +3,13 @@ import React, {
   cloneElement,
   isValidElement,
   ReactNode,
-} from "react";
-import { getPatternflyColor, PFColor } from "./pfcolors";
+} from 'react';
+import { getPatternflyColor, PFColor } from './pfcolors';
 
 export function IconWrapper(props: {
   children: ReactNode;
   color?: PFColor;
-  size?: "sm" | "md" | "lg" | "xl";
+  size?: 'sm' | 'md' | 'lg' | 'xl';
   padRight?: boolean;
 }) {
   const newProps: {
@@ -29,16 +29,16 @@ export function IconWrapper(props: {
   let paddingRight = 0;
   if (props.padRight) {
     switch (props.size) {
-      case "sm":
+      case 'sm':
         paddingRight = 4;
         break;
-      case "md":
+      case 'md':
         paddingRight = 6;
         break;
-      case "lg":
+      case 'lg':
         paddingRight = 8;
         break;
-      case "xl":
+      case 'xl':
         paddingRight = 12;
         break;
     }

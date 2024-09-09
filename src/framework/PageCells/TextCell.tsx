@@ -1,12 +1,12 @@
-import { Split, SplitItem } from "@patternfly/react-core";
-import React, { ReactNode } from "react";
-import { IconWrapper } from "../components/IconWrapper";
-import { getPatternflyColor, PFColor } from "../components/pfcolors";
-import { usePageNavigate } from "../components/usePageNavigate";
+import { Split, SplitItem } from '@patternfly/react-core';
+import React, { ReactNode } from 'react';
+import { IconWrapper } from '../components/IconWrapper';
+import { getPatternflyColor, PFColor } from '../components/pfcolors';
+import { usePageNavigate } from '../components/usePageNavigate';
 
 export interface TextCellProps {
   icon?: ReactNode;
-  iconSize?: "sm" | "md" | "lg";
+  iconSize?: 'sm' | 'md' | 'lg';
   text?: string | null;
   to?: string;
   onClick?: () => void;
@@ -19,11 +19,11 @@ export interface TextCellProps {
 export function TextCell(props: TextCellProps) {
   const navigate = usePageNavigate();
   return (
-    <Split style={{ maxWidth: "100%" }}>
+    <Split style={{ maxWidth: '100%' }}>
       {props.icon && (
         <SplitItem>
           <IconWrapper
-            size={props.iconSize ?? "sm"}
+            size={props.iconSize ?? 'sm'}
             color={props.iconColor ?? props.color}
             padRight
           >
@@ -32,13 +32,13 @@ export function TextCell(props: TextCellProps) {
         </SplitItem>
       )}
       {props.text && (
-        <SplitItem style={{ maxWidth: "100%" }}>
+        <SplitItem style={{ maxWidth: '100%' }}>
           <div
             style={{
-              maxWidth: props.maxWidth ?? "100%",
-              whiteSpace: "nowrap",
-              textOverflow: "ellipsis",
-              overflow: "hidden",
+              maxWidth: props.maxWidth ?? '100%',
+              whiteSpace: 'nowrap',
+              textOverflow: 'ellipsis',
+              overflow: 'hidden',
               color: props.color ? getPatternflyColor(props.color) : undefined,
             }}
           >

@@ -161,7 +161,7 @@ const Clusters = () => {
                 chartDataIsSuccess && (
                   <BarChart
                     margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                    id="d3-bar-chart-root"
+                    id='d3-bar-chart-root'
                     data={chartData}
                     queryParams={queryParams}
                   />
@@ -169,7 +169,7 @@ const Clusters = () => {
               {queryParams.cluster_id?.length > 0 && chartDataIsSuccess && (
                 <LineChart
                   margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                  id="d3-line-chart-root"
+                  id='d3-line-chart-root'
                   data={chartData}
                   queryParams={queryParams}
                 />

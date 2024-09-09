@@ -1,6 +1,6 @@
-import { Button, Split, SplitItem } from "@patternfly/react-core";
-import moment from "moment";
-import React, { useEffect, useState } from "react";
+import { Button, Split, SplitItem } from '@patternfly/react-core';
+import moment from 'moment';
+import React, { useEffect, useState } from 'react';
 
 export function DateCell(props: { value: number | string }) {
   const date = new Date(props.value);
@@ -31,11 +31,11 @@ export function SinceCell(props: {
   }, [props.value]);
   if (props.value === undefined) return <></>;
   return (
-    <span style={{ whiteSpace: "nowrap" }}>
+    <span style={{ whiteSpace: 'nowrap' }}>
       {dateTime}
-      {author && <span>&nbsp;{t("by")}&nbsp;</span>}
+      {author && <span>&nbsp;{t('by')}&nbsp;</span>}
       {onClick ? (
-        <Button variant="link" isInline onClick={onClick}>
+        <Button variant='link' isInline onClick={onClick}>
           {author}
         </Button>
       ) : (

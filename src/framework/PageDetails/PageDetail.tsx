@@ -2,9 +2,9 @@ import {
   DescriptionListDescription,
   DescriptionListGroup,
   DescriptionListTerm,
-} from "@patternfly/react-core";
-import React, { ReactNode } from "react";
-import { StandardPopover } from "../components/StandardPopover";
+} from '@patternfly/react-core';
+import React, { ReactNode } from 'react';
+import { StandardPopover } from '../components/StandardPopover';
 
 export function PageDetail(props: {
   label?: string;
@@ -13,7 +13,7 @@ export function PageDetail(props: {
   isEmpty?: boolean;
 }) {
   const { label, children, helpText, isEmpty } = props;
-  if (children === null || typeof children === "undefined" || children === "") {
+  if (children === null || typeof children === 'undefined' || children === '') {
     return <></>;
   }
   if (isEmpty) {
@@ -31,7 +31,7 @@ export function PageDetail(props: {
         </DescriptionListTerm>
       )}
       <DescriptionListDescription
-        id={label?.toLowerCase().split(" ").join("-")}
+        id={label?.toLowerCase().split(' ').join('-')}
       >
         {children}
       </DescriptionListDescription>

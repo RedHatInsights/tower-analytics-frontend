@@ -34,7 +34,7 @@ const RoutedTabs = ({ tabsArray, defaultTabId = 1 }) => {
           key={tab.id}
           link={tab.link}
           title={<TabTitleText>{tab.name}</TabTitleText>}
-          role="tab"
+          role='tab'
         />
       ))}
     </Tabs>

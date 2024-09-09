@@ -1,7 +1,7 @@
-import { Button, ButtonVariant, Tooltip } from "@patternfly/react-core";
-import React, { ComponentClass, Fragment, FunctionComponent } from "react";
-import { Link } from "react-router-dom";
-import { IPageActionButton } from "./PageAction";
+import { Button, ButtonVariant, Tooltip } from '@patternfly/react-core';
+import React, { ComponentClass, Fragment, FunctionComponent } from 'react';
+import { Link } from 'react-router-dom';
+import { IPageActionButton } from './PageAction';
 
 export function PageButtonAction(props: {
   action: IPageActionButton;
@@ -36,7 +36,7 @@ export function PageButtonAction(props: {
     variant = ButtonVariant.plain;
   }
 
-  const id = props.action.label.toLowerCase().split(" ").join("-");
+  const id = props.action.label.toLowerCase().split(' ').join('-');
   const content =
     props.iconOnly && Icon ? (
       <Icon />
@@ -48,7 +48,7 @@ export function PageButtonAction(props: {
 
   return (
     <Wrapper>
-      <Tooltip content={tooltip} trigger={tooltip ? undefined : "manual"}>
+      <Tooltip content={tooltip} trigger={tooltip ? undefined : 'manual'}>
         <Button
           id={id}
           variant={variant}

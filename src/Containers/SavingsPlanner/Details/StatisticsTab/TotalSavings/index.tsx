@@ -16,8 +16,8 @@ const TotalSavings: FunctionComponent<Props> = ({
     <CardTitle style={{ paddingBottom: '0' }}>Total savings</CardTitle>
     <CardBody>
       <Title
-        headingLevel="h3"
-        size="4xl"
+        headingLevel='h3'
+        size='4xl'
         style={{
           color: isMoney ? 'var(--pf-global--success-color--200)' : '#0063CF',
         }}

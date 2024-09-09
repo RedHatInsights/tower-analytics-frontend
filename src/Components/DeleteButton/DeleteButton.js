@@ -69,7 +69,7 @@ const DeleteButton = ({
   return (
     <>
       {disabledTooltip ? (
-        <Tooltip content={disabledTooltip} position="top">
+        <Tooltip content={disabledTooltip} position='top'>
           <div>
             <Button
               spinnerAriaValueText={isLoading ? 'Loading' : undefined}
@@ -98,13 +98,13 @@ const DeleteButton = ({
       <AlertModal
         isOpen={isOpen}
         title={modalTitle}
-        variant="danger"
+        variant='danger'
         onClose={() => toggleModal(false)}
         actions={[
           <Button
-            ouiaId="delete-modal-confirm"
-            key="delete"
-            variant="danger"
+            ouiaId='delete-modal-confirm'
+            key='delete'
+            variant='danger'
             aria-label={'Confirm Delete'}
             isDisabled={isDisabled}
             onClick={() => {
@@ -115,9 +115,9 @@ const DeleteButton = ({
             {'Delete'}
           </Button>,
           <Button
-            ouiaId="delete-modal-cancel"
-            key="cancel"
-            variant="link"
+            ouiaId='delete-modal-cancel'
+            key='cancel'
+            variant='link'
             aria-label={'Cancel'}
             onClick={() => toggleModal(false)}
           >
@@ -130,7 +130,7 @@ const DeleteButton = ({
         <strong>{name}</strong>
         {Object.values(deleteDetails).length > 0 && (
           <WarningMessage
-            variant="warning"
+            variant='warning'
             isInline
             title={
               <div>

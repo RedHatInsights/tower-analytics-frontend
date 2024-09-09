@@ -39,13 +39,13 @@ const TotalSavings: FunctionComponent<Props> = ({
           <CardTitle>{title}</CardTitle>
           <CardBody>
             <Title
-              headingLevel="h3"
+              headingLevel='h3'
               size={index === 0 ? '4xl' : 'xl'}
               style={{ color: 'var(--pf-global--success-color--200)' }}
             >
               {isLoading ? (
                 <SpinnerDiv>
-                  <Spinner data-cy={'spinner'}  size="lg" />
+                  <Spinner data-cy={'spinner'} size='lg' />
                 </SpinnerDiv>
               ) : isMoney ? (
                 currencyFormatter(

@@ -40,8 +40,8 @@ describe('<ToolbarDeleteButton />', () => {
         onDelete={() => {}}
         itemsToDelete={[itemA]}
         deleteDetailsRequests={deleteDetailsRequests}
-        deleteMessage="Delete this?"
-        warningMessage="Are you sure to want to delete this"
+        deleteMessage='Delete this?'
+        warningMessage='Are you sure to want to delete this'
       />
     );
     expect(screen.getByLabelText('Delete'));
@@ -67,8 +67,8 @@ describe('<ToolbarDeleteButton />', () => {
             },
           ]}
           deleteDetailsRequests={deleteDetailsRequests}
-          deleteMessage="Delete this?"
-          warningMessage="Are you sure to want to delete this"
+          deleteMessage='Delete this?'
+          warningMessage='Are you sure to want to delete this'
         />
       );
     });
@@ -104,8 +104,8 @@ describe('<ToolbarDeleteButton />', () => {
             },
           ]}
           deleteDetailsRequests={[request]}
-          deleteMessage="Delete this?"
-          warningMessage="Are you sure to want to delete this"
+          deleteMessage='Delete this?'
+          warningMessage='Are you sure to want to delete this'
         />
       );
     });
@@ -138,8 +138,8 @@ describe('<ToolbarDeleteButton />', () => {
           onDelete={() => {}}
           itemsToDelete={[itemA]}
           deleteDetailsRequests={[request]}
-          deleteMessage="Delete this?"
-          warningMessage="Are you sure to want to delete this"
+          deleteMessage='Delete this?'
+          warningMessage='Are you sure to want to delete this'
         />
       );
     });

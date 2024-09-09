@@ -78,9 +78,9 @@ const Details: FunctionComponent<Record<string, never>> = () => {
     } else if (error) {
       return (
         <Error404
-          title="404: Page does not exist."
-          body="The report you are looking for does not exist."
-          buttonText="Return to Reports page"
+          title='404: Page does not exist.'
+          body='The report you are looking for does not exist.'
+          buttonText='Return to Reports page'
           link={'../reports'}
         />
       );

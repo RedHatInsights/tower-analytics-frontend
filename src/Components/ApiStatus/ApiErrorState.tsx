@@ -15,10 +15,16 @@ interface Props {
 
 const ApiErrorState: FunctionComponent<Props> = ({ message }) => (
   <EmptyState variant={EmptyStateVariant.sm} data-cy={'api_error_state'}>
-    <EmptyStateHeader titleText="Error" icon={<EmptyStateIcon
-      icon={ExclamationCircleIcon}
-      color={globalDangerColor200.value}
-    />} headingLevel="h2" />
+    <EmptyStateHeader
+      titleText='Error'
+      icon={
+        <EmptyStateIcon
+          icon={ExclamationCircleIcon}
+          color={globalDangerColor200.value}
+        />
+      }
+      headingLevel='h2'
+    />
     <EmptyStateBody>{message}</EmptyStateBody>
   </EmptyState>
 );

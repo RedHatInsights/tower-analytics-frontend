@@ -1,8 +1,8 @@
-import { savingsPlannerUrl, ENV, ENVS} from '../support/constants';
+import { savingsPlannerUrl, ENV, ENVS } from '../support/constants';
 
 describe('Savings Planner page smoketests', () => {
   if (ENV != ENVS.EPHEMERAL) {
-      // Doesn't seem to work on ephemeral
+    // Doesn't seem to work on ephemeral
     beforeEach(() => {
       cy.intercept('**/plans/*').as('getPlans');
       cy.visit(savingsPlannerUrl);

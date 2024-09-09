@@ -10,7 +10,7 @@ describe('Utilities/Legend', () => {
       <Legend
         data={[]}
         selected={[]}
-        height="100"
+        height='100'
         onToggle={() => {}}
         chartName={'testname'}
       />

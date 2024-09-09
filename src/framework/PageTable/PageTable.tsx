@@ -11,10 +11,10 @@ import {
   Skeleton,
   Spinner,
   Title,
-} from "@patternfly/react-core";
-import ExclamationCircleIcon from "@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon";
-import PlusCircleIcon from "@patternfly/react-icons/dist/esm/icons/plus-circle-icon";
-import SearchIcon from "@patternfly/react-icons/dist/esm/icons/search-icon";
+} from '@patternfly/react-core';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
+import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
+import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 import {
   CollapseColumn,
   SortByDirection,
@@ -24,9 +24,9 @@ import {
   Th,
   Thead,
   Tr,
-} from "@patternfly/react-table";
-import { ThSortType } from "@patternfly/react-table/dist/esm/components/Table/base";
-import useResizeObserver from "@react-hook/resize-observer";
+} from '@patternfly/react-table';
+import { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base';
+import useResizeObserver from '@react-hook/resize-observer';
 import React, {
   Dispatch,
   Fragment,
@@ -38,23 +38,23 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from "react";
-import { Scrollable } from "../components/Scrollable";
-import { useBreakpoint } from "../components/useBreakPoint";
-import { IPageAction } from "../PageActions/PageAction";
-import { PageActions } from "../PageActions/PageActions";
-import { PageActionType } from "../PageActions/PageActionType";
-import { PageBody } from "../PageBody";
-import { SinceCell } from "../PageCells/DateTimeCell";
-import { LabelsCell } from "../PageCells/LabelsCell";
-import { TextCell } from "../PageCells/TextCell";
-import { useColumnModal } from "../PageColumnModal";
-import { useSettings } from "../Settings";
-import { PagePagination } from "./PagePagination";
-import { PageTableCards } from "./PageTableCards";
-import { PageTableList } from "./PageTableList";
-import { PageTableViewType, PageTableViewTypeE } from "./PageTableViewType";
-import { IToolbarFilter, PageTableToolbar } from "./PageToolbar";
+} from 'react';
+import { Scrollable } from '../components/Scrollable';
+import { useBreakpoint } from '../components/useBreakPoint';
+import { IPageAction } from '../PageActions/PageAction';
+import { PageActions } from '../PageActions/PageActions';
+import { PageActionType } from '../PageActions/PageActionType';
+import { PageBody } from '../PageBody';
+import { SinceCell } from '../PageCells/DateTimeCell';
+import { LabelsCell } from '../PageCells/LabelsCell';
+import { TextCell } from '../PageCells/TextCell';
+import { useColumnModal } from '../PageColumnModal';
+import { useSettings } from '../Settings';
+import { PagePagination } from './PagePagination';
+import { PageTableCards } from './PageTableCards';
+import { PageTableList } from './PageTableList';
+import { PageTableViewType, PageTableViewTypeE } from './PageTableViewType';
+import { IToolbarFilter, PageTableToolbar } from './PageToolbar';
 
 export type PageTableProps<T extends object> = {
   keyFn: (item: T) => string | number;
@@ -75,8 +75,8 @@ export type PageTableProps<T extends object> = {
 
   sort?: string;
   setSort?: (sort: string) => void;
-  sortDirection?: "asc" | "desc";
-  setSortDirection?: (sortDirection: "asc" | "desc") => void;
+  sortDirection?: 'asc' | 'desc';
+  setSortDirection?: (sortDirection: 'asc' | 'desc') => void;
   compact?: boolean;
 
   page: number;
@@ -166,20 +166,20 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
         : PageTableViewTypeE.Cards)
   );
 
-  const usePadding = useBreakpoint("md") && props.disableBodyPadding !== true;
+  const usePadding = useBreakpoint('md') && props.disableBodyPadding !== true;
 
   if (error) {
     return (
-      <div className="dark-2" style={{ height: "100%" }}>
+      <div className='dark-2' style={{ height: '100%' }}>
         <EmptyState
           variant={EmptyStateVariant.small}
           style={{ paddingTop: 48 }}
         >
           <EmptyStateIcon
             icon={ExclamationCircleIcon}
-            color="var(--pf-global--danger-color--100)"
+            color='var(--pf-global--danger-color--100)'
           />
-          <Title headingLevel="h2" size="lg">
+          <Title headingLevel='h2' size='lg'>
             {/* Unable to connect */}
             {props.errorStateTitle}
           </Title>
@@ -198,7 +198,7 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
           style={{ paddingTop: 48 }}
         >
           <EmptyStateIcon icon={props.emptyStateIcon ?? PlusCircleIcon} />
-          <Title headingLevel="h4" size="lg">
+          <Title headingLevel='h4' size='lg'>
             {props.emptyStateTitle}
           </Title>
           {props.emptyStateDescription && (
@@ -206,7 +206,7 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
           )}
           {props.emptyStateButtonClick && (
             <Button
-              variant="primary"
+              variant='primary'
               onClick={props.emptyStateButtonClick}
               icon={
                 props.emptyStateButtonIcon ? props.emptyStateButtonIcon : null
@@ -222,7 +222,7 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
 
   if (itemCount === undefined) {
     return (
-      <PageSection isFilled variant="light">
+      <PageSection isFilled variant='light'>
         <Bullseye>
           <Spinner />
         </Bullseye>
@@ -246,14 +246,14 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
       )}
       {viewType === PageTableViewTypeE.List && (
         <Scrollable>
-          <PageSection padding={{ default: "noPadding", md: "padding" }}>
+          <PageSection padding={{ default: 'noPadding', md: 'padding' }}>
             <div
               style={{
                 borderLeft: usePadding
-                  ? "thin solid var(--pf-global--BorderColor--100)"
+                  ? 'thin solid var(--pf-global--BorderColor--100)'
                   : undefined,
                 borderRight: usePadding
-                  ? "thin solid var(--pf-global--BorderColor--100)"
+                  ? 'thin solid var(--pf-global--BorderColor--100)'
                   : undefined,
               }}
             >
@@ -333,21 +333,21 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
 
   return (
     <div
-      className="pf-c-scroll-inner-wrapper"
-      style={{ height: "100%", marginBottom: -1 }}
+      className='pf-c-scroll-inner-wrapper'
+      style={{ height: '100%', marginBottom: -1 }}
       ref={containerRef}
       onScroll={onScroll}
     >
       <TableComposable
-        aria-label="Simple table"
+        aria-label='Simple table'
         variant={
           props.compact
-            ? "compact"
-            : settings.tableLayout === "compact"
-            ? "compact"
+            ? 'compact'
+            : settings.tableLayout === 'compact'
+            ? 'compact'
             : undefined
         }
-        gridBreakPoint=""
+        gridBreakPoint=''
         isStickyHeader
       >
         {itemCount === undefined ? (
@@ -374,7 +374,7 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
                 <Tr key={index}>
                   <Td>
                     <div style={{ paddingTop: 5, paddingBottom: 5 }}>
-                      <Skeleton height="27px" />
+                      <Skeleton height='27px' />
                     </div>
                   </Td>
                 </Tr>
@@ -387,7 +387,7 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
                     {showSelect && <Td></Td>}
                     <Td colSpan={tableColumns.length}>
                       <div style={{ paddingTop: 5, paddingBottom: 5 }}>
-                        <Skeleton height="27px" />
+                        <Skeleton height='27px' />
                       </div>
                     </Td>
                   </Tr>
@@ -416,18 +416,18 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
       {itemCount === 0 && (
         <EmptyState style={{ paddingTop: 48 }}>
           <EmptyStateIcon icon={SearchIcon} />
-          <Title headingLevel="h2" size="lg">
-            {t("No results found")}
+          <Title headingLevel='h2' size='lg'>
+            {t('No results found')}
           </Title>
           <EmptyStateBody>
             {t(
-              "No results match this filter criteria. Clear all filters and try again."
+              'No results match this filter criteria. Clear all filters and try again.'
             )}
           </EmptyStateBody>
           {clearAllFilters && (
             <EmptyStateSecondaryActions>
-              <Button variant="primary" onClick={clearAllFilters}>
-                {t("Clear all filters")}
+              <Button variant='primary' onClick={clearAllFilters}>
+                {t('Clear all filters')}
               </Button>
             </EmptyStateSecondaryActions>
           )}
@@ -442,8 +442,8 @@ function TableHead<T extends object>(props: {
   rowActions?: IPageAction<T>[];
   sort?: string;
   setSort?: (sort: string) => void;
-  sortDirection?: "asc" | "desc";
-  setSortDirection?: (sortDirection: "asc" | "desc") => void;
+  sortDirection?: 'asc' | 'desc';
+  setSortDirection?: (sortDirection: 'asc' | 'desc') => void;
   showSelect?: boolean;
   scrollLeft?: boolean;
   scrollRight?: boolean;
@@ -491,16 +491,16 @@ function TableHead<T extends object>(props: {
 
   return (
     <Thead>
-      <Tr className="light dark-2">
+      <Tr className='light dark-2'>
         {expandedRow && (
-          <Th style={{ padding: 0, backgroundColor: "inherit" }} />
+          <Th style={{ padding: 0, backgroundColor: 'inherit' }} />
         )}
         {(showSelect || onSelect) && (
           <Th
             isStickyColumn
-            stickyMinWidth="0px"
+            stickyMinWidth='0px'
             hasRightBorder={props.scrollLeft}
-            style={{ backgroundColor: "inherit" }}
+            style={{ backgroundColor: 'inherit' }}
           >
             &nbsp;
           </Th>
@@ -515,13 +515,13 @@ function TableHead<T extends object>(props: {
                 style={{
                   minWidth:
                     column.minWidth === 0
-                      ? "1%"
+                      ? '1%'
                       : column.minWidth !== undefined
                       ? column.minWidth
                       : undefined,
                   maxWidth:
                     column.maxWidth !== undefined ? column.maxWidth : undefined,
-                  backgroundColor: "inherit",
+                  backgroundColor: 'inherit',
                 }}
               >
                 {column.header}
@@ -532,15 +532,15 @@ function TableHead<T extends object>(props: {
           <Td
             isActionCell
             isStickyColumn
-            stickyMinWidth="0px"
+            stickyMinWidth='0px'
             style={{
               right: 0,
               padding: 0,
               paddingRight: 0,
-              backgroundColor: "inherit",
+              backgroundColor: 'inherit',
               zIndex: 302,
             }}
-            className={props.scrollRight ? "pf-m-border-left" : undefined}
+            className={props.scrollRight ? 'pf-m-border-left' : undefined}
           >
             &nbsp;
           </Td>
@@ -586,11 +586,11 @@ function TableRow<T extends object>(props: {
   return (
     <>
       <Tr
-        className={isItemSelected ? "selected" : undefined}
+        className={isItemSelected ? 'selected' : undefined}
         isRowSelected={expanded}
         style={{
-          boxShadow: "unset",
-          borderBottom: expanded ? "unset" : undefined,
+          boxShadow: 'unset',
+          borderBottom: expanded ? 'unset' : undefined,
         }}
       >
         {expandedRow && (
@@ -624,7 +624,7 @@ function TableRow<T extends object>(props: {
                 : undefined
             }
             isStickyColumn
-            stickyMinWidth="0px"
+            stickyMinWidth='0px'
             hasRightBorder={props.scrollLeft}
           />
         )}
@@ -640,10 +640,10 @@ function TableRow<T extends object>(props: {
                 onSelect?.(item);
               },
               isSelected: isItemSelected ?? false,
-              variant: isSelectMultiple ? "checkbox" : "radio",
+              variant: isSelectMultiple ? 'checkbox' : 'radio',
             }}
             isStickyColumn
-            stickyMinWidth="0px"
+            stickyMinWidth='0px'
             hasRightBorder={props.scrollLeft}
           />
         )}
@@ -657,22 +657,22 @@ function TableRow<T extends object>(props: {
       </Tr>
       {expandedRow && expanded && expandedContent && (
         <Tr
-          className={isItemSelected ? "selected" : undefined}
+          className={isItemSelected ? 'selected' : undefined}
           isExpanded={expanded}
-          style={{ boxShadow: "unset" }}
+          style={{ boxShadow: 'unset' }}
         >
           <Td />
           {showSelect && (
             <Th
               isStickyColumn
-              stickyMinWidth="0px"
+              stickyMinWidth='0px'
               hasRightBorder={props.scrollLeft}
             />
           )}
           {onSelect && (
             <Td
               isStickyColumn
-              stickyMinWidth="0px"
+              stickyMinWidth='0px'
               hasRightBorder={props.scrollLeft}
             />
           )}
@@ -681,7 +681,7 @@ function TableRow<T extends object>(props: {
               columns.filter((column) => column.enabled !== false).length
             }
             style={{
-              paddingBottom: settings.tableLayout === "compact" ? 12 : 24,
+              paddingBottom: settings.tableLayout === 'compact' ? 12 : 24,
               paddingTop: 0,
             }}
           >
@@ -691,13 +691,13 @@ function TableRow<T extends object>(props: {
             <Td
               isActionCell
               isStickyColumn
-              stickyMinWidth="0px"
+              stickyMinWidth='0px'
               style={{
                 right: 0,
                 padding: 0,
                 paddingRight: 0,
               }}
-              className={props.scrollRight ? "pf-m-border-left" : undefined}
+              className={props.scrollRight ? 'pf-m-border-left' : undefined}
             >
               &nbsp;
             </Td>
@@ -726,8 +726,8 @@ function TableCells<T extends object>(props: {
             <Td
               key={column.header}
               dataLabel={column.header}
-              modifier="nowrap"
-              style={{ width: column.minWidth === 0 ? "0%" : undefined }}
+              modifier='nowrap'
+              style={{ width: column.minWidth === 0 ? '0%' : undefined }}
             >
               <TableColumnCell item={item} column={column} />
             </Td>
@@ -737,14 +737,14 @@ function TableCells<T extends object>(props: {
         <Td
           isActionCell
           isStickyColumn
-          stickyMinWidth="0px"
+          stickyMinWidth='0px'
           style={{
             right: 0,
             padding: 0,
             paddingRight: 0,
             zIndex: actionsExpanded ? 301 : undefined,
           }}
-          className={props.scrollRight ? "pf-m-border-left" : undefined}
+          className={props.scrollRight ? 'pf-m-border-left' : undefined}
         >
           <PageActions
             actions={rowActions}
@@ -770,7 +770,7 @@ export interface ITableColumnCommon<T extends object> {
   isIdColumn?: boolean;
 
   sort?: string;
-  defaultSortDirection?: "asc" | "desc";
+  defaultSortDirection?: 'asc' | 'desc';
   defaultSort?: boolean;
 
   // card?: 'description' | 'hidden' | 'count'
@@ -782,26 +782,26 @@ export interface ITableColumnCommon<T extends object> {
   // primary?: boolean
 
   icon?: (item: T) => ReactNode;
-  card?: "name" | "subtitle" | "description" | "hidden";
+  card?: 'name' | 'subtitle' | 'description' | 'hidden';
   list?:
-    | "name"
-    | "subtitle"
-    | "description"
-    | "hidden"
-    | "primary"
-    | "secondary";
+    | 'name'
+    | 'subtitle'
+    | 'description'
+    | 'hidden'
+    | 'primary'
+    | 'secondary';
 }
 
 export enum TableColumnSomething {
-  "id",
-  "name",
-  "description",
+  'id',
+  'name',
+  'description',
 }
 
 export enum TableColumnCardType {
-  "description",
-  "hidden",
-  "count",
+  'description',
+  'hidden',
+  'count',
 }
 
 export interface ITableColumnTypeReactNode<T extends object>
@@ -813,31 +813,31 @@ export interface ITableColumnTypeReactNode<T extends object>
 
 export interface ITableColumnTypeCount<T extends object>
   extends ITableColumnCommon<T> {
-  type: "count";
+  type: 'count';
   value: CellFn<T, number | undefined>;
 }
 
 export interface ITableColumnTypeLabels<T extends object>
   extends ITableColumnCommon<T> {
-  type: "labels";
+  type: 'labels';
   value: CellFn<T, string[] | undefined>;
 }
 
 export interface ITableColumnTypeDateTime<T extends object>
   extends ITableColumnCommon<T> {
-  type: "datetime";
+  type: 'datetime';
   value: CellFn<T, number | string | undefined>;
 }
 
 export interface ITableColumnTypeDescription<T extends object>
   extends ITableColumnCommon<T> {
-  type: "description";
+  type: 'description';
   value: CellFn<T, string | undefined | null>;
 }
 
 export interface ITableColumnTypeText<T extends object>
   extends ITableColumnCommon<T> {
-  type: "text";
+  type: 'text';
   value: CellFn<T, string | null | undefined>;
 }
 
@@ -856,15 +856,15 @@ export function TableColumnCell<T extends object>(props: {
   const { item, column } = props;
   if (!column) return <></>;
   switch (column.type) {
-    case "text":
+    case 'text':
       return <TextCell text={column.value(item)} />;
-    case "labels":
+    case 'labels':
       return <LabelsCell labels={column.value(item) ?? []} />;
-    case "description":
+    case 'description':
       return <TextCell text={column.value(item)} />;
-    case "count":
-      return <>{column.value(item) ?? "-"}</>;
-    case "datetime":
+    case 'count':
+      return <>{column.value(item) ?? '-'}</>;
+    case 'datetime':
       return <SinceCell value={column.value(item)} />;
     default:
       return <>{column.cell(item)}</>;

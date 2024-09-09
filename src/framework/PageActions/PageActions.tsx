@@ -3,13 +3,13 @@ import {
   DropdownPosition,
   Split,
   SplitItem,
-} from "@patternfly/react-core";
-import React, { ComponentClass, FunctionComponent, useMemo } from "react";
-import { useBreakpoint, WindowSize } from "../components/useBreakPoint";
-import { IPageAction } from "./PageAction";
-import { PageActionType } from "./PageActionType";
-import { PageDropdownAction } from "./PageDropdownAction";
-import { PagePinnedActions } from "./PagePinnedActions";
+} from '@patternfly/react-core';
+import React, { ComponentClass, FunctionComponent, useMemo } from 'react';
+import { useBreakpoint, WindowSize } from '../components/useBreakPoint';
+import { IPageAction } from './PageAction';
+import { PageActionType } from './PageActionType';
+import { PageDropdownAction } from './PageDropdownAction';
+import { PagePinnedActions } from './PagePinnedActions';
 
 /**
  * Page actions represent actions used in table rows, toolbars, and page headers.
@@ -31,7 +31,7 @@ export function PageActions<T extends object>(props: {
   wrapper?: ComponentClass | FunctionComponent;
 
   /** When to collapse the primary and secondary items into the dropdown menu */
-  collapse?: WindowSize | "always" | "never";
+  collapse?: WindowSize | 'always' | 'never';
 
   /** The position for the dropdown */
   position?: DropdownPosition;
@@ -44,13 +44,13 @@ export function PageActions<T extends object>(props: {
   const { actions, selectedItem, selectedItems, iconOnly } = props;
 
   const collapseBreakpoint = useBreakpoint(
-    props.collapse !== "never" && props.collapse !== "always"
-      ? props.collapse ?? "lg"
-      : "lg"
+    props.collapse !== 'never' && props.collapse !== 'always'
+      ? props.collapse ?? 'lg'
+      : 'lg'
   );
   const collapseButtons =
-    props.collapse !== "never" &&
-    (props.collapse === "always" || !collapseBreakpoint);
+    props.collapse !== 'never' &&
+    (props.collapse === 'always' || !collapseBreakpoint);
 
   /** Actions that are visible */
   const visibleActions = useMemo(
@@ -83,7 +83,7 @@ export function PageActions<T extends object>(props: {
       {dropdownActions.length > 0 && (
         <SplitItem
           isFilled
-          style={{ display: "flex", justifyContent: "flex-end" }}
+          style={{ display: 'flex', justifyContent: 'flex-end' }}
         >
           <PageDropdownAction
             {...props}

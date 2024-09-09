@@ -161,14 +161,14 @@ const Notifications: FC<Record<string, never>> = () => {
             <CardTitle>
               <DropdownGroup>
                 <FormSelect
-                  name="selectedCluster"
+                  name='selectedCluster'
                   value={selectedCluster}
                   onChange={(_event, value) => {
                     setSelectedCluster(value);
                     setId(value);
                     setFromPagination(0);
                   }}
-                  aria-label="Select Cluster"
+                  aria-label='Select Cluster'
                 >
                   {formatClusterName(clustersData).map(
                     ({ value, label, disabled }, index) => (
@@ -182,13 +182,13 @@ const Notifications: FC<Record<string, never>> = () => {
                   )}
                 </FormSelect>
                 <FormSelect
-                  name="selectedNotification"
+                  name='selectedNotification'
                   value={severity || ''}
                   onChange={(_event, value) => {
                     setSeverity(value);
                     setFromPagination(0);
                   }}
-                  aria-label="Select Notification Type"
+                  aria-label='Select Notification Type'
                 >
                   {notificationOptions.map(
                     ({ disabled, value, label }, index) => (

@@ -6,8 +6,8 @@ import {
   DropdownToggle,
   KebabToggle,
   Tooltip,
-} from "@patternfly/react-core";
-import CircleIcon from "@patternfly/react-icons/dist/esm/icons/circle-icon";
+} from '@patternfly/react-core';
+import CircleIcon from '@patternfly/react-icons/dist/esm/icons/circle-icon';
 import React, {
   ComponentClass,
   FunctionComponent,
@@ -15,11 +15,11 @@ import React, {
   useEffect,
   useMemo,
   useState,
-} from "react";
-import { Link } from "react-router-dom";
-import { IPageAction } from "./PageAction";
-import { isHiddenAction } from "./PageActions";
-import { PageActionType } from "./PageActionType";
+} from 'react';
+import { Link } from 'react-router-dom';
+import { IPageAction } from './PageAction';
+import { isHiddenAction } from './PageActions';
+import { PageActionType } from './PageActionType';
 
 export function PageDropdownAction<T extends object>(props: {
   actions: IPageAction<T>[];
@@ -70,14 +70,14 @@ export function PageDropdownAction<T extends object>(props: {
   const Toggle =
     label || Icon ? (
       <DropdownToggle
-        id="toggle-dropdown"
+        id='toggle-dropdown'
         isDisabled={isDisabled}
         onToggle={() => setDropdownOpen(!dropdownOpen)}
-        toggleVariant={isPrimary ? "primary" : undefined}
+        toggleVariant={isPrimary ? 'primary' : undefined}
         toggleIndicator={null}
         style={
           isPrimary && !label
-            ? { color: "var(--pf-global--Color--light-100)" }
+            ? { color: 'var(--pf-global--Color--light-100)' }
             : {}
         }
       >
@@ -85,13 +85,13 @@ export function PageDropdownAction<T extends object>(props: {
       </DropdownToggle>
     ) : (
       <KebabToggle
-        id="toggle-kebab"
+        id='toggle-kebab'
         isDisabled={isDisabled}
         onToggle={() => setDropdownOpen(!dropdownOpen)}
-        toggleVariant={isPrimary ? "primary" : undefined}
+        toggleVariant={isPrimary ? 'primary' : undefined}
         style={
           isPrimary && !label
-            ? { color: "var(--pf-global--Color--light-100)" }
+            ? { color: 'var(--pf-global--Color--light-100)' }
             : {}
         }
       >
@@ -106,7 +106,7 @@ export function PageDropdownAction<T extends object>(props: {
       isPlain={!label || iconOnly}
       dropdownItems={actions.map((action, index) => (
         <PageDropdownActionItem
-          key={"label" in action ? action.label : `action-${index}`}
+          key={'label' in action ? action.label : `action-${index}`}
           action={action}
           selectedItems={selectedItems ?? []}
           selectedItem={selectedItem}
@@ -119,7 +119,7 @@ export function PageDropdownAction<T extends object>(props: {
     />
   );
   return tooltip && (iconOnly || isDisabled) ? (
-    <Tooltip content={tooltip} trigger={tooltip ? undefined : "manual"}>
+    <Tooltip content={tooltip} trigger={tooltip ? undefined : 'manual'}>
       {dropdown}
     </Tooltip>
   ) : (
@@ -151,7 +151,7 @@ function PageDropdownActionItem<T extends object>(props: {
         <Tooltip
           key={action.label}
           content={tooltip}
-          trigger={tooltip ? undefined : "manual"}
+          trigger={tooltip ? undefined : 'manual'}
         >
           <DropdownItem
             onClick={
@@ -164,7 +164,7 @@ function PageDropdownActionItem<T extends object>(props: {
                 ? (props: object) => (
                     <Link
                       {...props}
-                      to={selectedItem ? action.href(selectedItem) : ""}
+                      to={selectedItem ? action.href(selectedItem) : ''}
                     />
                   )
                 : undefined) as ReactNode
@@ -180,7 +180,7 @@ function PageDropdownActionItem<T extends object>(props: {
             style={{
               color:
                 action.isDanger && !isDisabled
-                  ? "var(--pf-global--danger-color--100)"
+                  ? 'var(--pf-global--danger-color--100)'
                   : undefined,
             }}
           >
@@ -197,14 +197,14 @@ function PageDropdownActionItem<T extends object>(props: {
       let tooltip = action.tooltip;
       let isDisabled = false;
       if (action.type === PageActionType.bulk && !selectedItems.length) {
-        tooltip = "No selections";
+        tooltip = 'No selections';
         isDisabled = true;
       }
       return (
         <Tooltip
           key={action.label}
           content={tooltip}
-          trigger={tooltip ? undefined : "manual"}
+          trigger={tooltip ? undefined : 'manual'}
         >
           <DropdownItem
             onClick={
@@ -226,7 +226,7 @@ function PageDropdownActionItem<T extends object>(props: {
             style={{
               color:
                 action.isDanger && !isDisabled
-                  ? "var(--pf-global--danger-color--100)"
+                  ? 'var(--pf-global--danger-color--100)'
                   : undefined,
             }}
           >
@@ -240,7 +240,7 @@ function PageDropdownActionItem<T extends object>(props: {
       const isDisabled =
         action.isDisabled !== undefined && selectedItem
           ? action.isDisabled(selectedItem)
-          : "";
+          : '';
       tooltip = isDisabled ? isDisabled : tooltip;
       return (
         <PageDropdownAction<T>

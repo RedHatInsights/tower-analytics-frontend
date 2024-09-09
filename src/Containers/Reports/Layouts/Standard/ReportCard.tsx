@@ -207,7 +207,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
 
   const additionalControls = [
     availableChartTypes.length > 1 && (
-      <ToggleGroup aria-label="Chart type toggle" key="chart-toggle">
+      <ToggleGroup aria-label='Chart type toggle' key='chart-toggle'>
         {availableChartTypes.map((chartType) => (
           <ToggleGroupItem
             key={chartType}
@@ -223,7 +223,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       </ToggleGroup>
     ),
     <DownloadButton
-      key="download-button"
+      key='download-button'
       slug={slug}
       name={name}
       description={description}

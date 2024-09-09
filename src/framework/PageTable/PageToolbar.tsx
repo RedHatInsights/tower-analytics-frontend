@@ -24,35 +24,35 @@ import {
   ToolbarItem,
   ToolbarToggleGroup,
   Tooltip,
-} from "@patternfly/react-core";
-import ArrowRightIcon from "@patternfly/react-icons/dist/esm/icons/arrow-right-icon";
-import ColumnsIcon from "@patternfly/react-icons/dist/esm/icons/columns-icon";
-import FilterIcon from "@patternfly/react-icons/dist/esm/icons/filter-icon";
-import ListIcon from "@patternfly/react-icons/dist/esm/icons/list-icon";
-import TableIcon from "@patternfly/react-icons/dist/esm/icons/table-icon";
-import ThLargeIcon from "@patternfly/react-icons/dist/esm/icons/th-large-icon";
-import TimesIcon from "@patternfly/react-icons/dist/esm/icons/times-icon";
+} from '@patternfly/react-core';
+import ArrowRightIcon from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
+import ColumnsIcon from '@patternfly/react-icons/dist/esm/icons/columns-icon';
+import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
+import ListIcon from '@patternfly/react-icons/dist/esm/icons/list-icon';
+import TableIcon from '@patternfly/react-icons/dist/esm/icons/table-icon';
+import ThLargeIcon from '@patternfly/react-icons/dist/esm/icons/th-large-icon';
+import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
 import React, {
   Dispatch,
   Fragment,
   SetStateAction,
   useCallback,
   useState,
-} from "react";
-import { BulkSelector } from "../components/BulkSelector";
-import { useBreakpoint } from "../components/useBreakPoint";
-import { IPageAction } from "../PageActions/PageAction";
-import { PageActions } from "../PageActions/PageActions";
-import { PageActionType } from "../PageActions/PageActionType";
-import { FormGroupSelect } from "../PageForm/Inputs/FormGroupSelect";
-import { useFrameworkTranslations } from "../useFrameworkTranslations";
-import { PageTableViewType, PageTableViewTypeE } from "./PageTableViewType";
+} from 'react';
+import { BulkSelector } from '../components/BulkSelector';
+import { useBreakpoint } from '../components/useBreakPoint';
+import { IPageAction } from '../PageActions/PageAction';
+import { PageActions } from '../PageActions/PageActions';
+import { PageActionType } from '../PageActions/PageActionType';
+import { FormGroupSelect } from '../PageForm/Inputs/FormGroupSelect';
+import { useFrameworkTranslations } from '../useFrameworkTranslations';
+import { PageTableViewType, PageTableViewTypeE } from './PageTableViewType';
 
-import "./PageToolbar.css";
+import './PageToolbar.css';
 
 export interface IItemFilter<T extends object> {
   label: string;
-  type?: "search" | "filter";
+  type?: 'search' | 'filter';
   options: {
     label: string;
     value: string;
@@ -70,7 +70,7 @@ export function toolbarActionsHaveBulkActions<T extends object>(
 ) {
   if (!actions) return false;
   for (const action of actions) {
-    if (action.type === "bulk") return true;
+    if (action.type === 'bulk') return true;
   }
   return false;
 }
@@ -78,7 +78,7 @@ export function toolbarActionsHaveBulkActions<T extends object>(
 export interface IToolbarStringFilter {
   key: string;
   label: string;
-  type: "string";
+  type: 'string';
   query: string;
   placeholder?: string;
 }
@@ -86,7 +86,7 @@ export interface IToolbarStringFilter {
 export interface IToolbarSelectFilter {
   key: string;
   label: string;
-  type: "select";
+  type: 'select';
   options: {
     label: string;
     value: string;
@@ -153,7 +153,7 @@ export function PageTableToolbar<T extends object>(
     openColumnModal,
   } = props;
 
-  const sm = useBreakpoint("md");
+  const sm = useBreakpoint('md');
 
   const { viewType, setViewType } = props;
   let { toolbarActions } = props;
@@ -186,8 +186,8 @@ export function PageTableToolbar<T extends object>(
     toolbarFilters
       ? toolbarFilters?.length > 0
         ? toolbarFilters[0].key
-        : ""
-      : ""
+        : ''
+      : ''
   );
 
   let viewTypeCount = 0;
@@ -202,15 +202,15 @@ export function PageTableToolbar<T extends object>(
   if (itemCount === undefined) {
     return (
       <Toolbar
-        className="border-bottom dark-2"
+        className='border-bottom dark-2'
         style={{
           paddingBottom: sm ? undefined : 8,
           paddingTop: sm ? undefined : 8,
         }}
       >
         <ToolbarContent>
-          <ToolbarItem style={{ width: "100%" }}>
-            <Skeleton height="36px" />
+          <ToolbarItem style={{ width: '100%' }}>
+            <Skeleton height='36px' />
           </ToolbarItem>
         </ToolbarContent>
       </Toolbar>
@@ -220,7 +220,7 @@ export function PageTableToolbar<T extends object>(
   return (
     <Toolbar
       clearAllFilters={clearAllFilters}
-      className="dark-2"
+      className='dark-2'
       style={{
         paddingBottom: sm ? undefined : 8,
         paddingTop: sm ? undefined : 8,
@@ -229,7 +229,7 @@ export function PageTableToolbar<T extends object>(
       <ToolbarContent>
         {showSelect && (
           <ToolbarGroup>
-            <ToolbarItem variant="bulk-select">
+            <ToolbarItem variant='bulk-select'>
               <BulkSelector {...props} />
             </ToolbarItem>
           </ToolbarGroup>
@@ -237,23 +237,23 @@ export function PageTableToolbar<T extends object>(
         {toolbarFilters && toolbarFilters.length > 0 && (
           <ToolbarToggleGroup
             toggleIcon={<FilterIcon />}
-            breakpoint="md"
+            breakpoint='md'
             style={{ zIndex: 302 }}
           >
-            <ToolbarGroup variant="filter-group">
+            <ToolbarGroup variant='filter-group'>
               <ToolbarItem>
                 <FormGroupSelect
-                  id="filter"
+                  id='filter'
                   onSelect={(_, v) => setSeletedFilter(v.toString())}
                   value={selectedFilter}
-                  placeholderText="Select filter"
+                  placeholderText='Select filter'
                 >
                   {toolbarFilters.map((filter) => (
                     <SelectOption key={filter.key} value={filter.key}>
                       <Flex
-                        spaceItems={{ default: "spaceItemsNone" }}
-                        alignItems={{ default: "alignItemsCenter" }}
-                        flexWrap={{ default: "nowrap" }}
+                        spaceItems={{ default: 'spaceItemsNone' }}
+                        alignItems={{ default: 'alignItemsCenter' }}
+                        flexWrap={{ default: 'nowrap' }}
                       >
                         <FlexItem style={{ paddingLeft: 4, paddingRight: 8 }}>
                           <FilterIcon />
@@ -266,7 +266,7 @@ export function PageTableToolbar<T extends object>(
               </ToolbarItem>
               <ToolbarItem>
                 <ToolbarFilterInput
-                  id="filter-input"
+                  id='filter-input'
                   filter={toolbarFilters.find(
                     (filter) => filter.key === selectedFilter
                   )}
@@ -292,7 +292,7 @@ export function PageTableToolbar<T extends object>(
                     key={filter.label}
                     categoryName={filter.label}
                     chips={values.map((value) => {
-                      return "options" in filter
+                      return 'options' in filter
                         ? filter.options.find((o) => o.value === value)
                             ?.label ?? value
                         : value;
@@ -301,7 +301,7 @@ export function PageTableToolbar<T extends object>(
                       setFilters?.((filters) => {
                         //TODO bug here where value is actually select filter option label... need to map
                         const newState = { ...filters };
-                        value = typeof value === "string" ? value : value.key;
+                        value = typeof value === 'string' ? value : value.key;
                         let values = filters[filter.key];
                         if (values) {
                           values = values.filter((v) => v !== value);
@@ -332,7 +332,7 @@ export function PageTableToolbar<T extends object>(
         )}
 
         {/* Action Buttons */}
-        <ToolbarGroup variant="button-group" style={{ zIndex: 302 }}>
+        <ToolbarGroup variant='button-group' style={{ zIndex: 302 }}>
           <PageActions
             actions={toolbarActions}
             selectedItems={selectedItems}
@@ -341,14 +341,14 @@ export function PageTableToolbar<T extends object>(
         </ToolbarGroup>
         <div style={{ flexGrow: 1 }} />
 
-        <ToolbarGroup variant="button-group" style={{ zIndex: 302 }}>
+        <ToolbarGroup variant='button-group' style={{ zIndex: 302 }}>
           {!props.disableColumnManagement &&
             openColumnModal &&
-            viewType === "table" && (
+            viewType === 'table' && (
               <ToolbarItem>
-                <Tooltip content={"Manage columns"}>
+                <Tooltip content={'Manage columns'}>
                   <Button
-                    variant="plain"
+                    variant='plain'
                     icon={<ColumnsIcon />}
                     onClick={openColumnModal}
                   />
@@ -357,7 +357,7 @@ export function PageTableToolbar<T extends object>(
             )}
           {viewTypeCount > 1 && (
             <ToolbarItem>
-              <ToggleGroup aria-label="table view toggle">
+              <ToggleGroup aria-label='table view toggle'>
                 {[
                   !props.disableTableView && PageTableViewTypeE.Table,
                   !props.disableListView && PageTableViewTypeE.List,
@@ -369,9 +369,9 @@ export function PageTableToolbar<T extends object>(
                       case PageTableViewTypeE.Cards:
                         return (
                           <Tooltip
-                            content={"Card view"}
+                            content={'Card view'}
                             key={vt}
-                            position="top-end"
+                            position='top-end'
                             enableFlip={false}
                           >
                             <ToggleGroupItem
@@ -380,16 +380,16 @@ export function PageTableToolbar<T extends object>(
                               onClick={() =>
                                 setViewType?.(PageTableViewTypeE.Cards)
                               }
-                              aria-label="card view"
+                              aria-label='card view'
                             />
                           </Tooltip>
                         );
                       case PageTableViewTypeE.List:
                         return (
                           <Tooltip
-                            content={"List view"}
+                            content={'List view'}
                             key={vt}
-                            position="top-end"
+                            position='top-end'
                             enableFlip={false}
                           >
                             <ToggleGroupItem
@@ -398,16 +398,16 @@ export function PageTableToolbar<T extends object>(
                               onClick={() =>
                                 setViewType?.(PageTableViewTypeE.List)
                               }
-                              aria-label="list view"
+                              aria-label='list view'
                             />
                           </Tooltip>
                         );
                       case PageTableViewTypeE.Table:
                         return (
                           <Tooltip
-                            content={"Table view"}
+                            content={'Table view'}
                             key={vt}
-                            position="top-end"
+                            position='top-end'
                             enableFlip={false}
                           >
                             <ToggleGroupItem
@@ -416,7 +416,7 @@ export function PageTableToolbar<T extends object>(
                               onClick={() =>
                                 setViewType?.(PageTableViewTypeE.Table)
                               }
-                              aria-label="table view"
+                              aria-label='table view'
                             />
                           </Tooltip>
                         );
@@ -431,7 +431,7 @@ export function PageTableToolbar<T extends object>(
         {/* <ToolbarGroup variant="button-group">{toolbarActionDropDownItems}</ToolbarGroup> */}
 
         {/* Pagination */}
-        <ToolbarItem visibility={{ default: "hidden", "2xl": "visible" }}>
+        <ToolbarItem visibility={{ default: 'hidden', '2xl': 'visible' }}>
           <Pagination
             variant={PaginationVariant.top}
             isCompact
@@ -457,9 +457,9 @@ function ToolbarFilterInput(props: {
 }) {
   const { filter } = props;
   switch (filter?.type) {
-    case "string":
+    case 'string':
       return <ToolbarTextFilter {...props} placeholder={filter.placeholder} />;
-    case "select":
+    case 'select':
       return (
         <ToolbarSelectFilter
           {...props}
@@ -476,7 +476,7 @@ function ToolbarTextFilter(props: {
   addFilter: (value: string) => void;
   placeholder?: string;
 }) {
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState('');
   return (
     <InputGroup>
       <TextInputGroup style={{ minWidth: 220 }}>
@@ -486,20 +486,20 @@ function ToolbarTextFilter(props: {
           value={value}
           onChange={(e, v) => setValue(v)}
           onKeyUp={(event) => {
-            if (value && event.key === "Enter") {
+            if (value && event.key === 'Enter') {
               props.addFilter(value);
-              setValue("");
+              setValue('');
               // ref.current?.focus() // Does not work because PF does not expose ref
             }
           }}
           placeholder={props.placeholder}
         />
-        {value !== "" && (
+        {value !== '' && (
           <TextInputGroupUtilities>
             <Button
-              variant="plain"
-              aria-label="clear filter"
-              onClick={() => setValue("")}
+              variant='plain'
+              aria-label='clear filter'
+              onClick={() => setValue('')}
               style={{ opacity: value ? undefined : 0 }}
               // tabIndex={value ? undefined : -1}
               tabIndex={-1}
@@ -514,11 +514,11 @@ function ToolbarTextFilter(props: {
         <></>
       ) : (
         <Button
-          variant={value ? "primary" : "control"}
-          aria-label="apply filter"
+          variant={value ? 'primary' : 'control'}
+          aria-label='apply filter'
           onClick={() => {
             props.addFilter(value);
-            setValue("");
+            setValue('');
           }}
           tabIndex={-1}
         >

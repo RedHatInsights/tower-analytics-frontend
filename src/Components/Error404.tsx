@@ -4,9 +4,10 @@ import {
   EmptyStateVariant,
   EmptyStateIcon,
   EmptyStateBody,
-  EmptyStateHeader, EmptyStateFooter,
+  EmptyStateHeader,
+  EmptyStateFooter,
 } from '@patternfly/react-core';
-import PathMissingIcon from "@patternfly/react-icons/dist/esm/icons/path-missing-icon";
+import PathMissingIcon from '@patternfly/react-icons/dist/esm/icons/path-missing-icon';
 import { Paths } from '../paths';
 import { Link } from 'react-router-dom';
 
@@ -24,8 +25,14 @@ export const Error404: FunctionComponent<Props> = ({
   link = Paths.clusters,
 }) => (
   <EmptyState variant={EmptyStateVariant.xl} data-cy={'error_page_404'}>
-
-    <EmptyStateHeader titleText={<>{title}</>} icon={<EmptyStateIcon icon={PathMissingIcon} />} headingLevel="h4" /><EmptyStateBody>{body}</EmptyStateBody><EmptyStateFooter>
-    <Link to={link.replace('/', '')}>{buttonText}</Link>
-  </EmptyStateFooter></EmptyState>
+    <EmptyStateHeader
+      titleText={<>{title}</>}
+      icon={<EmptyStateIcon icon={PathMissingIcon} />}
+      headingLevel='h4'
+    />
+    <EmptyStateBody>{body}</EmptyStateBody>
+    <EmptyStateFooter>
+      <Link to={link.replace('/', '')}>{buttonText}</Link>
+    </EmptyStateFooter>
+  </EmptyState>
 );

@@ -1,4 +1,10 @@
-import { reportsUrl, allReports, skippedTests, ENV, ENVS, } from '../support/constants';
+import {
+  reportsUrl,
+  allReports,
+  skippedTests,
+  ENV,
+  ENVS,
+} from '../support/constants';
 
 describe("Reports' navigation on Reports page - smoketests", () => {
   beforeEach(() => {

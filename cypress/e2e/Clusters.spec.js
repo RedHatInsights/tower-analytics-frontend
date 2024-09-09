@@ -114,11 +114,11 @@ describe('Clusters page', () => {
     // Wait for loading and check the selected filter is present
     if (ENV != ENVS.EPHEMERAL) {
       // does not work on ephemeral
-      cy.get('.pf-v5-c-empty-state__content').should('not.exist');    
+      cy.get('.pf-v5-c-empty-state__content').should('not.exist');
       cy.get('.pf-v5-c-chip-group__main').contains('Cluster').should('exist');
       cy.get('.pf-v5-c-chip-group__main')
-      .contains('ec2-52-90-106-02.compute-1.amazonaws.com')
-      .should('exist');
+        .contains('ec2-52-90-106-02.compute-1.amazonaws.com')
+        .should('exist');
     }
 
     if (ENV == ENVS.STAGE) {

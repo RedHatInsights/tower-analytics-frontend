@@ -4,21 +4,21 @@ import { Link, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
 import {
-	Card,
-	CardHeader,
-	CardTitle as PFCardTitle,
-	CardBody,
-	CardFooter,
-	Checkbox as PFCheckbox,
-	Label,
-	Tooltip,
-	TooltipPosition
+  Card,
+  CardHeader,
+  CardTitle as PFCardTitle,
+  CardBody,
+  CardFooter,
+  Checkbox as PFCheckbox,
+  Label,
+  Tooltip,
+  TooltipPosition,
 } from '@patternfly/react-core';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import {
-	Dropdown,
-	DropdownItem,
-	KebabToggle
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
 } from '@patternfly/react-core/deprecated';
 
 import { Paths } from '../../../../paths';
@@ -114,23 +114,23 @@ const ListItem = ({
   const kebabDropDownItems = [
     <React.Fragment key={id}>
       <DropdownItem
-        key="edit"
+        key='edit'
         onClick={() => navigate(`${id}/edit`)}
-        position="right"
+        position='right'
       >
         Edit
       </DropdownItem>
       <DropdownItem
-        key="link"
+        key='link'
         onClick={() => navigate(`${id}/edit#tasks`)}
-        position="right"
+        position='right'
       >
         Manage tasks
       </DropdownItem>
       <DropdownItem
-        key="link"
+        key='link'
         onClick={() => navigate(`${id}/edit#link_template`)}
-        position="right"
+        position='right'
       >
         Link template
       </DropdownItem>
@@ -139,31 +139,45 @@ const ListItem = ({
 
   return (
     <Card>
-      <CardHeader {...(canWrite && {actions: { actions: <><Dropdown
-              onSelect={() => {}}
-              toggle={
-                <KebabToggle
-                  onToggle={() => setIsCardKebabOpen(!isCardKebabOpen)}
+      <CardHeader
+        {...(canWrite && {
+          actions: {
+            actions: (
+              <>
+                <Dropdown
+                  onSelect={() => {}}
+                  toggle={
+                    <KebabToggle
+                      onToggle={() => setIsCardKebabOpen(!isCardKebabOpen)}
+                    />
+                  }
+                  isOpen={isCardKebabOpen}
+                  isPlain
+                  dropdownItems={kebabDropDownItems}
+                  position={'right'}
                 />
-              }
-              isOpen={isCardKebabOpen}
-              isPlain
-              dropdownItems={kebabDropDownItems}
-              position={'right'}
-            />
-            <Checkbox
-              onChange={() => handleSelect(plan.id)}
-              isChecked={selected.includes(plan.id)}
-              aria-label="card checkbox"
-              id="check-1"
-              name="check1"
-            /></>, hasNoOffset: false, className: undefined}})} >
-        actions={<>
-          <CardTitle>
-            <Link to={`${id}`}>{name}</Link>
-          </CardTitle>
-        </>}
-        
+                <Checkbox
+                  onChange={() => handleSelect(plan.id)}
+                  isChecked={selected.includes(plan.id)}
+                  aria-label='card checkbox'
+                  id='check-1'
+                  name='check1'
+                />
+              </>
+            ),
+            hasNoOffset: false,
+            className: undefined,
+          },
+        })}
+      >
+        actions=
+        {
+          <>
+            <CardTitle>
+              <Link to={`${id}`}>{name}</Link>
+            </CardTitle>
+          </>
+        }
       </CardHeader>
       <CardBody>
         {description ? <Small>{description}</Small> : null}
@@ -207,8 +221,8 @@ const ListItem = ({
                 <JobStatus status={item} />
               ) : (
                 <Label
-                  variant="outline"
-                  color="red"
+                  variant='outline'
+                  color='red'
                   icon={<ExclamationCircleIcon />}
                   style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}
                 >
@@ -220,8 +234,8 @@ const ListItem = ({
             <JobStatus status={automation_status.status} />
           ) : (
             <Label
-              variant="outline"
-              color="red"
+              variant='outline'
+              color='red'
               icon={<ExclamationCircleIcon />}
               style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}
             >

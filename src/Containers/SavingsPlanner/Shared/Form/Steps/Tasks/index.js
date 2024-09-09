@@ -17,7 +17,8 @@ import {
   Grid,
   InputGroup,
   TextInput,
-  Title, InputGroupItem,
+  Title,
+  InputGroupItem,
 } from '@patternfly/react-core';
 import PlusIcon from '@patternfly/react-icons/dist/esm/icons/plus-icon';
 import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
@@ -98,44 +99,43 @@ const Tasks = ({ tasks, dispatch }) => {
       <Form>
         <Grid hasGutter md={6}>
           <FormGroup
-            label="What tasks do you need to accomplish this plan?"
-            fieldId="task-field"
+            label='What tasks do you need to accomplish this plan?'
+            fieldId='task-field'
           >
             <InputGroup>
-              <InputGroupItem isFill ><TextInput
-                placeholder="Enter a description of each task"
-                type="text"
-                id="task-field"
-                name="task"
-                value={taskToAdd}
-                onChange={(_event, newTaskName) => setTaskToAdd(newTaskName)}
-                onKeyDown={handleTextKeyDown}
-              /></InputGroupItem>
-              <InputGroupItem><Button
-                onClick={appendTask}
-                isDisabled={taskToAdd.trim() === ''}
-                variant="control"
-                aria-label="Add task"
-              >
-                <PlusIcon />
-              </Button></InputGroupItem>
+              <InputGroupItem isFill>
+                <TextInput
+                  placeholder='Enter a description of each task'
+                  type='text'
+                  id='task-field'
+                  name='task'
+                  value={taskToAdd}
+                  onChange={(_event, newTaskName) => setTaskToAdd(newTaskName)}
+                  onKeyDown={handleTextKeyDown}
+                />
+              </InputGroupItem>
+              <InputGroupItem>
+                <Button
+                  onClick={appendTask}
+                  isDisabled={taskToAdd.trim() === ''}
+                  variant='control'
+                  aria-label='Add task'
+                >
+                  <PlusIcon />
+                </Button>
+              </InputGroupItem>
             </InputGroup>
           </FormGroup>
         </Grid>
       </Form>
       {tasks.length > 0 && (
         <TaskSection>
-          <TaskTitle headingLevel="h4" size="xl">
+          <TaskTitle headingLevel='h4' size='xl'>
             Tasks
           </TaskTitle>
           <DataList
-            aria-label="Draggable list to reorder and remove tasks."
+            aria-label='Draggable list to reorder and remove tasks.'
             isCompact
-            
-            
-            
-            
-            
           >
             {tasks.map((task, index) => (
               <DataListItem
@@ -146,10 +146,10 @@ const Tasks = ({ tasks, dispatch }) => {
                 <TaskRow>
                   <DataListControl>
                     <DataListDragButton
-                      aria-label="Reorder"
+                      aria-label='Reorder'
                       aria-labelledby={`cell-${index + 1}`}
-                      aria-describedby="Press space or enter to begin dragging, and use the arrow keys to navigate up or down. Press enter to confirm the drag, or any other key to cancel the drag operation."
-                      aria-pressed="false"
+                      aria-describedby='Press space or enter to begin dragging, and use the arrow keys to navigate up or down. Press enter to confirm the drag, or any other key to cancel the drag operation.'
+                      aria-pressed='false'
                     />
                   </DataListControl>
                   <DataListItemCells
@@ -161,11 +161,11 @@ const Tasks = ({ tasks, dispatch }) => {
                       </DataListCell>,
                     ]}
                   />
-                  <DeleteTaskActionSection aria-label="Actions">
+                  <DeleteTaskActionSection aria-label='Actions'>
                     <TaskDeleteButton
                       onClick={() => removeTask(index)}
-                      variant="plain"
-                      aria-label="Delete"
+                      variant='plain'
+                      aria-label='Delete'
                     >
                       <TimesIcon />
                     </TaskDeleteButton>
@@ -176,7 +176,7 @@ const Tasks = ({ tasks, dispatch }) => {
           </DataList>
         </TaskSection>
       )}
-      <div className="pf-screen-reader" aria-live="assertive">
+      <div className='pf-screen-reader' aria-live='assertive'>
         {liveText}
       </div>
     </>

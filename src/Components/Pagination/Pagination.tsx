@@ -38,7 +38,7 @@ const Pagination: FunctionComponent<Props> = ({
     <PFPagination
       data-cy={props.isCompact ? 'pagination_top' : 'pagination_bottom'}
       itemCount={count}
-      widgetId="aa-pagination"
+      widgetId='aa-pagination'
       perPageOptions={perPageOptions ?? defaultPerPageOptions}
       perPage={limit}
       page={currentPage}

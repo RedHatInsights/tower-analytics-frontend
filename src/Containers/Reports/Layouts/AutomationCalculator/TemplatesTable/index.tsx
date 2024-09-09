@@ -1,9 +1,9 @@
 import React, { FunctionComponent, useState } from 'react';
 
 import {
-	Dropdown,
-	DropdownItem,
-	KebabToggle
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
 } from '@patternfly/react-core/deprecated';
 import {
   Table /* data-codemods */,
@@ -46,36 +46,36 @@ const TopTemplates: FunctionComponent<Props> = ({
 
   const kebabDropdownItems = [
     <DropdownItem
-      key="showAll"
-      component="button"
+      key='showAll'
+      component='button'
       onClick={() => setEnabled(undefined)(true)}
     >
       Show all
     </DropdownItem>,
     <DropdownItem
-      key="hideAll"
-      component="button"
+      key='hideAll'
+      component='button'
       onClick={() => setEnabled(undefined)(false)}
     >
       Hide all
     </DropdownItem>,
     <DropdownItem
-      key="showAll"
-      component="button"
+      key='showAll'
+      component='button'
       onClick={() => setFromToolbar('template_weigh_in', undefined)}
     >
       Display all template rows
     </DropdownItem>,
     <DropdownItem
-      key="hideHiddenTemplates"
-      component="button"
+      key='hideHiddenTemplates'
+      component='button'
       onClick={() => setFromToolbar('template_weigh_in', true)}
     >
       Display only shown template rows
     </DropdownItem>,
     <DropdownItem
-      key="showHiddenTemplates"
-      component="button"
+      key='showHiddenTemplates'
+      component='button'
       onClick={() => setFromToolbar('template_weigh_in', false)}
     >
       Display only hidden template rows
@@ -84,7 +84,7 @@ const TopTemplates: FunctionComponent<Props> = ({
   return (
     <Table
       data-cy={'table'}
-      aria-label="ROI Table"
+      aria-label='ROI Table'
       variant={TableVariant.compact}
     >
       <Thead>
@@ -112,7 +112,7 @@ const TopTemplates: FunctionComponent<Props> = ({
               toggle={
                 <KebabToggle
                   style={{ paddingBottom: '0px' }}
-                  id="table-kebab"
+                  id='table-kebab'
                   onToggle={() => setIsKebabOpen(!isKebabOpen)}
                 />
               }

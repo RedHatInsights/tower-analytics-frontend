@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
-import React, { ReactNode } from "react";
-import { Popover } from "@patternfly/react-core";
-import HelpIcon from "@patternfly/react-icons/dist/esm/icons/help-icon";
-import styled from "styled-components";
+import React, { ReactNode } from 'react';
+import { Popover } from '@patternfly/react-core';
+import HelpIcon from '@patternfly/react-icons/dist/esm/icons/help-icon';
+import styled from 'styled-components';
 
 const PopoverButton = styled.button`
   padding: var(--pf-global--spacer--xs);
@@ -21,11 +21,11 @@ function StandardPopover(props: {
   maxWidth?: string;
 }) {
   const {
-    ariaLabel = "",
+    ariaLabel = '',
     content,
     header,
-    id = "",
-    maxWidth = "",
+    id = '',
+    maxWidth = '',
     ...rest
   } = props;
   if (!content) {
@@ -42,11 +42,11 @@ function StandardPopover(props: {
       {...rest}
     >
       <PopoverButton
-        aria-label={ariaLabel ?? "More information"}
-        aria-haspopup="true"
-        className="pf-c-form__group-label-help"
+        aria-label={ariaLabel ?? 'More information'}
+        aria-haspopup='true'
+        className='pf-c-form__group-label-help'
         onClick={(e: Event) => e.preventDefault()}
-        type="button"
+        type='button'
       >
         <HelpIcon noVerticalAlign />
       </PopoverButton>

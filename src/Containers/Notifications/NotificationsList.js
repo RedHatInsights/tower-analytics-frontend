@@ -58,13 +58,13 @@ const AllNotificationTemplate = ({ notifications }) =>
     ({ date, message, label, notification_id: id, tower_url: url }) => {
       if (label === '' || label === 'notice') {
         return (
-          <NotificationDrawerListItem variant="info" key={date + '-' + id}>
+          <NotificationDrawerListItem variant='info' key={date + '-' + id}>
             <NotificationDrawerListItemHeader
-              variant="info"
+              variant='info'
               title={
                 <>
                   {url ? (
-                    <a target="_blank" rel="noopener noreferrer" href={url}>
+                    <a target='_blank' rel='noopener noreferrer' href={url}>
                       {capitalize(label)}
                       <ExternalLinkAltIcon />
                     </a>
@@ -83,13 +83,13 @@ const AllNotificationTemplate = ({ notifications }) =>
 
       if (label === 'error') {
         return (
-          <NotificationDrawerListItem variant="danger" key={date + '-' + id}>
+          <NotificationDrawerListItem variant='danger' key={date + '-' + id}>
             <NotificationDrawerListItemHeader
-              variant="danger"
+              variant='danger'
               title={
                 <>
                   {url ? (
-                    <a target="_blank" rel="noopener noreferrer" href={url}>
+                    <a target='_blank' rel='noopener noreferrer' href={url}>
                       {capitalize(label)}
                       <ExternalLinkAltIcon />
                     </a>
@@ -108,13 +108,13 @@ const AllNotificationTemplate = ({ notifications }) =>
 
       if (label === 'warning') {
         return (
-          <NotificationDrawerListItem variant="warning" key={date + '-' + id}>
+          <NotificationDrawerListItem variant='warning' key={date + '-' + id}>
             <NotificationDrawerListItemHeader
-              variant="warning"
+              variant='warning'
               title={
                 <>
                   {url ? (
-                    <a target="_blank" rel="noopener noreferrer" href={url}>
+                    <a target='_blank' rel='noopener noreferrer' href={url}>
                       {capitalize(label)}
                       <ExternalLinkAltIcon />
                     </a>
@@ -137,13 +137,13 @@ const ErrorNotificationTemplate = ({ notifications }) =>
   notifications
     .filter((notification) => notification.label === 'error')
     .map(({ message, date, label, notification_id: id, tower_url: url }) => (
-      <NotificationDrawerListItem variant="danger" key={date + '-' + id}>
+      <NotificationDrawerListItem variant='danger' key={date + '-' + id}>
         <NotificationDrawerListItemHeader
-          variant="danger"
+          variant='danger'
           title={
             <>
               {url ? (
-                <a target="_blank" rel="noopener noreferrer" href={url}>
+                <a target='_blank' rel='noopener noreferrer' href={url}>
                   {capitalize(label)}
                   <ExternalLinkAltIcon />
                 </a>
@@ -163,13 +163,13 @@ const NoticeNotificationTemplate = ({ notifications }) =>
   notifications
     .filter((notification) => notification.label === 'notice')
     .map(({ message, date, label, notification_id: id, tower_url: url }) => (
-      <NotificationDrawerListItem variant="info" key={date + '-' + id}>
+      <NotificationDrawerListItem variant='info' key={date + '-' + id}>
         <NotificationDrawerListItemHeader
-          variant="info"
+          variant='info'
           title={
             <>
               {url ? (
-                <a target="_blank" rel="noopener noreferrer" href={url}>
+                <a target='_blank' rel='noopener noreferrer' href={url}>
                   {capitalize(label)}
                   <ExternalLinkAltIcon />
                 </a>
@@ -189,13 +189,13 @@ const WarningNotificationTemplate = ({ notifications }) =>
   notifications
     .filter((notification) => notification.label === 'warning')
     .map(({ message, date, label, notification_id: id, tower_url: url }) => (
-      <NotificationDrawerListItem variant="warning" key={date + '-' + id}>
+      <NotificationDrawerListItem variant='warning' key={date + '-' + id}>
         <NotificationDrawerListItemHeader
-          variant="warning"
+          variant='warning'
           title={
             <>
               {url ? (
-                <a target="_blank" rel="noopener noreferrer" href={url}>
+                <a target='_blank' rel='noopener noreferrer' href={url}>
                   {capitalize(label)}
                   <ExternalLinkAltIcon />
                 </a>

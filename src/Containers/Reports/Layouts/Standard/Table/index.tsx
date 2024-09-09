@@ -13,9 +13,9 @@ import TableRow from './TableRow';
 import { LegendEntry, TableHeaders, TableSortParams } from '../types';
 import { ExpandedTableRowName } from '../Components';
 import {
-	Dropdown,
-	DropdownItem,
-	KebabToggle
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
 } from '@patternfly/react-core/deprecated';
 import { useQueryParams } from '../../../../../QueryParams';
 import { reportDefaultParams } from '../../../../../Utilities/constants';
@@ -43,22 +43,22 @@ const ReportTable: FunctionComponent<Props> = ({
 
   const kebabDropdownItems = [
     <DropdownItem
-      key="showAll"
-      component="button"
+      key='showAll'
+      component='button'
       onClick={() => setFromToolbar('anomaly', undefined)}
     >
       Display all host rows
     </DropdownItem>,
     <DropdownItem
-      key="showAnomalousHosts"
-      component="button"
+      key='showAnomalousHosts'
+      component='button'
       onClick={() => setFromToolbar('anomaly', true)}
     >
       Display only slow host rows
     </DropdownItem>,
     <DropdownItem
-      key="showNonAnomalousHosts"
-      component="button"
+      key='showNonAnomalousHosts'
+      component='button'
       onClick={() => setFromToolbar('anomaly', false)}
     >
       Display only non-slow host rows
@@ -82,7 +82,7 @@ const ReportTable: FunctionComponent<Props> = ({
   };
 
   return (
-    <Table aria-label="Report Table" variant={TableVariant.compact}>
+    <Table aria-label='Report Table' variant={TableVariant.compact}>
       <Thead>
         <Tr>
           {expandedRowName && <Th />}
@@ -103,7 +103,7 @@ const ReportTable: FunctionComponent<Props> = ({
                   toggle={
                     <KebabToggle
                       style={{ paddingBottom: '0px' }}
-                      id="table-kebab"
+                      id='table-kebab'
                       onToggle={() => setIsKebabOpen(!isKebabOpen)}
                     />
                   }

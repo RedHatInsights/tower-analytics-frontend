@@ -6,7 +6,8 @@ import {
   TextInput,
   Tooltip,
   Switch,
-  ButtonVariant, InputGroupItem,
+  ButtonVariant,
+  InputGroupItem,
 } from '@patternfly/react-core';
 import { Tr, Td } from '@patternfly/react-table';
 import { global_success_color_200 as globalSuccessColor200 } from '@patternfly/react-tokens';
@@ -115,37 +116,39 @@ const Row: FunctionComponent<Props> = ({
         )}
         <Td>
           <InputGroup>
-            <InputGroupItem isFill ><TextInput
-              autoFocus={
-                window.localStorage.getItem('focused') ===
-                'manual-time-' + template.id.toString()
-              }
-              id={'manual-time-' + template.id.toString()}
-              data-cy={'manual-time'}
-              style={{ maxWidth: '150px' }}
-              type="number"
-              aria-label="time run manually"
-              defaultValue={template.avgRunTime / 60}
-              onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
-                const minutes = +event.target.value;
-                if (minutes <= 0 || isNaN(minutes)) {
-                  event.target.value = '60';
-                  setDataRunTime(+event.target.value * 60, template.id);
-                } else {
-                  setDataRunTime(minutes * 60, template.id);
-                }
-                window.localStorage.setItem('focused', '');
-              }}
-              onChange={() => {
-                window.localStorage.setItem(
-                  'focused',
+            <InputGroupItem isFill>
+              <TextInput
+                autoFocus={
+                  window.localStorage.getItem('focused') ===
                   'manual-time-' + template.id.toString()
-                );
-              }}
-              isDisabled={readOnly}
-            /></InputGroupItem>
+                }
+                id={'manual-time-' + template.id.toString()}
+                data-cy={'manual-time'}
+                style={{ maxWidth: '150px' }}
+                type='number'
+                aria-label='time run manually'
+                defaultValue={template.avgRunTime / 60}
+                onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  const minutes = +event.target.value;
+                  if (minutes <= 0 || isNaN(minutes)) {
+                    event.target.value = '60';
+                    setDataRunTime(+event.target.value * 60, template.id);
+                  } else {
+                    setDataRunTime(minutes * 60, template.id);
+                  }
+                  window.localStorage.setItem('focused', '');
+                }}
+                onChange={() => {
+                  window.localStorage.setItem(
+                    'focused',
+                    'manual-time-' + template.id.toString()
+                  );
+                }}
+                isDisabled={readOnly}
+              />
+            </InputGroupItem>
             <InputGroupText>min</InputGroupText>
-            <InputGroupText >
+            <InputGroupText>
               x {template.successful_hosts_total} host runs
             </InputGroupText>
           </InputGroup>
@@ -167,8 +170,8 @@ const Row: FunctionComponent<Props> = ({
         </Td>
         <Td>
           <Switch
-            label="Show"
-            labelOff="Hide"
+            label='Show'
+            labelOff='Hide'
             isChecked={template.enabled}
             onChange={(_event, checked) => setEnabled(checked)}
             isDisabled={readOnly}

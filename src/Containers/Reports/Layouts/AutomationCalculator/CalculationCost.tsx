@@ -49,10 +49,10 @@ const CalculationCost: FunctionComponent<Props> = ({
           <DollarSignIcon />
         </InputGroupText>
         <TextInput
-          id="manual-cost"
-          key="manual-cost"
-          type="number"
-          aria-label="manual-cost"
+          id='manual-cost'
+          key='manual-cost'
+          type='number'
+          aria-label='manual-cost'
           value={isNaN(costManual) ? '' : costManual.toString()}
           onChange={(e) => setFromCalculation('manual_cost', validFloat(+e))}
           isDisabled={readOnly}
@@ -65,10 +65,10 @@ const CalculationCost: FunctionComponent<Props> = ({
           <DollarSignIcon />
         </InputGroupText>
         <TextInput
-          id="automation-cost"
-          key="automation-cost"
-          type="number"
-          aria-label="automation-cost"
+          id='automation-cost'
+          key='automation-cost'
+          type='number'
+          aria-label='automation-cost'
           value={isNaN(costAutomation) ? '' : costAutomation.toString()}
           onChange={(e) =>
             setFromCalculation('automation_cost', validFloat(+e))

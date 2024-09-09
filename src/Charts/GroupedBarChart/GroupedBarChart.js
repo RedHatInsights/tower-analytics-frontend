@@ -225,7 +225,7 @@ const GroupedBarChart = ({
           data={colors}
           selected={selectedIds}
           onToggle={handleToggle}
-          height="350px"
+          height='350px'
           chartName={`${props.id}-legend`}
         />
       )}

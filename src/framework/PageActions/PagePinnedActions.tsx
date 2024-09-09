@@ -1,11 +1,11 @@
-import { DropdownPosition, Split } from "@patternfly/react-core";
-import React, { ComponentClass, FunctionComponent } from "react";
-import { IPageAction } from "./PageAction";
-import { PageActionType } from "./PageActionType";
-import { PageBulkAction } from "./PageBulkAction";
-import { PageButtonAction } from "./PageButtonAction";
-import { PageDropdownAction } from "./PageDropdownAction";
-import { PageSingleAction } from "./PageSingleAction";
+import { DropdownPosition, Split } from '@patternfly/react-core';
+import React, { ComponentClass, FunctionComponent } from 'react';
+import { IPageAction } from './PageAction';
+import { PageActionType } from './PageActionType';
+import { PageBulkAction } from './PageBulkAction';
+import { PageButtonAction } from './PageButtonAction';
+import { PageDropdownAction } from './PageDropdownAction';
+import { PageSingleAction } from './PageSingleAction';
 
 export function PagePinnedActions<T extends object>(props: {
   actions: IPageAction<T>[];
@@ -89,7 +89,7 @@ export function PagePinnedAction<T extends object>(props: {
       const isDisabled =
         action.isDisabled !== undefined && selectedItem
           ? action.isDisabled(selectedItem)
-          : "";
+          : '';
       tooltip = isDisabled ? isDisabled : tooltip;
       return (
         <PageDropdownAction<T>

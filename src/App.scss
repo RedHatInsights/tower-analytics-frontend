@@ -1,5 +1,5 @@
 // Importing Global Variables
-@import "~@redhat-cloud-services/frontend-components-utilities/styles/all";
+@import '~@redhat-cloud-services/frontend-components-utilities/styles/all';
 
 // Automation Analytics Styling
 
@@ -7,12 +7,17 @@
  * CONSIDER when styling using the styled components instead of this file.
  * At this project we prefer to use the styled components.
  * ***********************************************************************/
-#d3-donut-1-chart-root, #d3-donut-2-chart-root {
+#d3-donut-1-chart-root,
+#d3-donut-2-chart-root {
   min-height: 300px;
   min-width: 60%;
 }
 
-#d3-grouped-bar-chart-root, #d3-line-chart-root, #d3-bar-chart-root, #d3-pie-1-chart-root, #d3-roi-chart-root {
+#d3-grouped-bar-chart-root,
+#d3-line-chart-root,
+#d3-bar-chart-root,
+#d3-pie-1-chart-root,
+#d3-roi-chart-root {
   min-height: 450px;
   min-width: 75%;
 }
@@ -22,11 +27,11 @@
 }
 
 #d3-bar-chart-root rect:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #d3-grouped-bar-chart-root rect:hover {
-    cursor: pointer;
+  cursor: pointer;
 }
 
 #d3-line-chart-root circle:hover {

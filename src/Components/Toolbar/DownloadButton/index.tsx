@@ -1,17 +1,17 @@
 import React, { FC, useState } from 'react';
 import {
-	Button,
-	ButtonVariant,
-	Spinner,
-	Tooltip,
-	TooltipPosition
+  Button,
+  ButtonVariant,
+  Spinner,
+  Tooltip,
+  TooltipPosition,
 } from '@patternfly/react-core';
 import DownloadIcon from '@patternfly/react-icons/dist/esm/icons/download-icon';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import {
-	Wizard,
-	WizardContextConsumer,
-	WizardFooter
+  Wizard,
+  WizardContextConsumer,
+  WizardFooter,
 } from '@patternfly/react-core/deprecated';
 import { DownloadState } from '../../../store/pdfDownloadButton/types';
 import {
@@ -287,7 +287,7 @@ const DownloadButton: FC<Props> = ({
               <>
                 <Button
                   variant={ButtonVariant.primary}
-                  type="submit"
+                  type='submit'
                   onClick={
                     downloadType === 'pdf' && totalPages <= 1 ? onSave : onNext
                   }
@@ -298,11 +298,11 @@ const DownloadButton: FC<Props> = ({
                     : 'Next'}
                 </Button>
                 {activeStep.id !== 1 && (
-                  <Button variant="secondary" onClick={onBack}>
+                  <Button variant='secondary' onClick={onBack}>
                     Back
                   </Button>
                 )}
-                <Button variant="link" onClick={onClose}>
+                <Button variant='link' onClick={onClose}>
                   Cancel
                 </Button>
               </>
@@ -313,7 +313,7 @@ const DownloadButton: FC<Props> = ({
             <>
               <Button
                 variant={ButtonVariant.primary}
-                type="submit"
+                type='submit'
                 onClick={onSave}
                 isDisabled={
                   downloadType === 'email' ? sendEmailButtonDisabled() : false
@@ -321,10 +321,10 @@ const DownloadButton: FC<Props> = ({
               >
                 {downloadType === 'email' ? 'Send e-mail' : 'Export'}
               </Button>
-              <Button variant="secondary" onClick={onBack}>
+              <Button variant='secondary' onClick={onBack}>
                 Back
               </Button>
-              <Button variant="link" onClick={onClose}>
+              <Button variant='link' onClick={onClose}>
                 Cancel
               </Button>
             </>
@@ -338,16 +338,16 @@ const DownloadButton: FC<Props> = ({
 
   return (
     <>
-      <Tooltip position={TooltipPosition.top} content="Export report">
+      <Tooltip position={TooltipPosition.top} content='Export report'>
         <Button
           variant={isError ? ButtonVariant.link : ButtonVariant.plain}
-          aria-label="Export report"
+          aria-label='Export report'
           onClick={() => setIsExportModalOpen(true)}
           isDanger={isError}
           data-cy={'download-button'}
         >
           {isLoading && (
-            <Spinner data-cy={'download-button-loading'}  size="md" />
+            <Spinner data-cy={'download-button-loading'} size='md' />
           )}
           {!isLoading && isError && (
             <ExclamationCircleIcon data-cy={'download-button-error'} />

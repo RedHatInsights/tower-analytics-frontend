@@ -121,8 +121,8 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
     ) : (
       <Label
         key={index}
-        variant="outline"
-        color="red"
+        variant='outline'
+        color='red'
         icon={<ExclamationCircleIcon />}
         style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}
       >
@@ -204,11 +204,11 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
               </DescriptionList>
               {tasks.length > 0 && (
                 <DescriptionList>
-                  <Divider component="div" />
+                  <Divider component='div' />
                   <DescriptionListGroup key={tasks}>
                     <DescriptionListTerm>Tasks</DescriptionListTerm>
                     <DescriptionListDescription>
-                      <List component="ol" type="1">
+                      <List component='ol' type='1'>
                         {tasks.map(({ id, task }) => (
                           <ListItem key={id}>{task}</ListItem>
                         ))}
@@ -223,9 +223,9 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
             <CardFooter>
               <CardActionsRow>
                 <Button
-                  key="edit-plan-button"
-                  variant="primary"
-                  aria-label="Edit plan"
+                  key='edit-plan-button'
+                  variant='primary'
+                  aria-label='Edit plan'
                   onClick={() => {
                     navigate(
                       createUrl(`${pathname.split('/details')[0]}/edit`)
@@ -248,7 +248,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
                   isOpen={!!error}
                   onClose={dismissError}
                   title={'Error'}
-                  variant="error"
+                  variant='error'
                 >
                   <ErrorDetail error={error.detail} />
                 </AlertModal>

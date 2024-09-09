@@ -39,7 +39,7 @@ const Edit = ({ data }) => {
 
   const renderContent = () => {
     if (!isSuccess) return null;
-    return <Form title="Edit plan" options={options} data={data} />;
+    return <Form title='Edit plan' options={options} data={data} />;
   };
 
   return renderContent();

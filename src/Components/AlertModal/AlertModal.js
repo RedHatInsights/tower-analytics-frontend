@@ -46,17 +46,17 @@ const AlertModal = ({
   ...props
 }) => {
   const variantIcons = {
-    danger: <ExclamationCircleIcon size="lg" />,
-    error: <TimesCircleIcon size="lg" />,
-    info: <InfoCircleIcon size="lg" />,
-    success: <CheckCircleIcon size="lg" />,
-    warning: <ExclamationTriangleIcon size="lg" />,
+    danger: <ExclamationCircleIcon size='lg' />,
+    error: <TimesCircleIcon size='lg' />,
+    info: <InfoCircleIcon size='lg' />,
+    success: <CheckCircleIcon size='lg' />,
+    warning: <ExclamationTriangleIcon size='lg' />,
   };
 
   const customHeader = (
     <Header>
       {variant ? variantIcons[variant] : null}
-      <Title id="alert-modal-header-label" size="2xl" headingLevel="h2">
+      <Title id='alert-modal-header-label' size='2xl' headingLevel='h2'>
         {title}
       </Title>
     </Header>
@@ -66,9 +66,9 @@ const AlertModal = ({
     <Modal
       header={customHeader}
       aria-label={label}
-      aria-labelledby="alert-modal-header-label"
+      aria-labelledby='alert-modal-header-label'
       isOpen={!!isOpen}
-      variant="small"
+      variant='small'
       title={title}
       {...props}
     >

@@ -9,7 +9,7 @@ jest.mock('../../Api');
 
 describe('<DeleteButton />', () => {
   test('should render button', async () => {
-    render(<DeleteButton onConfirm={() => {}} name="Foo" />);
+    render(<DeleteButton onConfirm={() => {}} name='Foo' />);
     await (() => screen.getById('button'));
   });
 
@@ -17,7 +17,7 @@ describe('<DeleteButton />', () => {
     render(
       <DeleteButton
         onConfirm={() => {}}
-        name="Foo"
+        name='Foo'
         deleteDetailsRequests={[
           {
             label: 'Plan',
@@ -26,8 +26,8 @@ describe('<DeleteButton />', () => {
             }),
           },
         ]}
-        deleteMessage="Delete this?"
-        warningMessage="Are you sure to want to delete this"
+        deleteMessage='Delete this?'
+        warningMessage='Are you sure to want to delete this'
       />
     );
     expect(screen.getByLabelText('Delete'));
@@ -43,7 +43,7 @@ describe('<DeleteButton />', () => {
     render(
       <DeleteButton
         onConfirm={onConfirm}
-        itemsToDelete="foo"
+        itemsToDelete='foo'
         deleteDetailsRequests={[
           {
             label: 'Plan',

@@ -23,7 +23,7 @@ const PdfDetails = ({
 
   return (
     <>
-      <Title size="md" headingLevel="h4">
+      <Title size='md' headingLevel='h4'>
         {'Select details:'}
       </Title>
       <Grid md={4}>
@@ -36,10 +36,10 @@ const PdfDetails = ({
               })
             }
             isChecked={!showExtraRows}
-            name="showExtraRows"
-            label="Current page"
-            id="current-radio"
-            aria-label="current-radio"
+            name='showExtraRows'
+            label='Current page'
+            id='current-radio'
+            aria-label='current-radio'
           />
         </GridItem>
         <GridItem>
@@ -51,10 +51,10 @@ const PdfDetails = ({
               })
             }
             isChecked={showExtraRows}
-            name="showExtraRows"
+            name='showExtraRows'
             label={extraRowsLabel}
-            id="extra-radio"
-            aria-label="extra-radio"
+            id='extra-radio'
+            aria-label='extra-radio'
           />
         </GridItem>
       </Grid>

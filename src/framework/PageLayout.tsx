@@ -1,7 +1,7 @@
-import React, { ReactNode } from "react";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { PageAlertsProvider } from "./PageAlerts";
-import { useFrameworkTranslations } from "./useFrameworkTranslations";
+import React, { ReactNode } from 'react';
+import ErrorBoundary from './components/ErrorBoundary';
+import { PageAlertsProvider } from './PageAlerts';
+import { useFrameworkTranslations } from './useFrameworkTranslations';
 
 /**
  * The PageLayout is used as the container for the contents of the page.
@@ -23,10 +23,10 @@ export function PageLayout(props: { children?: ReactNode }) {
       <PageAlertsProvider>
         <div
           style={{
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-            maxHeight: "100%",
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            maxHeight: '100%',
           }}
         >
           {props.children}

@@ -116,13 +116,13 @@ const FormulaDescription: FunctionComponent<Record<string, never>> = () => {
         Automation formula
       </Button>
       <Modal
-        title="Automation formula"
+        title='Automation formula'
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         variant={ModalVariant.medium}
         actions={[
           <Button
-            key="cancel"
+            key='cancel'
             variant={ButtonVariant.primary}
             onClick={() => setIsOpen(false)}
           >

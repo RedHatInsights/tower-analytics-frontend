@@ -17,19 +17,19 @@ import {
   Popover,
   Text,
   Truncate,
-} from "@patternfly/react-core";
-import React, { ReactNode, useCallback, useMemo } from "react";
-import { IconWrapper } from "../components/IconWrapper";
-import { LabelColor } from "../components/pfcolors";
-import { IPageAction } from "../PageActions/PageAction";
-import { PageActions } from "../PageActions/PageActions";
-import { PageDetail } from "../PageDetails/PageDetail";
+} from '@patternfly/react-core';
+import React, { ReactNode, useCallback, useMemo } from 'react';
+import { IconWrapper } from '../components/IconWrapper';
+import { LabelColor } from '../components/pfcolors';
+import { IPageAction } from '../PageActions/PageAction';
+import { PageActions } from '../PageActions/PageActions';
+import { PageDetail } from '../PageDetails/PageDetail';
 import {
   ITableColumn,
   ITableColumnTypeCount,
   ITableColumnTypeLabels,
   TableColumnCell,
-} from "./PageTable";
+} from './PageTable';
 
 export interface IPageTableCard {
   id: string | number;
@@ -44,7 +44,7 @@ export interface IPageTableCard {
   badgeTooltipTitle?: string;
   alertTitle?: string;
   alertContent?: ReactNode;
-  alertVariant?: "success" | "danger" | "warning" | "info" | "default";
+  alertVariant?: 'success' | 'danger' | 'warning' | 'info' | 'default';
 }
 
 export function PageTableCard<T extends object>(props: {
@@ -93,36 +93,36 @@ export function PageTableCard<T extends object>(props: {
       isSelectable={isItemSelected}
       isSelected={isItemSelected}
       style={{
-        transition: "box-shadow 0.25s",
-        cursor: "default",
-        maxWidth: "100%",
+        transition: 'box-shadow 0.25s',
+        cursor: 'default',
+        maxWidth: '100%',
       }}
     >
       <CardHeader
-        style={{ display: "flex", flexWrap: "nowrap", maxWidth: "100%" }}
+        style={{ display: 'flex', flexWrap: 'nowrap', maxWidth: '100%' }}
       >
-        <div style={{ display: "flex", flexWrap: "nowrap", maxWidth: "100%" }}>
+        <div style={{ display: 'flex', flexWrap: 'nowrap', maxWidth: '100%' }}>
           <div
             style={{
-              display: "flex",
-              flexWrap: "wrap",
-              alignItems: "center",
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
               gap: 16,
-              maxWidth: "100%",
+              maxWidth: '100%',
             }}
           >
-            {card.icon && <IconWrapper size="xl">{card.icon}</IconWrapper>}
-            <div style={{ maxWidth: "100%" }}>
+            {card.icon && <IconWrapper size='xl'>{card.icon}</IconWrapper>}
+            <div style={{ maxWidth: '100%' }}>
               <CardTitle>
                 <Truncate content={card.title as string} />
               </CardTitle>
               {card.subtitle ? (
-                <Text component="small" style={{ opacity: 0.7 }}>
+                <Text component='small' style={{ opacity: 0.7 }}>
                   {card.subtitle}
                 </Text>
               ) : (
                 defaultCardSubtitle && (
-                  <Text component="small" style={{ opacity: 0.7 }}>
+                  <Text component='small' style={{ opacity: 0.7 }}>
                     {defaultCardSubtitle}
                   </Text>
                 )
@@ -156,7 +156,7 @@ export function PageTableCard<T extends object>(props: {
                 position={DropdownPosition.right}
                 selectedItem={item}
                 iconOnly
-                collapse="always"
+                collapse='always'
               />
             )}
             {showSelect && (
@@ -164,7 +164,7 @@ export function PageTableCard<T extends object>(props: {
                 isChecked={isSelected?.(item)}
                 onChange={onSelectClick}
                 // aria-label="card checkbox example"
-                id="check-1"
+                id='check-1'
                 // name="check1"
               />
             )}
@@ -176,9 +176,9 @@ export function PageTableCard<T extends object>(props: {
         <CardFooter>
           <div
             style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "end",
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'end',
               gap: 16,
             }}
           >
@@ -219,27 +219,27 @@ export function useColumnsToTableCardFn<T extends object>(
 
     for (const column of columns) {
       switch (column.type) {
-        case "description":
+        case 'description':
           if (!descriptionColumn) descriptionColumn = column;
           break;
-        case "labels":
+        case 'labels':
           if (!labelColumn) labelColumn = column;
           break;
-        case "count":
+        case 'count':
           countColumns.push(column);
           break;
         default:
           switch (column.card) {
-            case "name":
+            case 'name':
               nameColumn = column;
               break;
-            case "subtitle":
+            case 'subtitle':
               subtitleColumn = column;
               break;
-            case "description":
+            case 'description':
               descriptionColumn = column;
               break;
-            case "hidden":
+            case 'hidden':
               break;
             default:
               cardColumns.push(column);
@@ -286,7 +286,7 @@ export function useColumnsToTableCardFn<T extends object>(
             <DescriptionList isCompact>
               {hasDescription && (
                 <PageDetail key={descriptionColumn.id}>
-                  {descriptionColumn.type === "description" ? (
+                  {descriptionColumn.type === 'description' ? (
                     <div>{descriptionColumn.value(item)}</div>
                   ) : (
                     <TableColumnCell column={descriptionColumn} item={item} />
@@ -304,19 +304,19 @@ export function useColumnsToTableCardFn<T extends object>(
                 <PageDetail>
                   <div
                     style={{
-                      display: "flex",
+                      display: 'flex',
                       gap: 16,
                       marginTop: 8,
-                      flexWrap: "wrap",
+                      flexWrap: 'wrap',
                     }}
                   >
                     {countColumns.map((column, i) => (
                       <div
                         key={i}
                         style={{
-                          display: "flex",
+                          display: 'flex',
                           gap: 6,
-                          alignItems: "baseline",
+                          alignItems: 'baseline',
                         }}
                       >
                         <TableColumnCell column={column} item={item} />

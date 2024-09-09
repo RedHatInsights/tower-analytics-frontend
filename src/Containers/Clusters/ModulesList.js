@@ -31,7 +31,7 @@ const DataCellEnd = styled(DataListCell)`
 
 const ModulesList = ({ modules, isLoading }) => (
   <DataList
-    aria-label="Top Modules"
+    aria-label='Top Modules'
     style={{
       maxHeight: '400px',
       overflow: 'auto',
@@ -39,7 +39,7 @@ const ModulesList = ({ modules, isLoading }) => (
       background: 'white',
     }}
   >
-    <DataListItem aria-labelledby="top-modules-header">
+    <DataListItem aria-labelledby='top-modules-header'>
       <DataListCell>
         <h3>Top modules</h3>
       </DataListCell>
@@ -49,7 +49,7 @@ const ModulesList = ({ modules, isLoading }) => (
     </DataListItem>
     {isLoading && (
       <PFDataListItem
-        aria-labelledby="modules-loading"
+        aria-labelledby='modules-loading'
         key={isLoading}
         style={{ border: 'none' }}
       >
@@ -60,7 +60,7 @@ const ModulesList = ({ modules, isLoading }) => (
     )}
     {!isLoading && modules.length <= 0 && (
       <PFDataListItem
-        aria-labelledby="modules-no-data"
+        aria-labelledby='modules-no-data'
         key={isLoading}
         style={{ border: 'none' }}
       >
@@ -73,7 +73,7 @@ const ModulesList = ({ modules, isLoading }) => (
       modules
         .filter((module) => module.name !== null)
         .map(({ name, host_task_count }, index) => (
-          <DataListItem aria-labelledby="top-modules-detail" key={index}>
+          <DataListItem aria-labelledby='top-modules-detail' key={index}>
             <DataListCell>
               <span>{trimStr(name)}</span>
             </DataListCell>

@@ -158,10 +158,10 @@ const List = () => {
           ...(canWrite
             ? [
                 <Button
-                  key="add-plan-button"
+                  key='add-plan-button'
                   data-cy={'add-plan-button'}
-                  variant="primary"
-                  aria-label="Add plan"
+                  variant='primary'
+                  aria-label='Add plan'
                   onClick={() => {
                     navigate(createUrl(`${pathname}/add`));
                   }}
@@ -172,7 +172,7 @@ const List = () => {
             : []),
           canWrite && isSuccess && data.length > 0 && (
             <ToolbarDeleteButton
-              key="delete-plan-button"
+              key='delete-plan-button'
               data-cy={'delete-plan-button'}
               onDelete={handleDelete}
               itemsToDelete={data.filter((d) => selected.includes(d.id))}
@@ -214,7 +214,7 @@ const List = () => {
           isOpen={deletionError}
           onClose={clearDeletionError}
           title={'Error'}
-          variant="error"
+          variant='error'
         >
           {'Failed to delete one or more plans.'}
           <ErrorDetail error={deletionError.detail} />

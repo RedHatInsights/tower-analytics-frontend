@@ -51,16 +51,16 @@ export const AnalyticsRoutes: FunctionComponent<Record<string, never>> = () => {
     <Routes>
       {/* Catch urls with the trailing slash and remove it */}
       <Route
-        path="/:url*(/+)"
+        path='/:url*(/+)'
         element={<Navigate to={pathname.slice(0, -1)} replace />}
       />
       {/* Finally, catch all unmatched routes and render 404 */}
       <Route
-        path="*"
+        path='*'
         element={
           <Error404
             data-cy={'error_page_404'}
-            body="Sorry, we could not find what you were looking for. The page you requested may have been changed or moved."
+            body='Sorry, we could not find what you were looking for. The page you requested may have been changed or moved.'
           />
         }
       />
@@ -72,7 +72,7 @@ export const AnalyticsRoutes: FunctionComponent<Record<string, never>> = () => {
       })}
       {/* Redirect the root path to the clusters so it does not give 404. */}
       <Route
-        path="/"
+        path='/'
         element={
           <Navigate to={prefixPath + Paths.clusters.replace('/', '')} replace />
         }

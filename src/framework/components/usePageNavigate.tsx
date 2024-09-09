@@ -3,7 +3,7 @@ import React, {
   ReactNode,
   useCallback,
   useContext,
-} from "react";
+} from 'react';
 
 const PageNavigateCallbackContext = createContext<
   ((url: string) => void) | undefined
@@ -28,12 +28,12 @@ export function usePageNavigate() {
   const pageNavigateCallback = usePageNavigateCallback();
   const navigate = useCallback(
     (to?: string) => {
-      if (to?.startsWith("http")) {
-        open(to, "_blank");
+      if (to?.startsWith('http')) {
+        open(to, '_blank');
       } else {
         pageNavigateCallback
-          ? pageNavigateCallback(to ?? "")
-          : open(to, "_self");
+          ? pageNavigateCallback(to ?? '')
+          : open(to, '_self');
       }
     },
     [pageNavigateCallback]

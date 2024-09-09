@@ -15,18 +15,18 @@ import {
   Stack,
   Text,
   Title,
-} from "@patternfly/react-core";
-import React, { ReactNode, useCallback, useMemo } from "react";
-import { IconWrapper } from "../components/IconWrapper";
-import { IPageAction } from "../PageActions/PageAction";
-import { PageActions } from "../PageActions/PageActions";
+} from '@patternfly/react-core';
+import React, { ReactNode, useCallback, useMemo } from 'react';
+import { IconWrapper } from '../components/IconWrapper';
+import { IPageAction } from '../PageActions/PageAction';
+import { PageActions } from '../PageActions/PageActions';
 import {
   ITableColumn,
   ITableColumnTypeCount,
   ITableColumnTypeLabels,
   PageTableProps,
   TableColumnCell,
-} from "./PageTable";
+} from './PageTable';
 
 export type PageTableListProps<T extends object> = PageTableProps<T>;
 
@@ -56,8 +56,8 @@ export function PageTableList<T extends object>(props: PageTableListProps<T>) {
 
   return (
     <DataList
-      aria-label="TODO"
-      style={{ marginTop: -1, maxWidth: "100%", overflow: "hidden" }}
+      aria-label='TODO'
+      style={{ marginTop: -1, maxWidth: '100%', overflow: 'hidden' }}
     >
       {pageItems?.map(columnsToDataList)}
     </DataList>
@@ -85,29 +85,29 @@ export function useColumnsToDataList<T extends object>(
 
     for (const column of tableColumns) {
       switch (column.type) {
-        case "description":
+        case 'description':
           if (!descriptionColumn) descriptionColumn = column;
           break;
-        case "labels":
+        case 'labels':
           if (!labelColumn) labelColumn = column;
           break;
-        case "count":
+        case 'count':
           countColumns.push(column);
           break;
         default:
           switch (column.list) {
-            case "name":
+            case 'name':
               nameColumn = column;
               break;
-            case "subtitle":
+            case 'subtitle':
               subtitleColumn = column;
               break;
-            case "description":
+            case 'description':
               descriptionColumn = column;
               break;
-            case "hidden":
+            case 'hidden':
               break;
-            case "secondary":
+            case 'secondary':
               secondaryColumns.push(column);
               break;
             default:
@@ -170,19 +170,19 @@ export function useColumnsToDataList<T extends object>(
             )}
             <DataListItemCells
               dataListCells={[
-                <DataListCell key="primary" width={5}>
+                <DataListCell key='primary' width={5}>
                   <Flex>
                     <Stack hasGutter>
-                      <Flex alignItems={{ default: "alignItemsCenter" }}>
+                      <Flex alignItems={{ default: 'alignItemsCenter' }}>
                         {nameColumn?.icon && (
-                          <IconWrapper size="xl">
+                          <IconWrapper size='xl'>
                             {nameColumn?.icon(item)}
                           </IconWrapper>
                         )}
                         <Stack>
                           <Title
-                            headingLevel="h2"
-                            style={{ marginTop: -4, fontWeight: "bold" }}
+                            headingLevel='h2'
+                            style={{ marginTop: -4, fontWeight: 'bold' }}
                           >
                             <span id={`data-list-${key}`}>
                               <TableColumnCell
@@ -192,7 +192,7 @@ export function useColumnsToDataList<T extends object>(
                             </span>
                           </Title>
                           {subtitleColumn ? (
-                            <Text component="small" style={{ opacity: 0.7 }}>
+                            <Text component='small' style={{ opacity: 0.7 }}>
                               <TableColumnCell
                                 column={subtitleColumn}
                                 item={item}
@@ -200,7 +200,7 @@ export function useColumnsToDataList<T extends object>(
                             </Text>
                           ) : (
                             defaultCardSubtitle && (
-                              <Text component="small" style={{ opacity: 0.7 }}>
+                              <Text component='small' style={{ opacity: 0.7 }}>
                                 {defaultCardSubtitle}
                               </Text>
                             )
@@ -232,7 +232,7 @@ export function useColumnsToDataList<T extends object>(
                             return (
                               <DescriptionListGroup key={column.header}>
                                 <DescriptionListTerm
-                                  style={{ whiteSpace: "nowrap" }}
+                                  style={{ whiteSpace: 'nowrap' }}
                                 >
                                   {column.header}
                                 </DescriptionListTerm>
@@ -246,23 +246,23 @@ export function useColumnsToDataList<T extends object>(
                             );
                           })}
                           {countColumns.length > 0 && (
-                            <DescriptionListGroup key="counts">
+                            <DescriptionListGroup key='counts'>
                               <DescriptionListDescription>
                                 <div
                                   style={{
-                                    display: "flex",
+                                    display: 'flex',
                                     gap: 16,
                                     marginTop: 8,
-                                    flexWrap: "wrap",
+                                    flexWrap: 'wrap',
                                   }}
                                 >
                                   {countColumns.map((column, i) => (
                                     <div
                                       key={i}
                                       style={{
-                                        display: "flex",
+                                        display: 'flex',
                                         gap: 6,
-                                        alignItems: "baseline",
+                                        alignItems: 'baseline',
                                       }}
                                     >
                                       <TableColumnCell
@@ -294,14 +294,14 @@ export function useColumnsToDataList<T extends object>(
                   </Flex>
                 </DataListCell>,
                 secondaryColumns.length > 0 ? (
-                  <DataListCell key="secondary">
+                  <DataListCell key='secondary'>
                     <DescriptionList isCompact>
                       {secondaryColumns.map((column) => {
                         if (column.value && !column.value(item)) return <></>;
                         return (
                           <DescriptionListGroup key={column.header}>
                             <DescriptionListTerm
-                              style={{ whiteSpace: "nowrap" }}
+                              style={{ whiteSpace: 'nowrap' }}
                             >
                               {column.header}
                             </DescriptionListTerm>
@@ -318,11 +318,11 @@ export function useColumnsToDataList<T extends object>(
             />
             {rowActions && (
               <DataListAction
-                aria-labelledby="check-action-item1 check-action-action1"
-                id="check-action-action1"
-                aria-label="Actions"
+                aria-labelledby='check-action-item1 check-action-action1'
+                id='check-action-action1'
+                aria-label='Actions'
                 isPlainButtonAction
-                style={{ whiteSpace: "nowrap" }}
+                style={{ whiteSpace: 'nowrap' }}
               >
                 <PageActions
                   actions={rowActions}

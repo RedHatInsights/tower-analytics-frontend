@@ -236,7 +236,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
 
   return (
     <Modal
-      aria-label="modal"
+      aria-label='modal'
       variant={ModalVariant.medium}
       title={
         jobsApi.isSuccess &&
@@ -278,17 +278,14 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
             </DescriptionList>
 
             <Divider
-              component="div"
+              component='div'
               style={{ marginTop: '2rem', marginBottom: '1.5rem' }}
             />
             <p>
               <strong>Last 5 jobs</strong>
             </p>
 
-            <Table
-              aria-label="Template information table"
-              variant="compact"
-            >
+            <Table aria-label='Template information table' variant='compact'>
               <Thead>
                 <Tr>
                   {tableCols.map((heading, idx) => (
@@ -315,8 +312,8 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
 
       <ActionContainer>
         <Button
-          key="cancel"
-          variant="secondary"
+          key='cancel'
+          variant='secondary'
           onClick={() => {
             cleanup();
           }}
@@ -326,9 +323,9 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
         </Button>
 
         <Button
-          component="a"
+          component='a'
           onClick={navigateToJobExplorer}
-          variant="link"
+          variant='link'
           data-cy={'modal_view_all_jobs_button'}
         >
           View all jobs

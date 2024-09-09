@@ -1,11 +1,11 @@
-import useResizeObserver from "@react-hook/resize-observer";
+import useResizeObserver from '@react-hook/resize-observer';
 import React, {
   ReactNode,
   useCallback,
   useLayoutEffect,
   useRef,
   useState,
-} from "react";
+} from 'react';
 
 export function PageGrid(props: {
   size?: number;
@@ -14,7 +14,7 @@ export function PageGrid(props: {
 }) {
   const size = props.size ?? 350;
   const target = useRef<HTMLDivElement>(null);
-  const [gridTemplateColumns, setGridTemplateColumns] = useState("1fr");
+  const [gridTemplateColumns, setGridTemplateColumns] = useState('1fr');
   const resize = useCallback(
     (width: number) => {
       let columns = Math.min(
@@ -22,7 +22,7 @@ export function PageGrid(props: {
         Math.max(Math.floor(width / size), 1)
       );
       if (columns < 1) columns = 1;
-      setGridTemplateColumns(() => new Array(columns).fill("1fr").join(" "));
+      setGridTemplateColumns(() => new Array(columns).fill('1fr').join(' '));
     },
     [props.maxColumns, size]
   );
@@ -38,7 +38,7 @@ export function PageGrid(props: {
   return (
     <div
       ref={target}
-      style={{ display: "grid", gridAutoRows: "1fr", gridTemplateColumns, gap }}
+      style={{ display: 'grid', gridAutoRows: '1fr', gridTemplateColumns, gap }}
     >
       {props.children}
     </div>

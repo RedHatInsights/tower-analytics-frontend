@@ -1,10 +1,6 @@
 import React, { FunctionComponent, useState } from 'react';
-import {
-	ToolbarGroup
-} from '@patternfly/react-core';
-import {
-	SelectOptionProps
-} from '@patternfly/react-core/deprecated';
+import { ToolbarGroup } from '@patternfly/react-core';
+import { SelectOptionProps } from '@patternfly/react-core/deprecated';
 
 import CategoryDropdown from './CategoryDropdown';
 import ToolbarInput from './ToolbarInput';
@@ -29,9 +25,9 @@ const FilterCategoriesGroup: FunctionComponent<Props> = ({
   );
 
   return (
-    <ToolbarGroup variant="filter-group">
+    <ToolbarGroup variant='filter-group'>
       <CategoryDropdown
-        categoryKey="category_selector"
+        categoryKey='category_selector'
         selected={currentCategory}
         setSelected={setCurrentCategory}
         categories={Object.keys(filterCategories).map((el) => ({

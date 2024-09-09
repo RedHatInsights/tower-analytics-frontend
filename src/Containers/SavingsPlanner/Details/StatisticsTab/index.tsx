@@ -254,21 +254,30 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
 
   const renderLeft = () => (
     <Card isPlain>
-      <CardHeader actions={{ actions: <><ToggleGroup aria-label="toggleButton">
-            <ToggleGroupItem
-              text="Money"
-              buttonId="money"
-              isSelected={isMoney}
-              onChange={() => setIsMoney(true)}
-            />
-            <ToggleGroupItem
-              text="Time"
-              buttonId="time"
-              isSelected={!isMoney}
-              onChange={() => setIsMoney(false)}
-            />
-          </ToggleGroup></>, hasNoOffset: false, className: undefined}} >
-        
+      <CardHeader
+        actions={{
+          actions: (
+            <>
+              <ToggleGroup aria-label='toggleButton'>
+                <ToggleGroupItem
+                  text='Money'
+                  buttonId='money'
+                  isSelected={isMoney}
+                  onChange={() => setIsMoney(true)}
+                />
+                <ToggleGroupItem
+                  text='Time'
+                  buttonId='time'
+                  isSelected={!isMoney}
+                  onChange={() => setIsMoney(false)}
+                />
+              </ToggleGroup>
+            </>
+          ),
+          hasNoOffset: false,
+          className: undefined,
+        }}
+      >
         <CardTitle>{statsPlan.name}</CardTitle>
       </CardHeader>
       <CardBody>

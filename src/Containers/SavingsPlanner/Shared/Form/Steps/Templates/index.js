@@ -110,8 +110,8 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
   return isSuccess ? (
     <Form>
       <FormGroup
-        label="Link a template to this plan:"
-        fieldId="template-link-field"
+        label='Link a template to this plan:'
+        fieldId='template-link-field'
       >
         <FilterableToolbar
           categories={options}
@@ -133,7 +133,7 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
         {templatesIsLoading && <LoadingState />}
         {templatesIsSuccess && templates.length <= 0 && <NoResults />}
         {templatesIsSuccess && templates.length > 0 && (
-          <Table aria-label="Template link table" variant="compact">
+          <Table aria-label='Template link table' variant='compact'>
             <Thead>
               <Tr>
                 <Th />
@@ -168,9 +168,9 @@ const Templates = ({ template_id, dispatch: formDispatch }) => {
           <div>
             {template_id !== -2 && (
               <Button
-                key="clear-selection-button"
-                variant="link"
-                aria-label="Clear selection"
+                key='clear-selection-button'
+                variant='link'
+                aria-label='Clear selection'
                 onClick={() => {
                   formDispatch({
                     type: actions.SET_TEMPLATE_ID,

@@ -54,19 +54,22 @@ const ListItem: FunctionComponent<Props> = ({
       }}
     >
       <CardHeader>
-        actions={<>
-          <CardTitle onClick={(event) => event.stopPropagation()}>
-            <Tooltip content={<div>Click to go to report details</div>}>
-              <Link to={paths.getDetails(slug)}>{name}</Link>
-            </Tooltip>
-          </CardTitle>
-        </>}
+        actions=
+        {
+          <>
+            <CardTitle onClick={(event) => event.stopPropagation()}>
+              <Tooltip content={<div>Click to go to report details</div>}>
+                <Link to={paths.getDetails(slug)}>{name}</Link>
+              </Tooltip>
+            </CardTitle>
+          </>
+        }
       </CardHeader>
       <CardBody>
         {description ? (
           <Tooltip
             content={<div>Show report in preview</div>}
-            position="bottom"
+            position='bottom'
           >
             <Small>{description}</Small>
           </Tooltip>

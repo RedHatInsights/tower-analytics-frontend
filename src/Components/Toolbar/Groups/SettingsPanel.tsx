@@ -1,11 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { Button, Switch, Popover } from '@patternfly/react-core';
-import {
-  Card,
-  CardTitle,
-  CardBody,
-  CardHeader,
-} from '@patternfly/react-core';
+import { Card, CardTitle, CardBody, CardHeader } from '@patternfly/react-core';
 import PFOutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon';
 import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
 
@@ -49,13 +44,22 @@ const SettingsPanel: FunctionComponent<Props> = ({
   bodyContent,
 }) => (
   <Card isFlat style={{ backgroundColor: '#EEEEEE' }}>
-    <CardHeader actions={{ actions: <><Button
-          variant="plain"
-          onClick={() => setSettingsExpanded(!settingsExpanded)}
-        >
-          <TimesIcon />
-        </Button></>, hasNoOffset: false, className: undefined}} >
-
+    <CardHeader
+      actions={{
+        actions: (
+          <>
+            <Button
+              variant='plain'
+              onClick={() => setSettingsExpanded(!settingsExpanded)}
+            >
+              <TimesIcon />
+            </Button>
+          </>
+        ),
+        hasNoOffset: false,
+        className: undefined,
+      }}
+    >
       <CardTitle>Settings</CardTitle>
     </CardHeader>
     <CardBody>
@@ -66,7 +70,7 @@ const SettingsPanel: FunctionComponent<Props> = ({
         isChecked={!!isChecked}
         onChange={onChange}
       />
-      <PopoverButton variant="plain">
+      <PopoverButton variant='plain'>
         <Popover
           aria-label={ariaLabel}
           position={'top'}

@@ -1,13 +1,11 @@
 import React, { FunctionComponent } from 'react';
 import {
-	SplitItem,
-	ToolbarGroup,
-	Split,
-	ToolbarGroupVariant
+  SplitItem,
+  ToolbarGroup,
+  Split,
+  ToolbarGroupVariant,
 } from '@patternfly/react-core';
-import {
-	SelectOptionProps
-} from '@patternfly/react-core/deprecated';
+import { SelectOptionProps } from '@patternfly/react-core/deprecated';
 
 import ToolbarInput from './ToolbarInput';
 
@@ -43,14 +41,14 @@ const QuickDateGroup: FunctionComponent<Props> = ({
     <ToolbarGroup variant={ToolbarGroupVariant['filter-group']}>
       {values.granularity && (
         <ToolbarInput
-          categoryKey="granularity"
+          categoryKey='granularity'
           value={filters.granularity}
           selectOptions={values.granularity}
           setValue={(value) => setFilters('granularity', value)}
         />
       )}
       <ToolbarInput
-        categoryKey="quick_date_range"
+        categoryKey='quick_date_range'
         value={filters.quick_date_range}
         selectOptions={values.quick_date_range}
         setValue={(value) => setFilters('quick_date_range', value)}
@@ -61,7 +59,7 @@ const QuickDateGroup: FunctionComponent<Props> = ({
         <Split hasGutter>
           <SplitItem>
             <ToolbarInput
-              categoryKey="start_date"
+              categoryKey='start_date'
               value={startDate}
               setValue={(e) => setFilters('start_date', e)}
               validators={[
@@ -73,7 +71,7 @@ const QuickDateGroup: FunctionComponent<Props> = ({
           <SplitItem style={{ paddingTop: '6px' }}>to</SplitItem>
           <SplitItem>
             <ToolbarInput
-              categoryKey="end_date"
+              categoryKey='end_date'
               value={endDate}
               setValue={(e) => setFilters('end_date', e)}
               validators={[

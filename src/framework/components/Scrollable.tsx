@@ -1,4 +1,4 @@
-import useResizeObserver from "@react-hook/resize-observer";
+import useResizeObserver from '@react-hook/resize-observer';
 import React, {
   CSSProperties,
   ReactNode,
@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useRef,
   useState,
-} from "react";
+} from 'react';
 
 export function Scrollable(props: {
   children?: ReactNode;
@@ -42,31 +42,31 @@ export function Scrollable(props: {
   // }
 
   /* istanbul ignore next */
-  const borderTop = props.borderTop ? "thin solid rgba(0, 0, 0, 0.12)" : "";
+  const borderTop = props.borderTop ? 'thin solid rgba(0, 0, 0, 0.12)' : '';
 
   /* istanbul ignore next */
   const borderBottom = props.borderBottom
-    ? "thin solid rgba(0, 0, 0, 0.12)"
-    : "";
+    ? 'thin solid rgba(0, 0, 0, 0.12)'
+    : '';
 
   return (
     <div
       style={{
         ...props.style,
-        display: "flex",
-        flexDirection: "column",
+        display: 'flex',
+        flexDirection: 'column',
         flexGrow: 1,
-        overflowY: "hidden",
-        position: "relative",
+        overflowY: 'hidden',
+        position: 'relative',
       }}
     >
       <div
         ref={divEl}
         style={{
-          display: "flex",
-          flexDirection: "column",
+          display: 'flex',
+          flexDirection: 'column',
           flexGrow: 1,
-          overflowY: "auto",
+          overflowY: 'auto',
           borderTop,
           borderBottom,
         }}
@@ -78,10 +78,10 @@ export function Scrollable(props: {
         /* istanbul ignore next */ shadowOpacityTop > 0 && (
           <div
             style={{
-              position: "absolute",
+              position: 'absolute',
               top: 0,
-              height: "10px",
-              width: "100%",
+              height: '10px',
+              width: '100%',
               background: `linear-gradient(rgba(0,0,0,${shadowOpacityTop}), rgba(0,0,0,0))`,
             }}
           />
@@ -91,10 +91,10 @@ export function Scrollable(props: {
         /* istanbul ignore next */ shadowOpacityBottom > 0 && (
           <div
             style={{
-              position: "absolute",
+              position: 'absolute',
               bottom: 0,
-              height: "10px",
-              width: "100%",
+              height: '10px',
+              width: '100%',
               background: `linear-gradient(rgba(0,0,0,0), rgba(0,0,0,${shadowOpacityBottom}))`,
             }}
           />

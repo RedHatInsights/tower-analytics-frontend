@@ -5,7 +5,7 @@ import React, {
   SetStateAction,
   useContext,
   useState,
-} from "react";
+} from 'react';
 
 export interface IFrameworkTranslations {
   cancelText: string;
@@ -24,19 +24,19 @@ export interface IFrameworkTranslations {
 }
 
 const defaultTranslations: IFrameworkTranslations = {
-  cancelText: "Cancel",
-  canceledText: "Canceled",
-  closeText: "Close",
-  confirmText: "Confirm",
-  errorText: "Error",
-  noItemsFound: "No items found",
-  ofText: "of",
-  pendingText: "Pending",
-  processingText: "Processing",
-  selectedText: "Selected",
-  submitText: "Submit",
-  submittingText: "Submitting",
-  successText: "Success",
+  cancelText: 'Cancel',
+  canceledText: 'Canceled',
+  closeText: 'Close',
+  confirmText: 'Confirm',
+  errorText: 'Error',
+  noItemsFound: 'No items found',
+  ofText: 'of',
+  pendingText: 'Pending',
+  processingText: 'Processing',
+  selectedText: 'Selected',
+  submitText: 'Submit',
+  submittingText: 'Submitting',
+  successText: 'Success',
 };
 
 const FrameworkTranslationsContext = createContext<
@@ -44,7 +44,7 @@ const FrameworkTranslationsContext = createContext<
     translations: IFrameworkTranslations,
     setTranslations: Dispatch<SetStateAction<IFrameworkTranslations>>
   ]
->([defaultTranslations, () => alert("Use FrameworkTranslationsProvider")]);
+>([defaultTranslations, () => alert('Use FrameworkTranslationsProvider')]);
 
 export function FrameworkTranslationsProvider(props: { children: ReactNode }) {
   const state = useState<IFrameworkTranslations>(defaultTranslations);

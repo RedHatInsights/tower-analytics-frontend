@@ -110,14 +110,14 @@ const AutomationFormula: FunctionComponent<Record<string, never>> = () => {
         Automation formula
       </Button>
       <Modal
-        title="Automation formula"
+        title='Automation formula'
         data-cy={'automation_formula_modal'}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         variant={ModalVariant.medium}
         actions={[
           <Button
-            key="cancel"
+            key='cancel'
             variant={ButtonVariant.primary}
             onClick={() => setIsOpen(false)}
             data-cy={'automation_formula_cancel_button'}

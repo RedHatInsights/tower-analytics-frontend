@@ -16,7 +16,7 @@ const ExportOptions = ({
 
   return (
     <>
-      <Title size="md" headingLevel="h4">
+      <Title size='md' headingLevel='h4'>
         {'Select export format:'}
       </Title>
       <Grid sm={2}>
@@ -29,10 +29,10 @@ const ExportOptions = ({
               })
             }
             isChecked={downloadType === 'pdf'}
-            name="optionSelected"
-            label="PDF"
-            id="pdf-radio"
-            aria-label="pdf-radio"
+            name='optionSelected'
+            label='PDF'
+            id='pdf-radio'
+            aria-label='pdf-radio'
           />
         </GridItem>
         {useFeatureFlag(ValidFeatureFlags.sendEmail) && (
@@ -45,10 +45,10 @@ const ExportOptions = ({
                 })
               }
               isChecked={downloadType === 'email'}
-              name="optionSelected"
-              label="E-mail"
-              id="email-radio"
-              aria-label="email-radio"
+              name='optionSelected'
+              label='E-mail'
+              id='email-radio'
+              aria-label='email-radio'
             />
           </GridItem>
         )}

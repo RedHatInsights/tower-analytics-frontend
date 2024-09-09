@@ -10,9 +10,9 @@ import {
   DataListItemRow,
   Modal,
   ModalVariant,
-} from "@patternfly/react-core";
-import React, { FormEvent, useCallback, useEffect, useState } from "react";
-import { ITableColumn } from "./PageTable/PageTable";
+} from '@patternfly/react-core';
+import React, { FormEvent, useCallback, useEffect, useState } from 'react';
+import { ITableColumn } from './PageTable/PageTable';
 
 export function useColumnModal<T extends object>(
   columns: ITableColumn<T>[],
@@ -74,7 +74,7 @@ export function useColumnModal<T extends object>(
   const columnModal = (
     <Modal
       variant={ModalVariant.medium}
-      title="Manage columns"
+      title='Manage columns'
       // description={
       //     <TextContent>
       //         <Text component={TextVariants.p}>Selected categories will be displayed in the table.</Text>
@@ -86,8 +86,8 @@ export function useColumnModal<T extends object>(
       isOpen={columnModalOpen}
       onClose={onClose}
       actions={[
-        <Button key="save" variant="primary" onClick={onClose}>
-          {t("Close")}
+        <Button key='save' variant='primary' onClick={onClose}>
+          {t('Close')}
         </Button>,
         // <Button key="cancel" variant="link" onClick={onClose}>
         //     Cancel
@@ -95,13 +95,13 @@ export function useColumnModal<T extends object>(
       ]}
     >
       <DataList
-        aria-label="Table column management"
-        id="table-column-management"
+        aria-label='Table column management'
+        id='table-column-management'
         isCompact
         onDragFinish={onDragFinish}
         itemOrder={managedColumns.map((column) => column.header)}
-        gridBreakpoint="none"
-        style={{ borderTopWidth: "thin" }}
+        gridBreakpoint='none'
+        style={{ borderTopWidth: 'thin' }}
       >
         {managedColumns.map((column) => {
           // if (index === 0) return <Fragment />
@@ -109,19 +109,19 @@ export function useColumnModal<T extends object>(
             <DataListItem
               key={column.header}
               id={column.header}
-              aria-labelledby="table-column-management-item1"
-              style={{ borderBottomWidth: "thin" }}
+              aria-labelledby='table-column-management-item1'
+              style={{ borderBottomWidth: 'thin' }}
             >
               <DataListItemRow>
                 <DataListControl>
                   <DataListDragButton
-                    aria-label="Reorder"
-                    aria-labelledby="table-column-management-item1"
-                    aria-describedby="Press space or enter to begin dragging, and use the arrow keys to navigate up or down. Press enter to confirm the drag, or any other key to cancel the drag operation."
-                    aria-pressed="false"
+                    aria-label='Reorder'
+                    aria-labelledby='table-column-management-item1'
+                    aria-describedby='Press space or enter to begin dragging, and use the arrow keys to navigate up or down. Press enter to confirm the drag, or any other key to cancel the drag operation.'
+                    aria-pressed='false'
                   />
                   <DataListCheck
-                    aria-labelledby="table-column-management-item1"
+                    aria-labelledby='table-column-management-item1'
                     checked={column.enabled !== false}
                     name={column.header}
                     id={column.header}
@@ -132,7 +132,7 @@ export function useColumnModal<T extends object>(
                 <DataListItemCells
                   dataListCells={[
                     <DataListCell
-                      id="table-column-management-item1"
+                      id='table-column-management-item1'
                       key={column.header}
                     >
                       <label htmlFor={column.header}>{column.header}</label>

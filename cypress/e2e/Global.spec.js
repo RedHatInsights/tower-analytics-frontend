@@ -24,16 +24,16 @@ describe('Insights smoketests', () => {
 
     //cy.get('[data-quickstart-id="Automation-Analytics"]') // this is for devel or stage
     cy.get('[data-ouia-component-id="SideNavigation"]') // this is for eph. env.
-      .find('a')
-      //.should('have.length', 7)
+      .find('a');
+    //.should('have.length', 7)
 
-      /*
+    /*
       .get('[data-quickstart-id="ansible_automation-analytics_organization-statistics"]')
       .click()
       .url().should('eq', Cypress.config().baseUrl + orgsUrl)
          */
 
-      /* does not work on ephemeral
+    /* does not work on ephemeral
       .get('[data-quickstart-id="ansible_automation-analytics_job-explorer"]')
       .click()
       .url()

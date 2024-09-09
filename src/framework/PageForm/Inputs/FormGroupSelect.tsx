@@ -3,19 +3,19 @@ import {
   SelectOptionObject,
   SelectProps,
   SelectVariant,
-} from "@patternfly/react-core";
-import React, { ChangeEvent, ReactElement, useCallback, useState } from "react";
-import { PageFormGroup, PageFormGroupProps } from "./PageFormGroup";
+} from '@patternfly/react-core';
+import React, { ChangeEvent, ReactElement, useCallback, useState } from 'react';
+import { PageFormGroup, PageFormGroupProps } from './PageFormGroup';
 
 export type FormGroupSelectProps = Pick<
   SelectProps,
-  | "footer"
-  | "isCreatable"
-  | "isGrouped"
-  | "onSelect"
-  | "placeholderText"
-  | "value"
-  | "isDisabled"
+  | 'footer'
+  | 'isCreatable'
+  | 'isGrouped'
+  | 'onSelect'
+  | 'placeholderText'
+  | 'value'
+  | 'isDisabled'
 > &
   PageFormGroupProps & {
     isReadOnly?: boolean;
@@ -34,7 +34,7 @@ export function FormGroupSelect(props: FormGroupSelectProps) {
       event: React.MouseEvent<Element, MouseEvent> | ChangeEvent<Element>,
       value: string | SelectOptionObject
     ) => {
-      if (typeof value === "string") onSelect?.(event, value);
+      if (typeof value === 'string') onSelect?.(event, value);
       else onSelect?.(event, value.toString());
       setOpen(false);
     },
@@ -53,7 +53,7 @@ export function FormGroupSelect(props: FormGroupSelectProps) {
         isOpen={open}
         onToggle={onToggle}
         maxHeight={280}
-        validated={helperTextInvalid ? "error" : undefined}
+        validated={helperTextInvalid ? 'error' : undefined}
         isDisabled={props.isDisabled || isReadOnly}
       >
         {children as ReactElement[]}

@@ -40,7 +40,7 @@ const App = () => {
   };
 
   return (
-    <div id="automation-analytics-application" version={packageJson.version}>
+    <div id='automation-analytics-application' version={packageJson.version}>
       {renderContent()}
     </div>
   );

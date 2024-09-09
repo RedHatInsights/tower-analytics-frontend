@@ -290,7 +290,7 @@ const PieChart = ({
           data={colors}
           selected={selectedIds}
           onToggle={handleToggle}
-          height="300px"
+          height='300px'
           chartName={`${id}-legend`}
         />
       )}

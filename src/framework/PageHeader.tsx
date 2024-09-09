@@ -16,14 +16,14 @@ import {
   Text,
   Title,
   Truncate,
-} from "@patternfly/react-core";
-import ExternalLinkAltIcon from "@patternfly/react-icons/dist/esm/icons/external-link-alt-icon";
-import OutlinedQuestionCircleIcon from "@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon";
-import React, { CSSProperties, Fragment, ReactNode } from "react";
-import { useBreakpoint } from "./components/useBreakPoint";
-import { usePageNavigate } from "./components/usePageNavigate";
-import { PageAlertsArrayContext, PageAlertsContext } from "./PageAlerts";
-import "./PageFramework.css";
+} from '@patternfly/react-core';
+import ExternalLinkAltIcon from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
+import OutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon';
+import React, { CSSProperties, Fragment, ReactNode } from 'react';
+import { useBreakpoint } from './components/useBreakPoint';
+import { usePageNavigate } from './components/usePageNavigate';
+import { PageAlertsArrayContext, PageAlertsContext } from './PageAlerts';
+import './PageFramework.css';
 
 export interface ICatalogBreadcrumb {
   id?: string;
@@ -117,9 +117,9 @@ export function PageHeader(props: PageHeaderProps) {
     headerActions,
     footer,
   } = props;
-  const lg = useBreakpoint("lg");
-  const xl = useBreakpoint("xl");
-  const isMdOrLarger = useBreakpoint("md");
+  const lg = useBreakpoint('lg');
+  const xl = useBreakpoint('xl');
+  const isMdOrLarger = useBreakpoint('md');
   let { t } = props;
   t = t ? t : (t: string) => t;
   return (
@@ -127,13 +127,13 @@ export function PageHeader(props: PageHeaderProps) {
       {navigation && (
         <PageSection
           variant={PageSectionVariants.light}
-          className="border-top dark-1"
+          className='border-top dark-1'
           style={{ paddingLeft: 0, paddingTop: 0, paddingBottom: 0 }}
         >
           <Flex
-            direction={{ default: "row" }}
-            flexWrap={{ default: "nowrap" }}
-            style={{ maxWidth: "100%" }}
+            direction={{ default: 'row' }}
+            flexWrap={{ default: 'nowrap' }}
+            style={{ maxWidth: '100%' }}
           >
             <PageNavigation
               style={{ paddingTop: 0, flexShrink: 1, flexGrow: 1 }}
@@ -160,7 +160,7 @@ export function PageHeader(props: PageHeaderProps) {
       )}
       <PageSection
         variant={PageSectionVariants.light}
-        className="border-top border-bottom dark-3"
+        className='border-top border-bottom dark-3'
         style={{
           paddingTop: breadcrumbs ? (xl ? 16 : 12) : xl ? 16 : 12,
           paddingBottom: xl ? 16 : 12,
@@ -168,10 +168,10 @@ export function PageHeader(props: PageHeaderProps) {
       >
         <Stack hasGutter>
           <Flex
-            flexWrap={{ default: "nowrap" }}
-            alignItems={{ default: "alignItemsStretch" }}
+            flexWrap={{ default: 'nowrap' }}
+            alignItems={{ default: 'alignItemsStretch' }}
           >
-            <FlexItem grow={{ default: "grow" }}>
+            <FlexItem grow={{ default: 'grow' }}>
               {breadcrumbs && (
                 <Breadcrumbs
                   breadcrumbs={breadcrumbs}
@@ -184,7 +184,7 @@ export function PageHeader(props: PageHeaderProps) {
                     headerContent={props.titleHelpTitle}
                     bodyContent={
                       <Stack hasGutter>
-                        {typeof props.titleHelp === "string" ? (
+                        {typeof props.titleHelp === 'string' ? (
                           <StackItem>{props.titleHelp}</StackItem>
                         ) : (
                           props.titleHelp.map((help, index) => (
@@ -195,30 +195,30 @@ export function PageHeader(props: PageHeaderProps) {
                           <StackItem>
                             <Button
                               icon={<ExternalLinkAltIcon />}
-                              variant="link"
+                              variant='link'
                               onClick={() =>
-                                window.open(props.titleDocLink, "_blank")
+                                window.open(props.titleDocLink, '_blank')
                               }
                               isInline
                             >
-                              {t("Documentation")}
+                              {t('Documentation')}
                             </Button>
                           </StackItem>
                         )}
                       </Stack>
                     }
-                    position="bottom-start"
+                    position='bottom-start'
                     removeFindDomNode
                   >
-                    <Title headingLevel="h1">
+                    <Title headingLevel='h1'>
                       {title}
                       <Button
-                        variant="link"
+                        variant='link'
                         style={{
                           padding: 0,
                           marginTop: 1,
                           marginLeft: 8,
-                          verticalAlign: "top",
+                          verticalAlign: 'top',
                         }}
                       >
                         <OutlinedQuestionCircleIcon />
@@ -226,19 +226,19 @@ export function PageHeader(props: PageHeaderProps) {
                     </Title>
                   </Popover>
                 ) : (
-                  <Title headingLevel="h1">{title}</Title>
+                  <Title headingLevel='h1'>{title}</Title>
                 )
               ) : (
-                <Title headingLevel="h1">
-                  <Skeleton width="160px" />
+                <Title headingLevel='h1'>
+                  <Skeleton width='160px' />
                 </Title>
               )}
               {isMdOrLarger && description && (
                 <Text
-                  component="p"
+                  component='p'
                   style={{ paddingTop: xl ? 4 : 2, opacity: 0.8 }}
                 >
-                  {typeof description === "string" ? (
+                  {typeof description === 'string' ? (
                     <Truncate content={description} />
                   ) : (
                     <Stack>
@@ -252,12 +252,12 @@ export function PageHeader(props: PageHeaderProps) {
             </FlexItem>
             {title && (headerActions || controls) && (
               <Flex
-                direction={{ default: "column" }}
-                spaceItems={{ default: "spaceItemsSm", xl: "spaceItemsMd" }}
-                justifyContent={{ default: "justifyContentCenter" }}
+                direction={{ default: 'column' }}
+                spaceItems={{ default: 'spaceItemsSm', xl: 'spaceItemsMd' }}
+                justifyContent={{ default: 'justifyContentCenter' }}
               >
                 {controls && (
-                  <FlexItem grow={{ default: "grow" }}>{controls}</FlexItem>
+                  <FlexItem grow={{ default: 'grow' }}>{controls}</FlexItem>
                 )}
                 {headerActions && <FlexItem>{headerActions}</FlexItem>}
               </Flex>
@@ -272,7 +272,7 @@ export function PageHeader(props: PageHeaderProps) {
             {(pageAlertsArray) => {
               if (pageAlertsArray.length === 0) return <></>;
               return (
-                <div style={{ borderBottom: "thin solid rgba(0, 0, 0, 0.12)" }}>
+                <div style={{ borderBottom: 'thin solid rgba(0, 0, 0, 0.12)' }}>
                   {pageAlertsArray.map((alertProps, index) => (
                     <Alert
                       {...alertProps}

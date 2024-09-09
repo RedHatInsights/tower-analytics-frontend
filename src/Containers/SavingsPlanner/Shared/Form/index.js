@@ -2,14 +2,11 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useNavigate, useLocation, Navigate } from 'react-router-dom';
 
+import { Button, ButtonVariant } from '@patternfly/react-core';
 import {
-	Button,
-	ButtonVariant
-} from '@patternfly/react-core';
-import {
-	Wizard,
-	WizardFooter,
-	WizardContextConsumer
+  Wizard,
+  WizardFooter,
+  WizardContextConsumer,
 } from '@patternfly/react-core/deprecated';
 
 import useRequest from '../../../../Utilities/useRequest';
@@ -135,18 +132,18 @@ const Form = ({ title, options, data = {} }) => {
               <>
                 <Button
                   variant={ButtonVariant.primary}
-                  type="submit"
+                  type='submit'
                   onClick={onNext}
                   isDisabled={!formData.name}
                 >
                   Next
                 </Button>
                 {activeStep.step_number !== 1 && (
-                  <Button variant="secondary" onClick={onBack}>
+                  <Button variant='secondary' onClick={onBack}>
                     Back
                   </Button>
                 )}
-                <Button variant="link" onClick={onClose}>
+                <Button variant='link' onClick={onClose}>
                   Cancel
                 </Button>
               </>
@@ -157,16 +154,16 @@ const Form = ({ title, options, data = {} }) => {
             <>
               <Button
                 variant={ButtonVariant.primary}
-                type="submit"
+                type='submit'
                 onClick={onSave}
                 isDisabled={!formData.name}
               >
                 Save
               </Button>
-              <Button variant="secondary" onClick={onBack}>
+              <Button variant='secondary' onClick={onBack}>
                 Back
               </Button>
-              <Button variant="link" onClick={onClose}>
+              <Button variant='link' onClick={onClose}>
                 Cancel
               </Button>
             </>
@@ -193,7 +190,7 @@ const Form = ({ title, options, data = {} }) => {
           onClose={onClose}
           footer={CustomFooter}
           startAtStep={startStep}
-          height="calc(100vh - 240px)"
+          height='calc(100vh - 240px)'
         />
       )}
       {error && (
@@ -201,7 +198,7 @@ const Form = ({ title, options, data = {} }) => {
           isOpen={!!error}
           onClose={() => reset()}
           title={'Error'}
-          variant="error"
+          variant='error'
         >
           {'There was an error saving the plan.'}
           <ErrorDetail error={error?.error?.detail.name} />

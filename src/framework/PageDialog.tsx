@@ -5,7 +5,7 @@ import React, {
   SetStateAction,
   useContext,
   useState,
-} from "react";
+} from 'react';
 
 export const DialogContext = createContext<ReactNode | undefined>(undefined);
 export const SetDialogContext = createContext<(dialog?: ReactNode) => void>(
@@ -17,7 +17,7 @@ const PageDialogContext = createContext<
     dialog: ReactNode | undefined,
     setDialog: Dispatch<SetStateAction<ReactNode | undefined>>
   ]
->([undefined, () => alert("Use PageDialogProvider")]);
+>([undefined, () => alert('Use PageDialogProvider')]);
 
 export function PageDialogProvider(props: { children: ReactNode }) {
   const state = useState<ReactNode | undefined>();

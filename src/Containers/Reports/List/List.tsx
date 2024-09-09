@@ -4,26 +4,26 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { PageHeader } from '../../../framework/PageHeader';
 import {
-	Button,
-	ButtonVariant,
-	Card,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-	Divider,
-	Gallery,
-	Label,
-	PageSection,
-	Tooltip,
-	TooltipPosition
+  Button,
+  ButtonVariant,
+  Card,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+  Divider,
+  Gallery,
+  Label,
+  PageSection,
+  Tooltip,
+  TooltipPosition,
 } from '@patternfly/react-core';
 import AngleLeftIcon from '@patternfly/react-icons/dist/esm/icons/angle-left-icon';
 import AngleRightIcon from '@patternfly/react-icons/dist/esm/icons/angle-right-icon';
 import CaretDownIcon from '@patternfly/react-icons/dist/esm/icons/caret-down-icon';
 import {
-	Dropdown,
-	DropdownItem,
-	DropdownToggle
+  Dropdown,
+  DropdownItem,
+  DropdownToggle,
 } from '@patternfly/react-core/deprecated';
 
 import paths from '../paths';
@@ -109,7 +109,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
           <Button
             key={report.slug}
             variant={ButtonVariant.plain}
-            aria-label="Report list item"
+            aria-label='Report list item'
             onClick={() => setSelected(report.slug)}
           >
             <DropdownItem key={report.slug}>{report.name}</DropdownItem>
@@ -148,62 +148,82 @@ const List: FunctionComponent<Record<string, never>> = () => {
                       isCompact
                       data-cy={report.slug}
                     >
-                      <CardHeader actions={{ actions: <><Button
-                            variant={ButtonVariant.plain}
-                            aria-label="Previous report"
-                            data-cy={'previous_report_button'}
-                            isDisabled={reports.indexOf(report) === 0}
-                            onClick={() => setSelected(previousItem)}
-                          >
-                            <AngleLeftIcon />
-                          </Button>
-                          <Dropdown
-                            data-cy={'preview_dropdown'}
-                            isPlain
-                            onSelect={() => setIsOpen(!isOpen)}
-                            toggle={
-                              <DropdownToggle
-                                onToggle={(_event, next) => setIsOpen(next)}
-                                toggleIndicator={CaretDownIcon}
-                                id="report_list"
-                                data-cy={'selected_report_dropdown'}
-                                style={{ color: '#151515' }}
+                      <CardHeader
+                        actions={{
+                          actions: (
+                            <>
+                              <Button
+                                variant={ButtonVariant.plain}
+                                aria-label='Previous report'
+                                data-cy={'previous_report_button'}
+                                isDisabled={reports.indexOf(report) === 0}
+                                onClick={() => setSelected(previousItem)}
                               >
-                                {report.name}
-                              </DropdownToggle>
-                            }
-                            isOpen={isOpen}
-                            dropdownItems={dropdownItems}
-                          />
-                          <Button
-                            variant={ButtonVariant.plain}
-                            aria-label="Next report"
-                            data-cy="next_report_button"
-                            isDisabled={
-                              reports.indexOf(report) >= reports.length - 1
-                            }
-                            onClick={() => setSelected(nextItem)}
-                          >
-                            <AngleRightIcon />
-                          </Button></>, hasNoOffset: false, className: undefined}}  actions={{ actions: <>{report.tags.map(
-                            (
-                              tagKey: TagName,
-                              idx: React.Key | null | undefined
-                            ) => {
-                              const tag = TAGS.find((t) => t.key === tagKey);
-                              if (tag) {
-                                return (
-                                  <Tooltip
-                                    key={`tooltip_${idx as string}`}
-                                    position={TooltipPosition.top}
-                                    content={tag.description}
+                                <AngleLeftIcon />
+                              </Button>
+                              <Dropdown
+                                data-cy={'preview_dropdown'}
+                                isPlain
+                                onSelect={() => setIsOpen(!isOpen)}
+                                toggle={
+                                  <DropdownToggle
+                                    onToggle={(_event, next) => setIsOpen(next)}
+                                    toggleIndicator={CaretDownIcon}
+                                    id='report_list'
+                                    data-cy={'selected_report_dropdown'}
+                                    style={{ color: '#151515' }}
                                   >
-                                    <Label key={idx}>{tag.name}</Label>
-                                  </Tooltip>
-                                );
-                              }
-                            }
-                          )}</>, hasNoOffset: false, className: undefined}} 
+                                    {report.name}
+                                  </DropdownToggle>
+                                }
+                                isOpen={isOpen}
+                                dropdownItems={dropdownItems}
+                              />
+                              <Button
+                                variant={ButtonVariant.plain}
+                                aria-label='Next report'
+                                data-cy='next_report_button'
+                                isDisabled={
+                                  reports.indexOf(report) >= reports.length - 1
+                                }
+                                onClick={() => setSelected(nextItem)}
+                              >
+                                <AngleRightIcon />
+                              </Button>
+                            </>
+                          ),
+                          hasNoOffset: false,
+                          className: undefined,
+                        }}
+                        actions={{
+                          actions: (
+                            <>
+                              {report.tags.map(
+                                (
+                                  tagKey: TagName,
+                                  idx: React.Key | null | undefined
+                                ) => {
+                                  const tag = TAGS.find(
+                                    (t) => t.key === tagKey
+                                  );
+                                  if (tag) {
+                                    return (
+                                      <Tooltip
+                                        key={`tooltip_${idx as string}`}
+                                        position={TooltipPosition.top}
+                                        content={tag.description}
+                                      >
+                                        <Label key={idx}>{tag.name}</Label>
+                                      </Tooltip>
+                                    );
+                                  }
+                                }
+                              )}
+                            </>
+                          ),
+                          hasNoOffset: false,
+                          className: undefined,
+                        }}
                         style={{
                           paddingTop: '16px',
                           paddingBottom: '16px',
@@ -218,8 +238,6 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             {report.name}
                           </Link>
                         </CardTitle>
-                        
-                        
                       </CardHeader>
                       <Divider />
                       {report.slug === previewReport.slug
@@ -240,7 +258,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
               );
             })}
           <Gallery
-            data-cy="all_reports"
+            data-cy='all_reports'
             hasGutter
             minWidths={{
               sm: '307px',

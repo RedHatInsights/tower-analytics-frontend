@@ -222,7 +222,7 @@ const OrganizationStatistics = () => {
   const renderDeprecationWarning = () => (
     <Alert
       variant={AlertVariant.warning}
-      title="The organization statistics page will be deprecated in a future release."
+      title='The organization statistics page will be deprecated in a future release.'
       actionLinks={
         <>
           <AlertActionLink>
@@ -269,7 +269,7 @@ const OrganizationStatistics = () => {
             {orgsIsSuccess && orgs.dates?.length > 0 && (
               <GroupedBarChart
                 margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
-                id="d3-grouped-bar-chart-root"
+                id='d3-grouped-bar-chart-root'
                 data={orgsChartMapper(
                   orgs.dates,
                   orgs.meta,
@@ -298,7 +298,7 @@ const OrganizationStatistics = () => {
             {jobsIsSuccess && jobs.items?.length > 0 && (
               <PieChart
                 margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
-                id="d3-donut-1-chart-root"
+                id='d3-donut-1-chart-root'
                 data={pieChartMapper(jobs.items, 'total_count')}
                 colorFunc={colorFunc}
               />
@@ -319,7 +319,7 @@ const OrganizationStatistics = () => {
             {tasksIsSuccess && tasks.items?.length > 0 && (
               <PieChart
                 margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
-                id="d3-donut-2-chart-root"
+                id='d3-donut-2-chart-root'
                 data={pieChartMapper(tasks.items, 'host_task_count')}
                 colorFunc={colorFunc}
               />

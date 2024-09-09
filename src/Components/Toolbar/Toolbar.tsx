@@ -70,13 +70,13 @@ const FilterableToolbar: FunctionComponent<Props> = ({
 
   return (
     <Toolbar
-      className="pf-m-toggle-group-container"
+      className='pf-m-toggle-group-container'
       clearAllFilters={() => setFilters(null, null)}
-      collapseListedFiltersBreakpoint="xl"
+      collapseListedFiltersBreakpoint='xl'
       data-cy={'filter-toolbar'}
     >
       <ToolbarContent>
-        <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
+        <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint='xl'>
           {Object.keys(filterCategories).length > 0 && (
             <FilterCategoriesGroup
               filterCategories={filterCategories}
@@ -105,7 +105,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
             <Button
               variant={ButtonVariant.plain}
               onClick={() => setSettingsExpanded(!settingsExpanded)}
-              aria-label="settings"
+              aria-label='settings'
               data-cy={'settings'}
               isActive={settingsExpanded}
             >

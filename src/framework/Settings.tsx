@@ -4,7 +4,7 @@ import {
   Modal,
   ModalVariant,
   SelectOption,
-} from "@patternfly/react-core";
+} from '@patternfly/react-core';
 import React, {
   createContext,
   ReactNode,
@@ -12,17 +12,17 @@ import React, {
   useContext,
   useEffect,
   useState,
-} from "react";
-import { usePageDialog } from "./PageDialog";
-import { FormGroupSelect } from "./PageForm/Inputs/FormGroupSelect";
-import { useFrameworkTranslations } from "./useFrameworkTranslations";
+} from 'react';
+import { usePageDialog } from './PageDialog';
+import { FormGroupSelect } from './PageForm/Inputs/FormGroupSelect';
+import { useFrameworkTranslations } from './useFrameworkTranslations';
 
 export interface Settings {
-  theme?: "system" | "light" | "dark";
-  activeTheme?: "light" | "dark";
-  tableLayout?: "compact" | "comfortable";
-  formColumns?: "single" | "multiple";
-  formLayout?: "vertical" | "horizontal";
+  theme?: 'system' | 'light' | 'dark';
+  activeTheme?: 'light' | 'dark';
+  tableLayout?: 'compact' | 'comfortable';
+  formColumns?: 'single' | 'multiple';
+  formLayout?: 'vertical' | 'horizontal';
 }
 
 export const SettingsContext = createContext<
@@ -36,51 +36,51 @@ export function useSettings() {
 
 export function SettingsProvider(props: { children?: ReactNode }) {
   const [settings, setSettingsState] = useState<Settings>(() => {
-    const theme = localStorage.getItem("theme") as "system" | "light" | "dark";
+    const theme = localStorage.getItem('theme') as 'system' | 'light' | 'dark';
     const activeTheme =
-      theme !== "dark" && theme !== "light"
-        ? window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
+      theme !== 'dark' && theme !== 'light'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
         : theme;
     const settings: Settings = {
       theme,
       activeTheme,
-      tableLayout: localStorage.getItem("tableLayout") as
-        | "compact"
-        | "comfortable",
-      formColumns: localStorage.getItem("formColumns") as "single" | "multiple",
-      formLayout: localStorage.getItem("formLayout") as
-        | "vertical"
-        | "horizontal",
+      tableLayout: localStorage.getItem('tableLayout') as
+        | 'compact'
+        | 'comfortable',
+      formColumns: localStorage.getItem('formColumns') as 'single' | 'multiple',
+      formLayout: localStorage.getItem('formLayout') as
+        | 'vertical'
+        | 'horizontal',
     };
 
-    if (activeTheme === "dark") {
-      document.documentElement.classList.add("pf-theme-dark");
+    if (activeTheme === 'dark') {
+      document.documentElement.classList.add('pf-theme-dark');
     } else {
-      document.documentElement.classList.remove("pf-theme-dark");
+      document.documentElement.classList.remove('pf-theme-dark');
     }
     return settings;
   });
 
   const setSettings = useCallback((settings: Settings) => {
-    localStorage.setItem("theme", settings.theme ?? "system");
-    localStorage.setItem("tableLayout", settings.tableLayout ?? "comfortable");
-    localStorage.setItem("formColumns", settings.formColumns ?? "multiple");
-    localStorage.setItem("formLayout", settings.formLayout ?? "vertical");
+    localStorage.setItem('theme', settings.theme ?? 'system');
+    localStorage.setItem('tableLayout', settings.tableLayout ?? 'comfortable');
+    localStorage.setItem('formColumns', settings.formColumns ?? 'multiple');
+    localStorage.setItem('formLayout', settings.formLayout ?? 'vertical');
     const activeTheme =
-      settings.theme !== "light" && settings.theme !== "dark"
-        ? window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
+      settings.theme !== 'light' && settings.theme !== 'dark'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
         : settings.theme;
     settings.activeTheme = activeTheme;
     setSettingsState(settings);
 
-    if (activeTheme === "dark") {
-      document.documentElement.classList.add("pf-theme-dark");
+    if (activeTheme === 'dark') {
+      document.documentElement.classList.add('pf-theme-dark');
     } else {
-      document.documentElement.classList.remove("pf-theme-dark");
+      document.documentElement.classList.remove('pf-theme-dark');
     }
   }, []);
 
@@ -114,78 +114,78 @@ export function SettingsDialog(props: {
   const [translations] = useFrameworkTranslations();
   return (
     <Modal
-      title="Settings"
+      title='Settings'
       isOpen={props.open}
       onClose={onClose}
       variant={ModalVariant.medium}
       tabIndex={0}
       actions={[
-        <Button key="close" variant="primary" onClick={onClose}>
+        <Button key='close' variant='primary' onClick={onClose}>
           {translations.closeText}
         </Button>,
       ]}
     >
-      <Form isHorizontal={settings.formLayout === "horizontal"}>
+      <Form isHorizontal={settings.formLayout === 'horizontal'}>
         <FormGroupSelect
-          id="theme"
-          label="Theme"
-          value={settings.theme ?? "system"}
+          id='theme'
+          label='Theme'
+          value={settings.theme ?? 'system'}
           onSelect={(_, theme) =>
             setSettings({
               ...settings,
-              theme: theme as "system" | "light" | "dark",
+              theme: theme as 'system' | 'light' | 'dark',
             })
           }
-          placeholderText="Select theme"
+          placeholderText='Select theme'
         >
-          <SelectOption value="system">{"System default"}</SelectOption>
-          <SelectOption value="light">{"Light"}</SelectOption>
-          <SelectOption value="dark">{"Dark"}</SelectOption>
+          <SelectOption value='system'>{'System default'}</SelectOption>
+          <SelectOption value='light'>{'Light'}</SelectOption>
+          <SelectOption value='dark'>{'Dark'}</SelectOption>
         </FormGroupSelect>
         <FormGroupSelect
-          id="table-layout"
-          label="Table Layout"
-          value={settings.tableLayout ?? "comfortable"}
+          id='table-layout'
+          label='Table Layout'
+          value={settings.tableLayout ?? 'comfortable'}
           onSelect={(_, tableLayout) =>
             setSettings({
               ...settings,
-              tableLayout: tableLayout as "compact" | "comfortable",
+              tableLayout: tableLayout as 'compact' | 'comfortable',
             })
           }
-          placeholderText="Select table layout"
+          placeholderText='Select table layout'
         >
-          <SelectOption value="comfortable">{"Comfortable"}</SelectOption>
-          <SelectOption value="compact">{"Compact"}</SelectOption>
+          <SelectOption value='comfortable'>{'Comfortable'}</SelectOption>
+          <SelectOption value='compact'>{'Compact'}</SelectOption>
         </FormGroupSelect>
         <FormGroupSelect
-          id="form-columns"
-          label="Form Columns"
-          value={settings.formColumns ?? "multiple"}
+          id='form-columns'
+          label='Form Columns'
+          value={settings.formColumns ?? 'multiple'}
           onSelect={(_, formColumns) =>
             setSettings({
               ...settings,
-              formColumns: formColumns as "multiple" | "single",
+              formColumns: formColumns as 'multiple' | 'single',
             })
           }
-          placeholderText="Select form columns"
+          placeholderText='Select form columns'
         >
-          <SelectOption value="multiple">{"Multiple columns"}</SelectOption>
-          <SelectOption value="single">{"Single column"}</SelectOption>
+          <SelectOption value='multiple'>{'Multiple columns'}</SelectOption>
+          <SelectOption value='single'>{'Single column'}</SelectOption>
         </FormGroupSelect>
         <FormGroupSelect
-          id="form-layout"
-          label="Form Layout"
-          value={settings.formLayout ?? "vertical"}
+          id='form-layout'
+          label='Form Layout'
+          value={settings.formLayout ?? 'vertical'}
           onSelect={(_, formLayout) =>
             setSettings({
               ...settings,
-              formLayout: formLayout as "vertical" | "horizontal",
+              formLayout: formLayout as 'vertical' | 'horizontal',
             })
           }
-          placeholderText="Select form layout"
+          placeholderText='Select form layout'
         >
-          <SelectOption value="vertical">{"Vertical labels"}</SelectOption>
-          <SelectOption value="horizontal">{"Horizontal labels"}</SelectOption>
+          <SelectOption value='vertical'>{'Vertical labels'}</SelectOption>
+          <SelectOption value='horizontal'>{'Horizontal labels'}</SelectOption>
         </FormGroupSelect>
       </Form>
     </Modal>

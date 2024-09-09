@@ -4,7 +4,8 @@ import {
   ToolbarFilter,
   TextInput,
   InputGroup,
-  Button, InputGroupItem,
+  Button,
+  InputGroupItem,
 } from '@patternfly/react-core';
 
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
@@ -50,27 +51,31 @@ const Text: FunctionComponent<Props> = ({
       deleteChip={options.hasChips ? onDelete : undefined}
     >
       <InputGroup>
-        <InputGroupItem isFill ><TextInput
-          type="search"
-          aria-label={options.name}
-          value={searchVal}
-          onChange={(_event, val) => setSearchVal(val)}
-          onKeyDown={(e) => {
-            if (e.key && e.key === 'Enter') {
-              e.preventDefault();
+        <InputGroupItem isFill>
+          <TextInput
+            type='search'
+            aria-label={options.name}
+            value={searchVal}
+            onChange={(_event, val) => setSearchVal(val)}
+            onKeyDown={(e) => {
+              if (e.key && e.key === 'Enter') {
+                e.preventDefault();
+                setValue(searchVal);
+              }
+            }}
+          />
+        </InputGroupItem>
+        <InputGroupItem>
+          <Button
+            variant='control'
+            aria-label={`Search button for ${options.name}`}
+            onClick={() => {
               setValue(searchVal);
-            }
-          }}
-        /></InputGroupItem>
-        <InputGroupItem><Button
-          variant="control"
-          aria-label={`Search button for ${options.name}`}
-          onClick={() => {
-            setValue(searchVal);
-          }}
-        >
-          <SearchIcon />
-        </Button></InputGroupItem>
+            }}
+          >
+            <SearchIcon />
+          </Button>
+        </InputGroupItem>
       </InputGroup>
     </ToolbarFilter>
   );

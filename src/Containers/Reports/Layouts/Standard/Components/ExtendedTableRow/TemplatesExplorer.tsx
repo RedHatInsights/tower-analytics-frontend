@@ -240,7 +240,7 @@ const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
           />
 
           <Divider
-            component="div"
+            component='div'
             style={{ marginTop: '2rem', marginBottom: '1.5rem' }}
           />
 

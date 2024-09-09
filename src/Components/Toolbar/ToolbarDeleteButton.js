@@ -136,11 +136,11 @@ const ToolbarDeleteButton = ({
 
   return (
     <>
-      <Tooltip content={renderTooltip()} position="top">
+      <Tooltip content={renderTooltip()} position='top'>
         <div>
           <Button
-            variant="secondary"
-            ouiaId="delete-button"
+            variant='secondary'
+            ouiaId='delete-button'
             spinnerAriaValueText={isLoading ? 'Loading' : undefined}
             aria-label={'Delete'}
             onClick={() => toggleModal(true)}
@@ -153,15 +153,15 @@ const ToolbarDeleteButton = ({
 
       {isModalOpen && (
         <AlertModal
-          variant="danger"
+          variant='danger'
           title={modalTitle}
           isOpen={isModalOpen}
           onClose={() => toggleModal(false)}
           actions={[
             <Button
-              ouiaId="delete-modal-confirm"
-              key="delete"
-              variant="danger"
+              ouiaId='delete-modal-confirm'
+              key='delete'
+              variant='danger'
               aria-label={'confirm delete'}
               isDisabled={Boolean(deleteDetails)}
               onClick={handleDelete}
@@ -169,8 +169,8 @@ const ToolbarDeleteButton = ({
               {'Delete'}
             </Button>,
             <Button
-              key="cancel"
-              variant="link"
+              key='cancel'
+              variant='link'
               aria-label={'cancel delete'}
               onClick={() => toggleModal(false)}
             >

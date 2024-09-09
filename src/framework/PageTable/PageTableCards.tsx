@@ -1,8 +1,8 @@
-import { PageSection } from "@patternfly/react-core";
-import React, { useMemo } from "react";
-import { PageGrid } from "../components/PageGrid";
-import { PageTableProps } from "./PageTable";
-import { PageTableCard, useColumnsToTableCardFn } from "./PageTableCard";
+import { PageSection } from '@patternfly/react-core';
+import React, { useMemo } from 'react';
+import { PageGrid } from '../components/PageGrid';
+import { PageTableProps } from './PageTable';
+import { PageTableCard, useColumnsToTableCardFn } from './PageTableCard';
 
 export type PageTableCardsProps<T extends object> = PageTableProps<T>;
 

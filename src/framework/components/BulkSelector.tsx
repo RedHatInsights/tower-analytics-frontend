@@ -3,9 +3,9 @@ import {
   DropdownItem,
   DropdownToggle,
   DropdownToggleCheckbox,
-} from "@patternfly/react-core";
-import React, { useCallback, useMemo, useState } from "react";
-import { useBreakpoint } from "./useBreakPoint";
+} from '@patternfly/react-core';
+import React, { useCallback, useMemo, useState } from 'react';
+import { useBreakpoint } from './useBreakPoint';
 
 export interface BulkSelectorProps<T> {
   itemCount?: number;
@@ -19,7 +19,7 @@ export interface BulkSelectorProps<T> {
 
 export function BulkSelector<T extends object>(props: BulkSelectorProps<T>) {
   const [isOpen, setIsOpen] = useState(false);
-  const isSmallOrLarger = useBreakpoint("sm");
+  const isSmallOrLarger = useBreakpoint('sm');
 
   const { pageItems, selectedItems, selectItems, unselectAll } = props;
 
@@ -43,12 +43,12 @@ export function BulkSelector<T extends object>(props: BulkSelectorProps<T>) {
       if (selectedItems && selectedItems.length > 0) {
         return `${selectedItems.length} selected`;
       }
-      return "";
+      return '';
     } else {
       if (selectedItems && selectedItems.length > 0) {
         return `${selectedItems.length}`;
       }
-      return "";
+      return '';
     }
   }, [isSmallOrLarger, selectedItems]);
 
@@ -58,9 +58,9 @@ export function BulkSelector<T extends object>(props: BulkSelectorProps<T>) {
       <DropdownToggle
         splitButtonItems={[
           <DropdownToggleCheckbox
-            id="select-all"
-            key="select-all"
-            aria-label="Select all"
+            id='select-all'
+            key='select-all'
+            aria-label='Select all'
             isChecked={
               allPageItemsSelected ? true : selectedCount > 0 ? null : false
             }
@@ -77,14 +77,14 @@ export function BulkSelector<T extends object>(props: BulkSelectorProps<T>) {
   const selectNoneDropdownItem = useMemo(() => {
     return (
       <DropdownItem
-        id="select-none"
-        key="select-none"
+        id='select-none'
+        key='select-none'
         onClick={() => {
           unselectAll?.();
           setIsOpen(false);
         }}
       >
-        {props.selectNoneText ?? "Select none"}
+        {props.selectNoneText ?? 'Select none'}
       </DropdownItem>
     );
   }, [props.selectNoneText, unselectAll]);
@@ -92,8 +92,8 @@ export function BulkSelector<T extends object>(props: BulkSelectorProps<T>) {
   const selectPageDropdownItem = useMemo(() => {
     return (
       <DropdownItem
-        id="select-page"
-        key="select-page"
+        id='select-page'
+        key='select-page'
         onClick={() => {
           selectItems?.(pageItems ?? []);
           setIsOpen(false);

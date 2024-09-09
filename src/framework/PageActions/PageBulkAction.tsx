@@ -1,6 +1,6 @@
-import { Button, ButtonVariant, Tooltip } from "@patternfly/react-core";
-import React, { ComponentClass, Fragment, FunctionComponent } from "react";
-import { IPageBulkAction } from "./PageAction";
+import { Button, ButtonVariant, Tooltip } from '@patternfly/react-core';
+import React, { ComponentClass, Fragment, FunctionComponent } from 'react';
+import { IPageBulkAction } from './PageAction';
 
 export function PageBulkAction<T extends object>(props: {
   action: IPageBulkAction<T>;
@@ -17,12 +17,12 @@ export function PageBulkAction<T extends object>(props: {
     variant = ButtonVariant.danger;
   }
   if (!selectedItems || !selectedItems.length) {
-    tooltip = "No selections";
+    tooltip = 'No selections';
     isDisabled = true;
   }
   return (
     <Wrapper>
-      <Tooltip content={tooltip} trigger={tooltip ? undefined : "manual"}>
+      <Tooltip content={tooltip} trigger={tooltip ? undefined : 'manual'}>
         <Button
           variant={variant}
           icon={

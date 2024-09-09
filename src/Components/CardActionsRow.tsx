@@ -12,11 +12,7 @@ interface Props {
 }
 
 const CardActionsRow: FunctionComponent<Props> = ({ children }) => {
-  return (
-    <CardActionsWrapper>
-      {children}
-    </CardActionsWrapper>
-  );
+  return <CardActionsWrapper>{children}</CardActionsWrapper>;
 };
 
 export default CardActionsRow;

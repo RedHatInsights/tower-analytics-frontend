@@ -5,7 +5,9 @@ import {
   EmptyStateBody,
   Button,
   EmptyStateVariant,
-  ButtonVariant, EmptyStateHeader, EmptyStateFooter,
+  ButtonVariant,
+  EmptyStateHeader,
+  EmptyStateFooter,
 } from '@patternfly/react-core';
 import AddCircleOIcon from '@patternfly/react-icons/dist/esm/icons/add-circle-o-icon';
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
@@ -37,24 +39,30 @@ const EmptyList: FunctionComponent<Props> = ({
 
   return (
     <EmptyState variant={EmptyStateVariant.full}>
-      <EmptyStateHeader titleText={<>{title}</>} icon={<EmptyStateIcon icon={canAdd ? AddCircleOIcon : SearchIcon} />} headingLevel="h3" />
-      <EmptyStateBody>{message}</EmptyStateBody><EmptyStateFooter>
-      {(canAdd || showButton) && (
-        <Button
-          key="add-item-button"
-          variant={ButtonVariant.primary}
-          aria-label={label}
-          onClick={() => {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            /* @ts-ignore */
-            if (path) navigate(createUrl(path));
-            if (onButtonClick) onButtonClick();
-          }}
-        >
-          {label}
-        </Button>
-      )}
-    </EmptyStateFooter></EmptyState>
+      <EmptyStateHeader
+        titleText={<>{title}</>}
+        icon={<EmptyStateIcon icon={canAdd ? AddCircleOIcon : SearchIcon} />}
+        headingLevel='h3'
+      />
+      <EmptyStateBody>{message}</EmptyStateBody>
+      <EmptyStateFooter>
+        {(canAdd || showButton) && (
+          <Button
+            key='add-item-button'
+            variant={ButtonVariant.primary}
+            aria-label={label}
+            onClick={() => {
+              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+              /* @ts-ignore */
+              if (path) navigate(createUrl(path));
+              if (onButtonClick) onButtonClick();
+            }}
+          >
+            {label}
+          </Button>
+        )}
+      </EmptyStateFooter>
+    </EmptyState>
   );
 };
 
