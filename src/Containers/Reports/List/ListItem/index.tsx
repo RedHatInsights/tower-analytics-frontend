@@ -53,9 +53,8 @@ const ListItem: FunctionComponent<Props> = ({
         setSelected(slug);
       }}
     >
-      <CardHeader>
-        actions=
-        {
+      <CardHeader
+        actions={
           <>
             <CardTitle onClick={(event) => event.stopPropagation()}>
               <Tooltip content={<div>Click to go to report details</div>}>
@@ -64,7 +63,7 @@ const ListItem: FunctionComponent<Props> = ({
             </CardTitle>
           </>
         }
-      </CardHeader>
+      />
       <CardBody>
         {description ? (
           <Tooltip

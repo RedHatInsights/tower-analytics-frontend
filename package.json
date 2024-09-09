@@ -32,25 +32,6 @@
     "victory-core": "^36.8.5",
     "web-streams-polyfill": "^3.2.1"
   },
-  "jest": {
-    "testEnvironment": "jsdom",
-    "transform": {
-      "^.+\\.jsx?$": "babel-jest",
-      "^.+\\.tsx?$": "ts-jest"
-    },
-    "setupFiles": [
-      "<rootDir>/config/setupTests.js"
-    ],
-    "roots": [
-      "<rootDir>/src/"
-    ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/src/__tests__/"
-    ],
-    "moduleNameMapper": {
-      "\\.(css|scss)$": "identity-obj-proxy"
-    }
-  },
   "devDependencies": {
     "@babel/core": "^7.22.10",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
@@ -60,66 +41,41 @@
     "@babel/preset-env": "^7.22.10",
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
-    "@cfaester/enzyme-adapter-react-18": "^0.7.1",
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "^1.3.0",
     "@redhat-cloud-services/frontend-components-config": "^5.0.0",
     "@redhat-cloud-services/frontend-components-config-utilities": "^2.0.0",
-    "@testing-library/jest-dom": "^5.17.0",
-    "@testing-library/react": "^14.2.1",
-    "@testing-library/react-hooks": "^7.0.2",
-    "@testing-library/user-event": "^13.5.0",
     "@types/streamsaver": "^2.0.4",
     "@types/styled-components": "^5.1.34",
     "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
-    "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^27.5.1",
     "css-loader": "^6.8.1",
     "cypress": "^12.17.4",
     "cypress-wait-until": "^1.7.2",
-    "enzyme": "^3.11.0",
-    "enzyme-to-json": "^3.6.2",
     "eslint": "^8.9.0",
     "eslint-plugin-cypress": "^2.14.0",
-    "fetch-mock-jest": "^1.5.1",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.5.1",
     "node-fetch": "^2.6.12",
     "npm-run-all": "^4.1.5",
     "prop-types": "^15.8.1",
-    "redux-mock-store": "^1.5.4",
     "stylelint": "^13.13.1",
     "stylelint-config-recommended-scss": "^4.3.0",
     "stylelint-scss": "^3.21.0",
-    "ts-jest": "^27.1.5",
-    "ts-loader": "^9.4.4",
-    "ts-node": "^10.9.1",
-    "typescript": "^4.9.5",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.4",
     "victory-cursor-container": "^36.6.12",
     "webpack": "^5.88.2",
-    "webpack-bundle-analyzer": "^4.9.0",
     "webpack-cli": "^4.10.0"
   },
   "scripts": {
-    "test": "TZ=UTC jest --verbose",
-    "test:watch": "TZ=UTC jest --coverage=false --watch",
-    "lint": "eslint config src && stylelint 'src/**/*.scss' --config .stylelintrc.json",
-    "lint:fix": "eslint config src --fix",
-    "prettier": "prettier -w config/ cypress/ src/",
-    "start": "fec dev",
     "build": "fec build",
-    "deploy": "npm-run-all build lint test",
-    "deploy-only": "npm-run-all build",
-    "verify": "npm-run-all build lint test",
-    "cy:open": "DEBUG=cypress cypress open",
     "cy:headless": "DEBUG=cypress cypress run --browser=chrome",
-    "cy:lint": "eslint config cypress",
-    "cy:lint-fix": "eslint config cypress --fix"
+    "cy:open": "DEBUG=cypress cypress open",
+    "deploy": "npm-run-all build lint",
+    "lint": "eslint src/ cypress/ && stylelint 'src/**/*.scss' --config .stylelintrc.json",
+    "lint:fix": "eslint src/ cypress/ --fix",
+    "prettier": "prettier -w src/ cypress/",
+    "start": "fec dev"
   },
   "insights": {
     "appname": "automation-analytics"
-  },
-  "overrides": {
-    "tough-cookie": "^4.1.3"
   }
 }

@@ -140,45 +140,38 @@ const ListItem = ({
   return (
     <Card>
       <CardHeader
-        {...(canWrite && {
-          actions: {
-            actions: (
-              <>
-                <Dropdown
-                  onSelect={() => {}}
-                  toggle={
-                    <KebabToggle
-                      onToggle={() => setIsCardKebabOpen(!isCardKebabOpen)}
-                    />
-                  }
-                  isOpen={isCardKebabOpen}
-                  isPlain
-                  dropdownItems={kebabDropDownItems}
-                  position={'right'}
-                />
-                <Checkbox
-                  onChange={() => handleSelect(plan.id)}
-                  isChecked={selected.includes(plan.id)}
-                  aria-label='card checkbox'
-                  id='check-1'
-                  name='check1'
-                />
-              </>
-            ),
-            hasNoOffset: false,
-            className: undefined,
-          },
-        })}
-      >
-        actions=
-        {
-          <>
-            <CardTitle>
-              <Link to={`${id}`}>{name}</Link>
-            </CardTitle>
-          </>
+        actions={
+          !canWrite ? (
+            <>
+              <CardTitle>
+                <Link to={`${id}`}>{name}</Link>
+              </CardTitle>
+            </>
+          ) : (
+            <>
+              <Dropdown
+                onSelect={() => {}}
+                toggle={
+                  <KebabToggle
+                    onToggle={() => setIsCardKebabOpen(!isCardKebabOpen)}
+                  />
+                }
+                isOpen={isCardKebabOpen}
+                isPlain
+                dropdownItems={kebabDropDownItems}
+                position={'right'}
+              />
+              <Checkbox
+                onChange={() => handleSelect(plan.id)}
+                isChecked={selected.includes(plan.id)}
+                aria-label='card checkbox'
+                id='check-1'
+                name='check1'
+              />
+            </>
+          )
         }
-      </CardHeader>
+      />
       <CardBody>
         {description ? <Small>{description}</Small> : null}
         <CardDetail>

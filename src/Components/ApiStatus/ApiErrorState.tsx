@@ -2,6 +2,7 @@ import React, { FunctionComponent } from 'react';
 import {
   EmptyState,
   EmptyStateBody,
+  EmptyStateHeader,
   EmptyStateIcon,
   EmptyStateVariant,
   Title,
