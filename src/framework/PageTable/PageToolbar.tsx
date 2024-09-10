@@ -1,40 +1,36 @@
 import {
-  Button,
-  Flex,
-  FlexItem,
-  InputGroup,
-  OnPerPageSelect,
-  OnSetPage,
-  Pagination,
-  PaginationVariant,
-  Skeleton,
-  TextInputGroup,
-  TextInputGroupMain,
-  TextInputGroupUtilities,
-  ToggleGroup,
-  ToggleGroupItem,
-  Toolbar,
-  ToolbarContent,
-  ToolbarFilter,
-  ToolbarGroup,
-  ToolbarItem,
-  ToolbarToggleGroup,
-  Tooltip,
-  InputGroupItem,
-} from '@patternfly/react-core';
-import {
   Select,
   SelectOption,
   SelectOptionObject,
   SelectVariant,
 } from '@patternfly/react-core/deprecated';
-import ArrowRightIcon from '@patternfly/react-icons/dist/esm/icons/arrow-right-icon';
-import ColumnsIcon from '@patternfly/react-icons/dist/esm/icons/columns-icon';
-import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
-import ListIcon from '@patternfly/react-icons/dist/esm/icons/list-icon';
-import TableIcon from '@patternfly/react-icons/dist/esm/icons/table-icon';
-import ThLargeIcon from '@patternfly/react-icons/dist/esm/icons/th-large-icon';
-import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { InputGroupItem } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { InputGroup } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { Pagination } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { Skeleton } from '@patternfly/react-core/dist/dynamic/components/Skeleton';
+import { TextInputGroup } from '@patternfly/react-core/dist/dynamic/components/TextInputGroup';
+import { TextInputGroupMain } from '@patternfly/react-core/dist/dynamic/components/TextInputGroup';
+import { TextInputGroupUtilities } from '@patternfly/react-core/dist/dynamic/components/TextInputGroup';
+import { ToggleGroup } from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
+import { ToggleGroupItem } from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
+import { Toolbar } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarContent } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarFilter } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarToggleGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import ArrowRightIcon from '@patternfly/react-icons/dist/dynamic/icons/arrow-right-icon';
+import ColumnsIcon from '@patternfly/react-icons/dist/dynamic/icons/columns-icon';
+import FilterIcon from '@patternfly/react-icons/dist/dynamic/icons/filter-icon';
+import ListIcon from '@patternfly/react-icons/dist/dynamic/icons/list-icon';
+import TableIcon from '@patternfly/react-icons/dist/dynamic/icons/table-icon';
+import ThLargeIcon from '@patternfly/react-icons/dist/dynamic/icons/th-large-icon';
+import TimesIcon from '@patternfly/react-icons/dist/dynamic/icons/times-icon';
 import React, {
   Dispatch,
   Fragment,
@@ -42,15 +38,14 @@ import React, {
   useCallback,
   useState,
 } from 'react';
+import { IPageAction } from '../PageActions/PageAction';
+import { PageActionType } from '../PageActions/PageActionType';
+import { PageActions } from '../PageActions/PageActions';
+import { FormGroupSelect } from '../PageForm/Inputs/FormGroupSelect';
 import { BulkSelector } from '../components/BulkSelector';
 import { useBreakpoint } from '../components/useBreakpoint';
-import { IPageAction } from '../PageActions/PageAction';
-import { PageActions } from '../PageActions/PageActions';
-import { PageActionType } from '../PageActions/PageActionType';
-import { FormGroupSelect } from '../PageForm/Inputs/FormGroupSelect';
 import { useFrameworkTranslations } from '../useFrameworkTranslations';
 import { PageTableViewType, PageTableViewTypeE } from './PageTableViewType';
-
 import './PageToolbar.css';
 
 export interface IItemFilter<T extends object> {
@@ -162,11 +157,8 @@ export function PageTableToolbar<T extends object>(
   let { toolbarActions } = props;
   toolbarActions = toolbarActions ?? [];
 
-  const onSetPage = useCallback<OnSetPage>(
-    (_event, page) => setPage(page),
-    [setPage]
-  );
-  const onPerPageSelect = useCallback<OnPerPageSelect>(
+  const onSetPage = useCallback((_event, page) => setPage(page), [setPage]);
+  const onPerPageSelect = useCallback(
     (_event, perPage) => setPerPage(perPage),
     [setPerPage]
   );

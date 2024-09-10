@@ -10,11 +10,9 @@ const useFeatureFlag = (flag: string): boolean => {
   // On beta use the beta flag which has the 'beta_flagname' format.
   const betaFlag = `beta_${flag}`;
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
   const { flagsReady } = useFlagsStatus();
 
   const flagToCheck = isBeta() ? betaFlag : flag;
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-call
   const isFlagEnabled = useFlag(flagToCheck);
 
   if (isLocalhost() || isEphemeral()) return true;

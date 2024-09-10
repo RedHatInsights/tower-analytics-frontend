@@ -1,4 +1,4 @@
-import { notificationsUrl, ENV, ENVS } from '../support/constants';
+import { ENV, ENVS, notificationsUrl } from '../support/constants';
 
 const appid = Cypress.env('appid');
 

@@ -1,19 +1,14 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-
-import {
-  Form,
-  FormGroup,
-  Grid,
-  TextInput,
-  NumberInput,
-  FormHelperText,
-} from '@patternfly/react-core';
 import { Select, SelectOption } from '@patternfly/react-core/deprecated';
-
-import { actions } from '../../../constants';
-
+import { FormHelperText } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { NumberInput } from '@patternfly/react-core/dist/dynamic/components/NumberInput';
+import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import { isPositiveNum } from '../../../../../../Utilities/helpers';
+import { actions } from '../../../constants';
 
 const Details = ({ options, formData, dispatch }) => {
   const { name, category, description, manual_time, hosts, frequency_period } =

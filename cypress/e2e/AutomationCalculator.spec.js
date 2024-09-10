@@ -1,4 +1,4 @@
-import { calculatorUrl, ENV, ENVS } from '../support/constants';
+import { ENV, ENVS, calculatorUrl } from '../support/constants';
 
 const waitToLoad = () => {
   cy.wait('@roiCostEffortData');

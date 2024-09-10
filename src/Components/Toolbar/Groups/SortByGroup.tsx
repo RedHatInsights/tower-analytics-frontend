@@ -1,17 +1,14 @@
-import React, { FunctionComponent } from 'react';
-import {
-  ToolbarGroup,
-  Button,
-  ButtonVariant,
-  ToolbarGroupVariant,
-  ToolbarItem,
-} from '@patternfly/react-core';
-import SortAmountDownIcon from '@patternfly/react-icons/dist/esm/icons/sort-amount-down-icon';
-import SortAmountUpIcon from '@patternfly/react-icons/dist/esm/icons/sort-amount-up-icon';
 import { SelectOptionProps } from '@patternfly/react-core/deprecated';
-
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarGroupVariant } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import SortAmountDownIcon from '@patternfly/react-icons/dist/dynamic/icons/sort-amount-down-icon';
+import SortAmountUpIcon from '@patternfly/react-icons/dist/dynamic/icons/sort-amount-up-icon';
+import React, { FunctionComponent } from 'react';
+import { AttributeType, SetValues } from '../types';
 import ToolbarInput from './ToolbarInput';
-import { SetValues, AttributeType } from '../types';
 
 interface Props {
   filters: Record<string, AttributeType>;

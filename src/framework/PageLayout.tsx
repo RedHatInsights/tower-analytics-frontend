@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
-import ErrorBoundary from './components/ErrorBoundary';
 import { PageAlertsProvider } from './PageAlerts';
+import ErrorBoundary from './components/ErrorBoundary';
 import { useFrameworkTranslations } from './useFrameworkTranslations';
 
 /**

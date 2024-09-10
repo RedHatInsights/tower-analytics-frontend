@@ -1,4 +1,4 @@
-import { State, ActionTypes, ReducerTypes, DownloadState } from './types';
+import { ActionTypes, DownloadState, ReducerTypes, State } from './types';
 
 const reducer = (state = {}, action: ActionTypes): State => {
   switch (action.type) {

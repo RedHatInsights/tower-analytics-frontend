@@ -1,28 +1,24 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/no-empty-function */
-import {
-  Alert,
-  Card,
-  CardBody,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  Checkbox,
-  DescriptionList,
-  FlexItem,
-  Label,
-  LabelGroup,
-  Popover,
-  Text,
-  Truncate,
-} from '@patternfly/react-core';
 import { DropdownPosition } from '@patternfly/react-core/deprecated';
+import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardFooter } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardHeader } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { Checkbox } from '@patternfly/react-core/dist/dynamic/components/Checkbox';
+import { DescriptionList } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
+import { LabelGroup } from '@patternfly/react-core/dist/dynamic/components/Label';
+import { Popover } from '@patternfly/react-core/dist/dynamic/components/Popover';
+import { Text } from '@patternfly/react-core/dist/dynamic/components/Text';
+import { Truncate } from '@patternfly/react-core/dist/dynamic/components/Truncate';
+import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
 import React, { ReactNode, useCallback, useMemo } from 'react';
-import { IconWrapper } from '../components/IconWrapper';
-import { LabelColor } from '../components/pfcolors';
 import { IPageAction } from '../PageActions/PageAction';
 import { PageActions } from '../PageActions/PageActions';
 import { PageDetail } from '../PageDetails/PageDetail';
+import { IconWrapper } from '../components/IconWrapper';
+import { LabelColor } from '../components/pfcolors';
 import {
   ITableColumn,
   ITableColumnTypeCount,

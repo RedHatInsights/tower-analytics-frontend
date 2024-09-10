@@ -1,46 +1,39 @@
-import React, { useEffect, useState } from 'react';
-
-import { useQueryParams } from '../../QueryParams/';
-import useRequest from '../../Utilities/useRequest';
-import { formatDateTime, formatJobType } from '../../Utilities/helpers';
-import JobStatus from '../../Components/JobStatus';
-import Breakdown from '../../Charts/Breakdown';
-
-import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
-import Pagination from '../../Components/Pagination';
-
-import { readJobExplorer, readJobExplorerOptions } from '../../Api/';
-import { jobExplorer } from '../../Utilities/constants';
-
-import {
-  Button,
-  Card,
-  CardBody,
-  DescriptionList,
-  DescriptionListGroup,
-  DescriptionListTerm,
-  DescriptionListDescription,
-  Flex,
-  FlexItem,
-  Grid,
-  GridItem,
-  PageSection,
-  PaginationVariant,
-} from '@patternfly/react-core';
-import {
-  global_palette_green_300,
-  global_palette_black_400,
-  global_palette_gold_300,
-  global_palette_red_100,
-  global_palette_blue_300,
-} from '@patternfly/react-tokens';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { DescriptionList } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionListGroup } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionListTerm } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionListDescription } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { ExpandableRowContent } from '@patternfly/react-table';
-
+import {
+  global_palette_black_400,
+  global_palette_blue_300,
+  global_palette_gold_300,
+  global_palette_green_300,
+  global_palette_red_100,
+} from '@patternfly/react-tokens';
+import React, { useEffect, useState } from 'react';
+import { readJobExplorer, readJobExplorerOptions } from '../../Api/';
+import Breakdown from '../../Charts/Breakdown';
+import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
+import JobStatus from '../../Components/JobStatus';
+import Pagination from '../../Components/Pagination';
 import FilterableToolbar from '../../Components/Toolbar/';
 import { SettingsPanel } from '../../Components/Toolbar/Groups';
+import { useQueryParams } from '../../QueryParams/';
+import { jobExplorer } from '../../Utilities/constants';
+import { formatDateTime, formatJobType } from '../../Utilities/helpers';
+import useRequest from '../../Utilities/useRequest';
+import { TextCell } from '../../framework/PageCells/TextCell';
 import { PageHeader } from '../../framework/PageHeader';
 import { PageTable } from '../../framework/PageTable/PageTable';
-import { TextCell } from '../../framework/PageCells/TextCell';
 
 const JobExplorer = () => {
   const {

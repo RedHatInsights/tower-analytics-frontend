@@ -1,13 +1,12 @@
-import React from 'react';
+import { Modal } from '@patternfly/react-core/dist/dynamic/components/Modal';
+import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
+import PFCheckCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/check-circle-icon';
+import PFExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
+import PFExclamationTriangleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-triangle-icon';
+import PFInfoCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/info-circle-icon';
+import PFTimesCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/times-circle-icon';
 import PropTypes from 'prop-types';
-
-import { Modal, Title } from '@patternfly/react-core';
-import PFCheckCircleIcon from '@patternfly/react-icons/dist/esm/icons/check-circle-icon';
-import PFExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
-import PFExclamationTriangleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-triangle-icon';
-import PFInfoCircleIcon from '@patternfly/react-icons/dist/esm/icons/info-circle-icon';
-import PFTimesCircleIcon from '@patternfly/react-icons/dist/esm/icons/times-circle-icon';
-
+import React from 'react';
 import styled from 'styled-components';
 
 const ExclamationCircleIcon = styled(PFExclamationCircleIcon)`

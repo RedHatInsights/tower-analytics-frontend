@@ -1,51 +1,43 @@
-import React, { useEffect } from 'react';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import {
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+} from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { Divider } from '@patternfly/react-core/dist/dynamic/components/Divider';
+import { ModalVariant } from '@patternfly/react-core/dist/dynamic/components/Modal';
+import { Modal } from '@patternfly/react-core/dist/dynamic/components/Modal';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
+import {
+  global_palette_black_850,
+  global_palette_blue_300,
+  global_palette_cyan_200,
+  global_palette_green_200,
+  global_palette_light_green_200,
+  global_palette_orange_300,
+  global_palette_purple_300,
+  global_palette_red_100,
+} from '@patternfly/react-tokens';
 import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import LoadingState from '../../Components/ApiStatus/LoadingState';
-import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
-import NoResults from '../../Components/ApiStatus/NoResults';
+import { readJobExplorer } from '../../Api';
 import Breakdown from '../../Charts/Breakdown';
+import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
+import LoadingState from '../../Components/ApiStatus/LoadingState';
+import NoResults from '../../Components/ApiStatus/NoResults';
 import JobStatus from '../../Components/JobStatus';
-import { Paths } from '../../paths';
+import { DEFAULT_NAMESPACE, createUrl } from '../../QueryParams';
+import { jobExplorer } from '../../Utilities/constants';
 import {
   formatDateTime,
   formatJobType,
   formatTotalTime,
 } from '../../Utilities/helpers';
-import { readJobExplorer } from '../../Api';
-
-import { Button, Modal, ModalVariant } from '@patternfly/react-core';
-import {
-  global_palette_blue_300,
-  global_palette_green_200,
-  global_palette_red_100,
-  global_palette_black_850,
-  global_palette_orange_300,
-  global_palette_purple_300,
-  global_palette_cyan_200,
-  global_palette_light_green_200,
-} from '@patternfly/react-tokens';
-
-import {
-  DescriptionList,
-  DescriptionListTerm,
-  DescriptionListGroup,
-  DescriptionListDescription,
-  Divider,
-} from '@patternfly/react-core';
-
-import {
-  Table /* data-codemods */,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-} from '@patternfly/react-table';
 import useRequest from '../../Utilities/useRequest';
-import { DEFAULT_NAMESPACE, createUrl } from '../../QueryParams';
-import { jobExplorer } from '../../Utilities/constants';
-import { useNavigate } from 'react-router-dom';
+import { Paths } from '../../paths';
 
 const ActionContainer = styled.div`
   display: flex;

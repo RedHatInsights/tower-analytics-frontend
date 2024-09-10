@@ -1,15 +1,15 @@
-import React, { FC, useEffect, useState } from 'react';
-import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import ChartBuilder, {
   ChartData,
   ChartFunctions,
   ChartSchemaElement,
   functions,
 } from '@ansible/react-json-chart-builder';
+import { ChartDataSerie } from '@ansible/react-json-chart-builder/dist/cjs';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
+import React, { FC, useEffect, useState } from 'react';
 import { useQueryParams } from '../../QueryParams';
 import { convertApiToData } from './convertApi';
 import { ApiReturnType } from './types';
-import { ChartDataSerie } from '@ansible/react-json-chart-builder/dist/cjs';
 
 interface Props {
   schema: ChartSchemaElement[];
@@ -84,7 +84,6 @@ const Chart: FC<Props> = ({
   namespace = 'settings',
 }) => {
   const {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     queryParams: { chartSeriesHiddenProps },
     dispatch,
   } = useQueryParams(

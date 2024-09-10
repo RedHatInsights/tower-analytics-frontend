@@ -1,5 +1,5 @@
-import { AlertProps } from '@patternfly/react-core';
-import React, { createContext, ReactNode, useContext, useState } from 'react';
+import { AlertProps } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import React, { ReactNode, createContext, useContext, useState } from 'react';
 
 export interface IPageAlerts {
   addAlert: (alert: AlertProps) => void;

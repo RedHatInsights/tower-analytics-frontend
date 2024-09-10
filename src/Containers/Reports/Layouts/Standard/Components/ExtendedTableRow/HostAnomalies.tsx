@@ -1,19 +1,9 @@
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-// TODO(Jo): Remove eslint-disable comments
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// @ts-nocheck
-
-import React from 'react';
-import {
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
-} from '@patternfly/react-core';
+import { DescriptionListTerm } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionList } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionListDescription } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionListGroup } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
-
+import React from 'react';
 import percentageFormatter from '../../../../../../Utilities/percentageFormatter';
 
 const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {

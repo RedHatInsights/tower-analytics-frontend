@@ -1,13 +1,12 @@
 import {
-  dashboardUrl,
-  orgsUrl,
-  jobExplorerUrl,
+  calculatorUrl,
   clustersUrl,
+  dashboardUrl,
+  jobExplorerUrl,
+  notificationsUrl,
+  orgsUrl,
   reportsUrl,
   savingsPlannerUrl,
-  calculatorUrl,
-  calculatorUrlDirect,
-  notificationsUrl,
 } from '../support/constants';
 
 describe('Insights smoketests', () => {

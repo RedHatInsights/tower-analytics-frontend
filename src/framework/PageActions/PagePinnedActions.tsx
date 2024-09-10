@@ -1,5 +1,5 @@
-import { Split } from '@patternfly/react-core';
 import { DropdownPosition } from '@patternfly/react-core/deprecated';
+import { Split } from '@patternfly/react-core/dist/dynamic/layouts/Split';
 import React, { ComponentClass, FunctionComponent } from 'react';
 import { IPageAction } from './PageAction';
 import { PageActionType } from './PageActionType';

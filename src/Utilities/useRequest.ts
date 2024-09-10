@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
 import { useEffect, useState } from 'react';
 import useIsMounted from './useIsMounted';
 
@@ -59,7 +58,6 @@ const hasAttributesDeep = (obj: unknown, required: unknown): boolean => {
       (key) =>
         !!Object.prototype.hasOwnProperty.call(required, key) &&
         !!Object.prototype.hasOwnProperty.call(obj, key) &&
-        // eslint-disable-next-line
         // @ts-ignore-next-line
         hasAttributesDeep(obj[key], required[key])
     );

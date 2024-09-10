@@ -1,8 +1,8 @@
-import { Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import React, { FunctionComponent } from 'react';
-import asyncComponent from './Utilities/asyncComponent';
-import { prefixPath, Paths } from './paths';
+import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
 import { Error404 } from './Components/Error404';
+import asyncComponent from './Utilities/asyncComponent';
+import { Paths, prefixPath } from './paths';
 
 const components = {
   [Paths.clusters]: asyncComponent(

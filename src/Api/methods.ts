@@ -1,12 +1,17 @@
+import {
+  addNotification,
+  removeNotification,
+} from '@redhat-cloud-services/frontend-components-notifications/redux';
 import queryString from 'query-string';
+import { createWriteStream } from 'streamsaver';
 import { saveStream } from './streamSaver';
 import {
   ApiJson,
   NotificationParams,
-  Params,
-  ParamsWithPagination,
   PDFEmailParams,
   PDFParams,
+  Params,
+  ParamsWithPagination,
   saveROIParams,
 } from './types';
 
@@ -21,12 +26,6 @@ interface ParamsPdf {
   slug: string;
   token: string;
 }
-
-import { createWriteStream } from 'streamsaver';
-import {
-  addNotification,
-  removeNotification,
-} from '@redhat-cloud-services/frontend-components-notifications/redux';
 
 declare global {
   interface Window {
@@ -96,7 +95,8 @@ export const postWithFileReturn = async (
                     notif.id,
                     error?.detail?.name
                       ? error?.detail?.name[0]
-                      : error?.detail.toString()
+                      : // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                        error?.detail.toString()
                   )
                 )
               );
@@ -115,6 +115,7 @@ export const postWithFileReturn = async (
       if (response.body) return saveStream(response.body, fileStream);
     });
 };
+
 export const postWithEmail = async (
   endpoint: string,
   params: ParamsPdf,
@@ -145,6 +146,7 @@ export const postWithEmail = async (
     return;
   });
 };
+
 export const get = (
   endpoint: string,
   params: Params = {}

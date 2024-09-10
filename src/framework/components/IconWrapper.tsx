@@ -1,10 +1,10 @@
 import React, {
   Children,
+  ReactNode,
   cloneElement,
   isValidElement,
-  ReactNode,
 } from 'react';
-import { getPatternflyColor, PFColor } from './pfcolors';
+import { PFColor, getPatternflyColor } from './pfcolors';
 
 export function IconWrapper(props: {
   children: ReactNode;

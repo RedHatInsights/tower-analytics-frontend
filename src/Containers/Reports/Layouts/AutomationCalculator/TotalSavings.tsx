@@ -1,13 +1,11 @@
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
+import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
 import React, { FunctionComponent } from 'react';
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Spinner,
-  Title,
-} from '@patternfly/react-core';
-import currencyFormatter from '../../../../Utilities/currencyFormatter';
 import styled from 'styled-components';
+import currencyFormatter from '../../../../Utilities/currencyFormatter';
 import hoursFormatter from '../../../../Utilities/hoursFormatter';
 
 interface Props {

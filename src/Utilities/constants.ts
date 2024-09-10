@@ -5,7 +5,6 @@ import {
   global_palette_green_300,
   global_palette_red_100,
 } from '@patternfly/react-tokens';
-
 import { Params } from '../Api/types';
 
 export interface DefaultParamsProps {
@@ -600,11 +599,9 @@ const allDefaultParams: any = {
 };
 
 export const reportDefaultParams = (slug: string): DefaultParamsProps => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   return allDefaultParams[slug].defaultParams as DefaultParamsProps;
 };
 
 export const specificReportDefaultParams = (slug: string): Params => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   return allDefaultParams[slug].defaultParams as Params;
 };

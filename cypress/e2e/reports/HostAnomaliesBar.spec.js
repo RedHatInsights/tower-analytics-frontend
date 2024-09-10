@@ -1,4 +1,5 @@
 import { hab as pageName } from '../../support/constants';
+
 //disable as there's no data for this page on eph. env. right now
 xdescribe('Report: Slow hosts by job template (aka Host Anomalies Bar)', () => {
   beforeEach(() => {

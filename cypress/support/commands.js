@@ -209,27 +209,21 @@ Cypress.Commands.add('waitSpinner', () => {
 });
 
 Cypress.Commands.add('tableShowAll', () => {
-  cy.get('#table-kebab')
-    .click()
-    .then(() => {
-      cy.get('.pf-v5-c-dropdown__menu.pf-m-align-right')
-        .find('button')
-        .contains('Show all')
-        .click();
-      cy.get('#table-kebab').click();
-    });
+  cy.get('#table-kebab').click();
+  cy.get('.pf-v5-c-dropdown__menu.pf-m-align-right')
+    .find('button')
+    .contains('Show all')
+    .click();
+  cy.get('#table-kebab').click();
   cy.waitSpinner();
 });
 
 Cypress.Commands.add('tableHideAll', () => {
-  cy.get('#table-kebab')
-    .click()
-    .then(() => {
-      cy.get('.pf-v5-c-dropdown__menu.pf-m-align-right')
-        .find('button')
-        .contains('Hide all')
-        .click();
-      cy.get('#table-kebab').click();
-    });
+  cy.get('#table-kebab').click();
+  cy.get('.pf-v5-c-dropdown__menu.pf-m-align-right')
+    .find('button')
+    .contains('Hide all')
+    .click();
+  cy.get('#table-kebab').click();
   cy.waitSpinner();
 });

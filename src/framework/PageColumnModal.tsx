@@ -1,16 +1,14 @@
-import {
-  Button,
-  DataList,
-  DataListCell,
-  DataListCheck,
-  DataListControl,
-  DataListDragButton,
-  DataListItem,
-  DataListItemCells,
-  DataListItemRow,
-  Modal,
-  ModalVariant,
-} from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { DataList } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListCell } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListCheck } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListControl } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListDragButton } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListItem } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListItemCells } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListItemRow } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { ModalVariant } from '@patternfly/react-core/dist/dynamic/components/Modal';
+import { Modal } from '@patternfly/react-core/dist/dynamic/components/Modal';
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import { ITableColumn } from './PageTable/PageTable';
 
@@ -49,13 +47,6 @@ export function useColumnModal<T extends object>(
   //         return [...managedColumns]
   //     })
   // }, [])
-  const onDragFinish = useCallback((itemOrder: string[]) => {
-    setManagedColumns((managedColumns) => {
-      return itemOrder.map((header) =>
-        managedColumns.find((column) => column.header === header)
-      ) as ITableColumn<T>[];
-    });
-  }, []);
   const handleChange = useCallback(
     (checked: boolean, event: FormEvent<HTMLInputElement>) => {
       const columnHeader = (event.target as unknown as { name?: string }).name;

@@ -1,35 +1,30 @@
-import React, { FunctionComponent, useState } from 'react';
-import {
-  Card,
-  CardBody,
-  CardHeader,
-  CardTitle,
-  Grid,
-  GridItem,
-  List,
-  ListItem,
-  ToggleGroup,
-  ToggleGroupItem,
-} from '@patternfly/react-core';
-import SquareFullIcon from '@patternfly/react-icons/dist/esm/icons/square-full-icon';
-
 import {
   ChartKind,
-  ChartThemeColor,
-  ChartType,
-  ChartTopLevelType,
-  ChartSchemaElement,
   ChartLabelFormatFunction,
+  ChartSchemaElement,
+  ChartThemeColor,
+  ChartTopLevelType,
+  ChartType,
 } from '@ansible/react-json-chart-builder';
-
-import RoutedTabs from '../../../../Components/RoutedTabs';
-
-import TotalSavings from './TotalSavings';
-import FormulaDescription from './FormulaDescription';
-import currencyFormatter from '../../../../Utilities/currencyFormatter';
-import hoursFormatter from '../../../../Utilities/hoursFormatter';
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardHeader } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { List } from '@patternfly/react-core/dist/dynamic/components/List';
+import { ListItem } from '@patternfly/react-core/dist/dynamic/components/List';
+import { ToggleGroupItem } from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
+import { ToggleGroup } from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import SquareFullIcon from '@patternfly/react-icons/dist/dynamic/icons/square-full-icon';
+import React, { FunctionComponent, useState } from 'react';
 import Chart from '../../../../Components/Chart';
 import { ApiReturnType } from '../../../../Components/Chart/types';
+import RoutedTabs from '../../../../Components/RoutedTabs';
+import currencyFormatter from '../../../../Utilities/currencyFormatter';
+import hoursFormatter from '../../../../Utilities/hoursFormatter';
+import FormulaDescription from './FormulaDescription';
+import TotalSavings from './TotalSavings';
 
 // This should model the return type somewhere next to the Api.js where the call is made.
 // This is just a basic mockup of the exact data for TS to work.

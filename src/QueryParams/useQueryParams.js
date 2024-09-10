@@ -1,9 +1,8 @@
-import { useContext } from 'react';
 import * as moment from 'moment';
-import { QueryParamsContext } from './Context';
-import useAsyncActionQueue from '../Utilities/useAsyncActionQueue';
-
+import { useContext } from 'react';
 import { formatDate } from '../Utilities/helpers';
+import useAsyncActionQueue from '../Utilities/useAsyncActionQueue';
+import { QueryParamsContext } from './Context';
 import { DEFAULT_NAMESPACE } from './helpers';
 
 const paramsReducer = (state, { type, value }) => {

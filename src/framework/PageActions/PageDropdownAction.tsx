@@ -1,4 +1,3 @@
-import { Tooltip } from '@patternfly/react-core';
 import {
   Dropdown,
   DropdownItem,
@@ -7,7 +6,8 @@ import {
   DropdownToggle,
   KebabToggle,
 } from '@patternfly/react-core/deprecated';
-import CircleIcon from '@patternfly/react-icons/dist/esm/icons/circle-icon';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import CircleIcon from '@patternfly/react-icons/dist/dynamic/icons/circle-icon';
 import React, {
   ComponentClass,
   FunctionComponent,
@@ -18,8 +18,8 @@ import React, {
 } from 'react';
 import { Link } from 'react-router-dom';
 import { IPageAction } from './PageAction';
-import { isHiddenAction } from './PageActions';
 import { PageActionType } from './PageActionType';
+import { isHiddenAction } from './PageActions';
 
 export function PageDropdownAction<T extends object>(props: {
   actions: IPageAction<T>[];

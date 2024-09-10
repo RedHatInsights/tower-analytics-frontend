@@ -1,32 +1,30 @@
-import {
-  Bullseye,
-  Button,
-  EmptyState,
-  EmptyStateBody,
-  EmptyStateIcon,
-  EmptyStateVariant,
-  PageSection,
-  Skeleton,
-  Spinner,
-  EmptyStateActions,
-  EmptyStateHeader,
-  EmptyStateFooter,
-} from '@patternfly/react-core';
 import { DropdownPosition } from '@patternfly/react-core/deprecated';
-import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
-import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/plus-circle-icon';
-import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { EmptyStateFooter } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateBody } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateIcon } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateVariant } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateActions } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateHeader } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { Skeleton } from '@patternfly/react-core/dist/dynamic/components/Skeleton';
+import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
+import { Bullseye } from '@patternfly/react-core/dist/dynamic/layouts/Bullseye';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
+import PlusCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/plus-circle-icon';
+import SearchIcon from '@patternfly/react-icons/dist/dynamic/icons/search-icon';
 import {
   CollapseColumn,
   SortByDirection,
-  Table /* data-codemods */,
+  Table,
   Tbody,
   Td,
   Th,
   Thead,
   Tr,
 } from '@patternfly/react-table';
-import { ThSortType } from '@patternfly/react-table/dist/esm/components/Table/base';
+import { ThSortType } from '@patternfly/react-table/dist/dynamic/components/Table/base';
 import useResizeObserver from '@react-hook/resize-observer';
 import React, {
   Dispatch,
@@ -40,17 +38,17 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Scrollable } from '../components/Scrollable';
-import { useBreakpoint } from '../components/useBreakpoint';
 import { IPageAction } from '../PageActions/PageAction';
-import { PageActions } from '../PageActions/PageActions';
 import { PageActionType } from '../PageActions/PageActionType';
+import { PageActions } from '../PageActions/PageActions';
 import { PageBody } from '../PageBody';
 import { SinceCell } from '../PageCells/DateTimeCell';
 import { LabelsCell } from '../PageCells/LabelsCell';
 import { TextCell } from '../PageCells/TextCell';
 import { useColumnModal } from '../PageColumnModal';
 import { useSettings } from '../Settings';
+import { Scrollable } from '../components/Scrollable';
+import { useBreakpoint } from '../components/useBreakpoint';
 import { PagePagination } from './PagePagination';
 import { PageTableCards } from './PageTableCards';
 import { PageTableList } from './PageTableList';
@@ -101,7 +99,6 @@ export type PageTableProps<T extends object> = {
 
   emptyStateTitle: string;
   emptyStateDescription?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   emptyStateIcon?: React.ComponentType<any>;
   emptyStateButtonIcon?: React.ReactNode;
   emptyStateButtonText?: string;

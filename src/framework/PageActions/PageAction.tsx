@@ -1,4 +1,4 @@
-import { ButtonVariant } from '@patternfly/react-core';
+import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ComponentClass } from 'react';
 import { PageActionType } from './PageActionType';
 

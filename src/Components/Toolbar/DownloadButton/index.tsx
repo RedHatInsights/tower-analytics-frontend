@@ -1,36 +1,34 @@
-import React, { FC, useState } from 'react';
-import {
-  Button,
-  ButtonVariant,
-  Spinner,
-  Tooltip,
-  TooltipPosition,
-} from '@patternfly/react-core';
-import DownloadIcon from '@patternfly/react-icons/dist/esm/icons/download-icon';
-import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import {
   Wizard,
   WizardContextConsumer,
   WizardFooter,
 } from '@patternfly/react-core/deprecated';
-import { DownloadState } from '../../../store/pdfDownloadButton/types';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
+import { TooltipPosition } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import DownloadIcon from '@patternfly/react-icons/dist/dynamic/icons/download-icon';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
+import React, { FC, useState } from 'react';
 import {
   Endpoint,
   OptionsReturnType,
-  Params,
   PDFEmailParams,
+  Params,
 } from '../../../Api';
-import { useAppDispatch, useAppSelector } from '../../../store';
 import { useReadQueryParams } from '../../../QueryParams';
+import { getDateFormatByGranularity } from '../../../Utilities/helpers';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { DownloadState } from '../../../store/pdfDownloadButton/types';
+import EmailDetails from '../DownloadButton/Steps/EmailDetails';
+import SendEmail from '../DownloadButton/Steps/EmailDetails/SendEmail';
 import ExportOptions from '../DownloadButton/Steps/ExportOptions';
 import PdfDetails from '../DownloadButton/Steps/PdfDetails';
-import EmailDetails from '../DownloadButton/Steps/EmailDetails';
 import PdfDownload from '../DownloadButton/Steps/PdfDetails/PdfDownload';
-import useOptionsData from '../DownloadButton/useOptionsData';
-import SendEmail from '../DownloadButton/Steps/EmailDetails/SendEmail';
 import { actions } from '../DownloadButton/constants';
+import useOptionsData from '../DownloadButton/useOptionsData';
 import { EmailDetailsProps } from '../types';
-import { getDateFormatByGranularity } from '../../../Utilities/helpers';
 
 interface Props {
   settingsNamespace: string;
@@ -181,7 +179,6 @@ const DownloadButton: FC<Props> = ({
         dispatch,
         emailExtraRows,
         expiry,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         pdfPostBody,
       });
     }

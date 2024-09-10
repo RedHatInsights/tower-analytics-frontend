@@ -1,25 +1,23 @@
-import {
-  DataList,
-  DataListAction,
-  DataListCell,
-  DataListCheck,
-  DataListItem,
-  DataListItemCells,
-  DataListItemRow,
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
-  Flex,
-  Stack,
-  Text,
-  Title,
-} from '@patternfly/react-core';
 import { DropdownPosition } from '@patternfly/react-core/deprecated';
+import { DataList } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListAction } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListCell } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListCheck } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListItem } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListItemCells } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListItemRow } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DescriptionList } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionListDescription } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionListGroup } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionListTerm } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { Text } from '@patternfly/react-core/dist/dynamic/components/Text';
+import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
+import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import { Stack } from '@patternfly/react-core/dist/dynamic/layouts/Stack';
 import React, { ReactNode, useCallback, useMemo } from 'react';
-import { IconWrapper } from '../components/IconWrapper';
 import { IPageAction } from '../PageActions/PageAction';
 import { PageActions } from '../PageActions/PageActions';
+import { IconWrapper } from '../components/IconWrapper';
 import {
   ITableColumn,
   ITableColumnTypeCount,

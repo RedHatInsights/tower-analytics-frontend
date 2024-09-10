@@ -1,23 +1,19 @@
-import React, { useState } from 'react';
+import { DataListCell } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListItem } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataList } from '@patternfly/react-core/dist/dynamic/components/DataList';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
-
-import {
-  DataList,
-  DataListItem as PFDataListItem,
-  DataListCell as PFDataListCell,
-} from '@patternfly/react-core';
-
 import ModalContents from './ModalContents';
 
-const DataListCell = styled(PFDataListCell)`
+const TLDataListCell = styled(DataListCell)`
   --pf-c-data-list__cell-cell--MarginRight: 0;
   --pf-c-data-list__cell--PaddingBottom: 10px;
 `;
 
-const DataListItem = styled(PFDataListItem)`
+const TLDataListItem = styled(DataListItem)`
   display: flex;
   flex-direction: row;
   justify-content: space-around;
@@ -26,7 +22,7 @@ const DataListItem = styled(PFDataListItem)`
   align-items: center;
 `;
 
-const DataCellEnd = styled(DataListCell)`
+const DataCellEnd = styled(TLDataListCell)`
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -51,43 +47,45 @@ const TemplatesList = ({ templates, isLoading, qp, title, jobType }) => {
           background: 'white',
         }}
       >
-        <DataListItem aria-labelledby={`top-${displayJobType(jobType)}-header`}>
-          <DataListCell>
+        <TLDataListItem
+          aria-labelledby={`top-${displayJobType(jobType)}-header`}
+        >
+          <TLDataListCell>
             <h3>{title}</h3>
-          </DataListCell>
+          </TLDataListCell>
           <DataCellEnd>
             <h3>Usage</h3>
           </DataCellEnd>
-        </DataListItem>
+        </TLDataListItem>
         {isLoading && (
-          <PFDataListItem
+          <DataListItem
             aria-labelledby={`${displayJobType(jobType)}-loading`}
             key={isLoading}
             style={{ border: 'none' }}
           >
-            <PFDataListCell>
+            <DataListCell>
               <LoadingState />
-            </PFDataListCell>
-          </PFDataListItem>
+            </DataListCell>
+          </DataListItem>
         )}
         {!isLoading && templates.length <= 0 && (
-          <PFDataListItem
+          <DataListItem
             aria-labelledby={`${displayJobType(jobType)}-no-data`}
             key={isLoading}
             style={{ border: 'none' }}
           >
-            <PFDataListCell>
+            <DataListCell>
               <NoData />
-            </PFDataListCell>
-          </PFDataListItem>
+            </DataListCell>
+          </DataListItem>
         )}
         {!isLoading &&
           templates.map(({ name, total_count, id }, index) => (
-            <DataListItem
+            <TLDataListItem
               aria-labelledby={`top-${displayJobType(jobType)}-detail`}
               key={index}
             >
-              <DataListCell>
+              <TLDataListCell>
                 <a
                   onClick={() => {
                     setIsModalOpen(true);
@@ -96,9 +94,9 @@ const TemplatesList = ({ templates, isLoading, qp, title, jobType }) => {
                 >
                   {name}
                 </a>
-              </DataListCell>
+              </TLDataListCell>
               <DataCellEnd>{total_count}</DataCellEnd>
-            </DataListItem>
+            </TLDataListItem>
           ))}
       </DataList>
       {selectedId && (

@@ -1,30 +1,23 @@
-import React, { useState, useEffect, FC, useCallback } from 'react';
-
-import { useQueryParams } from '../../QueryParams/';
-
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { FormSelect } from '@patternfly/react-core/dist/dynamic/components/FormSelect';
+import { FormSelectOption } from '@patternfly/react-core/dist/dynamic/components/FormSelect';
+import { NotificationDrawer } from '@patternfly/react-core/dist/dynamic/components/NotificationDrawer';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { Params, readClusters, readNotifications } from '../../Api/';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
-import { Params, readClusters, readNotifications } from '../../Api/';
-import useRequest from '../../Utilities/useRequest';
-
-import { PageHeader } from '../../framework/PageHeader';
-
-import {
-  Card,
-  CardBody,
-  CardTitle as PFCardTitle,
-  FormSelect,
-  FormSelectOption,
-  PaginationVariant,
-  NotificationDrawer,
-  PageSection,
-} from '@patternfly/react-core';
-
-import NotificationsList from './NotificationsList';
 import Pagination from '../../Components/Pagination';
+import { useQueryParams } from '../../QueryParams/';
+import useRequest from '../../Utilities/useRequest';
+import { PageHeader } from '../../framework/PageHeader';
+import NotificationsList from './NotificationsList';
 
-const CardTitle = styled(PFCardTitle)`
+const NCardTitle = styled(CardTitle)`
   display: flex;
   justify-content: space-between;
 
@@ -111,7 +104,6 @@ interface ClusterDataType {
 const Notifications: FC<Record<string, never>> = () => {
   const [selectedCluster, setSelectedCluster] = useState('');
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { queryParams, setId, setFromPagination, setSeverity } = useQueryParams(
     initialQueryParams.defaultParams
   );
@@ -158,7 +150,7 @@ const Notifications: FC<Record<string, never>> = () => {
       <>
         <PageSection>
           <Card>
-            <CardTitle>
+            <NCardTitle>
               <DropdownGroup>
                 <FormSelect
                   name='selectedCluster'
@@ -212,7 +204,7 @@ const Notifications: FC<Record<string, never>> = () => {
                 setPagination={setFromPagination}
                 isCompact
               />
-            </CardTitle>
+            </NCardTitle>
             <CardBody>
               {isLoading && <LoadingState />}
               {isSuccess && notificationsData.length <= 0 && <NoData />}

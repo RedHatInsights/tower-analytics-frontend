@@ -1,4 +1,4 @@
-import { PageSection } from '@patternfly/react-core';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
 import React, { useMemo } from 'react';
 import { PageGrid } from '../components/PageGrid';
 import { PageTableProps } from './PageTable';

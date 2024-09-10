@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import { Badge } from '@patternfly/react-core/dist/dynamic/components/Badge';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import PropTypes from 'prop-types';
-
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Button, Badge, Alert, Tooltip } from '@patternfly/react-core';
-import AlertModal from '../AlertModal';
 import { getRelatedResourceDeleteCounts } from '../../Utilities/getRelatedResourceDeleteDetails';
+import AlertModal from '../AlertModal';
 import ErrorDetail from '../ErrorDetail';
 
 const WarningMessage = styled(Alert)`

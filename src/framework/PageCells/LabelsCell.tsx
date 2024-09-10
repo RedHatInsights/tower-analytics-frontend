@@ -1,5 +1,6 @@
+import { LabelGroup } from '@patternfly/react-core/dist/dynamic/components/Label';
+import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
 import React from 'react';
-import { Label, LabelGroup } from '@patternfly/react-core';
 
 export function LabelsCell(props: { labels: string[] }) {
   return (

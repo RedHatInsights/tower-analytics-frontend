@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { actions } from '../../constants';
-import {
-  Form,
-  FormGroup,
-  FormHelperText,
-  Grid,
-  GridItem,
-  Radio,
-  TextArea,
-  TextInput,
-} from '@patternfly/react-core';
-import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
 import {
   Select,
   SelectOption,
   SelectVariant,
 } from '@patternfly/react-core/deprecated';
-
+import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { FormHelperText } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { Radio } from '@patternfly/react-core/dist/dynamic/components/Radio';
+import { TextArea } from '@patternfly/react-core/dist/dynamic/components/TextArea';
+import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
+import React, { useEffect, useState } from 'react';
+import { readRbacGroups, readRbacPrincipals } from '../../../../../Api';
+import { today } from '../../../../../Utilities/helpers';
+import useRequest from '../../../../../Utilities/useRequest';
+import ToolbarInput from '../../../Groups/ToolbarInput';
 import {
   EmailDetailsProps,
   RbacGroupFromApi,
@@ -24,10 +24,7 @@ import {
   TypeValue,
   User,
 } from '../../../types';
-import useRequest from '../../../../../Utilities/useRequest';
-import { readRbacGroups, readRbacPrincipals } from '../../../../../Api';
-import ToolbarInput from '../../../Groups/ToolbarInput';
-import { today } from '../../../../../Utilities/helpers';
+import { actions } from '../../constants';
 
 interface RbacGroupsDataType {
   data: RbacGroupFromApi[];
@@ -39,7 +36,6 @@ interface RbacPrincipalsDataType {
   data: RbacPrincipalFromApi[];
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const EmailDetails = ({
   options,
   formData,

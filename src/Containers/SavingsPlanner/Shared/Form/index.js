@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { useNavigate, useLocation, Navigate } from 'react-router-dom';
-
-import { Button, ButtonVariant } from '@patternfly/react-core';
 import {
   Wizard,
-  WizardFooter,
   WizardContextConsumer,
+  WizardFooter,
 } from '@patternfly/react-core/deprecated';
-
-import useRequest from '../../../../Utilities/useRequest';
-import usePlanData from '../usePlanData';
-
+import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { createPlan, updatePlan } from '../../../../Api/';
-
 import AlertModal from '../../../../Components/AlertModal/AlertModal';
 import ErrorDetail from '../../../../Components/ErrorDetail/ErrorDetail';
-
+import useRequest from '../../../../Utilities/useRequest';
+import usePlanData from '../usePlanData';
 import Details from './Steps/Details';
 import Tasks from './Steps/Tasks';
 import Templates from './Steps/Templates';

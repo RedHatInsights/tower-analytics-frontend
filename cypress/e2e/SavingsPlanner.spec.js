@@ -1,4 +1,4 @@
-import { savingsPlannerUrl, ENV, ENVS } from '../support/constants';
+import { ENV, ENVS, savingsPlannerUrl } from '../support/constants';
 
 describe('Savings Planner page smoketests', () => {
   if (ENV != ENVS.EPHEMERAL) {

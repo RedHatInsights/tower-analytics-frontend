@@ -1,9 +1,7 @@
 import {
-  OnPerPageSelect,
-  OnSetPage,
   Pagination,
   PaginationVariant,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/dist/dynamic/components/Pagination';
 import React, { CSSProperties, useCallback } from 'react';
 import { useBreakpoint } from '../components/useBreakpoint';
 
@@ -18,11 +16,8 @@ export type PagePaginationProps = {
 
 export function PagePagination(props: PagePaginationProps) {
   const { setPage, setPerPage } = props;
-  const onSetPage = useCallback<OnSetPage>(
-    (_event, page) => setPage(page),
-    [setPage]
-  );
-  const onPerPageSelect = useCallback<OnPerPageSelect>(
+  const onSetPage = useCallback((_event, page) => setPage(page), [setPage]);
+  const onPerPageSelect = useCallback(
     (_event, perPage) => setPerPage(perPage),
     [setPerPage]
   );

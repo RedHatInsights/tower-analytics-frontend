@@ -1,6 +1,6 @@
 import React, {
-  createContext,
   ReactNode,
+  createContext,
   useCallback,
   useContext,
 } from 'react';
@@ -31,9 +31,11 @@ export function usePageNavigate() {
       if (to?.startsWith('http')) {
         open(to, '_blank');
       } else {
-        pageNavigateCallback
-          ? pageNavigateCallback(to ?? '')
-          : open(to, '_self');
+        if (pageNavigateCallback) {
+          pageNavigateCallback(to ?? '');
+        } else {
+          open(to, '_self');
+        }
       }
     },
     [pageNavigateCallback]

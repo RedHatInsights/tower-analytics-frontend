@@ -1,18 +1,15 @@
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import CaretLeftIcon from '@patternfly/react-icons/dist/dynamic/icons/caret-left-icon';
 import React, { useEffect } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
-import CaretLeftIcon from '@patternfly/react-icons/dist/esm/icons/caret-left-icon';
-import { Card, PageSection } from '@patternfly/react-core';
-
+import { useLocation, useParams } from 'react-router-dom';
+import { readPlan } from '../../../Api/';
+import ApiErrorState from '../../../Components/ApiStatus/ApiErrorState';
+import useRequest from '../../../Utilities/useRequest';
+import { PageHeader } from '../../../framework/PageHeader';
+import SavingsPlanEdit from '../Edit';
 import DetailsTab from './DetailsTab';
 import StatisticsTab from './StatisticsTab';
-import ApiErrorState from '../../../Components/ApiStatus/ApiErrorState';
-
-import { PageHeader } from '../../../framework/PageHeader';
-
-import { readPlan } from '../../../Api/';
-
-import SavingsPlanEdit from '../Edit';
-import useRequest from '../../../Utilities/useRequest';
 
 const Details = () => {
   const { id } = useParams();

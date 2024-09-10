@@ -1,16 +1,12 @@
-import React, { useState, useEffect, FunctionComponent } from 'react';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { InputGroupItem } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { InputGroup } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
+import { ToolbarFilter } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import SearchIcon from '@patternfly/react-icons/dist/dynamic/icons/search-icon';
 import PropTypes from 'prop-types';
-import {
-  ToolbarFilter,
-  TextInput,
-  InputGroup,
-  Button,
-  InputGroupItem,
-} from '@patternfly/react-core';
-
-import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { optionsForCategories } from '../../constants';
-
 import { SetValue } from '../../types';
 
 interface Props {

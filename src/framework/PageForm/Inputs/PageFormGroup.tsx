@@ -1,14 +1,10 @@
-import {
-  Button,
-  FormGroup,
-  FormGroupProps,
-  Popover,
-} from '@patternfly/react-core';
-import OutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { Popover } from '@patternfly/react-core/dist/dynamic/components/Popover';
+import OutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/outlined-question-circle-icon';
 import React, { ReactNode } from 'react';
 
 export type PageFormGroupProps = Pick<
-  FormGroupProps,
   'children' | 'helperText' | 'helperTextInvalid' | 'isRequired' | 'label'
 > & { id?: string; labelHelpTitle?: string; labelHelp?: ReactNode };
 

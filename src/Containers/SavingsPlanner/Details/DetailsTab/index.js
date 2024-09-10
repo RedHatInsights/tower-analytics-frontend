@@ -1,43 +1,43 @@
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
-
-import styled from 'styled-components';
-import { useLocation, useNavigate } from 'react-router-dom';
-
-import { Button } from '@patternfly/react-core';
-
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardFooter } from '@patternfly/react-core/dist/dynamic/components/Card';
 import {
-  CardBody as PFCardBody,
-  CardFooter,
   DescriptionList,
-  DescriptionListTerm,
-  DescriptionListGroup,
   DescriptionListDescription,
-  Divider as PFDivider,
-  Label,
+  DescriptionListGroup,
+  DescriptionListTerm,
+} from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { Divider } from '@patternfly/react-core/dist/dynamic/components/Divider';
+import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
+import {
   List,
   ListItem,
+} from '@patternfly/react-core/dist/dynamic/components/List';
+import {
   Tooltip,
   TooltipPosition,
-} from '@patternfly/react-core';
-import CardActionsRow from '../../../../Components/CardActionsRow';
+} from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import { deletePlan, readPlanOptions } from '../../../../Api/';
+import AlertModal from '../../../../Components/AlertModal/AlertModal';
+import CardActionsRow from '../../../../Components/CardActionsRow';
+import DeleteButton from '../../../../Components/DeleteButton/DeleteButton';
+import ErrorDetail from '../../../../Components/ErrorDetail/ErrorDetail';
+import JobStatus from '../../../../Components/JobStatus';
+import RoutedTabs from '../../../../Components/RoutedTabs';
+import { DEFAULT_NAMESPACE, createUrl } from '../../../../QueryParams/';
+import { jobExplorer } from '../../../../Utilities/constants';
+import { formatDateTime } from '../../../../Utilities/helpers';
 import useRequest, {
   useDismissableError,
 } from '../../../../Utilities/useRequest';
-import DeleteButton from '../../../../Components/DeleteButton/DeleteButton';
-import ExclamationCircleIcon from '@patternfly/react-icons/dist/esm/icons/exclamation-circle-icon';
-import { formatDateTime } from '../../../../Utilities/helpers';
-import RoutedTabs from '../../../../Components/RoutedTabs';
-import AlertModal from '../../../../Components/AlertModal/AlertModal';
-import ErrorDetail from '../../../../Components/ErrorDetail/ErrorDetail';
-import JobStatus from '../../../../Components/JobStatus';
-
-import { createUrl, DEFAULT_NAMESPACE } from '../../../../QueryParams/';
-import { jobExplorer } from '../../../../Utilities/constants';
 import { Paths } from '../../../../paths';
 
-const CardBody = styled(PFCardBody)`
+const DCardBody = styled(CardBody)`
   min-height: 500px;
   padding: 0;
   padding-bottom: 20px;
@@ -47,7 +47,7 @@ const CardBody = styled(PFCardBody)`
   }
 `;
 
-const Divider = styled(PFDivider)`
+const DDivider = styled(Divider)`
   padding-top: 24px;
 `;
 
@@ -168,7 +168,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
     <>
       {plan && (
         <>
-          <CardBody>
+          <DCardBody>
             <RoutedTabs tabsArray={tabsArray} />
             <div style={{ padding: '1rem' }}>
               <DescriptionList isHorizontal columnModifier={{ lg: '3Col' }}>
@@ -204,7 +204,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
               </DescriptionList>
               {tasks.length > 0 && (
                 <DescriptionList>
-                  <Divider component='div' />
+                  <DDivider component='div' />
                   <DescriptionListGroup key={tasks}>
                     <DescriptionListTerm>Tasks</DescriptionListTerm>
                     <DescriptionListDescription>
@@ -218,7 +218,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
                 </DescriptionList>
               )}
             </div>
-          </CardBody>
+          </DCardBody>
           {canWrite && (
             <CardFooter>
               <CardActionsRow>

@@ -1,18 +1,16 @@
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { EmptyStateFooter } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateIcon } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateBody } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateVariant } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateHeader } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import AddCircleOIcon from '@patternfly/react-icons/dist/dynamic/icons/add-circle-o-icon';
+import SearchIcon from '@patternfly/react-icons/dist/dynamic/icons/search-icon';
 import React, { FunctionComponent } from 'react';
-import {
-  EmptyState,
-  EmptyStateIcon,
-  EmptyStateBody,
-  Button,
-  EmptyStateVariant,
-  ButtonVariant,
-  EmptyStateHeader,
-  EmptyStateFooter,
-} from '@patternfly/react-core';
-import AddCircleOIcon from '@patternfly/react-icons/dist/esm/icons/add-circle-o-icon';
-import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
-import { createUrl } from '../QueryParams/';
 import { useNavigate } from 'react-router-dom';
+import { createUrl } from '../QueryParams/';
 
 interface Props {
   label?: string;

@@ -1,6 +1,6 @@
-import React, { FunctionComponent } from 'react';
+import { DatePicker } from '@patternfly/react-core/dist/dynamic/components/DatePicker';
 import PropTypes from 'prop-types';
-import { DatePicker } from '@patternfly/react-core';
+import React, { FunctionComponent } from 'react';
 import { optionsForCategories } from '../../constants';
 
 interface Props {

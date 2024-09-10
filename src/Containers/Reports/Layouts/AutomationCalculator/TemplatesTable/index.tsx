@@ -1,23 +1,22 @@
-import React, { FunctionComponent, useState } from 'react';
-
 import {
   Dropdown,
   DropdownItem,
   KebabToggle,
 } from '@patternfly/react-core/deprecated';
 import {
-  Table /* data-codemods */,
+  Table,
   TableVariant,
   Tbody,
   Th,
   Thead,
   Tr,
 } from '@patternfly/react-table';
-import { Template } from './types';
-import Row from './Row';
-import { TableSortParams } from '../../Standard/types';
+import React, { FunctionComponent, useState } from 'react';
 import { useQueryParams } from '../../../../../QueryParams';
 import { reportDefaultParams } from '../../../../../Utilities/constants';
+import { TableSortParams } from '../../Standard/types';
+import Row from './Row';
+import { Template } from './types';
 
 interface Props {
   data: Template[];

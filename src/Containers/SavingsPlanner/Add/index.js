@@ -1,16 +1,13 @@
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
 import React, { useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-
-import { Card, CardBody, PageSection } from '@patternfly/react-core';
-
-import { PageHeader } from '../../../framework/PageHeader';
-
 import { readPlanOptions } from '../../../Api/';
-
-import Form from '../Shared/Form';
-
-import { Paths } from '../../../paths';
 import useRequest from '../../../Utilities/useRequest';
+import { PageHeader } from '../../../framework/PageHeader';
+import { Paths } from '../../../paths';
+import Form from '../Shared/Form';
 
 const Add = () => {
   const {

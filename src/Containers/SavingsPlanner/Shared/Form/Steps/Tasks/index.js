@@ -1,28 +1,24 @@
-import React, { useState } from 'react';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { DataList } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListAction } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListItem } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListCell } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListItemRow } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListControl } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListDragButton } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { DataListItemCells } from '@patternfly/react-core/dist/dynamic/components/DataList';
+import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { InputGroupItem } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { InputGroup } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
+import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import PlusIcon from '@patternfly/react-icons/dist/dynamic/icons/plus-icon';
+import TimesIcon from '@patternfly/react-icons/dist/dynamic/icons/times-icon';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-
-import {
-  Button,
-  DataList,
-  DataListAction,
-  DataListItem,
-  DataListCell,
-  DataListItemRow,
-  DataListControl,
-  DataListDragButton,
-  DataListItemCells,
-  Form,
-  FormGroup,
-  Grid,
-  InputGroup,
-  TextInput,
-  Title,
-  InputGroupItem,
-} from '@patternfly/react-core';
-import PlusIcon from '@patternfly/react-icons/dist/esm/icons/plus-icon';
-import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
-
 import { actions } from '../../../constants';
 
 const TaskSection = styled.div`
@@ -54,26 +50,6 @@ const Tasks = ({ tasks, dispatch }) => {
 
   const [liveText, setLiveText] = useState('');
   const [id, setId] = useState('');
-
-  const onDragStart = (newId) => {
-    setId(newId);
-    setLiveText(`Dragging started for task ${newId}.`);
-  };
-
-  const onDragMove = (oldIndex, newIndex) => {
-    setLiveText(
-      `Dragging task ${id}.  Task ${oldIndex} is now task ${newIndex}.`
-    );
-  };
-
-  const onDragCancel = () => {
-    setLiveText('Dragging cancelled. Tasks list order is unchanged.');
-  };
-
-  const onDragFinish = (newItemOrder) => {
-    setLiveText('Dragging finished');
-    setTasks(newItemOrder.map((val) => val.split('-').slice(0, -1).join('-')));
-  };
 
   const appendTask = () => {
     const trimmedTask = taskToAdd.trim();

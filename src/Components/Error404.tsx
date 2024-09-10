@@ -1,15 +1,13 @@
+import { EmptyStateFooter } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateVariant } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateIcon } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateBody } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateHeader } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import PathMissingIcon from '@patternfly/react-icons/dist/dynamic/icons/path-missing-icon';
 import React, { FunctionComponent } from 'react';
-import {
-  EmptyState,
-  EmptyStateVariant,
-  EmptyStateIcon,
-  EmptyStateBody,
-  EmptyStateHeader,
-  EmptyStateFooter,
-} from '@patternfly/react-core';
-import PathMissingIcon from '@patternfly/react-icons/dist/esm/icons/path-missing-icon';
-import { Paths } from '../paths';
 import { Link } from 'react-router-dom';
+import { Paths } from '../paths';
 
 interface Props {
   title?: string;

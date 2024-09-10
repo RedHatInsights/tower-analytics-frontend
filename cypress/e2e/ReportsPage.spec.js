@@ -1,10 +1,10 @@
 import {
-  aapUrl,
-  reportsUrl,
-  allReports,
-  skippedTests,
   ENV,
   ENVS,
+  aapUrl,
+  allReports,
+  reportsUrl,
+  skippedTests,
 } from '../support/constants';
 
 describe('Reports page smoketests', () => {
@@ -41,7 +41,7 @@ describe('Reports page smoketests', () => {
       if (skippedTests['reports'].includes(item)) return;
 
       if (ENV != ENVS.EPHEMERAL) {
-        cy.getByCy(item).click().should('exist');
+        cy.getByCy(item).click();
       }
       if (ENV != ENVS.STAGE) {
         cy.waitSpinner();

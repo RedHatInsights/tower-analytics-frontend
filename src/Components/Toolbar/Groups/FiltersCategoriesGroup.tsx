@@ -1,11 +1,10 @@
-import React, { FunctionComponent, useState } from 'react';
-import { ToolbarGroup } from '@patternfly/react-core';
 import { SelectOptionProps } from '@patternfly/react-core/deprecated';
-
+import { ToolbarGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import React, { FunctionComponent, useState } from 'react';
+import { optionsForCategories } from '../constants';
+import { AttributeType, SetValues } from '../types';
 import CategoryDropdown from './CategoryDropdown';
 import ToolbarInput from './ToolbarInput';
-import { optionsForCategories } from '../constants';
-import { SetValues, AttributeType } from '../types';
 
 interface Props {
   filterCategories: Record<string, SelectOptionProps[]>;

@@ -1,19 +1,21 @@
 // TODO: The component converts all types to string.
 // It should be able to use the correct type in the future for example number and number[].
-import React, { FunctionComponent, useState } from 'react';
-import { Tooltip, ToolbarFilter, ToolbarChip } from '@patternfly/react-core';
 import {
   Select as PFSelect,
   SelectOption,
-  SelectVariant,
   SelectOptionObject,
+  SelectVariant,
 } from '@patternfly/react-core/deprecated';
-
-import { handleCheckboxChips, handleSingleChips } from './helpers';
-import { optionsForCategories } from '../../constants';
+import {
+  ToolbarChip,
+  ToolbarFilter,
+} from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import React, { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
-
+import { optionsForCategories } from '../../constants';
 import { AttributeType, SelectOptionProps, SetValue } from '../../types';
+import { handleCheckboxChips, handleSingleChips } from './helpers';
 
 const OptionSpan = styled('span')`
   display: block;

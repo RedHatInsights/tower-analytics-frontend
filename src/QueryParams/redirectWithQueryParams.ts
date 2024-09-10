@@ -1,5 +1,6 @@
-import { stringifyQueryParams } from './helpers';
 import { prefixPath } from '../paths';
+import { stringifyQueryParams } from './helpers';
+
 /**
  * The function helps to serialize query params to string.
  *

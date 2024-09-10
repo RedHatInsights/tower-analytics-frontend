@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import PropTypes from 'prop-types';
-import { Button, Tooltip } from '@patternfly/react-core';
-import AlertModal from '../AlertModal';
-
+import React, { useState } from 'react';
 import { getRelatedResourceDeleteCounts } from '../../Utilities/getRelatedResourceDeleteDetails';
-
+import AlertModal from '../AlertModal';
 import ErrorDetail from '../ErrorDetail';
 
 const requiredField = (props) => {

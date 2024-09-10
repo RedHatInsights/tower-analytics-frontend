@@ -1,2 +1,8 @@
 singleQuote: true
 jsxSingleQuote: true
+importOrder:
+  - '<THIRD_PARTY_MODULES>'
+  - '^[./]'
+importOrderSortSpecifiers: true
+plugins:
+  - '@trivago/prettier-plugin-sort-imports'

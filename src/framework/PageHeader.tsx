@@ -1,29 +1,35 @@
+import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import { AlertActionCloseButton } from '@patternfly/react-core/dist/dynamic/components/Alert';
 import {
-  Alert,
-  AlertActionCloseButton,
   Breadcrumb,
   BreadcrumbItem,
-  Button,
-  Flex,
-  FlexItem,
+} from '@patternfly/react-core/dist/dynamic/components/Breadcrumb';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import {
   PageNavigation,
   PageSection,
   PageSectionVariants,
-  Popover,
-  Skeleton,
+} from '@patternfly/react-core/dist/dynamic/components/Page';
+import { Popover } from '@patternfly/react-core/dist/dynamic/components/Popover';
+import { Skeleton } from '@patternfly/react-core/dist/dynamic/components/Skeleton';
+import { Text } from '@patternfly/react-core/dist/dynamic/components/Text';
+import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
+import { Truncate } from '@patternfly/react-core/dist/dynamic/components/Truncate';
+import {
+  Flex,
+  FlexItem,
+} from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import {
   Stack,
   StackItem,
-  Text,
-  Title,
-  Truncate,
-} from '@patternfly/react-core';
-import ExternalLinkAltIcon from '@patternfly/react-icons/dist/esm/icons/external-link-alt-icon';
-import OutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon';
+} from '@patternfly/react-core/dist/dynamic/layouts/Stack';
+import ExternalLinkAltIcon from '@patternfly/react-icons/dist/dynamic/icons/external-link-alt-icon';
+import OutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/outlined-question-circle-icon';
 import React, { CSSProperties, Fragment, ReactNode } from 'react';
-import { useBreakpoint } from './components/useBreakpoint';
-import { usePageNavigate } from './components/usePageNavigate';
 import { PageAlertsArrayContext, PageAlertsContext } from './PageAlerts';
 import './PageFramework.css';
+import { useBreakpoint } from './components/useBreakpoint';
+import { usePageNavigate } from './components/usePageNavigate';
 
 export interface ICatalogBreadcrumb {
   id?: string;

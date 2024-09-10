@@ -1,54 +1,45 @@
+import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import { AlertVariant } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import { AlertActionLink } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { Tabs } from '@patternfly/react-core/dist/dynamic/components/Tabs';
+import { Tab } from '@patternfly/react-core/dist/dynamic/components/Tabs';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { scaleOrdinal } from 'd3';
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-
-import {
-  useQueryParams,
-  createUrl,
-  DEFAULT_NAMESPACE,
-} from '../../QueryParams/';
-import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
-
-import { readJobExplorer, readHostExplorer, readOrgOptions } from '../../Api/';
-
-import { PageHeader } from '../../framework/PageHeader';
-
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Tabs,
-  Tab,
-  Grid,
-  GridItem,
-  Alert,
-  AlertVariant,
-  AlertActionLink,
-  PageSection,
-} from '@patternfly/react-core';
-
+import styled from 'styled-components';
+import { readHostExplorer, readJobExplorer, readOrgOptions } from '../../Api/';
 import {
   GroupedBarChart,
-  OrgsTooltip,
   HostsTooltip,
+  OrgsTooltip,
 } from '../../Charts/GroupedBarChart/';
 import PieChart from '../../Charts/PieChart';
-import FilterableToolbar from '../../Components/Toolbar/';
-import {
-  jobExplorer,
-  organizationStatistics as constants,
-} from '../../Utilities/constants';
-import reportPaths from '../Reports/paths';
-
 // For chart colors
 import { pfmulti } from '../../Charts/Utilities/colors';
-import { scaleOrdinal } from 'd3';
-import useRequest from '../../Utilities/useRequest';
-
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
+import FilterableToolbar from '../../Components/Toolbar/';
+import {
+  DEFAULT_NAMESPACE,
+  createUrl,
+  useQueryParams,
+} from '../../QueryParams/';
+import {
+  organizationStatistics as constants,
+  jobExplorer,
+} from '../../Utilities/constants';
+import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
+import useRequest from '../../Utilities/useRequest';
+import { PageHeader } from '../../framework/PageHeader';
 import { Paths } from '../../paths';
+import reportPaths from '../Reports/paths';
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;

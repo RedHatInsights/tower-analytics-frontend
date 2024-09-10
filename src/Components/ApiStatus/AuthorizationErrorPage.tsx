@@ -1,18 +1,18 @@
-import React, { FunctionComponent } from 'react';
-import {
-  Button,
-  Title,
-  EmptyState,
-  EmptyStateVariant,
-  EmptyStateIcon,
-  EmptyStateBody,
-  ButtonVariant,
-  EmptyStateHeader,
-  EmptyStateFooter,
-} from '@patternfly/react-core';
-import WrenchIcon from '@patternfly/react-icons/dist/esm/icons/wrench-icon';
 // @ts-ignore
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
+import {
+  EmptyState,
+  EmptyStateBody,
+  EmptyStateFooter,
+  EmptyStateHeader,
+  EmptyStateIcon,
+  EmptyStateVariant,
+} from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
+import WrenchIcon from '@patternfly/react-icons/dist/dynamic/icons/wrench-icon';
 import NotAuthorized from '@redhat-cloud-services/frontend-components/NotAuthorized';
+import React, { FunctionComponent } from 'react';
 import { notAuthorizedParams } from '../../Utilities/constants';
 
 interface Props {

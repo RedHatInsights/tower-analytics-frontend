@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import initializeChart from './BaseChart';
-import { getTotal } from '../Utilities/helpers';
-import Legend from './Utilities/Legend';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { getTotal } from '../Utilities/helpers';
+import initializeChart from './BaseChart';
+import Legend from './Utilities/Legend';
 
 const Wrapper = styled.div`
   display: flex;

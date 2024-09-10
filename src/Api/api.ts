@@ -1,30 +1,25 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// @ts-nocheck
 import {
+  authenticatedFetch,
+  deleteById,
+  deleteByIds,
   get,
+  handleResponse,
   post,
+  postWithEmail,
+  postWithFileReturn,
   postWithPagination,
   saveROIData,
-  deleteById,
   updateById,
-  authenticatedFetch,
-  deleteByIds,
-  postWithFileReturn,
-  postWithEmail,
-  handleResponse,
 } from './methods';
 import {
-  ReadEndpointFnc,
+  ApiJson,
+  NotificationParams,
+  PDFEmailParams,
+  PDFParams,
   Params,
   ParamsWithPagination,
-  ApiJson,
-  PDFParams,
-  NotificationParams,
+  ReadEndpointFnc,
   saveROIParams,
-  PDFEmailParams,
 } from './types';
 
 export enum Endpoint {

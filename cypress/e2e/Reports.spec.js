@@ -1,9 +1,9 @@
 import {
-  reportsUrl,
-  allReports,
-  skippedTests,
   ENV,
   ENVS,
+  allReports,
+  reportsUrl,
+  skippedTests,
 } from '../support/constants';
 
 describe("Reports' navigation on Reports page - smoketests", () => {

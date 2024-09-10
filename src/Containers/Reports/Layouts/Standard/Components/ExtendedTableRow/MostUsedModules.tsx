@@ -1,11 +1,10 @@
-// @ts-nocheck
-import React from 'react';
-import { Flex, FlexItem } from '@patternfly/react-core';
+import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
-
+import React from 'react';
+import { ExpandedTableRowComponent } from '.';
 import Breakdown from '../../../../../../Charts/Breakdown';
 import { categoryColor } from '../../../../../../Utilities/constants';
-import { ExpandedTableRowComponent } from '.';
 
 const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
   const totalTaskCount = item

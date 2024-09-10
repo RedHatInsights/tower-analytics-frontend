@@ -1,11 +1,15 @@
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { CardHeader } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { Popover } from '@patternfly/react-core/dist/dynamic/components/Popover';
+import { Switch } from '@patternfly/react-core/dist/dynamic/components/Switch';
+import PFOutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/outlined-question-circle-icon';
+import TimesIcon from '@patternfly/react-icons/dist/dynamic/icons/times-icon';
 import React, { FunctionComponent } from 'react';
-import { Button, Switch, Popover } from '@patternfly/react-core';
-import { Card, CardTitle, CardBody, CardHeader } from '@patternfly/react-core';
-import PFOutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/esm/icons/outlined-question-circle-icon';
-import TimesIcon from '@patternfly/react-icons/dist/esm/icons/times-icon';
-
-import { SetValues, AttributeType } from '../types';
 import styled from 'styled-components';
+import { AttributeType, SetValues } from '../types';
 
 const OutlinedQuestionCircleIcon = styled(PFOutlinedQuestionCircleIcon)`
   color: #151515;

@@ -1,8 +1,11 @@
-import { Button, Form, Modal, ModalVariant } from '@patternfly/react-core';
 import { SelectOption } from '@patternfly/react-core/deprecated';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { ModalVariant } from '@patternfly/react-core/dist/dynamic/components/Modal';
+import { Modal } from '@patternfly/react-core/dist/dynamic/components/Modal';
 import React, {
-  createContext,
   ReactNode,
+  createContext,
   useCallback,
   useContext,
   useEffect,

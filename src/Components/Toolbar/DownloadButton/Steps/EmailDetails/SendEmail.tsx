@@ -1,7 +1,7 @@
-import { email as emailAction } from '../../../../../store/pdfDownloadButton';
-import { DispatchType } from '../../../../../store';
-import { User } from '../../../types';
 import { PDFEmailParams } from '../../../../../Api';
+import { DispatchType } from '../../../../../store';
+import { email as emailAction } from '../../../../../store/pdfDownloadButton';
+import { User } from '../../../types';
 
 interface Props {
   slug: string;

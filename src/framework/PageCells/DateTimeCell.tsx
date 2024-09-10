@@ -1,4 +1,6 @@
-import { Button, Split, SplitItem } from '@patternfly/react-core';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { SplitItem } from '@patternfly/react-core/dist/dynamic/layouts/Split';
+import { Split } from '@patternfly/react-core/dist/dynamic/layouts/Split';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 

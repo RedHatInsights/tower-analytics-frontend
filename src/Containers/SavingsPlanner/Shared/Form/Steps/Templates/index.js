@@ -1,38 +1,23 @@
-import React, { useEffect } from 'react';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-
-import {
-  Button,
-  Form,
-  FormGroup,
-  PaginationVariant,
-} from '@patternfly/react-core';
-import {
-  Table /* data-codemods */,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-} from '@patternfly/react-table';
-
-import LoadingState from '../../../../../../Components/ApiStatus/LoadingState';
-import NoResults from '../../../../../../Components/ApiStatus/NoResults';
-import ApiErrorState from '../../../../../../Components/ApiStatus/ApiErrorState';
-import Pagination from '../../../../../../Components/Pagination';
-
-import { useQueryParams } from '../../../../../../QueryParams/';
-
 import {
   readJobExplorer,
   readJobExplorerOptions,
 } from '../../../../../../Api/';
-
+import ApiErrorState from '../../../../../../Components/ApiStatus/ApiErrorState';
+import LoadingState from '../../../../../../Components/ApiStatus/LoadingState';
+import NoResults from '../../../../../../Components/ApiStatus/NoResults';
+import Pagination from '../../../../../../Components/Pagination';
 import FilterableToolbar from '../../../../../../Components/Toolbar/';
-
-import { actions } from '../../../constants';
+import { useQueryParams } from '../../../../../../QueryParams/';
 import useRequest from '../../../../../../Utilities/useRequest';
+import { actions } from '../../../constants';
 
 const ListFooter = styled.div`
   display: flex;

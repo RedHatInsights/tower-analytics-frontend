@@ -1,70 +1,58 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-// @ts-nocheck
-import React, { useState, useEffect, FC } from 'react';
-import {
-  Card,
-  CardBody,
-  Grid,
-  GridItem,
-  Stack,
-  StackItem,
-  CardHeader,
-  CardTitle,
-  CardFooter,
-  ToggleGroup,
-  ToggleGroupItem,
-  PaginationVariant,
-  Spinner,
-} from '@patternfly/react-core';
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardHeader } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardFooter } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
+import { ToggleGroup } from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
+import { ToggleGroupItem } from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { Stack } from '@patternfly/react-core/dist/dynamic/layouts/Stack';
+import { StackItem } from '@patternfly/react-core/dist/dynamic/layouts/Stack';
+import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
+import React, { FC, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import { endpointFunctionMap, saveROI } from '../../../../Api';
+import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
+// Chart
+import Chart from '../../../../Components/Chart';
+import EmptyList from '../../../../Components/EmptyList';
+import Pagination from '../../../../Components/Pagination';
 // Imports from custom components
 import FilterableToolbar from '../../../../Components/Toolbar';
-import Pagination from '../../../../Components/Pagination';
+import DownloadButton from '../../../../Components/Toolbar/DownloadButton';
 // Imports from utilities
 import {
-  useQueryParams,
   DEFAULT_NAMESPACE,
   createUrl,
+  useQueryParams,
 } from '../../../../QueryParams';
 import {
   jobExplorer,
   reportDefaultParams,
 } from '../../../../Utilities/constants';
+import currencyFormatter from '../../../../Utilities/currencyFormatter';
 import {
   calculateDelta,
   convertSecondsToHours,
 } from '../../../../Utilities/helpers';
-import useRequest from '../../../../Utilities/useRequest';
 import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
-
-// Chart
-import Chart from '../../../../Components/Chart';
-
+import hoursFormatter from '../../../../Utilities/hoursFormatter';
+import useRequest from '../../../../Utilities/useRequest';
+import { NotificationType } from '../../../../globalTypes';
+import { Paths } from '../../../../paths';
+import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants';
+import hydrateSchema from '../../Shared/hydrateSchema';
+import { AutmationCalculatorProps } from '../types';
+import AutomationFormula from './AutomationFormula';
+import CalculationCost from './CalculationCost';
+import TemplatesTable from './TemplatesTable';
 // Local imports
 import TotalSavings from './TotalSavings';
-import CalculationCost from './CalculationCost';
-import AutomationFormula from './AutomationFormula';
-import TemplatesTable from './TemplatesTable';
-import { Paths } from '../../../../paths';
-import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
-import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants';
-import DownloadButton from '../../../../Components/Toolbar/DownloadButton';
-import { endpointFunctionMap, saveROI } from '../../../../Api';
-import { AutmationCalculatorProps } from '../types';
-import hydrateSchema from '../../Shared/hydrateSchema';
-import currencyFormatter from '../../../../Utilities/currencyFormatter';
-import hoursFormatter from '../../../../Utilities/hoursFormatter';
-import styled from 'styled-components';
-import { useDispatch } from 'react-redux';
-import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
-import { NotificationType } from '../../../../globalTypes';
-import EmptyList from '../../../../Components/EmptyList';
-
-import { useNavigate } from 'react-router-dom';
 
 const SpinnerDiv = styled.div`
   height: 400px;
@@ -229,7 +217,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       return;
     }
     await update();
-    varName === 'manual_cost' ? setCostManual(value) : setCostAutomation(value);
+    if (varName === 'manual_cost') {
+      setCostManual(value);
+    } else {
+      setCostAutomation(value);
+    }
   };
 
   /**

@@ -1,13 +1,11 @@
-import React, { useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
 import PropTypes from 'prop-types';
-
+import React, { useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { readPlanOptions } from '../../../Api/';
-import { paths } from '../index';
-
-import Form from '../Shared/Form';
-import useRequest from '../../../Utilities/useRequest';
 import { createUrl } from '../../../QueryParams/';
+import useRequest from '../../../Utilities/useRequest';
+import Form from '../Shared/Form';
+import { paths } from '../index';
 
 const Edit = ({ data }) => {
   const { id } = useParams();
