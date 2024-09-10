@@ -1,4 +1,4 @@
-import { stringify } from 'query-string';
+import queryString from 'query-string';
 import { saveStream } from './streamSaver';
 import {
   ApiJson,
@@ -150,7 +150,7 @@ export const get = (
   params: Params = {}
 ): Promise<ApiJson> => {
   const url = new URL(endpoint, window.location.origin);
-  url.search = stringify(params);
+  url.search = queryString.stringify(params);
 
   return authenticatedFetch(url.toString(), {
     method: 'GET',
@@ -186,7 +186,7 @@ export const postWithPagination = (
   const { limit, offset, sort_options, sort_order } = params;
 
   const url = new URL(endpoint, window.location.origin);
-  url.search = stringify({
+  url.search = queryString.stringify({
     limit,
     offset,
     sort_by:

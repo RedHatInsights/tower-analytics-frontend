@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import React, { ReactNode } from 'react';
 import { Popover } from '@patternfly/react-core';

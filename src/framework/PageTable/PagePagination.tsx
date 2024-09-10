@@ -5,7 +5,7 @@ import {
   PaginationVariant,
 } from '@patternfly/react-core';
 import React, { CSSProperties, useCallback } from 'react';
-import { useBreakpoint } from '../components/useBreakPoint';
+import { useBreakpoint } from '../components/useBreakpoint';
 
 export type PagePaginationProps = {
   itemCount?: number;

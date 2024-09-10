@@ -33,7 +33,6 @@ const EmptyList: FunctionComponent<Props> = ({
   path = undefined,
   onButtonClick = undefined,
 }) => {
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   /* @ts-ignore */
   const navigate = useNavigate();
 
@@ -52,7 +51,6 @@ const EmptyList: FunctionComponent<Props> = ({
             variant={ButtonVariant.primary}
             aria-label={label}
             onClick={() => {
-              // eslint-disable-next-line @typescript-eslint/ban-ts-comment
               /* @ts-ignore */
               if (path) navigate(createUrl(path));
               if (onButtonClick) onButtonClick();

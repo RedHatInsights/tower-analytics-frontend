@@ -41,7 +41,7 @@ import React, {
   useState,
 } from 'react';
 import { Scrollable } from '../components/Scrollable';
-import { useBreakpoint } from '../components/useBreakPoint';
+import { useBreakpoint } from '../components/useBreakpoint';
 import { IPageAction } from '../PageActions/PageAction';
 import { PageActions } from '../PageActions/PageActions';
 import { PageActionType } from '../PageActions/PageActionType';

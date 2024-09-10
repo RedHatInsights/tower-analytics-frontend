@@ -5,7 +5,7 @@ import {
   DropdownToggleCheckbox,
 } from '@patternfly/react-core/deprecated';
 import React, { useCallback, useMemo, useState } from 'react';
-import { useBreakpoint } from './useBreakPoint';
+import { useBreakpoint } from './useBreakpoint';
 
 export interface BulkSelectorProps<T> {
   itemCount?: number;

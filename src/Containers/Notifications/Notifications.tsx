@@ -208,7 +208,6 @@ const Notifications: FC<Record<string, never>> = () => {
                   limit: +limit,
                   offset: +offset,
                 }}
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 /* @ts-ignore */
                 setPagination={setFromPagination}
                 isCompact
@@ -232,7 +231,6 @@ const Notifications: FC<Record<string, never>> = () => {
                   limit: +limit,
                   offset: +offset,
                 }}
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 /* @ts-ignore */
                 setPagination={setFromPagination}
                 variant={PaginationVariant.bottom}

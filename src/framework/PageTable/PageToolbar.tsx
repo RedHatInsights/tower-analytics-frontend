@@ -43,7 +43,7 @@ import React, {
   useState,
 } from 'react';
 import { BulkSelector } from '../components/BulkSelector';
-import { useBreakpoint } from '../components/useBreakPoint';
+import { useBreakpoint } from '../components/useBreakpoint';
 import { IPageAction } from '../PageActions/PageAction';
 import { PageActions } from '../PageActions/PageActions';
 import { PageActionType } from '../PageActions/PageActionType';

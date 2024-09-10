@@ -1,6 +1,6 @@
 import React, { CSSProperties, ReactNode } from 'react';
 import ErrorBoundary from './components/ErrorBoundary';
-import { useBreakpoint } from './components/useBreakPoint';
+import { useBreakpoint } from './components/useBreakpoint';
 import { useFrameworkTranslations } from './useFrameworkTranslations';
 
 export function PageBody(props: {

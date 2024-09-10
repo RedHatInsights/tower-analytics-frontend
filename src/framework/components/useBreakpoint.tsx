@@ -1,18 +1,13 @@
-import xl2Breakpoint from '@patternfly/react-tokens/dist/esm/global_breakpoint_2xl';
-import lgBreakpoint from '@patternfly/react-tokens/dist/esm/global_breakpoint_lg';
-import mdBreakpoint from '@patternfly/react-tokens/dist/esm/global_breakpoint_md';
-import smBreakpoint from '@patternfly/react-tokens/dist/esm/global_breakpoint_sm';
-import xlBreakpoint from '@patternfly/react-tokens/dist/esm/global_breakpoint_xl';
-import xsBreakpoint from '@patternfly/react-tokens/dist/esm/global_breakpoint_xs';
 import { useCallback, useEffect, useState } from 'react';
 
+// https://www.patternfly.org/2022.05/developer-resources/global-css-variables/
 const breakpoints: Record<string, number> = {
-  xs: Number(xsBreakpoint.value.replace('px', '')),
-  sm: Number(smBreakpoint.value.replace('px', '')),
-  md: Number(mdBreakpoint.value.replace('px', '')),
-  lg: Number(lgBreakpoint.value.replace('px', '')),
-  xl: Number(xlBreakpoint.value.replace('px', '')),
-  xxl: Number(xl2Breakpoint.value.replace('px', '')),
+  xs: 0,
+  sm: 576,
+  md: 768,
+  lg: 992,
+  xl: 1200,
+  xxl: 1450,
 };
 
 export type WindowSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
