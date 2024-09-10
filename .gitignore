@@ -25,4 +25,8 @@ cypress/screenshots
 cypress/videos
 cypress/downloads
 
-.cache
+.cache*
+.cache_*
+core
+*.sw[po]
+*~
