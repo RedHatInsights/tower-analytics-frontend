@@ -1,36 +1,32 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Link, useNavigate } from 'react-router-dom';
-import PropTypes from 'prop-types';
-
 import {
-  Card,
-  CardHeader,
-  CardHeaderMain,
-  CardActions,
-  CardTitle as PFCardTitle,
-  CardBody,
-  CardFooter,
-  Checkbox as PFCheckbox,
   Dropdown,
   DropdownItem,
   KebabToggle,
-  Label,
-  Tooltip,
-  TooltipPosition,
-} from '@patternfly/react-core';
-import { ExclamationCircleIcon } from '@patternfly/react-icons';
-
-import { Paths } from '../../../../paths';
-import { createUrl, DEFAULT_NAMESPACE } from '../../../../QueryParams/';
+} from '@patternfly/react-core/deprecated';
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+} from '@patternfly/react-core/dist/dynamic/components/Card';
+import { Checkbox } from '@patternfly/react-core/dist/dynamic/components/Checkbox';
+import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
+import { TooltipPosition } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
+import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import JobStatus from '../../../../Components/JobStatus';
+import { DEFAULT_NAMESPACE, createUrl } from '../../../../QueryParams/';
 import { jobExplorer } from '../../../../Utilities/constants';
-
 import currencyFormatter from '../../../../Utilities/currencyFormatter';
 import { formatDateTime } from '../../../../Utilities/helpers';
+import { Paths } from '../../../../paths';
 
-import JobStatus from '../../../../Components/JobStatus';
-
-const CardTitle = styled(PFCardTitle)`
+const SCardTitle = styled(CardTitle)`
   word-break: break-word;
 `;
 
@@ -45,7 +41,7 @@ const Small = styled.small`
   color: #6a6e73;
 `;
 
-const Checkbox = styled(PFCheckbox)`
+const SCheckbox = styled(Checkbox)`
   &.pf-c-check.pf-m-standalone {
     margin-top: -3px;
   }
@@ -114,23 +110,23 @@ const ListItem = ({
   const kebabDropDownItems = [
     <React.Fragment key={id}>
       <DropdownItem
-        key="edit"
+        key='edit'
         onClick={() => navigate(`${id}/edit`)}
-        position="right"
+        position='right'
       >
         Edit
       </DropdownItem>
       <DropdownItem
-        key="link"
+        key='link'
         onClick={() => navigate(`${id}/edit#tasks`)}
-        position="right"
+        position='right'
       >
         Manage tasks
       </DropdownItem>
       <DropdownItem
-        key="link"
+        key='link'
         onClick={() => navigate(`${id}/edit#link_template`)}
-        position="right"
+        position='right'
       >
         Link template
       </DropdownItem>
@@ -139,36 +135,39 @@ const ListItem = ({
 
   return (
     <Card>
-      <CardHeader>
-        <CardHeaderMain>
-          <CardTitle>
-            <Link to={`${id}`}>{name}</Link>
-          </CardTitle>
-        </CardHeaderMain>
-        {canWrite && (
-          <CardActions>
-            <Dropdown
-              onSelect={() => {}}
-              toggle={
-                <KebabToggle
-                  onToggle={() => setIsCardKebabOpen(!isCardKebabOpen)}
-                />
-              }
-              isOpen={isCardKebabOpen}
-              isPlain
-              dropdownItems={kebabDropDownItems}
-              position={'right'}
-            />
-            <Checkbox
-              onChange={() => handleSelect(plan.id)}
-              isChecked={selected.includes(plan.id)}
-              aria-label="card checkbox"
-              id="check-1"
-              name="check1"
-            />
-          </CardActions>
-        )}
-      </CardHeader>
+      <CardHeader
+        actions={
+          !canWrite ? (
+            <>
+              <SCardTitle>
+                <Link to={`${id}`}>{name}</Link>
+              </SCardTitle>
+            </>
+          ) : (
+            <>
+              <Dropdown
+                onSelect={() => {}}
+                toggle={
+                  <KebabToggle
+                    onToggle={() => setIsCardKebabOpen(!isCardKebabOpen)}
+                  />
+                }
+                isOpen={isCardKebabOpen}
+                isPlain
+                dropdownItems={kebabDropDownItems}
+                position={'right'}
+              />
+              <SCheckbox
+                onChange={() => handleSelect(plan.id)}
+                isChecked={selected.includes(plan.id)}
+                aria-label='card checkbox'
+                id='check-1'
+                name='check1'
+              />
+            </>
+          )
+        }
+      />
       <CardBody>
         {description ? <Small>{description}</Small> : null}
         <CardDetail>
@@ -211,8 +210,8 @@ const ListItem = ({
                 <JobStatus status={item} />
               ) : (
                 <Label
-                  variant="outline"
-                  color="red"
+                  variant='outline'
+                  color='red'
                   icon={<ExclamationCircleIcon />}
                   style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}
                 >
@@ -224,8 +223,8 @@ const ListItem = ({
             <JobStatus status={automation_status.status} />
           ) : (
             <Label
-              variant="outline"
-              color="red"
+              variant='outline'
+              color='red'
               icon={<ExclamationCircleIcon />}
               style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}
             >

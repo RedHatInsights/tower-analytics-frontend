@@ -1,10 +1,10 @@
-import React, { FunctionComponent, useState } from 'react';
 import {
-  ToolbarItem,
   Select,
   SelectOption,
   SelectVariant,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/deprecated';
+import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import React, { FunctionComponent, useState } from 'react';
 
 interface Props {
   categoryKey: string;

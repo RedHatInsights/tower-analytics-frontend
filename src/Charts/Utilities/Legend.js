@@ -1,7 +1,6 @@
+import { Switch } from '@patternfly/react-core/dist/dynamic/components/Switch';
 import PropTypes from 'prop-types';
 import React from 'react';
-import { Switch } from '@patternfly/react-core';
-
 import styled from 'styled-components';
 
 const Container = styled.div`

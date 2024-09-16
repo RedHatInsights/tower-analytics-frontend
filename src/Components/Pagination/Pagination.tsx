@@ -1,6 +1,6 @@
-import React, { FunctionComponent } from 'react';
+import { Pagination } from '@patternfly/react-core/dist/dynamic/components/Pagination';
 import PropTypes from 'prop-types';
-import { Pagination as PFPagination } from '@patternfly/react-core';
+import React, { FunctionComponent } from 'react';
 
 const defaultPerPageOptions = [
   { title: '5', value: 5 },
@@ -23,7 +23,7 @@ interface Props {
   [x: string]: unknown;
 }
 
-const Pagination: FunctionComponent<Props> = ({
+const AAPagination: FunctionComponent<Props> = ({
   count = 0,
   perPageOptions = null,
   params,
@@ -35,10 +35,10 @@ const Pagination: FunctionComponent<Props> = ({
   const returnOffsetVal = (page: number) => (page - 1) * limit;
 
   return (
-    <PFPagination
+    <Pagination
       data-cy={props.isCompact ? 'pagination_top' : 'pagination_bottom'}
       itemCount={count}
-      widgetId="aa-pagination"
+      widgetId='aa-pagination'
       perPageOptions={perPageOptions ?? defaultPerPageOptions}
       perPage={limit}
       page={currentPage}
@@ -53,7 +53,7 @@ const Pagination: FunctionComponent<Props> = ({
   );
 };
 
-Pagination.propTypes = {
+AAPagination.propTypes = {
   count: PropTypes.number,
   params: PropTypes.exact({
     offset: PropTypes.number.isRequired,
@@ -68,4 +68,4 @@ Pagination.propTypes = {
   ),
 };
 
-export default Pagination;
+export default AAPagination;

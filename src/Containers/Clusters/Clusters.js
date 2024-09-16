@@ -1,35 +1,27 @@
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import React, { useEffect } from 'react';
-
-import LoadingState from '../../Components/ApiStatus/LoadingState';
 import {
   readClustersOptions,
-  readJobExplorer,
   readEventExplorer,
+  readJobExplorer,
 } from '../../Api/';
-
-import { jobExplorer } from '../../Utilities/constants';
-
-import { PageHeader } from '@ansible/ansible-ui-framework';
-
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Grid,
-  GridItem,
-  PageSection,
-} from '@patternfly/react-core';
-
 import BarChart from '../../Charts/BarChart';
 import LineChart from '../../Charts/LineChart';
-import ModulesList from './ModulesList';
-import TemplatesList from './TemplatesList';
-import FilterableToolbar from '../../Components/Toolbar';
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
-
+import LoadingState from '../../Components/ApiStatus/LoadingState';
+import FilterableToolbar from '../../Components/Toolbar';
+import { useQueryParams } from '../../QueryParams/';
+import { jobExplorer } from '../../Utilities/constants';
 import { clusters } from '../../Utilities/constants';
 import useRequest from '../../Utilities/useRequest';
-import { useQueryParams } from '../../QueryParams/';
+import { PageHeader } from '../../framework/PageHeader';
+import ModulesList from './ModulesList';
+import TemplatesList from './TemplatesList';
 
 const initialTopTemplateParams = {
   group_by: 'template',
@@ -161,7 +153,7 @@ const Clusters = () => {
                 chartDataIsSuccess && (
                   <BarChart
                     margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                    id="d3-bar-chart-root"
+                    id='d3-bar-chart-root'
                     data={chartData}
                     queryParams={queryParams}
                   />
@@ -169,7 +161,7 @@ const Clusters = () => {
               {queryParams.cluster_id?.length > 0 && chartDataIsSuccess && (
                 <LineChart
                   margin={{ top: 20, right: 20, bottom: 50, left: 70 }}
-                  id="d3-line-chart-root"
+                  id='d3-line-chart-root'
                   data={chartData}
                   queryParams={queryParams}
                 />

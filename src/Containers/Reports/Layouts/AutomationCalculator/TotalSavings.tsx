@@ -1,13 +1,11 @@
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
+import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
 import React, { FunctionComponent } from 'react';
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Spinner,
-  Title,
-} from '@patternfly/react-core';
-import currencyFormatter from '../../../../Utilities/currencyFormatter';
 import styled from 'styled-components';
+import currencyFormatter from '../../../../Utilities/currencyFormatter';
 import hoursFormatter from '../../../../Utilities/hoursFormatter';
 
 interface Props {
@@ -39,13 +37,13 @@ const TotalSavings: FunctionComponent<Props> = ({
           <CardTitle>{title}</CardTitle>
           <CardBody>
             <Title
-              headingLevel="h3"
+              headingLevel='h3'
               size={index === 0 ? '4xl' : 'xl'}
               style={{ color: 'var(--pf-global--success-color--200)' }}
             >
               {isLoading ? (
                 <SpinnerDiv>
-                  <Spinner data-cy={'spinner'} isSVG size="lg" />
+                  <Spinner data-cy={'spinner'} size='lg' />
                 </SpinnerDiv>
               ) : isMoney ? (
                 currencyFormatter(

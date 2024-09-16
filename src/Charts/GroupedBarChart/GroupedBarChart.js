@@ -1,8 +1,7 @@
-import PropTypes from 'prop-types';
-import React, { useState, useEffect } from 'react';
 import * as d3 from 'd3';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-
 import initializeChart from '.././BaseChart';
 import Legend from '../Utilities/Legend';
 
@@ -225,7 +224,7 @@ const GroupedBarChart = ({
           data={colors}
           selected={selectedIds}
           onToggle={handleToggle}
-          height="350px"
+          height='350px'
           chartName={`${props.id}-legend`}
         />
       )}

@@ -1,10 +1,8 @@
+import { EmptyStateHeader } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateIcon } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
 import React, { Component } from 'react';
-import {
-  Title,
-  EmptyState,
-  EmptyStateIcon,
-  Spinner,
-} from '@patternfly/react-core';
 
 /**
  * Webpack allows loading components asynchronously by using import().
@@ -51,10 +49,11 @@ export default function asyncComponent(importComponent) {
         </div>
       ) : (
         <EmptyState>
-          <EmptyStateIcon variant="container" component={Spinner} />
-          <Title size="lg" headingLevel="h4">
-            Loading
-          </Title>
+          <EmptyStateHeader
+            titleText='Loading'
+            icon={<EmptyStateIcon icon={Spinner} />}
+            headingLevel='h4'
+          />
         </EmptyState>
       );
     }

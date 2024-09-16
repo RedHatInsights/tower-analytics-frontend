@@ -1,20 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import { actions } from '../../constants';
 import {
-  Form,
-  FormGroup,
-  FormHelperText,
-  Grid,
-  GridItem,
-  Radio,
   Select,
   SelectOption,
   SelectVariant,
-  TextArea,
-  TextInput,
-} from '@patternfly/react-core';
-import { ExclamationCircleIcon } from '@patternfly/react-icons';
-
+} from '@patternfly/react-core/deprecated';
+import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { FormHelperText } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { Radio } from '@patternfly/react-core/dist/dynamic/components/Radio';
+import { TextArea } from '@patternfly/react-core/dist/dynamic/components/TextArea';
+import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
+import React, { useEffect, useState } from 'react';
+import { readRbacGroups, readRbacPrincipals } from '../../../../../Api';
+import { today } from '../../../../../Utilities/helpers';
+import useRequest from '../../../../../Utilities/useRequest';
+import ToolbarInput from '../../../Groups/ToolbarInput';
 import {
   EmailDetailsProps,
   RbacGroupFromApi,
@@ -22,10 +24,7 @@ import {
   TypeValue,
   User,
 } from '../../../types';
-import useRequest from '../../../../../Utilities/useRequest';
-import { readRbacGroups, readRbacPrincipals } from '../../../../../Api';
-import ToolbarInput from '../../../Groups/ToolbarInput';
-import { today } from '../../../../../Utilities/helpers';
+import { actions } from '../../constants';
 
 interface RbacGroupsDataType {
   data: RbacGroupFromApi[];
@@ -37,7 +36,6 @@ interface RbacPrincipalsDataType {
   data: RbacPrincipalFromApi[];
 }
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const EmailDetails = ({
   options,
   formData,
@@ -189,7 +187,7 @@ const EmailDetails = ({
   return (
     <Form>
       {totalPages > 1 && (
-        <FormGroup label="Select details:" fieldId="details-field">
+        <FormGroup label='Select details:' fieldId='details-field'>
           <Grid md={4}>
             <GridItem>
               <Radio
@@ -200,10 +198,10 @@ const EmailDetails = ({
                   })
                 }
                 isChecked={!emailExtraRows}
-                name="emailExtraRows"
-                label="Current page"
-                id="email-current-radio"
-                aria-label="email-current-radio"
+                name='emailExtraRows'
+                label='Current page'
+                id='email-current-radio'
+                aria-label='email-current-radio'
               />
             </GridItem>
             <GridItem>
@@ -215,19 +213,19 @@ const EmailDetails = ({
                   })
                 }
                 isChecked={emailExtraRows}
-                name="emailExtraRows"
+                name='emailExtraRows'
                 label={extraRowsLabel}
-                id="email-extra-radio"
-                aria-label="email-extra-radio"
+                id='email-extra-radio'
+                aria-label='email-extra-radio'
               />
             </GridItem>
           </Grid>
         </FormGroup>
       )}
       <FormGroup
-        label="Recipient(s)"
+        label='Recipient(s)'
         isRequired
-        fieldId="selectedRbacGroups-field"
+        fieldId='selectedRbacGroups-field'
       >
         <Select
           variant={SelectVariant.checkbox}
@@ -255,7 +253,7 @@ const EmailDetails = ({
       </FormGroup>
 
       {users.length > 0 && (
-        <FormGroup label="User emails" fieldId="emails-field">
+        <FormGroup label='User emails' fieldId='emails-field'>
           {users.map(({ name, emails }, i) => {
             return (
               <p key={i}>
@@ -271,18 +269,18 @@ const EmailDetails = ({
         </FormGroup>
       )}
       <FormGroup
-        label="External recipient(s)"
-        fieldId="additionalRecipients-field"
+        label='External recipient(s)'
+        fieldId='additionalRecipients-field'
       >
         <TextInput
-          placeholder="Comma separated emails"
-          type="email"
-          id="additionalRecipients"
-          name="additionalRecipients"
+          placeholder='Comma separated emails'
+          type='email'
+          id='additionalRecipients'
+          name='additionalRecipients'
           value={additionalRecipients}
           onBlur={(e) => checkEmailInput(e)}
           onFocus={(e) => checkEmailInput(e)}
-          onChange={(newValue) =>
+          onChange={(_event, newValue) =>
             dispatchReducer({
               type: actions.SET_ADDITIONAL_RECIPIENTS,
               value: newValue,
@@ -290,11 +288,7 @@ const EmailDetails = ({
           }
         />
         {additionalRecipients && showError && (
-          <FormHelperText
-            isError
-            icon={<ExclamationCircleIcon />}
-            isHidden={!showError}
-          >
+          <FormHelperText>
             The email format must be valid and comma separated.
           </FormHelperText>
         )}
@@ -323,14 +317,14 @@ const EmailDetails = ({
       {/*    </FormHelperText>*/}
       {/*  )}*/}
       {/*</FormGroup>*/}
-      <FormGroup label="Subject" fieldId="subject-field">
+      <FormGroup label='Subject' fieldId='subject-field'>
         <TextInput
-          placeholder="Report is ready to be downloaded"
-          type="text"
-          id="subject"
-          name="subject"
+          placeholder='Report is ready to be downloaded'
+          type='text'
+          id='subject'
+          name='subject'
           value={subject}
-          onChange={(newValue) =>
+          onChange={(_event, newValue) =>
             dispatchReducer({
               type: actions.SET_SUBJECT,
               value: newValue,
@@ -338,16 +332,16 @@ const EmailDetails = ({
           }
         />
       </FormGroup>
-      <FormGroup label="Body" fieldId="body-field">
+      <FormGroup label='Body' fieldId='body-field'>
         <TextArea
           rows={10}
           autoResize
-          placeholder=""
-          type="text"
-          id="body"
-          name="body"
+          placeholder=''
+          type='text'
+          id='body'
+          name='body'
           value={body}
-          onChange={(newValue) =>
+          onChange={(_event, newValue) =>
             dispatchReducer({
               type: actions.SET_BODY,
               value: newValue,
@@ -357,9 +351,9 @@ const EmailDetails = ({
       </FormGroup>
       {showExpiryDate && (
         <>
-          <FormGroup label="Link expires on" fieldId="expiry-field">
+          <FormGroup label='Link expires on' fieldId='expiry-field'>
             <ToolbarInput
-              categoryKey="start_date"
+              categoryKey='start_date'
               value={expiry}
               setValue={(e) => onExpiryChange(e as string)}
               validators={[
@@ -370,16 +364,12 @@ const EmailDetails = ({
               ]}
             />
           </FormGroup>
-          <FormHelperText
-            isError
-            icon={<ExclamationCircleIcon />}
-            isHidden={!showExpiryDate}
-          >
+          <FormHelperText>
             Link expiry date only applies to external users
           </FormHelperText>
         </>
       )}
-      <FormGroup label="Report link" fieldId="link-field">
+      <FormGroup label='Report link' fieldId='link-field'>
         {reportUrl}
       </FormGroup>
     </Form>

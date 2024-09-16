@@ -1,10 +1,10 @@
-import React, { useState, useEffect, FunctionComponent } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { QueryParamsProvider as Provider } from './Context';
 import {
+  DEFAULT_NAMESPACE,
   parseQueryParams,
   setQueryParams as setQsInUrl,
-  DEFAULT_NAMESPACE,
 } from './helpers';
 import { NamespacedQueryParams, UpdateFunction } from './types';
 

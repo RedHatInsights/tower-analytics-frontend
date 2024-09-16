@@ -1,4 +1,5 @@
-import { clustersUrl, ENV, ENVS } from '../support/constants';
+import { ENV, ENVS, clustersUrl } from '../support/constants';
+
 const appid = Cypress.env('appid');
 
 describe('Clusters page', () => {
@@ -32,7 +33,7 @@ describe('Clusters page', () => {
       */
       cy.getByCy('header-clusters')
         .get('[data-cy="filter-toolbar"')
-        .find('.pf-c-toolbar__item')
+        .find('.pf-v5-c-toolbar__item')
         .find('button')
         .contains('Clear all filters')
         .first()
@@ -44,7 +45,7 @@ describe('Clusters page', () => {
     cy.contains('Top workflows');
     cy.contains('Top templates');
     cy.contains('Top modules');
-    cy.get('.pf-c-empty-state__content').should('not.exist');
+    cy.get('.pf-v5-c-empty-state__content').should('not.exist');
     cy.get('[data-cy="card-title-job-status"]')
       .find('h2')
       .contains('Job status')
@@ -64,7 +65,7 @@ describe('Clusters page', () => {
 
     cy.get('[data-cy="barchart"]');
     cy.get('#d3-bar-chart-root');
-    cy.get('div.pf-c-empty-state__content').should('not.exist');
+    cy.get('div.pf-v5-c-empty-state__content').should('not.exist');
     // get the same request object again and confirm the response
     cy.get('@eventExplorerData')
       .its('response')
@@ -80,7 +81,7 @@ describe('Clusters page', () => {
   });
 
   it('has anchor clear filters link', () => {
-    cy.get('div.pf-c-empty-state__content').should('not.exist');
+    cy.get('div.pf-v5-c-empty-state__content').should('not.exist');
 
     if (ENV == ENVS.STAGE) {
       cy.get('[data-cy="filter-toolbar"');
@@ -94,7 +95,7 @@ describe('Clusters page', () => {
       */
       cy.getByCy('header-clusters')
         .get('[data-cy="filter-toolbar"')
-        .find('.pf-c-toolbar__item')
+        .find('.pf-v5-c-toolbar__item')
         .find('button')
         .contains('Clear all filters')
         .first()
@@ -104,7 +105,7 @@ describe('Clusters page', () => {
       // end of FIXME
     }
 
-    cy.get('.pf-c-empty-state__content').should('not.exist');
+    cy.get('.pf-v5-c-empty-state__content').should('not.exist');
     // Add Cluster to the filters
     cy.get('[data-cy="category_selector"]').find('button').click();
     cy.get('button').contains('Cluster').click();
@@ -114,11 +115,11 @@ describe('Clusters page', () => {
     // Wait for loading and check the selected filter is present
     if (ENV != ENVS.EPHEMERAL) {
       // does not work on ephemeral
-      cy.get('.pf-c-empty-state__content').should('not.exist');    
-      cy.get('.pf-c-chip-group__main').contains('Cluster').should('exist');
-      cy.get('.pf-c-chip-group__main')
-      .contains('ec2-52-90-106-02.compute-1.amazonaws.com')
-      .should('exist');
+      cy.get('.pf-v5-c-empty-state__content').should('not.exist');
+      cy.get('.pf-v5-c-chip-group__main').contains('Cluster').should('exist');
+      cy.get('.pf-v5-c-chip-group__main')
+        .contains('ec2-52-90-106-02.compute-1.amazonaws.com')
+        .should('exist');
     }
 
     if (ENV == ENVS.STAGE) {
@@ -138,9 +139,9 @@ describe('Clusters page', () => {
     cy.get('@btnClearAllFilters').should('exist');
     cy.get('@btnClearAllFilters').click({ force: true }); //FIXME
     // Wait and check that the filter is no longer present
-    cy.get('.pf-c-empty-state__content').should('not.exist');
-    cy.get('.pf-c-chip-group__main').contains('Cluster').should('not.exist');
-    cy.get('.pf-c-chip-group__main')
+    cy.get('.pf-v5-c-empty-state__content').should('not.exist');
+    cy.get('.pf-v5-c-chip-group__main').contains('Cluster').should('not.exist');
+    cy.get('.pf-v5-c-chip-group__main')
       .contains('ec2-52-90-106-02.compute-1.amazonaws.com')
       .should('not.exist');
   });
@@ -171,10 +172,10 @@ describe('Clusters page', () => {
 
   it('Hover over each row in all tables', () => {
     cy.get(appid)
-      .find('*[class^="pf-c-data-list pf-m-grid-md"]')
+      .find('*[class^="pf-v5-c-data-list pf-m-grid-md"]')
       .each((_slice, ix) => {
         cy.get(appid)
-          .find('*[class^="pf-c-data-list pf-m-grid-md"] > li > div')
+          .find('*[class^="pf-v5-c-data-list pf-m-grid-md"] > li > div')
           .eq(ix)
           .trigger('mouseover', {
             force: true,

@@ -1,10 +1,10 @@
 import {
-  aapUrl,
-  reportsUrl,
-  allReports,
-  skippedTests,
   ENV,
   ENVS,
+  aapUrl,
+  allReports,
+  reportsUrl,
+  skippedTests,
 } from '../support/constants';
 
 describe('Reports page smoketests', () => {
@@ -41,7 +41,7 @@ describe('Reports page smoketests', () => {
       if (skippedTests['reports'].includes(item)) return;
 
       if (ENV != ENVS.EPHEMERAL) {
-        cy.getByCy(item).click().should('exist');
+        cy.getByCy(item).click();
       }
       if (ENV != ENVS.STAGE) {
         cy.waitSpinner();
@@ -124,13 +124,13 @@ describe('Reports page smoketests', () => {
     cy.getByCy('selected_report_dropdown').should('exist');
     allReports.forEach(($item, index) => {
       cy.getByCy('selected_report_dropdown').click();
-      cy.get('ul.pf-c-dropdown__menu > button > li > a').should('exist');
-      cy.get('ul.pf-c-dropdown__menu > button > li > a').eq(index).click();
+      cy.get('ul.pf-v5-c-dropdown__menu > button > li > a').should('exist');
+      cy.get('ul.pf-v5-c-dropdown__menu > button > li > a').eq(index).click();
       cy.getByCy('preview_title_link')
         .invoke('text')
         .then(($text) => {
           cy.get(
-            '[data-cy="selected_report_dropdown"] > span.pf-c-dropdown__toggle-text'
+            '[data-cy="selected_report_dropdown"] > span.pf-v5-c-dropdown__toggle-text'
           )
             .invoke('text')
             .should('eq', $text);

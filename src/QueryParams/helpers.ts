@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { parse, ParsedQuery, stringify } from 'query-string';
+import queryString, { ParsedQuery } from 'query-string';
 import { NamespacedQueryParams, QueryParams } from './types';
 
 export const DEFAULT_NAMESPACE = 'default';
@@ -16,7 +13,6 @@ const parseNamespace = (
 
     if (!(namespace in retObj)) retObj[namespace] = {};
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     retObj[namespace][attributes] = obj[key];
   });
@@ -36,7 +32,7 @@ const stringifyNamespace = (
 };
 
 export const parseQueryParams = (search: string): NamespacedQueryParams => {
-  const parsed = parse(search, {
+  const parsed = queryString.parse(search, {
     parseNumbers: false,
     parseBooleans: true,
     arrayFormat: 'bracket-separator',
@@ -53,7 +49,9 @@ export const stringifyQueryParams = (
     {}
   );
 
-  return stringify(namespacedObject, { arrayFormat: 'bracket-separator' });
+  return queryString.stringify(namespacedObject, {
+    arrayFormat: 'bracket-separator',
+  });
 };
 
 export const setQueryParams = (

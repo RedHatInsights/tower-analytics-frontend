@@ -24,3 +24,9 @@ sitemap.xml
 cypress/screenshots
 cypress/videos
 cypress/downloads
+
+.cache*
+.cache_*
+core
+*.sw[po]
+*~

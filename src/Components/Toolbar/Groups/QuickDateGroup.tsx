@@ -1,16 +1,12 @@
+import { SelectOptionProps } from '@patternfly/react-core/deprecated';
+import { ToolbarGroupVariant } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { SplitItem } from '@patternfly/react-core/dist/dynamic/layouts/Split';
+import { Split } from '@patternfly/react-core/dist/dynamic/layouts/Split';
 import React, { FunctionComponent } from 'react';
-import {
-  SplitItem,
-  ToolbarGroup,
-  Split,
-  SelectOptionProps,
-  ToolbarGroupVariant,
-} from '@patternfly/react-core';
-
-import ToolbarInput from './ToolbarInput';
-
 import { today } from '../../../Utilities/helpers';
-import { SetValues, AttributeType } from '../types';
+import { AttributeType, SetValues } from '../types';
+import ToolbarInput from './ToolbarInput';
 
 const getDateByDays = (days: number): string =>
   today(days).toISOString().split(/T/)[0];
@@ -41,14 +37,14 @@ const QuickDateGroup: FunctionComponent<Props> = ({
     <ToolbarGroup variant={ToolbarGroupVariant['filter-group']}>
       {values.granularity && (
         <ToolbarInput
-          categoryKey="granularity"
+          categoryKey='granularity'
           value={filters.granularity}
           selectOptions={values.granularity}
           setValue={(value) => setFilters('granularity', value)}
         />
       )}
       <ToolbarInput
-        categoryKey="quick_date_range"
+        categoryKey='quick_date_range'
         value={filters.quick_date_range}
         selectOptions={values.quick_date_range}
         setValue={(value) => setFilters('quick_date_range', value)}
@@ -59,7 +55,7 @@ const QuickDateGroup: FunctionComponent<Props> = ({
         <Split hasGutter>
           <SplitItem>
             <ToolbarInput
-              categoryKey="start_date"
+              categoryKey='start_date'
               value={startDate}
               setValue={(e) => setFilters('start_date', e)}
               validators={[
@@ -71,7 +67,7 @@ const QuickDateGroup: FunctionComponent<Props> = ({
           <SplitItem style={{ paddingTop: '6px' }}>to</SplitItem>
           <SplitItem>
             <ToolbarInput
-              categoryKey="end_date"
+              categoryKey='end_date'
               value={endDate}
               setValue={(e) => setFilters('end_date', e)}
               validators={[

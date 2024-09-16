@@ -1,28 +1,23 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-import React, { FunctionComponent, useState } from 'react';
-import { global_disabled_color_300 } from '@patternfly/react-tokens';
-
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import { Td, Tr } from '@patternfly/react-table';
-import {
-  avgDurationFormatter,
-  formatTotalTime,
-} from '../../../../../Utilities/helpers';
-
-import currencyFormatter from '../../../../../Utilities/currencyFormatter';
-
-import { LegendEntry, TableHeaders } from '../types';
-import { ExpandedTableRowName, getExpandedRowComponent } from '../Components';
-import paths from '../../../paths';
-import { Tooltip } from '@patternfly/react-core';
+import { global_disabled_color_300 } from '@patternfly/react-tokens';
+import React, { FunctionComponent, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   DEFAULT_NAMESPACE,
   createUrl,
   useQueryParams,
 } from '../../../../../QueryParams';
-import { useNavigate } from 'react-router-dom';
-import { specificReportDefaultParams } from '../../../../../Utilities/constants';
 import { QueryParams } from '../../../../../QueryParams/types';
+import { specificReportDefaultParams } from '../../../../../Utilities/constants';
+import currencyFormatter from '../../../../../Utilities/currencyFormatter';
+import {
+  avgDurationFormatter,
+  formatTotalTime,
+} from '../../../../../Utilities/helpers';
+import paths from '../../../paths';
+import { ExpandedTableRowName, getExpandedRowComponent } from '../Components';
+import { LegendEntry, TableHeaders } from '../types';
 
 const timeFields: string[] = ['elapsed'];
 const costFields: string[] = [];

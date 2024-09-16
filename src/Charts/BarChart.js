@@ -1,12 +1,12 @@
-import React, { Component } from 'react';
-import initializeChart from './BaseChart';
 import * as d3 from 'd3';
 import PropTypes from 'prop-types';
-import Tooltip from './Utilities/Tooltip';
-import { Paths } from '../paths';
-import { formatDate } from '../Utilities/helpers';
+import React, { Component } from 'react';
 import { DEFAULT_NAMESPACE, createUrl } from '../QueryParams/';
 import { jobExplorer } from '../Utilities/constants';
+import { formatDate } from '../Utilities/helpers';
+import { Paths } from '../paths';
+import initializeChart from './BaseChart';
+import Tooltip from './Utilities/Tooltip';
 
 class BarChart extends Component {
   constructor(props) {
@@ -210,7 +210,7 @@ class BarChart extends Component {
   }
 
   render() {
-    return <div id={this.props.id} data-cy="barchart" />;
+    return <div id={this.props.id} data-cy='barchart' />;
   }
 }
 

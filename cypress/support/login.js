@@ -37,7 +37,7 @@ function uiLogin(strategy, username, password) {
   if (kcLoginFields[strategy]['2step'] === true) {
     cy.log('Two step verfication');
     cy.get('#login-show-step2').as('showStep2');
-    cy.get('@showStep2').click().should('be.visible');
+    cy.get('@showStep2').click();
   }
 
   cy.get(kcLoginFields[strategy]['password']).as('passwordField');

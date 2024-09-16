@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import * as d3 from 'd3';
-import initializeChart from './BaseChart';
-import { getTotal } from '../Utilities/helpers';
-import Legend from './Utilities/Legend';
+import PropTypes from 'prop-types';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { getTotal } from '../Utilities/helpers';
+import initializeChart from './BaseChart';
+import Legend from './Utilities/Legend';
 
 const Wrapper = styled.div`
   display: flex;
@@ -79,7 +79,7 @@ class Tooltip {
     }
   }
 
-  handleMouseOver = (d) => {
+  handleMouseOver = (event, d) => {
     // treat draw() as a singleton to avoid a painted window effect
     if (this.drawn !== true) {
       this.draw(d);
@@ -90,13 +90,9 @@ class Tooltip {
     let percSuccess;
     let orgName;
     const x =
-      d3.event.pageX -
-      d3.select(this.svg).node().getBoundingClientRect().x +
-      10;
+      event.pageX - d3.select(this.svg).node().getBoundingClientRect().x + 10;
     const y =
-      d3.event.pageY -
-      d3.select(this.svg).node().getBoundingClientRect().y -
-      10;
+      event.pageY - d3.select(this.svg).node().getBoundingClientRect().y - 10;
     if (!d) {
       return;
     }
@@ -290,7 +286,7 @@ const PieChart = ({
           data={colors}
           selected={selectedIds}
           onToggle={handleToggle}
-          height="300px"
+          height='300px'
           chartName={`${id}-legend`}
         />
       )}

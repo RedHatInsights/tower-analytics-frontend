@@ -1,44 +1,32 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardFooter } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { ToggleGroupItem } from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
+import { ToggleGroup } from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
 import React, { FunctionComponent, useEffect } from 'react';
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  PaginationVariant,
-  ToggleGroup,
-  ToggleGroupItem,
-} from '@patternfly/react-core';
-
-import Pagination from '../../../../Components/Pagination';
-
-import { DEFAULT_NAMESPACE, useQueryParams } from '../../../../QueryParams';
-
-import useRequest from '../../../../Utilities/useRequest';
-
+import { useNavigate } from 'react-router-dom';
+import { OptionsReturnType, endpointFunctionMap } from '../../../../Api';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
-import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
-
 import Chart from '../../../../Components/Chart';
 import PlotlyChart from '../../../../Components/Chart/PlotlyChart';
-import Table from './Table';
+import Pagination from '../../../../Components/Pagination';
 import DownloadButton from '../../../../Components/Toolbar/DownloadButton';
-import { endpointFunctionMap, OptionsReturnType } from '../../../../Api';
-import { capitalize } from '../../../../Utilities/helpers';
-import { perPageOptions } from '../../Shared/constants';
-import hydrateSchema from '../../Shared/hydrateSchema';
-import { StandardProps } from '../types';
-import percentageFormatter from '../../../../Utilities/percentageFormatter';
-import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
+import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
+import { DEFAULT_NAMESPACE, useQueryParams } from '../../../../QueryParams';
+import { createUrl } from '../../../../QueryParams';
 import {
   reportDefaultParams,
   specificReportDefaultParams,
 } from '../../../../Utilities/constants';
-import { createUrl } from '../../../../QueryParams';
-import { useNavigate } from 'react-router-dom';
+import { capitalize } from '../../../../Utilities/helpers';
+import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
+import percentageFormatter from '../../../../Utilities/percentageFormatter';
+import useRequest from '../../../../Utilities/useRequest';
+import { perPageOptions } from '../../Shared/constants';
+import hydrateSchema from '../../Shared/hydrateSchema';
+import { StandardProps } from '../types';
+import Table from './Table';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
@@ -207,7 +195,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
 
   const additionalControls = [
     availableChartTypes.length > 1 && (
-      <ToggleGroup aria-label="Chart type toggle" key="chart-toggle">
+      <ToggleGroup aria-label='Chart type toggle' key='chart-toggle'>
         {availableChartTypes.map((chartType) => (
           <ToggleGroupItem
             key={chartType}
@@ -223,7 +211,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       </ToggleGroup>
     ),
     <DownloadButton
-      key="download-button"
+      key='download-button'
       slug={slug}
       name={name}
       description={description}

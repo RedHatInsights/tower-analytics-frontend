@@ -1,6 +1,6 @@
-import { downloadPdf as downloadPdfAction } from '../../../../../store/pdfDownloadButton';
 import { Endpoint, OptionsReturnType, Params } from '../../../../../Api';
 import { DispatchType } from '../../../../../store';
+import { downloadPdf as downloadPdfAction } from '../../../../../store/pdfDownloadButton';
 
 interface Props {
   slug: string;

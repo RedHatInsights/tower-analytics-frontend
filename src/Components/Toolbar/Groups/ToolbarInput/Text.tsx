@@ -1,15 +1,12 @@
-import React, { useState, useEffect, FunctionComponent } from 'react';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { InputGroupItem } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { InputGroup } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
+import { ToolbarFilter } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import SearchIcon from '@patternfly/react-icons/dist/dynamic/icons/search-icon';
 import PropTypes from 'prop-types';
-import {
-  ToolbarFilter,
-  TextInput,
-  InputGroup,
-  Button,
-} from '@patternfly/react-core';
-
-import { SearchIcon } from '@patternfly/react-icons';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { optionsForCategories } from '../../constants';
-
 import { SetValue } from '../../types';
 
 interface Props {
@@ -50,27 +47,31 @@ const Text: FunctionComponent<Props> = ({
       deleteChip={options.hasChips ? onDelete : undefined}
     >
       <InputGroup>
-        <TextInput
-          type="search"
-          aria-label={options.name}
-          value={searchVal}
-          onChange={setSearchVal}
-          onKeyDown={(e) => {
-            if (e.key && e.key === 'Enter') {
-              e.preventDefault();
+        <InputGroupItem isFill>
+          <TextInput
+            type='search'
+            aria-label={options.name}
+            value={searchVal}
+            onChange={(_event, val) => setSearchVal(val)}
+            onKeyDown={(e) => {
+              if (e.key && e.key === 'Enter') {
+                e.preventDefault();
+                setValue(searchVal);
+              }
+            }}
+          />
+        </InputGroupItem>
+        <InputGroupItem>
+          <Button
+            variant='control'
+            aria-label={`Search button for ${options.name}`}
+            onClick={() => {
               setValue(searchVal);
-            }
-          }}
-        />
-        <Button
-          variant="control"
-          aria-label={`Search button for ${options.name}`}
-          onClick={() => {
-            setValue(searchVal);
-          }}
-        >
-          <SearchIcon />
-        </Button>
+            }}
+          >
+            <SearchIcon />
+          </Button>
+        </InputGroupItem>
       </InputGroup>
     </ToolbarFilter>
   );

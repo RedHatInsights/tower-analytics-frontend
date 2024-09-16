@@ -1,7 +1,7 @@
 import { useReducer } from 'react';
-import { actions } from './constants';
 import { formatDate } from '../../../Utilities/helpers';
 import { EmailDetailsProps, TypeValue } from '../types';
+import { actions } from './constants';
 
 const generateExpiryDate = () => {
   const d = new Date();
@@ -9,7 +9,6 @@ const generateExpiryDate = () => {
   return formatDate(d);
 };
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const useOptionsData = (
   initial: EmailDetailsProps,
   name: string,

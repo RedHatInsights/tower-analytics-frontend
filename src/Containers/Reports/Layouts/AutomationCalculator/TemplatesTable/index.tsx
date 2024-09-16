@@ -1,19 +1,22 @@
-import React, { FunctionComponent, useState } from 'react';
-
-import { Dropdown, DropdownItem, KebabToggle } from '@patternfly/react-core';
 import {
-  TableComposable,
+  Dropdown,
+  DropdownItem,
+  KebabToggle,
+} from '@patternfly/react-core/deprecated';
+import {
+  Table,
   TableVariant,
   Tbody,
   Th,
   Thead,
   Tr,
 } from '@patternfly/react-table';
-import { Template } from './types';
-import Row from './Row';
-import { TableSortParams } from '../../Standard/types';
+import React, { FunctionComponent, useState } from 'react';
 import { useQueryParams } from '../../../../../QueryParams';
 import { reportDefaultParams } from '../../../../../Utilities/constants';
+import { TableSortParams } from '../../Standard/types';
+import Row from './Row';
+import { Template } from './types';
 
 interface Props {
   data: Template[];
@@ -42,45 +45,45 @@ const TopTemplates: FunctionComponent<Props> = ({
 
   const kebabDropdownItems = [
     <DropdownItem
-      key="showAll"
-      component="button"
+      key='showAll'
+      component='button'
       onClick={() => setEnabled(undefined)(true)}
     >
       Show all
     </DropdownItem>,
     <DropdownItem
-      key="hideAll"
-      component="button"
+      key='hideAll'
+      component='button'
       onClick={() => setEnabled(undefined)(false)}
     >
       Hide all
     </DropdownItem>,
     <DropdownItem
-      key="showAll"
-      component="button"
+      key='showAll'
+      component='button'
       onClick={() => setFromToolbar('template_weigh_in', undefined)}
     >
       Display all template rows
     </DropdownItem>,
     <DropdownItem
-      key="hideHiddenTemplates"
-      component="button"
+      key='hideHiddenTemplates'
+      component='button'
       onClick={() => setFromToolbar('template_weigh_in', true)}
     >
       Display only shown template rows
     </DropdownItem>,
     <DropdownItem
-      key="showHiddenTemplates"
-      component="button"
+      key='showHiddenTemplates'
+      component='button'
       onClick={() => setFromToolbar('template_weigh_in', false)}
     >
       Display only hidden template rows
     </DropdownItem>,
   ];
   return (
-    <TableComposable
+    <Table
       data-cy={'table'}
-      aria-label="ROI Table"
+      aria-label='ROI Table'
       variant={TableVariant.compact}
     >
       <Thead>
@@ -108,7 +111,7 @@ const TopTemplates: FunctionComponent<Props> = ({
               toggle={
                 <KebabToggle
                   style={{ paddingBottom: '0px' }}
-                  id="table-kebab"
+                  id='table-kebab'
                   onToggle={() => setIsKebabOpen(!isKebabOpen)}
                 />
               }
@@ -134,7 +137,7 @@ const TopTemplates: FunctionComponent<Props> = ({
           />
         ))}
       </Tbody>
-    </TableComposable>
+    </Table>
   );
 };
 

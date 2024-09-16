@@ -1,5 +1,4 @@
 import { useReducer } from 'react';
-
 import { actions } from './constants';
 
 const formatPayload = (data) => {

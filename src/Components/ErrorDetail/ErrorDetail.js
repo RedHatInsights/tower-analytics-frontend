@@ -1,24 +1,21 @@
-import React, { useState } from 'react';
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { ExpandableSection } from '@patternfly/react-core/dist/dynamic/components/ExpandableSection';
 import PropTypes from 'prop-types';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import {
-  Card as PFCard,
-  CardBody as PFCardBody,
-  ExpandableSection as PFExpandable,
-} from '@patternfly/react-core';
-
-const Card = styled(PFCard)`
+const EDCard = styled(Card)`
   background-color: var(--pf-global--BackgroundColor--200);
   overflow-wrap: break-word;
 `;
 
-const CardBody = styled(PFCardBody)`
+const EDCardBody = styled(CardBody)`
   max-height: 200px;
   overflow: scroll;
 `;
 
-const Expandable = styled(PFExpandable)`
+const Expandable = styled(ExpandableSection)`
   text-align: left;
 
   & .pf-c-expandable__toggle {
@@ -44,15 +41,15 @@ function ErrorDetail({ error }) {
           onToggle={handleToggle}
           isExpanded={isExpanded}
         >
-          <Card>
-            <CardBody>
+          <EDCard>
+            <EDCardBody>
               <ul>
                 {error.map((m) =>
                   typeof m === 'string' ? <li key={m}>{m}</li> : null
                 )}
               </ul>
-            </CardBody>
-          </Card>
+            </EDCardBody>
+          </EDCard>
         </Expandable>
       )}
     </>

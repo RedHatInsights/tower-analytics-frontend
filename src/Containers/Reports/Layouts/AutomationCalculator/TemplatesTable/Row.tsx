@@ -1,25 +1,22 @@
-import React, { FunctionComponent, useState } from 'react';
-import {
-  Button,
-  InputGroup,
-  InputGroupText,
-  TextInput,
-  Tooltip,
-  InputGroupTextVariant,
-  Switch,
-  ButtonVariant,
-} from '@patternfly/react-core';
-import { Tr, Td } from '@patternfly/react-table';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { InputGroupItem } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { InputGroup } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { InputGroupText } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { Switch } from '@patternfly/react-core/dist/dynamic/components/Switch';
+import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import { Td, Tr } from '@patternfly/react-table';
 import { global_success_color_200 as globalSuccessColor200 } from '@patternfly/react-tokens';
 import { global_disabled_color_200 as globalDisabledColor200 } from '@patternfly/react-tokens';
 import { global_palette_red_200 } from '@patternfly/react-tokens';
-
+import React, { FunctionComponent, useState } from 'react';
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
-import timeFormatter from '../../../../../Utilities/timeFormatter';
-import percentageFormatter from '../../../../../Utilities/percentageFormatter';
-import { Template } from './types';
-import ExpandedRowContents from './ExplandedRowContents';
 import hoursFormatter from '../../../../../Utilities/hoursFormatter';
+import percentageFormatter from '../../../../../Utilities/percentageFormatter';
+import timeFormatter from '../../../../../Utilities/timeFormatter';
+import ExpandedRowContents from './ExplandedRowContents';
+import { Template } from './types';
 
 interface Props {
   template: Template;
@@ -116,37 +113,39 @@ const Row: FunctionComponent<Props> = ({
         )}
         <Td>
           <InputGroup>
-            <TextInput
-              autoFocus={
-                window.localStorage.getItem('focused') ===
-                'manual-time-' + template.id.toString()
-              }
-              id={'manual-time-' + template.id.toString()}
-              data-cy={'manual-time'}
-              style={{ maxWidth: '150px' }}
-              type="number"
-              aria-label="time run manually"
-              defaultValue={template.avgRunTime / 60}
-              onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
-                const minutes = +event.target.value;
-                if (minutes <= 0 || isNaN(minutes)) {
-                  event.target.value = '60';
-                  setDataRunTime(+event.target.value * 60, template.id);
-                } else {
-                  setDataRunTime(minutes * 60, template.id);
-                }
-                window.localStorage.setItem('focused', '');
-              }}
-              onChange={() => {
-                window.localStorage.setItem(
-                  'focused',
+            <InputGroupItem isFill>
+              <TextInput
+                autoFocus={
+                  window.localStorage.getItem('focused') ===
                   'manual-time-' + template.id.toString()
-                );
-              }}
-              isDisabled={readOnly}
-            />
+                }
+                id={'manual-time-' + template.id.toString()}
+                data-cy={'manual-time'}
+                style={{ maxWidth: '150px' }}
+                type='number'
+                aria-label='time run manually'
+                defaultValue={template.avgRunTime / 60}
+                onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
+                  const minutes = +event.target.value;
+                  if (minutes <= 0 || isNaN(minutes)) {
+                    event.target.value = '60';
+                    setDataRunTime(+event.target.value * 60, template.id);
+                  } else {
+                    setDataRunTime(minutes * 60, template.id);
+                  }
+                  window.localStorage.setItem('focused', '');
+                }}
+                onChange={() => {
+                  window.localStorage.setItem(
+                    'focused',
+                    'manual-time-' + template.id.toString()
+                  );
+                }}
+                isDisabled={readOnly}
+              />
+            </InputGroupItem>
             <InputGroupText>min</InputGroupText>
-            <InputGroupText variant={InputGroupTextVariant.plain}>
+            <InputGroupText>
               x {template.successful_hosts_total} host runs
             </InputGroupText>
           </InputGroup>
@@ -168,10 +167,10 @@ const Row: FunctionComponent<Props> = ({
         </Td>
         <Td>
           <Switch
-            label="Show"
-            labelOff="Hide"
+            label='Show'
+            labelOff='Hide'
             isChecked={template.enabled}
-            onChange={(checked) => setEnabled(checked)}
+            onChange={(_event, checked) => setEnabled(checked)}
             isDisabled={readOnly}
           />
         </Td>

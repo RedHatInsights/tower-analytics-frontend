@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import PropTypes from 'prop-types';
-import { Button, Tooltip } from '@patternfly/react-core';
-import AlertModal from '../AlertModal';
-
+import React, { useState } from 'react';
 import { getRelatedResourceDeleteCounts } from '../../Utilities/getRelatedResourceDeleteDetails';
-
+import AlertModal from '../AlertModal';
 import ErrorDetail from '../ErrorDetail';
 
 const requiredField = (props) => {
@@ -136,11 +135,11 @@ const ToolbarDeleteButton = ({
 
   return (
     <>
-      <Tooltip content={renderTooltip()} position="top">
+      <Tooltip content={renderTooltip()} position='top'>
         <div>
           <Button
-            variant="secondary"
-            ouiaId="delete-button"
+            variant='secondary'
+            ouiaId='delete-button'
             spinnerAriaValueText={isLoading ? 'Loading' : undefined}
             aria-label={'Delete'}
             onClick={() => toggleModal(true)}
@@ -153,15 +152,15 @@ const ToolbarDeleteButton = ({
 
       {isModalOpen && (
         <AlertModal
-          variant="danger"
+          variant='danger'
           title={modalTitle}
           isOpen={isModalOpen}
           onClose={() => toggleModal(false)}
           actions={[
             <Button
-              ouiaId="delete-modal-confirm"
-              key="delete"
-              variant="danger"
+              ouiaId='delete-modal-confirm'
+              key='delete'
+              variant='danger'
               aria-label={'confirm delete'}
               isDisabled={Boolean(deleteDetails)}
               onClick={handleDelete}
@@ -169,8 +168,8 @@ const ToolbarDeleteButton = ({
               {'Delete'}
             </Button>,
             <Button
-              key="cancel"
-              variant="link"
+              key='cancel'
+              variant='link'
               aria-label={'cancel delete'}
               onClick={() => toggleModal(false)}
             >

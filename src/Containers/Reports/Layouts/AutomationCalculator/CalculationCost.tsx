@@ -1,16 +1,13 @@
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { InputGroup } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { InputGroupText } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
+import DollarSignIcon from '@patternfly/react-icons/dist/dynamic/icons/dollar-sign-icon';
 import React, { FunctionComponent } from 'react';
-
-import {
-  Card,
-  CardBody,
-  InputGroup as PFInputGroup,
-  InputGroupText,
-  TextInput,
-} from '@patternfly/react-core';
-import { DollarSignIcon } from '@patternfly/react-icons';
 import styled from 'styled-components';
 
-const InputGroup = styled(PFInputGroup)`
+const WInputGroup = styled(InputGroup)`
   width: 170px;
 `;
 
@@ -44,31 +41,31 @@ const CalculationCost: FunctionComponent<Props> = ({
           (e.g. average salary of mid-level Software Engineer)
         </span>
       </p>
-      <InputGroup>
+      <WInputGroup>
         <InputGroupText>
           <DollarSignIcon />
         </InputGroupText>
         <TextInput
-          id="manual-cost"
-          key="manual-cost"
-          type="number"
-          aria-label="manual-cost"
+          id='manual-cost'
+          key='manual-cost'
+          type='number'
+          aria-label='manual-cost'
           value={isNaN(costManual) ? '' : costManual.toString()}
           onChange={(e) => setFromCalculation('manual_cost', validFloat(+e))}
           isDisabled={readOnly}
         />
         <InputGroupText>/hr</InputGroupText>
-      </InputGroup>
+      </WInputGroup>
       <p style={{ paddingTop: '10px' }}>Automated process cost</p>
-      <InputGroup>
+      <WInputGroup>
         <InputGroupText>
           <DollarSignIcon />
         </InputGroupText>
         <TextInput
-          id="automation-cost"
-          key="automation-cost"
-          type="number"
-          aria-label="automation-cost"
+          id='automation-cost'
+          key='automation-cost'
+          type='number'
+          aria-label='automation-cost'
           value={isNaN(costAutomation) ? '' : costAutomation.toString()}
           onChange={(e) =>
             setFromCalculation('automation_cost', validFloat(+e))
@@ -76,7 +73,7 @@ const CalculationCost: FunctionComponent<Props> = ({
           isDisabled={readOnly}
         />
         <InputGroupText>/hr</InputGroupText>
-      </InputGroup>
+      </WInputGroup>
     </CardBody>
   </Card>
 );
