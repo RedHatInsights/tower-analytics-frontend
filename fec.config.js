@@ -4,6 +4,7 @@ module.exports = {
   proxyVerbose: true,
   appUrl: ['/ansible/automation-analytics/', '/ansible/automation-analytics'],
   plugins: [],
+  // sassPrefix: '.automation-analytics, .automationAnalytics',
 
   moduleFederation: {
     exclude: ['react-router-dom'],
