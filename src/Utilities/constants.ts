@@ -9,6 +9,7 @@ import { Params } from '../Api/types';
 
 export interface DefaultParamsProps {
   defaultParams: Params;
+  [key: string]: string | number | undefined | Params;
 }
 
 export const jobExplorer = {
