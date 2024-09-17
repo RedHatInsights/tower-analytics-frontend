@@ -29,7 +29,7 @@
     "streamsaver": "^2.0.6",
     "styled-components": "^6.1.13",
     "uuid": "^10.0.0",
-    "victory-core": "^36.9.2",
+    "victory-core": "^37.1.1",
     "victory-cursor-container": "^36.9.2",
     "web-streams-polyfill": "^3.3.3"
   },
