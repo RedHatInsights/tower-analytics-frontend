@@ -30,7 +30,7 @@
     "styled-components": "^6.1.13",
     "uuid": "^10.0.0",
     "victory-core": "^36.9.2",
-    "victory-cursor-container": "^36.9.2",
+    "victory-cursor-container": "^37.1.1",
     "web-streams-polyfill": "^3.3.3"
   },
   "devDependencies": {
