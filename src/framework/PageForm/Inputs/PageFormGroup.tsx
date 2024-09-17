@@ -1,24 +1,36 @@
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
-import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
+import {
+  FormGroup,
+  FormHelperText,
+} from '@patternfly/react-core/dist/dynamic/components/Form';
+import {
+  HelperText,
+  HelperTextItem,
+} from '@patternfly/react-core/dist/dynamic/components/HelperText';
 import { Popover } from '@patternfly/react-core/dist/dynamic/components/Popover';
 import OutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/outlined-question-circle-icon';
 import React, { ReactNode } from 'react';
 
-export type PageFormGroupProps = Pick<
-  'children' | 'helperText' | 'helperTextInvalid' | 'isRequired' | 'label'
-> & { id?: string; labelHelpTitle?: string; labelHelp?: ReactNode };
+export type PageFormGroupProps = {
+  children?: ReactNode;
+  helperText?: string;
+  helperTextInvalid?: string;
+  id?: string;
+  isRequired?: boolean;
+  label?: string;
+  labelHelp?: ReactNode;
+  labelHelpTitle?: string;
+};
 
 /** Wrapper over the PatternFly FormGroup making it optional based on if label is given. */
 export function PageFormGroup(props: PageFormGroupProps) {
   const { children, helperText, helperTextInvalid, isRequired, label } = props;
+
   return (
     <FormGroup
       id={`${props.id ?? ''}-form-group`}
       fieldId={props.id}
       label={label}
-      helperText={helperText}
-      helperTextInvalid={helperTextInvalid}
-      validated={helperTextInvalid ? 'error' : undefined}
       isRequired={isRequired}
       labelIcon={
         props.labelHelp ? (
@@ -35,6 +47,15 @@ export function PageFormGroup(props: PageFormGroupProps) {
       }
     >
       {children}
+      {helperTextInvalid || helperText ? (
+        <FormHelperText>
+          <HelperText>
+            <HelperTextItem variant={helperTextInvalid ? 'error' : 'default'}>
+              {helperTextInvalid || helperText}
+            </HelperTextItem>
+          </HelperText>
+        </FormHelperText>
+      ) : null}
     </FormGroup>
   );
 }

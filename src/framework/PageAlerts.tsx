@@ -1,5 +1,5 @@
 import { AlertProps } from '@patternfly/react-core/dist/dynamic/components/Alert';
-import React, { ReactNode, createContext, useContext, useState } from 'react';
+import React, { ReactNode, createContext, useState } from 'react';
 
 export interface IPageAlerts {
   addAlert: (alert: AlertProps) => void;
@@ -16,10 +16,6 @@ export const PageAlertsContext = createContext<IPageAlerts>({
 });
 
 export const PageAlertsArrayContext = createContext<AlertProps[]>([]);
-
-export function usePageAlerts(): IPageAlerts {
-  return useContext(PageAlertsContext);
-}
 
 export function PageAlertsProvider(props: { children: ReactNode }) {
   const [toasterAlerts, setToasterAlerts] = useState<AlertProps[]>([]);

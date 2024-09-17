@@ -5,25 +5,37 @@ import {
   SelectVariant,
 } from '@patternfly/react-core/deprecated';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
-import { InputGroupItem } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
-import { InputGroup } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
-import { Pagination } from '@patternfly/react-core/dist/dynamic/components/Pagination';
-import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import {
+  InputGroup,
+  InputGroupItem,
+} from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import {
+  Pagination,
+  PaginationVariant,
+} from '@patternfly/react-core/dist/dynamic/components/Pagination';
 import { Skeleton } from '@patternfly/react-core/dist/dynamic/components/Skeleton';
-import { TextInputGroup } from '@patternfly/react-core/dist/dynamic/components/TextInputGroup';
-import { TextInputGroupMain } from '@patternfly/react-core/dist/dynamic/components/TextInputGroup';
-import { TextInputGroupUtilities } from '@patternfly/react-core/dist/dynamic/components/TextInputGroup';
-import { ToggleGroup } from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
-import { ToggleGroupItem } from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
-import { Toolbar } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
-import { ToolbarContent } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
-import { ToolbarFilter } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
-import { ToolbarGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
-import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
-import { ToolbarToggleGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import {
+  TextInputGroup,
+  TextInputGroupMain,
+  TextInputGroupUtilities,
+} from '@patternfly/react-core/dist/dynamic/components/TextInputGroup';
+import {
+  ToggleGroup,
+  ToggleGroupItem,
+} from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
+import {
+  Toolbar,
+  ToolbarContent,
+  ToolbarFilter,
+  ToolbarGroup,
+  ToolbarItem,
+  ToolbarToggleGroup,
+} from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
-import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
-import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import {
+  Flex,
+  FlexItem,
+} from '@patternfly/react-core/dist/dynamic/layouts/Flex';
 import ArrowRightIcon from '@patternfly/react-icons/dist/dynamic/icons/arrow-right-icon';
 import ColumnsIcon from '@patternfly/react-icons/dist/dynamic/icons/columns-icon';
 import FilterIcon from '@patternfly/react-icons/dist/dynamic/icons/filter-icon';
@@ -44,7 +56,6 @@ import { PageActions } from '../PageActions/PageActions';
 import { FormGroupSelect } from '../PageForm/Inputs/FormGroupSelect';
 import { BulkSelector } from '../components/BulkSelector';
 import { useBreakpoint } from '../components/useBreakpoint';
-import { useFrameworkTranslations } from '../useFrameworkTranslations';
 import { PageTableViewType, PageTableViewTypeE } from './PageTableViewType';
 import './PageToolbar.css';
 
@@ -62,16 +73,6 @@ export type SetFilterValues<T extends object> = (
   filter: IItemFilter<T>,
   values: string[]
 ) => void;
-
-export function toolbarActionsHaveBulkActions<T extends object>(
-  actions?: IPageAction<T>[]
-) {
-  if (!actions) return false;
-  for (const action of actions) {
-    if (action.type === 'bulk') return true;
-  }
-  return false;
-}
 
 export interface IToolbarStringFilter {
   key: string;
@@ -533,7 +534,6 @@ function ToolbarSelectFilter(props: {
   values: string[];
   placeholder?: string;
 }) {
-  const [translations] = useFrameworkTranslations();
   const { addFilter, removeFilter, options, values } = props;
   const [open, setOpen] = useState(false);
   const onSelect = useCallback(
@@ -557,7 +557,7 @@ function ToolbarSelectFilter(props: {
         onSelect={onSelect}
         placeholderText={
           values.length ? (
-            translations.selectedText
+            'Selected'
           ) : (
             <span style={{ opacity: 0.7 }}>{props.placeholder}</span>
           )

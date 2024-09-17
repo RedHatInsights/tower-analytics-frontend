@@ -1,8 +1,6 @@
 import { DispatchType } from '../';
 import { generatePdf, sendEmail } from '../../Api/api';
-import { PDFParams } from '../../Api/types';
-import { PDFEmailParams } from '../../Api/types';
-// Later from the frontend component / redux when typed
+import { PDFEmailParams, PDFParams } from '../../Api/types';
 import { NotificationType } from '../../globalTypes';
 import { ActionTypes, ReducerTypes } from './types';
 

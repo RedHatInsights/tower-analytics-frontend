@@ -1,6 +1,8 @@
-import { EmptyStateHeader } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
-import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
-import { EmptyStateIcon } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import {
+  EmptyState,
+  EmptyStateHeader,
+  EmptyStateIcon,
+} from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
 import React, { Component } from 'react';
 
@@ -22,6 +24,7 @@ import React, { Component } from 'react';
  *
  * @returns {AsyncComponent} The imported component or can return a loading
  */
+// FIXME: asyncComponent -> lazy; Suspense fallback=EmptyState..
 export default function asyncComponent(importComponent) {
   class AsyncComponent extends Component {
     constructor(props) {

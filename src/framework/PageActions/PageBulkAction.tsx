@@ -1,5 +1,7 @@
-import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
-import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
+import {
+  Button,
+  ButtonVariant,
+} from '@patternfly/react-core/dist/dynamic/components/Button';
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import React, { ComponentClass, Fragment, FunctionComponent } from 'react';
 import { IPageBulkAction } from './PageAction';

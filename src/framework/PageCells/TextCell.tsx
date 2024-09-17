@@ -1,5 +1,7 @@
-import { SplitItem } from '@patternfly/react-core/dist/dynamic/layouts/Split';
-import { Split } from '@patternfly/react-core/dist/dynamic/layouts/Split';
+import {
+  Split,
+  SplitItem,
+} from '@patternfly/react-core/dist/dynamic/layouts/Split';
 import React, { ReactNode } from 'react';
 import { IconWrapper } from '../components/IconWrapper';
 import { PFColor, getPatternflyColor } from '../components/pfcolors';

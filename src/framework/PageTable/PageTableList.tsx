@@ -1,15 +1,19 @@
 import { DropdownPosition } from '@patternfly/react-core/deprecated';
-import { DataList } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DataListAction } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DataListCell } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DataListCheck } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DataListItem } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DataListItemCells } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DataListItemRow } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DescriptionList } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
-import { DescriptionListDescription } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
-import { DescriptionListGroup } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
-import { DescriptionListTerm } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import {
+  DataList,
+  DataListAction,
+  DataListCell,
+  DataListCheck,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+} from '@patternfly/react-core/dist/dynamic/components/DataList';
+import {
+  DescriptionList,
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+} from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
 import { Text } from '@patternfly/react-core/dist/dynamic/components/Text';
 import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
 import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
@@ -62,7 +66,7 @@ export function PageTableList<T extends object>(props: PageTableListProps<T>) {
   );
 }
 
-export function useColumnsToDataList<T extends object>(
+function useColumnsToDataList<T extends object>(
   tableColumns: ITableColumn<T>[],
   keyFn: (item: T) => string | number,
   isSelected?: (item: T) => boolean,

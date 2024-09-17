@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 import { PageAlertsProvider } from './PageAlerts';
 import ErrorBoundary from './components/ErrorBoundary';
-import { useFrameworkTranslations } from './useFrameworkTranslations';
 
 /**
  * The PageLayout is used as the container for the contents of the page.
@@ -17,9 +16,8 @@ import { useFrameworkTranslations } from './useFrameworkTranslations';
  * <Page>
  */
 export function PageLayout(props: { children?: ReactNode }) {
-  const [translations] = useFrameworkTranslations();
   return (
-    <ErrorBoundary message={translations.errorText}>
+    <ErrorBoundary message='Error'>
       <PageAlertsProvider>
         <div
           style={{

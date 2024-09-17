@@ -260,9 +260,7 @@ function PageDropdownActionItem<T extends object>(props: {
 
 const TransparentIcon = () => <CircleIcon style={{ opacity: 0 }} />;
 
-export function filterActionSeperators<T extends object>(
-  actions: IPageAction<T>[]
-) {
+function filterActionSeperators<T extends object>(actions: IPageAction<T>[]) {
   const filteredActions = [...actions];
 
   // Remove seperators at beginning of actions

@@ -2,7 +2,7 @@ import { ChartData, ChartDataSerie } from '@ansible/react-json-chart-builder';
 import { v4 as uuidv4 } from 'uuid';
 import { ApiReturnType, ApiType, GroupedApi } from './types';
 
-export const convertGroupedByData = (data: GroupedApi): ChartDataSerie[] => {
+const convertGroupedByData = (data: GroupedApi): ChartDataSerie[] => {
   const { dates } = data;
   const items: ChartDataSerie[] = [];
   dates.forEach((el) => {

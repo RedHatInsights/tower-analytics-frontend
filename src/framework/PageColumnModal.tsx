@@ -1,23 +1,22 @@
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
-import { DataList } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DataListCell } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DataListCheck } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DataListControl } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DataListDragButton } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DataListItem } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DataListItemCells } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { DataListItemRow } from '@patternfly/react-core/dist/dynamic/components/DataList';
-import { ModalVariant } from '@patternfly/react-core/dist/dynamic/components/Modal';
-import { Modal } from '@patternfly/react-core/dist/dynamic/components/Modal';
+import {
+  DataList,
+  DataListCell,
+  DataListCheck,
+  DataListControl,
+  DataListDragButton,
+  DataListItem,
+  DataListItemCells,
+  DataListItemRow,
+} from '@patternfly/react-core/dist/dynamic/components/DataList';
+import {
+  Modal,
+  ModalVariant,
+} from '@patternfly/react-core/dist/dynamic/components/Modal';
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import { ITableColumn } from './PageTable/PageTable';
 
-export function useColumnModal<T extends object>(
-  columns: ITableColumn<T>[],
-  t?: (t: string) => string
-) {
-  t = t ? t : (t: string) => t;
-
+export function useColumnModal<T extends object>(columns: ITableColumn<T>[]) {
   const [columnModalOpen, setColumnModalOpen] = useState(false);
   const openColumnModal = useCallback(() => {
     setColumnModalOpen(true);
@@ -48,7 +47,7 @@ export function useColumnModal<T extends object>(
   //     })
   // }, [])
   const handleChange = useCallback(
-    (checked: boolean, event: FormEvent<HTMLInputElement>) => {
+    (event: FormEvent<HTMLInputElement>, checked: boolean) => {
       const columnHeader = (event.target as unknown as { name?: string }).name;
       if (columnHeader) {
         setManagedColumns((managedColumns) => {
@@ -78,7 +77,7 @@ export function useColumnModal<T extends object>(
       onClose={onClose}
       actions={[
         <Button key='save' variant='primary' onClick={onClose}>
-          {t('Close')}
+          Close
         </Button>,
         // <Button key="cancel" variant="link" onClick={onClose}>
         //     Cancel

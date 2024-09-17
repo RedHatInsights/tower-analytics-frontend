@@ -15,4 +15,5 @@ const AutomationAnalytics = () => (
   </Provider>
 );
 
+// imported directly by fec
 export default AutomationAnalytics;

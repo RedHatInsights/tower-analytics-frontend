@@ -11,42 +11,23 @@ const PopoverButton = styled.button`
   --pf-c-form__group-label-help--hover--Color: var(--pf-global--Color--100);
 `;
 
-function StandardPopover(props: {
-  ariaLabel?: string;
-  content: ReactNode;
-  header: ReactNode;
-  id?: string;
-  maxWidth?: string;
-}) {
-  const {
-    ariaLabel = '',
-    content,
-    header,
-    id = '',
-    maxWidth = '',
-    ...rest
-  } = props;
+function StandardPopover(props: { content: ReactNode; header: ReactNode }) {
+  const { content, header } = props;
+
   if (!content) {
     return null;
   }
+
   return (
-    <Popover
-      bodyContent={content}
-      headerContent={header}
-      hideOnOutsideClick
-      id={id}
-      data-cy={id}
-      maxWidth={maxWidth}
-      {...rest}
-    >
+    <Popover bodyContent={content} headerContent={header} hideOnOutsideClick>
       <PopoverButton
-        aria-label={ariaLabel ?? 'More information'}
+        aria-label='More information'
         aria-haspopup='true'
-        className='pf-c-form__group-label-help'
-        onClick={(e: Event) => e.preventDefault()}
+        className='pf-v5-c-form__group-label-help'
+        onClick={(e) => e.preventDefault()}
         type='button'
       >
-        <HelpIcon noVerticalAlign />
+        <HelpIcon />
       </PopoverButton>
     </Popover>
   );

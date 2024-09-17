@@ -1,5 +1,7 @@
-import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
-import { AlertActionCloseButton } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import {
+  Alert,
+  AlertActionCloseButton,
+} from '@patternfly/react-core/dist/dynamic/components/Alert';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -87,7 +89,6 @@ export interface PageHeaderProps {
   controls?: ReactNode;
   headerActions?: ReactNode;
   footer?: ReactNode;
-  t?: (t: string) => string;
 }
 
 /**
@@ -126,8 +127,6 @@ export function PageHeader(props: PageHeaderProps) {
   const lg = useBreakpoint('lg');
   const xl = useBreakpoint('xl');
   const isMdOrLarger = useBreakpoint('md');
-  let { t } = props;
-  t = t ? t : (t: string) => t;
   return (
     <>
       {navigation && (
@@ -156,7 +155,7 @@ export function PageHeader(props: PageHeaderProps) {
                                         isInline
                                         style={{ whiteSpace: 'nowrap' }}
                                     >
-                                        {isSmLarger ? <span>{t('Documentation')}</span> : <span>{'Docs'}</span>}
+                                        {isSmLarger ? <span>Documentation</span> : <span>{'Docs'}</span>}
                                     </Button>
                                 </Bullseye>
                             </FlexItem>
@@ -207,7 +206,7 @@ export function PageHeader(props: PageHeaderProps) {
                               }
                               isInline
                             >
-                              {t('Documentation')}
+                              Documentation
                             </Button>
                           </StackItem>
                         )}

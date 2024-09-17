@@ -1,6 +1,8 @@
-import { DescriptionListTerm } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
-import { DescriptionListDescription } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
-import { DescriptionListGroup } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import {
+  DescriptionListDescription,
+  DescriptionListGroup,
+  DescriptionListTerm,
+} from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
 import React, { ReactNode } from 'react';
 import { StandardPopover } from '../components/StandardPopover';
 

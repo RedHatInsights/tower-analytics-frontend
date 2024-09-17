@@ -38,7 +38,7 @@ export function PagePinnedActions<T extends object>(props: {
   );
 }
 
-export function PagePinnedAction<T extends object>(props: {
+function PagePinnedAction<T extends object>(props: {
   action: IPageAction<T>;
   selectedItem?: T;
   selectedItems?: T[];

@@ -1,12 +1,14 @@
 import { DropdownPosition } from '@patternfly/react-core/deprecated';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
-import { EmptyStateFooter } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
-import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
-import { EmptyStateBody } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
-import { EmptyStateIcon } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
-import { EmptyStateVariant } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
-import { EmptyStateActions } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
-import { EmptyStateHeader } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import {
+  EmptyState,
+  EmptyStateActions,
+  EmptyStateBody,
+  EmptyStateFooter,
+  EmptyStateHeader,
+  EmptyStateIcon,
+  EmptyStateVariant,
+} from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
 import { Skeleton } from '@patternfly/react-core/dist/dynamic/components/Skeleton';
 import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
@@ -24,7 +26,6 @@ import {
   Thead,
   Tr,
 } from '@patternfly/react-table';
-import { ThSortType } from '@patternfly/react-table/dist/dynamic/components/Table/base';
 import useResizeObserver from '@react-hook/resize-observer';
 import React, {
   Dispatch,
@@ -46,7 +47,6 @@ import { SinceCell } from '../PageCells/DateTimeCell';
 import { LabelsCell } from '../PageCells/LabelsCell';
 import { TextCell } from '../PageCells/TextCell';
 import { useColumnModal } from '../PageColumnModal';
-import { useSettings } from '../Settings';
 import { Scrollable } from '../components/Scrollable';
 import { useBreakpoint } from '../components/useBreakpoint';
 import { PagePagination } from './PagePagination';
@@ -103,8 +103,6 @@ export type PageTableProps<T extends object> = {
   emptyStateButtonIcon?: React.ReactNode;
   emptyStateButtonText?: string;
   emptyStateButtonClick?: () => void;
-
-  t?: (t: string) => string;
 
   showSelect?: boolean;
 
@@ -298,8 +296,6 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
     unselectAll,
     expandedRow,
   } = props;
-  let { t } = props;
-  t = t ? t : (t: string) => t;
   const showSelect =
     props.showSelect ||
     toolbarActions?.find(
@@ -333,24 +329,16 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
   useResizeObserver(containerRef, () => updateScroll(containerRef.current));
   useEffect(() => updateScroll(containerRef.current), [updateScroll]);
 
-  const settings = useSettings();
-
   return (
     <div
-      className='pf-c-scroll-inner-wrapper'
+      className='pf-v5-c-scroll-inner-wrapper'
       style={{ height: '100%', marginBottom: -1 }}
       ref={containerRef}
       onScroll={onScroll}
     >
       <Table
         aria-label='Simple table'
-        variant={
-          props.compact
-            ? 'compact'
-            : settings.tableLayout === 'compact'
-            ? 'compact'
-            : undefined
-        }
+        variant={props.compact ? 'compact' : undefined}
         gridBreakPoint=''
         isStickyHeader
       >
@@ -420,20 +408,19 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
       {itemCount === 0 && (
         <EmptyState style={{ paddingTop: 48 }}>
           <EmptyStateHeader
-            titleText={<>{t('No results found')}</>}
+            titleText={<>No results found</>}
             icon={<EmptyStateIcon icon={SearchIcon} />}
             headingLevel='h2'
           />
           <EmptyStateBody>
-            {t(
-              'No results match this filter criteria. Clear all filters and try again.'
-            )}
+            No results match this filter criteria. Clear all filters and try
+            again.
           </EmptyStateBody>
           <EmptyStateFooter>
             {clearAllFilters && (
               <EmptyStateActions>
                 <Button variant='primary' onClick={clearAllFilters}>
-                  {t('Clear all filters')}
+                  Clear all filters
                 </Button>
               </EmptyStateActions>
             )}
@@ -470,7 +457,7 @@ function TableHead<T extends object>(props: {
   } = props;
 
   const getColumnSort = useCallback<
-    (columnIndex: number, column: ITableColumn<T>) => ThSortType | undefined
+    (columnIndex: number, column: ITableColumn<T>) => any
   >(
     (columnIndex: number, column: ITableColumn<T>) => {
       if (!column.sort) return undefined;
@@ -588,8 +575,8 @@ function TableRow<T extends object>(props: {
     expandedRow,
   } = props;
   const [expanded, setExpanded] = useState(false);
-  const settings = useSettings();
   const expandedContent = expandedRow?.(item);
+
   return (
     <>
       <Tr
@@ -688,7 +675,7 @@ function TableRow<T extends object>(props: {
               columns.filter((column) => column.enabled !== false).length
             }
             style={{
-              paddingBottom: settings.tableLayout === 'compact' ? 12 : 24,
+              paddingBottom: 24,
               paddingTop: 0,
             }}
           >
