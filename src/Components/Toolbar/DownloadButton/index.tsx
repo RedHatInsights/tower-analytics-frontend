@@ -33,7 +33,7 @@ import { EmailDetailsProps } from '../types';
 interface Props {
   settingsNamespace?: string;
   slug: string;
-  isMoney: boolean;
+  isMoney?: boolean;
   name: string;
   description: string;
   endpointUrl: Endpoint;
@@ -107,6 +107,11 @@ const DownloadButton: FC<Props> = ({
     downloadType,
     expiry,
   } = formData;
+
+  isMoney = isMoney ?? false;
+  chartType = chartType ?? '';
+  dateGranularity = dateGranularity ?? '';
+  adoptionRateType = adoptionRateType ?? '';
 
   const onSave = () => {
     if (downloadType === 'pdf')

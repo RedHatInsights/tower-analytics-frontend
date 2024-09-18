@@ -15,7 +15,7 @@ interface Props {
     isLoading: boolean;
   };
   children: React.ReactNode;
-  customLoading: boolean;
+  customLoading?: boolean;
   customEmptyState?: boolean;
 }
 
