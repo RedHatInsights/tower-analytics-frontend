@@ -16,11 +16,7 @@ import React, { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import {
-  ParamsWithPagination,
-  endpointFunctionMap,
-  saveROI,
-} from '../../../../Api';
+import { endpointFunctionMap, saveROI } from '../../../../Api';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 // Chart
 import Chart from '../../../../Components/Chart';
@@ -533,7 +529,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             categories={options as any}
             filters={queryParams as any}
             setFilters={setFromToolbar}
-            pagination={
+            pagination={() => (
               <Pagination
                 count={api.result.meta.count}
                 perPageOptions={perPageOptions}
@@ -544,36 +540,40 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 setPagination={setFromPagination as any}
                 isCompact
               />
-            }
+            )}
             additionalControls={[
-              <DownloadButton
-                key='download-button'
-                slug={slug}
-                isMoney={isMoney}
-                name={name}
-                description={description}
-                endpointUrl={dataEndpoint}
-                queryParams={queryParams}
-                selectOptions={options}
-                y={chartParams.y}
-                label={chartParams.label}
-                xTickFormat={chartParams.xTickFormat}
-                totalPages={Math.ceil(
-                  api.result.meta.count / queryParams.limit
-                )}
-                pageLimit={queryParams.limit}
-                sortOptions={chartParams.y}
-                sortOrder={queryParams.sort_order}
-                startDate={queryParams.start_date}
-                endDate={queryParams.end_date}
-                dateRange={queryParams.quick_date_range}
-                inputs={{
-                  costManual,
-                  costAutomation,
-                  totalSavings: computeTotalSavings(),
-                  currentPageSavings: computeCurrentPageSavings(),
-                }}
-              />,
+              () => (
+                <DownloadButton
+                  key='download-button'
+                  slug={slug}
+                  isMoney={isMoney}
+                  name={name}
+                  description={description}
+                  endpointUrl={dataEndpoint}
+                  queryParams={queryParams as any}
+                  selectOptions={options as any}
+                  y={chartParams.y as any}
+                  label={chartParams.label as any}
+                  xTickFormat={chartParams.xTickFormat}
+                  totalPages={Math.ceil(
+                    api.result.meta.count / (queryParams.limit as any)
+                  )}
+                  pageLimit={queryParams.limit as any}
+                  sortOptions={chartParams.y as any}
+                  sortOrder={queryParams.sort_order as any}
+                  startDate={queryParams.start_date as any}
+                  endDate={queryParams.end_date as any}
+                  dateRange={queryParams.quick_date_range as any}
+                  inputs={
+                    {
+                      costManual,
+                      costAutomation,
+                      totalSavings: computeTotalSavings(),
+                      currentPageSavings: computeCurrentPageSavings(),
+                    } as any
+                  }
+                />
+              ),
             ]}
           />
           <Grid hasGutter>
