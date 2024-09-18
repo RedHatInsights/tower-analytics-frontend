@@ -51,7 +51,9 @@ const CalculationCost: FunctionComponent<Props> = ({
           type='number'
           aria-label='manual-cost'
           value={isNaN(costManual) ? '' : costManual.toString()}
-          onChange={(e) => setFromCalculation('manual_cost', validFloat(+e))}
+          onChange={(_event, value) =>
+            setFromCalculation('manual_cost', validFloat(+value))
+          }
           isDisabled={readOnly}
         />
         <InputGroupText>/hr</InputGroupText>
@@ -67,8 +69,8 @@ const CalculationCost: FunctionComponent<Props> = ({
           type='number'
           aria-label='automation-cost'
           value={isNaN(costAutomation) ? '' : costAutomation.toString()}
-          onChange={(e) =>
-            setFromCalculation('automation_cost', validFloat(+e))
+          onChange={(_event, value) =>
+            setFromCalculation('automation_cost', validFloat(+value))
           }
           isDisabled={readOnly}
         />
