@@ -1,5 +1,4 @@
 import { DropdownPosition } from '@patternfly/react-core/deprecated';
-import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
 import {
   Card,
   CardBody,
@@ -41,9 +40,6 @@ export interface IPageTableCard {
   badgeColor?: LabelColor;
   badgeTooltip?: string;
   badgeTooltipTitle?: string;
-  alertTitle?: string;
-  alertContent?: ReactNode;
-  alertVariant?: 'success' | 'danger' | 'warning' | 'info' | 'custom';
 }
 
 export function PageTableCard<T extends object>(props: {
@@ -199,11 +195,6 @@ export function PageTableCard<T extends object>(props: {
             </div>
           </div>
         </CardFooter>
-      )}
-      {card.alertTitle && (
-        <Alert title={card.alertTitle} isInline variant={card.alertVariant}>
-          {card.alertContent}
-        </Alert>
       )}
     </Card>
   );

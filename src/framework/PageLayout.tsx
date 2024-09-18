@@ -1,5 +1,4 @@
 import React, { ReactNode } from 'react';
-import { PageAlertsProvider } from './PageAlerts';
 import ErrorBoundary from './components/ErrorBoundary';
 
 /**
@@ -18,18 +17,16 @@ import ErrorBoundary from './components/ErrorBoundary';
 export function PageLayout(props: { children?: ReactNode }) {
   return (
     <ErrorBoundary message='Error'>
-      <PageAlertsProvider>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%',
-            maxHeight: '100%',
-          }}
-        >
-          {props.children}
-        </div>
-      </PageAlertsProvider>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          maxHeight: '100%',
+        }}
+      >
+        {props.children}
+      </div>
     </ErrorBoundary>
   );
 }
