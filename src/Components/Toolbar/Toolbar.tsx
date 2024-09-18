@@ -19,7 +19,7 @@ interface Props {
   filters: Record<string, AttributeType>;
   defaultSelected?: string;
   setFilters: SetValues;
-  pagination?: FunctionComponent;
+  pagination?: FunctionComponent | null;
   settingsPanel?: (
     setSettingsExpanded: (arg0: boolean) => void,
     settingsExpanded: boolean
