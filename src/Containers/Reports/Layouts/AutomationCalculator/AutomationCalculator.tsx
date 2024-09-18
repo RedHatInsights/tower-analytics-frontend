@@ -251,7 +251,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       }
     });
     try {
-      await saveROI(getROISaveData(updatedData), dispatch);
+      await saveROI(getROISaveData(updatedData) as any);
     } catch {
       dispatch(
         addNotification({
@@ -341,8 +341,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
    * Get data from API depending on the queryParam.
    */
   useEffect(() => {
-    fetchOptions(queryParams);
-    fetchData(queryParams);
+    (fetchOptions as (any) => void)(queryParams);
+    (fetchData as (any) => void)(queryParams);
   }, [queryParams]);
   /**
    * Function to navigate to the job explorer page
