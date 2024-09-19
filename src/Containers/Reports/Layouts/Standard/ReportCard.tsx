@@ -6,15 +6,10 @@ import { ToggleGroupItem } from '@patternfly/react-core/dist/dynamic/components/
 import { ToggleGroup } from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
 import React, { FunctionComponent, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  ApiJson,
-  OptionsReturnType,
-  endpointFunctionMap,
-} from '../../../../Api';
+import { OptionsReturnType, endpointFunctionMap } from '../../../../Api';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 import Chart from '../../../../Components/Chart';
 import PlotlyChart from '../../../../Components/Chart/PlotlyChart';
-import { GroupedApi, NonGroupedApi } from '../../../../Components/Chart/types';
 import Pagination from '../../../../Components/Pagination';
 import DownloadButton from '../../../../Components/Toolbar/DownloadButton';
 import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
@@ -61,20 +56,12 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     'settings'
   );
 
-  const { result: options, request: fetchOptions } = useRequest<ApiJson>(
-    readOptions as (...args: unknown[]) => Promise<OptionsReturnType>,
-    {}
-  );
+  const { result: options, request: fetchOptions } =
+    useRequest<OptionsReturnType>(readOptions as any, {});
 
-  const { request: fetchData, ...dataApi } = useRequest(
-    readData as unknown as (
-      ...args: unknown[]
-    ) => Promise<NonGroupedApi | GroupedApi>,
-    {
-      meta: { count: 0, legend: [] },
-      items: [],
-    }
-  );
+  const { request: fetchData, ...dataApi } = useRequest(readData as any, {
+    meta: { count: 0, legend: [] },
+  });
 
   const navigate = useNavigate();
 
@@ -242,12 +229,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       pageLimit={queryParams.limit as any}
       chartType={chartParams.chartType as string}
       sortOptions={chartParams.y}
-      sortOrder={
-        queryParams.sortOrder &&
-        (queryParams.sort_order === 'desc' || queryParams.sort_order === 'asc')
-          ? queryParams.sort_order
-          : 'asc'
-      }
+      sortOrder={queryParams.sortOrder as any}
       dateGranularity={queryParams.granularity as string}
       startDate={queryParams.start_date as string}
       endDate={queryParams.end_date as string}
@@ -319,7 +301,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           !showKebab &&
           slug === 'templates_by_organization' ? (
           <ApiStatusWrapper api={dataApi as any}>
-            <PlotlyChart data={(dataApi.result as NonGroupedApi).items} />
+            <PlotlyChart data={(dataApi.result as any).items} />
             <Table
               legend={
                 (dataApi.result.meta as any).tableData
@@ -397,7 +379,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       />
       {tableHeaders && slug === 'templates_by_organization' ? (
         <ApiStatusWrapper api={dataApi as any}>
-          <PlotlyChart data={(dataApi.result as NonGroupedApi).items} />
+          <PlotlyChart data={(dataApi.result as any).items} />
         </ApiStatusWrapper>
       ) : (
         <ApiStatusWrapper api={dataApi as any}>
