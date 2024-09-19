@@ -271,7 +271,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
                 label: chartParams.label,
                 y: chartParams.y,
                 xTickFormat: chartParams.xTickFormat,
-                chartType: chartParams.chartType,
+                chartType: chartParams.chartType as any,
               })}
               dataComponent={'foobar'}
               data={dataApi.result as any}
@@ -323,7 +323,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
                   label: chartParams.label,
                   y: chartParams.y,
                   xTickFormat: chartParams.xTickFormat,
-                  chartType: chartParams.chartType,
+                  chartType: chartParams.chartType as any,
                 })}
                 dataComponent={'foobar'}
                 data={dataApi.result as any}
@@ -388,7 +388,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
               label: chartParams.label,
               y: chartParams.y,
               xTickFormat: chartParams.xTickFormat,
-              chartType: chartParams.chartType,
+              chartType: chartParams.chartType as any,
             })}
             data={dataApi.result as any}
             specificFunctions={{
