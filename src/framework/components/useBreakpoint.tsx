@@ -12,7 +12,7 @@ const breakpoints: Record<string, number> = {
 
 export type WindowSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | 'xxl';
 
-export function useWindowSize(): WindowSize {
+function useWindowSize(): WindowSize {
   const [windowSize, setWindowSize] = useState<WindowSize>(() => {
     if (window.innerWidth <= breakpoints.sm) return 'xs';
     else if (window.innerWidth <= breakpoints.md) return 'sm';
@@ -93,25 +93,4 @@ export function useBreakpoint(size: WindowSize): boolean {
           return false;
       }
   }
-}
-
-export function useOrientation(): 'landscape' | 'portrait' {
-  const [orientation, setOrientation] = useState<'landscape' | 'portrait'>(() =>
-    window.innerWidth > window.innerHeight ? 'landscape' : 'portrait'
-  );
-  const handleResize = useCallback(() => {
-    setOrientation(
-      window.innerWidth > window.innerHeight ? 'landscape' : 'portrait'
-    );
-  }, []);
-
-  useEffect(() => {
-    const handler = handleResize;
-    window.addEventListener('resize', handler);
-    return () => window.removeEventListener('resize', handler);
-  }, [handleResize]);
-
-  useEffect(() => handleResize(), [handleResize]);
-
-  return orientation;
 }

@@ -1,14 +1,17 @@
 import { DropdownPosition } from '@patternfly/react-core/deprecated';
-import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
-import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
-import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
-import { CardFooter } from '@patternfly/react-core/dist/dynamic/components/Card';
-import { CardHeader } from '@patternfly/react-core/dist/dynamic/components/Card';
-import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@patternfly/react-core/dist/dynamic/components/Card';
 import { Checkbox } from '@patternfly/react-core/dist/dynamic/components/Checkbox';
 import { DescriptionList } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
-import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
-import { LabelGroup } from '@patternfly/react-core/dist/dynamic/components/Label';
+import {
+  Label,
+  LabelGroup,
+} from '@patternfly/react-core/dist/dynamic/components/Label';
 import { Popover } from '@patternfly/react-core/dist/dynamic/components/Popover';
 import { Text } from '@patternfly/react-core/dist/dynamic/components/Text';
 import { Truncate } from '@patternfly/react-core/dist/dynamic/components/Truncate';
@@ -37,9 +40,6 @@ export interface IPageTableCard {
   badgeColor?: LabelColor;
   badgeTooltip?: string;
   badgeTooltipTitle?: string;
-  alertTitle?: string;
-  alertContent?: ReactNode;
-  alertVariant?: 'success' | 'danger' | 'warning' | 'info' | 'default';
 }
 
 export function PageTableCard<T extends object>(props: {
@@ -195,11 +195,6 @@ export function PageTableCard<T extends object>(props: {
             </div>
           </div>
         </CardFooter>
-      )}
-      {card.alertTitle && (
-        <Alert title={card.alertTitle} isInline variant={card.alertVariant}>
-          {card.alertContent}
-        </Alert>
       )}
     </Card>
   );

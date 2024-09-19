@@ -1,7 +1,5 @@
 import React, { ReactNode } from 'react';
-import { PageAlertsProvider } from './PageAlerts';
 import ErrorBoundary from './components/ErrorBoundary';
-import { useFrameworkTranslations } from './useFrameworkTranslations';
 
 /**
  * The PageLayout is used as the container for the contents of the page.
@@ -17,21 +15,18 @@ import { useFrameworkTranslations } from './useFrameworkTranslations';
  * <Page>
  */
 export function PageLayout(props: { children?: ReactNode }) {
-  const [translations] = useFrameworkTranslations();
   return (
-    <ErrorBoundary message={translations.errorText}>
-      <PageAlertsProvider>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            height: '100%',
-            maxHeight: '100%',
-          }}
-        >
-          {props.children}
-        </div>
-      </PageAlertsProvider>
+    <ErrorBoundary message='Error'>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          height: '100%',
+          maxHeight: '100%',
+        }}
+      >
+        {props.children}
+      </div>
     </ErrorBoundary>
   );
 }

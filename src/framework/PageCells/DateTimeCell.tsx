@@ -1,29 +1,15 @@
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
-import { SplitItem } from '@patternfly/react-core/dist/dynamic/layouts/Split';
-import { Split } from '@patternfly/react-core/dist/dynamic/layouts/Split';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-
-export function DateCell(props: { value: number | string }) {
-  const date = new Date(props.value);
-  return (
-    <Split hasGutter>
-      <SplitItem>{date.toLocaleDateString()}</SplitItem>
-      <SplitItem>{date.toLocaleTimeString()}</SplitItem>
-    </Split>
-  );
-}
 
 export function SinceCell(props: {
   value: string | number | undefined | null;
   author?: string;
   onClick?: () => void;
-  t?: (t: string) => string;
 }) {
-  let { t } = props;
-  t = t ? t : (t: string) => t;
   const { author, onClick } = props;
   const [dateTime, setDateTime] = useState<string | null>(null);
+
   useEffect(() => {
     setDateTime(moment(props.value).fromNow());
     const timeout = setInterval(() => {
@@ -31,11 +17,15 @@ export function SinceCell(props: {
     }, 1000);
     return () => clearTimeout(timeout);
   }, [props.value]);
-  if (props.value === undefined) return <></>;
+
+  if (props.value === undefined) {
+    return <></>;
+  }
+
   return (
     <span style={{ whiteSpace: 'nowrap' }}>
       {dateTime}
-      {author && <span>&nbsp;{t('by')}&nbsp;</span>}
+      {author && <span>&nbsp;by&nbsp;</span>}
       {onClick ? (
         <Button variant='link' isInline onClick={onClick}>
           {author}

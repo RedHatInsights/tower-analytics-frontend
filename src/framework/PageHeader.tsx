@@ -1,5 +1,3 @@
-import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
-import { AlertActionCloseButton } from '@patternfly/react-core/dist/dynamic/components/Alert';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -26,7 +24,6 @@ import {
 import ExternalLinkAltIcon from '@patternfly/react-icons/dist/dynamic/icons/external-link-alt-icon';
 import OutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/outlined-question-circle-icon';
 import React, { CSSProperties, Fragment, ReactNode } from 'react';
-import { PageAlertsArrayContext, PageAlertsContext } from './PageAlerts';
 import './PageFramework.css';
 import { useBreakpoint } from './components/useBreakpoint';
 import { usePageNavigate } from './components/usePageNavigate';
@@ -87,7 +84,6 @@ export interface PageHeaderProps {
   controls?: ReactNode;
   headerActions?: ReactNode;
   footer?: ReactNode;
-  t?: (t: string) => string;
 }
 
 /**
@@ -126,8 +122,6 @@ export function PageHeader(props: PageHeaderProps) {
   const lg = useBreakpoint('lg');
   const xl = useBreakpoint('xl');
   const isMdOrLarger = useBreakpoint('md');
-  let { t } = props;
-  t = t ? t : (t: string) => t;
   return (
     <>
       {navigation && (
@@ -156,7 +150,7 @@ export function PageHeader(props: PageHeaderProps) {
                                         isInline
                                         style={{ whiteSpace: 'nowrap' }}
                                     >
-                                        {isSmLarger ? <span>{t('Documentation')}</span> : <span>{'Docs'}</span>}
+                                        {isSmLarger ? <span>Documentation</span> : <span>{'Docs'}</span>}
                                     </Button>
                                 </Bullseye>
                             </FlexItem>
@@ -207,7 +201,7 @@ export function PageHeader(props: PageHeaderProps) {
                               }
                               isInline
                             >
-                              {t('Documentation')}
+                              Documentation
                             </Button>
                           </StackItem>
                         )}
@@ -271,32 +265,6 @@ export function PageHeader(props: PageHeaderProps) {
           {footer}
         </Stack>
       </PageSection>
-      <PageAlertsContext.Consumer>
-        {(pageAlerts) => (
-          <PageAlertsArrayContext.Consumer>
-            {(pageAlertsArray) => {
-              if (pageAlertsArray.length === 0) return <></>;
-              return (
-                <div style={{ borderBottom: 'thin solid rgba(0, 0, 0, 0.12)' }}>
-                  {pageAlertsArray.map((alertProps, index) => (
-                    <Alert
-                      {...alertProps}
-                      key={alertProps.key ?? alertProps.id ?? index}
-                      actionClose={
-                        <AlertActionCloseButton
-                          onClose={() => pageAlerts.removeAlert(alertProps)}
-                        />
-                      }
-                      isInline
-                      isExpandable={!!alertProps.children}
-                    />
-                  ))}
-                </div>
-              );
-            }}
-          </PageAlertsArrayContext.Consumer>
-        )}
-      </PageAlertsContext.Consumer>
     </>
   );
 }

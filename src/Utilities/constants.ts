@@ -47,36 +47,6 @@ export const jobExplorer = {
   },
 };
 
-export const roi = {
-  defaultParams: {
-    status: ['successful'],
-    org_id: [],
-    cluster_id: [],
-    template_id: [],
-    inventory_id: [],
-    quick_date_range: 'roi_last_year',
-    job_type: ['job'],
-    sort_options: 'template_productivity_score',
-    sort_order: 'desc',
-    start_date: undefined,
-    end_date: undefined,
-    limit: '6',
-    offset: '0',
-    only_root_workflows_and_standalone_jobs: true,
-    attributes: [
-      'elapsed',
-      'host_count',
-      'total_count',
-      'total_org_count',
-      'total_cluster_count',
-      'successful_hosts_total',
-      'successful_elapsed_total',
-    ],
-    group_by: 'template',
-    group_by_time: false,
-  },
-};
-
 export const organizationStatistics = {
   defaultParams: {
     status: [],
