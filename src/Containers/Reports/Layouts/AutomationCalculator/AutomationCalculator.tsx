@@ -94,16 +94,19 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const readData = endpointFunctionMap(dataEndpoint);
   const readOptions = endpointFunctionMap(optionsEndpoint);
   const defaultParams = reportDefaultParams(slug);
+
   const navigate = useNavigate();
 
-  const [costManual, setCostManual] = useState('');
-  const [costAutomation, setCostAutomation] = useState('');
+  const [costManual, setCostManual] = useState<number | string | undefined>('');
+  const [costAutomation, setCostAutomation] = useState<
+    number | string | undefined
+  >('');
   const [isMoney, setIsMoney] = useState(true);
   const { queryParams, setFromToolbar, setFromPagination } =
     useQueryParams(defaultParams);
 
   const mapApi = ({ legend = [] }) => {
-    return legend.map((el) => ({
+    return legend.map((el: { [key: string]: number }) => ({
       ...el,
       delta: 0,
       avgRunTime: el.manual_effort_minutes * 60 || 3600,
@@ -112,21 +115,24 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       enabled: el.template_weigh_in,
     }));
   };
-  const { result: options, request: fetchOptions } = useRequest(readOptions, {
-    sort_options: isMoney
-      ? [
-          {
-            key: defaultParams.sort_options,
-            value: defaultParams.sort_options,
-          },
-        ]
-      : [
-          {
-            key: 'successful_saved_hours',
-            value: 'successful_saved_hours',
-          },
-        ],
-  });
+  const { result: options, request: fetchOptions } = useRequest(
+    readOptions as any,
+    {
+      sort_options: isMoney
+        ? [
+            {
+              key: defaultParams.sort_options,
+              value: defaultParams.sort_options,
+            },
+          ]
+        : [
+            {
+              key: 'successful_saved_hours',
+              value: 'successful_saved_hours',
+            },
+          ],
+    }
+  );
 
   const {
     request: fetchData,
@@ -134,7 +140,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     ...api
   } = useRequest(
     async (params) => {
-      const response = await readData(params);
+      const response = (await readData(params as any)) as any;
       return {
         ...response,
         items: updateDeltaCost(
@@ -158,10 +164,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       items,
     });
   };
+
   const getROISaveData = (
     items: any[],
-    manualCost?: number = costManual,
-    automationCost?: number = costAutomation
+    manualCost = costManual,
+    automationCost = costAutomation
   ) => {
     const updatedDataApi = items.map((el) => ({
       template_id: el.id,
@@ -178,14 +185,14 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const dispatch = useDispatch();
 
   const update = async () => {
-    const res = await readData(queryParams);
+    const res = await readData(queryParams as any);
     api.result.monetary_gain_current_page = res.monetary_gain_current_page;
     api.result.monetary_gain_other_pages = res.monetary_gain_other_pages;
     api.result.successful_hosts_saved_hours_current_page =
       res.successful_hosts_saved_hours_current_page;
     api.result.successful_hosts_saved_hours_other_pages =
       res.successful_hosts_saved_hours_other_pages;
-    setValue(mapApi(res.meta));
+    setValue(mapApi(res.meta as any));
     return res;
   };
 
@@ -202,7 +209,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           api.result.items,
           hourly_manual_labor_cost,
           hourly_automation_cost
-        )
+        ) as any
       );
     } catch {
       dispatch(
@@ -244,7 +251,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       }
     });
     try {
-      await saveROI(getROISaveData(updatedData), dispatch);
+      await saveROI(getROISaveData(updatedData) as any);
     } catch {
       dispatch(
         addNotification({
@@ -268,7 +275,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           el.id === id ? { ...el, enabled: value } : el
         );
     try {
-      await saveROI(getROISaveData(updatedData));
+      await saveROI(getROISaveData(updatedData) as any);
     } catch {
       dispatch(
         addNotification({
@@ -334,8 +341,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
    * Get data from API depending on the queryParam.
    */
   useEffect(() => {
-    fetchOptions(queryParams);
-    fetchData(queryParams);
+    (fetchOptions as (any) => void)(queryParams);
+    (fetchData as (any) => void)(queryParams);
   }, [queryParams]);
   /**
    * Function to navigate to the job explorer page
@@ -363,7 +370,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       options.sort_options?.find(({ key }) => key === queryParams.sort_options)
         ?.value || 'Label Y',
     themeColor: isMoney ? 'green' : 'blue',
-    xTickFormat: getDateFormatByGranularity(queryParams.granularity),
+    xTickFormat: getDateFormatByGranularity(queryParams.granularity as any),
   };
 
   const formattedValue = (key: string, value: number) => {
@@ -396,7 +403,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       ' for ' +
       datum.name +
       ': ' +
-      formattedValue(queryParams.sort_options, datum.y);
+      formattedValue(queryParams.sort_options as any, datum.y);
     return tooltip;
   };
 
@@ -454,16 +461,18 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         </SpinnerDiv>
       ) : filterDisabled(api?.result?.items).length > 0 ? (
         <Chart
-          schema={hydrateSchema(schema)({
+          schema={hydrateSchema(schema as any)({
             themeColor: chartParams.themeColor,
-            label: chartParams.label,
-            tooltip: chartParams.tooltip,
+            label: chartParams.label as any,
+            tooltip: chartParams.tooltip as any,
             field: chartParams.field,
-            yAxis: chartParams.yAxis,
-          })}
-          data={{
-            items: filterDisabled(api.result.items),
-          }}
+            yAxis: (chartParams as any).yAxis as any,
+          } as any)}
+          data={
+            {
+              items: filterDisabled(api.result.items),
+            } as any
+          }
           specificFunctions={{
             labelFormat: {
               customTooltipFormatting,
@@ -478,7 +487,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           }
           showButton={true}
           label={'Clear all filters'}
-          onButtonClick={() => setFromToolbar(undefined, undefined)}
+          onButtonClick={() => setFromToolbar(undefined, undefined) as any}
         />
       )}
     </Card>
@@ -498,9 +507,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         <Stack>
           <StackItem>
             <CalculationCost
-              costManual={costManual}
+              costManual={costManual as any}
               setFromCalculation={updateCalculationValues}
-              costAutomation={costAutomation}
+              costAutomation={costAutomation as any}
               readOnly={isReadOnly(api)}
             />
           </StackItem>
@@ -517,50 +526,54 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       <Card>
         <CardBody>
           <FilterableToolbar
-            categories={options}
-            filters={queryParams}
+            categories={options as any}
+            filters={queryParams as any}
             setFilters={setFromToolbar}
-            pagination={
+            pagination={() => (
               <Pagination
                 count={api.result.meta.count}
                 perPageOptions={perPageOptions}
                 params={{
-                  limit: +queryParams.limit,
-                  offset: +queryParams.offset,
+                  limit: +(queryParams?.limit as unknown as number),
+                  offset: +(queryParams?.offset as unknown as number),
                 }}
-                setPagination={setFromPagination}
+                setPagination={setFromPagination as any}
                 isCompact
               />
-            }
+            )}
             additionalControls={[
-              <DownloadButton
-                key='download-button'
-                slug={slug}
-                isMoney={isMoney}
-                name={name}
-                description={description}
-                endpointUrl={dataEndpoint}
-                queryParams={queryParams}
-                selectOptions={options}
-                y={chartParams.y}
-                label={chartParams.label}
-                xTickFormat={chartParams.xTickFormat}
-                totalPages={Math.ceil(
-                  api.result.meta.count / queryParams.limit
-                )}
-                pageLimit={queryParams.limit}
-                sortOptions={chartParams.y}
-                sortOrder={queryParams.sort_order}
-                startDate={queryParams.start_date}
-                endDate={queryParams.end_date}
-                dateRange={queryParams.quick_date_range}
-                inputs={{
-                  costManual,
-                  costAutomation,
-                  totalSavings: computeTotalSavings(),
-                  currentPageSavings: computeCurrentPageSavings(),
-                }}
-              />,
+              () => (
+                <DownloadButton
+                  key='download-button'
+                  slug={slug}
+                  isMoney={isMoney}
+                  name={name}
+                  description={description}
+                  endpointUrl={dataEndpoint}
+                  queryParams={queryParams as any}
+                  selectOptions={options as any}
+                  y={chartParams.y as any}
+                  label={chartParams.label as any}
+                  xTickFormat={chartParams.xTickFormat}
+                  totalPages={Math.ceil(
+                    api.result.meta.count / (queryParams.limit as any)
+                  )}
+                  pageLimit={queryParams.limit as any}
+                  sortOptions={chartParams.y as any}
+                  sortOrder={queryParams.sort_order as any}
+                  startDate={queryParams.start_date as any}
+                  endDate={queryParams.end_date as any}
+                  dateRange={queryParams.quick_date_range as any}
+                  inputs={
+                    {
+                      costManual,
+                      costAutomation,
+                      totalSavings: computeTotalSavings(),
+                      currentPageSavings: computeCurrentPageSavings(),
+                    } as any
+                  }
+                />
+              ),
             ]}
           />
           <Grid hasGutter>
@@ -576,12 +589,14 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 <TemplatesTable
                   navigateToJobExplorer={navigateToJobExplorer}
                   data={api.result.items}
-                  variableRow={options.sort_options.find(
-                    ({ key }) => key === queryParams.sort_options
-                  )}
+                  variableRow={
+                    options.sort_options.find(
+                      ({ key }) => key === queryParams.sort_options
+                    ) as any
+                  }
                   setDataRunTime={setDataRunTime}
                   setEnabled={setEnabled}
-                  getSortParams={getSortParams}
+                  getSortParams={getSortParams as any}
                   readOnly={isReadOnly(api)}
                   isMoney={isMoney}
                 />
@@ -593,11 +608,13 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           <Pagination
             count={api.result.meta.count}
             perPageOptions={perPageOptions}
-            params={{
-              limit: +queryParams.limit,
-              offset: +queryParams.offset,
-            }}
-            setPagination={setFromPagination}
+            params={
+              {
+                limit: +(queryParams.limit as any),
+                offset: +(queryParams.offset as any),
+              } as any
+            }
+            setPagination={setFromPagination as any}
             variant={PaginationVariant.bottom}
           />
         </CardFooter>
@@ -605,8 +622,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     ) : (
       <>
         <FilterableToolbar
-          categories={options}
-          filters={queryParams}
+          categories={options as any}
+          filters={queryParams as any}
           setFilters={setFromToolbar}
         />
         <Grid hasGutter>
@@ -616,7 +633,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       </>
     );
   return (
-    <ApiStatusWrapper api={api} customLoading={true} customEmptyState={true}>
+    <ApiStatusWrapper
+      api={api as any}
+      customLoading={true}
+      customEmptyState={true}
+    >
       {renderContents()}
     </ApiStatusWrapper>
   );

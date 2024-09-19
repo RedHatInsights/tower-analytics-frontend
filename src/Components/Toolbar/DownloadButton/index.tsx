@@ -31,7 +31,7 @@ import useOptionsData from '../DownloadButton/useOptionsData';
 import { EmailDetailsProps } from '../types';
 
 interface Props {
-  settingsNamespace: string;
+  settingsNamespace?: string;
   slug: string;
   isMoney: boolean;
   name: string;
@@ -42,16 +42,16 @@ interface Props {
   y: string;
   label: string;
   xTickFormat: string;
-  chartType: string;
+  chartType?: string;
   totalPages: number;
   pageLimit: number;
   sortOptions: string;
   sortOrder: 'asc' | 'desc';
-  dateGranularity: string;
+  dateGranularity?: string;
   startDate: string;
   endDate: string;
   dateRange: string;
-  adoptionRateType: string;
+  adoptionRateType?: string;
   inputs?: { automationCost: number; manualCost: number };
 }
 
