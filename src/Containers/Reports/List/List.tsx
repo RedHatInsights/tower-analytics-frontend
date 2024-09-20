@@ -147,6 +147,27 @@ const List: FunctionComponent<Record<string, never>> = () => {
                         actions={{
                           actions: (
                             <>
+                             {report.tags.map(
+                                (
+                                  tagKey: TagName,
+                                  idx: React.Key | null | undefined
+                                ) => {
+                                  const tag = TAGS.find(
+                                    (t) => t.key === tagKey
+                                  );
+                                  if (tag) {
+                                    return (
+                                      <Tooltip
+                                        key={`tooltip_${idx as string}`}
+                                        position={TooltipPosition.top}
+                                        content={tag.description}
+                                      >
+                                        <Label key={idx}>{tag.name}</Label>
+                                      </Tooltip>
+                                    );
+                                  }
+                                }
+                              )}
                               <Button
                                 variant={ButtonVariant.plain}
                                 aria-label='Previous report'
@@ -185,35 +206,6 @@ const List: FunctionComponent<Record<string, never>> = () => {
                               >
                                 <AngleRightIcon />
                               </Button>
-                            </>
-                          ),
-                          hasNoOffset: false,
-                          className: undefined,
-                        }}
-                        actions={{
-                          actions: (
-                            <>
-                              {report.tags.map(
-                                (
-                                  tagKey: TagName,
-                                  idx: React.Key | null | undefined
-                                ) => {
-                                  const tag = TAGS.find(
-                                    (t) => t.key === tagKey
-                                  );
-                                  if (tag) {
-                                    return (
-                                      <Tooltip
-                                        key={`tooltip_${idx as string}`}
-                                        position={TooltipPosition.top}
-                                        content={tag.description}
-                                      >
-                                        <Label key={idx}>{tag.name}</Label>
-                                      </Tooltip>
-                                    );
-                                  }
-                                }
-                              )}
                             </>
                           ),
                           hasNoOffset: false,
