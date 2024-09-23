@@ -11,7 +11,6 @@ import { TextArea } from '@patternfly/react-core/dist/dynamic/components/TextAre
 import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
 import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
-import ExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
 import React, { useEffect, useState } from 'react';
 import { readRbacGroups, readRbacPrincipals } from '../../../../../Api';
 import { today } from '../../../../../Utilities/helpers';
@@ -293,30 +292,6 @@ const EmailDetails = ({
           </FormHelperText>
         )}
       </FormGroup>
-      {/*<FormGroup label="EULA Acknowledgement" fieldId="eula-field">*/}
-      {/*  <Checkbox*/}
-      {/*    isChecked={eula}*/}
-      {/*    aria-label="card checkbox"*/}
-      {/*    id="eula"*/}
-      {/*    name="eula"*/}
-      {/*    onChange={(newValue) =>*/}
-      {/*      dispatchReducer({*/}
-      {/*        type: actions.SET_EULA,*/}
-      {/*        value: newValue,*/}
-      {/*      })*/}
-      {/*    }*/}
-      {/*  />*/}
-      {/*  {additionalRecipients && !eula && (*/}
-      {/*    <FormHelperText*/}
-      {/*      isError*/}
-      {/*      icon={<ExclamationCircleIcon />}*/}
-      {/*      isHidden={additionalRecipients === '' && !eula}*/}
-      {/*    >*/}
-      {/*      Please confirm the EULA acknowledgement if external e-mails are*/}
-      {/*      being used.*/}
-      {/*    </FormHelperText>*/}
-      {/*  )}*/}
-      {/*</FormGroup>*/}
       <FormGroup label='Subject' fieldId='subject-field'>
         <TextInput
           placeholder='Report is ready to be downloaded'

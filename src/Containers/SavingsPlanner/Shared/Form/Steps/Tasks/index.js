@@ -48,9 +48,6 @@ const Tasks = ({ tasks, dispatch }) => {
 
   const [taskToAdd, setTaskToAdd] = useState('');
 
-  const [liveText, setLiveText] = useState('');
-  const [id, setId] = useState('');
-
   const appendTask = () => {
     const trimmedTask = taskToAdd.trim();
     if (trimmedTask !== '') {
@@ -152,9 +149,6 @@ const Tasks = ({ tasks, dispatch }) => {
           </DataList>
         </TaskSection>
       )}
-      <div className='pf-screen-reader' aria-live='assertive'>
-        {liveText}
-      </div>
     </>
   );
 };
