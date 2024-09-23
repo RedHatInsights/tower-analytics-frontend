@@ -2,7 +2,6 @@ import {
   Card,
   CardBody,
   CardFooter,
-  CardHeader,
   CardTitle,
 } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
@@ -14,10 +13,6 @@ import styled from 'styled-components';
 import { BaseReportProps } from '../../Layouts/types';
 import { TAGS } from '../../Shared/constants';
 import paths from '../../paths';
-
-const SCardTitle = styled(CardTitle)`
-  word-break: break-word;
-`;
 
 const Small = styled.small`
   display: block;
@@ -45,23 +40,21 @@ const ListItem: FunctionComponent<Props> = ({
   return (
     <Card
       data-cy={slug}
-      isSelectable
       isSelected={selected === slug}
       onClick={() => {
         setSelected(slug);
       }}
+      className={
+        selected === slug
+          ? 'pf-m-selectable-raised pf-m-selected-raised'
+          : 'pf-m-selectable-raised'
+      }
     >
-      <CardHeader
-        actions={
-          <>
-            <SCardTitle onClick={(event) => event.stopPropagation()}>
-              <Tooltip content={<div>Click to go to report details</div>}>
-                <Link to={paths.getDetails(slug)}>{name}</Link>
-              </Tooltip>
-            </SCardTitle>
-          </>
-        }
-      />
+      <CardTitle>
+        <Tooltip content={<div>Click to go to report details</div>}>
+          <Link to={paths.getDetails(slug)}>{name}</Link>
+        </Tooltip>
+      </CardTitle>
       <CardBody>
         {description ? (
           <Tooltip
