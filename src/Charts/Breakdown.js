@@ -44,11 +44,11 @@ function title(str) {
 }
 
 const Breakdown = ({ categoryCount, categoryColor, showPercent = false }) => {
-  const totalCount = Object.values(categoryCount).reduce(
+  const totalCount = Object.values(categoryCount || {}).reduce(
     (accumulated, currentVal) => accumulated + currentVal
   );
 
-  const sortedCategories = Object.keys(categoryCount)
+  const sortedCategories = Object.keys(categoryCount || {})
     .filter((category) => categoryCount[category] > 0)
     .sort((a, b) => {
       if (categoryCount[a] < categoryCount[b]) {
@@ -124,7 +124,7 @@ const Breakdown = ({ categoryCount, categoryColor, showPercent = false }) => {
 
 Breakdown.propTypes = {
   categoryColor: PropTypes.object.isRequired,
-  categoryCount: PropTypes.object.isRequired,
+  categoryCount: PropTypes.object,
   showPercent: PropTypes.bool,
 };
 

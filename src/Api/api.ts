@@ -139,7 +139,7 @@ const mungeData = async (promise, params) => {
   };
 };
 
-export const preflightRequest = (): Promise<Response> => {
+export const preflightRequest = (): Promise<ApiJson> => {
   return authenticatedFetch(Endpoint.preflight, {
     method: 'GET',
   }).then(handleResponse);
