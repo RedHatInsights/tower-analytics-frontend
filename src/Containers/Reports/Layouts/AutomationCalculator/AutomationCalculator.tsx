@@ -366,9 +366,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     y: queryParams.sort_options,
     tooltip: 'Savings for',
     field: queryParams.sort_options,
-    label:
-      options.sort_options?.find(({ key }) => key === queryParams.sort_options)
-        ?.value || 'Label Y',
+    label: (options.sort_options?.find(
+      ({ key }) => key === queryParams.sort_options
+    )?.value || 'Label Y') as string,
     themeColor: isMoney ? 'green' : 'blue',
     xTickFormat: getDateFormatByGranularity(queryParams.granularity as any),
   };
@@ -397,15 +397,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     }
     return val;
   };
-  const customTooltipFormatting = ({ datum }) => {
-    const tooltip =
-      chartParams.label +
-      ' for ' +
-      datum.name +
-      ': ' +
-      formattedValue(queryParams.sort_options as any, datum.y);
-    return tooltip;
-  };
+  const customTooltipFormatting = ({ datum }) =>
+    `${chartParams.label} for ${datum.name}: ${formattedValue(
+      queryParams.sort_options as any,
+      datum.y
+    )}`;
 
   const isReadOnly = (api) => {
     return !api.result.rbac?.perms?.all && !api.result.rbac?.perms?.write;
@@ -466,7 +462,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             label: chartParams.label as any,
             tooltip: chartParams.tooltip as any,
             field: chartParams.field,
-            yAxis: (chartParams as any).yAxis as any,
+            yAxis: (chartParams as any).yAxis,
           } as any)}
           data={
             {

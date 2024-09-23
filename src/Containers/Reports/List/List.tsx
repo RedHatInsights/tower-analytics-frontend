@@ -40,6 +40,7 @@ export interface Report {
   description: string;
   tags: any[];
   tableHeaders: string[];
+  schema;
 }
 
 const List: FunctionComponent<Record<string, never>> = () => {
@@ -61,21 +62,23 @@ const List: FunctionComponent<Record<string, never>> = () => {
     isSuccess: isSuccess,
     error: error,
     request: fetchReports,
-  } = useRequest(readReports, { reports: [] });
+  } = useRequest(readReports as any, { reports: [] });
 
   const optionsQueryParams = useQueryParams(reportDefaultParams('reports'));
   const { result: options, request: fetchOptions } = useRequest(
-    reportOptions,
+    reportOptions as any,
     {}
   );
 
   useEffect(() => {
-    fetchReports(queryParams);
-    fetchOptions(optionsQueryParams.queryParams);
+    (fetchReports as any)(queryParams);
+    (fetchOptions as any)(optionsQueryParams.queryParams);
   }, [queryParams]);
 
   const reports = data as Report[];
-  const selected = queryParams.selected_report || reports[0]?.slug || '';
+  const selected = (queryParams.selected_report ||
+    reports[0]?.slug ||
+    '') as string;
   const setSelected = (slug: string) => setFromToolbar('selected_report', slug);
 
   const {
@@ -117,8 +120,8 @@ const List: FunctionComponent<Record<string, never>> = () => {
     <>
       <PageHeader data-cy={'header-all_reports'} title={'Reports'} />
       <FilterableToolbar
-        categories={options}
-        filters={queryParams}
+        categories={options as any}
+        filters={queryParams as any}
         setFilters={setFromToolbar}
       />
       {isSuccess && reports.length > 0 && isReportSuccess && (
@@ -147,7 +150,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                         actions={{
                           actions: (
                             <>
-                             {report.tags.map(
+                              {report.tags.map(
                                 (
                                   tagKey: TagName,
                                   idx: React.Key | null | undefined

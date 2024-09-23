@@ -271,7 +271,7 @@ const DownloadButton: FC<Props> = ({
     },
   ];
 
-  const onStepChange = (step: { id: React.SetStateAction<number> }) => {
+  const onStepChange = (step: { id: number }) => {
     setStepIdSelected(stepIdSelected < step?.id ? step.id : stepIdSelected);
   };
 

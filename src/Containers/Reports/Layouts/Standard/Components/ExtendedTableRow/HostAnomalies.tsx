@@ -5,6 +5,7 @@ import { DescriptionListGroup } from '@patternfly/react-core/dist/dynamic/compon
 import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
 import React from 'react';
 import percentageFormatter from '../../../../../../Utilities/percentageFormatter';
+import { ExpandedTableRowComponent } from './types';
 
 const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
   const expandedInfo = (item: any) => {
@@ -19,11 +20,11 @@ const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
       },
       {
         label: 'Slow Hosts Percentage',
-        value: `${percentageFormatter(item.slow_hosts_percentage)}%` ?? 0,
+        value: `${percentageFormatter(item.slow_hosts_percentage)}%`,
       },
       {
         label: 'Template Success Rate',
-        value: `${percentageFormatter(item.template_success_rate)}%` ?? 0,
+        value: `${percentageFormatter(item.template_success_rate)}%`,
       },
     ];
   };
