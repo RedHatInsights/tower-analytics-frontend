@@ -35,8 +35,8 @@ const QueryParamsProvider: FunctionComponent<Props> = ({ children }) => {
     const q = removeDefault
       ? {
           ...queryParams,
-          [namespace]: newQueryParams,
           [DEFAULT_NAMESPACE]: {},
+          [namespace]: newQueryParams,
         }
       : {
           ...queryParams,
