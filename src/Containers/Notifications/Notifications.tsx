@@ -6,6 +6,8 @@ import { FormSelectOption } from '@patternfly/react-core/dist/dynamic/components
 import { NotificationDrawer } from '@patternfly/react-core/dist/dynamic/components/NotificationDrawer';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
 import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
 import React, { FC, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Params, readClusters, readNotifications } from '../../Api/';
@@ -23,29 +25,6 @@ const NCardTitle = styled(CardTitle)`
 
   @media screen and (max-width: 1035px) {
     display: block;
-  }
-`;
-
-const DropdownGroup = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-
-  @media screen and (max-width: 1035px) {
-    display: block;
-  }
-
-  select {
-    margin: 0 10px;
-    width: 150px;
-
-    @media screen and (max-width: 1035px) {
-      margin: 10px 10px 0 0;
-    }
-
-    @media screen and (max-width: 865px) {
-      width: 100%;
-    }
   }
 `;
 
@@ -151,49 +130,53 @@ const Notifications: FC<Record<string, never>> = () => {
         <PageSection>
           <Card>
             <NCardTitle>
-              <DropdownGroup>
-                <FormSelect
-                  name='selectedCluster'
-                  value={selectedCluster}
-                  onChange={(_event, value) => {
-                    setSelectedCluster(value);
-                    setId(value);
-                    setFromPagination(0);
-                  }}
-                  aria-label='Select Cluster'
-                >
-                  {formatClusterName(clustersData).map(
-                    ({ value, label, disabled }, index) => (
-                      <FormSelectOption
-                        isDisabled={disabled}
-                        key={index}
-                        value={value}
-                        label={label}
-                      />
-                    )
-                  )}
-                </FormSelect>
-                <FormSelect
-                  name='selectedNotification'
-                  value={severity || ''}
-                  onChange={(_event, value) => {
-                    setSeverity(value);
-                    setFromPagination(0);
-                  }}
-                  aria-label='Select Notification Type'
-                >
-                  {notificationOptions.map(
-                    ({ disabled, value, label }, index) => (
-                      <FormSelectOption
-                        isDisabled={disabled}
-                        key={index}
-                        value={value}
-                        label={label}
-                      />
-                    )
-                  )}
-                </FormSelect>
-              </DropdownGroup>
+              <Flex direction={{ default: 'row' }}>
+                <FlexItem>
+                  <FormSelect
+                    name='selectedCluster'
+                    value={selectedCluster}
+                    onChange={(_event, value) => {
+                      setSelectedCluster(value);
+                      setId(value);
+                      setFromPagination(0);
+                    }}
+                    aria-label='Select Cluster'
+                  >
+                    {formatClusterName(clustersData).map(
+                      ({ value, label, disabled }, index) => (
+                        <FormSelectOption
+                          isDisabled={disabled}
+                          key={index}
+                          value={value}
+                          label={label}
+                        />
+                      )
+                    )}
+                  </FormSelect>
+                </FlexItem>
+                <FlexItem>
+                  <FormSelect
+                    name='selectedNotification'
+                    value={severity || ''}
+                    onChange={(_event, value) => {
+                      setSeverity(value);
+                      setFromPagination(0);
+                    }}
+                    aria-label='Select Notification Type'
+                  >
+                    {notificationOptions.map(
+                      ({ disabled, value, label }, index) => (
+                        <FormSelectOption
+                          isDisabled={disabled}
+                          key={index}
+                          value={value}
+                          label={label}
+                        />
+                      )
+                    )}
+                  </FormSelect>
+                </FlexItem>
+              </Flex>
               <Pagination
                 count={meta?.count}
                 params={{
