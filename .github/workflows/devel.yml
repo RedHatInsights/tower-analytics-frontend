@@ -1,0 +1,24 @@
+name: Deployed CI
+
+on:
+  push:
+    branches: [devel]
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+    name: Syncing branches
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Opening pull request
+        id: pull
+        uses: tretuna/sync-branches@1.4.0
+        with:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          FROM_BRANCH: 'devel'
+          TO_BRANCH: 'master'
+          PULL_REQUEST_AUTO_MERGE_METHOD: 'rebase'
+          PULL_REQUEST_TITLE: 'Sync devel -> master'
+          PULL_REQUEST_BODY: 'Automatically syncing devel with master'
