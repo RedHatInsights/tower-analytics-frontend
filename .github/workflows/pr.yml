@@ -1,8 +1,8 @@
-name: CI for PRs
+name: 'CI for PRs'
 
 on:
   pull_request:
-    branches: [ devel ]
+    branches: [devel]
 
 jobs:
   pr:
@@ -15,8 +15,12 @@ jobs:
           node-version: '18'
           cache: 'npm'
 
-      - name: Install modules
-        run: npm install
+      - name: 'Install modules'
+        run: |
+          npm install
 
-      - name: Check the code builds & lints
+          # fail if npm install had to change package-lock.json
+          git diff --exit-code package-lock.json
+
+      - name: 'Check the code builds & lints'
         run: npm run verify
