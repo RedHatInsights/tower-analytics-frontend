@@ -1,13 +1,10 @@
+import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
+import CheckCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/check-circle-icon';
+import ClockIcon from '@patternfly/react-icons/dist/dynamic/icons/clock-icon';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
+import ExclamationTriangleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-triangle-icon';
+import SyncAltIcon from '@patternfly/react-icons/dist/dynamic/icons/sync-alt-icon';
 import React, { FunctionComponent } from 'react';
-import { Label } from '@patternfly/react-core';
-import {
-  CheckCircleIcon,
-  ExclamationCircleIcon,
-  ClockIcon,
-  SyncAltIcon,
-  ExclamationTriangleIcon,
-} from '@patternfly/react-icons';
-
 import { capitalize } from '../Utilities/helpers';
 
 interface Props {
@@ -60,7 +57,7 @@ const JobStatus: FunctionComponent<Props> = ({ status }) => {
 
   return (
     <Label
-      variant="outline"
+      variant='outline'
       color={getColor()}
       icon={getIcon()}
       style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}

@@ -1,31 +1,28 @@
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { Gallery } from '@patternfly/react-core/dist/dynamic/layouts/Gallery';
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
 import { useLocation, useNavigate } from 'react-router-dom';
-import {
-  Button,
-  Gallery,
-  PageSection as FrameworkPageSection,
-  PaginationVariant,
-} from '@patternfly/react-core';
-import { PageHeader, PageLayout } from '@ansible/ansible-ui-framework';
-
+import styled from 'styled-components';
 import { deletePlans, readPlanOptions, readPlans } from '../../../Api/';
-import FilterableToolbar from '../../../Components/Toolbar';
+import AlertModal from '../../../Components/AlertModal';
 import ApiErrorState from '../../../Components/ApiStatus/ApiErrorState';
 import LoadingState from '../../../Components/ApiStatus/LoadingState';
 import EmptyList from '../../../Components/EmptyList';
-import Pagination from '../../../Components/Pagination';
-import PlanCard from './ListItem';
-import { useQueryParams, createUrl } from '../../../QueryParams/';
-import { savingsPlanner } from '../../../Utilities/constants';
-
-import ToolbarDeleteButton from '../../../Components/Toolbar/ToolbarDeleteButton';
-import useSelected from '../../../Utilities/useSelected';
-import useRequest, { useDeleteItems } from '../../../Utilities/useRequest';
 import ErrorDetail from '../../../Components/ErrorDetail';
-import AlertModal from '../../../Components/AlertModal';
+import Pagination from '../../../Components/Pagination';
+import FilterableToolbar from '../../../Components/Toolbar';
+import ToolbarDeleteButton from '../../../Components/Toolbar/ToolbarDeleteButton';
+import { createUrl, useQueryParams } from '../../../QueryParams/';
+import { savingsPlanner } from '../../../Utilities/constants';
+import useRequest, { useDeleteItems } from '../../../Utilities/useRequest';
+import useSelected from '../../../Utilities/useSelected';
+import { PageHeader } from '../../../framework/PageHeader';
+import { PageLayout } from '../../../framework/PageLayout';
+import PlanCard from './ListItem';
 
-const PageSection = styled(FrameworkPageSection)`
+const SPageSection = styled(PageSection)`
   height: calc(100vh - 290px);
 `;
 
@@ -157,10 +154,10 @@ const List = () => {
           ...(canWrite
             ? [
                 <Button
-                  key="add-plan-button"
+                  key='add-plan-button'
                   data-cy={'add-plan-button'}
-                  variant="primary"
-                  aria-label="Add plan"
+                  variant='primary'
+                  aria-label='Add plan'
                   onClick={() => {
                     navigate(createUrl(`${pathname}/add`));
                   }}
@@ -171,7 +168,7 @@ const List = () => {
             : []),
           canWrite && isSuccess && data.length > 0 && (
             <ToolbarDeleteButton
-              key="delete-plan-button"
+              key='delete-plan-button'
               data-cy={'delete-plan-button'}
               onDelete={handleDelete}
               itemsToDelete={data.filter((d) => selected.includes(d.id))}
@@ -193,7 +190,7 @@ const List = () => {
           ) : null
         }
       />
-      <PageSection hasOverflowScroll>{renderContent()}</PageSection>
+      <SPageSection hasOverflowScroll>{renderContent()}</SPageSection>
       {data.length > 0 && !(itemsIsLoading || deleteLoading) && (
         <Footer>
           <Pagination
@@ -213,7 +210,7 @@ const List = () => {
           isOpen={deletionError}
           onClose={clearDeletionError}
           title={'Error'}
-          variant="error"
+          variant='error'
         >
           {'Failed to delete one or more plans.'}
           <ErrorDetail error={deletionError.detail} />

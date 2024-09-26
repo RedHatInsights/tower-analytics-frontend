@@ -1,10 +1,12 @@
+import { Radio } from '@patternfly/react-core/dist/dynamic/components/Radio';
+import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import React from 'react';
-import { actions } from '../../constants';
-import { Grid, GridItem, Radio, Title } from '@patternfly/react-core';
+import { ValidFeatureFlags, useFeatureFlag } from '../../../../../FeatureFlags';
 import { EmailDetailsProps, TypeValue } from '../../../types';
-import { useFeatureFlag, ValidFeatureFlags } from '../../../../../FeatureFlags';
+import { actions } from '../../constants';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const ExportOptions = ({
   formData,
   dispatchReducer,
@@ -16,7 +18,7 @@ const ExportOptions = ({
 
   return (
     <>
-      <Title size="md" headingLevel="h4">
+      <Title size='md' headingLevel='h4'>
         {'Select export format:'}
       </Title>
       <Grid sm={2}>
@@ -29,10 +31,10 @@ const ExportOptions = ({
               })
             }
             isChecked={downloadType === 'pdf'}
-            name="optionSelected"
-            label="PDF"
-            id="pdf-radio"
-            aria-label="pdf-radio"
+            name='optionSelected'
+            label='PDF'
+            id='pdf-radio'
+            aria-label='pdf-radio'
           />
         </GridItem>
         {useFeatureFlag(ValidFeatureFlags.sendEmail) && (
@@ -45,10 +47,10 @@ const ExportOptions = ({
                 })
               }
               isChecked={downloadType === 'email'}
-              name="optionSelected"
-              label="E-mail"
-              id="email-radio"
-              aria-label="email-radio"
+              name='optionSelected'
+              label='E-mail'
+              id='email-radio'
+              aria-label='email-radio'
             />
           </GridItem>
         )}

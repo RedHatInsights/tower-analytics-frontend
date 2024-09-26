@@ -1,14 +1,12 @@
-import React from 'react';
+import { Modal } from '@patternfly/react-core/dist/dynamic/components/Modal';
+import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
+import PFCheckCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/check-circle-icon';
+import PFExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
+import PFExclamationTriangleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-triangle-icon';
+import PFInfoCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/info-circle-icon';
+import PFTimesCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/times-circle-icon';
 import PropTypes from 'prop-types';
-
-import { Modal, Title } from '@patternfly/react-core';
-import {
-  CheckCircleIcon as PFCheckCircleIcon,
-  ExclamationCircleIcon as PFExclamationCircleIcon,
-  ExclamationTriangleIcon as PFExclamationTriangleIcon,
-  InfoCircleIcon as PFInfoCircleIcon,
-  TimesCircleIcon as PFTimesCircleIcon,
-} from '@patternfly/react-icons';
+import React from 'react';
 import styled from 'styled-components';
 
 const ExclamationCircleIcon = styled(PFExclamationCircleIcon)`
@@ -47,17 +45,17 @@ const AlertModal = ({
   ...props
 }) => {
   const variantIcons = {
-    danger: <ExclamationCircleIcon size="lg" />,
-    error: <TimesCircleIcon size="lg" />,
-    info: <InfoCircleIcon size="lg" />,
-    success: <CheckCircleIcon size="lg" />,
-    warning: <ExclamationTriangleIcon size="lg" />,
+    danger: <ExclamationCircleIcon size='lg' />,
+    error: <TimesCircleIcon size='lg' />,
+    info: <InfoCircleIcon size='lg' />,
+    success: <CheckCircleIcon size='lg' />,
+    warning: <ExclamationTriangleIcon size='lg' />,
   };
 
   const customHeader = (
     <Header>
       {variant ? variantIcons[variant] : null}
-      <Title id="alert-modal-header-label" size="2xl" headingLevel="h2">
+      <Title id='alert-modal-header-label' size='2xl' headingLevel='h2'>
         {title}
       </Title>
     </Header>
@@ -67,9 +65,9 @@ const AlertModal = ({
     <Modal
       header={customHeader}
       aria-label={label}
-      aria-labelledby="alert-modal-header-label"
+      aria-labelledby='alert-modal-header-label'
       isOpen={!!isOpen}
-      variant="small"
+      variant='small'
       title={title}
       {...props}
     >

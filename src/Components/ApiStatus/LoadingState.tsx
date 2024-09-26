@@ -1,19 +1,18 @@
+import { EmptyStateHeader } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateVariant } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateIcon } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyStateBody } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import CubesIcon from '@patternfly/react-icons/dist/dynamic/icons/cubes-icon';
 import React, { FunctionComponent } from 'react';
-import {
-  Title,
-  EmptyState,
-  EmptyStateVariant,
-  EmptyStateIcon,
-  EmptyStateBody,
-} from '@patternfly/react-core';
-import { CubesIcon } from '@patternfly/react-icons';
 
 const LoadingState: FunctionComponent<Record<string, never>> = () => (
   <EmptyState variant={EmptyStateVariant.full} style={{ minHeight: '400px' }}>
-    <EmptyStateIcon icon={CubesIcon} />
-    <Title headingLevel="h5" size="lg">
-      Loading...
-    </Title>
+    <EmptyStateHeader
+      titleText='Loading...'
+      icon={<EmptyStateIcon icon={CubesIcon} />}
+      headingLevel='h5'
+    />
     <EmptyStateBody>Please wait.</EmptyStateBody>
   </EmptyState>
 );

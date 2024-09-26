@@ -1,0 +1,26 @@
+name: 'CI for PRs'
+
+on:
+  pull_request:
+    branches: [devel]
+
+jobs:
+  pr:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: 'Install modules'
+        run: |
+          npm install
+
+          # fail if npm install had to change package-lock.json
+          git diff --exit-code package-lock.json
+
+      - name: 'Check the code builds & lints'
+        run: npm run verify

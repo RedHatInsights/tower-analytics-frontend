@@ -1,8 +1,8 @@
+import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';
+import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise-middleware';
 import pdfDownloadButton from './pdfDownloadButton';
-import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 
 const rootReducer = combineReducers({
   notifications: notificationsReducer,

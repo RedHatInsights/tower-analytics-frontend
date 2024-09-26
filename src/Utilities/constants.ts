@@ -5,11 +5,11 @@ import {
   global_palette_green_300,
   global_palette_red_100,
 } from '@patternfly/react-tokens';
-
 import { Params } from '../Api/types';
 
 export interface DefaultParamsProps {
   defaultParams: Params;
+  [key: string]: string | number | undefined | Params;
 }
 
 export const jobExplorer = {
@@ -45,36 +45,6 @@ export const jobExplorer = {
     only_root_workflows_and_standalone_jobs: false,
     limit: '5',
     offset: '0',
-  },
-};
-
-export const roi = {
-  defaultParams: {
-    status: ['successful'],
-    org_id: [],
-    cluster_id: [],
-    template_id: [],
-    inventory_id: [],
-    quick_date_range: 'roi_last_year',
-    job_type: ['job'],
-    sort_options: 'template_productivity_score',
-    sort_order: 'desc',
-    start_date: undefined,
-    end_date: undefined,
-    limit: '6',
-    offset: '0',
-    only_root_workflows_and_standalone_jobs: true,
-    attributes: [
-      'elapsed',
-      'host_count',
-      'total_count',
-      'total_org_count',
-      'total_cluster_count',
-      'successful_hosts_total',
-      'successful_elapsed_total',
-    ],
-    group_by: 'template',
-    group_by_time: false,
   },
 };
 
@@ -600,11 +570,9 @@ const allDefaultParams: any = {
 };
 
 export const reportDefaultParams = (slug: string): DefaultParamsProps => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   return allDefaultParams[slug].defaultParams as DefaultParamsProps;
 };
 
 export const specificReportDefaultParams = (slug: string): Params => {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
   return allDefaultParams[slug].defaultParams as Params;
 };

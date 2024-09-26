@@ -1,13 +1,11 @@
-import React, { FunctionComponent } from 'react';
+import { DescriptionListTerm } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionList } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionListDescription } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionListGroup } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
 import { ExpandableRowContent, Td } from '@patternfly/react-table';
-import {
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
-} from '@patternfly/react-core';
-import { Template } from './types';
+import React, { FunctionComponent } from 'react';
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
+import { Template } from './types';
 
 interface Props {
   template: Template;

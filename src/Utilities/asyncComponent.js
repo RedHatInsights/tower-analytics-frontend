@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
 import {
-  Title,
   EmptyState,
+  EmptyStateHeader,
   EmptyStateIcon,
-  Spinner,
-} from '@patternfly/react-core';
+} from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
+import React, { Component } from 'react';
 
 /**
  * Webpack allows loading components asynchronously by using import().
@@ -24,6 +24,7 @@ import {
  *
  * @returns {AsyncComponent} The imported component or can return a loading
  */
+// FIXME: asyncComponent -> lazy; Suspense fallback=EmptyState..
 export default function asyncComponent(importComponent) {
   class AsyncComponent extends Component {
     constructor(props) {
@@ -51,10 +52,11 @@ export default function asyncComponent(importComponent) {
         </div>
       ) : (
         <EmptyState>
-          <EmptyStateIcon variant="container" component={Spinner} />
-          <Title size="lg" headingLevel="h4">
-            Loading
-          </Title>
+          <EmptyStateHeader
+            titleText='Loading'
+            icon={<EmptyStateIcon icon={Spinner} />}
+            headingLevel='h4'
+          />
         </EmptyState>
       );
     }

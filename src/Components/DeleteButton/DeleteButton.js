@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import { Badge } from '@patternfly/react-core/dist/dynamic/components/Badge';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import PropTypes from 'prop-types';
-
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Button, Badge, Alert, Tooltip } from '@patternfly/react-core';
-import AlertModal from '../AlertModal';
 import { getRelatedResourceDeleteCounts } from '../../Utilities/getRelatedResourceDeleteDetails';
+import AlertModal from '../AlertModal';
 import ErrorDetail from '../ErrorDetail';
 
 const WarningMessage = styled(Alert)`
@@ -69,7 +71,7 @@ const DeleteButton = ({
   return (
     <>
       {disabledTooltip ? (
-        <Tooltip content={disabledTooltip} position="top">
+        <Tooltip content={disabledTooltip} position='top'>
           <div>
             <Button
               spinnerAriaValueText={isLoading ? 'Loading' : undefined}
@@ -98,13 +100,13 @@ const DeleteButton = ({
       <AlertModal
         isOpen={isOpen}
         title={modalTitle}
-        variant="danger"
+        variant='danger'
         onClose={() => toggleModal(false)}
         actions={[
           <Button
-            ouiaId="delete-modal-confirm"
-            key="delete"
-            variant="danger"
+            ouiaId='delete-modal-confirm'
+            key='delete'
+            variant='danger'
             aria-label={'Confirm Delete'}
             isDisabled={isDisabled}
             onClick={() => {
@@ -115,9 +117,9 @@ const DeleteButton = ({
             {'Delete'}
           </Button>,
           <Button
-            ouiaId="delete-modal-cancel"
-            key="cancel"
-            variant="link"
+            ouiaId='delete-modal-cancel'
+            key='cancel'
+            variant='link'
             aria-label={'Cancel'}
             onClick={() => toggleModal(false)}
           >
@@ -130,7 +132,7 @@ const DeleteButton = ({
         <strong>{name}</strong>
         {Object.values(deleteDetails).length > 0 && (
           <WarningMessage
-            variant="warning"
+            variant='warning'
             isInline
             title={
               <div>

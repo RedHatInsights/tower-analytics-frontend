@@ -1,6 +1,6 @@
 import React from 'react';
-import StandardReport from './Standard';
 import AutomationCalculator from './AutomationCalculator';
+import StandardReport from './Standard/ReportCard';
 import { ReportSchema } from './types';
 
 const getLayoutComponent = (

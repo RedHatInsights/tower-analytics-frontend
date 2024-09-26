@@ -1,44 +1,38 @@
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
-import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { PageHeader } from '@ansible/ansible-ui-framework';
 import {
-  Button,
-  ButtonVariant,
-  Card,
-  CardActions,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-  Divider,
   Dropdown,
   DropdownItem,
   DropdownToggle,
-  Gallery,
-  Label,
-  PageSection,
-  Tooltip,
-  TooltipPosition,
-} from '@patternfly/react-core';
-import {
-  AngleLeftIcon,
-  AngleRightIcon,
-  CaretDownIcon,
-} from '@patternfly/react-icons';
-
+} from '@patternfly/react-core/deprecated';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardFooter } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardHeader } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { Divider } from '@patternfly/react-core/dist/dynamic/components/Divider';
+import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { TooltipPosition } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import { Gallery } from '@patternfly/react-core/dist/dynamic/layouts/Gallery';
+import AngleLeftIcon from '@patternfly/react-icons/dist/dynamic/icons/angle-left-icon';
+import AngleRightIcon from '@patternfly/react-icons/dist/dynamic/icons/angle-right-icon';
+import CaretDownIcon from '@patternfly/react-icons/dist/dynamic/icons/caret-down-icon';
+import React, { FunctionComponent, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { readReport, readReports, reportOptions } from '../../../Api';
+import NoData from '../../../Components/ApiStatus/NoData';
+import EmptyList from '../../../Components/EmptyList';
+import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
+import { useQueryParams } from '../../../QueryParams';
+import { reportDefaultParams } from '../../../Utilities/constants';
+import useRequest from '../../../Utilities/useRequest';
+import { PageHeader } from '../../../framework/PageHeader';
+import getComponent from '../Layouts/index';
+import { ReportSchema } from '../Layouts/types';
+import { TAGS, TagName } from '../Shared/constants';
 import paths from '../paths';
 import ListItem from './ListItem';
-import { TagName, TAGS } from '../Shared/constants';
-import getComponent from '../Layouts/index';
-import useRequest from '../../../Utilities/useRequest';
-import { readReport, readReports, reportOptions } from '../../../Api';
-import { ReportSchema } from '../Layouts/types';
-import { reportDefaultParams } from '../../../Utilities/constants';
-import { useQueryParams } from '../../../QueryParams';
-import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
-import EmptyList from '../../../Components/EmptyList';
-import NoData from '../../../Components/ApiStatus/NoData';
 
 export interface Report {
   slug: string;
@@ -46,6 +40,7 @@ export interface Report {
   description: string;
   tags: any[];
   tableHeaders: string[];
+  schema;
 }
 
 const List: FunctionComponent<Record<string, never>> = () => {
@@ -67,21 +62,23 @@ const List: FunctionComponent<Record<string, never>> = () => {
     isSuccess: isSuccess,
     error: error,
     request: fetchReports,
-  } = useRequest(readReports, { reports: [] });
+  } = useRequest(readReports as any, { reports: [] });
 
   const optionsQueryParams = useQueryParams(reportDefaultParams('reports'));
   const { result: options, request: fetchOptions } = useRequest(
-    reportOptions,
+    reportOptions as any,
     {}
   );
 
   useEffect(() => {
-    fetchReports(queryParams);
-    fetchOptions(optionsQueryParams.queryParams);
+    (fetchReports as any)(queryParams);
+    (fetchOptions as any)(optionsQueryParams.queryParams);
   }, [queryParams]);
 
   const reports = data as Report[];
-  const selected = queryParams.selected_report || reports[0]?.slug || '';
+  const selected = (queryParams.selected_report ||
+    reports[0]?.slug ||
+    '') as string;
   const setSelected = (slug: string) => setFromToolbar('selected_report', slug);
 
   const {
@@ -110,7 +107,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
           <Button
             key={report.slug}
             variant={ButtonVariant.plain}
-            aria-label="Report list item"
+            aria-label='Report list item'
             onClick={() => setSelected(report.slug)}
           >
             <DropdownItem key={report.slug}>{report.name}</DropdownItem>
@@ -123,8 +120,8 @@ const List: FunctionComponent<Record<string, never>> = () => {
     <>
       <PageHeader data-cy={'header-all_reports'} title={'Reports'} />
       <FilterableToolbar
-        categories={options}
-        filters={queryParams}
+        categories={options as any}
+        filters={queryParams as any}
         setFilters={setFromToolbar}
       />
       {isSuccess && reports.length > 0 && isReportSuccess && (
@@ -150,6 +147,73 @@ const List: FunctionComponent<Record<string, never>> = () => {
                       data-cy={report.slug}
                     >
                       <CardHeader
+                        actions={{
+                          actions: (
+                            <>
+                              {report.tags.map(
+                                (
+                                  tagKey: TagName,
+                                  idx: React.Key | null | undefined
+                                ) => {
+                                  const tag = TAGS.find(
+                                    (t) => t.key === tagKey
+                                  );
+                                  if (tag) {
+                                    return (
+                                      <Tooltip
+                                        key={`tooltip_${idx as string}`}
+                                        position={TooltipPosition.top}
+                                        content={tag.description}
+                                      >
+                                        <Label key={idx}>{tag.name}</Label>
+                                      </Tooltip>
+                                    );
+                                  }
+                                }
+                              )}
+                              <Button
+                                variant={ButtonVariant.plain}
+                                aria-label='Previous report'
+                                data-cy={'previous_report_button'}
+                                isDisabled={reports.indexOf(report) === 0}
+                                onClick={() => setSelected(previousItem)}
+                              >
+                                <AngleLeftIcon />
+                              </Button>
+                              <Dropdown
+                                data-cy={'preview_dropdown'}
+                                isPlain
+                                onSelect={() => setIsOpen(!isOpen)}
+                                toggle={
+                                  <DropdownToggle
+                                    onToggle={(_event, next) => setIsOpen(next)}
+                                    toggleIndicator={CaretDownIcon}
+                                    id='report_list'
+                                    data-cy={'selected_report_dropdown'}
+                                    style={{ color: '#151515' }}
+                                  >
+                                    {report.name}
+                                  </DropdownToggle>
+                                }
+                                isOpen={isOpen}
+                                dropdownItems={dropdownItems}
+                              />
+                              <Button
+                                variant={ButtonVariant.plain}
+                                aria-label='Next report'
+                                data-cy='next_report_button'
+                                isDisabled={
+                                  reports.indexOf(report) >= reports.length - 1
+                                }
+                                onClick={() => setSelected(nextItem)}
+                              >
+                                <AngleRightIcon />
+                              </Button>
+                            </>
+                          ),
+                          hasNoOffset: false,
+                          className: undefined,
+                        }}
                         style={{
                           paddingTop: '16px',
                           paddingBottom: '16px',
@@ -164,69 +228,6 @@ const List: FunctionComponent<Record<string, never>> = () => {
                             {report.name}
                           </Link>
                         </CardTitle>
-                        <CardActions
-                          style={{ marginLeft: '15px', marginTop: '-2px' }}
-                        >
-                          {report.tags.map(
-                            (
-                              tagKey: TagName,
-                              idx: React.Key | null | undefined
-                            ) => {
-                              const tag = TAGS.find((t) => t.key === tagKey);
-                              if (tag) {
-                                return (
-                                  <Tooltip
-                                    key={`tooltip_${idx as string}`}
-                                    position={TooltipPosition.top}
-                                    content={tag.description}
-                                  >
-                                    <Label key={idx}>{tag.name}</Label>
-                                  </Tooltip>
-                                );
-                              }
-                            }
-                          )}
-                        </CardActions>
-                        <CardActions>
-                          <Button
-                            variant={ButtonVariant.plain}
-                            aria-label="Previous report"
-                            data-cy={'previous_report_button'}
-                            isDisabled={reports.indexOf(report) === 0}
-                            onClick={() => setSelected(previousItem)}
-                          >
-                            <AngleLeftIcon />
-                          </Button>
-                          <Dropdown
-                            data-cy={'preview_dropdown'}
-                            isPlain
-                            onSelect={() => setIsOpen(!isOpen)}
-                            toggle={
-                              <DropdownToggle
-                                onToggle={(next) => setIsOpen(next)}
-                                toggleIndicator={CaretDownIcon}
-                                id="report_list"
-                                data-cy={'selected_report_dropdown'}
-                                style={{ color: '#151515' }}
-                              >
-                                {report.name}
-                              </DropdownToggle>
-                            }
-                            isOpen={isOpen}
-                            dropdownItems={dropdownItems}
-                          />
-                          <Button
-                            variant={ButtonVariant.plain}
-                            aria-label="Next report"
-                            data-cy="next_report_button"
-                            isDisabled={
-                              reports.indexOf(report) >= reports.length - 1
-                            }
-                            onClick={() => setSelected(nextItem)}
-                          >
-                            <AngleRightIcon />
-                          </Button>
-                        </CardActions>
                       </CardHeader>
                       <Divider />
                       {report.slug === previewReport.slug
@@ -247,7 +248,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
               );
             })}
           <Gallery
-            data-cy="all_reports"
+            data-cy='all_reports'
             hasGutter
             minWidths={{
               sm: '307px',

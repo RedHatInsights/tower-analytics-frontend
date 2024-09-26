@@ -1,8 +1,10 @@
-import React from 'react';
+import { TabTitleText } from '@patternfly/react-core/dist/dynamic/components/Tabs';
+import { Tab } from '@patternfly/react-core/dist/dynamic/components/Tabs';
+import { Tabs } from '@patternfly/react-core/dist/dynamic/components/Tabs';
 import PropTypes from 'prop-types';
-import { shape, string, number, arrayOf, node, oneOfType } from 'prop-types';
-import { Tab, Tabs, TabTitleText } from '@patternfly/react-core';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { arrayOf, node, number, oneOfType, shape, string } from 'prop-types';
+import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const RoutedTabs = ({ tabsArray, defaultTabId = 1 }) => {
   const navigate = useNavigate();
@@ -34,7 +36,7 @@ const RoutedTabs = ({ tabsArray, defaultTabId = 1 }) => {
           key={tab.id}
           link={tab.link}
           title={<TabTitleText>{tab.name}</TabTitleText>}
-          role="tab"
+          role='tab'
         />
       ))}
     </Tabs>

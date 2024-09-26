@@ -1,10 +1,8 @@
-import { PDFParams } from '../../Api/types';
-import { generatePdf, sendEmail } from '../../Api/api';
-import { ReducerTypes, ActionTypes } from './types';
-// Later from the frontend component / redux when typed
-import { NotificationType } from '../../globalTypes';
 import { DispatchType } from '../';
-import { PDFEmailParams } from '../../Api/types';
+import { generatePdf, sendEmail } from '../../Api/api';
+import { PDFEmailParams, PDFParams } from '../../Api/types';
+import { NotificationType } from '../../globalTypes';
+import { ActionTypes, ReducerTypes } from './types';
 
 const pending = (id: string, title?: string) => ({
   variant: NotificationType.info,

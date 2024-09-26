@@ -1,58 +1,30 @@
-import React, { useState, useEffect, FC, useCallback } from 'react';
-
-import { useQueryParams } from '../../QueryParams/';
-
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { FormSelect } from '@patternfly/react-core/dist/dynamic/components/FormSelect';
+import { FormSelectOption } from '@patternfly/react-core/dist/dynamic/components/FormSelect';
+import { NotificationDrawer } from '@patternfly/react-core/dist/dynamic/components/NotificationDrawer';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import React, { FC, useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { Params, readClusters, readNotifications } from '../../Api/';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
-import { Params, readClusters, readNotifications } from '../../Api/';
-import useRequest from '../../Utilities/useRequest';
-
-import { PageHeader } from '@ansible/ansible-ui-framework';
-
-import {
-  Card,
-  CardBody,
-  CardTitle as PFCardTitle,
-  FormSelect,
-  FormSelectOption,
-  PaginationVariant,
-  NotificationDrawer,
-  PageSection,
-} from '@patternfly/react-core';
-
-import NotificationsList from './NotificationsList';
 import Pagination from '../../Components/Pagination';
+import { useQueryParams } from '../../QueryParams/';
+import useRequest from '../../Utilities/useRequest';
+import { PageHeader } from '../../framework/PageHeader';
+import NotificationsList from './NotificationsList';
 
-const CardTitle = styled(PFCardTitle)`
+const NCardTitle = styled(CardTitle)`
   display: flex;
   justify-content: space-between;
 
   @media screen and (max-width: 1035px) {
     display: block;
-  }
-`;
-
-const DropdownGroup = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-
-  @media screen and (max-width: 1035px) {
-    display: block;
-  }
-
-  select {
-    margin: 0 10px;
-    width: 150px;
-
-    @media screen and (max-width: 1035px) {
-      margin: 10px 10px 0 0;
-    }
-
-    @media screen and (max-width: 865px) {
-      width: 100%;
-    }
   }
 `;
 
@@ -111,7 +83,6 @@ interface ClusterDataType {
 const Notifications: FC<Record<string, never>> = () => {
   const [selectedCluster, setSelectedCluster] = useState('');
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const { queryParams, setId, setFromPagination, setSeverity } = useQueryParams(
     initialQueryParams.defaultParams
   );
@@ -158,62 +129,65 @@ const Notifications: FC<Record<string, never>> = () => {
       <>
         <PageSection>
           <Card>
-            <CardTitle>
-              <DropdownGroup>
-                <FormSelect
-                  name="selectedCluster"
-                  value={selectedCluster}
-                  onChange={(value) => {
-                    setSelectedCluster(value);
-                    setId(value);
-                    setFromPagination(0);
-                  }}
-                  aria-label="Select Cluster"
-                >
-                  {formatClusterName(clustersData).map(
-                    ({ value, label, disabled }, index) => (
-                      <FormSelectOption
-                        isDisabled={disabled}
-                        key={index}
-                        value={value}
-                        label={label}
-                      />
-                    )
-                  )}
-                </FormSelect>
-                <FormSelect
-                  name="selectedNotification"
-                  value={severity || ''}
-                  onChange={(value) => {
-                    setSeverity(value);
-                    setFromPagination(0);
-                  }}
-                  aria-label="Select Notification Type"
-                >
-                  {notificationOptions.map(
-                    ({ disabled, value, label }, index) => (
-                      <FormSelectOption
-                        isDisabled={disabled}
-                        key={index}
-                        value={value}
-                        label={label}
-                      />
-                    )
-                  )}
-                </FormSelect>
-              </DropdownGroup>
+            <NCardTitle>
+              <Flex direction={{ default: 'row' }}>
+                <FlexItem>
+                  <FormSelect
+                    name='selectedCluster'
+                    value={selectedCluster}
+                    onChange={(_event, value) => {
+                      setSelectedCluster(value);
+                      setId(value);
+                      setFromPagination(0);
+                    }}
+                    aria-label='Select Cluster'
+                  >
+                    {formatClusterName(clustersData).map(
+                      ({ value, label, disabled }, index) => (
+                        <FormSelectOption
+                          isDisabled={disabled}
+                          key={index}
+                          value={value}
+                          label={label}
+                        />
+                      )
+                    )}
+                  </FormSelect>
+                </FlexItem>
+                <FlexItem>
+                  <FormSelect
+                    name='selectedNotification'
+                    value={severity || ''}
+                    onChange={(_event, value) => {
+                      setSeverity(value);
+                      setFromPagination(0);
+                    }}
+                    aria-label='Select Notification Type'
+                  >
+                    {notificationOptions.map(
+                      ({ disabled, value, label }, index) => (
+                        <FormSelectOption
+                          isDisabled={disabled}
+                          key={index}
+                          value={value}
+                          label={label}
+                        />
+                      )
+                    )}
+                  </FormSelect>
+                </FlexItem>
+              </Flex>
               <Pagination
                 count={meta?.count}
                 params={{
                   limit: +limit,
                   offset: +offset,
                 }}
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 /* @ts-ignore */
                 setPagination={setFromPagination}
                 isCompact
               />
-            </CardTitle>
+            </NCardTitle>
             <CardBody>
               {isLoading && <LoadingState />}
               {isSuccess && notificationsData.length <= 0 && <NoData />}
@@ -232,7 +206,6 @@ const Notifications: FC<Record<string, never>> = () => {
                   limit: +limit,
                   offset: +offset,
                 }}
-                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 /* @ts-ignore */
                 setPagination={setFromPagination}
                 variant={PaginationVariant.bottom}

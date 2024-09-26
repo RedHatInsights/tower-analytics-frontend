@@ -1,9 +1,11 @@
+import { Radio } from '@patternfly/react-core/dist/dynamic/components/Radio';
+import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import React from 'react';
-import { actions } from '../../constants';
-import { Grid, GridItem, Radio, Title } from '@patternfly/react-core';
 import { EmailDetailsProps, PdfDetailsProps, TypeValue } from '../../../types';
+import { actions } from '../../constants';
 
-// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 const PdfDetails = ({
   options,
   formData,
@@ -23,7 +25,7 @@ const PdfDetails = ({
 
   return (
     <>
-      <Title size="md" headingLevel="h4">
+      <Title size='md' headingLevel='h4'>
         {'Select details:'}
       </Title>
       <Grid md={4}>
@@ -36,10 +38,10 @@ const PdfDetails = ({
               })
             }
             isChecked={!showExtraRows}
-            name="showExtraRows"
-            label="Current page"
-            id="current-radio"
-            aria-label="current-radio"
+            name='showExtraRows'
+            label='Current page'
+            id='current-radio'
+            aria-label='current-radio'
           />
         </GridItem>
         <GridItem>
@@ -51,10 +53,10 @@ const PdfDetails = ({
               })
             }
             isChecked={showExtraRows}
-            name="showExtraRows"
+            name='showExtraRows'
             label={extraRowsLabel}
-            id="extra-radio"
-            aria-label="extra-radio"
+            id='extra-radio'
+            aria-label='extra-radio'
           />
         </GridItem>
       </Grid>

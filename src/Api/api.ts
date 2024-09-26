@@ -1,31 +1,25 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/ban-ts-comment */
-// @ts-nocheck
 import {
+  authenticatedFetch,
+  deleteById,
+  deleteByIds,
   get,
+  handleResponse,
   post,
+  postWithEmail,
+  postWithFileReturn,
   postWithPagination,
   saveROIData,
-  deleteById,
   updateById,
-  authenticatedFetch,
-  deleteByIds,
-  postWithFileReturn,
-  postWithEmail,
-  handleResponse,
 } from './methods';
 import {
-  ReadEndpointFnc,
+  ApiJson,
+  NotificationParams,
+  PDFEmailParams,
+  PDFParams,
   Params,
   ParamsWithPagination,
-  ApiJson,
-  PDFParams,
-  NotificationParams,
+  ReadEndpointFnc,
   saveROIParams,
-  PDFEmailParams,
 } from './types';
 
 export enum Endpoint {
@@ -145,7 +139,7 @@ const mungeData = async (promise, params) => {
   };
 };
 
-export const preflightRequest = (): Promise<Response> => {
+export const preflightRequest = (): Promise<ApiJson> => {
   return authenticatedFetch(Endpoint.preflight, {
     method: 'GET',
   }).then(handleResponse);

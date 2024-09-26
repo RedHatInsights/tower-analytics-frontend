@@ -1,0 +1,53 @@
+version: 2
+updates:
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    groups:
+      babel:
+        patterns:
+          - '@babel/*'
+      eslint:
+        patterns:
+          - 'eslint'
+          - 'eslint-config-*'
+          - 'eslint-plugin-*'
+      patternfly:
+        patterns:
+          - '@patternfly/*'
+      react:
+        patterns:
+          - 'react'
+          - 'react-dom'
+      redhat:
+        patterns:
+          - '@redhat-cloud-services/*'
+      victory:
+        patterns:
+          - '@victory/*'
+    ignore:
+      - dependency-name: '@patternfly/react-charts'
+        update-types:
+          - 'version-update:semver-major'
+          - 'version-update:semver-minor'
+      - dependency-name: 'eslint'
+        update-types:
+          - 'version-update:semver-major'
+      - dependency-name: 'react-redux'
+        update-types:
+          - 'version-update:semver-major'
+      - dependency-name: 'redux'
+        update-types:
+          - 'version-update:semver-major'
+      - dependency-name: '@victory/*'
+        update-types:
+          - 'version-update:semver-major'
+      - dependency-name: 'web-streams-polyfill'
+        update-types:
+          - 'version-update:semver-major'
+
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'

@@ -1,5 +1,5 @@
-import React from 'react';
 import PropTypes from 'prop-types';
+import React from 'react';
 import Plot from 'react-plotly.js';
 import { useQueryParams } from '../../QueryParams';
 import { reportDefaultParams } from '../../Utilities/constants';

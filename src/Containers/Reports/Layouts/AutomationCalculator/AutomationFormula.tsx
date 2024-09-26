@@ -1,13 +1,11 @@
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { CodeBlock } from '@patternfly/react-core/dist/dynamic/components/CodeBlock';
+import { CodeBlockCode } from '@patternfly/react-core/dist/dynamic/components/CodeBlock';
+import { ModalVariant } from '@patternfly/react-core/dist/dynamic/components/Modal';
+import { Modal } from '@patternfly/react-core/dist/dynamic/components/Modal';
+import InfoCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/info-circle-icon';
 import React, { FunctionComponent, useState } from 'react';
-import {
-  Button,
-  ButtonVariant,
-  CodeBlock,
-  CodeBlockCode,
-  Modal,
-  ModalVariant,
-} from '@patternfly/react-core';
-import { InfoCircleIcon } from '@patternfly/react-icons';
 
 const SavingsPerTemplateText: FunctionComponent<Record<string, never>> = () => (
   <>
@@ -110,14 +108,14 @@ const AutomationFormula: FunctionComponent<Record<string, never>> = () => {
         Automation formula
       </Button>
       <Modal
-        title="Automation formula"
+        title='Automation formula'
         data-cy={'automation_formula_modal'}
         isOpen={isOpen}
         onClose={() => setIsOpen(false)}
         variant={ModalVariant.medium}
         actions={[
           <Button
-            key="cancel"
+            key='cancel'
             variant={ButtonVariant.primary}
             onClick={() => setIsOpen(false)}
             data-cy={'automation_formula_cancel_button'}

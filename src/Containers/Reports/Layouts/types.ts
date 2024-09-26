@@ -42,8 +42,10 @@ export type ReportSchema =
   | {
       layoutComponent: 'standard';
       layoutProps: StandardProps;
+      slug?;
     }
   | {
       layoutComponent: 'automationCalculator';
       layoutProps: AutmationCalculatorProps;
+      slug?;
     };

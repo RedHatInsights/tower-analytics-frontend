@@ -1,16 +1,14 @@
+import { SelectOptionProps } from '@patternfly/react-core/deprecated';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarGroupVariant } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import SortAmountDownIcon from '@patternfly/react-icons/dist/dynamic/icons/sort-amount-down-icon';
+import SortAmountUpIcon from '@patternfly/react-icons/dist/dynamic/icons/sort-amount-up-icon';
 import React, { FunctionComponent } from 'react';
-import {
-  ToolbarGroup,
-  Button,
-  SelectOptionProps,
-  ButtonVariant,
-  ToolbarGroupVariant,
-  ToolbarItem,
-} from '@patternfly/react-core';
-import { SortAmountDownIcon, SortAmountUpIcon } from '@patternfly/react-icons';
-
+import { AttributeType, SetValues } from '../types';
 import ToolbarInput from './ToolbarInput';
-import { SetValues, AttributeType } from '../types';
 
 interface Props {
   filters: Record<string, AttributeType>;
@@ -26,7 +24,7 @@ const SortByGroup: FunctionComponent<Props> = ({
   <ToolbarGroup variant={ToolbarGroupVariant['filter-group']}>
     <ToolbarItem>
       <ToolbarInput
-        categoryKey="sort_options"
+        categoryKey='sort_options'
         value={filters.sort_options}
         selectOptions={sort_options}
         setValue={(value) => setFilters('sort_options', value as string)}

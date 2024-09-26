@@ -1,13 +1,12 @@
+import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { AnalyticsRoutes } from './Routes';
-import './App.scss';
 import packageJson from '../package.json';
-import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
-
-import useRequest from './Utilities/useRequest';
 import { preflightRequest } from './Api/';
+import './App.scss';
 import AuthorizationErrorPage from './Components/ApiStatus/AuthorizationErrorPage';
+import { AnalyticsRoutes } from './Routes';
+import useRequest from './Utilities/useRequest';
 
 const el = document.getElementById('global-filter');
 if (el) el.style.display = 'none';
@@ -40,7 +39,7 @@ const App = () => {
   };
 
   return (
-    <div id="automation-analytics-application" version={packageJson.version}>
+    <div id='automation-analytics-application' version={packageJson.version}>
       {renderContent()}
     </div>
   );

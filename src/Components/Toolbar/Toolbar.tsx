@@ -1,18 +1,16 @@
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ToolbarToggleGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { Toolbar } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarContent } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarItemVariant } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import CogIcon from '@patternfly/react-icons/dist/dynamic/icons/cog-icon';
+import FilterIcon from '@patternfly/react-icons/dist/dynamic/icons/filter-icon';
 import React, { FunctionComponent, useState } from 'react';
-import {
-  Toolbar,
-  ToolbarContent,
-  ToolbarGroup,
-  Button,
-  ToolbarItem,
-  ToolbarItemVariant,
-  ButtonVariant,
-  ToolbarToggleGroup,
-} from '@patternfly/react-core';
-import { FilterIcon, CogIcon } from '@patternfly/react-icons';
-
-import { optionsForCategories } from './constants';
 import { FilterCategoriesGroup, QuickDateGroup, SortByGroup } from './Groups';
+import { optionsForCategories } from './constants';
 import { ApiOptionsType, AttributeType, SetValues } from './types';
 
 interface Props {
@@ -21,13 +19,13 @@ interface Props {
   filters: Record<string, AttributeType>;
   defaultSelected?: string;
   setFilters: SetValues;
-  pagination: FunctionComponent;
-  settingsPanel: (
+  pagination?: FunctionComponent | null;
+  settingsPanel?: (
     setSettingsExpanded: (arg0: boolean) => void,
     settingsExpanded: boolean
   ) => FunctionComponent;
-  hasSettings: boolean;
-  additionalControls: FunctionComponent[];
+  hasSettings?: boolean;
+  additionalControls?: FunctionComponent[];
 }
 
 const FilterableToolbar: FunctionComponent<Props> = ({
@@ -46,9 +44,8 @@ const FilterableToolbar: FunctionComponent<Props> = ({
 
   // Sets name attribute as a dropdown if it has predefined values
   if (Object.keys(categories).includes('name')) {
-    categories.name[0].value !== null
-      ? (optionsForCategories.name.type = 'select')
-      : (optionsForCategories.name.type = 'text');
+    optionsForCategories.name.type =
+      categories.name[0].value !== null ? 'select' : 'text';
   }
 
   // Filter out elements which are not in the option object and in defaultParams
@@ -69,13 +66,13 @@ const FilterableToolbar: FunctionComponent<Props> = ({
 
   return (
     <Toolbar
-      className="pf-m-toggle-group-container"
+      className='pf-m-toggle-group-container'
       clearAllFilters={() => setFilters(null, null)}
-      collapseListedFiltersBreakpoint="xl"
+      collapseListedFiltersBreakpoint='xl'
       data-cy={'filter-toolbar'}
     >
       <ToolbarContent>
-        <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint="xl">
+        <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint='xl'>
           {Object.keys(filterCategories).length > 0 && (
             <FilterCategoriesGroup
               filterCategories={filterCategories}
@@ -104,7 +101,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
             <Button
               variant={ButtonVariant.plain}
               onClick={() => setSettingsExpanded(!settingsExpanded)}
-              aria-label="settings"
+              aria-label='settings'
               data-cy={'settings'}
               isActive={settingsExpanded}
             >

@@ -1,18 +1,15 @@
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { CardHeader } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { Popover } from '@patternfly/react-core/dist/dynamic/components/Popover';
+import { Switch } from '@patternfly/react-core/dist/dynamic/components/Switch';
+import PFOutlinedQuestionCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/outlined-question-circle-icon';
+import TimesIcon from '@patternfly/react-icons/dist/dynamic/icons/times-icon';
 import React, { FunctionComponent } from 'react';
-import { Button, Switch, Popover } from '@patternfly/react-core';
-import {
-  Card,
-  CardTitle,
-  CardBody,
-  CardActions,
-  CardHeader,
-} from '@patternfly/react-core';
-import {
-  OutlinedQuestionCircleIcon as PFOutlinedQuestionCircleIcon,
-  TimesIcon,
-} from '@patternfly/react-icons';
-import { SetValues, AttributeType } from '../types';
 import styled from 'styled-components';
+import { AttributeType, SetValues } from '../types';
 
 const OutlinedQuestionCircleIcon = styled(PFOutlinedQuestionCircleIcon)`
   color: #151515;
@@ -32,8 +29,8 @@ interface Props {
   labelOff?: string;
   isChecked?: AttributeType;
   onChange?: (
-    checked: boolean,
-    event: React.FormEvent<HTMLInputElement>
+    event: React.FormEvent<HTMLInputElement>,
+    checked: boolean
   ) => void;
   ariaLabel?: string;
   bodyContent?: string;
@@ -51,15 +48,22 @@ const SettingsPanel: FunctionComponent<Props> = ({
   bodyContent,
 }) => (
   <Card isFlat style={{ backgroundColor: '#EEEEEE' }}>
-    <CardHeader>
-      <CardActions>
-        <Button
-          variant="plain"
-          onClick={() => setSettingsExpanded(!settingsExpanded)}
-        >
-          <TimesIcon />
-        </Button>
-      </CardActions>
+    <CardHeader
+      actions={{
+        actions: (
+          <>
+            <Button
+              variant='plain'
+              onClick={() => setSettingsExpanded(!settingsExpanded)}
+            >
+              <TimesIcon />
+            </Button>
+          </>
+        ),
+        hasNoOffset: false,
+        className: undefined,
+      }}
+    >
       <CardTitle>Settings</CardTitle>
     </CardHeader>
     <CardBody>
@@ -70,7 +74,7 @@ const SettingsPanel: FunctionComponent<Props> = ({
         isChecked={!!isChecked}
         onChange={onChange}
       />
-      <PopoverButton variant="plain">
+      <PopoverButton variant='plain'>
         <Popover
           aria-label={ariaLabel}
           position={'top'}

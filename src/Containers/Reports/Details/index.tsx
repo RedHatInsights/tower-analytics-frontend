@@ -1,20 +1,16 @@
+import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
+import { LabelGroup } from '@patternfly/react-core/dist/dynamic/components/Label';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { TooltipPosition } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import React, { FunctionComponent, useEffect } from 'react';
-import Error404 from '../../../Components/Error404';
-
-import { PageHeader } from '@ansible/ansible-ui-framework';
-import {
-  Label,
-  LabelGroup,
-  PageSection,
-  Tooltip,
-  TooltipPosition,
-} from '@patternfly/react-core';
-
-import getComponent from '../Layouts';
-import { TAGS } from '../Shared/constants';
-import { ReportSchema } from '../Layouts/types';
-import useRequest from '../../../Utilities/useRequest';
 import { readReport } from '../../../Api';
+import { Error404 } from '../../../Components/Error404';
+import useRequest from '../../../Utilities/useRequest';
+import { PageHeader } from '../../../framework/PageHeader';
+import getComponent from '../Layouts';
+import { ReportSchema } from '../Layouts/types';
+import { TAGS } from '../Shared/constants';
 
 const Details: FunctionComponent<Record<string, never>> = () => {
   const slug = location.pathname.split('/').pop() as string;
@@ -35,7 +31,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
   }, [slug]);
 
   const breadcrumbsItems = [
-    { label: 'Reports', to: 'ansible/automation-analytics/reports' },
+    { label: 'Reports', to: '/ansible/automation-analytics/reports' },
   ];
 
   const render = () => {
@@ -78,9 +74,9 @@ const Details: FunctionComponent<Record<string, never>> = () => {
     } else if (error) {
       return (
         <Error404
-          title="404: Page does not exist."
-          body="The report you are looking for does not exist."
-          buttonText="Return to Reports page"
+          title='404: Page does not exist.'
+          body='The report you are looking for does not exist.'
+          buttonText='Return to Reports page'
           link={'../reports'}
         />
       );

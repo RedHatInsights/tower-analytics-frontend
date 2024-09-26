@@ -1,38 +1,39 @@
-import React, { FC, useState } from 'react';
 import {
-  Button,
-  ButtonVariant,
-  Spinner,
-  Tooltip,
-  TooltipPosition,
   Wizard,
   WizardContextConsumer,
   WizardFooter,
-} from '@patternfly/react-core';
-import { DownloadIcon, ExclamationCircleIcon } from '@patternfly/react-icons';
-import { DownloadState } from '../../../store/pdfDownloadButton/types';
+} from '@patternfly/react-core/deprecated';
+import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
+import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
+import { TooltipPosition } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import DownloadIcon from '@patternfly/react-icons/dist/dynamic/icons/download-icon';
+import ExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
+import React, { FC, useState } from 'react';
 import {
   Endpoint,
   OptionsReturnType,
-  Params,
   PDFEmailParams,
+  Params,
 } from '../../../Api';
-import { useAppDispatch, useAppSelector } from '../../../store';
 import { useReadQueryParams } from '../../../QueryParams';
+import { getDateFormatByGranularity } from '../../../Utilities/helpers';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { DownloadState } from '../../../store/pdfDownloadButton/types';
+import EmailDetails from '../DownloadButton/Steps/EmailDetails';
+import SendEmail from '../DownloadButton/Steps/EmailDetails/SendEmail';
 import ExportOptions from '../DownloadButton/Steps/ExportOptions';
 import PdfDetails from '../DownloadButton/Steps/PdfDetails';
-import EmailDetails from '../DownloadButton/Steps/EmailDetails';
 import PdfDownload from '../DownloadButton/Steps/PdfDetails/PdfDownload';
-import useOptionsData from '../DownloadButton/useOptionsData';
-import SendEmail from '../DownloadButton/Steps/EmailDetails/SendEmail';
 import { actions } from '../DownloadButton/constants';
+import useOptionsData from '../DownloadButton/useOptionsData';
 import { EmailDetailsProps } from '../types';
-import { getDateFormatByGranularity } from '../../../Utilities/helpers';
 
 interface Props {
-  settingsNamespace: string;
+  settingsNamespace?: string;
   slug: string;
-  isMoney: boolean;
+  isMoney?: boolean;
   name: string;
   description: string;
   endpointUrl: Endpoint;
@@ -41,16 +42,16 @@ interface Props {
   y: string;
   label: string;
   xTickFormat: string;
-  chartType: string;
+  chartType?: string;
   totalPages: number;
   pageLimit: number;
   sortOptions: string;
   sortOrder: 'asc' | 'desc';
-  dateGranularity: string;
+  dateGranularity?: string;
   startDate: string;
   endDate: string;
   dateRange: string;
-  adoptionRateType: string;
+  adoptionRateType?: string;
   inputs?: { automationCost: number; manualCost: number };
 }
 
@@ -106,6 +107,11 @@ const DownloadButton: FC<Props> = ({
     downloadType,
     expiry,
   } = formData;
+
+  isMoney = isMoney ?? false;
+  chartType = chartType ?? '';
+  dateGranularity = dateGranularity ?? '';
+  adoptionRateType = adoptionRateType ?? '';
 
   const onSave = () => {
     if (downloadType === 'pdf')
@@ -178,7 +184,6 @@ const DownloadButton: FC<Props> = ({
         dispatch,
         emailExtraRows,
         expiry,
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         pdfPostBody,
       });
     }
@@ -266,7 +271,7 @@ const DownloadButton: FC<Props> = ({
     },
   ];
 
-  const onStepChange = (step: { id: React.SetStateAction<number> }) => {
+  const onStepChange = (step: { id: number }) => {
     setStepIdSelected(stepIdSelected < step?.id ? step.id : stepIdSelected);
   };
 
@@ -284,7 +289,7 @@ const DownloadButton: FC<Props> = ({
               <>
                 <Button
                   variant={ButtonVariant.primary}
-                  type="submit"
+                  type='submit'
                   onClick={
                     downloadType === 'pdf' && totalPages <= 1 ? onSave : onNext
                   }
@@ -295,11 +300,11 @@ const DownloadButton: FC<Props> = ({
                     : 'Next'}
                 </Button>
                 {activeStep.id !== 1 && (
-                  <Button variant="secondary" onClick={onBack}>
+                  <Button variant='secondary' onClick={onBack}>
                     Back
                   </Button>
                 )}
-                <Button variant="link" onClick={onClose}>
+                <Button variant='link' onClick={onClose}>
                   Cancel
                 </Button>
               </>
@@ -310,7 +315,7 @@ const DownloadButton: FC<Props> = ({
             <>
               <Button
                 variant={ButtonVariant.primary}
-                type="submit"
+                type='submit'
                 onClick={onSave}
                 isDisabled={
                   downloadType === 'email' ? sendEmailButtonDisabled() : false
@@ -318,10 +323,10 @@ const DownloadButton: FC<Props> = ({
               >
                 {downloadType === 'email' ? 'Send e-mail' : 'Export'}
               </Button>
-              <Button variant="secondary" onClick={onBack}>
+              <Button variant='secondary' onClick={onBack}>
                 Back
               </Button>
-              <Button variant="link" onClick={onClose}>
+              <Button variant='link' onClick={onClose}>
                 Cancel
               </Button>
             </>
@@ -335,16 +340,16 @@ const DownloadButton: FC<Props> = ({
 
   return (
     <>
-      <Tooltip position={TooltipPosition.top} content="Export report">
+      <Tooltip position={TooltipPosition.top} content='Export report'>
         <Button
           variant={isError ? ButtonVariant.link : ButtonVariant.plain}
-          aria-label="Export report"
+          aria-label='Export report'
           onClick={() => setIsExportModalOpen(true)}
           isDanger={isError}
           data-cy={'download-button'}
         >
           {isLoading && (
-            <Spinner data-cy={'download-button-loading'} isSVG size="md" />
+            <Spinner data-cy={'download-button-loading'} size='md' />
           )}
           {!isLoading && isError && (
             <ExclamationCircleIcon data-cy={'download-button-error'} />

@@ -1,54 +1,45 @@
+import { Alert } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import { AlertVariant } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import { AlertActionLink } from '@patternfly/react-core/dist/dynamic/components/Alert';
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { Tabs } from '@patternfly/react-core/dist/dynamic/components/Tabs';
+import { Tab } from '@patternfly/react-core/dist/dynamic/components/Tabs';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { scaleOrdinal } from 'd3';
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-
-import {
-  useQueryParams,
-  createUrl,
-  DEFAULT_NAMESPACE,
-} from '../../QueryParams/';
-import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
-
-import { readJobExplorer, readHostExplorer, readOrgOptions } from '../../Api/';
-
-import { PageHeader } from '@ansible/ansible-ui-framework';
-
 import { Link, useNavigate } from 'react-router-dom';
-import {
-  Card,
-  CardBody,
-  CardTitle,
-  Tabs,
-  Tab,
-  Grid,
-  GridItem,
-  Alert,
-  AlertVariant,
-  AlertActionLink,
-  PageSection,
-} from '@patternfly/react-core';
-
+import styled from 'styled-components';
+import { readHostExplorer, readJobExplorer, readOrgOptions } from '../../Api/';
 import {
   GroupedBarChart,
-  OrgsTooltip,
   HostsTooltip,
+  OrgsTooltip,
 } from '../../Charts/GroupedBarChart/';
 import PieChart from '../../Charts/PieChart';
-import FilterableToolbar from '../../Components/Toolbar/';
-import {
-  jobExplorer,
-  organizationStatistics as constants,
-} from '../../Utilities/constants';
-import reportPaths from '../Reports/paths';
-
 // For chart colors
 import { pfmulti } from '../../Charts/Utilities/colors';
-import { scaleOrdinal } from 'd3';
-import useRequest from '../../Utilities/useRequest';
-
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
+import FilterableToolbar from '../../Components/Toolbar/';
+import {
+  DEFAULT_NAMESPACE,
+  createUrl,
+  useQueryParams,
+} from '../../QueryParams/';
+import {
+  organizationStatistics as constants,
+  jobExplorer,
+} from '../../Utilities/constants';
+import { formatDate as dateForJobExplorer } from '../../Utilities/helpers';
+import useRequest from '../../Utilities/useRequest';
+import { PageHeader } from '../../framework/PageHeader';
 import { Paths } from '../../paths';
+import reportPaths from '../Reports/paths';
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
@@ -222,7 +213,7 @@ const OrganizationStatistics = () => {
   const renderDeprecationWarning = () => (
     <Alert
       variant={AlertVariant.warning}
-      title="The organization statistics page will be deprecated in a future release."
+      title='The organization statistics page will be deprecated in a future release.'
       actionLinks={
         <>
           <AlertActionLink>
@@ -269,7 +260,7 @@ const OrganizationStatistics = () => {
             {orgsIsSuccess && orgs.dates?.length > 0 && (
               <GroupedBarChart
                 margin={{ top: 20, right: 20, bottom: 50, left: 50 }}
-                id="d3-grouped-bar-chart-root"
+                id='d3-grouped-bar-chart-root'
                 data={orgsChartMapper(
                   orgs.dates,
                   orgs.meta,
@@ -298,7 +289,7 @@ const OrganizationStatistics = () => {
             {jobsIsSuccess && jobs.items?.length > 0 && (
               <PieChart
                 margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
-                id="d3-donut-1-chart-root"
+                id='d3-donut-1-chart-root'
                 data={pieChartMapper(jobs.items, 'total_count')}
                 colorFunc={colorFunc}
               />
@@ -319,7 +310,7 @@ const OrganizationStatistics = () => {
             {tasksIsSuccess && tasks.items?.length > 0 && (
               <PieChart
                 margin={{ top: 20, right: 20, bottom: 0, left: 20 }}
-                id="d3-donut-2-chart-root"
+                id='d3-donut-2-chart-root'
                 data={pieChartMapper(tasks.items, 'host_task_count')}
                 colorFunc={colorFunc}
               />

@@ -1,44 +1,32 @@
-/* eslint-disable @typescript-eslint/restrict-plus-operands */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
+import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { CardFooter } from '@patternfly/react-core/dist/dynamic/components/Card';
+import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { ToggleGroupItem } from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
+import { ToggleGroup } from '@patternfly/react-core/dist/dynamic/components/ToggleGroup';
 import React, { FunctionComponent, useEffect } from 'react';
-import {
-  Card,
-  CardBody,
-  CardFooter,
-  PaginationVariant,
-  ToggleGroup,
-  ToggleGroupItem,
-} from '@patternfly/react-core';
-
-import Pagination from '../../../../Components/Pagination';
-
-import { DEFAULT_NAMESPACE, useQueryParams } from '../../../../QueryParams';
-
-import useRequest from '../../../../Utilities/useRequest';
-
+import { useNavigate } from 'react-router-dom';
+import { OptionsReturnType, endpointFunctionMap } from '../../../../Api';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
-import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
-
 import Chart from '../../../../Components/Chart';
 import PlotlyChart from '../../../../Components/Chart/PlotlyChart';
-import Table from './Table';
+import Pagination from '../../../../Components/Pagination';
 import DownloadButton from '../../../../Components/Toolbar/DownloadButton';
-import { endpointFunctionMap, OptionsReturnType } from '../../../../Api';
-import { capitalize } from '../../../../Utilities/helpers';
-import { perPageOptions } from '../../Shared/constants';
-import hydrateSchema from '../../Shared/hydrateSchema';
-import { StandardProps } from '../types';
-import percentageFormatter from '../../../../Utilities/percentageFormatter';
-import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
+import FilterableToolbar from '../../../../Components/Toolbar/Toolbar';
+import { DEFAULT_NAMESPACE, useQueryParams } from '../../../../QueryParams';
+import { createUrl } from '../../../../QueryParams';
 import {
   reportDefaultParams,
   specificReportDefaultParams,
 } from '../../../../Utilities/constants';
-import { createUrl } from '../../../../QueryParams';
-import { useNavigate } from 'react-router-dom';
+import { capitalize } from '../../../../Utilities/helpers';
+import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
+import percentageFormatter from '../../../../Utilities/percentageFormatter';
+import useRequest from '../../../../Utilities/useRequest';
+import { perPageOptions } from '../../Shared/constants';
+import hydrateSchema from '../../Shared/hydrateSchema';
+import { StandardProps } from '../types';
+import Table from './Table';
 
 const ReportCard: FunctionComponent<StandardProps> = ({
   slug,
@@ -69,9 +57,9 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   );
 
   const { result: options, request: fetchOptions } =
-    useRequest<OptionsReturnType>(readOptions, {});
+    useRequest<OptionsReturnType>(readOptions as any, {});
 
-  const { request: fetchData, ...dataApi } = useRequest(readData, {
+  const { request: fetchData, ...dataApi } = useRequest(readData as any, {
     meta: { count: 0, legend: [] },
   });
 
@@ -103,16 +91,17 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   };
 
   useEffect(() => {
-    fetchData(queryParams);
-    fetchOptions(queryParams);
+    (fetchData as (any) => void)(queryParams as any);
+    (fetchOptions as (any) => void)(queryParams);
   }, [queryParams]);
 
   const chartParams = {
     y: queryParams.sort_options as string,
     label:
-      options.sort_options?.find(({ key }) => key === queryParams.sort_options)
-        ?.value || 'Label Y',
-    xTickFormat: getDateFormatByGranularity(queryParams.granularity),
+      (options.sort_options as any)?.find(
+        ({ key }) => key === queryParams.sort_options
+      )?.value || 'Label Y',
+    xTickFormat: getDateFormatByGranularity(queryParams.granularity as string),
     chartType: settingsQueryParams.chartType || availableChartTypes[0],
   };
 
@@ -155,7 +144,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         'Host: ' +
         datum.host_name +
         '\nAverage duration per task: ' +
-        formattedValue(queryParams.sortOptions, datum.y) +
+        formattedValue(queryParams.sortOptions as string, datum.y) +
         '\nHost status: ' +
         datum.host_status +
         '\nTotal tasks executed: ' +
@@ -170,7 +159,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         ' for ' +
         datum.name +
         ': ' +
-        formattedValue(queryParams.sort_options, datum.y);
+        formattedValue(queryParams.sort_options as string, datum.y);
     }
     return tooltip;
   };
@@ -185,7 +174,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       setFromToolbar('sort_options', tableHeaders[index]?.key);
     };
 
-    const whitelistKeys = options?.sort_options?.map(
+    const whitelistKeys = (options?.sort_options as any)?.map(
       ({ key }: { key: string }) => key
     );
     if (!whitelistKeys?.includes(currKey)) return {};
@@ -207,7 +196,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
 
   const additionalControls = [
     availableChartTypes.length > 1 && (
-      <ToggleGroup aria-label="Chart type toggle" key="chart-toggle">
+      <ToggleGroup aria-label='Chart type toggle' key='chart-toggle'>
         {availableChartTypes.map((chartType) => (
           <ToggleGroupItem
             key={chartType}
@@ -223,26 +212,29 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       </ToggleGroup>
     ),
     <DownloadButton
-      key="download-button"
+      key='download-button'
       slug={slug}
       name={name}
       description={description}
       endpointUrl={dataEndpoint}
-      queryParams={queryParams}
-      selectOptions={options}
+      queryParams={queryParams as any}
+      selectOptions={options as any}
       y={chartParams.y}
       label={chartParams.label}
       xTickFormat={chartParams.xTickFormat}
-      totalPages={Math.ceil(dataApi.result.meta.count / queryParams.limit)}
-      pageLimit={queryParams.limit}
-      chartType={chartParams.chartType}
+      totalPages={Math.ceil(
+        ((dataApi.result.meta as any).count as number) /
+          (queryParams.limit as any as number)
+      )}
+      pageLimit={queryParams.limit as any}
+      chartType={chartParams.chartType as string}
       sortOptions={chartParams.y}
-      sortOrder={queryParams.sort_order}
-      dateGranularity={queryParams.granularity}
-      startDate={queryParams.start_date}
-      endDate={queryParams.end_date}
-      dateRange={queryParams.quick_date_range}
-      adoptionRateType={queryParams.adoption_rate_type}
+      sortOrder={queryParams.sortOrder as any}
+      dateGranularity={queryParams.granularity as string}
+      startDate={queryParams.start_date as string}
+      endDate={queryParams.end_date as string}
+      dateRange={queryParams.quick_date_range as string}
+      adoptionRateType={queryParams.adoption_rate_type as string}
     />,
   ];
 
@@ -250,37 +242,39 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     <Card data-cy={dataApi.isLoading ? 'toolbar_loading' : 'toolbar_loaded'}>
       <CardBody>
         <FilterableToolbar
-          categories={options}
+          categories={options as any}
           defaultSelected={defaultSelectedToolbarCategory}
-          filters={queryParams}
+          filters={queryParams as any}
           setFilters={setFromToolbar}
           pagination={
-            showPagination && (
-              <Pagination
-                count={dataApi.result.meta.count}
-                perPageOptions={perPageOptions}
-                params={{
-                  limit: +queryParams.limit,
-                  offset: +queryParams.offset,
-                }}
-                setPagination={setFromPagination}
-                isCompact
-              />
-            )
+            showPagination
+              ? () => (
+                  <Pagination
+                    count={(dataApi.result.meta as any).count}
+                    perPageOptions={perPageOptions}
+                    params={{
+                      limit: +(queryParams?.limit as unknown as number),
+                      offset: +(queryParams?.offset as unknown as number),
+                    }}
+                    setPagination={setFromPagination as any}
+                    isCompact
+                  />
+                )
+              : null
           }
-          additionalControls={additionalControls}
+          additionalControls={additionalControls as any}
         />
         {tableHeaders && !showKebab && slug !== 'templates_by_organization' ? (
-          <ApiStatusWrapper api={dataApi}>
+          <ApiStatusWrapper api={dataApi as any}>
             <Chart
-              schema={hydrateSchema(schema)({
+              schema={hydrateSchema(schema as any)({
                 label: chartParams.label,
                 y: chartParams.y,
                 xTickFormat: chartParams.xTickFormat,
-                chartType: chartParams.chartType,
+                chartType: chartParams.chartType as any,
               })}
               dataComponent={'foobar'}
-              data={dataApi.result}
+              data={dataApi.result as any}
               specificFunctions={{
                 labelFormat: {
                   customTooltipFormatting,
@@ -292,12 +286,12 @@ const ReportCard: FunctionComponent<StandardProps> = ({
             />
             <Table
               legend={
-                dataApi.result.meta.tableData
-                  ? dataApi.result.meta.tableData
-                  : dataApi.result.meta.legend
+                (dataApi.result.meta as any).tableData
+                  ? (dataApi.result.meta as any).tableData
+                  : (dataApi.result.meta as any).legend
               }
               headers={tableHeaders}
-              getSortParams={getSortParams}
+              getSortParams={getSortParams as any}
               expandedRowName={expandedTableRowName}
               clickableLinking={clickableLinking}
               showKebab={showKebab}
@@ -306,16 +300,16 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         ) : tableHeaders &&
           !showKebab &&
           slug === 'templates_by_organization' ? (
-          <ApiStatusWrapper api={dataApi}>
-            <PlotlyChart data={dataApi.result.items} />
+          <ApiStatusWrapper api={dataApi as any}>
+            <PlotlyChart data={(dataApi.result as any).items} />
             <Table
               legend={
-                dataApi.result.meta.tableData
-                  ? dataApi.result.meta.tableData
-                  : dataApi.result.meta.legend
+                (dataApi.result.meta as any).tableData
+                  ? (dataApi.result.meta as any).tableData
+                  : (dataApi.result.meta as any).legend
               }
               headers={tableHeaders}
-              getSortParams={getSortParams}
+              getSortParams={getSortParams as any}
               expandedRowName={expandedTableRowName}
               clickableLinking={clickableLinking}
               showKebab={showKebab}
@@ -323,16 +317,16 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           </ApiStatusWrapper>
         ) : (
           <>
-            <ApiStatusWrapper api={dataApi}>
+            <ApiStatusWrapper api={dataApi as any}>
               <Chart
-                schema={hydrateSchema(schema)({
+                schema={hydrateSchema(schema as any)({
                   label: chartParams.label,
                   y: chartParams.y,
                   xTickFormat: chartParams.xTickFormat,
-                  chartType: chartParams.chartType,
+                  chartType: chartParams.chartType as any,
                 })}
                 dataComponent={'foobar'}
-                data={dataApi.result}
+                data={dataApi.result as any}
                 specificFunctions={{
                   labelFormat: {
                     customTooltipFormatting,
@@ -345,12 +339,12 @@ const ReportCard: FunctionComponent<StandardProps> = ({
             </ApiStatusWrapper>
             <Table
               legend={
-                dataApi.result.meta.tableData
-                  ? dataApi.result.meta.tableData
-                  : dataApi.result.meta.legend
+                (dataApi.result.meta as any).tableData
+                  ? (dataApi.result.meta as any).tableData
+                  : (dataApi.result.meta as any).legend
               }
               headers={tableHeaders}
-              getSortParams={getSortParams}
+              getSortParams={getSortParams as any}
               expandedRowName={expandedTableRowName}
               clickableLinking={clickableLinking}
               showKebab={showKebab}
@@ -361,13 +355,13 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       <CardFooter>
         {showPagination && (
           <Pagination
-            count={dataApi.result.meta.count}
+            count={(dataApi.result.meta as any).count}
             perPageOptions={perPageOptions}
             params={{
-              limit: +queryParams.limit,
-              offset: +queryParams.offset,
+              limit: queryParams.limit ? +queryParams.limit : 0,
+              offset: queryParams.offset ? +queryParams.offset : 0,
             }}
-            setPagination={setFromPagination}
+            setPagination={setFromPagination as any}
             variant={PaginationVariant.bottom}
           />
         )}
@@ -376,25 +370,27 @@ const ReportCard: FunctionComponent<StandardProps> = ({
   ) : (
     <div data-cy={dataApi.isLoading ? 'toolbar_loading' : 'toolbar_loaded'}>
       <FilterableToolbar
-        categories={options}
+        categories={options as any}
         defaultSelected={defaultSelectedToolbarCategory}
-        filters={queryParams}
+        filters={queryParams as any}
         setFilters={setFromToolbar}
+        hasSettings={false}
+        additionalControls={[]}
       />
       {tableHeaders && slug === 'templates_by_organization' ? (
-        <ApiStatusWrapper api={dataApi}>
-          <PlotlyChart data={dataApi.result.items} />
+        <ApiStatusWrapper api={dataApi as any}>
+          <PlotlyChart data={(dataApi.result as any).items} />
         </ApiStatusWrapper>
       ) : (
-        <ApiStatusWrapper api={dataApi}>
+        <ApiStatusWrapper api={dataApi as any}>
           <Chart
-            schema={hydrateSchema(schema)({
+            schema={hydrateSchema(schema as any)({
               label: chartParams.label,
               y: chartParams.y,
               xTickFormat: chartParams.xTickFormat,
-              chartType: chartParams.chartType,
+              chartType: chartParams.chartType as any,
             })}
-            data={dataApi.result}
+            data={dataApi.result as any}
             specificFunctions={{
               labelFormat: {
                 customTooltipFormatting,

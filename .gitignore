@@ -19,8 +19,11 @@ yarn-error.log*
 .DS_Store
 coverage
 
-sitemap.xml
-
 cypress/screenshots
 cypress/videos
 cypress/downloads
+
+.cache*
+core
+*.sw[po]
+*~

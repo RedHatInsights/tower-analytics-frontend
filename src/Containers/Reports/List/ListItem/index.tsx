@@ -1,26 +1,18 @@
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardTitle,
+} from '@patternfly/react-core/dist/dynamic/components/Card';
+import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
+import { TooltipPosition } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import React, { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
-
-import {
-  Card,
-  CardHeader,
-  CardHeaderMain,
-  CardTitle as PFCardTitle,
-  CardBody,
-  CardFooter,
-  Label as PFLabel,
-  Tooltip,
-  TooltipPosition,
-} from '@patternfly/react-core';
-
-import paths from '../../paths';
-import { TAGS } from '../../Shared/constants';
 import { BaseReportProps } from '../../Layouts/types';
-
-const CardTitle = styled(PFCardTitle)`
-  word-break: break-word;
-`;
+import { TAGS } from '../../Shared/constants';
+import paths from '../../paths';
 
 const Small = styled.small`
   display: block;
@@ -29,7 +21,7 @@ const Small = styled.small`
   white-space: pre-line;
 `;
 
-const Label = styled(PFLabel)`
+const SLabel = styled(Label)`
   margin-right: 10px;
   margin-bottom: 10px;
 `;
@@ -48,26 +40,26 @@ const ListItem: FunctionComponent<Props> = ({
   return (
     <Card
       data-cy={slug}
-      isSelectableRaised
       isSelected={selected === slug}
       onClick={() => {
         setSelected(slug);
       }}
+      className={
+        selected === slug
+          ? 'pf-m-selectable-raised pf-m-selected-raised'
+          : 'pf-m-selectable-raised'
+      }
     >
-      <CardHeader>
-        <CardHeaderMain>
-          <CardTitle onClick={(event) => event.stopPropagation()}>
-            <Tooltip content={<div>Click to go to report details</div>}>
-              <Link to={paths.getDetails(slug)}>{name}</Link>
-            </Tooltip>
-          </CardTitle>
-        </CardHeaderMain>
-      </CardHeader>
+      <CardTitle>
+        <Tooltip content={<div>Click to go to report details</div>}>
+          <Link to={paths.getDetails(slug)}>{name}</Link>
+        </Tooltip>
+      </CardTitle>
       <CardBody>
         {description ? (
           <Tooltip
             content={<div>Show report in preview</div>}
-            position="bottom"
+            position='bottom'
           >
             <Small>{description}</Small>
           </Tooltip>
@@ -83,7 +75,7 @@ const ListItem: FunctionComponent<Props> = ({
                 position={TooltipPosition.top}
                 content={tag.description}
               >
-                <Label key={idx}>{tag.name}</Label>
+                <SLabel key={idx}>{tag.name}</SLabel>
               </Tooltip>
             );
           }

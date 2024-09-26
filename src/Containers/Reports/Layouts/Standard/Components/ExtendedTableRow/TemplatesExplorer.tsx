@@ -1,35 +1,25 @@
+import { DescriptionList } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionListDescription } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionListGroup } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { DescriptionListTerm } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
+import { Divider } from '@patternfly/react-core/dist/dynamic/components/Divider';
+import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
+import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
+
 /**
  * TODO: This file is super specific to the data set, it is not reusable at all.
  * TODO: The types could be specified if I would be more confortable with the
  * data set this is developed for. The Brekadown component is not TS, which
  * is preventing the typescript compiler from compiling this component.
  */
-
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-nocheck
 import React from 'react';
-import {
-  DescriptionList,
-  DescriptionListDescription,
-  DescriptionListGroup,
-  DescriptionListTerm,
-  Divider,
-  Flex,
-  FlexItem,
-  Grid,
-  GridItem,
-} from '@patternfly/react-core';
-import { ExpandableRowContent, Td, Tr } from '@patternfly/react-table';
-
-import Breakdown from '../../../../../../Charts/Breakdown';
-import { categoryColor } from '../../../../../../Utilities/constants';
 import styled from 'styled-components';
 import { ExpandedTableRowComponent } from '.';
+import Breakdown from '../../../../../../Charts/Breakdown';
+import { categoryColor } from '../../../../../../Utilities/constants';
 
 const FailedTaskDescriptionList = styled(DescriptionList)`
   row-gap: 16px;
@@ -240,7 +230,7 @@ const TableExpandedRow: ExpandedTableRowComponent = ({ isExpanded, item }) => {
           />
 
           <Divider
-            component="div"
+            component='div'
             style={{ marginTop: '2rem', marginBottom: '1.5rem' }}
           />
 
