@@ -51,7 +51,7 @@ const GroupedBarChart = ({
       const selectedOrgs = items.filter(({ id }) => selectedIds.includes(id));
       return formatted.concat({ date, selectedOrgs });
     }, []);
-    const width = props.getWidth();
+    const width = props.getWidth() > 0 ? props.getWidth() : 700;
     const height = props.getHeight();
     // x scale of entire chart
     const x0 = d3.scaleBand().range([0, width]).padding(0.35);

@@ -80,6 +80,7 @@ const PdfDownload: ({
   if (!chartSeriesHiddenProps) {
     chartSeriesHiddenProps = [];
   }
+  sortOrder = sortOrder ?? 'asc';
   // Dispatch the start of downloading the pdf
   dispatch(
     downloadPdfAction(
