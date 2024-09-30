@@ -188,7 +188,7 @@ const PieChart = ({
 
   const draw = () => {
     d3.selectAll('#' + id + ' > *').remove();
-    const width = getWidth();
+    const width = getWidth() > 0 ? getWidth() : 300;
     const height = getHeight();
     const svg = d3
       .select('#' + id)
