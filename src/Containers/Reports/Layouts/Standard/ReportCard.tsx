@@ -262,7 +262,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
                 )
               : null
           }
-          additionalControls={additionalControls as any}
+          additionalControls={additionalControls}
         />
         {tableHeaders && !showKebab && slug !== 'templates_by_organization' ? (
           <ApiStatusWrapper api={dataApi as any}>
