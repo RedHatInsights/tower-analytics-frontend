@@ -8,7 +8,7 @@ import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Tool
 import { ToolbarItemVariant } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import CogIcon from '@patternfly/react-icons/dist/dynamic/icons/cog-icon';
 import FilterIcon from '@patternfly/react-icons/dist/dynamic/icons/filter-icon';
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, ReactNode, useState } from 'react';
 import { FilterCategoriesGroup, QuickDateGroup, SortByGroup } from './Groups';
 import { optionsForCategories } from './constants';
 import { ApiOptionsType, AttributeType, SetValues } from './types';
@@ -19,13 +19,13 @@ interface Props {
   filters: Record<string, AttributeType>;
   defaultSelected?: string;
   setFilters: SetValues;
-  pagination?: FunctionComponent | null;
+  pagination?: ReactNode | null;
   settingsPanel?: (
     setSettingsExpanded: (arg0: boolean) => void,
     settingsExpanded: boolean
-  ) => FunctionComponent;
+  ) => ReactNode;
   hasSettings?: boolean;
-  additionalControls?: FunctionComponent[];
+  additionalControls?: ReactNode[];
 }
 
 const FilterableToolbar: FunctionComponent<Props> = ({

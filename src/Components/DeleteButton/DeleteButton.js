@@ -70,20 +70,18 @@ const DeleteButton = ({
 
   return (
     <>
-      {disabledTooltip ? (
+      {isDisabled ? (
         <Tooltip content={disabledTooltip} position='top'>
-          <div>
-            <Button
-              spinnerAriaValueText={isLoading ? 'Loading' : undefined}
-              variant={variant || 'secondary'}
-              aria-label={'Delete'}
-              isDisabled={isDisabled}
-              onClick={() => toggleModal(true)}
-              ouiaId={ouiaId}
-            >
-              {children || 'Delete'}
-            </Button>
-          </div>
+          <Button
+            spinnerAriaValueText={isLoading ? 'Loading' : undefined}
+            variant={variant || 'secondary'}
+            aria-label={'Delete'}
+            isDisabled={isDisabled}
+            onClick={() => toggleModal(true)}
+            ouiaId={ouiaId}
+          >
+            {children || 'Delete'}
+          </Button>
         </Tooltip>
       ) : (
         <Button

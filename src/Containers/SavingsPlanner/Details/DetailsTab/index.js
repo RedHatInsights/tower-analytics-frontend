@@ -233,7 +233,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
                   }}
                 >
                   Edit
-                </Button>
+                </Button>{' '}
                 <DeleteButton
                   key={'delete-plan-button'}
                   name={name}
