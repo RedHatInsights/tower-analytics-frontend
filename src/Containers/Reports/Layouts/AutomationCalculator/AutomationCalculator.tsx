@@ -525,7 +525,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             categories={options as any}
             filters={queryParams as any}
             setFilters={setFromToolbar}
-            pagination={() => (
+            pagination={
               <Pagination
                 count={api.result.meta.count}
                 perPageOptions={perPageOptions}
@@ -536,40 +536,38 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 setPagination={setFromPagination as any}
                 isCompact
               />
-            )}
+            }
             additionalControls={[
-              () => (
-                <DownloadButton
-                  key='download-button'
-                  slug={slug}
-                  isMoney={isMoney}
-                  name={name}
-                  description={description}
-                  endpointUrl={dataEndpoint}
-                  queryParams={queryParams as any}
-                  selectOptions={options as any}
-                  y={chartParams.y as any}
-                  label={chartParams.label as any}
-                  xTickFormat={chartParams.xTickFormat}
-                  totalPages={Math.ceil(
-                    api.result.meta.count / (queryParams.limit as any)
-                  )}
-                  pageLimit={queryParams.limit as any}
-                  sortOptions={chartParams.y as any}
-                  sortOrder={queryParams.sort_order as any}
-                  startDate={queryParams.start_date as any}
-                  endDate={queryParams.end_date as any}
-                  dateRange={queryParams.quick_date_range as any}
-                  inputs={
-                    {
-                      costManual,
-                      costAutomation,
-                      totalSavings: computeTotalSavings(),
-                      currentPageSavings: computeCurrentPageSavings(),
-                    } as any
-                  }
-                />
-              ),
+              <DownloadButton
+                key='download-button'
+                slug={slug}
+                isMoney={isMoney}
+                name={name}
+                description={description}
+                endpointUrl={dataEndpoint}
+                queryParams={queryParams as any}
+                selectOptions={options as any}
+                y={chartParams.y as any}
+                label={chartParams.label as any}
+                xTickFormat={chartParams.xTickFormat}
+                totalPages={Math.ceil(
+                  api.result.meta.count / (queryParams.limit as any)
+                )}
+                pageLimit={queryParams.limit as any}
+                sortOptions={chartParams.y as any}
+                sortOrder={queryParams.sort_order as any}
+                startDate={queryParams.start_date as any}
+                endDate={queryParams.end_date as any}
+                dateRange={queryParams.quick_date_range as any}
+                inputs={
+                  {
+                    costManual,
+                    costAutomation,
+                    totalSavings: computeTotalSavings(),
+                    currentPageSavings: computeCurrentPageSavings(),
+                  } as any
+                }
+              />,
             ]}
           />
           <Grid hasGutter>
