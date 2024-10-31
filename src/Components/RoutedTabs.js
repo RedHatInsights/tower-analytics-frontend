@@ -15,7 +15,7 @@ const RoutedTabs = ({ tabsArray, defaultTabId = 1 }) => {
       tabsArray.find(
         (tab) =>
           typeof tab.name === 'string' &&
-          location.pathname.includes(tab.name.toLowerCase())
+          location.pathname.includes(tab.link.toLowerCase().replace('..', ''))
       )?.id || defaultTabId
     );
   };
