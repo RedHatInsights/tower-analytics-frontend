@@ -12,5 +12,6 @@ export const Paths = {
   reports: '/reports',
   reportsDetails: '/reports/:slug',
   reportsAutomationCalculator: '/reports/automation_calculator',
+  clusterList: '/cluster-list',
 };
 export const prefixPath = '/ansible/automation-analytics/';
