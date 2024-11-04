@@ -180,7 +180,7 @@ const ClustersList = ({ activeClusters }) => {
 };
 
 ClustersList.propTypes = {
-  activeClusters: PropTypes.boolean.isRequired,
+  activeClusters: PropTypes.bool.isRequired,
 };
 
 export default ClustersList;
