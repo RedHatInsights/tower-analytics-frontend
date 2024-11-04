@@ -74,6 +74,7 @@
     "postinstall": "ts-patch install",
     "prettier": "prettier -w src/ cypress/ *.config.js",
     "start": "fec dev --clouddotEnv=stage",
+    "start:prod": "fec dev --clouddotEnv=prod",
     "verify": "npm-run-all build lint"
   },
   "insights": {
