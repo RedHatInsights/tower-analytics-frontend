@@ -7,6 +7,7 @@ import MinusCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/minus-ci
 import PlusCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/plus-circle-icon';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { readJobExplorer, readJobExplorerOptions } from '../../Api';
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import JobStatus from '../../Components/JobStatus';
@@ -74,15 +75,7 @@ const ClustersList = ({ activeClusters }) => {
       type: 'text',
       cell: (item) => <TextCell text={item.id.id} iconSize='sm' />,
       value: (item) => {
-        return (
-          <a
-            href={item.id.tower_link}
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            {`${item.id.id} - ${item.id.template_name}`}
-          </a>
-        );
+        return <Link to={`${item.id.id}`}>{`${item.id.template_name}`}</Link>;
       },
     },
     {

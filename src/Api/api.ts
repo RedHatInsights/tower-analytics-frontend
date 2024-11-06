@@ -38,6 +38,8 @@ export enum Endpoint {
   adoptionRate = '/api/tower-analytics/v1/adoption_rate/',
   ROI = '/api/tower-analytics/v1/roi_templates/',
   costEffortROI = '/api/tower-analytics/v1/roi_cost_effort_data/',
+  // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
+  deployment = '/api/tower-analytics/v1/aap_clusters/',
   plans = '/api/tower-analytics/v1/plans/',
   plan = '/api/tower-analytics/v1/plan/',
   sendEmail = 'api/tower-analytics/v1/send_email/',
@@ -178,6 +180,9 @@ export const readOrgOptions = (params: Params): Promise<ApiJson> =>
 
 export const readHostExplorerOptions = (params: Params): Promise<ApiJson> =>
   post(Endpoint.hostExplorerOptions, params);
+
+export const readDeployment = (id: number): Promise<ApiJson> =>
+  get(`${Endpoint.deployment}${id}/`);
 
 export const readPlans = (params: ParamsWithPagination): Promise<ApiJson> =>
   postWithPagination(Endpoint.plans, params);

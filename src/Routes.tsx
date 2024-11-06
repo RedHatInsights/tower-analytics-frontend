@@ -45,6 +45,9 @@ const components = {
   [Paths.clusterList]: asyncComponent(
     () => import('./Containers/ClusterLists/ClusterListsPage')
   ),
+  [Paths.clusterListDetails]: asyncComponent(
+    () => import('./Containers/ClusterLists/ClusterPage')
+  ),
 };
 
 export const AnalyticsRoutes: FunctionComponent<Record<string, never>> = () => {
