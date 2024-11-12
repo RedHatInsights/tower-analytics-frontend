@@ -14,7 +14,7 @@
     "@redhat-cloud-services/frontend-components": "^4.2.16",
     "@redhat-cloud-services/frontend-components-notifications": "^4.1.0",
     "@redhat-cloud-services/frontend-components-utilities": "^4.0.19",
-    "@unleash/proxy-client-react": "^4.3.1",
+    "@unleash/proxy-client-react": "^4.4.0",
     "classnames": "^2.5.1",
     "d3": "^7.9.0",
     "moment": "^2.30.1",
