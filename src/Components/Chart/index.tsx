@@ -69,10 +69,7 @@ const applyHiddenFilter = (
     hidden:
       (!!series.serie[0].id || !!series.serie[0].host_id) &&
       !!chartSeriesHidden.includes(
-        // eslint-disable-next-line no-prototype-builtins
-        series.serie[0].hasOwnProperty('host_id').toString() ||
-          // eslint-disable-next-line no-prototype-builtins
-          series.serie[0].hasOwnProperty('id').toString()
+        (series.serie[0].host_id || series.serie[0].id || '').toString()
       ),
   })),
 });
@@ -98,6 +95,7 @@ const Chart: FC<Props> = ({
     legend: [],
   });
 
+  // gets called when clicking on legend, .series[x].hidden is updated
   const setChartDataHook = (newChartData: ChartData) => {
     dispatch({
       type: 'SET_CHART_SERIES_HIDDEN_PROPS',
@@ -114,7 +112,8 @@ const Chart: FC<Props> = ({
         chartSeriesHiddenProps as string[]
       )
     );
-  }, [data]);
+  }, [data, chartSeriesHiddenProps]);
+
   return (
     <ChartBuilder
       schema={schema}
