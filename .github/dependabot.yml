@@ -27,6 +27,9 @@ updates:
         patterns:
           - '@victory/*'
     ignore:
+      - dependency-name: '@patternfly/*'
+        update-types:
+          - 'version-update:semver-major'
       - dependency-name: '@patternfly/react-charts'
         update-types:
           - 'version-update:semver-major'
