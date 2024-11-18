@@ -28,7 +28,7 @@
     "redux-promise-middleware": "^6.2.0",
     "streamsaver": "^2.0.6",
     "styled-components": "^6.1.13",
-    "uuid": "^10.0.0",
+    "uuid": "^11.0.3",
     "victory-core": "^36.9.2",
     "victory-cursor-container": "^36.9.2",
     "web-streams-polyfill": "^3.3.3"
