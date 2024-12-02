@@ -48,6 +48,42 @@ export const jobExplorer = {
   },
 };
 
+export const clusterList = {
+  defaultParams: {
+    attributes: [
+      'id',
+      'status',
+      'job_type',
+      'started',
+      'finished',
+      'elapsed',
+      'created',
+      'cluster_name',
+      'org_name',
+      'most_failed_tasks',
+      'host_count',
+      'host_task_count',
+      'failed_host_count',
+      'unreachable_host_count',
+      'changed_host_count',
+      'ok_host_count',
+      'skipped_host_count',
+    ],
+    status: [],
+    quick_date_range: 'last_30_days',
+    job_type: [],
+    org_id: [],
+    cluster_id: [],
+    template_id: [],
+    inventory_id: [],
+    sort_options: 'created',
+    sort_order: 'desc',
+    only_root_workflows_and_standalone_jobs: false,
+    limit: '5',
+    offset: '0',
+  },
+};
+
 export const organizationStatistics = {
   defaultParams: {
     status: [],

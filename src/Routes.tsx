@@ -42,6 +42,9 @@ const components = {
   [Paths.reportsAutomationCalculator]: asyncComponent(
     () => import('./Containers/Reports/Details')
   ),
+  [Paths.clusterList]: asyncComponent(
+    () => import('./Containers/ClusterLists/ClusterListsPage')
+  ),
 };
 
 export const AnalyticsRoutes: FunctionComponent<Record<string, never>> = () => {
