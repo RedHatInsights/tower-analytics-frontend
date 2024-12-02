@@ -4,7 +4,7 @@ Automation Analytics provides data analytics for Ansible Tower that provides vis
 
 ### Developing against a deployed backend
 
-Have Node 18+ installed, have a custom `127.0.2.1 stage.foo.redhat.com` line in your `/etc/hosts`.
+Have Node 20+ installed, have a custom `127.0.2.1 stage.foo.redhat.com` line in your `/etc/hosts`.
 
 1. `npm install` - install dependencies
 2. `npm run start` - start local frontend while proxying all the requests to the stage environment
