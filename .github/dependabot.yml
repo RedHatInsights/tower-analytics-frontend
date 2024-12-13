@@ -37,6 +37,9 @@ updates:
       - dependency-name: 'eslint'
         update-types:
           - 'version-update:semver-major'
+      - dependency-name: 'react-router-dom'
+        update-types:
+          - 'version-update:semver-major'
       - dependency-name: 'react-redux'
         update-types:
           - 'version-update:semver-major'
