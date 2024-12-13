@@ -6,7 +6,7 @@ import { ExpandedTableRowComponent, ExpandedTableRowName } from './types';
 export * from './types';
 
 export const getExpandedRowComponent = (
-  name?: ExpandedTableRowName
+  name?: ExpandedTableRowName,
 ): ExpandedTableRowComponent | null => {
   switch (name) {
     case 'templatesExplorer':

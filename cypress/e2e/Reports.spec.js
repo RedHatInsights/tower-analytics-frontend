@@ -68,7 +68,7 @@ describe("Reports' navigation on Reports page - smoketests", () => {
         .invoke('text')
         .then((item) => {
           cy.get(
-            '[data-cy="selected_report_dropdown"] > span.pf-v5-c-dropdown__toggle-text'
+            '[data-cy="selected_report_dropdown"] > span.pf-v5-c-dropdown__toggle-text',
           )
             .invoke('text')
             .should('eq', item);

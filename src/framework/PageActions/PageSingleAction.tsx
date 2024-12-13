@@ -17,7 +17,7 @@ export function PageSingleAction<T extends object>(props: {
   const Wrapper = wrapper ?? Fragment;
   const Icon = action.icon;
   let tooltip =
-    action.tooltip ?? props.iconOnly ? props.action.label : undefined;
+    (action.tooltip ?? props.iconOnly) ? props.action.label : undefined;
   const isDisabled =
     action.isDisabled !== undefined && selectedItem
       ? action.isDisabled(selectedItem)

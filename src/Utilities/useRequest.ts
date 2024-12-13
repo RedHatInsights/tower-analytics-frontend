@@ -59,7 +59,7 @@ const hasAttributesDeep = (obj: unknown, required: unknown): boolean => {
         !!Object.prototype.hasOwnProperty.call(required, key) &&
         !!Object.prototype.hasOwnProperty.call(obj, key) &&
         // @ts-ignore-next-line
-        hasAttributesDeep(obj[key], required[key])
+        hasAttributesDeep(obj[key], required[key]),
     );
 
     return !matchArray.includes(false);
@@ -71,7 +71,7 @@ const hasAttributesDeep = (obj: unknown, required: unknown): boolean => {
 
 const useRequest = <T>(
   makeRequest: (...args: unknown[]) => Promise<T>,
-  initialValue: T
+  initialValue: T,
 ): UseRequestReturn<T> => {
   const [variables, setVariables] = useState<UseRequestVariables<T>>({
     result: initialValue,
@@ -99,7 +99,7 @@ const useRequest = <T>(
             '\nRecieved response from API:\n',
             response,
             '\nInitial value supplied:\n',
-            initialValue
+            initialValue,
           );
 
         if (isMounted.current) {
@@ -140,7 +140,7 @@ interface UseDismissableErrorReturn {
 }
 
 export const useDismissableError = (
-  error: ErrorType
+  error: ErrorType,
 ): UseDismissableErrorReturn => {
   const [showError, setShowError] = useState(false);
 
@@ -173,7 +173,7 @@ interface UseDeleteItemsReturn {
 }
 
 export const useDeleteItems = (
-  makeRequest: () => Promise<void>
+  makeRequest: () => Promise<void>,
 ): UseDeleteItemsReturn => {
   const {
     error: requestError,

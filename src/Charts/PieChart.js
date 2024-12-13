@@ -173,7 +173,7 @@ const PieChart = ({
     .sort((a, b) => (a.count > b.count ? 1 : b.count > a.count ? -1 : 0));
 
   const [selectedIds, setSelectedIds] = useState(
-    data.map(({ id }) => id).slice(0, 8)
+    data.map(({ id }) => id).slice(0, 8),
   );
 
   let timeout = null;
@@ -225,7 +225,7 @@ const PieChart = ({
         (width + margin.left + margin.right) / 2 +
         ',' +
         (height + margin.top + margin.bottom) / 2 +
-        ')'
+        ')',
     );
 
     svg

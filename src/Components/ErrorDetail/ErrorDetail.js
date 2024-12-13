@@ -45,7 +45,7 @@ function ErrorDetail({ error }) {
             <EDCardBody>
               <ul>
                 {error.map((m) =>
-                  typeof m === 'string' ? <li key={m}>{m}</li> : null
+                  typeof m === 'string' ? <li key={m}>{m}</li> : null,
                 )}
               </ul>
             </EDCardBody>

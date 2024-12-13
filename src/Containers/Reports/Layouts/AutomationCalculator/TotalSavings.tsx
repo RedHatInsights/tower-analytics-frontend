@@ -47,7 +47,7 @@ const TotalSavings: FunctionComponent<Props> = ({
                 </SpinnerDiv>
               ) : isMoney ? (
                 currencyFormatter(
-                  index === 0 ? totalSavings : currentPageSavings
+                  index === 0 ? totalSavings : currentPageSavings,
                 )
               ) : (
                 hoursFormatter(index === 0 ? totalSavings : currentPageSavings)

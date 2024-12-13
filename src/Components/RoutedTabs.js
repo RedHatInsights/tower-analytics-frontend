@@ -15,7 +15,7 @@ const RoutedTabs = ({ tabsArray, defaultTabId = 1 }) => {
       tabsArray.find(
         (tab) =>
           typeof tab.name === 'string' &&
-          location.pathname.includes(tab.name.toLowerCase())
+          location.pathname.includes(tab.name.toLowerCase()),
       )?.id || defaultTabId
     );
   };
@@ -50,7 +50,7 @@ RoutedTabs.propTypes = {
       id: number.isRequired,
       link: string.isRequired,
       name: oneOfType([string.isRequired, node.isRequired]),
-    })
+    }),
   ).isRequired,
 };
 

@@ -22,7 +22,7 @@ const parseUrl = (
   reportUrl: string,
   token: string,
   expiry: string,
-  slug: string
+  slug: string,
 ) => {
   const params = `slug=${slug}&token=${token}`;
   const host = location.protocol + '//' + location.host;
@@ -77,8 +77,8 @@ const SendEmail: ({
       },
       dispatch,
       slug,
-      token
-    )
+      token,
+    ),
   );
 };
 

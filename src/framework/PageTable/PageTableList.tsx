@@ -53,7 +53,7 @@ export function PageTableList<T extends object>(props: PageTableListProps<T>) {
     unselectItem,
     rowActions,
     defaultCardSubtitle,
-    showSelect
+    showSelect,
   );
 
   return (
@@ -74,7 +74,7 @@ function useColumnsToDataList<T extends object>(
   unselectItem?: (item: T) => void,
   rowActions?: IPageAction<T>[],
   defaultCardSubtitle?: ReactNode,
-  showSelect?: boolean
+  showSelect?: boolean,
 ): (item: T) => ReactNode {
   const data = useMemo(() => {
     let nameColumn: ITableColumn<T> | undefined;
@@ -138,7 +138,7 @@ function useColumnsToDataList<T extends object>(
         selectItem?.(item);
       }
     },
-    [isSelected, selectItem, unselectItem]
+    [isSelected, selectItem, unselectItem],
   );
 
   const {
@@ -352,6 +352,6 @@ function useColumnsToDataList<T extends object>(
       secondaryColumns,
       rowActions,
       onSelectClick,
-    ]
+    ],
   );
 }

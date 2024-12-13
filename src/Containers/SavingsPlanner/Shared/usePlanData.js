@@ -75,7 +75,7 @@ const usePlanData = (initial) => {
         };
       default:
         throw new Error(
-          `usePlanData reducer action type ${type} was not found.`
+          `usePlanData reducer action type ${type} was not found.`,
         );
     }
   };

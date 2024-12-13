@@ -37,7 +37,7 @@ class BarChart extends Component {
     };
 
     this.props.navigate(
-      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams)
+      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams),
     );
   }
 
@@ -69,7 +69,7 @@ class BarChart extends Component {
         let TOTAL = +successful_count + failed_count || 0;
         return formatted.concat({ DATE, RAN, FAIL, TOTAL });
       },
-      []
+      [],
     );
     const width = this.props.getWidth();
     const height = this.props.getHeight();
@@ -88,7 +88,7 @@ class BarChart extends Component {
           this.props.margin.left +
           ',' +
           this.props.margin.top +
-          ')'
+          ')',
       );
     //[fail, success]
     let colors = d3.scaleOrdinal(['#6EC664', '#A30000']);
@@ -142,7 +142,7 @@ class BarChart extends Component {
       .attr('class', 'x-axis')
       .attr('transform', 'translate(0,' + height + ')')
       .call(
-        d3.axisBottom(x).tickValues(ticks).tickFormat(d3.timeFormat('%-m/%-d')) // "1/19"
+        d3.axisBottom(x).tickValues(ticks).tickFormat(d3.timeFormat('%-m/%-d')), // "1/19"
       )
       .selectAll('line')
       .attr('stroke', '#d7d7d7');
@@ -157,7 +157,7 @@ class BarChart extends Component {
           width / 2 +
           ' ,' +
           (height + this.props.margin.top + 20) +
-          ')'
+          ')',
       )
       .style('text-anchor', 'middle')
       .text('Date');

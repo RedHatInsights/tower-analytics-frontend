@@ -140,12 +140,12 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
   // const { disableBodyPadding } = props
   const { toolbarActions, filters, error, itemCount } = props;
   const { openColumnModal, columnModal, managedColumns } = useColumnModal(
-    props.tableColumns
+    props.tableColumns,
   );
   const showSelect =
     props.showSelect ||
     toolbarActions?.find(
-      (toolbarAction) => PageActionType.bulk === toolbarAction.type
+      (toolbarAction) => PageActionType.bulk === toolbarAction.type,
     ) !== undefined;
 
   const hasTableViewType = !props.disableTableView;
@@ -158,8 +158,8 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
       (hasTableViewType
         ? PageTableViewTypeE.Table
         : hasListViewType
-        ? PageTableViewTypeE.List
-        : PageTableViewTypeE.Cards)
+          ? PageTableViewTypeE.List
+          : PageTableViewTypeE.Cards),
   );
 
   const usePadding = useBreakpoint('md') && props.disableBodyPadding !== true;
@@ -299,7 +299,7 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
   const showSelect =
     props.showSelect ||
     toolbarActions?.find(
-      (toolbarAction) => PageActionType.bulk === toolbarAction.type
+      (toolbarAction) => PageActionType.bulk === toolbarAction.type,
     ) !== undefined;
   const containerRef = useRef<HTMLDivElement>(null);
   const [scroll, setScroll] = useState<{
@@ -324,7 +324,7 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
   }, []);
   const onScroll = useCallback(
     (event: UIEvent<HTMLDivElement>) => updateScroll(event.currentTarget),
-    [updateScroll]
+    [updateScroll],
   );
   useResizeObserver(containerRef, () => updateScroll(containerRef.current));
   useEffect(() => updateScroll(containerRef.current), [updateScroll]);
@@ -372,37 +372,37 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
                 </Tr>
               ))
             : pageItems === undefined
-            ? new Array(Math.min(perPage, itemCount))
-                .fill(0)
-                .map((_, index) => (
-                  <Tr key={index}>
-                    {showSelect && <Td></Td>}
-                    <Td colSpan={tableColumns.length}>
-                      <div style={{ paddingTop: 5, paddingBottom: 5 }}>
-                        <Skeleton height='27px' />
-                      </div>
-                    </Td>
-                  </Tr>
-                ))
-            : pageItems?.map((item, rowIndex) => (
-                <TableRow<T>
-                  key={keyFn ? keyFn(item) : rowIndex}
-                  columns={tableColumns}
-                  item={item}
-                  isItemSelected={isSelected?.(item)}
-                  isSelectMultiple={isSelectMultiple}
-                  selectItem={selectItem}
-                  unselectItem={unselectItem}
-                  rowActions={rowActions}
-                  rowIndex={rowIndex}
-                  showSelect={showSelect}
-                  scrollLeft={scroll.left > 0}
-                  scrollRight={scroll.right > 1}
-                  unselectAll={unselectAll}
-                  onSelect={onSelect}
-                  expandedRow={expandedRow}
-                />
-              ))}
+              ? new Array(Math.min(perPage, itemCount))
+                  .fill(0)
+                  .map((_, index) => (
+                    <Tr key={index}>
+                      {showSelect && <Td></Td>}
+                      <Td colSpan={tableColumns.length}>
+                        <div style={{ paddingTop: 5, paddingBottom: 5 }}>
+                          <Skeleton height='27px' />
+                        </div>
+                      </Td>
+                    </Tr>
+                  ))
+              : pageItems?.map((item, rowIndex) => (
+                  <TableRow<T>
+                    key={keyFn ? keyFn(item) : rowIndex}
+                    columns={tableColumns}
+                    item={item}
+                    isItemSelected={isSelected?.(item)}
+                    isSelectMultiple={isSelectMultiple}
+                    selectItem={selectItem}
+                    unselectItem={unselectItem}
+                    rowActions={rowActions}
+                    rowIndex={rowIndex}
+                    showSelect={showSelect}
+                    scrollLeft={scroll.left > 0}
+                    scrollRight={scroll.right > 1}
+                    unselectAll={unselectAll}
+                    onSelect={onSelect}
+                    expandedRow={expandedRow}
+                  />
+                ))}
         </Tbody>
       </Table>
       {itemCount === 0 && (
@@ -465,7 +465,7 @@ function TableHead<T extends object>(props: {
         onSort: (
           _event: MouseEvent,
           _columnIndex: number,
-          sortByDirection: SortByDirection
+          sortByDirection: SortByDirection,
         ) => {
           if (column.sort) {
             setSort?.(column.sort);
@@ -480,7 +480,7 @@ function TableHead<T extends object>(props: {
         columnIndex,
       };
     },
-    [setSort, setSortDirection, sort, sortDirection]
+    [setSort, setSortDirection, sort, sortDirection],
   );
 
   return (
@@ -511,8 +511,8 @@ function TableHead<T extends object>(props: {
                     column.minWidth === 0
                       ? '1%'
                       : column.minWidth !== undefined
-                      ? column.minWidth
-                      : undefined,
+                        ? column.minWidth
+                        : undefined,
                   maxWidth:
                     column.maxWidth !== undefined ? column.maxWidth : undefined,
                   backgroundColor: 'inherit',

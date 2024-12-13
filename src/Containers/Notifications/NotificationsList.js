@@ -126,7 +126,7 @@ const AllNotificationTemplate = ({ notifications }) =>
           </NLNotificationDrawerListItem>
         );
       }
-    }
+    },
   );
 
 const ErrorNotificationTemplate = ({ notifications }) =>

@@ -91,7 +91,7 @@ const ListItem = ({
       },
     };
     navigate(
-      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams)
+      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams),
     );
   };
 
@@ -198,10 +198,10 @@ const ListItem = ({
               automation_status.last_known_day
                 ? `Status last reported on: ${automation_status.last_known_day}`
                 : automation_status.last_known_month
-                ? `Status last reported on: ${automation_status.last_known_month}`
-                : automation_status.last_known_year
-                ? `Status last reported on: ${automation_status.last_known_year}`
-                : `Status last reported on: ${automation_status.last_known_date}`
+                  ? `Status last reported on: ${automation_status.last_known_month}`
+                  : automation_status.last_known_year
+                    ? `Status last reported on: ${automation_status.last_known_year}`
+                    : `Status last reported on: ${automation_status.last_known_date}`
             }
           >
             <CardLabel>Last job status</CardLabel>

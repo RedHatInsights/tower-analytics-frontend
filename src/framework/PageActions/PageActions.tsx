@@ -45,8 +45,8 @@ export function PageActions<T extends object>(props: {
 
   const collapseBreakpoint = useBreakpoint(
     props.collapse !== 'never' && props.collapse !== 'always'
-      ? props.collapse ?? 'lg'
-      : 'lg'
+      ? (props.collapse ?? 'lg')
+      : 'lg',
   );
   const collapseButtons =
     props.collapse !== 'never' &&
@@ -55,7 +55,7 @@ export function PageActions<T extends object>(props: {
   /** Actions that are visible */
   const visibleActions = useMemo(
     () => actions.filter((action) => !isHiddenAction(action, selectedItem)),
-    [actions, selectedItem]
+    [actions, selectedItem],
   );
 
   /** Actions that show up outside the dropdown */
@@ -110,7 +110,7 @@ function isPinnedAction<T extends object>(action: IPageAction<T>) {
 
 export function isHiddenAction<T extends object>(
   action: IPageAction<T>,
-  selectedItem: T | undefined
+  selectedItem: T | undefined,
 ): boolean {
   switch (action.type) {
     case PageActionType.single:

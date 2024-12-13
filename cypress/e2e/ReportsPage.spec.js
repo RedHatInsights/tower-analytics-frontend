@@ -130,7 +130,7 @@ describe('Reports page smoketests', () => {
         .invoke('text')
         .then(($text) => {
           cy.get(
-            '[data-cy="selected_report_dropdown"] > span.pf-v5-c-dropdown__toggle-text'
+            '[data-cy="selected_report_dropdown"] > span.pf-v5-c-dropdown__toggle-text',
           )
             .invoke('text')
             .should('eq', $text);

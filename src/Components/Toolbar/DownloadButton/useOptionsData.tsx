@@ -12,7 +12,7 @@ const generateExpiryDate = () => {
 const useOptionsData = (
   initial: EmailDetailsProps,
   name: string,
-  description: string
+  description: string,
 ) => {
   const initialData = {
     downloadType: initial?.downloadType || 'pdf',
@@ -25,7 +25,7 @@ const useOptionsData = (
     body:
       initial?.body ||
       `<b>${name}</b>\nThis report shows ${description[0].toLowerCase()}${description.substring(
-        1
+        1,
       )}`,
     selectedRbacGroups: initial?.selectedRbacGroups || [],
     users: initial?.users || [],
@@ -34,7 +34,7 @@ const useOptionsData = (
 
   const formReducer = (
     state: EmailDetailsProps,
-    action: TypeValue
+    action: TypeValue,
   ): EmailDetailsProps => {
     switch (action.type) {
       /* v1 api reducers */
@@ -92,7 +92,7 @@ const useOptionsData = (
         return initialData;
       default:
         throw new Error(
-          `useOptionsData reducer action type ${action.type} was not found.`
+          `useOptionsData reducer action type ${action.type} was not found.`,
         );
     }
   };

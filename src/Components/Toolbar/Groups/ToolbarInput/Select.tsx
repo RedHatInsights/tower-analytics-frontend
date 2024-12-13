@@ -56,7 +56,7 @@ const Select: FunctionComponent<Props> = ({
       key: key?.toString(),
       value: value?.toString(),
       description: description?.toString(),
-    })
+    }),
   );
 
   const selectOptionsMasterCopy = selectOptions;
@@ -66,7 +66,7 @@ const Select: FunctionComponent<Props> = ({
   const onDelete = (chip: string) => {
     if (Array.isArray(value)) {
       const keyToDelete = selectOptionsMasterCopy.find(
-        ({ value }) => value === chip
+        ({ value }) => value === chip,
       )?.key;
 
       const stringValues: string[] = value.map((i) => i.toString());
@@ -82,9 +82,9 @@ const Select: FunctionComponent<Props> = ({
     return renderValues(
       selectOptionsMasterCopy
         .filter(({ value }) =>
-          value.toString().toLowerCase().includes(textInput.toLowerCase())
+          value.toString().toLowerCase().includes(textInput.toLowerCase()),
         )
-        .slice(0, 50)
+        .slice(0, 50),
     );
   };
 
@@ -97,7 +97,7 @@ const Select: FunctionComponent<Props> = ({
     if (Array.isArray(value))
       return handleCheckboxChips(
         value.map((i) => i.toString()),
-        selectOptionsMasterCopy
+        selectOptionsMasterCopy,
       );
     return handleSingleChips(value.toString(), selectOptions);
   };
@@ -108,7 +108,7 @@ const Select: FunctionComponent<Props> = ({
       setValue(
         !stringValues.includes(selection.toString())
           ? [...stringValues, selection]
-          : stringValues.filter((item) => item !== selection.toString())
+          : stringValues.filter((item) => item !== selection.toString()),
       );
     } else {
       setValue(selection);

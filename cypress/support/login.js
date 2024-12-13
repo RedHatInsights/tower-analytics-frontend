@@ -77,6 +77,6 @@ Cypress.Commands.add('loginWithPageSession', () => {
         cy.document().its('cookie').should('contain', 'TAsessionID');
       },
       cacheAcrossSpecs: true,
-    }
+    },
   );
 });
