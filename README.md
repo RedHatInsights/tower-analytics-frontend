@@ -10,6 +10,8 @@ Have Node 20+ installed, have a custom `127.0.2.1 stage.foo.redhat.com` line in 
 2. `npm run start` - start local frontend while proxying all the requests to the stage environment
 3. open https://stage.foo.redhat.com:1337/ansible/automation-analytics/
 
+(substitute `prod.foo.redhat.com` and `npm run start:prod` if needed)
+
 You need valid credentials for the crc stage environment you are running against to be able to log in.
 
 ### Other
