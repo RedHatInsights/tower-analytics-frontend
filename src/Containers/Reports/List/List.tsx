@@ -50,11 +50,11 @@ const List: FunctionComponent<Record<string, never>> = () => {
   let previousItem = '';
   const queryParams = useQueryParams(
     reportDefaultParams('reports'),
-    'allReports'
+    'allReports',
   ).queryParams;
   const setFromToolbar = useQueryParams(
     reportDefaultParams('reports'),
-    'allReports'
+    'allReports',
   ).setFromToolbar;
 
   const {
@@ -67,7 +67,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
   const optionsQueryParams = useQueryParams(reportDefaultParams('reports'));
   const { result: options, request: fetchOptions } = useRequest(
     reportOptions as any,
-    {}
+    {},
   );
 
   useEffect(() => {
@@ -153,10 +153,10 @@ const List: FunctionComponent<Record<string, never>> = () => {
                               {report.tags.map(
                                 (
                                   tagKey: TagName,
-                                  idx: React.Key | null | undefined
+                                  idx: React.Key | null | undefined,
                                 ) => {
                                   const tag = TAGS.find(
-                                    (t) => t.key === tagKey
+                                    (t) => t.key === tagKey,
                                   );
                                   if (tag) {
                                     return (
@@ -169,7 +169,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                                       </Tooltip>
                                     );
                                   }
-                                }
+                                },
                               )}
                               <Button
                                 variant={ButtonVariant.plain}

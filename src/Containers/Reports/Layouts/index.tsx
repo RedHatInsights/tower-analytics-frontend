@@ -5,7 +5,7 @@ import { ReportSchema } from './types';
 
 const getLayoutComponent = (
   report: ReportSchema,
-  fullCard: boolean
+  fullCard: boolean,
 ): React.ReactElement => {
   switch (report.layoutComponent) {
     case 'standard':

@@ -90,7 +90,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
     };
 
     navigate(
-      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams)
+      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams),
     );
   };
 
@@ -147,7 +147,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
     Template: template_id ? showTemplate(template_details) : undefined,
     'Last job status': Array.isArray(automation_status.status)
       ? automation_status.status.map((item, index) =>
-          jobStatusLabel(item, index)
+          jobStatusLabel(item, index),
         )
       : jobStatusLabel(automation_status.status),
     'Last updated': modified ? (
@@ -159,7 +159,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
     async (props) => {
       await deletePlan(props);
       navigate(createUrl(Paths.savingsPlanner, true));
-    }
+    },
   );
 
   const { error, dismissError } = useDismissableError(deleteError);
@@ -184,10 +184,10 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
                               automation_status.last_known_day
                                 ? `Status last reported on: ${automation_status.last_known_day}`
                                 : automation_status.last_known_month
-                                ? `Status last reported on: ${automation_status.last_known_month}`
-                                : automation_status.last_known_year
-                                ? `Status last reported on: ${automation_status.last_known_year}`
-                                : `Status last reported on: ${automation_status.last_known_date}`
+                                  ? `Status last reported on: ${automation_status.last_known_month}`
+                                  : automation_status.last_known_year
+                                    ? `Status last reported on: ${automation_status.last_known_year}`
+                                    : `Status last reported on: ${automation_status.last_known_date}`
                             }
                           >
                             <DescriptionListTerm>{key}</DescriptionListTerm>
@@ -199,7 +199,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
                           {labelsAndValues[key]}
                         </DescriptionListDescription>
                       </DescriptionListGroup>
-                    )
+                    ),
                 )}
               </DescriptionList>
               {tasks.length > 0 && (
@@ -228,7 +228,7 @@ const DetailsTab = ({ tabsArray, plan, canWrite }) => {
                   aria-label='Edit plan'
                   onClick={() => {
                     navigate(
-                      createUrl(`${pathname.split('/details')[0]}/edit`)
+                      createUrl(`${pathname.split('/details')[0]}/edit`),
                     );
                   }}
                 >

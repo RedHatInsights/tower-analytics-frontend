@@ -81,7 +81,7 @@ export interface saveROIParams {
 export type NotificationAsyncFunction = (
   id: string,
   title?: string,
-  message?: string
+  message?: string,
 ) => NotificationOptions;
 
 export interface NotificationParams {
@@ -96,5 +96,5 @@ export type ReadParams = { params: Params };
 export type ReadParamsWithPagination = { params: ParamsWithPagination };
 
 export type ReadEndpointFnc = (
-  params: Params | ParamsWithPagination
+  params: Params | ParamsWithPagination,
 ) => Promise<ApiJson>;

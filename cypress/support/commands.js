@@ -141,7 +141,7 @@ Cypress.Commands.add('findByCustomId', (idToFind) => {
   const { queryHelpers } = require('@testing-library/dom');
   let queryAllByOuia = queryHelpers.queryAllByAttribute.bind(
     null,
-    'data-ouia-component-id'
+    'data-ouia-component-id',
   );
   let queryAllByDataCy = queryHelpers.queryAllByAttribute.bind(null, 'data-cy');
   let queryAllById = queryHelpers.queryAllByAttribute.bind(null, 'id');
@@ -164,12 +164,12 @@ Cypress.Commands.add('visitReport', (pageName) => {
         cy.log('Page data from fixture:', JSON.stringify(page));
         cy.log(
           'Reports Url:',
-          Cypress.config().baseUrl + reportsUrl + '/' + page.name
+          Cypress.config().baseUrl + reportsUrl + '/' + page.name,
         );
         cy.visit(Cypress.config().baseUrl + reportsUrl + '/' + page.name);
         cy.url().should(
           'eq',
-          Cypress.config().baseUrl + reportsUrl + '/' + page.name
+          Cypress.config().baseUrl + reportsUrl + '/' + page.name,
         );
         cy.getByCy('loading').should('not.exist');
         cy.getByCy('api_error_state').should('not.exist');

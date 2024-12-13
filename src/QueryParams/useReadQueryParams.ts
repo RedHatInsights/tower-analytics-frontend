@@ -5,7 +5,7 @@ import { QueryParams } from './types';
 
 const useReadQueryParams = <T extends QueryParams>(
   initial: T,
-  namespace = DEFAULT_NAMESPACE
+  namespace = DEFAULT_NAMESPACE,
 ): T => {
   const { queryParams } = useContext(QueryParamsContext);
 

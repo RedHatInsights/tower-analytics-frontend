@@ -5,7 +5,7 @@ import { SelectOptionProps } from '../../types';
  */
 export const handleCheckboxChips = (
   item: string[],
-  comparator: SelectOptionProps[]
+  comparator: SelectOptionProps[],
 ): string[] => {
   if (item && comparator) {
     return item.reduce((acc: string[], i) => {
@@ -27,7 +27,7 @@ export const handleCheckboxChips = (
  */
 export const handleSingleChips = (
   item: string,
-  comparator: SelectOptionProps[]
+  comparator: SelectOptionProps[],
 ): string[] => {
   if (item && typeof item === 'string' && comparator) {
     let val;

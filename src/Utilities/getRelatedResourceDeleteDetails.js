@@ -13,7 +13,7 @@ export async function getRelatedResourceDeleteCounts(requests) {
           results[label] = count;
           hasCount = true;
         }
-      })
+      }),
     );
   } catch (err) {
     error = err;

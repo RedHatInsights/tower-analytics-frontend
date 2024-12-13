@@ -45,7 +45,7 @@ function title(str) {
 
 const Breakdown = ({ categoryCount, categoryColor, showPercent = false }) => {
   const totalCount = Object.values(categoryCount || {}).reduce(
-    (accumulated, currentVal) => accumulated + currentVal
+    (accumulated, currentVal) => accumulated + currentVal,
   );
 
   const sortedCategories = Object.keys(categoryCount || {})

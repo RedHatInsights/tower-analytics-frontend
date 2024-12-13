@@ -1,10 +1,10 @@
 import ChartBuilder, {
   ChartData,
+  ChartDataSerie,
   ChartFunctions,
   ChartSchemaElement,
   functions,
 } from '@ansible/react-json-chart-builder';
-import { ChartDataSerie } from '@ansible/react-json-chart-builder/dist/cjs';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
 import React, { FC, useEffect, useState } from 'react';
 import { useQueryParams } from '../../QueryParams';
@@ -61,7 +61,7 @@ const customFunctions = (specificFunctions?: ChartFunctions) => ({
 
 const applyHiddenFilter = (
   chartData: ChartData,
-  chartSeriesHidden: string[] = []
+  chartSeriesHidden: string[] = [],
 ): ChartData => ({
   ...chartData,
   series: chartData.series.map((series: ChartDataSerie) => ({
@@ -69,7 +69,7 @@ const applyHiddenFilter = (
     hidden:
       (!!series.serie[0].id || !!series.serie[0].host_id) &&
       !!chartSeriesHidden.includes(
-        (series.serie[0].host_id || series.serie[0].id || '').toString()
+        (series.serie[0].host_id || series.serie[0].id || '').toString(),
       ),
   })),
 });
@@ -87,7 +87,7 @@ const Chart: FC<Props> = ({
     {
       chartSeriesHiddenProps: [],
     },
-    namespace
+    namespace,
   );
 
   const [chartData, setChartData] = useState<ChartData>({
@@ -109,10 +109,10 @@ const Chart: FC<Props> = ({
     setChartData(
       applyHiddenFilter(
         convertApiToData(data),
-        chartSeriesHiddenProps as string[]
-      )
+        chartSeriesHiddenProps as string[],
+      ),
     );
-  }, [data, chartSeriesHiddenProps]);
+  }, [data]);
 
   return (
     <ChartBuilder

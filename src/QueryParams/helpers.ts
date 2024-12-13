@@ -4,7 +4,7 @@ import { NamespacedQueryParams, QueryParams } from './types';
 export const DEFAULT_NAMESPACE = 'default';
 
 const parseNamespace = (
-  obj: ParsedQuery<string | boolean>
+  obj: ParsedQuery<string | boolean>,
 ): NamespacedQueryParams => {
   const retObj = {} as NamespacedQueryParams;
   Object.keys(obj).map((key) => {
@@ -22,7 +22,7 @@ const parseNamespace = (
 
 const stringifyNamespace = (
   obj: QueryParams,
-  namespace: string
+  namespace: string,
 ): QueryParams => {
   const keyValues = Object.keys(obj).map((key) => ({
     [`${namespace}.${key}`]: obj[key],
@@ -42,11 +42,11 @@ export const parseQueryParams = (search: string): NamespacedQueryParams => {
 };
 
 export const stringifyQueryParams = (
-  queryParams: NamespacedQueryParams
+  queryParams: NamespacedQueryParams,
 ): string => {
   const namespacedObject = Object.keys(queryParams).reduce(
     (acc, key) => ({ ...acc, ...stringifyNamespace(queryParams[key], key) }),
-    {}
+    {},
   );
 
   return queryString.stringify(namespacedObject, {
@@ -57,7 +57,7 @@ export const stringifyQueryParams = (
 export const setQueryParams = (
   queryParams: NamespacedQueryParams,
   navigate: any,
-  location: any
+  location: any,
 ): void => {
   navigate({
     pathname: location.pathname,

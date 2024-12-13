@@ -61,7 +61,7 @@ const EmailDetails = ({
     {
       data: [],
       meta: { count: 0 },
-    }
+    },
   );
   const reportUrl = window.location.href;
   useEffect(() => {
@@ -74,9 +74,9 @@ const EmailDetails = ({
   } = useRequest<RbacPrincipalsDataType>(
     () =>
       readRbacPrincipals(
-        selectedRbacGroups.at(-1) as string
+        selectedRbacGroups.at(-1) as string,
       ) as unknown as Promise<RbacPrincipalsDataType>,
-    { data: [] }
+    { data: [] },
   );
 
   useEffect(() => {
@@ -85,7 +85,7 @@ const EmailDetails = ({
 
   const getGroupName = (key: string) => {
     return rbacGroupsFromApi.find(
-      (group: RbacGroupFromApi) => group.uuid === key
+      (group: RbacGroupFromApi) => group.uuid === key,
     )?.name;
   };
 
@@ -100,7 +100,7 @@ const EmailDetails = ({
       emails: usersEmailsList,
     };
     const index = users.findIndex(
-      (object: { uuid: string }) => object.uuid === userHash.uuid
+      (object: { uuid: string }) => object.uuid === userHash.uuid,
     );
     if (index === -1) {
       users.push(userHash as User);
@@ -155,10 +155,10 @@ const EmailDetails = ({
     // if checkbox unchecked, remove group from array & user info from users array
     if (selectedRbacGroups.indexOf(groupToChange) > -1) {
       revisedGroups = selectedRbacGroups.filter(
-        (group) => group !== groupToChange
+        (group) => group !== groupToChange,
       );
       const usersOfChangedGroup = users.findIndex(
-        ({ uuid }: { uuid: string }) => uuid === groupToChange
+        ({ uuid }: { uuid: string }) => uuid === groupToChange,
       );
       // if selected group has users
       if (usersOfChangedGroup >= 0) users.splice(usersOfChangedGroup, 1);
@@ -235,7 +235,7 @@ const EmailDetails = ({
           onSelect={(e, selection) => {
             onSelectionChange(
               'selectedRbacGroups',
-              typeof selection !== 'string' ? selection.toString() : selection
+              typeof selection !== 'string' ? selection.toString() : selection,
             );
             setIsExpanded(false);
           }}

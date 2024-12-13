@@ -50,7 +50,7 @@ const Form = ({ title, options, data = {} }) => {
       plan_created: {
         id: 0, // put zero to match the type
       },
-    }
+    },
   );
 
   const { formData, requestPayload, dispatch } = usePlanData(data);
@@ -89,7 +89,7 @@ const Form = ({ title, options, data = {} }) => {
       window.history.pushState(
         null,
         null,
-        window.location.pathname + '#details'
+        window.location.pathname + '#details',
       );
       setStartStep(1);
     }
@@ -99,7 +99,7 @@ const Form = ({ title, options, data = {} }) => {
     window.history.pushState(
       null,
       null,
-      window.location.pathname + `#${newStep.id}`
+      window.location.pathname + `#${newStep.id}`,
     );
   };
 

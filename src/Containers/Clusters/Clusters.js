@@ -54,7 +54,7 @@ const Clusters = () => {
   // params from toolbar/searchbar
   const optionsQueryParams = useQueryParams(initialOptionsParams);
   const { queryParams, setFromToolbar } = useQueryParams(
-    clusters.defaultParams
+    clusters.defaultParams,
   );
   const {
     result: options,

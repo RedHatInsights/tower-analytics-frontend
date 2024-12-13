@@ -6,41 +6,41 @@ import { Paths, prefixPath } from './paths';
 
 const components = {
   [Paths.clusters]: asyncComponent(
-    () => import('./Containers/Clusters/Clusters')
+    () => import('./Containers/Clusters/Clusters'),
   ),
   [Paths.organizationStatistics]: asyncComponent(
-    () => import('./Containers/OrganizationStatistics/OrganizationStatistics')
+    () => import('./Containers/OrganizationStatistics/OrganizationStatistics'),
   ),
   [Paths.notifications]: asyncComponent(
-    () => import('./Containers/Notifications/Notifications')
+    () => import('./Containers/Notifications/Notifications'),
   ),
   [Paths.automationCalculator]: asyncComponent(
-    () => import('./Containers/Reports/Details')
+    () => import('./Containers/Reports/Details'),
   ),
   [Paths.jobExplorer]: asyncComponent(
-    () => import('./Containers/JobExplorer/JobExplorer')
+    () => import('./Containers/JobExplorer/JobExplorer'),
   ),
   [Paths.savingsPlanner]: asyncComponent(
-    () => import('./Containers/SavingsPlanner/List')
+    () => import('./Containers/SavingsPlanner/List'),
   ),
   [Paths.savingsPlannerDetails]: asyncComponent(
-    () => import('./Containers/SavingsPlanner/Details')
+    () => import('./Containers/SavingsPlanner/Details'),
   ),
   [Paths.savingsPlannerDetailsTabs]: asyncComponent(
-    () => import('./Containers/SavingsPlanner/Details')
+    () => import('./Containers/SavingsPlanner/Details'),
   ),
   [Paths.savingsPlannerEdit]: asyncComponent(
-    () => import('./Containers/SavingsPlanner/Details')
+    () => import('./Containers/SavingsPlanner/Details'),
   ),
   [Paths.savingsPlannerAdd]: asyncComponent(
-    () => import('./Containers/SavingsPlanner/Add')
+    () => import('./Containers/SavingsPlanner/Add'),
   ),
   [Paths.reports]: asyncComponent(() => import('./Containers/Reports/List')),
   [Paths.reportsDetails]: asyncComponent(
-    () => import('./Containers/Reports/Details')
+    () => import('./Containers/Reports/Details'),
   ),
   [Paths.reportsAutomationCalculator]: asyncComponent(
-    () => import('./Containers/Reports/Details')
+    () => import('./Containers/Reports/Details'),
   ),
 };
 

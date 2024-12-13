@@ -75,7 +75,7 @@ const Row: FunctionComponent<Props> = ({
   isMoney,
 }) => {
   const [isExpanded, setIsExpanded] = useState(
-    window.localStorage.getItem(template.id.toString()) === 'true' || false
+    window.localStorage.getItem(template.id.toString()) === 'true' || false,
   );
   const expandedRow = (value: boolean, id: number) => {
     window.localStorage.setItem(id.toString(), value ? 'true' : 'false');
@@ -138,7 +138,7 @@ const Row: FunctionComponent<Props> = ({
                 onChange={() => {
                   window.localStorage.setItem(
                     'focused',
-                    'manual-time-' + template.id.toString()
+                    'manual-time-' + template.id.toString(),
                   );
                 }}
                 isDisabled={readOnly}

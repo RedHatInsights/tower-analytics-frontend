@@ -52,7 +52,7 @@ export const handleResponse = (response: Response): Promise<ApiJson> =>
 
 export const authenticatedFetch = (
   endpoint: RequestInfo,
-  options = {}
+  options = {},
 ): Promise<Response> =>
   // FIXME: Use chrome hook
   // eslint-disable-next-line rulesdir/no-chrome-api-call-from-window
@@ -62,13 +62,13 @@ export const authenticatedFetch = (
       headers: {
         'Content-Type': 'application/json',
       },
-    })
+    }),
   );
 
 export const postWithFileReturn = async (
   endpoint: string,
   params: PDFParams,
-  { dispatch, ...notif }: NotificationParams
+  { dispatch, ...notif }: NotificationParams,
 ): Promise<void> => {
   const url = new URL(endpoint, window.location.origin);
 
@@ -96,9 +96,9 @@ export const postWithFileReturn = async (
                     error?.detail?.name
                       ? error?.detail?.name[0]
                       : // eslint-disable-next-line @typescript-eslint/no-base-to-string
-                        error?.detail.toString()
-                  )
-                )
+                        error?.detail.toString(),
+                  ),
+                ),
               );
               return Promise.reject({ status: response.status, error });
             });
@@ -110,7 +110,7 @@ export const postWithFileReturn = async (
         `${params.slug}_${date}.pdf`.replace(/\s/g, '_'),
         {
           size: nSize,
-        }
+        },
       );
       if (response.body) return saveStream(response.body, fileStream);
     });
@@ -119,7 +119,7 @@ export const postWithFileReturn = async (
 export const postWithEmail = async (
   endpoint: string,
   params: ParamsPdf,
-  { dispatch, ...notif }: NotificationParams
+  { dispatch, ...notif }: NotificationParams,
 ): Promise<void> => {
   const url = new URL(endpoint, window.location.origin);
 
@@ -135,13 +135,13 @@ export const postWithEmail = async (
 
     if (response.ok)
       dispatch(
-        addNotification(notif.success(notif.id, 'Email sent successfully'))
+        addNotification(notif.success(notif.id, 'Email sent successfully')),
       );
     else
       dispatch(
         addNotification(
-          notif.rejected(notif.id, 'Error sending email, please try again.')
-        )
+          notif.rejected(notif.id, 'Error sending email, please try again.'),
+        ),
       );
     return;
   });
@@ -149,7 +149,7 @@ export const postWithEmail = async (
 
 export const get = (
   endpoint: string,
-  params: Params = {}
+  params: Params = {},
 ): Promise<ApiJson> => {
   const url = new URL(endpoint, window.location.origin);
   url.search = queryString.stringify(params);
@@ -161,7 +161,7 @@ export const get = (
 
 export const post = (
   endpoint: string,
-  params: Params = {}
+  params: Params = {},
 ): Promise<ApiJson> => {
   const url = new URL(endpoint, window.location.origin);
   return authenticatedFetch(url.toString(), {
@@ -172,7 +172,7 @@ export const post = (
 
 export const saveROIData = (
   endpoint: string,
-  params: saveROIParams
+  params: saveROIParams,
 ): Promise<ApiJson> => {
   const url = new URL(endpoint, window.location.origin);
   return authenticatedFetch(url.toString(), {
@@ -183,7 +183,7 @@ export const saveROIData = (
 
 export const postWithPagination = (
   endpoint: string,
-  params: ParamsWithPagination = {}
+  params: ParamsWithPagination = {},
 ): Promise<ApiJson> => {
   const { limit, offset, sort_options, sort_order } = params;
 
@@ -210,7 +210,7 @@ export const deleteById = (endpoint: string, id: number): Promise<ApiJson> => {
 
 export const deleteByIds = (
   endpoint: string,
-  ids: number[]
+  ids: number[],
 ): Promise<ApiJson> => {
   const url = new URL(endpoint, window.location.origin);
   return authenticatedFetch(url.toString(), {
@@ -222,7 +222,7 @@ export const deleteByIds = (
 export const updateById = (
   endpoint: string,
   id: string,
-  params: Params = {}
+  params: Params = {},
 ): Promise<ApiJson> => {
   const url = new URL(`${endpoint}${id}/`, window.location.origin);
   return authenticatedFetch(url.toString(), {

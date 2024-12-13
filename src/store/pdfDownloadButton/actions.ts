@@ -33,7 +33,7 @@ export const downloadPdf = (
   params: PDFParams,
   dispatch: DispatchType,
   slug: string,
-  token: string
+  token: string,
 ): ActionTypes => ({
   type: ReducerTypes.act,
   payload: generatePdf(params, {
@@ -60,7 +60,7 @@ export const email = (
   },
   dispatch: DispatchType,
   slug: string,
-  token: string
+  token: string,
 ): ActionTypes => ({
   type: ReducerTypes.act,
   payload: sendEmail(params, {

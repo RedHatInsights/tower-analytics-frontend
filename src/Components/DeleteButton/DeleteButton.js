@@ -40,7 +40,7 @@ const DeleteButton = ({
     setIsLoading(true);
     if (deleteDetailsRequests.length > 0 && isModalOpen) {
       const { results, error } = await getRelatedResourceDeleteCounts(
-        deleteDetailsRequests
+        deleteDetailsRequests,
       );
       if (error) {
         setDeleteMessageError(error);

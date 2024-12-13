@@ -19,7 +19,7 @@ export function PagePagination(props: PagePaginationProps) {
   const onSetPage = useCallback((_event, page) => setPage(page), [setPage]);
   const onPerPageSelect = useCallback(
     (_event, perPage) => setPerPage(perPage),
-    [setPerPage]
+    [setPerPage],
   );
   const compact = !useBreakpoint('md');
   return (

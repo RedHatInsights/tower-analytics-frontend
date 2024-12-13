@@ -22,7 +22,7 @@ export function useColumnModal<T extends object>(columns: ITableColumn<T>[]) {
     setColumnModalOpen(true);
   }, []);
   const [managedColumns, setManagedColumns] = useState<ITableColumn<T>[]>(
-    () => columns
+    () => columns,
   );
 
   useEffect(() => {
@@ -30,8 +30,8 @@ export function useColumnModal<T extends object>(columns: ITableColumn<T>[]) {
       managedColumns.map(
         (managedColumn) =>
           columns.find((column) => column.header === managedColumn.header) ??
-          managedColumn
-      )
+          managedColumn,
+      ),
     );
   }, [columns]);
 
@@ -59,7 +59,7 @@ export function useColumnModal<T extends object>(columns: ITableColumn<T>[]) {
         });
       }
     },
-    []
+    [],
   );
   const columnModal = (
     <Modal

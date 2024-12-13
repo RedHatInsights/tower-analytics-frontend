@@ -31,7 +31,7 @@ const GroupedBarChart = ({
     };
   });
   const [selectedIds, setSelectedIds] = useState(
-    legend.map(({ id }) => id).slice(0, 8)
+    legend.map(({ id }) => id).slice(0, 8),
   );
   let timeout = null;
 
@@ -67,7 +67,7 @@ const GroupedBarChart = ({
         .map((d, i) =>
           i % (data.length > 31 ? maxTicksTwoMonths : maxTicksOneMonth) === 0
             ? d.date
-            : undefined
+            : undefined,
         )
         .filter((item) => item);
     }
@@ -84,7 +84,7 @@ const GroupedBarChart = ({
       .append('g')
       .attr(
         'transform',
-        'translate(' + props.margin.left + ',' + props.margin.top + ')'
+        'translate(' + props.margin.left + ',' + props.margin.top + ')',
       );
 
     const dates = data.map((d) => d.date);
@@ -96,7 +96,7 @@ const GroupedBarChart = ({
     y.domain([
       0,
       d3.max(data, (date) =>
-        d3.max(date.selectedOrgs, (d) => d.value * 1.15)
+        d3.max(date.selectedOrgs, (d) => d.value * 1.15),
       ) || 8,
     ]);
 
@@ -135,7 +135,11 @@ const GroupedBarChart = ({
       .append('text')
       .attr(
         'transform',
-        'translate(' + width / 2 + ' ,' + (height + props.margin.top + 25) + ')'
+        'translate(' +
+          width / 2 +
+          ' ,' +
+          (height + props.margin.top + 25) +
+          ')',
       )
       .style('text-anchor', 'middle')
       .text('Date');
@@ -176,7 +180,7 @@ const GroupedBarChart = ({
         d.moreDetail = !d.name.endsWith('Others');
         d3.select(this).style(
           'cursor',
-          onClick && d.moreDetail ? 'pointer' : 'default'
+          onClick && d.moreDetail ? 'pointer' : 'default',
         );
         d3.select(this).style('fill', d3.rgb(color(d.id)).darker(1));
         tooltip.handleMouseOver(d);

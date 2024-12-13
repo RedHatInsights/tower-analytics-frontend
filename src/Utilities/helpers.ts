@@ -15,7 +15,7 @@ export const formatDate = (date: Date | string): string => {
 };
 
 export const getTotal = (
-  data: { count: number | string }[]
+  data: { count: number | string }[],
 ): number | undefined => {
   if (!data) return undefined;
 
@@ -31,7 +31,7 @@ export const capitalize = (s: string): string =>
 
 export const calculateDelta = (
   a: string | number,
-  b: string | number
+  b: string | number,
 ): number => {
   const n1 = +a;
   const n2 = +b;

@@ -11,7 +11,7 @@ import { stringifyQueryParams } from './helpers';
 export const createUrl = (
   path: string,
   newPage = false,
-  queryParams: any = undefined
+  queryParams: any = undefined,
 ): string => {
   const search: string = queryParams ? stringifyQueryParams(queryParams) : '';
   return `${newPage ? prefixPath + path : path}${search ? '?' : ''}${search}`;

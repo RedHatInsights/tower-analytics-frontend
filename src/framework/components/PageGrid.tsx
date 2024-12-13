@@ -19,12 +19,12 @@ export function PageGrid(props: {
     (width: number) => {
       let columns = Math.min(
         props.maxColumns ?? 12,
-        Math.max(Math.floor(width / size), 1)
+        Math.max(Math.floor(width / size), 1),
       );
       if (columns < 1) columns = 1;
       setGridTemplateColumns(() => new Array(columns).fill('1fr').join(' '));
     },
-    [props.maxColumns, size]
+    [props.maxColumns, size],
   );
   useResizeObserver(target, (entry) => resize(entry.contentRect.width));
   useLayoutEffect(() => {

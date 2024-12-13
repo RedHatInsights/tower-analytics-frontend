@@ -7,7 +7,7 @@ import { PageTableCard, useColumnsToTableCardFn } from './PageTableCard';
 export type PageTableCardsProps<T extends object> = PageTableProps<T>;
 
 export function PageTableCards<T extends object>(
-  props: PageTableCardsProps<T>
+  props: PageTableCardsProps<T>,
 ) {
   const {
     keyFn,

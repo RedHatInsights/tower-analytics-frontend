@@ -50,15 +50,15 @@ export function PageDropdownAction<T extends object>(props: {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const hasBulkActions = useMemo(
     () => !actions.every((action) => action.type !== PageActionType.bulk),
-    [actions]
+    [actions],
   );
   const hasIcons = useMemo(
     () =>
       actions.find(
         (action) =>
-          action.type !== PageActionType.seperator && action.icon !== undefined
+          action.type !== PageActionType.seperator && action.icon !== undefined,
       ) !== undefined,
-    [actions]
+    [actions],
   );
   useEffect(() => {
     props.onOpen?.(dropdownOpen);

@@ -131,7 +131,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               value: 'successful_saved_hours',
             },
           ],
-    }
+    },
   );
 
   const {
@@ -146,7 +146,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         items: updateDeltaCost(
           mapApi(response.meta),
           response.cost.hourly_manual_labor_cost,
-          response.cost.hourly_automation_cost
+          response.cost.hourly_automation_cost,
         ),
       };
     },
@@ -155,7 +155,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       meta: {
         count: 0,
       },
-    }
+    },
   );
 
   const setValue = (items) => {
@@ -168,7 +168,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const getROISaveData = (
     items: any[],
     manualCost = costManual,
-    automationCost = costAutomation
+    automationCost = costAutomation,
   ) => {
     const updatedDataApi = items.map((el) => ({
       template_id: el.id,
@@ -208,8 +208,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         getROISaveData(
           api.result.items,
           hourly_manual_labor_cost,
-          hourly_automation_cost
-        ) as any
+          hourly_automation_cost,
+        ) as any,
       );
     } catch {
       dispatch(
@@ -218,7 +218,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           description: `Unable to save changes ${humanVarName}. Please try again.`,
           variant: NotificationType.danger,
           autoDismiss: false,
-        })
+        }),
       );
       // don't update inputs
       return;
@@ -243,7 +243,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         const updatedDelta = updateDeltaCost(
           [el],
           costAutomation,
-          costManual
+          costManual,
         )[0];
         return updatedDelta;
       } else {
@@ -260,7 +260,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             'Unable to save changes to Manual time. Please try again.',
           variant: NotificationType.danger,
           autoDismiss: false,
-        })
+        }),
       );
       // don't update inputs
       return;
@@ -272,7 +272,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     const updatedData = !id
       ? api.result.items.map((el) => ({ ...el, enabled: value }))
       : api.result.items.map((el) =>
-          el.id === id ? { ...el, enabled: value } : el
+          el.id === id ? { ...el, enabled: value } : el,
         );
     try {
       await saveROI(getROISaveData(updatedData) as any);
@@ -284,7 +284,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
             'Unable to save changes to visibility. Please try again.',
           variant: NotificationType.danger,
           autoDismiss: false,
-        })
+        }),
       );
       // don't update inputs
       return;
@@ -358,7 +358,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       isMoney: true,
     };
     navigate(
-      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams)
+      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams),
     );
   };
 
@@ -367,7 +367,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     tooltip: 'Savings for',
     field: queryParams.sort_options,
     label: (options.sort_options?.find(
-      ({ key }) => key === queryParams.sort_options
+      ({ key }) => key === queryParams.sort_options,
     )?.value || 'Label Y') as string,
     themeColor: isMoney ? 'green' : 'blue',
     xTickFormat: getDateFormatByGranularity(queryParams.granularity as any),
@@ -400,7 +400,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const customTooltipFormatting = ({ datum }) =>
     `${chartParams.label} for ${datum.name}: ${formattedValue(
       queryParams.sort_options as any,
-      datum.y
+      datum.y,
     )}`;
 
   const isReadOnly = (api) => {
@@ -424,7 +424,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                       setIsMoney(true);
                       setFromToolbar(
                         'sort_options',
-                        'successful_hosts_savings'
+                        'successful_hosts_savings',
                       );
                     }}
                   />
@@ -437,7 +437,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                       setIsMoney(false);
                       setFromToolbar(
                         'sort_options',
-                        'successful_hosts_saved_hours'
+                        'successful_hosts_saved_hours',
                       );
                     }}
                   />
@@ -551,7 +551,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                 label={chartParams.label as any}
                 xTickFormat={chartParams.xTickFormat}
                 totalPages={Math.ceil(
-                  api.result.meta.count / (queryParams.limit as any)
+                  api.result.meta.count / (queryParams.limit as any),
                 )}
                 pageLimit={queryParams.limit as any}
                 sortOptions={chartParams.y as any}
@@ -585,7 +585,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                   data={api.result.items}
                   variableRow={
                     options.sort_options.find(
-                      ({ key }) => key === queryParams.sort_options
+                      ({ key }) => key === queryParams.sort_options,
                     ) as any
                   }
                   setDataRunTime={setDataRunTime}

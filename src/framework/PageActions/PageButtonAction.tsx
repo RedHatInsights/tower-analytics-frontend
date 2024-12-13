@@ -21,7 +21,7 @@ export function PageButtonAction(props: {
   const Wrapper = wrapper ?? Fragment;
   const Icon = action.icon;
   let tooltip =
-    action.tooltip ?? props.iconOnly ? props.action.label : undefined;
+    (action.tooltip ?? props.iconOnly) ? props.action.label : undefined;
   const isDisabled =
     action.isDisabled !== undefined ? action.isDisabled : false;
   tooltip = isDisabled ? isDisabled : tooltip;

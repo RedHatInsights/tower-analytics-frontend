@@ -10,7 +10,7 @@ const requiredField = (props) => {
   const { name, username, image } = props;
   if (!name && !username && !image) {
     return new Error(
-      `One of 'name', 'username' or 'image' is required by ItemToDelete component.`
+      `One of 'name', 'username' or 'image' is required by ItemToDelete component.`,
     );
   }
   if (name) {
@@ -20,7 +20,7 @@ const requiredField = (props) => {
       },
       { name: props.name },
       'prop',
-      'ItemToDelete'
+      'ItemToDelete',
     );
   }
   if (username) {
@@ -30,7 +30,7 @@ const requiredField = (props) => {
       },
       { username: props.username },
       'prop',
-      'ItemToDelete'
+      'ItemToDelete',
     );
   }
   if (image) {
@@ -40,7 +40,7 @@ const requiredField = (props) => {
       },
       { image: props.image },
       'prop',
-      'ItemToDelete'
+      'ItemToDelete',
     );
   }
   return null;
@@ -69,7 +69,7 @@ const ToolbarDeleteButton = ({
       deleteDetailsRequests?.length > 0
     ) {
       const { results, error } = await getRelatedResourceDeleteCounts(
-        deleteDetailsRequests
+        deleteDetailsRequests,
       );
 
       if (error) {
@@ -197,7 +197,7 @@ ToolbarDeleteButton.propTypes = {
       name: requiredField,
       username: requiredField,
       image: requiredField,
-    })
+    }),
   ).isRequired,
   pluralizedItemName: PropTypes.string,
   onDelete: PropTypes.func.isRequired,

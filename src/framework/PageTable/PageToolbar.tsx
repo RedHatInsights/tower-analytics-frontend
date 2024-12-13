@@ -71,7 +71,7 @@ export interface IItemFilter<T extends object> {
 
 export type SetFilterValues<T extends object> = (
   filter: IItemFilter<T>,
-  values: string[]
+  values: string[],
 ) => void;
 
 export interface IToolbarStringFilter {
@@ -136,7 +136,7 @@ export type PagetableToolbarProps<T extends object> = {
 };
 
 export function PageTableToolbar<T extends object>(
-  props: PagetableToolbarProps<T>
+  props: PagetableToolbarProps<T>,
 ) {
   const {
     itemCount,
@@ -161,7 +161,7 @@ export function PageTableToolbar<T extends object>(
   const onSetPage = useCallback((_event, page) => setPage(page), [setPage]);
   const onPerPageSelect = useCallback(
     (_event, perPage) => setPerPage(perPage),
-    [setPerPage]
+    [setPerPage],
   );
 
   const showSearchAndFilters = toolbarFilters !== undefined;
@@ -173,7 +173,7 @@ export function PageTableToolbar<T extends object>(
     (selectedItems !== undefined &&
       toolbarActions &&
       toolbarActions.find(
-        (toolbarAction) => PageActionType.bulk === toolbarAction.type
+        (toolbarAction) => PageActionType.bulk === toolbarAction.type,
       ));
 
   const showToolbar = showSelect || showSearchAndFilters || showToolbarActions;
@@ -183,7 +183,7 @@ export function PageTableToolbar<T extends object>(
       ? toolbarFilters?.length > 0
         ? toolbarFilters[0].key
         : ''
-      : ''
+      : '',
   );
 
   let viewTypeCount = 0;
@@ -264,7 +264,7 @@ export function PageTableToolbar<T extends object>(
                 <ToolbarFilterInput
                   id='filter-input'
                   filter={toolbarFilters.find(
-                    (filter) => filter.key === selectedFilter
+                    (filter) => filter.key === selectedFilter,
                   )}
                   addFilter={(value: string) => {
                     let values = filters?.[selectedFilter];
@@ -289,8 +289,8 @@ export function PageTableToolbar<T extends object>(
                     categoryName={filter.label}
                     chips={values.map((value) => {
                       return 'options' in filter
-                        ? filter.options.find((o) => o.value === value)
-                            ?.label ?? value
+                        ? (filter.options.find((o) => o.value === value)
+                            ?.label ?? value)
                         : value;
                     })}
                     deleteChip={(_group, value) => {
@@ -544,7 +544,7 @@ function ToolbarSelectFilter(props: {
         addFilter(value.toString());
       }
     },
-    [addFilter, removeFilter, values]
+    [addFilter, removeFilter, values],
   );
   const selections = values;
   return (

@@ -202,7 +202,7 @@ export function PageTableCard<T extends object>(props: {
 
 export function useColumnsToTableCardFn<T extends object>(
   columns: ITableColumn<T>[],
-  keyFn: (item: T) => string | number
+  keyFn: (item: T) => string | number,
 ): (item: T) => IPageTableCard {
   const data = useMemo(() => {
     let nameColumn: ITableColumn<T> | undefined;

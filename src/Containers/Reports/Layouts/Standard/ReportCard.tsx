@@ -53,7 +53,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     {
       chartType: availableChartTypes[0],
     },
-    'settings'
+    'settings',
   );
 
   const { result: options, request: fetchOptions } =
@@ -73,7 +73,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     inventoryId: any,
     status: any,
     hostStatus: any,
-    quickDateRange: any
+    quickDateRange: any,
   ) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
@@ -99,7 +99,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     y: queryParams.sort_options as string,
     label:
       (options.sort_options as any)?.find(
-        ({ key }) => key === queryParams.sort_options
+        ({ key }) => key === queryParams.sort_options,
       )?.value || 'Label Y',
     xTickFormat: getDateFormatByGranularity(queryParams.granularity as string),
     chartType: settingsQueryParams.chartType || availableChartTypes[0],
@@ -132,7 +132,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       queryParams.inventory_id,
       queryParams.status,
       queryParams.host_status,
-      queryParams.quick_date_range
+      queryParams.quick_date_range,
     );
     window.location.reload();
   };
@@ -168,14 +168,14 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     const onSort = (
       _event: unknown,
       index: number,
-      direction: 'asc' | 'desc'
+      direction: 'asc' | 'desc',
     ) => {
       setFromToolbar('sort_order', direction);
       setFromToolbar('sort_options', tableHeaders[index]?.key);
     };
 
     const whitelistKeys = (options?.sort_options as any)?.map(
-      ({ key }: { key: string }) => key
+      ({ key }: { key: string }) => key,
     );
     if (!whitelistKeys?.includes(currKey)) return {};
 
@@ -184,7 +184,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
         sortBy: {
           index:
             tableHeaders.findIndex(
-              ({ key }) => key === queryParams.sort_options
+              ({ key }) => key === queryParams.sort_options,
             ) || 0,
           direction: queryParams.sort_order || 'none',
         },
@@ -224,7 +224,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
       xTickFormat={chartParams.xTickFormat}
       totalPages={Math.ceil(
         ((dataApi.result.meta as any).count as number) /
-          (queryParams.limit as any as number)
+          (queryParams.limit as any as number),
       )}
       pageLimit={queryParams.limit as any}
       chartType={chartParams.chartType as string}
