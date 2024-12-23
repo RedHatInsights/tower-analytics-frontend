@@ -64,7 +64,7 @@
     "ts-patch": "^3.3.0",
     "typescript": "^5.7.2",
     "webpack": "^5.97.1",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^6.0.1"
   },
   "scripts": {
     "build": "fec build",
