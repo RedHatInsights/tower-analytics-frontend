@@ -35,7 +35,7 @@ const AuthorizationErrorPage: FunctionComponent<Props> = ({ error }) => (
           <EmptyStateBody>
             Please visit{' '}
             <a
-              href='https://docs.ansible.com/automation-controller/latest/html/administration/usability_data_collection.html#automation-analytics'
+              href='https://docs.redhat.com/en/documentation/red_hat_ansible_automation_platform/2.5/html/configuring_automation_execution/controller-config#proc-controller-configure-analytics'
               target='_blank'
               rel='noopener noreferrer'
             >
