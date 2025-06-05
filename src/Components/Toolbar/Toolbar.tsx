@@ -22,7 +22,7 @@ interface Props {
   pagination?: ReactNode | null;
   settingsPanel?: (
     setSettingsExpanded: (arg0: boolean) => void,
-    settingsExpanded: boolean
+    settingsExpanded: boolean,
   ) => ReactNode;
   hasSettings?: boolean;
   additionalControls?: ReactNode[];
@@ -53,7 +53,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
     .filter(
       (key) =>
         Object.keys(optionsForCategories).includes(key) &&
-        Object.keys(filters).includes(key)
+        Object.keys(filters).includes(key),
     )
     .reduce((obj: ApiOptionsType, key) => {
       obj[key] = restCategories[key];

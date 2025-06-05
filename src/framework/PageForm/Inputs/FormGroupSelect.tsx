@@ -32,13 +32,13 @@ export function FormGroupSelect(props: FormGroupSelectProps) {
   const onSelectHandler = useCallback(
     (
       event: React.MouseEvent<Element, MouseEvent> | ChangeEvent<Element>,
-      value: string | SelectOptionObject
+      value: string | SelectOptionObject,
     ) => {
       if (typeof value === 'string') onSelect?.(event, value);
       else onSelect?.(event, value.toString());
       setOpen(false);
     },
-    [onSelect]
+    [onSelect],
   );
 
   return (

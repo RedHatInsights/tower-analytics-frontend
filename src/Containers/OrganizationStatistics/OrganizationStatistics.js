@@ -121,7 +121,7 @@ const OrganizationStatistics = () => {
 
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(
-    constants.defaultParams
+    constants.defaultParams,
   );
 
   const jobEventsByOrgParams = {
@@ -170,7 +170,7 @@ const OrganizationStatistics = () => {
 
   const { result: options, request: setOptions } = useRequest(
     readOrgOptions,
-    {}
+    {},
   );
 
   const {
@@ -264,7 +264,7 @@ const OrganizationStatistics = () => {
                 data={orgsChartMapper(
                   orgs.dates,
                   orgs.meta,
-                  chartMapper[activeTabKey].attr
+                  chartMapper[activeTabKey].attr,
                 )}
                 legend={orgs.meta.legend}
                 colorFunc={colorFunc}

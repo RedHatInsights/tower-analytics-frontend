@@ -10,7 +10,7 @@ describe('Automation Calculator page', () => {
     cy.visit(calculatorUrl);
 
     cy.intercept('/api/tower-analytics/v1/roi_cost_effort_data/').as(
-      'roiCostEffortData'
+      'roiCostEffortData',
     );
     cy.intercept('/api/tower-analytics/v1/roi_templates/*').as('roiTemplates');
 

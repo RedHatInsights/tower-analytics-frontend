@@ -146,14 +146,14 @@ export const preflightRequest = (): Promise<ApiJson> => {
 };
 
 export const readJobExplorer = (
-  params: ParamsWithPagination
+  params: ParamsWithPagination,
 ): Promise<ApiJson> => postWithPagination(Endpoint.jobExplorer, params);
 
 export const readJobExplorerOptions = (params: Params): Promise<ApiJson> =>
   post(Endpoint.jobExplorerOptions, params);
 
 export const readEventExplorer = (
-  params: ParamsWithPagination
+  params: ParamsWithPagination,
 ): Promise<ApiJson> => postWithPagination(Endpoint.eventExplorer, params);
 
 export const readEventExplorerOptions = (params: Params): Promise<ApiJson> =>
@@ -170,7 +170,7 @@ export const readROIOptions = (params: Params): Promise<ApiJson> =>
   post(Endpoint.ROIOptions, params);
 
 export const readHostExplorer = (
-  params: ParamsWithPagination
+  params: ParamsWithPagination,
 ): Promise<ApiJson> => postWithPagination(Endpoint.hostExplorer, params);
 
 export const readOrgOptions = (params: Params): Promise<ApiJson> =>
@@ -209,7 +209,7 @@ export const readNotifications = (params: Params): Promise<ApiJson> =>
   get(Endpoint.notifications, params);
 
 export const readProbeTemplates = (
-  params: ParamsWithPagination
+  params: ParamsWithPagination,
 ): Promise<ApiJson> => {
   return postWithPagination(Endpoint.probeTemplates, params);
 };
@@ -217,7 +217,7 @@ export const readProbeTemplates = (
 export const readProbeTemplateForHosts = (params: Params): Promise<ApiJson> => {
   return mungeData(
     postWithPagination(Endpoint.probeTemplateForHosts, params),
-    params
+    params,
   );
 };
 
@@ -225,11 +225,11 @@ export const readProbeTemplatesOptions = (params: Params): Promise<ApiJson> =>
   post(Endpoint.probeTemplatesOptions, params);
 
 export const readProbeTemplateForHostsOptions = (
-  params: Params
+  params: Params,
 ): Promise<ApiJson> => post(Endpoint.probeTemplateForHostsOptions, params);
 
 export const readAdoptionRate = (
-  params: ParamsWithPagination
+  params: ParamsWithPagination,
 ): Promise<ApiJson> => {
   return postWithPagination(Endpoint.adoptionRate, params);
 };
@@ -248,7 +248,7 @@ export const reportOptions = (params: Params): Promise<ApiJson> =>
 
 export const generatePdf = async (
   params: PDFParams,
-  meta: NotificationParams
+  meta: NotificationParams,
 ): Promise<void> => {
   let url = Endpoint.pdfGenerate.toString();
   if (typeof params.dataFetchingParams.token !== 'undefined')
@@ -273,7 +273,7 @@ export const sendEmail = (
     slug: string;
     token: string;
   },
-  meta: NotificationParams
+  meta: NotificationParams,
 ): Promise<void> => postWithEmail(Endpoint.sendEmail, params, meta);
 
 export const readRbacGroups = (): Promise<ApiJson> =>

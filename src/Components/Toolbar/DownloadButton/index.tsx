@@ -88,13 +88,13 @@ const DownloadButton: FC<Props> = ({
     {
       chartSeriesHiddenProps: [],
     },
-    settingsNamespace
+    settingsNamespace,
   );
   const [stepIdSelected, setStepIdSelected] = useState(1);
   const { formData, dispatchReducer } = useOptionsData(
     {} as EmailDetailsProps,
     name,
-    description
+    description,
   );
 
   const {
@@ -144,7 +144,7 @@ const DownloadButton: FC<Props> = ({
         y: queryParams.sort_options as string,
         label: queryParams.sort_options,
         xTickFormat: getDateFormatByGranularity(
-          queryParams.granularity as string
+          queryParams.granularity as string,
         ),
         chartType: chartType,
       };

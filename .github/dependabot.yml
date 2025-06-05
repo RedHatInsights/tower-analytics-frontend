@@ -27,11 +27,17 @@ updates:
         patterns:
           - '@victory/*'
     ignore:
+      - dependency-name: '@patternfly/*'
+        update-types:
+          - 'version-update:semver-major'
       - dependency-name: '@patternfly/react-charts'
         update-types:
           - 'version-update:semver-major'
           - 'version-update:semver-minor'
       - dependency-name: 'eslint'
+        update-types:
+          - 'version-update:semver-major'
+      - dependency-name: 'react-router-dom'
         update-types:
           - 'version-update:semver-major'
       - dependency-name: 'react-redux'

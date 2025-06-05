@@ -36,7 +36,7 @@ const List = () => {
 
   // params from toolbar/searchbar
   const { queryParams, setFromPagination, setFromToolbar } = useQueryParams(
-    savingsPlanner.defaultParams
+    savingsPlanner.defaultParams,
   );
 
   const {
@@ -76,7 +76,7 @@ const List = () => {
     itemsIsSuccess && (rbac.perms?.write === true || rbac.perms?.all === true);
 
   const { selected, handleSelect, setSelected } = useSelected(
-    data.map(({ id }) => id)
+    data.map(({ id }) => id),
   );
 
   const {

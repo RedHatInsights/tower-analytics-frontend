@@ -37,7 +37,7 @@ const SortByGroup: FunctionComponent<Props> = ({
         onClick={() =>
           setFilters(
             'sort_order',
-            filters.sort_order === 'asc' ? 'desc' : 'asc'
+            filters.sort_order === 'asc' ? 'desc' : 'asc',
           )
         }
       >

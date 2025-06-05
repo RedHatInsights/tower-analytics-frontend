@@ -33,7 +33,7 @@ const isAvgDuration = (item: Record<string, string | number>, key: string) =>
 
 const getText = (
   item: Record<string, string | number>,
-  key: string
+  key: string,
 ): string => {
   if (isNoName(item, key)) return '-';
   if (isOther(item, key)) return '-';
@@ -80,14 +80,14 @@ const TableRow: FunctionComponent<Params> = ({
       createUrl(
         'reports/' + paths.getDetails(slug).replace('/', ''),
         true,
-        initialQueryParams
-      )
+        initialQueryParams,
+      ),
     );
   };
   const navigateToTemplatesExplorer = (
     slug: string,
     org_id: any,
-    queryParams: QueryParams
+    queryParams: QueryParams,
   ) => {
     const initialQueryParams = {
       [DEFAULT_NAMESPACE]: {
@@ -106,17 +106,17 @@ const TableRow: FunctionComponent<Params> = ({
       createUrl(
         'reports/' + paths.getDetails(slug).replace('/', ''),
         true,
-        initialQueryParams
-      )
+        initialQueryParams,
+      ),
     );
   };
 
   const getClickableText = (
     item: Record<string, string | number>,
-    key: string
+    key: string,
   ) => {
     const { queryParams } = useQueryParams(
-      specificReportDefaultParams('templates_by_organization')
+      specificReportDefaultParams('templates_by_organization'),
     );
 
     const countMapper: { [key: string]: string } = {
@@ -146,7 +146,7 @@ const TableRow: FunctionComponent<Params> = ({
               navigateToTemplatesExplorer(
                 countMapper[key],
                 item.org_id,
-                queryParams
+                queryParams,
               )
             }
           >{`${item[key]}`}</a>
@@ -199,7 +199,7 @@ const TableRow: FunctionComponent<Params> = ({
                 ? getClickableText(legendEntry, key)
                 : getText(legendEntry, key)}
             </Td>
-          )
+          ),
         )}
       </Tr>
       {renderExpandedRow()}

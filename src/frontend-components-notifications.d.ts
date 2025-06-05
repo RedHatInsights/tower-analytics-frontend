@@ -31,7 +31,7 @@ declare module '@redhat-cloud-services/frontend-components-notifications/redux' 
   }
 
   export function addNotification(
-    notification: NotificationOptions
+    notification: NotificationOptions,
   ): AddNotificationAction;
   export function removeNotification(id: string): RemoveNotificationAction;
 }

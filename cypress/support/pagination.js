@@ -16,7 +16,7 @@ Cypress.Commands.add(
       .find(`[data-action="${childBtnAction}"]`)
       .as('arrowBtn');
     return cy.get('@arrowBtn');
-  }
+  },
 );
 
 Cypress.Commands.add('getPaginationBtn', (cyParent, btnAction) => {
@@ -226,7 +226,7 @@ Cypress.Commands.add('testPageDataWithPagination', (selector, data) => {
   cy.findByIdLike('@pag_option_menu', 'aa-pagination-').should(
     'have.attr',
     'aria-expanded',
-    'true'
+    'true',
   );
 
   // assert the options available

@@ -106,7 +106,7 @@ export function BulkSelector<T extends object>(props: BulkSelectorProps<T>) {
 
   const dropdownItems = useMemo(
     () => [selectNoneDropdownItem, selectPageDropdownItem],
-    [selectNoneDropdownItem, selectPageDropdownItem]
+    [selectNoneDropdownItem, selectPageDropdownItem],
   );
 
   return (

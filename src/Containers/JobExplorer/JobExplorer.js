@@ -308,7 +308,7 @@ const JobExplorer = () => {
                   onChange={(value) => {
                     setFromToolbar(
                       'only_root_workflows_and_standalone_jobs',
-                      value
+                      value,
                     );
                   }}
                   ariaLabel={'ignore nested workflow popover'}

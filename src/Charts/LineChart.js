@@ -39,7 +39,7 @@ class LineChart extends Component {
     };
 
     this.props.navigate(
-      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams)
+      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams),
     );
   }
 
@@ -96,7 +96,7 @@ class LineChart extends Component {
           this.props.margin.left +
           ',' +
           this.props.margin.top +
-          ')'
+          ')',
       );
     // Tooltip
     const tooltip = new Tooltip({
@@ -114,13 +114,13 @@ class LineChart extends Component {
         let TOTAL = +successful_count + failed_count || 0;
         return formatted.concat({ DATE, RAN, FAIL, TOTAL });
       },
-      []
+      [],
     );
     // Scale the range of the data
     x.domain(
       d3.extent(data, function (d) {
         return d.DATE;
-      })
+      }),
     );
     y.domain([
       0,
@@ -186,7 +186,7 @@ class LineChart extends Component {
           .axisBottom(x)
           .tickValues(ticks)
           .tickSize(-height)
-          .tickFormat(d3.timeFormat('%-m/%-d')) // "1/19"
+          .tickFormat(d3.timeFormat('%-m/%-d')), // "1/19"
       ) // "Jan-01"
       .selectAll('line')
       .attr('stroke', '#d7d7d7');
@@ -201,7 +201,7 @@ class LineChart extends Component {
           width / 2 +
           ' ,' +
           (height + this.props.margin.top + 20) +
-          ')'
+          ')',
       )
       .style('text-anchor', 'middle')
       .text('Date');

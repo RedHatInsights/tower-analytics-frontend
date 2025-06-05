@@ -55,7 +55,7 @@ const formatTopFailedTask = (data) => {
 
   if (data && data[0]) {
     const percentage = Math.ceil(
-      (data[0].failed_count / data[0].total_failed_count) * 100
+      (data[0].failed_count / data[0].total_failed_count) * 100,
     );
     return `${data[0].task_name} ${percentage}%`;
   }
@@ -146,7 +146,7 @@ const ModalContents = ({ selectedId, isOpen, handleModal, qp, jobType }) => {
       },
     };
     navigate(
-      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams)
+      createUrl(Paths.jobExplorer.replace('/', ''), true, initialQueryParams),
     );
   };
 

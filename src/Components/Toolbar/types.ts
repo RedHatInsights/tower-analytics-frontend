@@ -17,7 +17,7 @@ export interface SelectOptionProps {
 export type SetValue = (value: AttributeType | null) => void;
 export type SetValues = (
   type: string | null,
-  value: AttributeType | null
+  value: AttributeType | null,
 ) => void;
 export type ApiOptionsType = Record<
   string,

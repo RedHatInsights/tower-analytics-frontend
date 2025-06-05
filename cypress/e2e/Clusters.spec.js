@@ -7,7 +7,7 @@ describe('Clusters page', () => {
     cy.visit(clustersUrl);
 
     cy.intercept('/api/tower-analytics/v1/event_explorer/*').as(
-      'eventExplorerData'
+      'eventExplorerData',
     );
     cy.wait('@eventExplorerData', ENV == ENVS.STAGE ? { timeout: 10000 } : {});
 

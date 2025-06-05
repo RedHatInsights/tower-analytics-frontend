@@ -41,7 +41,7 @@ const notificationOptions = [
 ];
 
 const formatClusterName = (
-  data: any[]
+  data: any[],
 ): { value: string; label: string; disabled: boolean }[] => {
   const defaultClusterOptions = [
     { value: 'please choose', label: 'Select cluster', disabled: true },
@@ -54,7 +54,7 @@ const formatClusterName = (
       value: id as string,
       label: (label ?? uuid) as string,
       disabled: false,
-    })
+    }),
   );
 
   return [...defaultClusterOptions, ...calcData];
@@ -84,7 +84,7 @@ const Notifications: FC<Record<string, never>> = () => {
   const [selectedCluster, setSelectedCluster] = useState('');
 
   const { queryParams, setId, setFromPagination, setSeverity } = useQueryParams(
-    initialQueryParams.defaultParams
+    initialQueryParams.defaultParams,
   );
 
   const { severity, limit, offset } = queryParams as Record<string, string>;
@@ -99,11 +99,11 @@ const Notifications: FC<Record<string, never>> = () => {
     useCallback(
       () =>
         readNotifications(
-          queryParams as Params
+          queryParams as Params,
         ) as unknown as Promise<NotificationDataType>,
-      [queryParams]
+      [queryParams],
     ),
-    { notifications: [], meta: { count: 0 } }
+    { notifications: [], meta: { count: 0 } },
   );
 
   const {
@@ -111,7 +111,7 @@ const Notifications: FC<Record<string, never>> = () => {
     request: fetchClusters,
   } = useRequest<ClusterDataType>(
     () => readClusters() as unknown as Promise<ClusterDataType>,
-    { templates: [] }
+    { templates: [] },
   );
 
   useEffect(() => {
@@ -150,7 +150,7 @@ const Notifications: FC<Record<string, never>> = () => {
                           value={value}
                           label={label}
                         />
-                      )
+                      ),
                     )}
                   </FormSelect>
                 </FlexItem>
@@ -172,7 +172,7 @@ const Notifications: FC<Record<string, never>> = () => {
                           value={value}
                           label={label}
                         />
-                      )
+                      ),
                     )}
                   </FormSelect>
                 </FlexItem>

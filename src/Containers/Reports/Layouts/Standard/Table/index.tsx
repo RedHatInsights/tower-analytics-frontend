@@ -115,7 +115,7 @@ const ReportTable: FunctionComponent<Props> = ({
               <Th key={key} {...getSortParams(key)} data-cy={key}>
                 {value}
               </Th>
-            )
+            ),
           )}
         </Tr>
       </Thead>

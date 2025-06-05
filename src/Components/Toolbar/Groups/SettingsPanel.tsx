@@ -30,7 +30,7 @@ interface Props {
   isChecked?: AttributeType;
   onChange?: (
     event: React.FormEvent<HTMLInputElement>,
-    checked: boolean
+    checked: boolean,
   ) => void;
   ariaLabel?: string;
   bodyContent?: string;

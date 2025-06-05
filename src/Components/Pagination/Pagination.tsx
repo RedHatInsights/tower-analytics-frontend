@@ -64,7 +64,7 @@ AAPagination.propTypes = {
     PropTypes.exact({
       title: PropTypes.string.isRequired,
       value: PropTypes.number.isRequired,
-    }).isRequired
+    }).isRequired,
   ),
 };
 

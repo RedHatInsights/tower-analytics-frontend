@@ -20,7 +20,7 @@ const FilterCategoriesGroup: FunctionComponent<Props> = ({
   setFilters,
 }) => {
   const [currentCategory, setCurrentCategory] = useState(
-    defaultSelected || Object.keys(filterCategories)[0]
+    defaultSelected || Object.keys(filterCategories)[0],
   );
 
   return (

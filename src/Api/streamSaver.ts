@@ -1,6 +1,6 @@
 export const saveStream = (
   readableStream: ReadableStream,
-  fileStream: WritableStream
+  fileStream: WritableStream,
 ): Promise<void> => {
   const writer = fileStream.getWriter();
 

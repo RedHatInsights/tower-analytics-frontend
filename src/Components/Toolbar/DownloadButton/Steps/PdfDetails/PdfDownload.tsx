@@ -112,8 +112,8 @@ const PdfDownload: ({
       },
       dispatch,
       slug,
-      token
-    )
+      token,
+    ),
   );
 };
 export default PdfDownload;
