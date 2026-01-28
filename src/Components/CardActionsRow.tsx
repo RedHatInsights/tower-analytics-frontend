@@ -7,7 +7,7 @@ const CardActionsWrapper = styled.div`
 `;
 
 interface Props {
-  children: React.ReactChild | React.ReactChildren;
+  children: React.ReactNode;
 }
 
 const CardActionsRow: FunctionComponent<Props> = ({ children }) => {

@@ -41,7 +41,7 @@ const pfDisabled = 'var(--pf-global--disabled-color--100)';
 
 export type LabelColor =
   | 'blue'
-  | 'cyan'
+  | 'teal'
   | 'green'
   | 'orange'
   | 'purple'

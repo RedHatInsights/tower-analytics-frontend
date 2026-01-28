@@ -13,11 +13,11 @@ import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { ExpandableRowContent } from '@patternfly/react-table';
 import {
-  t_temp_dev_tbd as global_palette_black_400 /* CODEMODS: you should update this color token */,
-  t_temp_dev_tbd as global_palette_blue_300 /* CODEMODS: you should update this color token */,
-  t_temp_dev_tbd as global_palette_gold_300 /* CODEMODS: you should update this color token */,
-  t_temp_dev_tbd as global_palette_green_300 /* CODEMODS: you should update this color token */,
-  t_temp_dev_tbd as global_palette_red_100 /* CODEMODS: you should update this color token */,
+  t_chart_color_black_400 as global_palette_black_400,
+  t_chart_color_blue_300 as global_palette_blue_300,
+  t_chart_color_orange_300 as global_palette_gold_300,
+  t_chart_color_green_300 as global_palette_green_300,
+  t_chart_color_red_orange_300 as global_palette_red_100,
 } from '@patternfly/react-tokens';
 import React, { useEffect, useState } from 'react';
 import { readJobExplorer, readJobExplorerOptions } from '../../Api/';
