@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 const EDCard = styled(Card)`
-  background-color: var(--pf-global--BackgroundColor--200);
+  background-color: var(--pf-t--global--background--color--200);
   overflow-wrap: break-word;
 `;
 

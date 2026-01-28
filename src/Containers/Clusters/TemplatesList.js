@@ -9,8 +9,8 @@ import NoData from '../../Components/ApiStatus/NoData';
 import ModalContents from './ModalContents';
 
 const TLDataListCell = styled(DataListCell)`
-  --pf-c-data-list__cell-cell--MarginRight: 0;
-  --pf-c-data-list__cell--PaddingBottom: 10px;
+  --pf-v6-c-data-list__cell-cell--MarginRight: 0;
+  --pf-v6-c-data-list__cell--PaddingBottom: 10px;
 `;
 
 const TLDataListItem = styled(DataListItem)`

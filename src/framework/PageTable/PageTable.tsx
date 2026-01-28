@@ -233,10 +233,10 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
             <div
               style={{
                 borderLeft: usePadding
-                  ? 'thin solid var(--pf-global--BorderColor--100)'
+                  ? 'thin solid var(--pf-t--global--border--color--100)'
                   : undefined,
                 borderRight: usePadding
-                  ? 'thin solid var(--pf-global--BorderColor--100)'
+                  ? 'thin solid var(--pf-t--global--border--color--100)'
                   : undefined,
               }}
             >
