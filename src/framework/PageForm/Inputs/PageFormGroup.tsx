@@ -32,15 +32,15 @@ export function PageFormGroup(props: PageFormGroupProps) {
       fieldId={props.id}
       label={label}
       isRequired={isRequired}
-      labelIcon={
+      labelHelp={
         props.labelHelp ? (
           <Popover
             headerContent={props.labelHelpTitle}
             bodyContent={props.labelHelp}
             position='bottom-start'
           >
-            <Button variant='link' isInline>
-              <OutlinedQuestionCircleIcon />
+            <Button icon={<OutlinedQuestionCircleIcon />} variant='link' isInline>
+              
             </Button>
           </Popover>
         ) : undefined

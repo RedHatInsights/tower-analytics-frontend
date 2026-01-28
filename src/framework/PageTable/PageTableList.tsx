@@ -14,7 +14,7 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
-import { Text } from '@patternfly/react-core/dist/dynamic/components/Text';
+import { Content } from "@patternfly/react-core/dist/dynamic/components/Content";
 import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
 import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
 import { Stack } from '@patternfly/react-core/dist/dynamic/layouts/Stack';
@@ -194,17 +194,17 @@ function useColumnsToDataList<T extends object>(
                             </span>
                           </Title>
                           {subtitleColumn ? (
-                            <Text component='small' style={{ opacity: 0.7 }}>
+                            <Content component='small' style={{ opacity: 0.7 }}>
                               <TableColumnCell
                                 column={subtitleColumn}
                                 item={item}
                               />
-                            </Text>
+                            </Content>
                           ) : (
                             defaultCardSubtitle && (
-                              <Text component='small' style={{ opacity: 0.7 }}>
+                              <Content component='small' style={{ opacity: 0.7 }}>
                                 {defaultCardSubtitle}
-                              </Text>
+                              </Content>
                             )
                           )}
                         </Stack>
@@ -323,7 +323,7 @@ function useColumnsToDataList<T extends object>(
                 aria-labelledby='check-action-item1 check-action-action1'
                 id='check-action-action1'
                 aria-label='Actions'
-                isPlainButtonAction
+                
                 style={{ whiteSpace: 'nowrap' }}
               >
                 <PageActions

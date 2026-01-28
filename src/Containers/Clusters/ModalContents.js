@@ -6,18 +6,22 @@ import {
   DescriptionListTerm,
 } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
 import { Divider } from '@patternfly/react-core/dist/dynamic/components/Divider';
-import { ModalVariant } from '@patternfly/react-core/dist/dynamic/components/Modal';
-import { Modal } from '@patternfly/react-core/dist/dynamic/components/Modal';
+import {
+	ModalVariant
+} from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
+import {
+	Modal
+} from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import {
-  global_palette_black_850,
-  global_palette_blue_300,
-  global_palette_cyan_200,
-  global_palette_green_200,
-  global_palette_light_green_200,
-  global_palette_orange_300,
-  global_palette_purple_300,
-  global_palette_red_100,
+  t_temp_dev_tbd as global_palette_black_850 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_blue_300 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_cyan_200 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_green_200 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_light_green_200 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_orange_300 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_purple_300 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_red_100 /* CODEMODS: you should update this color token */,
 } from '@patternfly/react-tokens';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';

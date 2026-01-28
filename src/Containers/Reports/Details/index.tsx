@@ -66,7 +66,7 @@ const Details: FunctionComponent<Record<string, never>> = () => {
             description={description}
             footer={reportTags}
           />
-          <PageSection>{getComponent(report, true)}</PageSection>
+          <PageSection hasBodyWrapper={false}>{getComponent(report, true)}</PageSection>
         </div>
       );
     } else if (isLoading) {

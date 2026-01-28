@@ -13,7 +13,7 @@ import {
   LabelGroup,
 } from '@patternfly/react-core/dist/dynamic/components/Label';
 import { Popover } from '@patternfly/react-core/dist/dynamic/components/Popover';
-import { Text } from '@patternfly/react-core/dist/dynamic/components/Text';
+import { Content } from "@patternfly/react-core/dist/dynamic/components/Content";
 import { Truncate } from '@patternfly/react-core/dist/dynamic/components/Truncate';
 import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
 import React, { ReactNode, useCallback, useMemo } from 'react';
@@ -82,9 +82,9 @@ export function PageTableCard<T extends object>(props: {
     <Card
       id={card.id as string}
       key={card.id ?? card.title}
-      isFlat
+      
       isLarge
-      isRounded
+      
       isSelectable={isItemSelected}
       isSelected={isItemSelected}
       style={{
@@ -140,14 +140,14 @@ export function PageTableCard<T extends object>(props: {
                 <Truncate content={card.title as string} />
               </CardTitle>
               {card.subtitle ? (
-                <Text component='small' style={{ opacity: 0.7 }}>
+                <Content component='small' style={{ opacity: 0.7 }}>
                   {card.subtitle}
-                </Text>
+                </Content>
               ) : (
                 defaultCardSubtitle && (
-                  <Text component='small' style={{ opacity: 0.7 }}>
+                  <Content component='small' style={{ opacity: 0.7 }}>
                     {defaultCardSubtitle}
-                  </Text>
+                  </Content>
                 )
               )}
             </div>

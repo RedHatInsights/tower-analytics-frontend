@@ -7,7 +7,7 @@ import {
   SelectVariant,
 } from '@patternfly/react-core/deprecated';
 import {
-  ToolbarChip,
+  ToolbarLabel,
   ToolbarFilter,
 } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
@@ -121,11 +121,11 @@ const Select: FunctionComponent<Props> = ({
       data-cy={categoryKey}
       key={categoryKey}
       showToolbarItem={isVisible}
-      chips={options.hasChips ? handleChips() : []}
+      labels={options.hasChips ? handleChips() : []}
       categoryName={options.name}
-      deleteChip={
+      deleteLabel={
         options.hasChips
-          ? (_: unknown, chip: ToolbarChip | string) => onDelete(chip as string)
+          ? (_: unknown, chip: ToolbarLabel | string) => onDelete(chip as string)
           : undefined
       }
     >

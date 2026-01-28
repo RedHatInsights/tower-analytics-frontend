@@ -1,6 +1,6 @@
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import { Td, Tr } from '@patternfly/react-table';
-import { global_disabled_color_300 } from '@patternfly/react-tokens';
+import { t_temp_dev_tbd as global_disabled_color_300 /* CODEMODS: you should update this color token */ } from '@patternfly/react-tokens';
 import React, { FunctionComponent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {

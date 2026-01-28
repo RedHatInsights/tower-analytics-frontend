@@ -202,7 +202,7 @@ const Clusters = () => {
         filters={queryParams}
         setFilters={setFromToolbar}
       />
-      <PageSection>{renderContent()}</PageSection>
+      <PageSection hasBodyWrapper={false}>{renderContent()}</PageSection>
     </div>
   );
 };

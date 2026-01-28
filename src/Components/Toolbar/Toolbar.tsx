@@ -98,15 +98,13 @@ const FilterableToolbar: FunctionComponent<Props> = ({
         </ToolbarToggleGroup>
         {hasSettings && (
           <ToolbarItem>
-            <Button
+            <Button icon={<CogIcon />}
               variant={ButtonVariant.plain}
               onClick={() => setSettingsExpanded(!settingsExpanded)}
               aria-label='settings'
               data-cy={'settings'}
-              isActive={settingsExpanded}
-            >
-              <CogIcon />
-            </Button>
+              isClicked={settingsExpanded}
+             />
           </ToolbarItem>
         )}
         {additionalControls.length > 0 && (

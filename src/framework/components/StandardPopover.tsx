@@ -23,7 +23,7 @@ function StandardPopover(props: { content: ReactNode; header: ReactNode }) {
       <PopoverButton
         aria-label='More information'
         aria-haspopup='true'
-        className='pf-v5-c-form__group-label-help'
+        className='pf-v6-c-form__group-label-help'
         onClick={(e) => e.preventDefault()}
         type='button'
       >

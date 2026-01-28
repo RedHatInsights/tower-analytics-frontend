@@ -225,7 +225,7 @@ export function PageTableToolbar<T extends object>(
       <ToolbarContent>
         {showSelect && (
           <ToolbarGroup>
-            <ToolbarItem variant='bulk-select'>
+            <ToolbarItem >
               <BulkSelector {...props} />
             </ToolbarItem>
           </ToolbarGroup>
@@ -287,13 +287,13 @@ export function PageTableToolbar<T extends object>(
                   <ToolbarFilter
                     key={filter.label}
                     categoryName={filter.label}
-                    chips={values.map((value) => {
+                    labels={values.map((value) => {
                       return 'options' in filter
                         ? (filter.options.find((o) => o.value === value)
                             ?.label ?? value)
                         : value;
                     })}
-                    deleteChip={(_group, value) => {
+                    deleteLabel={(_group, value) => {
                       setFilters?.((filters) => {
                         //TODO bug here where value is actually select filter option label... need to map
                         const newState = { ...filters };
@@ -310,7 +310,7 @@ export function PageTableToolbar<T extends object>(
                         return newState;
                       });
                     }}
-                    deleteChipGroup={() => {
+                    deleteLabelGroup={() => {
                       setFilters?.((filters) => {
                         const newState = { ...filters };
                         delete newState[filter.key];
@@ -328,7 +328,7 @@ export function PageTableToolbar<T extends object>(
         )}
 
         {/* Action Buttons */}
-        <ToolbarGroup variant='button-group' style={{ zIndex: 302 }}>
+        <ToolbarGroup variant="action-group" style={{ zIndex: 302 }}>
           <PageActions
             actions={toolbarActions}
             selectedItems={selectedItems}
@@ -337,7 +337,7 @@ export function PageTableToolbar<T extends object>(
         </ToolbarGroup>
         <div style={{ flexGrow: 1 }} />
 
-        <ToolbarGroup variant='button-group' style={{ zIndex: 302 }}>
+        <ToolbarGroup variant="action-group" style={{ zIndex: 302 }}>
           {!props.disableColumnManagement &&
             openColumnModal &&
             viewType === 'table' && (
@@ -493,16 +493,14 @@ function ToolbarTextFilter(props: {
           />
           {value !== '' && (
             <TextInputGroupUtilities>
-              <Button
+              <Button icon={<TimesIcon />}
                 variant='plain'
                 aria-label='clear filter'
                 onClick={() => setValue('')}
                 style={{ opacity: value ? undefined : 0 }}
                 // tabIndex={value ? undefined : -1}
                 tabIndex={-1}
-              >
-                <TimesIcon />
-              </Button>
+               />
             </TextInputGroupUtilities>
           )}
         </TextInputGroup>
@@ -511,7 +509,7 @@ function ToolbarTextFilter(props: {
       {!value ? (
         <></>
       ) : (
-        <Button
+        <Button icon={<ArrowRightIcon />}
           variant={value ? 'primary' : 'control'}
           aria-label='apply filter'
           onClick={() => {
@@ -520,7 +518,7 @@ function ToolbarTextFilter(props: {
           }}
           tabIndex={-1}
         >
-          <ArrowRightIcon />
+          
         </Button>
       )}
     </InputGroup>

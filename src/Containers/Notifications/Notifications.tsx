@@ -127,7 +127,7 @@ const Notifications: FC<Record<string, never>> = () => {
     <>
       <PageHeader title={'Notifications'} />
       <>
-        <PageSection>
+        <PageSection hasBodyWrapper={false}>
           <Card>
             <NCardTitle>
               <Flex direction={{ default: 'row' }}>

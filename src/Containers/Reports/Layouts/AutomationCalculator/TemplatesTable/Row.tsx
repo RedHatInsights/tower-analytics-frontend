@@ -7,9 +7,9 @@ import { Switch } from '@patternfly/react-core/dist/dynamic/components/Switch';
 import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import { Td, Tr } from '@patternfly/react-table';
-import { global_success_color_200 as globalSuccessColor200 } from '@patternfly/react-tokens';
-import { global_disabled_color_200 as globalDisabledColor200 } from '@patternfly/react-tokens';
-import { global_palette_red_200 } from '@patternfly/react-tokens';
+import { t_temp_dev_tbd as globalSuccessColor200 /* CODEMODS: you should update this color token, original v5 token was global_success_color_200 */ } from '@patternfly/react-tokens';
+import { t_temp_dev_tbd as globalDisabledColor200 /* CODEMODS: you should update this color token, original v5 token was global_disabled_color_200 */ } from '@patternfly/react-tokens';
+import { t_temp_dev_tbd as global_palette_red_200 /* CODEMODS: you should update this color token */ } from '@patternfly/react-tokens';
 import React, { FunctionComponent, useState } from 'react';
 import currencyFormatter from '../../../../../Utilities/currencyFormatter';
 import hoursFormatter from '../../../../../Utilities/hoursFormatter';
@@ -168,7 +168,7 @@ const Row: FunctionComponent<Props> = ({
         <Td>
           <Switch
             label='Show'
-            labelOff='Hide'
+            
             isChecked={template.enabled}
             onChange={(_event, checked) => setEnabled(checked)}
             isDisabled={readOnly}

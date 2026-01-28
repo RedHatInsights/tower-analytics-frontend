@@ -47,17 +47,15 @@ const SettingsPanel: FunctionComponent<Props> = ({
   ariaLabel,
   bodyContent,
 }) => (
-  <Card isFlat style={{ backgroundColor: '#EEEEEE' }}>
+  <Card  style={{ backgroundColor: '#EEEEEE' }}>
     <CardHeader
       actions={{
         actions: (
           <>
-            <Button
+            <Button icon={<TimesIcon />}
               variant='plain'
               onClick={() => setSettingsExpanded(!settingsExpanded)}
-            >
-              <TimesIcon />
-            </Button>
+             />
           </>
         ),
         hasNoOffset: false,
@@ -70,7 +68,7 @@ const SettingsPanel: FunctionComponent<Props> = ({
       <Switch
         id={id}
         label={label}
-        labelOff={labelOff}
+        
         isChecked={!!isChecked}
         onChange={onChange}
       />

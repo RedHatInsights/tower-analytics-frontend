@@ -1,9 +1,9 @@
 import {
-  global_palette_black_400,
-  global_palette_blue_300,
-  global_palette_gold_300,
-  global_palette_green_300,
-  global_palette_red_100,
+  t_temp_dev_tbd as global_palette_black_400 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_blue_300 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_gold_300 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_green_300 /* CODEMODS: you should update this color token */,
+  t_temp_dev_tbd as global_palette_red_100 /* CODEMODS: you should update this color token */,
 } from '@patternfly/react-tokens';
 import { Params } from '../Api/types';
 

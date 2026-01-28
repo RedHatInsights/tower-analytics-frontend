@@ -5,8 +5,6 @@ import {
   EmptyStateActions,
   EmptyStateBody,
   EmptyStateFooter,
-  EmptyStateHeader,
-  EmptyStateIcon,
   EmptyStateVariant,
 } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
@@ -167,22 +165,12 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
   if (error) {
     return (
       <div className='dark-2' style={{ height: '100%' }}>
-        <EmptyState variant={EmptyStateVariant.sm} style={{ paddingTop: 48 }}>
-          <EmptyStateHeader
-            titleText={
+        <EmptyState  headingLevel='h2' icon={ExclamationCircleIcon}  titleText={
               <>
                 {/* Unable to connect */}
                 {props.errorStateTitle}
               </>
-            }
-            icon={
-              <EmptyStateIcon
-                icon={ExclamationCircleIcon}
-                color='var(--pf-global--danger-color--100)'
-              />
-            }
-            headingLevel='h2'
-          />
+            } variant={EmptyStateVariant.sm} style={{ paddingTop: 48 }}>
           {/* <EmptyStateBody>There was an error retrieving data. Check your connection and reload the page.</EmptyStateBody> */}
           <EmptyStateBody>{error.message}</EmptyStateBody>
         </EmptyState>
@@ -192,15 +180,8 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
 
   if (itemCount === 0 && Object.keys(filters ?? {}).length === 0) {
     return (
-      <PageSection>
-        <EmptyState variant={EmptyStateVariant.lg} style={{ paddingTop: 48 }}>
-          <EmptyStateHeader
-            titleText={<>{props.emptyStateTitle}</>}
-            icon={
-              <EmptyStateIcon icon={props.emptyStateIcon ?? PlusCircleIcon} />
-            }
-            headingLevel='h4'
-          />
+      <PageSection hasBodyWrapper={false}>
+        <EmptyState  headingLevel='h4' icon={props.emptyStateIcon ?? PlusCircleIcon}  titleText={<>{props.emptyStateTitle}</>} variant={EmptyStateVariant.lg} style={{ paddingTop: 48 }}>
           <EmptyStateFooter>
             {props.emptyStateDescription && (
               <EmptyStateBody>{props.emptyStateDescription}</EmptyStateBody>
@@ -224,7 +205,7 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
 
   if (itemCount === undefined) {
     return (
-      <PageSection isFilled variant='light'>
+      <PageSection hasBodyWrapper={false} isFilled >
         <Bullseye>
           <Spinner />
         </Bullseye>
@@ -248,7 +229,7 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
       )}
       {viewType === PageTableViewTypeE.List && (
         <Scrollable>
-          <PageSection padding={{ default: 'noPadding', md: 'padding' }}>
+          <PageSection hasBodyWrapper={false} padding={{ default: 'noPadding', md: 'padding' }}>
             <div
               style={{
                 borderLeft: usePadding
@@ -331,7 +312,7 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
 
   return (
     <div
-      className='pf-v5-c-scroll-inner-wrapper'
+      className='pf-v6-c-scroll-inner-wrapper'
       style={{ height: '100%', marginBottom: -1 }}
       ref={containerRef}
       onScroll={onScroll}
@@ -406,12 +387,7 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
         </Tbody>
       </Table>
       {itemCount === 0 && (
-        <EmptyState style={{ paddingTop: 48 }}>
-          <EmptyStateHeader
-            titleText={<>No results found</>}
-            icon={<EmptyStateIcon icon={SearchIcon} />}
-            headingLevel='h2'
-          />
+        <EmptyState  headingLevel='h2' icon={SearchIcon}  titleText={<>No results found</>} style={{ paddingTop: 48 }}>
           <EmptyStateBody>
             No results match this filter criteria. Clear all filters and try
             again.

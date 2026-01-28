@@ -42,9 +42,9 @@ const Text: FunctionComponent<Props> = ({
       data-cy={categoryKey}
       key={categoryKey}
       showToolbarItem={isVisible}
-      chips={options.hasChips ? handleChips() : []}
+      labels={options.hasChips ? handleChips() : []}
       categoryName={options.name}
-      deleteChip={options.hasChips ? onDelete : undefined}
+      deleteLabel={options.hasChips ? onDelete : undefined}
     >
       <InputGroup>
         <InputGroupItem isFill>
@@ -62,14 +62,14 @@ const Text: FunctionComponent<Props> = ({
           />
         </InputGroupItem>
         <InputGroupItem>
-          <Button
+          <Button icon={<SearchIcon />}
             variant='control'
             aria-label={`Search button for ${options.name}`}
             onClick={() => {
               setValue(searchVal);
             }}
           >
-            <SearchIcon />
+            
           </Button>
         </InputGroupItem>
       </InputGroup>
