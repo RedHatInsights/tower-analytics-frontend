@@ -1,3 +1,4 @@
+// Rebuild to pick up latest insights-frontend-builder-common (9026daa+)
 import useChrome from '@redhat-cloud-services/frontend-components/useChrome';
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
