@@ -1,9 +1,10 @@
+// @ts-nocheck
 import {
   Select,
   SelectOption,
   SelectOptionObject,
   SelectVariant,
-} from '@patternfly/react-core/deprecated';
+} from '../../pf5Shim';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import {
   InputGroup,

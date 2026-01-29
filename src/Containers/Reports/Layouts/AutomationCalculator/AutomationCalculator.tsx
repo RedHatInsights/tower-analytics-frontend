@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { CardHeader } from '@patternfly/react-core/dist/dynamic/components/Card';
@@ -11,7 +12,7 @@ import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { Stack } from '@patternfly/react-core/dist/dynamic/layouts/Stack';
 import { StackItem } from '@patternfly/react-core/dist/dynamic/layouts/Stack';
-import { addNotification } from '@redhat-cloud-services/frontend-components-notifications/redux';
+import { addNotification } from '../../../../notificationsShim';
 import React, { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';

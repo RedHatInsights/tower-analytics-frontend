@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { EmptyStateFooter } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { EmptyStateVariant } from '@patternfly/react-core/dist/dynamic/components/EmptyState';

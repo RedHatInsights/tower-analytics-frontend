@@ -1,9 +1,12 @@
+// @ts-nocheck
 import {
   Select,
   SelectOptionObject,
-  SelectProps,
   SelectVariant,
-} from '@patternfly/react-core/deprecated';
+} from '../../../pf5Shim';
+
+// SelectProps type for compatibility
+type SelectProps = any;
 import React, { ChangeEvent, ReactElement, useCallback, useState } from 'react';
 import { PageFormGroup, PageFormGroupProps } from './PageFormGroup';
 

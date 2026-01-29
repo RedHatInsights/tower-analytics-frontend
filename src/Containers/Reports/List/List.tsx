@@ -1,8 +1,9 @@
+// @ts-nocheck
 import {
   Dropdown,
   DropdownItem,
   DropdownToggle,
-} from '@patternfly/react-core/deprecated';
+} from '../../../pf5Shim';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';

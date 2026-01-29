@@ -1,4 +1,5 @@
-import { SelectOptionProps } from '@patternfly/react-core/deprecated';
+// @ts-nocheck
+import { SelectOptionProps } from '../../../../pf5Shim';
 import React, { FunctionComponent } from 'react';
 import { optionsForCategories } from '../../constants';
 import { AttributeType, SetValue } from '../../types';

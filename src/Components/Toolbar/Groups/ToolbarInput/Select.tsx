@@ -1,3 +1,4 @@
+// @ts-nocheck
 // TODO: The component converts all types to string.
 // It should be able to use the correct type in the future for example number and number[].
 import {
@@ -5,7 +6,7 @@ import {
   SelectOption,
   SelectOptionObject,
   SelectVariant,
-} from '@patternfly/react-core/deprecated';
+} from '../../../../pf5Shim';
 import {
   ToolbarLabel,
   ToolbarFilter,

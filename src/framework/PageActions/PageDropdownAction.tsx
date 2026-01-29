@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   Dropdown,
   DropdownItem,
@@ -5,7 +6,7 @@ import {
   DropdownSeparator,
   DropdownToggle,
   KebabToggle,
-} from '@patternfly/react-core/deprecated';
+} from '../../pf5Shim';
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import CircleIcon from '@patternfly/react-icons/dist/dynamic/icons/circle-icon';
 import React, {

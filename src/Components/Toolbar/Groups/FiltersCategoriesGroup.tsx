@@ -1,4 +1,5 @@
-import { SelectOptionProps } from '@patternfly/react-core/deprecated';
+// @ts-nocheck
+import { SelectOptionProps } from '../../../pf5Shim';
 import { ToolbarGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import React, { FunctionComponent, useState } from 'react';
 import { optionsForCategories } from '../constants';

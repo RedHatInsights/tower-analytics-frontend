@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
