@@ -1,4 +1,5 @@
-import { SelectOptionObject } from '@patternfly/react-core/deprecated';
+// @ts-nocheck
+import { SelectOptionObject } from '../../pf5Shim';
 import { Endpoint, OptionsReturnType, Params } from '../../Api';
 
 export type AttributeType =

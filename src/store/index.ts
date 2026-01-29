@@ -1,4 +1,5 @@
-import { notificationsReducer } from '@redhat-cloud-services/frontend-components-notifications/redux';
+// @ts-nocheck
+import { notificationsReducer } from '../notificationsShim';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise-middleware';

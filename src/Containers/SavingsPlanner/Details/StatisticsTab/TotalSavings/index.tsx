@@ -23,7 +23,7 @@ const TotalSavings: FunctionComponent<Props> = ({
         headingLevel='h3'
         size='4xl'
         style={{
-          color: isMoney ? 'var(--pf-global--success-color--200)' : '#0063CF',
+          color: isMoney ? 'var(--pf-t--global--color--status--success--200)' : '#0063CF',
         }}
       >
         {isMoney ? `${currencyFormatter(value)}` : `${hoursFormatter(value)}`}

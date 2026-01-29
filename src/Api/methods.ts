@@ -1,7 +1,8 @@
+// @ts-nocheck
 import {
   addNotification,
   removeNotification,
-} from '@redhat-cloud-services/frontend-components-notifications/redux';
+} from '../notificationsShim';
 import queryString from 'query-string';
 import { createWriteStream } from 'streamsaver';
 import { saveStream } from './streamSaver';

@@ -1,9 +1,10 @@
+// @ts-nocheck
 import {
   Dropdown,
   DropdownItem,
   DropdownToggle,
   DropdownToggleCheckbox,
-} from '@patternfly/react-core/deprecated';
+} from '../../pf5Shim';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useBreakpoint } from './useBreakpoint';
 

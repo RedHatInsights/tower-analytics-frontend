@@ -88,13 +88,13 @@ const Tasks = ({ tasks, dispatch }) => {
                 />
               </InputGroupItem>
               <InputGroupItem>
-                <Button
+                <Button icon={<PlusIcon />}
                   onClick={appendTask}
                   isDisabled={taskToAdd.trim() === ''}
                   variant='control'
                   aria-label='Add task'
                 >
-                  <PlusIcon />
+                  
                 </Button>
               </InputGroupItem>
             </InputGroup>

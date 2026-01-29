@@ -3,11 +3,11 @@ import styled from 'styled-components';
 
 const CardActionsWrapper = styled.div`
   margin-top: 20px;
-  --pf-v5-c-card__actions--PaddingLeft: 0;
+  --pf-v6-c-card__actions--PaddingLeft: 0;
 `;
 
 interface Props {
-  children: React.ReactChild | React.ReactChildren;
+  children: React.ReactNode;
 }
 
 const CardActionsRow: FunctionComponent<Props> = ({ children }) => {

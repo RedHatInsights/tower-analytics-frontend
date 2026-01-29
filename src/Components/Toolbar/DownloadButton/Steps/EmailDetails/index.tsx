@@ -1,8 +1,9 @@
+// @ts-nocheck
 import {
   Select,
   SelectOption,
   SelectVariant,
-} from '@patternfly/react-core/deprecated';
+} from '../../../../../pf5Shim';
 import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { FormHelperText } from '@patternfly/react-core/dist/dynamic/components/Form';

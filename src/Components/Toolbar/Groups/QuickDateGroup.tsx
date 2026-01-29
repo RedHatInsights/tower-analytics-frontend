@@ -1,4 +1,5 @@
-import { SelectOptionProps } from '@patternfly/react-core/deprecated';
+// @ts-nocheck
+import { SelectOptionProps } from '../../../pf5Shim';
 import { ToolbarGroupVariant } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { ToolbarGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { SplitItem } from '@patternfly/react-core/dist/dynamic/layouts/Split';

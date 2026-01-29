@@ -2,7 +2,7 @@ import {
   Dropdown,
   DropdownItem,
   KebabToggle,
-} from '@patternfly/react-core/deprecated';
+} from '../../../../pf5Shim';
 import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
 import {
   Card,

@@ -10,9 +10,9 @@ import {
   DataListItemRow,
 } from '@patternfly/react-core/dist/dynamic/components/DataList';
 import {
-  Modal,
-  ModalVariant,
-} from '@patternfly/react-core/dist/dynamic/components/Modal';
+	Modal,
+	ModalVariant
+} from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import { ITableColumn } from './PageTable/PageTable';
 

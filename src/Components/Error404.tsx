@@ -1,9 +1,9 @@
 import { EmptyStateFooter } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { EmptyStateVariant } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
-import { EmptyStateIcon } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+
 import { EmptyStateBody } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
-import { EmptyStateHeader } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+
 import PathMissingIcon from '@patternfly/react-icons/dist/dynamic/icons/path-missing-icon';
 import React, { FunctionComponent } from 'react';
 import { Link } from 'react-router-dom';
@@ -22,12 +22,7 @@ export const Error404: FunctionComponent<Props> = ({
   buttonText = 'Return to home page',
   link = Paths.clusters,
 }) => (
-  <EmptyState variant={EmptyStateVariant.xl} data-cy={'error_page_404'}>
-    <EmptyStateHeader
-      titleText={<>{title}</>}
-      icon={<EmptyStateIcon icon={PathMissingIcon} />}
-      headingLevel='h4'
-    />
+  <EmptyState  headingLevel='h4' icon={PathMissingIcon}  titleText={<>{title}</>} variant={EmptyStateVariant.xl} data-cy={'error_page_404'}>
     <EmptyStateBody>{body}</EmptyStateBody>
     <EmptyStateFooter>
       <Link to={link.replace('/', '')}>{buttonText}</Link>

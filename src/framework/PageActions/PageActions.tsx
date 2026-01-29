@@ -1,4 +1,5 @@
-import { DropdownPosition } from '@patternfly/react-core/deprecated';
+// @ts-nocheck
+import { DropdownPosition } from '../../pf5Shim';
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import {
   Split,

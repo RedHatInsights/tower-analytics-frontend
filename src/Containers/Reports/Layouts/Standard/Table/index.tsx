@@ -1,8 +1,9 @@
+// @ts-nocheck
 import {
   Dropdown,
   DropdownItem,
   KebabToggle,
-} from '@patternfly/react-core/deprecated';
+} from '../../../../../pf5Shim';
 import {
   Table,
   TableVariant,

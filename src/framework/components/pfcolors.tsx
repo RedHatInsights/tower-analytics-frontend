@@ -33,15 +33,15 @@ export function getPatternflyColor(color: PFColor) {
   }
 }
 
-const pfSuccess = 'var(--pf-global--success-color--100)';
-const pfDanger = 'var(--pf-global--danger-color--100)';
-const pfWarning = 'var(--pf-global--warning-color--100)';
-const pfInfo = 'var(--pf-global--info-color--100)';
-const pfDisabled = 'var(--pf-global--disabled-color--100)';
+const pfSuccess = 'var(--pf-t--global--color--status--success--default)';
+const pfDanger = 'var(--pf-t--global--color--status--danger--default)';
+const pfWarning = 'var(--pf-t--global--color--status--warning--default)';
+const pfInfo = 'var(--pf-t--global--color--status--info--default)';
+const pfDisabled = 'var(--pf-t--global--color--disabled--100)';
 
 export type LabelColor =
   | 'blue'
-  | 'cyan'
+  | 'teal'
   | 'green'
   | 'orange'
   | 'purple'

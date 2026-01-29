@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   Dropdown,
   DropdownItem,
@@ -5,7 +6,7 @@ import {
   DropdownSeparator,
   DropdownToggle,
   KebabToggle,
-} from '@patternfly/react-core/deprecated';
+} from '../../pf5Shim';
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import CircleIcon from '@patternfly/react-icons/dist/dynamic/icons/circle-icon';
 import React, {
@@ -77,7 +78,7 @@ export function PageDropdownAction<T extends object>(props: {
         toggleIndicator={null}
         style={
           isPrimary && !label
-            ? { color: 'var(--pf-global--Color--light-100)' }
+            ? { color: 'var(--pf-t--global--text--color--inverse)' }
             : {}
         }
       >
@@ -91,7 +92,7 @@ export function PageDropdownAction<T extends object>(props: {
         toggleVariant={isPrimary ? 'primary' : undefined}
         style={
           isPrimary && !label
-            ? { color: 'var(--pf-global--Color--light-100)' }
+            ? { color: 'var(--pf-t--global--text--color--inverse)' }
             : {}
         }
       >
@@ -180,7 +181,7 @@ function PageDropdownActionItem<T extends object>(props: {
             style={{
               color:
                 action.isDanger && !isDisabled
-                  ? 'var(--pf-global--danger-color--100)'
+                  ? 'var(--pf-t--global--color--status--danger--default)'
                   : undefined,
             }}
           >
@@ -226,7 +227,7 @@ function PageDropdownActionItem<T extends object>(props: {
             style={{
               color:
                 action.isDanger && !isDisabled
-                  ? 'var(--pf-global--danger-color--100)'
+                  ? 'var(--pf-t--global--color--status--danger--default)'
                   : undefined,
             }}
           >

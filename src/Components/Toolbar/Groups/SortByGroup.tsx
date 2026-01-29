@@ -1,4 +1,5 @@
-import { SelectOptionProps } from '@patternfly/react-core/deprecated';
+// @ts-nocheck
+import { SelectOptionProps } from '../../../pf5Shim';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';

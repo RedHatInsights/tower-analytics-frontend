@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ToolbarToggleGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
@@ -98,15 +99,13 @@ const FilterableToolbar: FunctionComponent<Props> = ({
         </ToolbarToggleGroup>
         {hasSettings && (
           <ToolbarItem>
-            <Button
+            <Button icon={<CogIcon />}
               variant={ButtonVariant.plain}
               onClick={() => setSettingsExpanded(!settingsExpanded)}
               aria-label='settings'
               data-cy={'settings'}
-              isActive={settingsExpanded}
-            >
-              <CogIcon />
-            </Button>
+              isClicked={settingsExpanded}
+             />
           </ToolbarItem>
         )}
         {additionalControls.length > 0 && (

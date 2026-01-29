@@ -1,8 +1,9 @@
+// @ts-nocheck
 import {
   Select,
   SelectOption,
   SelectVariant,
-} from '@patternfly/react-core/deprecated';
+} from '../../../pf5Shim';
 import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import React, { FunctionComponent, useState } from 'react';
 

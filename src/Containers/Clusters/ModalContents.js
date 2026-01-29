@@ -6,18 +6,22 @@ import {
   DescriptionListTerm,
 } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
 import { Divider } from '@patternfly/react-core/dist/dynamic/components/Divider';
-import { ModalVariant } from '@patternfly/react-core/dist/dynamic/components/Modal';
-import { Modal } from '@patternfly/react-core/dist/dynamic/components/Modal';
+import {
+	ModalVariant
+} from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
+import {
+	Modal
+} from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import {
-  global_palette_black_850,
-  global_palette_blue_300,
-  global_palette_cyan_200,
-  global_palette_green_200,
-  global_palette_light_green_200,
-  global_palette_orange_300,
-  global_palette_purple_300,
-  global_palette_red_100,
+  t_chart_color_black_500 as global_palette_black_850,
+  t_chart_color_blue_300 as global_palette_blue_300,
+  t_chart_color_teal_200 as global_palette_cyan_200,
+  t_chart_color_green_200 as global_palette_green_200,
+  t_chart_color_green_100 as global_palette_light_green_200,
+  t_chart_color_orange_300 as global_palette_orange_300,
+  t_chart_color_purple_300 as global_palette_purple_300,
+  t_chart_color_red_orange_300 as global_palette_red_100,
 } from '@patternfly/react-tokens';
 import PropTypes from 'prop-types';
 import React, { useEffect } from 'react';

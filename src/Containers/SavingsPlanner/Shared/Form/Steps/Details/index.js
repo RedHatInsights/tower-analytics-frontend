@@ -1,4 +1,4 @@
-import { Select, SelectOption } from '@patternfly/react-core/deprecated';
+import { Select, SelectOption } from '../../../../../../pf5Shim';
 import { FormHelperText } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
