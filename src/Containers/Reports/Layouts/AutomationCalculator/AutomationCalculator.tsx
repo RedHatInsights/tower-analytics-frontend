@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { CardHeader } from '@patternfly/react-core/dist/dynamic/components/Card';
@@ -12,9 +11,8 @@ import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { Stack } from '@patternfly/react-core/dist/dynamic/layouts/Stack';
 import { StackItem } from '@patternfly/react-core/dist/dynamic/layouts/Stack';
-import { addNotification } from '../../../../notificationsShim';
+import { useAddNotification } from '@redhat-cloud-services/frontend-components-notifications';
 import React, { FC, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { endpointFunctionMap, saveROI } from '../../../../Api';
@@ -44,7 +42,7 @@ import {
 import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
 import hoursFormatter from '../../../../Utilities/hoursFormatter';
 import useRequest from '../../../../Utilities/useRequest';
-import { NotificationType } from '../../../../globalTypes';
+
 import { Paths } from '../../../../paths';
 import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants';
 import hydrateSchema from '../../Shared/hydrateSchema';
@@ -183,7 +181,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       templates_manual_equivalent: updatedDataApi,
     };
   };
-  const dispatch = useDispatch();
+  const addNotification = useAddNotification();
 
   const update = async () => {
     const res = await readData(queryParams as any);
@@ -213,14 +211,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         ) as any,
       );
     } catch {
-      dispatch(
-        addNotification({
-          title: `Unable to save changes to ${humanVarName}.`,
-          description: `Unable to save changes ${humanVarName}. Please try again.`,
-          variant: NotificationType.danger,
-          autoDismiss: false,
-        }),
-      );
+      addNotification({
+        title: `Unable to save changes to ${humanVarName}.`,
+        description: `Unable to save changes ${humanVarName}. Please try again.`,
+        variant: 'danger',
+        dismissable: true,
+      });
       // don't update inputs
       return;
     }
@@ -254,15 +250,13 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     try {
       await saveROI(getROISaveData(updatedData) as any);
     } catch {
-      dispatch(
-        addNotification({
-          title: 'Unable to save changes to Manual time',
-          description:
-            'Unable to save changes to Manual time. Please try again.',
-          variant: NotificationType.danger,
-          autoDismiss: false,
-        }),
-      );
+      addNotification({
+        title: 'Unable to save changes to Manual time',
+        description:
+          'Unable to save changes to Manual time. Please try again.',
+        variant: 'danger',
+        dismissable: true,
+      });
       // don't update inputs
       return;
     }
@@ -278,15 +272,13 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     try {
       await saveROI(getROISaveData(updatedData) as any);
     } catch {
-      dispatch(
-        addNotification({
-          title: 'Unable to save changes to visibility',
-          description:
-            'Unable to save changes to visibility. Please try again.',
-          variant: NotificationType.danger,
-          autoDismiss: false,
-        }),
-      );
+      addNotification({
+        title: 'Unable to save changes to visibility',
+        description:
+          'Unable to save changes to visibility. Please try again.',
+        variant: 'danger',
+        dismissable: true,
+      });
       // don't update inputs
       return;
     }

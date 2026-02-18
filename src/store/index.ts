@@ -1,12 +1,9 @@
-// @ts-nocheck
-import { notificationsReducer } from '../notificationsShim';
 import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux';
 import { applyMiddleware, combineReducers, createStore } from 'redux';
 import promiseMiddleware from 'redux-promise-middleware';
 import pdfDownloadButton from './pdfDownloadButton';
 
 const rootReducer = combineReducers({
-  notifications: notificationsReducer,
   pdfDownloadButton,
 });
 

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { CardFooter } from '@patternfly/react-core/dist/dynamic/components/Card';
@@ -249,7 +248,7 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           setFilters={setFromToolbar}
           pagination={
             showPagination
-              ? () => (
+              ? (
                   <Pagination
                     count={(dataApi.result.meta as any).count}
                     perPageOptions={perPageOptions}

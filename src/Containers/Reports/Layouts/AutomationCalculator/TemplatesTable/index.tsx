@@ -1,9 +1,10 @@
-// @ts-nocheck
 import {
   Dropdown,
   DropdownItem,
-  KebabToggle,
-} from '../../../../../pf5Shim';
+  DropdownList,
+  MenuToggle,
+} from '@patternfly/react-core';
+import { EllipsisVIcon } from '@patternfly/react-icons';
 import {
   Table,
   TableVariant,
@@ -107,20 +108,26 @@ const TopTemplates: FunctionComponent<Props> = ({
           >
             <Dropdown
               onSelect={() => {
-                setIsKebabOpen(true);
+                setIsKebabOpen(false);
               }}
-              toggle={
-                <KebabToggle
+              toggle={(toggleRef) => (
+                <MenuToggle
+                  ref={toggleRef}
+                  variant="plain"
                   style={{ paddingBottom: '0px' }}
                   id='table-kebab'
-                  onToggle={() => setIsKebabOpen(!isKebabOpen)}
-                />
-              }
+                  onClick={() => setIsKebabOpen(!isKebabOpen)}
+                  isExpanded={isKebabOpen}
+                  aria-label="Table actions"
+                >
+                  <EllipsisVIcon />
+                </MenuToggle>
+              )}
               isOpen={isKebabOpen}
-              isPlain
-              dropdownItems={kebabDropdownItems}
-              position={'right'}
-            />
+              popperProps={{ position: 'right' }}
+            >
+              <DropdownList>{kebabDropdownItems}</DropdownList>
+            </Dropdown>
           </Th>
         </Tr>
       </Thead>

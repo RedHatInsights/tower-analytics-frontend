@@ -1,9 +1,18 @@
-// @ts-nocheck
 import {
   Select,
   SelectOption,
-  SelectVariant,
-} from '../../../../../pf5Shim';
+  SelectList,
+  MenuToggle,
+} from '@patternfly/react-core';
+
+// SelectVariant enum for backward compatibility
+const SelectVariant = {
+  single: 'single',
+  checkbox: 'checkbox',
+  typeahead: 'typeahead',
+  typeaheadMulti: 'typeaheadMulti',
+} as const;
+
 import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { FormHelperText } from '@patternfly/react-core/dist/dynamic/components/Form';
@@ -228,27 +237,34 @@ const EmailDetails = ({
         fieldId='selectedRbacGroups-field'
       >
         <Select
-          variant={SelectVariant.checkbox}
           aria-label={'Recipient'}
           isOpen={isExpanded}
-          onClear={() => clearGroupSelection()}
-          onToggle={() => setIsExpanded(!isExpanded)}
+          onOpenChange={(isOpen) => setIsExpanded(isOpen)}
           onSelect={(e, selection) => {
             onSelectionChange(
               'selectedRbacGroups',
               typeof selection !== 'string' ? selection.toString() : selection,
             );
-            setIsExpanded(false);
           }}
-          hasInlineFilter
-          selections={selectedRbacGroups}
-          placeholderText={'Select Recipients'}
+          selected={selectedRbacGroups}
+          toggle={(toggleRef) => (
+            <MenuToggle
+              ref={toggleRef}
+              onClick={() => setIsExpanded(!isExpanded)}
+              isExpanded={isExpanded}
+              isFullWidth
+            >
+              {selectedRbacGroups.length > 0 ? `${selectedRbacGroups.length} selected` : 'Select Recipients'}
+            </MenuToggle>
+          )}
         >
-          {rbacGroupsFromApi.map(({ uuid, name }, i) => (
-            <SelectOption key={i} value={uuid}>
-              {name}
-            </SelectOption>
-          ))}
+          <SelectList>
+            {rbacGroupsFromApi.map(({ uuid, name }, i) => (
+              <SelectOption key={i} value={uuid} hasCheckbox>
+                {name}
+              </SelectOption>
+            ))}
+          </SelectList>
         </Select>
       </FormGroup>
 

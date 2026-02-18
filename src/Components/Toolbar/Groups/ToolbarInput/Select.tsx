@@ -1,12 +1,26 @@
-// @ts-nocheck
 // TODO: The component converts all types to string.
 // It should be able to use the correct type in the future for example number and number[].
 import {
   Select as PFSelect,
   SelectOption,
-  SelectOptionObject,
-  SelectVariant,
-} from '../../../../pf5Shim';
+  SelectList,
+  MenuToggle,
+} from '@patternfly/react-core';
+
+// SelectVariant enum for backward compatibility
+const SelectVariant = {
+  single: 'single',
+  checkbox: 'checkbox',
+  typeahead: 'typeahead',
+  typeaheadMulti: 'typeaheadMulti',
+} as const;
+
+// SelectOptionObject interface for backward compatibility
+export interface SelectOptionObject {
+  toString(): string;
+  compareTo?(selectOption: any): boolean;
+}
+
 import {
   ToolbarLabel,
   ToolbarFilter,
@@ -33,10 +47,19 @@ interface Props {
   setValue: SetValue;
 }
 
-const renderValues = (values: SelectOptionProps[]) =>
+const renderValues = (
+  values: SelectOptionProps[],
+  isMultiSelect: boolean,
+) =>
   values &&
   values.map(({ key, value, description }) => (
-    <SelectOption key={key} value={key} description={description} data-cy={key}>
+    <SelectOption
+      key={key}
+      value={key}
+      description={description}
+      data-cy={key}
+      hasCheckbox={isMultiSelect}
+    >
       <Tooltip content={<div>{value}</div>}>
         <OptionSpan>{value}</OptionSpan>
       </Tooltip>
@@ -79,13 +102,15 @@ const Select: FunctionComponent<Props> = ({
   };
 
   const onFilter = (_: unknown, textInput: string) => {
-    if (textInput === '') return renderValues(selectOptions);
+    const isMultiSelect = Array.isArray(value);
+    if (textInput === '') return renderValues(selectOptions, isMultiSelect);
     return renderValues(
       selectOptionsMasterCopy
         .filter(({ value }) =>
           value.toString().toLowerCase().includes(textInput.toLowerCase()),
         )
         .slice(0, 50),
+      isMultiSelect,
     );
   };
 
@@ -131,20 +156,23 @@ const Select: FunctionComponent<Props> = ({
       }
     >
       <PFSelect
-        variant={
-          Array.isArray(value) ? SelectVariant.checkbox : SelectVariant.single
-        }
         aria-label={options.name}
-        onToggle={() => setExpanded(!expanded)}
+        toggle={(toggleRef) => (
+          <MenuToggle
+            ref={toggleRef}
+            onClick={() => setExpanded(!expanded)}
+            isExpanded={expanded}
+          >
+            {options.placeholder}
+          </MenuToggle>
+        )}
         onSelect={onSelect}
-        selections={value}
+        selected={value}
         isOpen={expanded}
-        hasInlineFilter
-        placeholderText={options.placeholder}
-        onFilter={onFilter}
-        maxHeight={'1000%'}
+        onOpenChange={(isOpen) => setExpanded(isOpen)}
+        maxMenuHeight={'1000%'}
       >
-        {renderValues(selectOptions)}
+        <SelectList>{renderValues(selectOptions, Array.isArray(value))}</SelectList>
       </PFSelect>
     </ToolbarFilter>
   );

@@ -1,9 +1,18 @@
-// @ts-nocheck
 import {
   Select,
   SelectOption,
-  SelectVariant,
-} from '../../../pf5Shim';
+  SelectList,
+  MenuToggle,
+} from '@patternfly/react-core';
+
+// SelectVariant enum for backward compatibility
+const SelectVariant = {
+  single: 'single',
+  checkbox: 'checkbox',
+  typeahead: 'typeahead',
+  typeaheadMulti: 'typeaheadMulti',
+} as const;
+
 import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import React, { FunctionComponent, useState } from 'react';
 
@@ -28,21 +37,31 @@ const CategoryDropdown: FunctionComponent<Props> = ({
     <ToolbarItem data-cy={categoryKey}>
       <Select
         isOpen={isExpanded}
-        variant={SelectVariant.single}
         aria-label={'Categories'}
-        onToggle={() => setIsExpanded(!isExpanded)}
+        onOpenChange={(isOpen) => setIsExpanded(isOpen)}
         onSelect={(_, selection) => {
           setSelected(selection as string);
           setIsExpanded(false);
         }}
-        selections={selected}
-        placeholderText={'Filter by'}
+        selected={selected}
+        toggle={(toggleRef) => (
+          <MenuToggle
+            ref={toggleRef}
+            onClick={() => setIsExpanded(!isExpanded)}
+            isExpanded={isExpanded}
+            isFullWidth
+          >
+            {selected || 'Filter by'}
+          </MenuToggle>
+        )}
       >
-        {categories.map(({ key, name }) => (
-          <SelectOption key={key} value={key}>
-            {name}
-          </SelectOption>
-        ))}
+        <SelectList>
+          {categories.map(({ key, name }) => (
+            <SelectOption key={key} value={key}>
+              {name}
+            </SelectOption>
+          ))}
+        </SelectList>
       </Select>
     </ToolbarItem>
   );

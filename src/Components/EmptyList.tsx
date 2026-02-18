@@ -31,7 +31,6 @@ const EmptyList: FunctionComponent<Props> = ({
   path = undefined,
   onButtonClick = undefined,
 }) => {
-  /* @ts-ignore */
   const navigate = useNavigate();
 
   return (
@@ -44,7 +43,6 @@ const EmptyList: FunctionComponent<Props> = ({
             variant={ButtonVariant.primary}
             aria-label={label}
             onClick={() => {
-              /* @ts-ignore */
               if (path) navigate(createUrl(path));
               if (onButtonClick) onButtonClick();
             }}

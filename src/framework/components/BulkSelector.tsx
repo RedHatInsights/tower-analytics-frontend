@@ -1,12 +1,5 @@
-// @ts-nocheck
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownToggle,
-  DropdownToggleCheckbox,
-} from '../../pf5Shim';
-import React, { useCallback, useMemo, useState } from 'react';
-import { useBreakpoint } from './useBreakpoint';
+import BulkSelect from '@redhat-cloud-services/frontend-components/BulkSelect';
+import React, { useCallback, useMemo } from 'react';
 
 export interface BulkSelectorProps<T> {
   itemCount?: number;
@@ -19,9 +12,6 @@ export interface BulkSelectorProps<T> {
 }
 
 export function BulkSelector<T extends object>(props: BulkSelectorProps<T>) {
-  const [isOpen, setIsOpen] = useState(false);
-  const isSmallOrLarger = useBreakpoint('sm');
-
   const { pageItems, selectedItems, selectItems, unselectAll } = props;
 
   const allPageItemsSelected =
@@ -31,91 +21,47 @@ export function BulkSelector<T extends object>(props: BulkSelectorProps<T>) {
     pageItems.length > 0 &&
     (pageItems ?? []).every((item) => selectedItems?.includes(item));
 
-  const onToggleCheckbox = useCallback(() => {
-    if (allPageItemsSelected) {
-      unselectAll?.();
-    } else {
-      selectItems?.(pageItems ?? []);
-    }
-  }, [allPageItemsSelected, unselectAll, selectItems, pageItems]);
+  const selectedCount = selectedItems ? selectedItems.length : 0;
 
-  const toggleText = useMemo(() => {
-    if (isSmallOrLarger) {
-      if (selectedItems && selectedItems.length > 0) {
-        return `${selectedItems.length} selected`;
+  const onSelect = useCallback(
+    (checked: boolean) => {
+      if (checked) {
+        selectItems?.(pageItems ?? []);
+      } else {
+        unselectAll?.();
       }
-      return '';
-    } else {
-      if (selectedItems && selectedItems.length > 0) {
-        return `${selectedItems.length}`;
-      }
-      return '';
-    }
-  }, [isSmallOrLarger, selectedItems]);
-
-  const toggle = useMemo(() => {
-    const selectedCount = selectedItems ? selectedItems.length : 0;
-    return (
-      <DropdownToggle
-        splitButtonItems={[
-          <DropdownToggleCheckbox
-            id='select-all'
-            key='select-all'
-            aria-label='Select all'
-            isChecked={
-              allPageItemsSelected ? true : selectedCount > 0 ? null : false
-            }
-            onChange={onToggleCheckbox}
-          >
-            {toggleText}
-          </DropdownToggleCheckbox>,
-        ]}
-        onToggle={(_event, isOpen) => setIsOpen(isOpen)}
-      />
-    );
-  }, [selectedItems, allPageItemsSelected, onToggleCheckbox, toggleText]);
-
-  const selectNoneDropdownItem = useMemo(() => {
-    return (
-      <DropdownItem
-        id='select-none'
-        key='select-none'
-        onClick={() => {
-          unselectAll?.();
-          setIsOpen(false);
-        }}
-      >
-        {props.selectNoneText ?? 'Select none'}
-      </DropdownItem>
-    );
-  }, [props.selectNoneText, unselectAll]);
-
-  const selectPageDropdownItem = useMemo(() => {
-    return (
-      <DropdownItem
-        id='select-page'
-        key='select-page'
-        onClick={() => {
-          selectItems?.(pageItems ?? []);
-          setIsOpen(false);
-        }}
-      >
-        {`Select ${pageItems?.length ?? 0} page items`}
-      </DropdownItem>
-    );
-  }, [selectItems, pageItems]);
-
-  const dropdownItems = useMemo(
-    () => [selectNoneDropdownItem, selectPageDropdownItem],
-    [selectNoneDropdownItem, selectPageDropdownItem],
+    },
+    [selectItems, unselectAll, pageItems]
   );
 
+  const bulkSelectItems = useMemo(() => {
+    return [
+      {
+        title: props.selectNoneText ?? 'Select none',
+        onClick: () => {
+          unselectAll?.();
+        },
+      },
+      {
+        title: `Select page (${pageItems?.length ?? 0} items)`,
+        onClick: () => {
+          selectItems?.(pageItems ?? []);
+        },
+      },
+    ];
+  }, [props.selectNoneText, unselectAll, selectItems, pageItems]);
+
   return (
-    <Dropdown
-      isOpen={isOpen}
-      toggle={toggle}
-      dropdownItems={dropdownItems}
-      style={{ zIndex: 302 }}
+    <BulkSelect
+      count={selectedCount}
+      items={bulkSelectItems}
+      checked={allPageItemsSelected ? true : selectedCount > 0 ? null : false}
+      onSelect={(_event, checked) => {
+        // BulkSelect passes the checkbox change event
+        if (typeof checked === 'boolean') {
+          onSelect(checked);
+        }
+      }}
     />
   );
 }

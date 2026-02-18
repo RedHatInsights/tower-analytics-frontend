@@ -1,4 +1,9 @@
-import { Select, SelectOption } from '../../../../../../pf5Shim';
+import {
+  Select,
+  SelectOption,
+  SelectList,
+  MenuToggle,
+} from '@patternfly/react-core';
 import { FormHelperText } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
@@ -52,10 +57,8 @@ const Details = ({ options, formData, dispatch }) => {
             <Select
               id='category-field'
               isOpen={categoryIsOpen}
-              variant={'single'}
               aria-label={'Plan category selector'}
-              maxHeight={390}
-              onToggle={() => setCategoryIsOpen(!categoryIsOpen)}
+              onOpenChange={(isOpen) => setCategoryIsOpen(isOpen)}
               onSelect={(_event, selection) => {
                 dispatch({
                   type: actions.SET_CATEGORY,
@@ -63,13 +66,25 @@ const Details = ({ options, formData, dispatch }) => {
                 });
                 setCategoryIsOpen(false);
               }}
-              selections={category}
+              selected={category}
+              toggle={(toggleRef) => (
+                <MenuToggle
+                  ref={toggleRef}
+                  onClick={() => setCategoryIsOpen(!categoryIsOpen)}
+                  isExpanded={categoryIsOpen}
+                  isFullWidth
+                >
+                  {category || 'Select category'}
+                </MenuToggle>
+              )}
             >
-              {(options?.category || []).map(({ key, value }) => (
-                <SelectOption key={key} value={key}>
-                  {value}
-                </SelectOption>
-              ))}
+              <SelectList>
+                {(options?.category || []).map(({ key, value }) => (
+                  <SelectOption key={key} value={key}>
+                    {value}
+                  </SelectOption>
+                ))}
+              </SelectList>
             </Select>
           </FormGroup>
           <FormGroup
@@ -97,10 +112,8 @@ const Details = ({ options, formData, dispatch }) => {
             <Select
               id='manual-time-field'
               isOpen={manualTimeIsOpen}
-              variant={'single'}
-              placeholderText='Select amount'
               aria-label={'Plan time selector'}
-              onToggle={() => setManualTimeIsOpen(!manualTimeIsOpen)}
+              onOpenChange={(isOpen) => setManualTimeIsOpen(isOpen)}
               onSelect={(_event, selection) => {
                 dispatch({
                   type: actions.SET_MANUAL_TIME,
@@ -108,13 +121,25 @@ const Details = ({ options, formData, dispatch }) => {
                 });
                 setManualTimeIsOpen(false);
               }}
-              selections={manual_time}
+              selected={manual_time}
+              toggle={(toggleRef) => (
+                <MenuToggle
+                  ref={toggleRef}
+                  onClick={() => setManualTimeIsOpen(!manualTimeIsOpen)}
+                  isExpanded={manualTimeIsOpen}
+                  isFullWidth
+                >
+                  {manual_time || 'Select amount'}
+                </MenuToggle>
+              )}
             >
-              {(options?.manual_time || []).map(({ key, value }) => (
-                <SelectOption key={key} value={key}>
-                  {value}
-                </SelectOption>
-              ))}
+              <SelectList>
+                {(options?.manual_time || []).map(({ key, value }) => (
+                  <SelectOption key={key} value={key}>
+                    {value}
+                  </SelectOption>
+                ))}
+              </SelectList>
             </Select>
           </FormGroup>
           <FormGroup
@@ -160,12 +185,8 @@ const Details = ({ options, formData, dispatch }) => {
             <Select
               id='frequency-period-field'
               isOpen={frequencyPeriodIsOpen}
-              variant={'single'}
-              placeholderText='Select frequency period'
               aria-label={'Plan frequency period selector'}
-              onToggle={() => {
-                setFrequencyPeriodIsOpen(!frequencyPeriodIsOpen);
-              }}
+              onOpenChange={(isOpen) => setFrequencyPeriodIsOpen(isOpen)}
               onSelect={(_event, selection) => {
                 dispatch({
                   type: actions.SET_FREQUENCY_PERIOD,
@@ -173,13 +194,25 @@ const Details = ({ options, formData, dispatch }) => {
                 });
                 setFrequencyPeriodIsOpen(false);
               }}
-              selections={frequency_period}
+              selected={frequency_period}
+              toggle={(toggleRef) => (
+                <MenuToggle
+                  ref={toggleRef}
+                  onClick={() => setFrequencyPeriodIsOpen(!frequencyPeriodIsOpen)}
+                  isExpanded={frequencyPeriodIsOpen}
+                  isFullWidth
+                >
+                  {frequency_period || 'Select frequency period'}
+                </MenuToggle>
+              )}
             >
-              {(options?.frequency_period || []).map(({ key, value }) => (
-                <SelectOption key={key} value={key}>
-                  {value}
-                </SelectOption>
-              ))}
+              <SelectList>
+                {(options?.frequency_period || []).map(({ key, value }) => (
+                  <SelectOption key={key} value={key}>
+                    {value}
+                  </SelectOption>
+                ))}
+              </SelectList>
             </Select>
           </FormGroup>
         </Grid>

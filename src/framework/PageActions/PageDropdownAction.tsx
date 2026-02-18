@@ -1,12 +1,17 @@
-// @ts-nocheck
 import {
   Dropdown,
   DropdownItem,
-  DropdownPosition,
-  DropdownSeparator,
-  DropdownToggle,
-  KebabToggle,
-} from '../../pf5Shim';
+  DropdownList,
+  MenuToggle,
+  Divider,
+} from '@patternfly/react-core';
+import { EllipsisVIcon } from '@patternfly/react-icons';
+
+// DropdownPosition for backward compatibility
+export const DropdownPosition = {
+  right: 'right',
+  left: 'left',
+} as const;
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import CircleIcon from '@patternfly/react-icons/dist/dynamic/icons/circle-icon';
 import React, {
@@ -30,7 +35,7 @@ export function PageDropdownAction<T extends object>(props: {
   tooltip?: string;
   selectedItems?: T[];
   selectedItem?: T;
-  position?: DropdownPosition;
+  position?: typeof DropdownPosition[keyof typeof DropdownPosition];
   iconOnly?: boolean;
   onOpen?: (open: boolean) => void;
 }) {
@@ -68,14 +73,16 @@ export function PageDropdownAction<T extends object>(props: {
   const Icon = icon;
   const toggleIcon = Icon ? <Icon /> : label;
   const isPrimary = hasBulkActions && !!selectedItems?.length;
-  const Toggle =
+  
+  const toggle = (toggleRef: React.Ref<any>) =>
     label || Icon ? (
-      <DropdownToggle
+      <MenuToggle
+        ref={toggleRef}
         id='toggle-dropdown'
         isDisabled={isDisabled}
-        onToggle={() => setDropdownOpen(!dropdownOpen)}
-        toggleVariant={isPrimary ? 'primary' : undefined}
-        toggleIndicator={null}
+        onClick={() => setDropdownOpen(!dropdownOpen)}
+        isExpanded={dropdownOpen}
+        variant={isPrimary ? 'primary' : 'default'}
         style={
           isPrimary && !label
             ? { color: 'var(--pf-t--global--text--color--inverse)' }
@@ -83,41 +90,48 @@ export function PageDropdownAction<T extends object>(props: {
         }
       >
         {toggleIcon}
-      </DropdownToggle>
+      </MenuToggle>
     ) : (
-      <KebabToggle
+      <MenuToggle
+        ref={toggleRef}
         id='toggle-kebab'
+        variant="plain"
         isDisabled={isDisabled}
-        onToggle={() => setDropdownOpen(!dropdownOpen)}
-        toggleVariant={isPrimary ? 'primary' : undefined}
+        onClick={() => setDropdownOpen(!dropdownOpen)}
+        isExpanded={dropdownOpen}
         style={
           isPrimary && !label
             ? { color: 'var(--pf-t--global--text--color--inverse)' }
             : {}
         }
       >
-        {toggleIcon}
-      </KebabToggle>
+        <EllipsisVIcon />
+      </MenuToggle>
     );
+  
   const dropdown = (
     <Dropdown
       onSelect={() => setDropdownOpen(false)}
-      toggle={Toggle}
+      toggle={toggle}
       isOpen={dropdownOpen}
-      isPlain={!label || iconOnly}
-      dropdownItems={actions.map((action, index) => (
-        <PageDropdownActionItem
-          key={'label' in action ? action.label : `action-${index}`}
-          action={action}
-          selectedItems={selectedItems ?? []}
-          selectedItem={selectedItem}
-          hasIcons={hasIcons}
-          index={index}
-        />
-      ))}
-      position={props.position}
+      popperProps={{
+        position: props.position === DropdownPosition.right ? 'right' : 'left',
+      }}
       style={{ zIndex: dropdownOpen ? 201 : undefined }}
-    />
+    >
+      <DropdownList>
+        {actions.map((action, index) => (
+          <PageDropdownActionItem
+            key={'label' in action ? action.label : `action-${index}`}
+            action={action}
+            selectedItems={selectedItems ?? []}
+            selectedItem={selectedItem}
+            hasIcons={hasIcons}
+            index={index}
+          />
+        ))}
+      </DropdownList>
+    </Dropdown>
   );
   return tooltip && (iconOnly || isDisabled) ? (
     <Tooltip content={tooltip} trigger={tooltip ? undefined : 'manual'}>
@@ -134,7 +148,7 @@ function PageDropdownActionItem<T extends object>(props: {
   selectedItem?: T;
   hasIcons: boolean;
   index: number;
-}): JSX.Element {
+}): React.ReactElement {
   const { action, selectedItems, selectedItem, hasIcons, index } = props;
 
   switch (action.type) {
@@ -161,14 +175,14 @@ function PageDropdownActionItem<T extends object>(props: {
                 : undefined
             }
             component={
-              (action.href
-                ? (props: object) => (
+              action.href && selectedItem
+                ? ((props: any) => (
                     <Link
                       {...props}
                       to={selectedItem ? action.href(selectedItem) : ''}
                     />
-                  )
-                : undefined) as ReactNode
+                  )) as any
+                : undefined
             }
             isAriaDisabled={Boolean(isDisabled)}
             icon={
@@ -212,9 +226,9 @@ function PageDropdownActionItem<T extends object>(props: {
               action.onClick ? () => action.onClick(selectedItems) : undefined
             }
             component={
-              (!action.onClick
-                ? (props: object) => <Link {...props} to={action.href} />
-                : undefined) as ReactNode
+              !action.onClick
+                ? ((props: any) => <Link {...props} to={action.href} />) as any
+                : undefined
             }
             isAriaDisabled={isDisabled}
             icon={
@@ -255,7 +269,7 @@ function PageDropdownActionItem<T extends object>(props: {
       );
     }
     case PageActionType.seperator:
-      return <DropdownSeparator key={`separator-${index}`} />;
+      return <Divider key={`separator-${index}`} />;
   }
 }
 

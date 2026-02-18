@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { EmptyStateBody } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 
@@ -9,7 +8,7 @@ import ExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/ex
 import React, { FunctionComponent } from 'react';
 
 interface Props {
-  message: string | Record<string, any>;
+  message: string;
 }
 
 const ApiErrorState: FunctionComponent<Props> = ({ message }) => (

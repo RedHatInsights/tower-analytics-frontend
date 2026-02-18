@@ -13,7 +13,6 @@ import {
 } from './methods';
 import {
   ApiJson,
-  NotificationParams,
   PDFEmailParams,
   PDFParams,
   Params,
@@ -248,7 +247,7 @@ export const reportOptions = (params: Params): Promise<ApiJson> =>
 
 export const generatePdf = async (
   params: PDFParams,
-  meta: NotificationParams,
+  title?: string,
 ): Promise<void> => {
   let url = Endpoint.pdfGenerate.toString();
   if (typeof params.dataFetchingParams.token !== 'undefined')
@@ -258,7 +257,7 @@ export const generatePdf = async (
       params.dataFetchingParams.token +
       '&slug=' +
       params.slug;
-  return postWithFileReturn(url, params, meta);
+  return postWithFileReturn(url, params, title || 'Generating PDF report');
 };
 
 export const sendEmail = (
@@ -273,8 +272,8 @@ export const sendEmail = (
     slug: string;
     token: string;
   },
-  meta: NotificationParams,
-): Promise<void> => postWithEmail(Endpoint.sendEmail, params, meta);
+  title?: string,
+): Promise<void> => postWithEmail(Endpoint.sendEmail, params, title || 'Sending email');
 
 export const readRbacGroups = (): Promise<ApiJson> =>
   get(Endpoint.readRbacGroups);

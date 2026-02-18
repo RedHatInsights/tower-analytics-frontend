@@ -1,5 +1,8 @@
-// @ts-nocheck
-import { DropdownPosition } from '../../pf5Shim';
+// DropdownPosition for backward compatibility
+const DropdownPosition = {
+  right: 'right',
+  left: 'left',
+} as const;
 import { Split } from '@patternfly/react-core/dist/dynamic/layouts/Split';
 import React, { ComponentClass, FunctionComponent } from 'react';
 import { IPageAction } from './PageAction';

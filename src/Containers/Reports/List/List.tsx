@@ -1,9 +1,9 @@
-// @ts-nocheck
 import {
   Dropdown,
   DropdownItem,
-  DropdownToggle,
-} from '../../../pf5Shim';
+  DropdownList,
+  MenuToggle,
+} from '@patternfly/react-core';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
@@ -116,7 +116,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
   ];
 
   return (
-    <>
+    <React.Fragment>
       <PageHeader data-cy={'header-all_reports'} title={'Reports'} />
       <FilterableToolbar
         categories={options as any}
@@ -181,20 +181,23 @@ const List: FunctionComponent<Record<string, never>> = () => {
                                 data-cy={'preview_dropdown'}
                                 isPlain
                                 onSelect={() => setIsOpen(!isOpen)}
-                                toggle={
-                                  <DropdownToggle
-                                    onToggle={(_event, next) => setIsOpen(next)}
-                                    toggleIndicator={CaretDownIcon}
+                                toggle={(toggleRef) => (
+                                  <MenuToggle
+                                    ref={toggleRef}
+                                    onClick={() => setIsOpen(!isOpen)}
+                                    isExpanded={isOpen}
+                                    icon={<CaretDownIcon />}
                                     id='report_list'
                                     data-cy={'selected_report_dropdown'}
                                     style={{ color: '#151515' }}
                                   >
                                     {report.name}
-                                  </DropdownToggle>
-                                }
+                                  </MenuToggle>
+                                )}
                                 isOpen={isOpen}
-                                dropdownItems={dropdownItems}
-                              />
+                              >
+                                <DropdownList>{dropdownItems}</DropdownList>
+                              </Dropdown>
                               <Button icon={<AngleRightIcon />}
                                 variant={ButtonVariant.plain}
                                 aria-label='Next report'
@@ -275,8 +278,12 @@ const List: FunctionComponent<Record<string, never>> = () => {
           path={'/ansible/automation-analytics/reports'}
         />
       )}
-      {error && <NoData />}
-    </>
+      {(error as any) && (
+        <div>
+          <NoData />
+        </div>
+      )}
+    </React.Fragment>
   );
 };
 

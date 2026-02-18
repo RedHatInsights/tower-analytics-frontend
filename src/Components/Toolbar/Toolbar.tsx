@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ToolbarToggleGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
@@ -76,7 +75,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
         <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint='xl'>
           {Object.keys(filterCategories).length > 0 && (
             <FilterCategoriesGroup
-              filterCategories={filterCategories}
+              filterCategories={filterCategories as Record<string, {key: string, value: string}[]>}
               defaultSelected={defaultSelected}
               filters={filters}
               setFilters={setFilters}
@@ -85,7 +84,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
           {(quick_date_range || granularity) && (
             <QuickDateGroup
               filters={filters}
-              values={{ quick_date_range, granularity }}
+              values={{ quick_date_range: quick_date_range as {key: string, value: string}[], granularity: granularity as {key: string, value: string}[] }}
               setFilters={setFilters}
             />
           )}
@@ -93,7 +92,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
             <SortByGroup
               filters={filters}
               setFilters={setFilters}
-              sort_options={sort_options}
+              sort_options={sort_options as {key: string, value: string}[]}
             />
           )}
         </ToolbarToggleGroup>

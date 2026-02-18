@@ -1,14 +1,9 @@
-// @ts-nocheck
-import {
-  addNotification,
-  removeNotification,
-} from '../notificationsShim';
+import { addNotification, removeNotification } from '../notificationStore';
 import queryString from 'query-string';
 import { createWriteStream } from 'streamsaver';
 import { saveStream } from './streamSaver';
 import {
   ApiJson,
-  NotificationParams,
   PDFEmailParams,
   PDFParams,
   Params,
@@ -69,38 +64,35 @@ export const authenticatedFetch = (
 export const postWithFileReturn = async (
   endpoint: string,
   params: PDFParams,
-  { dispatch, ...notif }: NotificationParams,
+  title = 'Generating report'
 ): Promise<void> => {
   const url = new URL(endpoint, window.location.origin);
 
-  // Dispatch notification when starts the download.
-  dispatch(addNotification(notif.pending(notif.id)));
+  // Add notification for report generation
+  addNotification({
+    title,
+    variant: 'info',
+  });
 
   return authenticatedFetch(url.toString(), {
     method: 'POST',
     body: JSON.stringify(params),
   })
     .then((response) => {
-      // Delete pending notification when we have results.
-      dispatch(removeNotification(notif.id));
       return response.ok
         ? // If response is ok, then continue to download the PDF
           { response, size: response.headers.get('content-length') }
         : response // Else it is an error and we have to parse it as a json
             .json()
             .then((error: { detail: { name: string[] } }) => {
-              // Add error reporting notification if we errored out.
-              dispatch(
-                addNotification(
-                  notif.rejected(
-                    notif.id,
-                    error?.detail?.name
-                      ? error?.detail?.name[0]
-                      : // eslint-disable-next-line @typescript-eslint/no-base-to-string
-                        error?.detail.toString(),
-                  ),
-                ),
-              );
+              // Show error notification
+              addNotification({
+                title: 'Report generation failed',
+                description: error?.detail?.name
+                  ? error?.detail?.name[0]
+                  : error?.detail?.toString() || 'An error occurred while generating the report',
+                variant: 'danger',
+              });
               return Promise.reject({ status: response.status, error });
             });
     })
@@ -113,38 +105,50 @@ export const postWithFileReturn = async (
           size: nSize,
         },
       );
-      if (response.body) return saveStream(response.body, fileStream);
+      if (response.body) {
+        // Show success notification for download start
+        addNotification({
+          title: 'Report download started',
+          variant: 'success',
+        });
+        return saveStream(response.body, fileStream);
+      }
     });
 };
 
 export const postWithEmail = async (
   endpoint: string,
   params: ParamsPdf,
-  { dispatch, ...notif }: NotificationParams,
+  title = 'Processing Email'
 ): Promise<void> => {
   const url = new URL(endpoint, window.location.origin);
 
-  // Dispatch notification when starts the download.
-  dispatch(addNotification(notif.pending(notif.id, 'Processing Email')));
+  // Add notification for processing
+  const notificationId = `email-${Date.now()}`;
+  addNotification({
+    title,
+    variant: 'info',
+  });
 
   return authenticatedFetch(url.toString(), {
     method: 'POST',
     body: JSON.stringify(params),
   }).then((response) => {
-    // Delete pending notification when we have results.
-    dispatch(removeNotification(notif.id));
+    // Email sent successfully - show success notification
+    addNotification({
+      title: 'Email sent successfully',
+      variant: 'success',
+    });
 
-    if (response.ok)
-      dispatch(
-        addNotification(notif.success(notif.id, 'Email sent successfully')),
-      );
-    else
-      dispatch(
-        addNotification(
-          notif.rejected(notif.id, 'Error sending email, please try again.'),
-        ),
-      );
     return;
+  }).catch((error) => {
+    // Email failed - show error notification
+    addNotification({
+      title: 'Failed to send email',
+      description: error.message || 'An error occurred while sending email',
+      variant: 'danger',
+    });
+    throw error;
   });
 };
 

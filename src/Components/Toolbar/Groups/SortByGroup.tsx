@@ -1,5 +1,11 @@
-// @ts-nocheck
-import { SelectOptionProps } from '../../../pf5Shim';
+// SelectOptionProps type for compatibility
+export type SelectOptionProps = {
+  key?: string;
+  value?: string;
+  description?: string;
+  isDisabled?: boolean;
+  [key: string]: any;
+};
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';

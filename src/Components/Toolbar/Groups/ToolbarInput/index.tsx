@@ -1,5 +1,11 @@
-// @ts-nocheck
-import { SelectOptionProps } from '../../../../pf5Shim';
+// SelectOptionProps type for compatibility
+export type SelectOptionProps = {
+  key?: string;
+  value?: string;
+  description?: string;
+  isDisabled?: boolean;
+  [key: string]: any;
+};
 import React, { FunctionComponent } from 'react';
 import { optionsForCategories } from '../../constants';
 import { AttributeType, SetValue } from '../../types';

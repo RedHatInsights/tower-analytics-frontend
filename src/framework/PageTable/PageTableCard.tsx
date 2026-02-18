@@ -1,5 +1,8 @@
-// @ts-nocheck
-import { DropdownPosition } from '../../pf5Shim';
+// DropdownPosition for backward compatibility
+const DropdownPosition = {
+  right: 'right',
+  left: 'left',
+} as const;
 import {
   Card,
   CardBody,

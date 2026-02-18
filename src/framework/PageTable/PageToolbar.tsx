@@ -1,10 +1,24 @@
-// @ts-nocheck
 import {
   Select,
   SelectOption,
-  SelectOptionObject,
-  SelectVariant,
-} from '../../pf5Shim';
+  SelectList,
+  MenuToggle,
+} from '@patternfly/react-core';
+
+// SelectVariant enum for backward compatibility
+const SelectVariant = {
+  single: 'single',
+  checkbox: 'checkbox',
+  typeahead: 'typeahead',
+  typeaheadMulti: 'typeaheadMulti',
+} as const;
+
+// SelectOptionObject interface for backward compatibility
+export interface SelectOptionObject {
+  toString(): string;
+  compareTo?(selectOption: any): boolean;
+}
+
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import {
   InputGroup,
@@ -244,6 +258,10 @@ export function PageTableToolbar<T extends object>(
                   onSelect={(_, v) => setSeletedFilter(v.toString())}
                   value={selectedFilter}
                   placeholderText='Select filter'
+                  isDisabled={false}
+                  footer={null}
+                  isCreatable={false}
+                  isGrouped={false}
                 >
                   {toolbarFilters.map((filter) => (
                     <SelectOption key={filter.key} value={filter.key}>
@@ -549,28 +567,37 @@ function ToolbarSelectFilter(props: {
   return (
     <>
       <Select
-        variant={SelectVariant.checkbox}
         isOpen={open}
-        onToggle={(_event, val) => setOpen(val)}
-        selections={selections}
+        onOpenChange={(isOpen) => setOpen(isOpen)}
+        selected={selections}
         onSelect={onSelect}
-        placeholderText={
-          values.length ? (
-            'Selected'
-          ) : (
-            <span style={{ opacity: 0.7 }}>{props.placeholder}</span>
-          )
-        }
-      >
-        {options.map((option) => (
-          <SelectOption
-            id={option.value}
-            key={option.value}
-            value={option.value}
+        toggle={(toggleRef) => (
+          <MenuToggle
+            ref={toggleRef}
+            onClick={() => setOpen(!open)}
+            isExpanded={open}
+            isFullWidth
           >
-            {option.label}
-          </SelectOption>
-        ))}
+            {values.length ? (
+              'Selected'
+            ) : (
+              <span style={{ opacity: 0.7 }}>{props.placeholder}</span>
+            )}
+          </MenuToggle>
+        )}
+      >
+        <SelectList>
+          {options.map((option) => (
+            <SelectOption
+              id={option.value}
+              key={option.value}
+              value={option.value}
+              hasCheckbox
+            >
+              {option.label}
+            </SelectOption>
+          ))}
+        </SelectList>
       </Select>
     </>
   );

@@ -1,4 +1,3 @@
-import { NotificationOptions } from '../globalTypes';
 import { DispatchType } from '../store';
 
 export type Params = Record<
@@ -76,20 +75,6 @@ export interface saveROIParams {
     effort_minutes: number;
     template_weigh_in: boolean;
   }[];
-}
-
-export type NotificationAsyncFunction = (
-  id: string,
-  title?: string,
-  message?: string,
-) => NotificationOptions;
-
-export interface NotificationParams {
-  pending: NotificationAsyncFunction;
-  rejected: NotificationAsyncFunction;
-  success: NotificationAsyncFunction;
-  dispatch: DispatchType;
-  id: string;
 }
 
 export type ReadParams = { params: Params };

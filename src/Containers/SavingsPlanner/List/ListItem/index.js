@@ -1,8 +1,10 @@
 import {
   Dropdown,
   DropdownItem,
-  KebabToggle,
-} from '../../../../pf5Shim';
+  DropdownList,
+  MenuToggle,
+} from '@patternfly/react-core';
+import { EllipsisVIcon } from '@patternfly/react-icons';
 import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
 import {
   Card,
@@ -142,17 +144,23 @@ const ListItem = ({
                 actions: (
                   <>
                     <Dropdown
-                      onSelect={() => {}}
-                      toggle={
-                        <KebabToggle
-                          onToggle={() => setIsCardKebabOpen(!isCardKebabOpen)}
-                        />
-                      }
+                      onSelect={() => setIsCardKebabOpen(false)}
+                      toggle={(toggleRef) => (
+                        <MenuToggle
+                          ref={toggleRef}
+                          variant="plain"
+                          onClick={() => setIsCardKebabOpen(!isCardKebabOpen)}
+                          isExpanded={isCardKebabOpen}
+                          aria-label="Card actions"
+                        >
+                          <EllipsisVIcon />
+                        </MenuToggle>
+                      )}
                       isOpen={isCardKebabOpen}
-                      isPlain
-                      dropdownItems={kebabDropDownItems}
-                      position={'right'}
-                    />
+                      popperProps={{ position: 'right' }}
+                    >
+                      <DropdownList>{kebabDropDownItems}</DropdownList>
+                    </Dropdown>
                     <SCheckbox
                       onChange={() => handleSelect(plan.id)}
                       isChecked={selected.includes(plan.id)}
