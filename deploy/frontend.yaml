@@ -1,7 +1,16 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/RedHatInsights/frontend-components/refs/heads/master/packages/config-utils/src/feo/spec/frontend-crd.schema.json
+
 apiVersion: v1
 kind: Template
 metadata:
   name: tower-analytics-frontend
+parameters:
+  - name: ENV_NAME
+    required: true
+  - name: IMAGE_TAG
+    required: true
+  - name: IMAGE
+    value: quay.io/cloudservices/automation-analytics-frontend
 objects:
   - apiVersion: cloud.redhat.com/v1alpha1
     kind: Frontend
@@ -10,59 +19,142 @@ objects:
     spec:
       envName: ${ENV_NAME}
       title: Automation Analytics
+      deploymentRepo: https://github.com/RedHatInsights/tower-analytics-frontend
+      image: ${IMAGE}:${IMAGE_TAG}
+      # feoConfigEnabled: true
+
+      # Frontend assets configuration
       frontend:
         paths:
           - /apps/automation-analytics
-      deploymentRepo: https://github.com/RedHatInsights/tower-analytics-frontend
+
+      # API catalog configuration
       API:
         versions:
           - v1
-      image: ${IMAGE}:${IMAGE_TAG}
-      # navItems:
-      #   - appId: "automationAnalytics"
-      #     title: "Reports"
-      #     href: "/ansible/automation-analytics/reports"
-      #     product: "Red Hat Insights"
-      #   - appId: "automationAnalytics"
-      #     title: "Savings Planner"
-      #     href: "/ansible/automation-analytics/savings-planner"
-      #     product: "Red Hat Insights"
-      #   - appId: "automationAnalytics"
-      #     title: "Automation Calculator"
-      #     href: "/ansible/automation-analytics/automation_calculator"
-      #     product: "Red Hat Insights"
-      #   - appId: "automationAnalytics"
-      #     title: "Organization Statistics"
-      #     href: "/ansible/automation-analytics/organization-statistics"
-      #     product: "Red Hat Insights"
-      #   - appId: "automationAnalytics"
-      #     title: "Job Explorer"
-      #     href: "/ansible/automation-analytics/job-explorer"
-      #     product: "Red Hat Insights"
-      #   - appId: "automationAnalytics"
-      #     title: "Clusters"
-      #     href: "/ansible/automation-analytics/clusters"
-      #     product: "Red Hat Insights"
-      #   - appId: "automationAnalytics"
-      #     title: "Notifications"
-      #     href: "/ansible/automation-analytics/notifications"
-      #     product: "Red Hat Insights"
 
+      # Module configuration
       module:
-        # match the fs location above
-        # moduleID: automationAnalytics
         manifestLocation: "/apps/automation-analytics/fed-mods.json"
+        defaultDocumentTitle: "Automation Analytics | Red Hat Hybrid Cloud Console"
         modules:
-          - id: "automationAnalytics"
+          - id: automationAnalytics
             module: "./RootApp"
             routes:
-              # cross reference againt paths above and make sure it matches
               - pathname: /ansible/automation-analytics
+                props:
+                  bundle: ansible
 
-parameters:
-  - name: ENV_NAME
-    required: true
-  - name: IMAGE_TAG
-    required: true
-  - name: IMAGE
-    value: quay.io/cloudservices/automation-analytics-frontend
+      # Navigation bundle segment for Ansible bundle
+      bundleSegments:
+        - segmentId: automation-analytics-ansible
+          bundleId: ansible
+          position: 800
+          navItems:
+            - id: automation-analytics
+              title: "Automation Analytics"
+              href: /ansible/automation-analytics/reports
+              product: "Ansible"
+              expandable: true
+              navItems:
+                - id: automation-analytics-reports
+                  title: "Reports"
+                  href: /ansible/automation-analytics/reports
+                  product: "Ansible"
+                - id: automation-analytics-savings-planner
+                  title: "Savings Planner"
+                  href: /ansible/automation-analytics/savings-planner
+                  product: "Ansible"
+                - id: automation-analytics-calculator
+                  title: "Automation Calculator"
+                  href: /ansible/automation-analytics/reports/automation_calculator/
+                  product: "Ansible"
+                - id: automation-analytics-org-stats
+                  title: "Organization Statistics"
+                  href: /ansible/automation-analytics/organization-statistics
+                  product: "Ansible"
+                - id: automation-analytics-job-explorer
+                  title: "Job Explorer"
+                  href: /ansible/automation-analytics/job-explorer
+                  product: "Ansible"
+                - id: automation-analytics-clusters
+                  title: "Clusters"
+                  href: /ansible/automation-analytics/clusters
+                  product: "Ansible"
+                - id: automation-analytics-notifications
+                  title: "Notifications"
+                  href: /ansible/automation-analytics/notifications
+                  product: "Ansible"
+
+      # Service tiles for services dropdown
+      serviceTiles:
+        - id: automation-analytics
+          section: ansible
+          group: ansible
+          title: "Automation Analytics"
+          href: /ansible/automation-analytics/reports
+          description: "Plan, measure, and scale your automation using actionable data."
+          icon: ChartLineIcon
+
+      # Search entries for global search
+      searchEntries:
+        - id: automation-analytics
+          title: "Automation Analytics"
+          href: /ansible/automation-analytics/reports
+          description: "Plan, measure, and scale your automation using actionable data. Access reports, savings planner, automation calculator, and more."
+          alt_title:
+            - "Automation"
+            - "Analytics"
+            - "Reports"
+            - "Savings"
+        - id: automation-analytics-reports
+          title: "Automation Analytics - Reports"
+          href: /ansible/automation-analytics/reports
+          description: "View and analyze automation reports to measure and scale your automation."
+          alt_title:
+            - "Reports"
+            - "Automation Reports"
+        - id: automation-analytics-savings-planner
+          title: "Automation Analytics - Savings Planner"
+          href: /ansible/automation-analytics/savings-planner
+          description: "Plan and calculate potential savings from automation initiatives."
+          alt_title:
+            - "Savings Planner"
+            - "Savings"
+        - id: automation-analytics-calculator
+          title: "Automation Analytics - Automation Calculator"
+          href: /ansible/automation-analytics/reports/automation_calculator/
+          description: "Calculate the ROI and impact of your automation efforts."
+          alt_title:
+            - "Automation Calculator"
+            - "Calculator"
+            - "ROI"
+        - id: automation-analytics-org-stats
+          title: "Automation Analytics - Organization Statistics"
+          href: /ansible/automation-analytics/organization-statistics
+          description: "View comprehensive statistics about your organization's automation usage."
+          alt_title:
+            - "Organization Statistics"
+            - "Org Stats"
+            - "Statistics"
+        - id: automation-analytics-job-explorer
+          title: "Automation Analytics - Job Explorer"
+          href: /ansible/automation-analytics/job-explorer
+          description: "Explore and analyze automation job execution details and history."
+          alt_title:
+            - "Job Explorer"
+            - "Jobs"
+        - id: automation-analytics-clusters
+          title: "Automation Analytics - Clusters"
+          href: /ansible/automation-analytics/clusters
+          description: "Manage and view automation cluster information and analytics."
+          alt_title:
+            - "Clusters"
+            - "Automation Clusters"
+        - id: automation-analytics-notifications
+          title: "Automation Analytics - Notifications"
+          href: /ansible/automation-analytics/notifications
+          description: "Configure and view notifications for automation events and alerts."
+          alt_title:
+            - "Notifications"
+            - "Alerts"
