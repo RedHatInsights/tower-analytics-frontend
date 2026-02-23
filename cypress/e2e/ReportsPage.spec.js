@@ -124,16 +124,14 @@ describe('Reports page smoketests', () => {
     cy.getByCy('selected_report_dropdown').should('exist');
     allReports.forEach(($item, index) => {
       cy.getByCy('selected_report_dropdown').click();
-      cy.get('ul.pf-v5-c-dropdown__menu > button > li > a').should('exist');
-      cy.get('ul.pf-v5-c-dropdown__menu > button > li > a').eq(index).click();
+      cy.get('[role="menu"]').should('exist').find('button').should('have.length.at.least', 1);
+      cy.get('[role="menu"]').find('button').eq(index).click();
       cy.getByCy('preview_title_link')
         .invoke('text')
-        .then(($text) => {
-          cy.get(
-            '[data-cy="selected_report_dropdown"] > span.pf-v5-c-dropdown__toggle-text',
-          )
+        .then((item) => {
+          cy.getByCy('selected_report_dropdown')
             .invoke('text')
-            .should('eq', $text);
+            .should('contain', item);
         });
     });
   });

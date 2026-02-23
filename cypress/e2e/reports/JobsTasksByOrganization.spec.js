@@ -12,7 +12,7 @@ describe('Report: Jobs and Tasks By Organization Smoketests', () => {
 
   it('Can change lookback', () => {
     cy.getByCy('quick_date_range').click();
-    cy.get('.pf-c-select__menu-item').contains('Past 62 days').click();
+    cy.get('.pf-v6-c-select__menu-item').contains('Past 62 days').click();
   });
 
   it('Can navigate through the pages', () => {
