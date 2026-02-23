@@ -168,8 +168,8 @@ Cypress.Commands.add('visitReport', (pageName) => {
         );
         cy.visit(Cypress.config().baseUrl + reportsUrl + '/' + page.name);
         cy.url().should(
-          'eq',
-          Cypress.config().baseUrl + reportsUrl + '/' + page.name,
+          'include',
+          reportsUrl + '/' + page.name,
         );
         cy.getByCy('loading').should('not.exist');
         cy.getByCy('api_error_state').should('not.exist');

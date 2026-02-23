@@ -62,8 +62,7 @@ Cypress.Commands.add('loginWithPageSession', () => {
       let strategy = null;
 
       // Get baseUrl from config, or use a default
-      const baseUrl = Cypress.config().baseUrl || 'http://localhost:1337';
-      cy.log('Using baseUrl: ' + baseUrl);
+      const baseUrl = Cypress.config().baseUrl || 'http://stage.foo.redhat.com:1337';
 
       // TODO: is there a better way to get the strategy??
       for (const index of Object.keys(kcLoginFields)) {
