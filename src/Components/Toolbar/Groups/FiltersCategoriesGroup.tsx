@@ -1,3 +1,10 @@
+import { ToolbarGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import React, { FunctionComponent, useState } from 'react';
+import { optionsForCategories } from '../constants';
+import { AttributeType, SetValues } from '../types';
+import CategoryDropdown from './CategoryDropdown';
+import ToolbarInput from './ToolbarInput';
+
 // SelectOptionProps type for compatibility
 export type SelectOptionProps = {
   key?: string;
@@ -6,12 +13,6 @@ export type SelectOptionProps = {
   isDisabled?: boolean;
   [key: string]: any;
 };
-import { ToolbarGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
-import React, { FunctionComponent, useState } from 'react';
-import { optionsForCategories } from '../constants';
-import { AttributeType, SetValues } from '../types';
-import CategoryDropdown from './CategoryDropdown';
-import ToolbarInput from './ToolbarInput';
 
 interface Props {
   filterCategories: Record<string, SelectOptionProps[]>;

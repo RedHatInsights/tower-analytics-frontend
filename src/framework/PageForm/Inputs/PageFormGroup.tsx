@@ -39,9 +39,11 @@ export function PageFormGroup(props: PageFormGroupProps) {
             bodyContent={props.labelHelp}
             position='bottom-start'
           >
-            <Button icon={<OutlinedQuestionCircleIcon />} variant='link' isInline>
-              
-            </Button>
+            <Button
+              icon={<OutlinedQuestionCircleIcon />}
+              variant='link'
+              isInline
+            ></Button>
           </Popover>
         ) : undefined
       }

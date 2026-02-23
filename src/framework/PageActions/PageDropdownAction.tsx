@@ -1,23 +1,14 @@
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownList,
-  MenuToggle,
-  Divider,
-} from '@patternfly/react-core';
-import { EllipsisVIcon } from '@patternfly/react-icons';
-
-// DropdownPosition for backward compatibility
-export const DropdownPosition = {
-  right: 'right',
-  left: 'left',
-} as const;
+import { Divider } from '@patternfly/react-core/dist/dynamic/components/Divider';
+import { Dropdown } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
+import { DropdownItem } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
+import { DropdownList } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import CircleIcon from '@patternfly/react-icons/dist/dynamic/icons/circle-icon';
+import EllipsisVIcon from '@patternfly/react-icons/dist/dynamic/icons/ellipsis-v-icon';
 import React, {
   ComponentClass,
   FunctionComponent,
-  ReactNode,
   useEffect,
   useMemo,
   useState,
@@ -27,6 +18,12 @@ import { IPageAction } from './PageAction';
 import { PageActionType } from './PageActionType';
 import { isHiddenAction } from './PageActions';
 
+// DropdownPosition for backward compatibility
+export const DropdownPosition = {
+  right: 'right',
+  left: 'left',
+} as const;
+
 export function PageDropdownAction<T extends object>(props: {
   actions: IPageAction<T>[];
   label?: string;
@@ -35,7 +32,7 @@ export function PageDropdownAction<T extends object>(props: {
   tooltip?: string;
   selectedItems?: T[];
   selectedItem?: T;
-  position?: typeof DropdownPosition[keyof typeof DropdownPosition];
+  position?: (typeof DropdownPosition)[keyof typeof DropdownPosition];
   iconOnly?: boolean;
   onOpen?: (open: boolean) => void;
 }) {
@@ -73,7 +70,7 @@ export function PageDropdownAction<T extends object>(props: {
   const Icon = icon;
   const toggleIcon = Icon ? <Icon /> : label;
   const isPrimary = hasBulkActions && !!selectedItems?.length;
-  
+
   const toggle = (toggleRef: React.Ref<any>) =>
     label || Icon ? (
       <MenuToggle
@@ -95,7 +92,7 @@ export function PageDropdownAction<T extends object>(props: {
       <MenuToggle
         ref={toggleRef}
         id='toggle-kebab'
-        variant="plain"
+        variant='plain'
         isDisabled={isDisabled}
         onClick={() => setDropdownOpen(!dropdownOpen)}
         isExpanded={dropdownOpen}
@@ -108,7 +105,7 @@ export function PageDropdownAction<T extends object>(props: {
         <EllipsisVIcon />
       </MenuToggle>
     );
-  
+
   const dropdown = (
     <Dropdown
       onSelect={() => setDropdownOpen(false)}
@@ -176,12 +173,12 @@ function PageDropdownActionItem<T extends object>(props: {
             }
             component={
               action.href && selectedItem
-                ? ((props: any) => (
+                ? (((props: any) => (
                     <Link
                       {...props}
                       to={selectedItem ? action.href(selectedItem) : ''}
                     />
-                  )) as any
+                  )) as any)
                 : undefined
             }
             isAriaDisabled={Boolean(isDisabled)}
@@ -227,7 +224,9 @@ function PageDropdownActionItem<T extends object>(props: {
             }
             component={
               !action.onClick
-                ? ((props: any) => <Link {...props} to={action.href} />) as any
+                ? (((props: any) => (
+                    <Link {...props} to={action.href} />
+                  )) as any)
                 : undefined
             }
             isAriaDisabled={isDisabled}

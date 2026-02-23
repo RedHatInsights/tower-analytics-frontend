@@ -6,7 +6,7 @@ describe('Job Explorer page smoketests', () => {
 
     cy.get('[data-cy="spinner"]', { timeout: 10000 }).should('not.exist');
     cy.get('[data-cy="loading"]', { timeout: 10000 }).should('not.exist');
-    
+
     // Wait for either table or empty state - only check for existence
     cy.get('body', { timeout: 30000 }).should('exist');
   });

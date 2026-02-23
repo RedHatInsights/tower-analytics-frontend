@@ -1,22 +1,11 @@
-import {
-  Select,
-  SelectOption,
-  SelectList,
-  MenuToggle,
-} from '@patternfly/react-core';
-
-// SelectVariant enum for backward compatibility
-const SelectVariant = {
-  single: 'single',
-  checkbox: 'checkbox',
-  typeahead: 'typeahead',
-  typeaheadMulti: 'typeaheadMulti',
-} as const;
-
 import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { FormHelperText } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
 import { Radio } from '@patternfly/react-core/dist/dynamic/components/Radio';
+import { Select } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectOption } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectList } from '@patternfly/react-core/dist/dynamic/components/Select';
 import { TextArea } from '@patternfly/react-core/dist/dynamic/components/TextArea';
 import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
 import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
@@ -145,18 +134,6 @@ const EmailDetails = ({
       }
     }
     setShowError(false);
-    return;
-  };
-
-  const clearGroupSelection = () => {
-    dispatchReducer({
-      type: actions.SET_SELECTED_RBAC_GROUPS,
-      value: [],
-    });
-    dispatchReducer({
-      type: actions.SET_USERS,
-      value: [],
-    });
   };
 
   const onSelectionChange = (field: string, groupToChange: string) => {
@@ -254,7 +231,9 @@ const EmailDetails = ({
               isExpanded={isExpanded}
               isFullWidth
             >
-              {selectedRbacGroups.length > 0 ? `${selectedRbacGroups.length} selected` : 'Select Recipients'}
+              {selectedRbacGroups.length > 0
+                ? `${selectedRbacGroups.length} selected`
+                : 'Select Recipients'}
             </MenuToggle>
           )}
         >

@@ -6,12 +6,8 @@ import {
   DescriptionListTerm,
 } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
 import { Divider } from '@patternfly/react-core/dist/dynamic/components/Divider';
-import {
-	ModalVariant
-} from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
-import {
-	Modal
-} from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
+import { ModalVariant } from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
+import { Modal } from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
 import { Table, Tbody, Td, Th, Thead, Tr } from '@patternfly/react-table';
 import {
   t_chart_color_black_500 as global_palette_black_850,

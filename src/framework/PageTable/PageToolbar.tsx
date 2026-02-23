@@ -1,33 +1,16 @@
-import {
-  Select,
-  SelectOption,
-  SelectList,
-  MenuToggle,
-} from '@patternfly/react-core';
-
-// SelectVariant enum for backward compatibility
-const SelectVariant = {
-  single: 'single',
-  checkbox: 'checkbox',
-  typeahead: 'typeahead',
-  typeaheadMulti: 'typeaheadMulti',
-} as const;
-
-// SelectOptionObject interface for backward compatibility
-export interface SelectOptionObject {
-  toString(): string;
-  compareTo?(selectOption: any): boolean;
-}
-
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import {
   InputGroup,
   InputGroupItem,
 } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
 import {
   Pagination,
   PaginationVariant,
 } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { Select } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectOption } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectList } from '@patternfly/react-core/dist/dynamic/components/Select';
 import { Skeleton } from '@patternfly/react-core/dist/dynamic/components/Skeleton';
 import {
   TextInputGroup,
@@ -73,6 +56,22 @@ import { BulkSelector } from '../components/BulkSelector';
 import { useBreakpoint } from '../components/useBreakpoint';
 import { PageTableViewType, PageTableViewTypeE } from './PageTableViewType';
 import './PageToolbar.css';
+
+export interface IPageToolbarFilter {
+  label: string;
+  key: string;
+  type?: 'search' | 'filter';
+  options?: {
+    label: string;
+    value: string;
+  }[];
+}
+
+// SelectOptionObject interface for backward compatibility
+export interface SelectOptionObject {
+  toString(): string;
+  compareTo?(selectOption: any): boolean;
+}
 
 export interface IItemFilter<T extends object> {
   label: string;
@@ -240,7 +239,7 @@ export function PageTableToolbar<T extends object>(
       <ToolbarContent>
         {showSelect && (
           <ToolbarGroup>
-            <ToolbarItem >
+            <ToolbarItem>
               <BulkSelector {...props} />
             </ToolbarItem>
           </ToolbarGroup>
@@ -347,7 +346,7 @@ export function PageTableToolbar<T extends object>(
         )}
 
         {/* Action Buttons */}
-        <ToolbarGroup variant="action-group" style={{ zIndex: 302 }}>
+        <ToolbarGroup variant='action-group' style={{ zIndex: 302 }}>
           <PageActions
             actions={toolbarActions}
             selectedItems={selectedItems}
@@ -356,7 +355,7 @@ export function PageTableToolbar<T extends object>(
         </ToolbarGroup>
         <div style={{ flexGrow: 1 }} />
 
-        <ToolbarGroup variant="action-group" style={{ zIndex: 302 }}>
+        <ToolbarGroup variant='action-group' style={{ zIndex: 302 }}>
           {!props.disableColumnManagement &&
             openColumnModal &&
             viewType === 'table' && (
@@ -512,14 +511,15 @@ function ToolbarTextFilter(props: {
           />
           {value !== '' && (
             <TextInputGroupUtilities>
-              <Button icon={<TimesIcon />}
+              <Button
+                icon={<TimesIcon />}
                 variant='plain'
                 aria-label='clear filter'
                 onClick={() => setValue('')}
                 style={{ opacity: value ? undefined : 0 }}
                 // tabIndex={value ? undefined : -1}
                 tabIndex={-1}
-               />
+              />
             </TextInputGroupUtilities>
           )}
         </TextInputGroup>
@@ -528,7 +528,8 @@ function ToolbarTextFilter(props: {
       {!value ? (
         <></>
       ) : (
-        <Button icon={<ArrowRightIcon />}
+        <Button
+          icon={<ArrowRightIcon />}
           variant={value ? 'primary' : 'control'}
           aria-label='apply filter'
           onClick={() => {
@@ -536,9 +537,7 @@ function ToolbarTextFilter(props: {
             setValue('');
           }}
           tabIndex={-1}
-        >
-          
-        </Button>
+        ></Button>
       )}
     </InputGroup>
   );

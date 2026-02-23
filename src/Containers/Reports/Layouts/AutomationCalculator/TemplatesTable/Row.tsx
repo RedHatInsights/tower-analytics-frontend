@@ -168,7 +168,6 @@ const Row: FunctionComponent<Props> = ({
         <Td>
           <Switch
             label='Show'
-            
             isChecked={template.enabled}
             onChange={(_event, checked) => setEnabled(checked)}
             isDisabled={readOnly}

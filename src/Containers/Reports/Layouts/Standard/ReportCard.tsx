@@ -247,20 +247,18 @@ const ReportCard: FunctionComponent<StandardProps> = ({
           filters={queryParams as any}
           setFilters={setFromToolbar}
           pagination={
-            showPagination
-              ? (
-                  <Pagination
-                    count={(dataApi.result.meta as any).count}
-                    perPageOptions={perPageOptions}
-                    params={{
-                      limit: +(queryParams?.limit as unknown as number),
-                      offset: +(queryParams?.offset as unknown as number),
-                    }}
-                    setPagination={setFromPagination as any}
-                    isCompact
-                  />
-                )
-              : null
+            showPagination ? (
+              <Pagination
+                count={(dataApi.result.meta as any).count}
+                perPageOptions={perPageOptions}
+                params={{
+                  limit: +(queryParams?.limit as unknown as number),
+                  offset: +(queryParams?.offset as unknown as number),
+                }}
+                setPagination={setFromPagination as any}
+                isCompact
+              />
+            ) : null
           }
           additionalControls={additionalControls}
         />

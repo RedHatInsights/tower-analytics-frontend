@@ -1,6 +1,4 @@
-import {
-  EmptyState,
-  } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
 import React, { Component } from 'react';
 
@@ -49,8 +47,11 @@ export default function asyncComponent(importComponent) {
           <C {...this.props} />
         </div>
       ) : (
-        <EmptyState  headingLevel='h4' icon={Spinner}  titleText='Loading'>
-          </EmptyState>
+        <EmptyState
+          headingLevel='h4'
+          icon={Spinner}
+          titleText='Loading'
+        ></EmptyState>
       );
     }
   }

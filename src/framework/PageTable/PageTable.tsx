@@ -1,8 +1,3 @@
-// DropdownPosition for backward compatibility
-const DropdownPosition = {
-  right: 'right',
-  left: 'left',
-} as const;
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import {
   EmptyState,
@@ -56,6 +51,12 @@ import { PageTableCards } from './PageTableCards';
 import { PageTableList } from './PageTableList';
 import { PageTableViewType, PageTableViewTypeE } from './PageTableViewType';
 import { IToolbarFilter, PageTableToolbar } from './PageToolbar';
+
+// DropdownPosition for backward compatibility
+const DropdownPosition = {
+  right: 'right',
+  left: 'left',
+} as const;
 
 export type PageTableProps<T extends object> = {
   keyFn: (item: T) => string | number;
@@ -169,12 +170,18 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
   if (error) {
     return (
       <div className='dark-2' style={{ height: '100%' }}>
-        <EmptyState  headingLevel='h2' icon={ExclamationCircleIcon}  titleText={
-              <>
-                {/* Unable to connect */}
-                {props.errorStateTitle}
-              </>
-            } variant={EmptyStateVariant.sm} style={{ paddingTop: 48 }}>
+        <EmptyState
+          headingLevel='h2'
+          icon={ExclamationCircleIcon}
+          titleText={
+            <>
+              {/* Unable to connect */}
+              {props.errorStateTitle}
+            </>
+          }
+          variant={EmptyStateVariant.sm}
+          style={{ paddingTop: 48 }}
+        >
           {/* <EmptyStateBody>There was an error retrieving data. Check your connection and reload the page.</EmptyStateBody> */}
           <EmptyStateBody>{error.message}</EmptyStateBody>
         </EmptyState>
@@ -185,7 +192,13 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
   if (itemCount === 0 && Object.keys(filters ?? {}).length === 0) {
     return (
       <PageSection hasBodyWrapper={false}>
-        <EmptyState  headingLevel='h4' icon={props.emptyStateIcon ?? PlusCircleIcon}  titleText={<>{props.emptyStateTitle}</>} variant={EmptyStateVariant.lg} style={{ paddingTop: 48 }}>
+        <EmptyState
+          headingLevel='h4'
+          icon={props.emptyStateIcon ?? PlusCircleIcon}
+          titleText={<>{props.emptyStateTitle}</>}
+          variant={EmptyStateVariant.lg}
+          style={{ paddingTop: 48 }}
+        >
           <EmptyStateFooter>
             {props.emptyStateDescription && (
               <EmptyStateBody>{props.emptyStateDescription}</EmptyStateBody>
@@ -209,7 +222,7 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
 
   if (itemCount === undefined) {
     return (
-      <PageSection hasBodyWrapper={false} isFilled >
+      <PageSection hasBodyWrapper={false} isFilled>
         <Bullseye>
           <Spinner />
         </Bullseye>
@@ -233,7 +246,10 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
       )}
       {viewType === PageTableViewTypeE.List && (
         <Scrollable>
-          <PageSection hasBodyWrapper={false} padding={{ default: 'noPadding', md: 'padding' }}>
+          <PageSection
+            hasBodyWrapper={false}
+            padding={{ default: 'noPadding', md: 'padding' }}
+          >
             <div
               style={{
                 borderLeft: usePadding
@@ -391,7 +407,12 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
         </Tbody>
       </Table>
       {itemCount === 0 && (
-        <EmptyState  headingLevel='h2' icon={SearchIcon}  titleText={<>No results found</>} style={{ paddingTop: 48 }}>
+        <EmptyState
+          headingLevel='h2'
+          icon={SearchIcon}
+          titleText={<>No results found</>}
+          style={{ paddingTop: 48 }}
+        >
           <EmptyStateBody>
             No results match this filter criteria. Clear all filters and try
             again.
@@ -778,39 +799,45 @@ export enum TableColumnCardType {
   'count',
 }
 
-export interface ITableColumnTypeReactNode<T extends object>
-  extends ITableColumnCommon<T> {
+export interface ITableColumnTypeReactNode<
+  T extends object,
+> extends ITableColumnCommon<T> {
   type?: undefined;
   value?: CellFn<T, string | string[] | number | boolean>;
   cell: CellFn<T, ReactNode | undefined>;
 }
 
-export interface ITableColumnTypeCount<T extends object>
-  extends ITableColumnCommon<T> {
+export interface ITableColumnTypeCount<
+  T extends object,
+> extends ITableColumnCommon<T> {
   type: 'count';
   value: CellFn<T, number | undefined>;
 }
 
-export interface ITableColumnTypeLabels<T extends object>
-  extends ITableColumnCommon<T> {
+export interface ITableColumnTypeLabels<
+  T extends object,
+> extends ITableColumnCommon<T> {
   type: 'labels';
   value: CellFn<T, string[] | undefined>;
 }
 
-export interface ITableColumnTypeDateTime<T extends object>
-  extends ITableColumnCommon<T> {
+export interface ITableColumnTypeDateTime<
+  T extends object,
+> extends ITableColumnCommon<T> {
   type: 'datetime';
   value: CellFn<T, number | string | undefined>;
 }
 
-export interface ITableColumnTypeDescription<T extends object>
-  extends ITableColumnCommon<T> {
+export interface ITableColumnTypeDescription<
+  T extends object,
+> extends ITableColumnCommon<T> {
   type: 'description';
   value: CellFn<T, string | undefined | null>;
 }
 
-export interface ITableColumnTypeText<T extends object>
-  extends ITableColumnCommon<T> {
+export interface ITableColumnTypeText<
+  T extends object,
+> extends ITableColumnCommon<T> {
   type: 'text';
   value: CellFn<T, string | null | undefined>;
 }

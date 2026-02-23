@@ -3,8 +3,8 @@ import NotificationsProvider from '@redhat-cloud-services/frontend-components-no
 import React from 'react';
 import { Provider } from 'react-redux';
 import App from './App';
-import notificationStore from './notificationStore';
 import { QueryParamsProvider } from './QueryParams';
+import notificationStore from './notificationStore';
 import './polyfills';
 import store from './store';
 

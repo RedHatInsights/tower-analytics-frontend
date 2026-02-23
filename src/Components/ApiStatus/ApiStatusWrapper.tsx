@@ -31,7 +31,15 @@ const ApiStatusWrapper: FunctionComponent<Props> = ({
   if (!api || api.isLoading)
     return <LoadingState data-cy={'api_loading_state'} />;
   if (api.error)
-    return <ApiErrorState message={typeof api.error.error === 'string' ? api.error.error : api.error.error?.error || 'An error occurred'} />;
+    return (
+      <ApiErrorState
+        message={
+          typeof api.error.error === 'string'
+            ? api.error.error
+            : api.error.error?.error || 'An error occurred'
+        }
+      />
+    );
 
   if (api.isSuccess) {
     if (

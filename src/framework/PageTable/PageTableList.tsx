@@ -1,8 +1,4 @@
-// DropdownPosition for backward compatibility
-const DropdownPosition = {
-  right: 'right',
-  left: 'left',
-} as const;
+import { Content } from '@patternfly/react-core/dist/dynamic/components/Content';
 import {
   DataList,
   DataListAction,
@@ -18,7 +14,6 @@ import {
   DescriptionListGroup,
   DescriptionListTerm,
 } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
-import { Content } from "@patternfly/react-core/dist/dynamic/components/Content";
 import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
 import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
 import { Stack } from '@patternfly/react-core/dist/dynamic/layouts/Stack';
@@ -33,6 +28,12 @@ import {
   PageTableProps,
   TableColumnCell,
 } from './PageTable';
+
+// DropdownPosition for backward compatibility
+const DropdownPosition = {
+  right: 'right',
+  left: 'left',
+} as const;
 
 export type PageTableListProps<T extends object> = PageTableProps<T>;
 
@@ -206,7 +207,10 @@ function useColumnsToDataList<T extends object>(
                             </Content>
                           ) : (
                             defaultCardSubtitle && (
-                              <Content component='small' style={{ opacity: 0.7 }}>
+                              <Content
+                                component='small'
+                                style={{ opacity: 0.7 }}
+                              >
                                 {defaultCardSubtitle}
                               </Content>
                             )
@@ -327,7 +331,6 @@ function useColumnsToDataList<T extends object>(
                 aria-labelledby='check-action-item1 check-action-action1'
                 id='check-action-action1'
                 aria-label='Actions'
-                
                 style={{ whiteSpace: 'nowrap' }}
               >
                 <PageActions

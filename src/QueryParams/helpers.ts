@@ -15,7 +15,10 @@ const parseNamespace = (
 
     const value = obj[key];
     if (value !== null && value !== undefined) {
-      retObj[namespace][attributes] = value as string | boolean | (string | boolean)[];
+      retObj[namespace][attributes] = value as
+        | string
+        | boolean
+        | (string | boolean)[];
     }
   });
 

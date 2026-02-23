@@ -167,10 +167,7 @@ Cypress.Commands.add('visitReport', (pageName) => {
           Cypress.config().baseUrl + reportsUrl + '/' + page.name,
         );
         cy.visit(Cypress.config().baseUrl + reportsUrl + '/' + page.name);
-        cy.url().should(
-          'include',
-          reportsUrl + '/' + page.name,
-        );
+        cy.url().should('include', reportsUrl + '/' + page.name);
         cy.getByCy('loading').should('not.exist');
         cy.getByCy('api_error_state').should('not.exist');
         cy.getByCy('api_loading_state').should('not.exist');
@@ -230,24 +227,22 @@ Cypress.Commands.add('tableHideAll', () => {
 
 /**
  * Wait for PatternFly 6 Select menu to be visible and ready for interaction
- * 
+ *
  * Example usage:
  * cy.waitForPF6Select('[data-cy="my-select"]')
- * 
+ *
  * @param {String} selector - The selector for the select component
  */
 Cypress.Commands.add('waitForPF6Select', (selector) => {
-  cy.get(selector)
-    .should('be.visible')
-    .and('not.be.disabled');
+  cy.get(selector).should('be.visible').and('not.be.disabled');
 });
 
 /**
  * Select an option from a PatternFly 6 Select component
- * 
+ *
  * Example usage:
  * cy.selectPF6Option('[data-cy="my-select"]', 'Option Text')
- * 
+ *
  * @param {String} toggleSelector - The selector for the select toggle
  * @param {String} optionText - The text of the option to select
  */
@@ -261,10 +256,10 @@ Cypress.Commands.add('selectPF6Option', (toggleSelector, optionText) => {
 
 /**
  * Verify that a PatternFly 6 component is in an empty state
- * 
+ *
  * Example usage:
  * cy.verifyPF6EmptyState('No data available')
- * 
+ *
  * @param {String} expectedMessage - Optional message to verify in empty state
  */
 Cypress.Commands.add('verifyPF6EmptyState', (expectedMessage) => {
@@ -276,7 +271,7 @@ Cypress.Commands.add('verifyPF6EmptyState', (expectedMessage) => {
 
 /**
  * Wait for all loading states to complete
- * 
+ *
  * Example usage:
  * cy.waitForPageLoad()
  */

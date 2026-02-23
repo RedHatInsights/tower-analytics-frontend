@@ -7,8 +7,12 @@ const PopoverButton = styled.button`
   padding: var(--pf-t--global--spacer--100);
   margin: -(var(--pf-t--global--spacer--100));
   font-size: var(--pf-t--global--font--size--200);
-  --pf-v6-c-form__group-label-help--Color: var(--pf-t--global--text--color--200);
-  --pf-v6-c-form__group-label-help--hover--Color: var(--pf-t--global--text--color--100);
+  --pf-v6-c-form__group-label-help--Color: var(
+    --pf-t--global--text--color--200
+  );
+  --pf-v6-c-form__group-label-help--hover--Color: var(
+    --pf-t--global--text--color--100
+  );
 `;
 
 function StandardPopover(props: { content: ReactNode; header: ReactNode }) {

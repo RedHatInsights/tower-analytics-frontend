@@ -21,7 +21,11 @@ interface Props {
 }
 
 const AuthorizationErrorPage: FunctionComponent<Props> = ({ error }) => (
-  <EmptyState   icon={WrenchIcon}   variant={EmptyStateVariant.full} data-cy={'error_page'}>
+  <EmptyState
+    icon={WrenchIcon}
+    variant={EmptyStateVariant.full}
+    data-cy={'error_page'}
+  >
     <EmptyStateFooter>
       {error.status === 404 && (
         <>

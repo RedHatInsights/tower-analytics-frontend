@@ -1,11 +1,3 @@
-// SelectOptionProps type for compatibility
-export type SelectOptionProps = {
-  key?: string;
-  value?: string;
-  description?: string;
-  isDisabled?: boolean;
-  [key: string]: any;
-};
 import { ToolbarGroupVariant } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { ToolbarGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { SplitItem } from '@patternfly/react-core/dist/dynamic/layouts/Split';
@@ -14,6 +6,15 @@ import React, { FunctionComponent } from 'react';
 import { today } from '../../../Utilities/helpers';
 import { AttributeType, SetValues } from '../types';
 import ToolbarInput from './ToolbarInput';
+
+// SelectOptionProps type for compatibility
+export type SelectOptionProps = {
+  key?: string;
+  value?: string;
+  description?: string;
+  isDisabled?: boolean;
+  [key: string]: any;
+};
 
 const getDateByDays = (days: number): string =>
   today(days).toISOString().split(/T/)[0];

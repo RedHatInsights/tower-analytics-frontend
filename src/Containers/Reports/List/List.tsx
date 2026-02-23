@@ -1,9 +1,3 @@
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownList,
-  MenuToggle,
-} from '@patternfly/react-core';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
@@ -11,7 +5,11 @@ import { CardFooter } from '@patternfly/react-core/dist/dynamic/components/Card'
 import { CardHeader } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { Divider } from '@patternfly/react-core/dist/dynamic/components/Divider';
+import { Dropdown } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
+import { DropdownItem } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
+import { DropdownList } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
 import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
 import { TooltipPosition } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
@@ -105,12 +103,13 @@ const List: FunctionComponent<Record<string, never>> = () => {
       isReportSuccess &&
       reports.map((report) => {
         return (
-          <Button icon={<DropdownItem key={report.slug}>{report.name}</DropdownItem>}
+          <Button
+            icon={<DropdownItem key={report.slug}>{report.name}</DropdownItem>}
             key={report.slug}
             variant={ButtonVariant.plain}
             aria-label='Report list item'
             onClick={() => setSelected(report.slug)}
-           />
+          />
         );
       }),
   ];
@@ -170,13 +169,14 @@ const List: FunctionComponent<Record<string, never>> = () => {
                                   }
                                 },
                               )}
-                              <Button icon={<AngleLeftIcon />}
+                              <Button
+                                icon={<AngleLeftIcon />}
                                 variant={ButtonVariant.plain}
                                 aria-label='Previous report'
                                 data-cy={'previous_report_button'}
                                 isDisabled={reports.indexOf(report) === 0}
                                 onClick={() => setSelected(previousItem)}
-                               />
+                              />
                               <Dropdown
                                 data-cy={'preview_dropdown'}
                                 isPlain
@@ -198,7 +198,8 @@ const List: FunctionComponent<Record<string, never>> = () => {
                               >
                                 <DropdownList>{dropdownItems}</DropdownList>
                               </Dropdown>
-                              <Button icon={<AngleRightIcon />}
+                              <Button
+                                icon={<AngleRightIcon />}
                                 variant={ButtonVariant.plain}
                                 aria-label='Next report'
                                 data-cy='next_report_button'
@@ -206,7 +207,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                                   reports.indexOf(report) >= reports.length - 1
                                 }
                                 onClick={() => setSelected(nextItem)}
-                               />
+                              />
                             </>
                           ),
                           hasNoOffset: false,

@@ -26,10 +26,10 @@ module.exports = defineConfig({
       on('before:browser:launch', (browser, launchOptions) => {
         if (browser.name === 'chrome' && browser.isHeadless) {
           launchOptions.args.push('--window-size=1920,1080');
-          
+
           // Force screen to be non-retina
           launchOptions.args.push('--force-device-scale-factor=1');
-          
+
           // Additional stability flags
           launchOptions.args.push('--disable-gpu');
           launchOptions.args.push('--no-sandbox');

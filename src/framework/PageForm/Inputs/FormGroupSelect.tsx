@@ -1,9 +1,8 @@
-import {
-  Select,
-  SelectOption,
-  SelectList,
-  MenuToggle,
-} from '@patternfly/react-core';
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
+import { Select } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectList } from '@patternfly/react-core/dist/dynamic/components/Select';
+import React, { useCallback, useState } from 'react';
+import { PageFormGroup, PageFormGroupProps } from './PageFormGroup';
 
 // SelectVariant enum for backward compatibility
 export const SelectVariant = {
@@ -21,8 +20,6 @@ export interface SelectOptionObject {
 
 // SelectProps type for compatibility
 type SelectProps = any;
-import React, { ChangeEvent, ReactElement, useCallback, useState } from 'react';
-import { PageFormGroup, PageFormGroupProps } from './PageFormGroup';
 
 export type FormGroupSelectProps = Pick<
   SelectProps,
@@ -44,7 +41,6 @@ export function FormGroupSelect(props: FormGroupSelectProps) {
   const { children, helperTextInvalid, isReadOnly, onSelect, value } = props;
 
   const [open, setOpen] = useState(false);
-  const onToggle = useCallback(() => setOpen((open) => !open), []);
 
   const onSelectHandler = useCallback(
     (

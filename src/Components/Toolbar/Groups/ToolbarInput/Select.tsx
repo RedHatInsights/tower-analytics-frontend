@@ -1,36 +1,25 @@
 // TODO: The component converts all types to string.
 // It should be able to use the correct type in the future for example number and number[].
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
+import { SelectOption } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectList } from '@patternfly/react-core/dist/dynamic/components/Select';
 import {
-  Select as PFSelect,
-  SelectOption,
-  SelectList,
-  MenuToggle,
-} from '@patternfly/react-core';
-
-// SelectVariant enum for backward compatibility
-const SelectVariant = {
-  single: 'single',
-  checkbox: 'checkbox',
-  typeahead: 'typeahead',
-  typeaheadMulti: 'typeaheadMulti',
-} as const;
+  ToolbarFilter,
+  ToolbarLabel,
+} from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import { PFSelect } from 'false';
+import React, { FunctionComponent, useState } from 'react';
+import styled from 'styled-components';
+import { optionsForCategories } from '../../constants';
+import { AttributeType, SelectOptionProps, SetValue } from '../../types';
+import { handleCheckboxChips, handleSingleChips } from './helpers';
 
 // SelectOptionObject interface for backward compatibility
 export interface SelectOptionObject {
   toString(): string;
   compareTo?(selectOption: any): boolean;
 }
-
-import {
-  ToolbarLabel,
-  ToolbarFilter,
-} from '@patternfly/react-core/dist/dynamic/components/Toolbar';
-import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
-import React, { FunctionComponent, useState } from 'react';
-import styled from 'styled-components';
-import { optionsForCategories } from '../../constants';
-import { AttributeType, SelectOptionProps, SetValue } from '../../types';
-import { handleCheckboxChips, handleSingleChips } from './helpers';
 
 const OptionSpan = styled('span')`
   display: block;
@@ -47,10 +36,7 @@ interface Props {
   setValue: SetValue;
 }
 
-const renderValues = (
-  values: SelectOptionProps[],
-  isMultiSelect: boolean,
-) =>
+const renderValues = (values: SelectOptionProps[], isMultiSelect: boolean) =>
   values &&
   values.map(({ key, value, description }) => (
     <SelectOption
@@ -101,7 +87,7 @@ const Select: FunctionComponent<Props> = ({
     }
   };
 
-  const onFilter = (_: unknown, textInput: string) => {
+  const _onFilter = (_: unknown, textInput: string) => {
     const isMultiSelect = Array.isArray(value);
     if (textInput === '') return renderValues(selectOptions, isMultiSelect);
     return renderValues(
@@ -151,7 +137,8 @@ const Select: FunctionComponent<Props> = ({
       categoryName={options.name}
       deleteLabel={
         options.hasChips
-          ? (_: unknown, chip: ToolbarLabel | string) => onDelete(chip as string)
+          ? (_: unknown, chip: ToolbarLabel | string) =>
+              onDelete(chip as string)
           : undefined
       }
     >
@@ -172,7 +159,9 @@ const Select: FunctionComponent<Props> = ({
         onOpenChange={(isOpen) => setExpanded(isOpen)}
         maxMenuHeight={'1000%'}
       >
-        <SelectList>{renderValues(selectOptions, Array.isArray(value))}</SelectList>
+        <SelectList>
+          {renderValues(selectOptions, Array.isArray(value))}
+        </SelectList>
       </PFSelect>
     </ToolbarFilter>
   );

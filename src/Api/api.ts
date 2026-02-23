@@ -273,7 +273,8 @@ export const sendEmail = (
     token: string;
   },
   title?: string,
-): Promise<void> => postWithEmail(Endpoint.sendEmail, params, title || 'Sending email');
+): Promise<void> =>
+  postWithEmail(Endpoint.sendEmail, params, title || 'Sending email');
 
 export const readRbacGroups = (): Promise<ApiJson> =>
   get(Endpoint.readRbacGroups);

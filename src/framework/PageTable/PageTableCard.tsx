@@ -1,8 +1,3 @@
-// DropdownPosition for backward compatibility
-const DropdownPosition = {
-  right: 'right',
-  left: 'left',
-} as const;
 import {
   Card,
   CardBody,
@@ -11,13 +6,13 @@ import {
   CardTitle,
 } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { Checkbox } from '@patternfly/react-core/dist/dynamic/components/Checkbox';
+import { Content } from '@patternfly/react-core/dist/dynamic/components/Content';
 import { DescriptionList } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
 import {
   Label,
   LabelGroup,
 } from '@patternfly/react-core/dist/dynamic/components/Label';
 import { Popover } from '@patternfly/react-core/dist/dynamic/components/Popover';
-import { Content } from "@patternfly/react-core/dist/dynamic/components/Content";
 import { Truncate } from '@patternfly/react-core/dist/dynamic/components/Truncate';
 import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
 import React, { ReactNode, useCallback, useMemo } from 'react';
@@ -32,6 +27,12 @@ import {
   ITableColumnTypeLabels,
   TableColumnCell,
 } from './PageTable';
+
+// DropdownPosition for backward compatibility
+const DropdownPosition = {
+  right: 'right',
+  left: 'left',
+} as const;
 
 export interface IPageTableCard {
   id: string | number;
@@ -86,9 +87,7 @@ export function PageTableCard<T extends object>(props: {
     <Card
       id={card.id as string}
       key={card.id ?? card.title}
-      
       isLarge
-      
       isSelectable={isItemSelected}
       isSelected={isItemSelected}
       style={{

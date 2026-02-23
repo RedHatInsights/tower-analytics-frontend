@@ -1,8 +1,3 @@
-// DropdownPosition for backward compatibility
-const DropdownPosition = {
-  right: 'right',
-  left: 'left',
-} as const;
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import {
   Split,
@@ -38,7 +33,7 @@ export function PageActions<T extends object>(props: {
   collapse?: WindowSize | 'always' | 'never';
 
   /** The position for the dropdown */
-  position?: typeof DropdownPosition[keyof typeof DropdownPosition];
+  position?: (typeof DropdownPosition)[keyof typeof DropdownPosition];
 
   /** Indicates if only to show the icon when not collapsed */
   iconOnly?: boolean;

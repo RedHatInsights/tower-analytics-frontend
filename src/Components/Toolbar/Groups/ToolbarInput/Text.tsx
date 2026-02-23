@@ -62,15 +62,14 @@ const Text: FunctionComponent<Props> = ({
           />
         </InputGroupItem>
         <InputGroupItem>
-          <Button icon={<SearchIcon />}
+          <Button
+            icon={<SearchIcon />}
             variant='control'
             aria-label={`Search button for ${options.name}`}
             onClick={() => {
               setValue(searchVal);
             }}
-          >
-            
-          </Button>
+          ></Button>
         </InputGroupItem>
       </InputGroup>
     </ToolbarFilter>

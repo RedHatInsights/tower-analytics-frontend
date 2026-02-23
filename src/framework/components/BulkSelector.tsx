@@ -31,7 +31,7 @@ export function BulkSelector<T extends object>(props: BulkSelectorProps<T>) {
         unselectAll?.();
       }
     },
-    [selectItems, unselectAll, pageItems]
+    [selectItems, unselectAll, pageItems],
   );
 
   const bulkSelectItems = useMemo(() => {

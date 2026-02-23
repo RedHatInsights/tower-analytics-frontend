@@ -1,18 +1,7 @@
-import {
-  Select,
-  SelectOption,
-  SelectList,
-  MenuToggle,
-} from '@patternfly/react-core';
-
-// SelectVariant enum for backward compatibility
-const SelectVariant = {
-  single: 'single',
-  checkbox: 'checkbox',
-  typeahead: 'typeahead',
-  typeaheadMulti: 'typeaheadMulti',
-} as const;
-
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
+import { Select } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectOption } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectList } from '@patternfly/react-core/dist/dynamic/components/Select';
 import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import React, { FunctionComponent, useState } from 'react';
 

@@ -18,7 +18,7 @@ describe('Automation Calculator page', () => {
     cy.intercept('/api/tower-analytics/v1/roi_templates/*').as('roiTemplates');
 
     // Wait for page to load (header or empty state)
-    cy.get('body', { timeout: 30000 }).then($body => {
+    cy.get('body', { timeout: 30000 }).then(($body) => {
       if ($body.find('[data-cy="header-automation_calculator"]').length > 0) {
         cy.log('Automation calculator page loaded');
       } else if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
@@ -31,13 +31,13 @@ describe('Automation Calculator page', () => {
 
   it('can change manual cost', () => {
     // Skip test if no data available
-    cy.get('body').then($body => {
+    cy.get('body').then(($body) => {
       if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
         cy.log('Empty state found - skipping manual cost test');
         expect(true).to.be.true;
         return;
       }
-      
+
       if (ENV != ENVS.STAGE) {
         cy.tableShowAll(); // make sure the 1st test show all lines
         cy.waitSpinner();
@@ -49,7 +49,9 @@ describe('Automation Calculator page', () => {
         .getByCy('current_page_savings')
         .find('h3').textContent;
       let originalSavingsValues = [];
-      cy.getByCy('savings').each(($el) => originalSavingsValues.push($el.text()));
+      cy.getByCy('savings').each(($el) =>
+        originalSavingsValues.push($el.text()),
+      );
 
       cy.get('#manual-cost').clear();
       waitToLoad();
@@ -87,13 +89,13 @@ describe('Automation Calculator page', () => {
 
   it('can change automated cost', () => {
     // Skip test if no data available
-    cy.get('body').then($body => {
+    cy.get('body').then(($body) => {
       if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
         cy.log('Empty state found - skipping automated cost test');
         expect(true).to.be.true;
         return;
       }
-      
+
       let originalTotalSavingsValue = cy
         .getByCy('total_savings')
         .find('h3').textContent;
@@ -101,7 +103,9 @@ describe('Automation Calculator page', () => {
         .getByCy('current_page_savings')
         .find('h3').textContent;
       let originalSavingsValues = [];
-      cy.getByCy('savings').each(($el) => originalSavingsValues.push($el.text()));
+      cy.getByCy('savings').each(($el) =>
+        originalSavingsValues.push($el.text()),
+      );
 
       cy.get('#automation-cost').clear();
       waitToLoad();

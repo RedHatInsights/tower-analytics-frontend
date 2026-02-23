@@ -1,10 +1,8 @@
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownList,
-  MenuToggle,
-} from '@patternfly/react-core';
-import { EllipsisVIcon } from '@patternfly/react-icons';
+import { Dropdown } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
+import { DropdownItem } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
+import { DropdownList } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
+import EllipsisVIcon from '@patternfly/react-icons/dist/dynamic/icons/ellipsis-v-icon';
 import {
   Table,
   TableVariant,
@@ -113,12 +111,12 @@ const TopTemplates: FunctionComponent<Props> = ({
               toggle={(toggleRef) => (
                 <MenuToggle
                   ref={toggleRef}
-                  variant="plain"
+                  variant='plain'
                   style={{ paddingBottom: '0px' }}
                   id='table-kebab'
                   onClick={() => setIsKebabOpen(!isKebabOpen)}
                   isExpanded={isKebabOpen}
-                  aria-label="Table actions"
+                  aria-label='Table actions'
                 >
                   <EllipsisVIcon />
                 </MenuToggle>

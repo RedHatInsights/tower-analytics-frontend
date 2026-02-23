@@ -39,7 +39,9 @@ const TotalSavings: FunctionComponent<Props> = ({
             <Title
               headingLevel='h3'
               size={index === 0 ? '4xl' : 'xl'}
-              style={{ color: 'var(--pf-t--global--color--status--success--200)' }}
+              style={{
+                color: 'var(--pf-t--global--color--status--success--200)',
+              }}
             >
               {isLoading ? (
                 <SpinnerDiv>

@@ -11,7 +11,7 @@ import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { Stack } from '@patternfly/react-core/dist/dynamic/layouts/Stack';
 import { StackItem } from '@patternfly/react-core/dist/dynamic/layouts/Stack';
-import { useAddNotification } from '@redhat-cloud-services/frontend-components-notifications';
+import useAddNotification from '@redhat-cloud-services/frontend-components-notifications/useAddNotification';
 import React, { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -42,7 +42,6 @@ import {
 import { getDateFormatByGranularity } from '../../../../Utilities/helpers';
 import hoursFormatter from '../../../../Utilities/hoursFormatter';
 import useRequest from '../../../../Utilities/useRequest';
-
 import { Paths } from '../../../../paths';
 import { perPageOptions as defaultPerPageOptions } from '../../Shared/constants';
 import hydrateSchema from '../../Shared/hydrateSchema';
@@ -252,8 +251,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     } catch {
       addNotification({
         title: 'Unable to save changes to Manual time',
-        description:
-          'Unable to save changes to Manual time. Please try again.',
+        description: 'Unable to save changes to Manual time. Please try again.',
         variant: 'danger',
         dismissable: true,
       });
@@ -274,8 +272,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     } catch {
       addNotification({
         title: 'Unable to save changes to visibility',
-        description:
-          'Unable to save changes to visibility. Please try again.',
+        description: 'Unable to save changes to visibility. Please try again.',
         variant: 'danger',
         dismissable: true,
       });

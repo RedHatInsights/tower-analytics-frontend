@@ -1,13 +1,11 @@
-import {
-  Select,
-  SelectOption,
-  SelectList,
-  MenuToggle,
-} from '@patternfly/react-core';
 import { FormHelperText } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
 import { NumberInput } from '@patternfly/react-core/dist/dynamic/components/NumberInput';
+import { Select } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectOption } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectList } from '@patternfly/react-core/dist/dynamic/components/Select';
 import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
 import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import PropTypes from 'prop-types';
@@ -198,7 +196,9 @@ const Details = ({ options, formData, dispatch }) => {
               toggle={(toggleRef) => (
                 <MenuToggle
                   ref={toggleRef}
-                  onClick={() => setFrequencyPeriodIsOpen(!frequencyPeriodIsOpen)}
+                  onClick={() =>
+                    setFrequencyPeriodIsOpen(!frequencyPeriodIsOpen)
+                  }
                   isExpanded={frequencyPeriodIsOpen}
                   isFullWidth
                 >

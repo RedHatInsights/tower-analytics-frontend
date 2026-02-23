@@ -14,9 +14,9 @@ import styled from 'styled-components';
 import { Params, readClusters, readNotifications } from '../../Api/';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
-import { PageHeader } from '../../framework/PageHeader';
 import { useQueryParams } from '../../QueryParams/';
 import useRequest from '../../Utilities/useRequest';
+import { PageHeader } from '../../framework/PageHeader';
 import NotificationsList from './NotificationsList';
 
 const NCardTitle = styled(CardTitle)`
@@ -128,7 +128,7 @@ const Notifications: FC<Record<string, never>> = () => {
     setFromPagination(newOffset);
   };
 
-  const handlePerPageChange = (_event: unknown, perPage: number) => {
+  const handlePerPageChange = (_event: unknown, _perPage: number) => {
     setFromPagination(0);
   };
 

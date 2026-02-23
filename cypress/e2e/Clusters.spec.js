@@ -46,7 +46,7 @@ describe('Clusters page', () => {
     cy.contains('Top templates');
     cy.contains('Top modules');
     // Check if data is present (no empty state) or if empty state exists
-    cy.get('body').then($body => {
+    cy.get('body').then(($body) => {
       if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
         cy.log('Empty state found - no cluster data available');
         cy.get('.pf-v6-c-empty-state__content').should('exist');
@@ -73,14 +73,14 @@ describe('Clusters page', () => {
     cy.get('[data-cy="card-title-job-status"]').find('h2').textContent;
 
     // Check if data is present or empty state
-    cy.get('body').then($body => {
+    cy.get('body').then(($body) => {
       if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
         cy.log('Empty state found - skipping API data validation');
         return;
       }
       cy.get('[data-cy="barchart"]').should('exist');
       cy.get('#d3-bar-chart-root').should('exist');
-      
+
       // get the same request object again and confirm the response
       cy.get('@eventExplorerData')
         .its('response')
@@ -102,14 +102,14 @@ describe('Clusters page', () => {
 
   it('has anchor clear filters link', () => {
     // Skip entire test if empty state exists (no data)
-    cy.get('body').then($body => {
+    cy.get('body').then(($body) => {
       if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
         cy.log('Empty state found - skipping filter test');
         // Mark test as passed since we can't test filters without data
         expect(true).to.be.true;
         return;
       }
-      
+
       // Only run filter tests if we have data
       if (ENV == ENVS.STAGE) {
         cy.get('[data-cy="filter-toolbar"')
@@ -164,7 +164,9 @@ describe('Clusters page', () => {
       }
 
       // Wait and check that the filter is no longer present
-      cy.get('.pf-v6-c-chip-group__main').contains('Cluster').should('not.exist');
+      cy.get('.pf-v6-c-chip-group__main')
+        .contains('Cluster')
+        .should('not.exist');
       cy.get('.pf-v6-c-chip-group__main')
         .contains('ec2-52-90-106-02.compute-1.amazonaws.com')
         .should('not.exist');

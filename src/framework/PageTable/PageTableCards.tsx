@@ -53,5 +53,9 @@ export function PageTableCards<T extends object>(
     defaultCardSubtitle,
   ]);
 
-  return <PageSection hasBodyWrapper={false} style={{ flexGrow: 1 }}>{catalogCards}</PageSection>;
+  return (
+    <PageSection hasBodyWrapper={false} style={{ flexGrow: 1 }}>
+      {catalogCards}
+    </PageSection>
+  );
 }

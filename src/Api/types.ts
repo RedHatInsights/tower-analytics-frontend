@@ -1,4 +1,4 @@
-import { DispatchType } from '../store';
+// import { DispatchType } from '../store';
 
 export type Params = Record<
   string,

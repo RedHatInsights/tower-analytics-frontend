@@ -3,12 +3,10 @@ import {
   BreadcrumbItem,
 } from '@patternfly/react-core/dist/dynamic/components/Breadcrumb';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
-import {
-  PageSection,
-  } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { Content } from '@patternfly/react-core/dist/dynamic/components/Content';
+import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
 import { Popover } from '@patternfly/react-core/dist/dynamic/components/Popover';
 import { Skeleton } from '@patternfly/react-core/dist/dynamic/components/Skeleton';
-import { Content } from "@patternfly/react-core/dist/dynamic/components/Content";
 import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
 import { Truncate } from '@patternfly/react-core/dist/dynamic/components/Truncate';
 import {
@@ -123,8 +121,8 @@ export function PageHeader(props: PageHeaderProps) {
   return (
     <>
       {navigation && (
-        <PageSection hasBodyWrapper={false}
-          
+        <PageSection
+          hasBodyWrapper={false}
           className='border-top dark-1'
           style={{ paddingLeft: 0, paddingTop: 0, paddingBottom: 0 }}
         >
@@ -133,9 +131,8 @@ export function PageHeader(props: PageHeaderProps) {
             flexWrap={{ default: 'nowrap' }}
             style={{ maxWidth: '100%' }}
           >
-            
-              {navigation}
-            
+            {navigation}
+
             {/* {!isMdOrLarger && props.titleDocLink && (
                             <FlexItem>
                                 <Bullseye>
@@ -154,8 +151,8 @@ export function PageHeader(props: PageHeaderProps) {
           </Flex>
         </PageSection>
       )}
-      <PageSection hasBodyWrapper={false}
-        
+      <PageSection
+        hasBodyWrapper={false}
         className='border-top border-bottom dark-3'
         style={{
           paddingTop: breadcrumbs ? (xl ? 16 : 12) : xl ? 16 : 12,
@@ -207,7 +204,8 @@ export function PageHeader(props: PageHeaderProps) {
                   >
                     <Title headingLevel='h1'>
                       {title}
-                      <Button icon={<OutlinedQuestionCircleIcon />}
+                      <Button
+                        icon={<OutlinedQuestionCircleIcon />}
                         variant='link'
                         style={{
                           padding: 0,
@@ -215,9 +213,7 @@ export function PageHeader(props: PageHeaderProps) {
                           marginLeft: 8,
                           verticalAlign: 'top',
                         }}
-                      >
-                        
-                      </Button>
+                      ></Button>
                     </Title>
                   </Popover>
                 ) : (

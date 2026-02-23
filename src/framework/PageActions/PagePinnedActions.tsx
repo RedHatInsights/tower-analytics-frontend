@@ -1,8 +1,3 @@
-// DropdownPosition for backward compatibility
-const DropdownPosition = {
-  right: 'right',
-  left: 'left',
-} as const;
 import { Split } from '@patternfly/react-core/dist/dynamic/layouts/Split';
 import React, { ComponentClass, FunctionComponent } from 'react';
 import { IPageAction } from './PageAction';
@@ -11,6 +6,12 @@ import { PageBulkAction } from './PageBulkAction';
 import { PageButtonAction } from './PageButtonAction';
 import { PageDropdownAction } from './PageDropdownAction';
 import { PageSingleAction } from './PageSingleAction';
+
+// DropdownPosition for backward compatibility
+const DropdownPosition = {
+  right: 'right',
+  left: 'left',
+} as const;
 
 export function PagePinnedActions<T extends object>(props: {
   actions: IPageAction<T>[];

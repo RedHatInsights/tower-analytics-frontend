@@ -1,9 +1,10 @@
+import { Endpoint, OptionsReturnType, Params } from '../../Api';
+
 // SelectOptionObject interface for backward compatibility
 export interface SelectOptionObject {
   toString(): string;
   compareTo?(selectOption: any): boolean;
 }
-import { Endpoint, OptionsReturnType, Params } from '../../Api';
 
 export type AttributeType =
   | string

@@ -1,6 +1,6 @@
-import { addNotification, removeNotification } from '../notificationStore';
 import queryString from 'query-string';
 import { createWriteStream } from 'streamsaver';
+import { addNotification } from '../notificationStore';
 import { saveStream } from './streamSaver';
 import {
   ApiJson,
@@ -64,7 +64,7 @@ export const authenticatedFetch = (
 export const postWithFileReturn = async (
   endpoint: string,
   params: PDFParams,
-  title = 'Generating report'
+  title = 'Generating report',
 ): Promise<void> => {
   const url = new URL(endpoint, window.location.origin);
 
@@ -90,7 +90,8 @@ export const postWithFileReturn = async (
                 title: 'Report generation failed',
                 description: error?.detail?.name
                   ? error?.detail?.name[0]
-                  : error?.detail?.toString() || 'An error occurred while generating the report',
+                  : (error?.detail ? JSON.stringify(error.detail) : '') ||
+                    'An error occurred while generating the report',
                 variant: 'danger',
               });
               return Promise.reject({ status: response.status, error });
@@ -119,12 +120,12 @@ export const postWithFileReturn = async (
 export const postWithEmail = async (
   endpoint: string,
   params: ParamsPdf,
-  title = 'Processing Email'
+  title = 'Processing Email',
 ): Promise<void> => {
   const url = new URL(endpoint, window.location.origin);
 
   // Add notification for processing
-  const notificationId = `email-${Date.now()}`;
+  const _notificationId = `email-${Date.now()}`;
   addNotification({
     title,
     variant: 'info',
@@ -133,23 +134,25 @@ export const postWithEmail = async (
   return authenticatedFetch(url.toString(), {
     method: 'POST',
     body: JSON.stringify(params),
-  }).then((response) => {
-    // Email sent successfully - show success notification
-    addNotification({
-      title: 'Email sent successfully',
-      variant: 'success',
-    });
+  })
+    .then((_response) => {
+      // Email sent successfully - show success notification
+      addNotification({
+        title: 'Email sent successfully',
+        variant: 'success',
+      });
 
-    return;
-  }).catch((error) => {
-    // Email failed - show error notification
-    addNotification({
-      title: 'Failed to send email',
-      description: error.message || 'An error occurred while sending email',
-      variant: 'danger',
+      return;
+    })
+    .catch((error) => {
+      // Email failed - show error notification
+      addNotification({
+        title: 'Failed to send email',
+        description: error.message || 'An error occurred while sending email',
+        variant: 'danger',
+      });
+      throw error;
     });
-    throw error;
-  });
 };
 
 export const get = (

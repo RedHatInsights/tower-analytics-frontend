@@ -1,7 +1,5 @@
-import {
-	Modal
-} from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
 import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
+import { Modal } from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
 import PFCheckCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/check-circle-icon';
 import PFExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
 import PFExclamationTriangleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-triangle-icon';

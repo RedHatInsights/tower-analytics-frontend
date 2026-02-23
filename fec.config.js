@@ -4,7 +4,7 @@
  * LOCAL DEVELOPMENT SETUP:
  * ========================
  * This app runs standalone for local development.
- * 
+ *
  * Start the app: npm start (runs on port 8003)
  * Access: https://localhost:8003/ansible/automation-analytics/
  */
