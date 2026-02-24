@@ -6,17 +6,8 @@ import { ToolbarGroupVariant } from '@patternfly/react-core/dist/dynamic/compone
 import SortAmountDownIcon from '@patternfly/react-icons/dist/dynamic/icons/sort-amount-down-icon';
 import SortAmountUpIcon from '@patternfly/react-icons/dist/dynamic/icons/sort-amount-up-icon';
 import React, { FunctionComponent } from 'react';
-import { AttributeType, SetValues } from '../types';
+import { AttributeType, SelectOptionProps, SetValues } from '../types';
 import ToolbarInput from './ToolbarInput';
-
-// SelectOptionProps type for compatibility
-export type SelectOptionProps = {
-  key?: string;
-  value?: string;
-  description?: string;
-  isDisabled?: boolean;
-  [key: string]: any;
-};
 
 interface Props {
   filters: Record<string, AttributeType>;

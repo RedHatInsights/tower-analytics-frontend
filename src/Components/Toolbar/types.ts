@@ -13,11 +13,13 @@ export type AttributeType =
   | SelectOptionObject[]
   | boolean;
 
-export interface SelectOptionProps {
-  value: string;
-  description: string;
-  key: string;
-}
+export type SelectOptionProps = {
+  key?: string;
+  value?: string;
+  description?: string;
+  isDisabled?: boolean;
+  [key: string]: any;
+};
 
 export type SetValue = (value: AttributeType | null) => void;
 export type SetValues = (

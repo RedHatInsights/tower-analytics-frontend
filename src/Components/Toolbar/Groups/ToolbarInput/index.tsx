@@ -1,18 +1,9 @@
 import React, { FunctionComponent } from 'react';
 import { optionsForCategories } from '../../constants';
-import { AttributeType, SetValue } from '../../types';
+import { AttributeType, SelectOptionProps, SetValue } from '../../types';
 import DateInput from './Date';
 import Select from './Select';
 import Text from './Text';
-
-// SelectOptionProps type for compatibility
-export type SelectOptionProps = {
-  key?: string;
-  value?: string;
-  description?: string;
-  isDisabled?: boolean;
-  [key: string]: any;
-};
 
 // Todo: unify the interfaces better so we don't have to use any
 // and avoid accidentall wronglt passed props
