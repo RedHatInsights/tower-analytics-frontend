@@ -586,10 +586,10 @@ function ToolbarSelectFilter(props: {
         )}
       >
         <SelectList>
-          {options.map((option) => (
+          {options.map((option, index) => (
             <SelectOption
               id={option.value}
-              key={option.value}
+              key={`${option.value}-${index}`}
               value={option.value}
               hasCheckbox
             >
