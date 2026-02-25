@@ -1,4 +1,3 @@
-import { SelectOptionProps } from '@patternfly/react-core/deprecated';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
@@ -7,7 +6,7 @@ import { ToolbarGroupVariant } from '@patternfly/react-core/dist/dynamic/compone
 import SortAmountDownIcon from '@patternfly/react-icons/dist/dynamic/icons/sort-amount-down-icon';
 import SortAmountUpIcon from '@patternfly/react-icons/dist/dynamic/icons/sort-amount-up-icon';
 import React, { FunctionComponent } from 'react';
-import { AttributeType, SetValues } from '../types';
+import { AttributeType, SelectOptionProps, SetValues } from '../types';
 import ToolbarInput from './ToolbarInput';
 
 interface Props {

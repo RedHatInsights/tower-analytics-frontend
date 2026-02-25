@@ -1,11 +1,25 @@
-import {
-  Select,
-  SelectOptionObject,
-  SelectProps,
-  SelectVariant,
-} from '@patternfly/react-core/deprecated';
-import React, { ChangeEvent, ReactElement, useCallback, useState } from 'react';
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
+import { Select } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectList } from '@patternfly/react-core/dist/dynamic/components/Select';
+import React, { ReactElement, useCallback, useState } from 'react';
 import { PageFormGroup, PageFormGroupProps } from './PageFormGroup';
+
+// SelectVariant enum for backward compatibility
+export const SelectVariant = {
+  single: 'single',
+  checkbox: 'checkbox',
+  typeahead: 'typeahead',
+  typeaheadMulti: 'typeaheadMulti',
+} as const;
+
+// SelectOptionObject interface for backward compatibility
+export interface SelectOptionObject {
+  toString(): string;
+  compareTo?(selectOption: any): boolean;
+}
+
+// SelectProps type for compatibility
+type SelectProps = any;
 
 export type FormGroupSelectProps = Pick<
   SelectProps,
@@ -27,15 +41,14 @@ export function FormGroupSelect(props: FormGroupSelectProps) {
   const { children, helperTextInvalid, isReadOnly, onSelect, value } = props;
 
   const [open, setOpen] = useState(false);
-  const onToggle = useCallback(() => setOpen((open) => !open), []);
 
   const onSelectHandler = useCallback(
     (
-      event: React.MouseEvent<Element, MouseEvent> | ChangeEvent<Element>,
-      value: string | SelectOptionObject,
+      event: React.MouseEvent<Element, MouseEvent> | undefined,
+      value: string | number | undefined,
     ) => {
-      if (typeof value === 'string') onSelect?.(event, value);
-      else onSelect?.(event, value.toString());
+      if (typeof value === 'string') onSelect?.(event as any, value);
+      else if (value !== undefined) onSelect?.(event as any, value.toString());
       setOpen(false);
     },
     [onSelect],
@@ -44,19 +57,25 @@ export function FormGroupSelect(props: FormGroupSelectProps) {
   return (
     <PageFormGroup {...props}>
       <Select
-        {...props}
-        label={undefined}
-        variant={SelectVariant.single}
         aria-describedby={props.id ? `${props.id}-form-group` : undefined}
-        selections={value}
-        onSelect={onSelectHandler}
         isOpen={open}
-        onToggle={onToggle}
-        maxHeight={280}
-        validated={helperTextInvalid ? 'error' : undefined}
-        isDisabled={props.isDisabled || isReadOnly}
+        selected={value}
+        onSelect={onSelectHandler}
+        onOpenChange={(isOpen) => setOpen(isOpen)}
+        toggle={(toggleRef) => (
+          <MenuToggle
+            ref={toggleRef}
+            onClick={() => setOpen(!open)}
+            isExpanded={open}
+            isDisabled={props.isDisabled || isReadOnly}
+            isFullWidth
+            status={helperTextInvalid ? 'danger' : undefined}
+          >
+            {value || props.placeholderText || 'Select...'}
+          </MenuToggle>
+        )}
       >
-        {children as ReactElement[]}
+        <SelectList>{children as ReactElement[]}</SelectList>
       </Select>
     </PageFormGroup>
   );

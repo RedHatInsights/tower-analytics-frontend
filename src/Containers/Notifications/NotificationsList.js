@@ -12,13 +12,13 @@ import { capitalize } from '../../Utilities/helpers';
 
 const NLExternalLinkAltIcon = styled(ExternalLinkAltIcon)`
   margin-left: 7px;
-  color: var(--pf-global--Color--400);
+  color: var(--pf-t--global--text--color--disabled);
   font-size: 14px;
 `;
 
 const NLNotificationDrawerListItem = styled(NotificationDrawerListItem)`
-  border-top: 1px solid var(--pf-global--BorderColor--light-100);
-  border-bottom::nth-child(odd): 1px solid var(--pf-global--BorderColor--light-100);
+  border-top: 1px solid var(--pf-t--global--border--color--50);
+  border-bottom::nth-child(odd): 1px solid var(--pf-t--global--border--color--50);
   box-shadow: none;
   &:focus {
     outline: none;
@@ -27,7 +27,7 @@ const NLNotificationDrawerListItem = styled(NotificationDrawerListItem)`
 
 const NLNotificationDrawerList = styled(NotificationDrawerList)`
   &:last-child {
-    border-bottom: 1px solid var(--pf-global--BorderColor--light-100);
+    border-bottom: 1px solid var(--pf-t--global--border--color--50);
   }
 `;
 

@@ -1,8 +1,3 @@
-import {
-  Dropdown,
-  DropdownItem,
-  DropdownToggle,
-} from '@patternfly/react-core/deprecated';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
@@ -10,7 +5,11 @@ import { CardFooter } from '@patternfly/react-core/dist/dynamic/components/Card'
 import { CardHeader } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { Divider } from '@patternfly/react-core/dist/dynamic/components/Divider';
+import { Dropdown } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
+import { DropdownItem } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
+import { DropdownList } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
 import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
 import { TooltipPosition } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
@@ -105,19 +104,18 @@ const List: FunctionComponent<Record<string, never>> = () => {
       reports.map((report) => {
         return (
           <Button
+            icon={<DropdownItem key={report.slug}>{report.name}</DropdownItem>}
             key={report.slug}
             variant={ButtonVariant.plain}
             aria-label='Report list item'
             onClick={() => setSelected(report.slug)}
-          >
-            <DropdownItem key={report.slug}>{report.name}</DropdownItem>
-          </Button>
+          />
         );
       }),
   ];
 
   return (
-    <>
+    <React.Fragment>
       <PageHeader data-cy={'header-all_reports'} title={'Reports'} />
       <FilterableToolbar
         categories={options as any}
@@ -125,7 +123,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
         setFilters={setFromToolbar}
       />
       {isSuccess && reports.length > 0 && isReportSuccess && (
-        <PageSection>
+        <PageSection hasBodyWrapper={false}>
           {reports
             .filter((report: Report) => report.slug === selected)
             .map((report) => {
@@ -172,33 +170,36 @@ const List: FunctionComponent<Record<string, never>> = () => {
                                 },
                               )}
                               <Button
+                                icon={<AngleLeftIcon />}
                                 variant={ButtonVariant.plain}
                                 aria-label='Previous report'
                                 data-cy={'previous_report_button'}
                                 isDisabled={reports.indexOf(report) === 0}
                                 onClick={() => setSelected(previousItem)}
-                              >
-                                <AngleLeftIcon />
-                              </Button>
+                              />
                               <Dropdown
                                 data-cy={'preview_dropdown'}
                                 isPlain
                                 onSelect={() => setIsOpen(!isOpen)}
-                                toggle={
-                                  <DropdownToggle
-                                    onToggle={(_event, next) => setIsOpen(next)}
-                                    toggleIndicator={CaretDownIcon}
+                                toggle={(toggleRef) => (
+                                  <MenuToggle
+                                    ref={toggleRef}
+                                    onClick={() => setIsOpen(!isOpen)}
+                                    isExpanded={isOpen}
+                                    icon={<CaretDownIcon />}
                                     id='report_list'
                                     data-cy={'selected_report_dropdown'}
                                     style={{ color: '#151515' }}
                                   >
                                     {report.name}
-                                  </DropdownToggle>
-                                }
+                                  </MenuToggle>
+                                )}
                                 isOpen={isOpen}
-                                dropdownItems={dropdownItems}
-                              />
+                              >
+                                <DropdownList>{dropdownItems}</DropdownList>
+                              </Dropdown>
                               <Button
+                                icon={<AngleRightIcon />}
                                 variant={ButtonVariant.plain}
                                 aria-label='Next report'
                                 data-cy='next_report_button'
@@ -206,9 +207,7 @@ const List: FunctionComponent<Record<string, never>> = () => {
                                   reports.indexOf(report) >= reports.length - 1
                                 }
                                 onClick={() => setSelected(nextItem)}
-                              >
-                                <AngleRightIcon />
-                              </Button>
+                              />
                             </>
                           ),
                           hasNoOffset: false,
@@ -280,8 +279,12 @@ const List: FunctionComponent<Record<string, never>> = () => {
           path={'/ansible/automation-analytics/reports'}
         />
       )}
-      {error && <NoData />}
-    </>
+      {(error as any) && (
+        <div>
+          <NoData />
+        </div>
+      )}
+    </React.Fragment>
   );
 };
 

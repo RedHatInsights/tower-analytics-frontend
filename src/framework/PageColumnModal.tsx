@@ -12,7 +12,7 @@ import {
 import {
   Modal,
   ModalVariant,
-} from '@patternfly/react-core/dist/dynamic/components/Modal';
+} from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
 import React, { FormEvent, useCallback, useEffect, useState } from 'react';
 import { ITableColumn } from './PageTable/PageTable';
 

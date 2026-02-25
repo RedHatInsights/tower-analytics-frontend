@@ -12,7 +12,7 @@ describe('Report: Module Usage By Task Smoketests', () => {
 
   it('Can change lookback', () => {
     cy.getByCy('quick_date_range').click();
-    cy.get('.pf-c-select__menu-item').contains('Past year').click();
+    cy.get('.pf-v6-c-select__menu-item').contains('Past year').click();
   });
 
   it('Can navigate through the pages', () => {

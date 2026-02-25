@@ -37,7 +37,7 @@ const Add = () => {
         ]}
         title={title}
       />
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <Card>
           <CardBody>
             <Form title={title} options={options} />

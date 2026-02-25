@@ -1,12 +1,9 @@
-// @ts-ignore
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import {
   EmptyState,
   EmptyStateBody,
   EmptyStateFooter,
-  EmptyStateHeader,
-  EmptyStateIcon,
   EmptyStateVariant,
 } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
@@ -24,8 +21,11 @@ interface Props {
 }
 
 const AuthorizationErrorPage: FunctionComponent<Props> = ({ error }) => (
-  <EmptyState variant={EmptyStateVariant.full} data-cy={'error_page'}>
-    <EmptyStateHeader icon={<EmptyStateIcon icon={WrenchIcon} />} />
+  <EmptyState
+    icon={WrenchIcon}
+    variant={EmptyStateVariant.full}
+    data-cy={'error_page'}
+  >
     <EmptyStateFooter>
       {error.status === 404 && (
         <>

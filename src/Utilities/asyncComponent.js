@@ -1,8 +1,4 @@
-import {
-  EmptyState,
-  EmptyStateHeader,
-  EmptyStateIcon,
-} from '@patternfly/react-core/dist/dynamic/components/EmptyState';
+import { EmptyState } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { Spinner } from '@patternfly/react-core/dist/dynamic/components/Spinner';
 import React, { Component } from 'react';
 
@@ -51,13 +47,11 @@ export default function asyncComponent(importComponent) {
           <C {...this.props} />
         </div>
       ) : (
-        <EmptyState>
-          <EmptyStateHeader
-            titleText='Loading'
-            icon={<EmptyStateIcon icon={Spinner} />}
-            headingLevel='h4'
-          />
-        </EmptyState>
+        <EmptyState
+          headingLevel='h4'
+          icon={Spinner}
+          titleText='Loading'
+        ></EmptyState>
       );
     }
   }

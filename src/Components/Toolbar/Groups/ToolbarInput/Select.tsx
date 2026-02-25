@@ -1,14 +1,12 @@
 // TODO: The component converts all types to string.
 // It should be able to use the correct type in the future for example number and number[].
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
+import { Select as PFSelect } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectOption } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectList } from '@patternfly/react-core/dist/dynamic/components/Select';
 import {
-  Select as PFSelect,
-  SelectOption,
-  SelectOptionObject,
-  SelectVariant,
-} from '@patternfly/react-core/deprecated';
-import {
-  ToolbarChip,
   ToolbarFilter,
+  ToolbarLabel,
 } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import React, { FunctionComponent, useState } from 'react';
@@ -17,6 +15,12 @@ import { optionsForCategories } from '../../constants';
 import { AttributeType, SelectOptionProps, SetValue } from '../../types';
 import { handleCheckboxChips, handleSingleChips } from './helpers';
 
+// SelectOptionObject interface for backward compatibility
+export interface SelectOptionObject {
+  toString(): string;
+  compareTo?(selectOption: any): boolean;
+}
+
 const OptionSpan = styled('span')`
   display: block;
   overflow-x: hidden;
@@ -24,7 +28,7 @@ const OptionSpan = styled('span')`
   max-width: 300px;
 `;
 
-interface Props {
+interface SelectProps {
   categoryKey: string;
   value: AttributeType;
   selectOptions: SelectOptionProps[];
@@ -32,17 +36,30 @@ interface Props {
   setValue: SetValue;
 }
 
-const renderValues = (values: SelectOptionProps[]) =>
+const renderValues = (
+  values: SelectOptionProps[],
+  isMultiSelect: boolean,
+  selectedValues: string[],
+) =>
   values &&
   values.map(({ key, value, description }) => (
-    <SelectOption key={key} value={key} description={description} data-cy={key}>
+    <SelectOption
+      key={key}
+      value={key}
+      description={description}
+      data-cy={key}
+      hasCheckbox={isMultiSelect}
+      isSelected={
+        isMultiSelect ? selectedValues.includes(key as string) : undefined
+      }
+    >
       <Tooltip content={<div>{value}</div>}>
         <OptionSpan>{value}</OptionSpan>
       </Tooltip>
     </SelectOption>
   ));
 
-const Select: FunctionComponent<Props> = ({
+const Select: FunctionComponent<SelectProps> = ({
   categoryKey,
   value,
   selectOptions: nonTypedSelectOptions,
@@ -77,14 +94,19 @@ const Select: FunctionComponent<Props> = ({
     }
   };
 
-  const onFilter = (_: unknown, textInput: string) => {
-    if (textInput === '') return renderValues(selectOptions);
+  const _onFilter = (_: unknown, textInput: string) => {
+    const isMultiSelect = Array.isArray(value);
+    const selectedValues = isMultiSelect ? (value as string[]).map(String) : [];
+    if (textInput === '')
+      return renderValues(selectOptions, isMultiSelect, selectedValues);
     return renderValues(
       selectOptionsMasterCopy
         .filter(({ value }) =>
-          value.toString().toLowerCase().includes(textInput.toLowerCase()),
+          value?.toString().toLowerCase().includes(textInput.toLowerCase()),
         )
         .slice(0, 50),
+      isMultiSelect,
+      selectedValues,
     );
   };
 
@@ -102,6 +124,17 @@ const Select: FunctionComponent<Props> = ({
     return handleSingleChips(value.toString(), selectOptions);
   };
 
+  const getToggleText = (): string => {
+    // For filters without chips, show the selected value in the toggle
+    if (!options.hasChips && value && !Array.isArray(value)) {
+      const selectedOption = selectOptionsMasterCopy.find(
+        ({ key }) => key === value.toString(),
+      );
+      return selectedOption?.value || options.placeholder || '';
+    }
+    return options.placeholder || '';
+  };
+
   const onSelect = (_: unknown, selection: SelectOptionObject | string) => {
     if (Array.isArray(value)) {
       const stringValues: string[] = value.map((i) => i.toString());
@@ -110,40 +143,50 @@ const Select: FunctionComponent<Props> = ({
           ? [...stringValues, selection]
           : stringValues.filter((item) => item !== selection.toString()),
       );
+      // Keep dropdown open for multi-select - don't call setExpanded(false)
     } else {
       setValue(selection);
       setExpanded(false);
     }
   };
 
+  const isMultiSelect = Array.isArray(value);
+  const selectedValues = isMultiSelect ? (value as string[]).map(String) : [];
+
   return (
     <ToolbarFilter
       data-cy={categoryKey}
       key={categoryKey}
       showToolbarItem={isVisible}
-      chips={options.hasChips ? handleChips() : []}
+      labels={options.hasChips ? handleChips() : []}
       categoryName={options.name}
-      deleteChip={
+      deleteLabel={
         options.hasChips
-          ? (_: unknown, chip: ToolbarChip | string) => onDelete(chip as string)
+          ? (_: unknown, chip: ToolbarLabel | string) =>
+              onDelete(chip as string)
           : undefined
       }
     >
       <PFSelect
-        variant={
-          Array.isArray(value) ? SelectVariant.checkbox : SelectVariant.single
-        }
         aria-label={options.name}
-        onToggle={() => setExpanded(!expanded)}
+        toggle={(toggleRef) => (
+          <MenuToggle
+            ref={toggleRef}
+            onClick={() => setExpanded(!expanded)}
+            isExpanded={expanded}
+          >
+            {getToggleText()}
+          </MenuToggle>
+        )}
         onSelect={onSelect}
-        selections={value}
+        selected={isMultiSelect ? selectedValues : value}
         isOpen={expanded}
-        hasInlineFilter
-        placeholderText={options.placeholder}
-        onFilter={onFilter}
-        maxHeight={'1000%'}
+        onOpenChange={setExpanded}
+        maxMenuHeight={'1000%'}
       >
-        {renderValues(selectOptions)}
+        <SelectList>
+          {renderValues(selectOptions, isMultiSelect, selectedValues)}
+        </SelectList>
       </PFSelect>
     </ToolbarFilter>
   );
