@@ -15,7 +15,7 @@ const paramsReducer = (state, { type, value }) => {
     case 'SET_ENDDATE':
       return { ...state, endDate: value };
     case 'SET_ID':
-      if (isNaN(value)) {
+      if (value === '' || isNaN(value)) {
         const { id: ignored, ...rest } = state;
         return rest;
       }

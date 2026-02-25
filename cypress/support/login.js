@@ -61,9 +61,13 @@ Cypress.Commands.add('loginWithPageSession', () => {
       cy.log(JSON.stringify(kcLoginFields));
       let strategy = null;
 
+      // Get baseUrl from config, or use a default
+      const baseUrl =
+        Cypress.config().baseUrl || 'http://stage.foo.redhat.com:1337';
+
       // TODO: is there a better way to get the strategy??
       for (const index of Object.keys(kcLoginFields)) {
-        if (Cypress.config().baseUrl.includes(index)) {
+        if (baseUrl.includes(index)) {
           cy.log('Baseurl contains: ' + index);
           strategy = index;
           break;

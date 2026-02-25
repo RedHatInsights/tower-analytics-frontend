@@ -1,18 +1,16 @@
-import {
-  Select,
-  SelectOption,
-  SelectOptionObject,
-  SelectVariant,
-} from '@patternfly/react-core/deprecated';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import {
   InputGroup,
   InputGroupItem,
 } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
 import {
   Pagination,
   PaginationVariant,
 } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { Select } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectOption } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectList } from '@patternfly/react-core/dist/dynamic/components/Select';
 import { Skeleton } from '@patternfly/react-core/dist/dynamic/components/Skeleton';
 import {
   TextInputGroup,
@@ -58,6 +56,22 @@ import { BulkSelector } from '../components/BulkSelector';
 import { useBreakpoint } from '../components/useBreakpoint';
 import { PageTableViewType, PageTableViewTypeE } from './PageTableViewType';
 import './PageToolbar.css';
+
+export interface IPageToolbarFilter {
+  label: string;
+  key: string;
+  type?: 'search' | 'filter';
+  options?: {
+    label: string;
+    value: string;
+  }[];
+}
+
+// SelectOptionObject interface for backward compatibility
+export interface SelectOptionObject {
+  toString(): string;
+  compareTo?(selectOption: any): boolean;
+}
 
 export interface IItemFilter<T extends object> {
   label: string;
@@ -225,7 +239,7 @@ export function PageTableToolbar<T extends object>(
       <ToolbarContent>
         {showSelect && (
           <ToolbarGroup>
-            <ToolbarItem variant='bulk-select'>
+            <ToolbarItem>
               <BulkSelector {...props} />
             </ToolbarItem>
           </ToolbarGroup>
@@ -243,6 +257,10 @@ export function PageTableToolbar<T extends object>(
                   onSelect={(_, v) => setSeletedFilter(v.toString())}
                   value={selectedFilter}
                   placeholderText='Select filter'
+                  isDisabled={false}
+                  footer={null}
+                  isCreatable={false}
+                  isGrouped={false}
                 >
                   {toolbarFilters.map((filter) => (
                     <SelectOption key={filter.key} value={filter.key}>
@@ -287,13 +305,13 @@ export function PageTableToolbar<T extends object>(
                   <ToolbarFilter
                     key={filter.label}
                     categoryName={filter.label}
-                    chips={values.map((value) => {
+                    labels={values.map((value) => {
                       return 'options' in filter
                         ? (filter.options.find((o) => o.value === value)
                             ?.label ?? value)
                         : value;
                     })}
-                    deleteChip={(_group, value) => {
+                    deleteLabel={(_group, value) => {
                       setFilters?.((filters) => {
                         //TODO bug here where value is actually select filter option label... need to map
                         const newState = { ...filters };
@@ -310,7 +328,7 @@ export function PageTableToolbar<T extends object>(
                         return newState;
                       });
                     }}
-                    deleteChipGroup={() => {
+                    deleteLabelGroup={() => {
                       setFilters?.((filters) => {
                         const newState = { ...filters };
                         delete newState[filter.key];
@@ -328,7 +346,7 @@ export function PageTableToolbar<T extends object>(
         )}
 
         {/* Action Buttons */}
-        <ToolbarGroup variant='button-group' style={{ zIndex: 302 }}>
+        <ToolbarGroup variant='action-group' style={{ zIndex: 302 }}>
           <PageActions
             actions={toolbarActions}
             selectedItems={selectedItems}
@@ -337,7 +355,7 @@ export function PageTableToolbar<T extends object>(
         </ToolbarGroup>
         <div style={{ flexGrow: 1 }} />
 
-        <ToolbarGroup variant='button-group' style={{ zIndex: 302 }}>
+        <ToolbarGroup variant='action-group' style={{ zIndex: 302 }}>
           {!props.disableColumnManagement &&
             openColumnModal &&
             viewType === 'table' && (
@@ -494,15 +512,14 @@ function ToolbarTextFilter(props: {
           {value !== '' && (
             <TextInputGroupUtilities>
               <Button
+                icon={<TimesIcon />}
                 variant='plain'
                 aria-label='clear filter'
                 onClick={() => setValue('')}
                 style={{ opacity: value ? undefined : 0 }}
                 // tabIndex={value ? undefined : -1}
                 tabIndex={-1}
-              >
-                <TimesIcon />
-              </Button>
+              />
             </TextInputGroupUtilities>
           )}
         </TextInputGroup>
@@ -512,6 +529,7 @@ function ToolbarTextFilter(props: {
         <></>
       ) : (
         <Button
+          icon={<ArrowRightIcon />}
           variant={value ? 'primary' : 'control'}
           aria-label='apply filter'
           onClick={() => {
@@ -519,9 +537,7 @@ function ToolbarTextFilter(props: {
             setValue('');
           }}
           tabIndex={-1}
-        >
-          <ArrowRightIcon />
-        </Button>
+        ></Button>
       )}
     </InputGroup>
   );
@@ -550,28 +566,37 @@ function ToolbarSelectFilter(props: {
   return (
     <>
       <Select
-        variant={SelectVariant.checkbox}
         isOpen={open}
-        onToggle={(_event, val) => setOpen(val)}
-        selections={selections}
+        onOpenChange={(isOpen) => setOpen(isOpen)}
+        selected={selections}
         onSelect={onSelect}
-        placeholderText={
-          values.length ? (
-            'Selected'
-          ) : (
-            <span style={{ opacity: 0.7 }}>{props.placeholder}</span>
-          )
-        }
-      >
-        {options.map((option) => (
-          <SelectOption
-            id={option.value}
-            key={option.value}
-            value={option.value}
+        toggle={(toggleRef) => (
+          <MenuToggle
+            ref={toggleRef}
+            onClick={() => setOpen(!open)}
+            isExpanded={open}
+            isFullWidth
           >
-            {option.label}
-          </SelectOption>
-        ))}
+            {values.length ? (
+              'Selected'
+            ) : (
+              <span style={{ opacity: 0.7 }}>{props.placeholder}</span>
+            )}
+          </MenuToggle>
+        )}
+      >
+        <SelectList>
+          {options.map((option, index) => (
+            <SelectOption
+              id={option.value}
+              key={`${option.value}-${index}`}
+              value={option.value}
+              hasCheckbox
+            >
+              {option.label}
+            </SelectOption>
+          ))}
+        </SelectList>
       </Select>
     </>
   );

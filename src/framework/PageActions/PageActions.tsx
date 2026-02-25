@@ -1,4 +1,3 @@
-import { DropdownPosition } from '@patternfly/react-core/deprecated';
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import {
   Split,
@@ -8,7 +7,7 @@ import React, { ComponentClass, FunctionComponent, useMemo } from 'react';
 import { WindowSize, useBreakpoint } from '../components/useBreakpoint';
 import { IPageAction } from './PageAction';
 import { PageActionType } from './PageActionType';
-import { PageDropdownAction } from './PageDropdownAction';
+import { DropdownPosition, PageDropdownAction } from './PageDropdownAction';
 import { PagePinnedActions } from './PagePinnedActions';
 
 /**
@@ -34,7 +33,7 @@ export function PageActions<T extends object>(props: {
   collapse?: WindowSize | 'always' | 'never';
 
   /** The position for the dropdown */
-  position?: DropdownPosition;
+  position?: (typeof DropdownPosition)[keyof typeof DropdownPosition];
 
   /** Indicates if only to show the icon when not collapsed */
   iconOnly?: boolean;

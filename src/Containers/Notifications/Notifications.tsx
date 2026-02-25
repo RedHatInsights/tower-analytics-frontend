@@ -6,6 +6,7 @@ import { FormSelectOption } from '@patternfly/react-core/dist/dynamic/components
 import { NotificationDrawer } from '@patternfly/react-core/dist/dynamic/components/NotificationDrawer';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
 import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { Pagination } from '@patternfly/react-core/dist/dynamic/components/Pagination';
 import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
 import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
 import React, { FC, useCallback, useEffect, useState } from 'react';
@@ -13,7 +14,6 @@ import styled from 'styled-components';
 import { Params, readClusters, readNotifications } from '../../Api/';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
-import Pagination from '../../Components/Pagination';
 import { useQueryParams } from '../../QueryParams/';
 import useRequest from '../../Utilities/useRequest';
 import { PageHeader } from '../../framework/PageHeader';
@@ -123,11 +123,22 @@ const Notifications: FC<Record<string, never>> = () => {
     fetchNotifications();
   }, [queryParams]);
 
+  const handlePaginationChange = (_event: unknown, page: number) => {
+    const newOffset = (page - 1) * +limit;
+    setFromPagination(newOffset);
+  };
+
+  const handlePerPageChange = (_event: unknown, _perPage: number) => {
+    setFromPagination(0);
+  };
+
+  const currentPage = Math.floor(+offset / +limit) + 1;
+
   return (
     <>
       <PageHeader title={'Notifications'} />
       <>
-        <PageSection>
+        <PageSection hasBodyWrapper={false}>
           <Card>
             <NCardTitle>
               <Flex direction={{ default: 'row' }}>
@@ -178,13 +189,11 @@ const Notifications: FC<Record<string, never>> = () => {
                 </FlexItem>
               </Flex>
               <Pagination
-                count={meta?.count}
-                params={{
-                  limit: +limit,
-                  offset: +offset,
-                }}
-                /* @ts-ignore */
-                setPagination={setFromPagination}
+                itemCount={meta?.count || 0}
+                page={currentPage}
+                perPage={+limit}
+                onSetPage={handlePaginationChange}
+                onPerPageSelect={handlePerPageChange}
                 isCompact
               />
             </NCardTitle>
@@ -199,15 +208,17 @@ const Notifications: FC<Record<string, never>> = () => {
                   />
                 </NotificationDrawer>
               )}
-              {error && <NoData />}
+              {!!error && (
+                <div>
+                  <NoData />
+                </div>
+              )}
               <Pagination
-                count={meta?.count}
-                params={{
-                  limit: +limit,
-                  offset: +offset,
-                }}
-                /* @ts-ignore */
-                setPagination={setFromPagination}
+                itemCount={meta?.count || 0}
+                page={currentPage}
+                perPage={+limit}
+                onSetPage={handlePaginationChange}
+                onPerPageSelect={handlePerPageChange}
                 variant={PaginationVariant.bottom}
               />
             </CardBody>

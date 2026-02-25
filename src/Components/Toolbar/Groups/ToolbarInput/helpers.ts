@@ -10,7 +10,7 @@ export const handleCheckboxChips = (
   if (item && comparator) {
     return item.reduce((acc: string[], i) => {
       comparator.forEach(({ key, value }) => {
-        if (key === i) {
+        if (key === i && value) {
           acc.push(value);
         }
       });

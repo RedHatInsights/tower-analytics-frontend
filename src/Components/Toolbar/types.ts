@@ -1,5 +1,10 @@
-import { SelectOptionObject } from '@patternfly/react-core/deprecated';
 import { Endpoint, OptionsReturnType, Params } from '../../Api';
+
+// SelectOptionObject interface for backward compatibility
+export interface SelectOptionObject {
+  toString(): string;
+  compareTo?(selectOption: any): boolean;
+}
 
 export type AttributeType =
   | string
@@ -8,11 +13,13 @@ export type AttributeType =
   | SelectOptionObject[]
   | boolean;
 
-export interface SelectOptionProps {
-  value: string;
-  description: string;
-  key: string;
-}
+export type SelectOptionProps = {
+  key?: string;
+  value?: string;
+  description?: string;
+  isDisabled?: boolean;
+  [key: string]: any;
+};
 
 export type SetValue = (value: AttributeType | null) => void;
 export type SetValues = (

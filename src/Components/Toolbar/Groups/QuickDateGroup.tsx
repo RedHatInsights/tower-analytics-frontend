@@ -1,11 +1,10 @@
-import { SelectOptionProps } from '@patternfly/react-core/deprecated';
 import { ToolbarGroupVariant } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { ToolbarGroup } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { SplitItem } from '@patternfly/react-core/dist/dynamic/layouts/Split';
 import { Split } from '@patternfly/react-core/dist/dynamic/layouts/Split';
 import React, { FunctionComponent } from 'react';
 import { today } from '../../../Utilities/helpers';
-import { AttributeType, SetValues } from '../types';
+import { AttributeType, SelectOptionProps, SetValues } from '../types';
 import ToolbarInput from './ToolbarInput';
 
 const getDateByDays = (days: number): string =>

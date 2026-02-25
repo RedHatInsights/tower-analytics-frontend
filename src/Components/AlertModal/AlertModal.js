@@ -1,5 +1,5 @@
-import { Modal } from '@patternfly/react-core/dist/dynamic/components/Modal';
 import { Title } from '@patternfly/react-core/dist/dynamic/components/Title';
+import { Modal } from '@patternfly/react-core/dist/dynamic/deprecated/components/Modal';
 import PFCheckCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/check-circle-icon';
 import PFExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
 import PFExclamationTriangleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-triangle-icon';
@@ -10,23 +10,23 @@ import React from 'react';
 import styled from 'styled-components';
 
 const ExclamationCircleIcon = styled(PFExclamationCircleIcon)`
-  color: var(--pf-global--danger-color--100);
+  color: var(--pf-t--global--color--status--danger--default);
 `;
 
 const TimesCircleIcon = styled(PFTimesCircleIcon)`
-  color: var(--pf-global--danger-color--100);
+  color: var(--pf-t--global--color--status--danger--default);
 `;
 
 const InfoCircleIcon = styled(PFInfoCircleIcon)`
-  color: var(--pf-global--info-color--100);
+  color: var(--pf-t--global--color--status--info--default);
 `;
 
 const CheckCircleIcon = styled(PFCheckCircleIcon)`
-  color: var(--pf-global--success-color--100);
+  color: var(--pf-t--global--color--status--success--default);
 `;
 
 const ExclamationTriangleIcon = styled(PFExclamationTriangleIcon)`
-  color: var(--pf-global--warning-color--100);
+  color: var(--pf-t--global--color--status--warning--default);
 `;
 
 const Header = styled.div`

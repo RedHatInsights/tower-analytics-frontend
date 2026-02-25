@@ -1,8 +1,3 @@
-import {
-  Dropdown,
-  DropdownItem,
-  KebabToggle,
-} from '@patternfly/react-core/deprecated';
 import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
 import {
   Card,
@@ -11,9 +6,14 @@ import {
   CardHeader,
 } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { Checkbox } from '@patternfly/react-core/dist/dynamic/components/Checkbox';
+import { Dropdown } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
+import { DropdownItem } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
+import { DropdownList } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
 import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
 import { TooltipPosition } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
+import EllipsisVIcon from '@patternfly/react-icons/dist/dynamic/icons/ellipsis-v-icon';
 import ExclamationCircleIcon from '@patternfly/react-icons/dist/dynamic/icons/exclamation-circle-icon';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
@@ -142,17 +142,23 @@ const ListItem = ({
                 actions: (
                   <>
                     <Dropdown
-                      onSelect={() => {}}
-                      toggle={
-                        <KebabToggle
-                          onToggle={() => setIsCardKebabOpen(!isCardKebabOpen)}
-                        />
-                      }
+                      onSelect={() => setIsCardKebabOpen(false)}
+                      toggle={(toggleRef) => (
+                        <MenuToggle
+                          ref={toggleRef}
+                          variant='plain'
+                          onClick={() => setIsCardKebabOpen(!isCardKebabOpen)}
+                          isExpanded={isCardKebabOpen}
+                          aria-label='Card actions'
+                        >
+                          <EllipsisVIcon />
+                        </MenuToggle>
+                      )}
                       isOpen={isCardKebabOpen}
-                      isPlain
-                      dropdownItems={kebabDropDownItems}
-                      position={'right'}
-                    />
+                      popperProps={{ position: 'right' }}
+                    >
+                      <DropdownList>{kebabDropDownItems}</DropdownList>
+                    </Dropdown>
                     <SCheckbox
                       onChange={() => handleSelect(plan.id)}
                       isChecked={selected.includes(plan.id)}

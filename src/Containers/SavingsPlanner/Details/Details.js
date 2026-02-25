@@ -84,7 +84,7 @@ const Details = () => {
       {dataSuccess && (
         <>
           <PageHeader breadcrumbs={breadcrumbsItems} title={pageTitle} />
-          <PageSection>
+          <PageSection hasBodyWrapper={false}>
             <Card>
               {location.pathname.includes('edit') && (
                 <SavingsPlanEdit data={plan} />

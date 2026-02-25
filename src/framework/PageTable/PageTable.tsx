@@ -1,12 +1,9 @@
-import { DropdownPosition } from '@patternfly/react-core/deprecated';
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import {
   EmptyState,
   EmptyStateActions,
   EmptyStateBody,
   EmptyStateFooter,
-  EmptyStateHeader,
-  EmptyStateIcon,
   EmptyStateVariant,
 } from '@patternfly/react-core/dist/dynamic/components/EmptyState';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
@@ -54,6 +51,12 @@ import { PageTableCards } from './PageTableCards';
 import { PageTableList } from './PageTableList';
 import { PageTableViewType, PageTableViewTypeE } from './PageTableViewType';
 import { IToolbarFilter, PageTableToolbar } from './PageToolbar';
+
+// DropdownPosition for backward compatibility
+const DropdownPosition = {
+  right: 'right',
+  left: 'left',
+} as const;
 
 export type PageTableProps<T extends object> = {
   keyFn: (item: T) => string | number;
@@ -167,22 +170,18 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
   if (error) {
     return (
       <div className='dark-2' style={{ height: '100%' }}>
-        <EmptyState variant={EmptyStateVariant.sm} style={{ paddingTop: 48 }}>
-          <EmptyStateHeader
-            titleText={
-              <>
-                {/* Unable to connect */}
-                {props.errorStateTitle}
-              </>
-            }
-            icon={
-              <EmptyStateIcon
-                icon={ExclamationCircleIcon}
-                color='var(--pf-global--danger-color--100)'
-              />
-            }
-            headingLevel='h2'
-          />
+        <EmptyState
+          headingLevel='h2'
+          icon={ExclamationCircleIcon}
+          titleText={
+            <>
+              {/* Unable to connect */}
+              {props.errorStateTitle}
+            </>
+          }
+          variant={EmptyStateVariant.sm}
+          style={{ paddingTop: 48 }}
+        >
           {/* <EmptyStateBody>There was an error retrieving data. Check your connection and reload the page.</EmptyStateBody> */}
           <EmptyStateBody>{error.message}</EmptyStateBody>
         </EmptyState>
@@ -192,15 +191,14 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
 
   if (itemCount === 0 && Object.keys(filters ?? {}).length === 0) {
     return (
-      <PageSection>
-        <EmptyState variant={EmptyStateVariant.lg} style={{ paddingTop: 48 }}>
-          <EmptyStateHeader
-            titleText={<>{props.emptyStateTitle}</>}
-            icon={
-              <EmptyStateIcon icon={props.emptyStateIcon ?? PlusCircleIcon} />
-            }
-            headingLevel='h4'
-          />
+      <PageSection hasBodyWrapper={false}>
+        <EmptyState
+          headingLevel='h4'
+          icon={props.emptyStateIcon ?? PlusCircleIcon}
+          titleText={<>{props.emptyStateTitle}</>}
+          variant={EmptyStateVariant.lg}
+          style={{ paddingTop: 48 }}
+        >
           <EmptyStateFooter>
             {props.emptyStateDescription && (
               <EmptyStateBody>{props.emptyStateDescription}</EmptyStateBody>
@@ -224,7 +222,7 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
 
   if (itemCount === undefined) {
     return (
-      <PageSection isFilled variant='light'>
+      <PageSection hasBodyWrapper={false} isFilled>
         <Bullseye>
           <Spinner />
         </Bullseye>
@@ -248,14 +246,17 @@ export function PageTable<T extends object>(props: PageTableProps<T>) {
       )}
       {viewType === PageTableViewTypeE.List && (
         <Scrollable>
-          <PageSection padding={{ default: 'noPadding', md: 'padding' }}>
+          <PageSection
+            hasBodyWrapper={false}
+            padding={{ default: 'noPadding', md: 'padding' }}
+          >
             <div
               style={{
                 borderLeft: usePadding
-                  ? 'thin solid var(--pf-global--BorderColor--100)'
+                  ? 'thin solid var(--pf-t--global--border--color--100)'
                   : undefined,
                 borderRight: usePadding
-                  ? 'thin solid var(--pf-global--BorderColor--100)'
+                  ? 'thin solid var(--pf-t--global--border--color--100)'
                   : undefined,
               }}
             >
@@ -331,7 +332,7 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
 
   return (
     <div
-      className='pf-v5-c-scroll-inner-wrapper'
+      className='pf-v6-c-scroll-inner-wrapper'
       style={{ height: '100%', marginBottom: -1 }}
       ref={containerRef}
       onScroll={onScroll}
@@ -406,12 +407,12 @@ function PageTableView<T extends object>(props: PageTableProps<T>) {
         </Tbody>
       </Table>
       {itemCount === 0 && (
-        <EmptyState style={{ paddingTop: 48 }}>
-          <EmptyStateHeader
-            titleText={<>No results found</>}
-            icon={<EmptyStateIcon icon={SearchIcon} />}
-            headingLevel='h2'
-          />
+        <EmptyState
+          headingLevel='h2'
+          icon={SearchIcon}
+          titleText={<>No results found</>}
+          style={{ paddingTop: 48 }}
+        >
           <EmptyStateBody>
             No results match this filter criteria. Clear all filters and try
             again.
@@ -798,39 +799,45 @@ export enum TableColumnCardType {
   'count',
 }
 
-export interface ITableColumnTypeReactNode<T extends object>
-  extends ITableColumnCommon<T> {
+export interface ITableColumnTypeReactNode<
+  T extends object,
+> extends ITableColumnCommon<T> {
   type?: undefined;
   value?: CellFn<T, string | string[] | number | boolean>;
   cell: CellFn<T, ReactNode | undefined>;
 }
 
-export interface ITableColumnTypeCount<T extends object>
-  extends ITableColumnCommon<T> {
+export interface ITableColumnTypeCount<
+  T extends object,
+> extends ITableColumnCommon<T> {
   type: 'count';
   value: CellFn<T, number | undefined>;
 }
 
-export interface ITableColumnTypeLabels<T extends object>
-  extends ITableColumnCommon<T> {
+export interface ITableColumnTypeLabels<
+  T extends object,
+> extends ITableColumnCommon<T> {
   type: 'labels';
   value: CellFn<T, string[] | undefined>;
 }
 
-export interface ITableColumnTypeDateTime<T extends object>
-  extends ITableColumnCommon<T> {
+export interface ITableColumnTypeDateTime<
+  T extends object,
+> extends ITableColumnCommon<T> {
   type: 'datetime';
   value: CellFn<T, number | string | undefined>;
 }
 
-export interface ITableColumnTypeDescription<T extends object>
-  extends ITableColumnCommon<T> {
+export interface ITableColumnTypeDescription<
+  T extends object,
+> extends ITableColumnCommon<T> {
   type: 'description';
   value: CellFn<T, string | undefined | null>;
 }
 
-export interface ITableColumnTypeText<T extends object>
-  extends ITableColumnCommon<T> {
+export interface ITableColumnTypeText<
+  T extends object,
+> extends ITableColumnCommon<T> {
   type: 'text';
   value: CellFn<T, string | null | undefined>;
 }

@@ -11,8 +11,8 @@ import NoData from '../../Components/ApiStatus/NoData';
 import { trimStr } from '../../Utilities/helpers';
 
 const MLDataListCell = styled(DataListCell)`
-  --pf-c-data-list__cell-cell--MarginRight: 0;
-  --pf-c-data-list__cell--PaddingBottom: 10px;
+  --pf-v6-c-data-list__cell-cell--MarginRight: 0;
+  --pf-v6-c-data-list__cell--PaddingBottom: 10px;
 `;
 
 const MLDataListItem = styled(DataListItem)`

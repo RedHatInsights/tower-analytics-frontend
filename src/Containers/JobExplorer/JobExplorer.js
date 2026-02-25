@@ -13,11 +13,11 @@ import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { ExpandableRowContent } from '@patternfly/react-table';
 import {
-  global_palette_black_400,
-  global_palette_blue_300,
-  global_palette_gold_300,
-  global_palette_green_300,
-  global_palette_red_100,
+  t_chart_color_black_400 as global_palette_black_400,
+  t_chart_color_blue_300 as global_palette_blue_300,
+  t_chart_color_orange_300 as global_palette_gold_300,
+  t_chart_color_green_300 as global_palette_green_300,
+  t_chart_color_red_orange_300 as global_palette_red_100,
 } from '@patternfly/react-tokens';
 import React, { useEffect, useState } from 'react';
 import { readJobExplorer, readJobExplorerOptions } from '../../Api/';
@@ -275,7 +275,7 @@ const JobExplorer = () => {
   return (
     <React.Fragment>
       <PageHeader title={'Job Explorer'} />
-      <PageSection>
+      <PageSection hasBodyWrapper={false}>
         <Card>
           <CardBody>
             <FilterableToolbar

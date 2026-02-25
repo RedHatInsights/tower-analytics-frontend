@@ -1,7 +1,6 @@
-import { SelectOptionProps } from '@patternfly/react-core/deprecated';
 import React, { FunctionComponent } from 'react';
 import { optionsForCategories } from '../../constants';
-import { AttributeType, SetValue } from '../../types';
+import { AttributeType, SelectOptionProps, SetValue } from '../../types';
 import DateInput from './Date';
 import Select from './Select';
 import Text from './Text';

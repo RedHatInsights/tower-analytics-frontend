@@ -33,7 +33,7 @@ const CalculationCost: FunctionComponent<Props> = ({
         Manual cost of automation
         <span
           style={{
-            color: 'var(--pf-global--Color--dark-200)',
+            color: 'var(--pf-t--global--text--color--200)',
             fontSize: '0.8em',
             display: 'block',
           }}

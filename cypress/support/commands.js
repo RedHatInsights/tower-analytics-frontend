@@ -167,10 +167,7 @@ Cypress.Commands.add('visitReport', (pageName) => {
           Cypress.config().baseUrl + reportsUrl + '/' + page.name,
         );
         cy.visit(Cypress.config().baseUrl + reportsUrl + '/' + page.name);
-        cy.url().should(
-          'eq',
-          Cypress.config().baseUrl + reportsUrl + '/' + page.name,
-        );
+        cy.url().should('include', reportsUrl + '/' + page.name);
         cy.getByCy('loading').should('not.exist');
         cy.getByCy('api_error_state').should('not.exist');
         cy.getByCy('api_loading_state').should('not.exist');
@@ -210,7 +207,7 @@ Cypress.Commands.add('waitSpinner', () => {
 
 Cypress.Commands.add('tableShowAll', () => {
   cy.get('#table-kebab').click();
-  cy.get('.pf-v5-c-dropdown__menu.pf-m-align-right')
+  cy.get('.pf-v6-c-menu.pf-m-align-right')
     .find('button')
     .contains('Show all')
     .click();
@@ -220,10 +217,67 @@ Cypress.Commands.add('tableShowAll', () => {
 
 Cypress.Commands.add('tableHideAll', () => {
   cy.get('#table-kebab').click();
-  cy.get('.pf-v5-c-dropdown__menu.pf-m-align-right')
+  cy.get('.pf-v6-c-menu.pf-m-align-right')
     .find('button')
     .contains('Hide all')
     .click();
   cy.get('#table-kebab').click();
   cy.waitSpinner();
+});
+
+/**
+ * Wait for PatternFly 6 Select menu to be visible and ready for interaction
+ *
+ * Example usage:
+ * cy.waitForPF6Select('[data-cy="my-select"]')
+ *
+ * @param {String} selector - The selector for the select component
+ */
+Cypress.Commands.add('waitForPF6Select', (selector) => {
+  cy.get(selector).should('be.visible').and('not.be.disabled');
+});
+
+/**
+ * Select an option from a PatternFly 6 Select component
+ *
+ * Example usage:
+ * cy.selectPF6Option('[data-cy="my-select"]', 'Option Text')
+ *
+ * @param {String} toggleSelector - The selector for the select toggle
+ * @param {String} optionText - The text of the option to select
+ */
+Cypress.Commands.add('selectPF6Option', (toggleSelector, optionText) => {
+  cy.get(toggleSelector).click();
+  cy.get('.pf-v6-c-menu__list')
+    .should('be.visible')
+    .contains(optionText)
+    .click();
+});
+
+/**
+ * Verify that a PatternFly 6 component is in an empty state
+ *
+ * Example usage:
+ * cy.verifyPF6EmptyState('No data available')
+ *
+ * @param {String} expectedMessage - Optional message to verify in empty state
+ */
+Cypress.Commands.add('verifyPF6EmptyState', (expectedMessage) => {
+  cy.get('.pf-v6-c-empty-state__content').should('be.visible');
+  if (expectedMessage) {
+    cy.get('.pf-v6-c-empty-state__content').should('contain', expectedMessage);
+  }
+});
+
+/**
+ * Wait for all loading states to complete
+ *
+ * Example usage:
+ * cy.waitForPageLoad()
+ */
+Cypress.Commands.add('waitForPageLoad', () => {
+  cy.getByCy('loading', { timeout: 15000 }).should('not.exist');
+  cy.getByCy('spinner', { timeout: 15000 }).should('not.exist');
+  cy.getByCy('api_loading_state', { timeout: 15000 }).should('not.exist');
+  cy.getByCy('api_error_state').should('not.exist');
 });
