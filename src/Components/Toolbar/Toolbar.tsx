@@ -66,7 +66,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
 
   return (
     <Toolbar
-      className='pf-m-toggle-group-container'
+      className='pf-v6-c-toolbar'
       clearAllFilters={() => setFilters(null, null)}
       collapseListedFiltersBreakpoint='xl'
       data-cy={'filter-toolbar'}

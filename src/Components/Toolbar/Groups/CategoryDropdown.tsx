@@ -22,6 +22,9 @@ const CategoryDropdown: FunctionComponent<Props> = ({
   categories = [],
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const selectedCategory = categories.find(({ key }) => key === selected);
+  const displayText = selectedCategory?.name || 'Filter by';
+
   return (
     <ToolbarItem data-cy={categoryKey}>
       <Select
@@ -40,7 +43,7 @@ const CategoryDropdown: FunctionComponent<Props> = ({
             isExpanded={isExpanded}
             isFullWidth
           >
-            {selected || 'Filter by'}
+            {displayText}
           </MenuToggle>
         )}
       >

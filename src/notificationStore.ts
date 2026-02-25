@@ -12,8 +12,8 @@
  * - Import { addNotification, removeNotification } from this file
  * - Call directly: addNotification({ title: '...', variant: 'success' })
  */
-import NotificationsStore from '@redhat-cloud-services/frontend-components-notifications/NotificationsStore';
-import createStore from '@redhat-cloud-services/frontend-components-notifications/createStore';
+import type { NotificationsStore } from '@redhat-cloud-services/frontend-components-notifications/state';
+import { createStore } from '@redhat-cloud-services/frontend-components-notifications/state';
 
 // Global notification store instance
 export const notificationStore: NotificationsStore = createStore();

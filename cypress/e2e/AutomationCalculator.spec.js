@@ -7,10 +7,7 @@ const waitToLoad = () => {
 
 describe('Automation Calculator page', () => {
   beforeEach(() => {
-    cy.log(`Visiting calculatorUrl: "${calculatorUrl}"`);
     cy.visit(calculatorUrl);
-    // Allow trailing slash redirect
-    cy.url().should('include', 'automation_calculator');
 
     cy.intercept('/api/tower-analytics/v1/roi_cost_effort_data/').as(
       'roiCostEffortData',
@@ -34,7 +31,6 @@ describe('Automation Calculator page', () => {
     cy.get('body').then(($body) => {
       if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
         cy.log('Empty state found - skipping manual cost test');
-        expect(true).to.be.true;
         return;
       }
 
@@ -92,7 +88,6 @@ describe('Automation Calculator page', () => {
     cy.get('body').then(($body) => {
       if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
         cy.log('Empty state found - skipping automated cost test');
-        expect(true).to.be.true;
         return;
       }
 

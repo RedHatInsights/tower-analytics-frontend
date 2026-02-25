@@ -1,6 +1,7 @@
 // TODO: The component converts all types to string.
 // It should be able to use the correct type in the future for example number and number[].
 import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
+import { Select as PFSelect } from '@patternfly/react-core/dist/dynamic/components/Select';
 import { SelectOption } from '@patternfly/react-core/dist/dynamic/components/Select';
 import { SelectList } from '@patternfly/react-core/dist/dynamic/components/Select';
 import {
@@ -8,7 +9,6 @@ import {
   ToolbarLabel,
 } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
-import { PFSelect } from 'false';
 import React, { FunctionComponent, useState } from 'react';
 import styled from 'styled-components';
 import { optionsForCategories } from '../../constants';
@@ -28,7 +28,7 @@ const OptionSpan = styled('span')`
   max-width: 300px;
 `;
 
-interface Props {
+interface SelectProps {
   categoryKey: string;
   value: AttributeType;
   selectOptions: SelectOptionProps[];
@@ -36,7 +36,11 @@ interface Props {
   setValue: SetValue;
 }
 
-const renderValues = (values: SelectOptionProps[], isMultiSelect: boolean) =>
+const renderValues = (
+  values: SelectOptionProps[],
+  isMultiSelect: boolean,
+  selectedValues: string[],
+) =>
   values &&
   values.map(({ key, value, description }) => (
     <SelectOption
@@ -45,6 +49,9 @@ const renderValues = (values: SelectOptionProps[], isMultiSelect: boolean) =>
       description={description}
       data-cy={key}
       hasCheckbox={isMultiSelect}
+      isSelected={
+        isMultiSelect ? selectedValues.includes(key as string) : undefined
+      }
     >
       <Tooltip content={<div>{value}</div>}>
         <OptionSpan>{value}</OptionSpan>
@@ -52,7 +59,7 @@ const renderValues = (values: SelectOptionProps[], isMultiSelect: boolean) =>
     </SelectOption>
   ));
 
-const Select: FunctionComponent<Props> = ({
+const Select: FunctionComponent<SelectProps> = ({
   categoryKey,
   value,
   selectOptions: nonTypedSelectOptions,
@@ -89,14 +96,17 @@ const Select: FunctionComponent<Props> = ({
 
   const _onFilter = (_: unknown, textInput: string) => {
     const isMultiSelect = Array.isArray(value);
-    if (textInput === '') return renderValues(selectOptions, isMultiSelect);
+    const selectedValues = isMultiSelect ? (value as string[]).map(String) : [];
+    if (textInput === '')
+      return renderValues(selectOptions, isMultiSelect, selectedValues);
     return renderValues(
       selectOptionsMasterCopy
         .filter(({ value }) =>
-          value.toString().toLowerCase().includes(textInput.toLowerCase()),
+          value?.toString().toLowerCase().includes(textInput.toLowerCase()),
         )
         .slice(0, 50),
       isMultiSelect,
+      selectedValues,
     );
   };
 
@@ -114,6 +124,17 @@ const Select: FunctionComponent<Props> = ({
     return handleSingleChips(value.toString(), selectOptions);
   };
 
+  const getToggleText = (): string => {
+    // For filters without chips, show the selected value in the toggle
+    if (!options.hasChips && value && !Array.isArray(value)) {
+      const selectedOption = selectOptionsMasterCopy.find(
+        ({ key }) => key === value.toString(),
+      );
+      return selectedOption?.value || options.placeholder || '';
+    }
+    return options.placeholder || '';
+  };
+
   const onSelect = (_: unknown, selection: SelectOptionObject | string) => {
     if (Array.isArray(value)) {
       const stringValues: string[] = value.map((i) => i.toString());
@@ -122,11 +143,15 @@ const Select: FunctionComponent<Props> = ({
           ? [...stringValues, selection]
           : stringValues.filter((item) => item !== selection.toString()),
       );
+      // Keep dropdown open for multi-select - don't call setExpanded(false)
     } else {
       setValue(selection);
       setExpanded(false);
     }
   };
+
+  const isMultiSelect = Array.isArray(value);
+  const selectedValues = isMultiSelect ? (value as string[]).map(String) : [];
 
   return (
     <ToolbarFilter
@@ -150,17 +175,17 @@ const Select: FunctionComponent<Props> = ({
             onClick={() => setExpanded(!expanded)}
             isExpanded={expanded}
           >
-            {options.placeholder}
+            {getToggleText()}
           </MenuToggle>
         )}
         onSelect={onSelect}
-        selected={value}
+        selected={isMultiSelect ? selectedValues : value}
         isOpen={expanded}
-        onOpenChange={(isOpen) => setExpanded(isOpen)}
+        onOpenChange={setExpanded}
         maxMenuHeight={'1000%'}
       >
         <SelectList>
-          {renderValues(selectOptions, Array.isArray(value))}
+          {renderValues(selectOptions, isMultiSelect, selectedValues)}
         </SelectList>
       </PFSelect>
     </ToolbarFilter>

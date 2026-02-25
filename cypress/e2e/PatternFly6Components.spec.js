@@ -21,10 +21,6 @@ describe('PatternFly 6 Components Verification', () => {
       } else {
         cy.log('✗ No PatternFly 6 classes found');
       }
-
-      if (html.includes('pf-v5-c-')) {
-        cy.log('⚠ PatternFly 5 classes still present');
-      }
     });
 
     // Verify dropdown component renders
@@ -46,13 +42,11 @@ describe('PatternFly 6 Components Verification', () => {
       // Check for different possible menu structures
       const hasRoleMenu = $body.find('[role="menu"]').length > 0;
       const hasV6Menu = $body.find('.pf-v6-c-menu').length > 0;
-      const hasV5Menu = $body.find('.pf-v5-c-menu').length > 0;
       const hasDropdownList = $body.find('[class*="DropdownList"]').length > 0;
 
       cy.log('Menu structure detected:');
       cy.log('- [role="menu"]:', hasRoleMenu);
       cy.log('- .pf-v6-c-menu:', hasV6Menu);
-      cy.log('- .pf-v5-c-menu:', hasV5Menu);
       cy.log('- DropdownList:', hasDropdownList);
 
       if (hasRoleMenu) {
@@ -70,11 +64,9 @@ describe('PatternFly 6 Components Verification', () => {
     // Look for switch toggles
     cy.get('body').then(($body) => {
       const hasV6Switch = $body.find('.pf-v6-c-switch__toggle').length > 0;
-      const hasV5Switch = $body.find('.pf-v5-c-switch__toggle').length > 0;
 
       cy.log('Switch components:');
       cy.log('- PF6 switches (.pf-v6-c-switch__toggle):', hasV6Switch);
-      cy.log('- PF5 switches (.pf-v5-c-switch__toggle):', hasV5Switch);
     });
   });
 
@@ -86,11 +78,9 @@ describe('PatternFly 6 Components Verification', () => {
 
     cy.get('body').then(($body) => {
       const hasV6EmptyState = $body.find('.pf-v6-c-empty-state').length > 0;
-      const hasV5EmptyState = $body.find('.pf-v5-c-empty-state').length > 0;
 
       cy.log('Empty state components:');
       cy.log('- PF6 empty states (.pf-v6-c-empty-state):', hasV6EmptyState);
-      cy.log('- PF5 empty states (.pf-v5-c-empty-state):', hasV5EmptyState);
     });
   });
 });

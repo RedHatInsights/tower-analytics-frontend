@@ -1,7 +1,7 @@
 import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
 import { Select } from '@patternfly/react-core/dist/dynamic/components/Select';
 import { SelectList } from '@patternfly/react-core/dist/dynamic/components/Select';
-import React, { useCallback, useState } from 'react';
+import React, { ReactElement, useCallback, useState } from 'react';
 import { PageFormGroup, PageFormGroupProps } from './PageFormGroup';
 
 // SelectVariant enum for backward compatibility

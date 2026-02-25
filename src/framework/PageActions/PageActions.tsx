@@ -7,7 +7,7 @@ import React, { ComponentClass, FunctionComponent, useMemo } from 'react';
 import { WindowSize, useBreakpoint } from '../components/useBreakpoint';
 import { IPageAction } from './PageAction';
 import { PageActionType } from './PageActionType';
-import { PageDropdownAction } from './PageDropdownAction';
+import { DropdownPosition, PageDropdownAction } from './PageDropdownAction';
 import { PagePinnedActions } from './PagePinnedActions';
 
 /**

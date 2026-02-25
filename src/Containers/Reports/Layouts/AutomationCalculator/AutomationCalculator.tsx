@@ -11,7 +11,7 @@ import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { Stack } from '@patternfly/react-core/dist/dynamic/layouts/Stack';
 import { StackItem } from '@patternfly/react-core/dist/dynamic/layouts/Stack';
-import useAddNotification from '@redhat-cloud-services/frontend-components-notifications/useAddNotification';
+import { useAddNotification } from '@redhat-cloud-services/frontend-components-notifications/hooks';
 import React, { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
