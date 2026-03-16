@@ -21,7 +21,7 @@ objects:
       title: Automation Analytics
       deploymentRepo: https://github.com/RedHatInsights/tower-analytics-frontend
       image: ${IMAGE}:${IMAGE_TAG}
-      # feoConfigEnabled: true
+      feoConfigEnabled: true
 
       # Frontend assets configuration
       frontend:
