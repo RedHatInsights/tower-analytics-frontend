@@ -44,6 +44,9 @@ objects:
               - pathname: /ansible/automation-analytics
                 props:
                   bundle: ansible
+        analytics:
+          APIKey: BjaG2zdY7M331DPuCBxeOeyLOosk6Gg5
+          APIKeyDev: TeMTzVmb6rAapQP4HLOYcCyRzlAEELA1
 
       # Navigation bundle segment for Ansible bundle
       bundleSegments:
