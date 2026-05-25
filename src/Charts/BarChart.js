@@ -7,6 +7,11 @@ import { formatDate } from '../Utilities/helpers';
 import { Paths } from '../paths';
 import initializeChart from './BaseChart';
 import Tooltip from './Utilities/Tooltip';
+import {
+  chartDangerColor,
+  chartGridColor,
+  chartSuccessColor,
+} from './Utilities/chartTheme';
 
 class BarChart extends Component {
   constructor(props) {
@@ -91,7 +96,7 @@ class BarChart extends Component {
           ')',
       );
     //[fail, success]
-    let colors = d3.scaleOrdinal(['#6EC664', '#A30000']);
+    let colors = d3.scaleOrdinal([chartSuccessColor(), chartDangerColor()]);
 
     const barTooltip = new Tooltip({
       svg: '#' + this.props.id,
@@ -116,11 +121,12 @@ class BarChart extends Component {
       .attr('class', 'y-axis')
       .call(d3.axisLeft(y).tickSize(-width, 0, 0))
       .selectAll('line')
-      .attr('stroke', '#d7d7d7');
+      .attr('stroke', chartGridColor());
     svg.selectAll('.y-axis .tick text').attr('x', -5);
     // text label for the y axis
     svg
       .append('text')
+      .attr('class', 'y-axis')
       .attr('transform', 'rotate(-90)')
       .attr('y', 0 - this.props.margin.left)
       .attr('x', 0 - height / 2)
@@ -145,12 +151,13 @@ class BarChart extends Component {
         d3.axisBottom(x).tickValues(ticks).tickFormat(d3.timeFormat('%-m/%-d')), // "1/19"
       )
       .selectAll('line')
-      .attr('stroke', '#d7d7d7');
+      .attr('stroke', chartGridColor());
     svg.selectAll('.x-axis .tick text').attr('y', 10);
 
     // text label for the x axis
     svg
       .append('text')
+      .attr('class', 'x-axis')
       .attr(
         'transform',
         'translate(' +

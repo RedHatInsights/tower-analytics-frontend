@@ -17,7 +17,7 @@ import paths from '../../paths';
 const Small = styled.small`
   display: block;
   margin-bottom: 10px;
-  color: #6a6e73;
+  color: inherit;
   white-space: pre-line;
 `;
 

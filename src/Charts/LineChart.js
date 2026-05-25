@@ -7,6 +7,13 @@ import { formatDate } from '../Utilities/helpers';
 import { Paths } from '../paths';
 import initializeChart from './BaseChart';
 import Tooltip from './Utilities/Tooltip';
+import {
+  chartDangerColor,
+  chartGridColor,
+  chartInfoColor,
+  chartSuccessColor,
+  chartText,
+} from './Utilities/chartTheme';
 
 class LineChart extends Component {
   constructor(props) {
@@ -82,7 +89,11 @@ class LineChart extends Component {
     const y = d3.scaleLinear().range([height, 0]);
 
     //[success, fail, total]
-    let colors = d3.scaleOrdinal(['#6EC664', '#A30000', '#06C']);
+    let colors = d3.scaleOrdinal([
+      chartSuccessColor(),
+      chartDangerColor(),
+      chartInfoColor(),
+    ]);
     const svg = d3
       .select('#' + this.props.id)
       .append('svg')
@@ -155,12 +166,13 @@ class LineChart extends Component {
       .attr('class', 'y-axis')
       .call(d3.axisLeft(y).ticks(10).tickSize(-width))
       .selectAll('line')
-      .attr('stroke', '#d7d7d7');
+      .attr('stroke', chartGridColor());
     svg.selectAll('.y-axis .tick text').attr('x', -5);
 
     // text label for the y axis
     svg
       .append('text')
+      .attr('class', 'y-axis')
       .attr('transform', 'rotate(-90)')
       .attr('y', 0 - this.props.margin.left)
       .attr('x', 0 - height / 2)
@@ -189,12 +201,13 @@ class LineChart extends Component {
           .tickFormat(d3.timeFormat('%-m/%-d')), // "1/19"
       ) // "Jan-01"
       .selectAll('line')
-      .attr('stroke', '#d7d7d7');
+      .attr('stroke', chartGridColor());
     svg.selectAll('.x-axis .tick text').attr('y', 10);
 
     // text label for the x axis
     svg
       .append('text')
+      .attr('class', 'x-axis')
       .attr(
         'transform',
         'translate(' +
@@ -208,7 +221,7 @@ class LineChart extends Component {
     const vertical = svg
       .append('path')
       .attr('class', 'mouse-line')
-      .style('stroke', 'black')
+      .style('stroke', chartText())
       .style('stroke-width', '3px')
       .style('stroke-dasharray', '3, 3')
       .style('opacity', '0');

@@ -25,7 +25,7 @@ const TotalSavings: FunctionComponent<Props> = ({
         style={{
           color: isMoney
             ? 'var(--pf-t--global--color--status--success--200)'
-            : '#0063CF',
+            : 'var(--pf-t--global--color--status--info--default)',
         }}
       >
         {isMoney ? `${currencyFormatter(value)}` : `${hoursFormatter(value)}`}

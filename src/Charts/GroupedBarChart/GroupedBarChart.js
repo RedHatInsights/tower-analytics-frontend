@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import initializeChart from '.././BaseChart';
 import Legend from '../Utilities/Legend';
+import { chartGridColor } from '../Utilities/chartTheme';
 
 const Wrapper = styled.div`
   display: flex;
@@ -106,7 +107,7 @@ const GroupedBarChart = ({
       .attr('class', 'y axis')
       .call(yAxis)
       .selectAll('line')
-      .attr('stroke', '#d7d7d7')
+      .attr('stroke', chartGridColor())
       .append('text')
       .attr('transform', 'rotate(-90)')
       .attr('y', 6)
@@ -116,6 +117,7 @@ const GroupedBarChart = ({
       .text('Value');
     svg
       .append('text')
+      .attr('class', 'y axis')
       .attr('transform', 'rotate(-90)')
       .attr('y', 0 - props.margin.left)
       .attr('x', 0 - height / 2)
@@ -130,9 +132,10 @@ const GroupedBarChart = ({
       .attr('transform', 'translate(0,' + height + ')')
       .call(xAxis)
       .selectAll('line')
-      .attr('stroke', '#d7d7d7');
+      .attr('stroke', chartGridColor());
     svg
       .append('text')
+      .attr('class', 'x axis')
       .attr(
         'transform',
         'translate(' +

@@ -189,7 +189,10 @@ const List: FunctionComponent<Record<string, never>> = () => {
                                     icon={<CaretDownIcon />}
                                     id='report_list'
                                     data-cy={'selected_report_dropdown'}
-                                    style={{ color: '#151515' }}
+                                    style={{
+                                      color:
+                                        'var(--pf-t--global--text--color--100)',
+                                    }}
                                   >
                                     {report.name}
                                   </MenuToggle>

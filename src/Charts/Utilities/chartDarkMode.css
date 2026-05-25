@@ -1,0 +1,9 @@
+:root:where(.pf-v6-theme-dark) svg text,
+:root:where(.pf-theme-dark) svg text {
+  fill: #e0e0e0;
+}
+
+:root:where(.pf-v6-theme-dark) svg .domain,
+:root:where(.pf-theme-dark) svg .domain {
+  stroke: #444548;
+}
