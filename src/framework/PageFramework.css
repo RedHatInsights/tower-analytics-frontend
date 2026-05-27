@@ -12,20 +12,20 @@
 
 :root:where(.pf-v6-theme-dark) .dark-0,
 :root:where(.pf-theme-dark) .dark-0 {
-  background-color: var(--pf-t--global--background--color--200);
+  background-color: var(--pf-t--global--dark--background--color--100);
 }
 
 :root:where(.pf-v6-theme-dark) .dark-1,
 :root:where(.pf-theme-dark) .dark-1 {
-  background-color: var(--pf-t--global--background--color--100);
+  background-color: var(--pf-t--global--dark--background--color--100);
 }
 
 :root:where(.pf-v6-theme-dark) .dark-2,
 :root:where(.pf-theme-dark) .dark-2 {
-  background-color: var(--pf-t--global--background--color--300);
+  background-color: var(--pf-t--global--dark--background--color--200);
 }
 
 :root:where(.pf-v6-theme-dark) .dark-3,
 :root:where(.pf-theme-dark) .dark-3 {
-  background-color: var(--pf-t--global--background--color--400);
+  background-color: var(--pf-t--global--dark--background--color--300);
 }
