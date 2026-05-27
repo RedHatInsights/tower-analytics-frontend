@@ -1,37 +1,54 @@
-function isDark(): boolean {
-  if (typeof document === 'undefined') return false;
-  const cl = document.documentElement.classList;
-  return cl.contains('pf-v6-theme-dark') || cl.contains('pf-theme-dark');
+import {
+  t_chart_color_blue_300,
+  t_chart_color_green_300,
+  t_chart_color_red_orange_400,
+  t_global_background_color_100,
+  t_global_background_color_inverse_default,
+  t_global_border_color_100,
+  t_global_text_color_regular,
+  t_global_text_color_subtle,
+} from '@patternfly/react-tokens';
+
+// Reads the resolved value of a PF CSS custom property from the document root.
+// PF redefines semantic tokens under .pf-v6-theme-dark, so dark mode is handled
+// automatically without any manual isDark() check.
+function pfVar(token: { name: string; value: string }): string {
+  if (typeof document === 'undefined') return token.value;
+  return (
+    getComputedStyle(document.documentElement)
+      .getPropertyValue(token.name)
+      .trim() || token.value
+  );
 }
 
 export function chartBackground(): string {
-  return isDark() ? '#1b1d21' : '#ffffff';
+  return pfVar(t_global_background_color_100);
 }
 
 export function chartText(): string {
-  return isDark() ? '#e0e0e0' : '#151515';
+  return pfVar(t_global_text_color_regular);
 }
 
 export function chartTextSecondary(): string {
-  return isDark() ? '#c9c9c9' : '#4f5255';
+  return pfVar(t_global_text_color_subtle);
 }
 
 export function chartGridColor(): string {
-  return isDark() ? '#444548' : '#d2d2d2';
+  return pfVar(t_global_border_color_100);
 }
 
 export function chartTooltipBg(): string {
-  return isDark() ? '#e0e0e0' : '#151515';
+  return pfVar(t_global_background_color_inverse_default);
 }
 
 export function chartSuccessColor(): string {
-  return isDark() ? '#5ba352' : '#3e8635';
+  return pfVar(t_chart_color_green_300);
 }
 
 export function chartDangerColor(): string {
-  return isDark() ? '#fe5142' : '#c9190b';
+  return pfVar(t_chart_color_red_orange_400);
 }
 
 export function chartInfoColor(): string {
-  return isDark() ? '#1fa7f8' : '#0066cc';
+  return pfVar(t_chart_color_blue_300);
 }
