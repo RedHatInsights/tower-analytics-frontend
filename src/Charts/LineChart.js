@@ -8,11 +8,10 @@ import { Paths } from '../paths';
 import initializeChart from './BaseChart';
 import Tooltip from './Utilities/Tooltip';
 import {
-  chartDangerColor,
-  chartGridColor,
-  chartInfoColor,
-  chartSuccessColor,
-  chartText,
+  chartDangerColorVar,
+  chartGridColorVar,
+  chartInfoColorVar,
+  chartSuccessColorVar,
   chartTextVar,
 } from './Utilities/chartTheme';
 
@@ -91,9 +90,9 @@ class LineChart extends Component {
 
     //[success, fail, total]
     let colors = d3.scaleOrdinal([
-      chartSuccessColor(),
-      chartDangerColor(),
-      chartInfoColor(),
+      chartSuccessColorVar,
+      chartDangerColorVar,
+      chartInfoColorVar,
     ]);
     const svg = d3
       .select('#' + this.props.id)
@@ -167,7 +166,7 @@ class LineChart extends Component {
       .attr('class', 'y-axis')
       .call(d3.axisLeft(y).ticks(10).tickSize(-width))
       .selectAll('line')
-      .attr('stroke', chartGridColor());
+      .style('stroke', chartGridColorVar);
     svg
       .selectAll('.y-axis .tick text')
       .attr('x', -5)
@@ -206,7 +205,7 @@ class LineChart extends Component {
           .tickFormat(d3.timeFormat('%-m/%-d')), // "1/19"
       ) // "Jan-01"
       .selectAll('line')
-      .attr('stroke', chartGridColor());
+      .style('stroke', chartGridColorVar);
     svg
       .selectAll('.x-axis .tick text')
       .attr('y', 10)
@@ -230,7 +229,7 @@ class LineChart extends Component {
     const vertical = svg
       .append('path')
       .attr('class', 'mouse-line')
-      .style('stroke', chartText())
+      .style('stroke', chartTextVar)
       .style('stroke-width', '3px')
       .style('stroke-dasharray', '3, 3')
       .style('opacity', '0');

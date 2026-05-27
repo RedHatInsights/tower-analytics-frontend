@@ -8,9 +8,9 @@ import { Paths } from '../paths';
 import initializeChart from './BaseChart';
 import Tooltip from './Utilities/Tooltip';
 import {
-  chartDangerColor,
-  chartGridColor,
-  chartSuccessColor,
+  chartDangerColorVar,
+  chartGridColorVar,
+  chartSuccessColorVar,
   chartTextVar,
 } from './Utilities/chartTheme';
 
@@ -97,7 +97,7 @@ class BarChart extends Component {
           ')',
       );
     //[fail, success]
-    let colors = d3.scaleOrdinal([chartSuccessColor(), chartDangerColor()]);
+    let colors = d3.scaleOrdinal([chartSuccessColorVar, chartDangerColorVar]);
 
     const barTooltip = new Tooltip({
       svg: '#' + this.props.id,
@@ -122,7 +122,7 @@ class BarChart extends Component {
       .attr('class', 'y-axis')
       .call(d3.axisLeft(y).tickSize(-width, 0, 0))
       .selectAll('line')
-      .attr('stroke', chartGridColor());
+      .style('stroke', chartGridColorVar);
     svg
       .selectAll('.y-axis .tick text')
       .attr('x', -5)
@@ -156,7 +156,7 @@ class BarChart extends Component {
         d3.axisBottom(x).tickValues(ticks).tickFormat(d3.timeFormat('%-m/%-d')), // "1/19"
       )
       .selectAll('line')
-      .attr('stroke', chartGridColor());
+      .style('stroke', chartGridColorVar);
     svg
       .selectAll('.x-axis .tick text')
       .attr('y', 10)

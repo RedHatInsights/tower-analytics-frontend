@@ -29,10 +29,14 @@ export function chartText(): string {
   return pfVar(t_global_text_color_regular);
 }
 
-// Returns the CSS variable reference rather than the resolved value.
-// Use this for D3 .style() calls so the colour updates reactively when
+// The exports below return the CSS variable reference rather than the resolved
+// value. Use these for D3 .style() calls so colours update reactively when
 // the user switches theme, without needing to redraw the chart.
 export const chartTextVar = t_global_text_color_regular.var;
+export const chartGridColorVar = t_global_border_color_100.var;
+export const chartSuccessColorVar = t_chart_color_green_300.var;
+export const chartDangerColorVar = t_chart_color_red_orange_400.var;
+export const chartInfoColorVar = t_chart_color_blue_300.var;
 
 export function chartTextSecondary(): string {
   return pfVar(t_global_text_color_subtle);
