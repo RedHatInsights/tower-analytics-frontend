@@ -13,6 +13,7 @@ import {
   chartInfoColor,
   chartSuccessColor,
   chartText,
+  chartTextVar,
 } from './Utilities/chartTheme';
 
 class LineChart extends Component {
@@ -167,7 +168,10 @@ class LineChart extends Component {
       .call(d3.axisLeft(y).ticks(10).tickSize(-width))
       .selectAll('line')
       .attr('stroke', chartGridColor());
-    svg.selectAll('.y-axis .tick text').attr('x', -5);
+    svg
+      .selectAll('.y-axis .tick text')
+      .attr('x', -5)
+      .style('fill', chartTextVar);
 
     // text label for the y axis
     svg
@@ -178,6 +182,7 @@ class LineChart extends Component {
       .attr('x', 0 - height / 2)
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
+      .style('fill', chartTextVar)
       .text('Job runs');
     // Add the X Axis
     let ticks;
@@ -202,7 +207,10 @@ class LineChart extends Component {
       ) // "Jan-01"
       .selectAll('line')
       .attr('stroke', chartGridColor());
-    svg.selectAll('.x-axis .tick text').attr('y', 10);
+    svg
+      .selectAll('.x-axis .tick text')
+      .attr('y', 10)
+      .style('fill', chartTextVar);
 
     // text label for the x axis
     svg
@@ -217,6 +225,7 @@ class LineChart extends Component {
           ')',
       )
       .style('text-anchor', 'middle')
+      .style('fill', chartTextVar)
       .text('Date');
     const vertical = svg
       .append('path')

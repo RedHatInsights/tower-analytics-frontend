@@ -11,6 +11,7 @@ import {
   chartDangerColor,
   chartGridColor,
   chartSuccessColor,
+  chartTextVar,
 } from './Utilities/chartTheme';
 
 class BarChart extends Component {
@@ -122,7 +123,10 @@ class BarChart extends Component {
       .call(d3.axisLeft(y).tickSize(-width, 0, 0))
       .selectAll('line')
       .attr('stroke', chartGridColor());
-    svg.selectAll('.y-axis .tick text').attr('x', -5);
+    svg
+      .selectAll('.y-axis .tick text')
+      .attr('x', -5)
+      .style('fill', chartTextVar);
     // text label for the y axis
     svg
       .append('text')
@@ -132,6 +136,7 @@ class BarChart extends Component {
       .attr('x', 0 - height / 2)
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
+      .style('fill', chartTextVar)
       .text('Jobs across all clusters');
     // Add the X Axis
     let ticks;
@@ -152,7 +157,10 @@ class BarChart extends Component {
       )
       .selectAll('line')
       .attr('stroke', chartGridColor());
-    svg.selectAll('.x-axis .tick text').attr('y', 10);
+    svg
+      .selectAll('.x-axis .tick text')
+      .attr('y', 10)
+      .style('fill', chartTextVar);
 
     // text label for the x axis
     svg
@@ -167,6 +175,7 @@ class BarChart extends Component {
           ')',
       )
       .style('text-anchor', 'middle')
+      .style('fill', chartTextVar)
       .text('Date');
 
     const layer = svg

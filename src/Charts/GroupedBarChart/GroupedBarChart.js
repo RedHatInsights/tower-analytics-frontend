@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import initializeChart from '.././BaseChart';
 import Legend from '../Utilities/Legend';
-import { chartGridColor } from '../Utilities/chartTheme';
+import { chartGridColor, chartTextVar } from '../Utilities/chartTheme';
 
 const Wrapper = styled.div`
   display: flex;
@@ -123,6 +123,7 @@ const GroupedBarChart = ({
       .attr('x', 0 - height / 2)
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
+      .style('fill', chartTextVar)
       .text(props.yLabel);
 
     // add x axis
@@ -145,6 +146,7 @@ const GroupedBarChart = ({
           ')',
       )
       .style('text-anchor', 'middle')
+      .style('fill', chartTextVar)
       .text('Date');
     // add the groups
     let slice = svg.selectAll('.slice').data(data);

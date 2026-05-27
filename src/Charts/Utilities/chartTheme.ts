@@ -2,8 +2,8 @@ import {
   t_chart_color_blue_300,
   t_chart_color_green_300,
   t_chart_color_red_orange_400,
+  t_color_gray_90,
   t_global_background_color_100,
-  t_global_background_color_inverse_default,
   t_global_border_color_100,
   t_global_text_color_regular,
   t_global_text_color_subtle,
@@ -29,6 +29,11 @@ export function chartText(): string {
   return pfVar(t_global_text_color_regular);
 }
 
+// Returns the CSS variable reference rather than the resolved value.
+// Use this for D3 .style() calls so the colour updates reactively when
+// the user switches theme, without needing to redraw the chart.
+export const chartTextVar = t_global_text_color_regular.var;
+
 export function chartTextSecondary(): string {
   return pfVar(t_global_text_color_subtle);
 }
@@ -37,8 +42,11 @@ export function chartGridColor(): string {
   return pfVar(t_global_border_color_100);
 }
 
+// Tooltips use a fixed dark background with white text in both themes.
+// SVG presentation attributes (fill=) don't resolve CSS variables, so we
+// use a static palette value rather than pfVar().
 export function chartTooltipBg(): string {
-  return pfVar(t_global_background_color_inverse_default);
+  return t_color_gray_90.value;
 }
 
 export function chartSuccessColor(): string {
