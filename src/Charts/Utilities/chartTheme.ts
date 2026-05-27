@@ -13,7 +13,6 @@ import {
 // PF redefines semantic tokens under .pf-v6-theme-dark, so dark mode is handled
 // automatically without any manual isDark() check.
 function pfVar(token: { name: string; value: string }): string {
-  if (typeof document === 'undefined') return token.value;
   return (
     getComputedStyle(document.documentElement)
       .getPropertyValue(token.name)
@@ -51,16 +50,4 @@ export function chartGridColor(): string {
 // use a static palette value rather than pfVar().
 export function chartTooltipBg(): string {
   return t_color_gray_90.value;
-}
-
-export function chartSuccessColor(): string {
-  return pfVar(t_chart_color_green_300);
-}
-
-export function chartDangerColor(): string {
-  return pfVar(t_chart_color_red_orange_400);
-}
-
-export function chartInfoColor(): string {
-  return pfVar(t_chart_color_blue_300);
 }
