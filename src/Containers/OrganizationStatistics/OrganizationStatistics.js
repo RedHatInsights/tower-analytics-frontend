@@ -43,6 +43,11 @@ import reportPaths from '../Reports/paths';
 
 const Divider = styled('hr')`
   border: 1px solid #ebebeb;
+
+  .pf-v6-theme-dark &,
+  .pf-theme-dark & {
+    border-color: var(--pf-t--global--border--color--100);
+  }
 `;
 
 const colorFunc = scaleOrdinal(pfmulti);

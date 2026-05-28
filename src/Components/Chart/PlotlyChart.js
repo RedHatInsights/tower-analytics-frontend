@@ -1,6 +1,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import Plot from 'react-plotly.js';
+import {
+  chartBackground,
+  chartGridColor,
+  chartText,
+  chartTextSecondary,
+  chartTooltipBg,
+} from '../../Charts/Utilities/chartTheme';
 import { useQueryParams } from '../../QueryParams';
 import { reportDefaultParams } from '../../Utilities/constants';
 
@@ -68,6 +75,12 @@ const PlotlyChart = ({ data }) => {
     }
   });
 
+  const bg = chartBackground();
+  const text = chartText();
+  const textSecondary = chartTextSecondary();
+  const grid = chartGridColor();
+  const tooltipBg = chartTooltipBg();
+
   const state = {
     config: {
       modeBarButtonsToRemove: ['zoom'],
@@ -76,15 +89,15 @@ const PlotlyChart = ({ data }) => {
     },
     data: [
       {
-        customdata: items, //customization: items from API
-        hovertemplate: ` <br>  <b>${xLabel}</b>: %{${xLabelValue}}  <br>  <b>${yToolTipLabel}</b>: %{${yToolTipLabelValue}}  <br>  <b>${findZLabel()}</b>: %{${findZLabelValue()}}  <br> `, //customization: All labels and values defined above
+        customdata: items,
+        hovertemplate: ` <br>  <b>${xLabel}</b>: %{${xLabelValue}}  <br>  <b>${yToolTipLabel}</b>: %{${yToolTipLabelValue}}  <br>  <b>${findZLabel()}</b>: %{${findZLabelValue()}}  <br> `,
         marker: {
-          color: ZArray, //customization: Derived from items
+          color: ZArray,
           coloraxis: 'coloraxis',
         },
         name: '',
-        x: orgArray, //customization: Derived from items
-        y: templateCountArray, //customization: Derived from items
+        x: orgArray,
+        y: templateCountArray,
         type: 'bar',
       },
     ],
@@ -94,14 +107,14 @@ const PlotlyChart = ({ data }) => {
           bar: [
             {
               error_x: {
-                color: '#2a3f5f',
+                color: textSecondary,
               },
               error_y: {
-                color: '#2a3f5f',
+                color: textSecondary,
               },
               marker: {
                 line: {
-                  color: 'white',
+                  color: bg,
                   width: 0.5,
                 },
                 pattern: {
@@ -119,26 +132,26 @@ const PlotlyChart = ({ data }) => {
             align: 'left',
           },
           hovermode: 'closest',
-          paper_bgcolor: 'white',
-          plot_bgcolor: 'white',
+          paper_bgcolor: bg,
+          plot_bgcolor: bg,
           xaxis: {
             automargin: true,
-            gridcolor: '#D2D2D2',
-            linecolor: '#D2D2D2',
+            gridcolor: grid,
+            linecolor: grid,
             title: {
               standoff: 15,
             },
-            zerolinecolor: '#D2D2D2',
+            zerolinecolor: grid,
             zerolinewidth: 2,
           },
           yaxis: {
             automargin: true,
-            gridcolor: '#D2D2D2',
-            linecolor: '#D2D2D2',
+            gridcolor: grid,
+            linecolor: grid,
             title: {
               standoff: 15,
             },
-            zerolinecolor: '#D2D2D2',
+            zerolinecolor: grid,
             zerolinewidth: 2,
           },
         },
@@ -146,12 +159,12 @@ const PlotlyChart = ({ data }) => {
       xaxis: {
         tickangle: -45,
         title: {
-          text: `${xLabel}`, //customization: All labels defined above
+          text: `${xLabel}`,
           font: {
             family:
               'RedHatText, Overpass, overpass, helvetica, arial, sans-serif',
             size: 15,
-            color: 'black',
+            color: text,
           },
         },
       },
@@ -159,29 +172,29 @@ const PlotlyChart = ({ data }) => {
         anchor: 'x',
         domain: [0.0, 1.0],
         title: {
-          text: `${yLabel}`, //customization: All labels defined above
+          text: `${yLabel}`,
           font: {
             family:
               'RedHatText, Overpass, overpass, helvetica, arial, sans-serif',
             size: 15,
-            color: 'black',
+            color: text,
           },
         },
-        color: '#4f5255',
+        color: textSecondary,
       },
       coloraxis: {
         colorbar: {
           title: {
             text: `${findZLabel()}`,
             font: {
-              color: '#4f5255',
+              color: textSecondary,
               family:
                 'RedHatText, Overpass, overpass, helvetica, arial, sans-serif',
               size: 15,
             },
           },
           tickfont: {
-            color: '#4f5255',
+            color: textSecondary,
             family:
               'RedHatText, Overpass, overpass, helvetica, arial, sans-serif',
             size: 15,
@@ -201,7 +214,7 @@ const PlotlyChart = ({ data }) => {
           font: {
             family:
               'RedHatText, Overpass, overpass, helvetica, arial, sans-serif',
-            color: '#4f5255',
+            color: textSecondary,
           },
         },
         font: {
@@ -214,13 +227,13 @@ const PlotlyChart = ({ data }) => {
       font: {
         family: 'RedHatText, Overpass, overpass, helvetica, arial, sans-serif',
         size: 14,
-        color: '#4f5255',
+        color: textSecondary,
       },
       title: {
         font: {
           family:
             'RedHatText, Overpass, overpass, helvetica, arial, sans-serif',
-          color: '#4f5255',
+          color: textSecondary,
           size: 15,
         },
       },
@@ -230,7 +243,7 @@ const PlotlyChart = ({ data }) => {
           family:
             'RedHatText, Overpass, overpass, helvetica, arial, sans-serif',
         },
-        bgcolor: '#151515',
+        bgcolor: tooltipBg,
       },
       style: { cursor: 'auto' },
     },

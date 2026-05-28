@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import packageJson from '../package.json';
 import { preflightRequest } from './Api/';
 import './App.scss';
+import './Charts/Utilities/chartDarkMode.css';
 import AuthorizationErrorPage from './Components/ApiStatus/AuthorizationErrorPage';
 import { AnalyticsRoutes } from './Routes';
 import useRequest from './Utilities/useRequest';

@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { chartTooltipBg } from './chartTheme';
 
 class Tooltip {
   constructor(opts) {
@@ -24,7 +25,7 @@ class Tooltip {
       .attr('y', 0)
       .attr('height', 20)
       .attr('width', 20)
-      .attr('fill', '#393f44');
+      .attr('fill', chartTooltipBg());
     this.boundingBox = this.toolTipBase
       .append('rect')
       .attr('x', 10)
@@ -32,7 +33,7 @@ class Tooltip {
       .attr('rx', 2)
       .attr('height', 110)
       .attr('width', this.boxWidth)
-      .attr('fill', '#393f44');
+      .attr('fill', chartTooltipBg());
     this.circleSuccess = this.toolTipBase
       .append('circle')
       .attr('cx', 26)

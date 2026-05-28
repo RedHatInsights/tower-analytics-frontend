@@ -1,4 +1,5 @@
 import * as d3 from 'd3';
+import { chartTooltipBg } from '../Utilities/chartTheme';
 
 const formatDate = (date) => {
   const pieces = date.split('-');
@@ -30,7 +31,7 @@ export default class OrgsTooltip {
       .attr('y', 0)
       .attr('height', 20)
       .attr('width', 20)
-      .attr('fill', '#393f44');
+      .attr('fill', chartTooltipBg());
     this.boundingBox = this.toolTipBase
       .append('rect')
       .attr('x', 10)
@@ -38,7 +39,7 @@ export default class OrgsTooltip {
       .attr('rx', 2)
       .attr('height', 50)
       .attr('width', this.boxWidth)
-      .attr('fill', '#393f44');
+      .attr('fill', chartTooltipBg());
     this.date = this.toolTipBase
       .append('text')
       .attr('x', 20)

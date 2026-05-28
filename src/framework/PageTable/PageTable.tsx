@@ -486,16 +486,13 @@ function TableHead<T extends object>(props: {
 
   return (
     <Thead>
-      <Tr className='light dark-2'>
-        {expandedRow && (
-          <Th style={{ padding: 0, backgroundColor: 'inherit' }} />
-        )}
+      <Tr>
+        {expandedRow && <Th style={{ padding: 0 }} />}
         {(showSelect || onSelect) && (
           <Th
             isStickyColumn
             stickyMinWidth='0px'
             hasRightBorder={props.scrollLeft}
-            style={{ backgroundColor: 'inherit' }}
           >
             &nbsp;
           </Th>
@@ -516,7 +513,6 @@ function TableHead<T extends object>(props: {
                         : undefined,
                   maxWidth:
                     column.maxWidth !== undefined ? column.maxWidth : undefined,
-                  backgroundColor: 'inherit',
                 }}
               >
                 {column.header}
@@ -532,7 +528,6 @@ function TableHead<T extends object>(props: {
               right: 0,
               padding: 0,
               paddingRight: 0,
-              backgroundColor: 'inherit',
               zIndex: 302,
             }}
             className={props.scrollRight ? 'pf-m-border-left' : undefined}

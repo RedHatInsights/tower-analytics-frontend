@@ -89,17 +89,17 @@ const getChartData = (data: Data): ApiReturnType => {
 const constants = (isMoney: boolean) => ({
   cost: {
     key: isMoney ? 'total_costs' : 'total_hours_spent_risk_adjusted',
-    color: '#8B8D8F',
+    color: 'var(--pf-t--global--text--color--200)',
   },
   benefit: {
     key: isMoney ? 'total_benefits' : 'total_hours_saved',
     color: isMoney
       ? 'var(--pf-t--global--color--status--success--default)'
-      : '#0063CF',
+      : 'var(--pf-t--global--color--status--info--default)',
   },
   net: {
     key: isMoney ? 'cumulative_net_benefits' : 'cumulative_time_net_benefits',
-    color: '#EE7A00',
+    color: 'var(--pf-t--global--color--status--warning--default)',
   },
 });
 
@@ -172,7 +172,7 @@ const StatisticsTab: FunctionComponent<Props> = ({ tabsArray, plan }) => {
         label: isMoney ? 'Money Saved' : 'Hours Saved',
         tickFormat: 'formatNumberAsK',
         style: {
-          grid: { stroke: '#D2D2D2' },
+          grid: { stroke: 'var(--pf-t--global--border--color--100)' },
           axisLabel: { padding: 60 },
         },
       },
