@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { getTotal } from '../Utilities/helpers';
 import initializeChart from './BaseChart';
 import Legend from './Utilities/Legend';
+import { chartTooltipBg } from './Utilities/chartTheme';
 
 const Wrapper = styled.div`
   display: flex;
@@ -41,7 +42,7 @@ class Tooltip {
       .attr('y', 0)
       .attr('height', 20)
       .attr('width', 20)
-      .attr('fill', '#393f44');
+      .attr('fill', chartTooltipBg());
     this.boundingBOx = this.toolTipBase
       .append('rect')
       .attr('x', 10)
@@ -49,7 +50,7 @@ class Tooltip {
       .attr('rx', 2)
       .attr('height', boundingHeight)
       .attr('width', boundingWidth)
-      .attr('fill', '#393f44');
+      .attr('fill', chartTooltipBg());
     this.orgName = this.toolTipBase
       .append('text')
       .attr('fill', 'white')

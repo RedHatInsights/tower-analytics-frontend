@@ -7,6 +7,12 @@ import { formatDate } from '../Utilities/helpers';
 import { Paths } from '../paths';
 import initializeChart from './BaseChart';
 import Tooltip from './Utilities/Tooltip';
+import {
+  chartDangerColorVar,
+  chartGridColorVar,
+  chartSuccessColorVar,
+  chartTextVar,
+} from './Utilities/chartTheme';
 
 class BarChart extends Component {
   constructor(props) {
@@ -91,7 +97,7 @@ class BarChart extends Component {
           ')',
       );
     //[fail, success]
-    let colors = d3.scaleOrdinal(['#6EC664', '#A30000']);
+    let colors = d3.scaleOrdinal([chartSuccessColorVar, chartDangerColorVar]);
 
     const barTooltip = new Tooltip({
       svg: '#' + this.props.id,
@@ -116,16 +122,21 @@ class BarChart extends Component {
       .attr('class', 'y-axis')
       .call(d3.axisLeft(y).tickSize(-width, 0, 0))
       .selectAll('line')
-      .attr('stroke', '#d7d7d7');
-    svg.selectAll('.y-axis .tick text').attr('x', -5);
+      .style('stroke', chartGridColorVar);
+    svg
+      .selectAll('.y-axis .tick text')
+      .attr('x', -5)
+      .style('fill', chartTextVar);
     // text label for the y axis
     svg
       .append('text')
+      .attr('class', 'y-axis')
       .attr('transform', 'rotate(-90)')
       .attr('y', 0 - this.props.margin.left)
       .attr('x', 0 - height / 2)
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
+      .style('fill', chartTextVar)
       .text('Jobs across all clusters');
     // Add the X Axis
     let ticks;
@@ -145,12 +156,16 @@ class BarChart extends Component {
         d3.axisBottom(x).tickValues(ticks).tickFormat(d3.timeFormat('%-m/%-d')), // "1/19"
       )
       .selectAll('line')
-      .attr('stroke', '#d7d7d7');
-    svg.selectAll('.x-axis .tick text').attr('y', 10);
+      .style('stroke', chartGridColorVar);
+    svg
+      .selectAll('.x-axis .tick text')
+      .attr('y', 10)
+      .style('fill', chartTextVar);
 
     // text label for the x axis
     svg
       .append('text')
+      .attr('class', 'x-axis')
       .attr(
         'transform',
         'translate(' +
@@ -160,6 +175,7 @@ class BarChart extends Component {
           ')',
       )
       .style('text-anchor', 'middle')
+      .style('fill', chartTextVar)
       .text('Date');
 
     const layer = svg

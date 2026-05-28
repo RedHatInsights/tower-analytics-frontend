@@ -38,7 +38,7 @@ const CardLabel = styled.span`
 const Small = styled.small`
   display: block;
   margin-bottom: 10px;
-  color: #6a6e73;
+  color: inherit;
 `;
 
 const SCheckbox = styled(Checkbox)`

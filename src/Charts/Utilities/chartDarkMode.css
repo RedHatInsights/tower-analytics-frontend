@@ -1,0 +1,9 @@
+:root:where(.pf-v6-theme-dark) svg text,
+:root:where(.pf-theme-dark) svg text {
+  fill: var(--pf-t--global--dark--text--color--100);
+}
+
+:root:where(.pf-v6-theme-dark) svg .domain,
+:root:where(.pf-theme-dark) svg .domain {
+  stroke: var(--pf-t--global--dark--border--color--100);
+}

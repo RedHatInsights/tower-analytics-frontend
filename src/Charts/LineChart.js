@@ -7,6 +7,13 @@ import { formatDate } from '../Utilities/helpers';
 import { Paths } from '../paths';
 import initializeChart from './BaseChart';
 import Tooltip from './Utilities/Tooltip';
+import {
+  chartDangerColorVar,
+  chartGridColorVar,
+  chartInfoColorVar,
+  chartSuccessColorVar,
+  chartTextVar,
+} from './Utilities/chartTheme';
 
 class LineChart extends Component {
   constructor(props) {
@@ -82,7 +89,11 @@ class LineChart extends Component {
     const y = d3.scaleLinear().range([height, 0]);
 
     //[success, fail, total]
-    let colors = d3.scaleOrdinal(['#6EC664', '#A30000', '#06C']);
+    let colors = d3.scaleOrdinal([
+      chartSuccessColorVar,
+      chartDangerColorVar,
+      chartInfoColorVar,
+    ]);
     const svg = d3
       .select('#' + this.props.id)
       .append('svg')
@@ -155,17 +166,22 @@ class LineChart extends Component {
       .attr('class', 'y-axis')
       .call(d3.axisLeft(y).ticks(10).tickSize(-width))
       .selectAll('line')
-      .attr('stroke', '#d7d7d7');
-    svg.selectAll('.y-axis .tick text').attr('x', -5);
+      .style('stroke', chartGridColorVar);
+    svg
+      .selectAll('.y-axis .tick text')
+      .attr('x', -5)
+      .style('fill', chartTextVar);
 
     // text label for the y axis
     svg
       .append('text')
+      .attr('class', 'y-axis')
       .attr('transform', 'rotate(-90)')
       .attr('y', 0 - this.props.margin.left)
       .attr('x', 0 - height / 2)
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
+      .style('fill', chartTextVar)
       .text('Job runs');
     // Add the X Axis
     let ticks;
@@ -189,12 +205,16 @@ class LineChart extends Component {
           .tickFormat(d3.timeFormat('%-m/%-d')), // "1/19"
       ) // "Jan-01"
       .selectAll('line')
-      .attr('stroke', '#d7d7d7');
-    svg.selectAll('.x-axis .tick text').attr('y', 10);
+      .style('stroke', chartGridColorVar);
+    svg
+      .selectAll('.x-axis .tick text')
+      .attr('y', 10)
+      .style('fill', chartTextVar);
 
     // text label for the x axis
     svg
       .append('text')
+      .attr('class', 'x-axis')
       .attr(
         'transform',
         'translate(' +
@@ -204,11 +224,12 @@ class LineChart extends Component {
           ')',
       )
       .style('text-anchor', 'middle')
+      .style('fill', chartTextVar)
       .text('Date');
     const vertical = svg
       .append('path')
       .attr('class', 'mouse-line')
-      .style('stroke', 'black')
+      .style('stroke', chartTextVar)
       .style('stroke-width', '3px')
       .style('stroke-dasharray', '3, 3')
       .style('opacity', '0');

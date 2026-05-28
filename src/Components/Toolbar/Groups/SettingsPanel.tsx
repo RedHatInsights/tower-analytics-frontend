@@ -12,7 +12,7 @@ import styled from 'styled-components';
 import { AttributeType, SetValues } from '../types';
 
 const OutlinedQuestionCircleIcon = styled(PFOutlinedQuestionCircleIcon)`
-  color: #151515;
+  color: var(--pf-t--global--text--color--100);
 `;
 
 const PopoverButton = styled(Button)`
@@ -47,7 +47,9 @@ const SettingsPanel: FunctionComponent<Props> = ({
   ariaLabel,
   bodyContent,
 }) => (
-  <Card style={{ backgroundColor: '#EEEEEE' }}>
+  <Card
+    style={{ backgroundColor: 'var(--pf-t--global--background--color--200)' }}
+  >
     <CardHeader
       actions={{
         actions: (

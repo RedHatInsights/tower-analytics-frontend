@@ -8,6 +8,12 @@ import React, {
   useState,
 } from 'react';
 
+function isDarkTheme(): boolean {
+  if (typeof document === 'undefined') return false;
+  const cl = document.documentElement.classList;
+  return cl.contains('pf-v6-theme-dark') || cl.contains('pf-theme-dark');
+}
+
 export function Scrollable(props: {
   children?: ReactNode;
   borderTop?: boolean;
@@ -33,20 +39,21 @@ export function Scrollable(props: {
   useResizeObserver(divEl, () => {
     update();
   });
-  const shadowOpacityTop = 0.2 * topShadow;
-  const shadowOpacityBottom = 0.2 * bottomShadow;
-  // const [theme] = useTheme()
-  // if (theme === ThemeE.Dark) {
-  //     shadowOpacityTop *= 6
-  //     shadowOpacityBottom *= 6
-  // }
+
+  const dark = isDarkTheme();
+  const shadowBase = dark ? '255,255,255' : '0,0,0';
+  const shadowMultiplier = dark ? 6 : 1;
+  const shadowOpacityTop = 0.2 * topShadow * shadowMultiplier;
+  const shadowOpacityBottom = 0.2 * bottomShadow * shadowMultiplier;
 
   /* istanbul ignore next */
-  const borderTop = props.borderTop ? 'thin solid rgba(0, 0, 0, 0.12)' : '';
+  const borderTop = props.borderTop
+    ? `thin solid ${dark ? 'var(--pf-t--global--border--color--100)' : 'rgba(0, 0, 0, 0.12)'}`
+    : '';
 
   /* istanbul ignore next */
   const borderBottom = props.borderBottom
-    ? 'thin solid rgba(0, 0, 0, 0.12)'
+    ? `thin solid ${dark ? 'var(--pf-t--global--border--color--100)' : 'rgba(0, 0, 0, 0.12)'}`
     : '';
 
   return (
@@ -82,7 +89,7 @@ export function Scrollable(props: {
               top: 0,
               height: '10px',
               width: '100%',
-              background: `linear-gradient(rgba(0,0,0,${shadowOpacityTop}), rgba(0,0,0,0))`,
+              background: `linear-gradient(rgba(${shadowBase},${shadowOpacityTop}), rgba(${shadowBase},0))`,
             }}
           />
         )
@@ -95,7 +102,7 @@ export function Scrollable(props: {
               bottom: 0,
               height: '10px',
               width: '100%',
-              background: `linear-gradient(rgba(0,0,0,0), rgba(0,0,0,${shadowOpacityBottom}))`,
+              background: `linear-gradient(rgba(${shadowBase},0), rgba(${shadowBase},${shadowOpacityBottom}))`,
             }}
           />
         )
