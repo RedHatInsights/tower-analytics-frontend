@@ -17,20 +17,10 @@ interface Props {
 
 const generateToken = (): string => {
   // Use cryptographically secure random number generator
-  // Generate 14 random bytes (which will give us more than enough entropy for 14 characters)
   const array = new Uint8Array(14);
   crypto.getRandomValues(array);
-
-  // Convert to base36 string similar to original format
-  // Use a deterministic conversion to maintain compatibility
-  let token = '';
-  for (let i = 0; i < array.length; i++) {
-    // Convert each byte to base36 and append
-    token += array[i].toString(36);
-  }
-
-  // Return first 14 characters to match original length
-  return token.substring(0, 14);
+  // Convert bytes to base36 characters
+  return Array.from(array, (b) => (b % 36).toString(36)).join('');
 };
 
 const parseUrl = (
