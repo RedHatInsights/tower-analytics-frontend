@@ -12,19 +12,21 @@ import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import {
   isPositiveNum,
-  sanitizeInput,
   validateLength,
 } from '../../../../../../Utilities/helpers';
 import { MAX_LENGTHS, actions } from '../../../constants';
 
-const Details = ({ options, formData, dispatch }) => {
-  const { name, category, description, manual_time, hosts, frequency_period } =
-    formData;
+const Details = ({ options, formData, dispatch, onValidationChange }) => {
+  const { category, manual_time, hosts, frequency_period } = formData;
 
   const [categoryIsOpen, setCategoryIsOpen] = useState(false);
   const [manualTimeIsOpen, setManualTimeIsOpen] = useState(false);
   const [frequencyPeriodIsOpen, setFrequencyPeriodIsOpen] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [localName, setLocalName] = useState(formData.name || '');
+  const [localDescription, setLocalDescription] = useState(
+    formData.description || '',
+  );
   const [nameValidation, setNameValidation] = useState({ isValid: true });
   const [descriptionValidation, setDescriptionValidation] = useState({
     isValid: true,
@@ -45,27 +47,33 @@ const Details = ({ options, formData, dispatch }) => {
               type='text'
               id='name-field'
               name='name'
-              value={name}
+              value={localName}
               validated={
-                !nameValidation.isValid || (!name && showError)
+                !nameValidation.isValid || (!localName && showError)
                   ? 'error'
                   : 'default'
               }
               onChange={(_event, newName) => {
+                setLocalName(newName);
                 const validation = validateLength(newName, MAX_LENGTHS.NAME);
                 setNameValidation(validation);
+                if (onValidationChange) {
+                  onValidationChange({
+                    nameValid: validation.isValid,
+                    descriptionValid: descriptionValidation.isValid,
+                  });
+                }
                 if (validation.isValid) {
-                  const sanitizedName = sanitizeInput(newName);
                   dispatch({
                     type: actions.SET_NAME,
-                    value: sanitizedName,
+                    value: newName,
                   });
                 }
               }}
-              onFocus={() => setShowError(!name)}
-              onBlur={() => setShowError(!name)}
+              onFocus={() => setShowError(!localName)}
+              onBlur={() => setShowError(!localName)}
             />
-            {!formData.name && showError && (
+            {!localName && showError && (
               <FormHelperText>
                 <span className='pf-v5-c-form__helper-text-icon'>
                   Name is required
@@ -123,19 +131,25 @@ const Details = ({ options, formData, dispatch }) => {
               placeholder='Place description here'
               id='description-field'
               name='description'
-              value={description}
+              value={localDescription}
               validated={!descriptionValidation.isValid ? 'error' : 'default'}
               onChange={(_event, newDescription) => {
+                setLocalDescription(newDescription);
                 const validation = validateLength(
                   newDescription,
                   MAX_LENGTHS.DESCRIPTION,
                 );
                 setDescriptionValidation(validation);
+                if (onValidationChange) {
+                  onValidationChange({
+                    nameValid: nameValidation.isValid,
+                    descriptionValid: validation.isValid,
+                  });
+                }
                 if (validation.isValid) {
-                  const sanitizedDescription = sanitizeInput(newDescription);
                   dispatch({
                     type: actions.SET_DESCRIPTION,
-                    value: sanitizedDescription,
+                    value: newDescription,
                   });
                 }
               }}
@@ -270,6 +284,7 @@ Details.propTypes = {
   options: PropTypes.object.isRequired,
   formData: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
+  onValidationChange: PropTypes.func,
 };
 
 export default Details;

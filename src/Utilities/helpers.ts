@@ -72,26 +72,6 @@ export const avgDurationFormatter = (avgDuration: number): string =>
   avgDuration.toFixed(2);
 
 /**
- * Sanitize user input to prevent XSS attacks by escaping HTML special characters
- * @param input - The user input string to sanitize
- * @returns Sanitized string with HTML entities escaped
- */
-export const sanitizeInput = (input: string): string => {
-  if (!input) return input;
-
-  const htmlEscapeMap: { [key: string]: string } = {
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#x27;',
-    '/': '&#x2F;',
-  };
-
-  return input.replace(/[&<>"'/]/g, (char) => htmlEscapeMap[char]);
-};
-
-/**
  * Validate input length against a maximum limit
  * @param input - The input string to validate
  * @param maxLength - Maximum allowed length

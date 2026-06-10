@@ -20,10 +20,7 @@ import TimesIcon from '@patternfly/react-icons/dist/dynamic/icons/times-icon';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import {
-  sanitizeInput,
-  validateLength,
-} from '../../../../../../Utilities/helpers';
+import { validateLength } from '../../../../../../Utilities/helpers';
 import { MAX_LENGTHS, actions } from '../../../constants';
 
 const TaskSection = styled.div`
@@ -62,8 +59,7 @@ const Tasks = ({ tasks, dispatch }) => {
         setTaskValidation(validation);
         return;
       }
-      const sanitizedTask = sanitizeInput(trimmedTask);
-      setTasks([...tasks, sanitizedTask]);
+      setTasks([...tasks, trimmedTask]);
       setTaskToAdd('');
       setTaskValidation({ isValid: true });
     }
