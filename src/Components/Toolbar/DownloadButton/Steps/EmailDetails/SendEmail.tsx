@@ -15,7 +15,23 @@ interface Props {
   pdfPostBody: PDFEmailParams;
 }
 
-const generateToken = () => Math.random().toString(36).substring(2, 16);
+const generateToken = (): string => {
+  // Use cryptographically secure random number generator
+  // Generate 14 random bytes (which will give us more than enough entropy for 14 characters)
+  const array = new Uint8Array(14);
+  crypto.getRandomValues(array);
+
+  // Convert to base36 string similar to original format
+  // Use a deterministic conversion to maintain compatibility
+  let token = '';
+  for (let i = 0; i < array.length; i++) {
+    // Convert each byte to base36 and append
+    token += array[i].toString(36);
+  }
+
+  // Return first 14 characters to match original length
+  return token.substring(0, 14);
+};
 
 const parseUrl = (
   emailExtraRows: boolean,
