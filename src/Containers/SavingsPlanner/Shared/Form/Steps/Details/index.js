@@ -10,8 +10,12 @@ import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextIn
 import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { isPositiveNum } from '../../../../../../Utilities/helpers';
-import { actions } from '../../../constants';
+import {
+  isPositiveNum,
+  sanitizeInput,
+  validateLength,
+} from '../../../../../../Utilities/helpers';
+import { MAX_LENGTHS, actions } from '../../../constants';
 
 const Details = ({ options, formData, dispatch }) => {
   const { name, category, description, manual_time, hosts, frequency_period } =
@@ -21,6 +25,10 @@ const Details = ({ options, formData, dispatch }) => {
   const [manualTimeIsOpen, setManualTimeIsOpen] = useState(false);
   const [frequencyPeriodIsOpen, setFrequencyPeriodIsOpen] = useState(false);
   const [showError, setShowError] = useState(false);
+  const [nameValidation, setNameValidation] = useState({ isValid: true });
+  const [descriptionValidation, setDescriptionValidation] = useState({
+    isValid: true,
+  });
 
   return (
     <Form>
@@ -38,17 +46,38 @@ const Details = ({ options, formData, dispatch }) => {
               id='name-field'
               name='name'
               value={name}
-              onChange={(_event, newName) =>
-                dispatch({
-                  type: actions.SET_NAME,
-                  value: newName,
-                })
+              validated={
+                !nameValidation.isValid || (!name && showError)
+                  ? 'error'
+                  : 'default'
               }
+              onChange={(_event, newName) => {
+                const validation = validateLength(newName, MAX_LENGTHS.NAME);
+                setNameValidation(validation);
+                if (validation.isValid) {
+                  const sanitizedName = sanitizeInput(newName);
+                  dispatch({
+                    type: actions.SET_NAME,
+                    value: sanitizedName,
+                  });
+                }
+              }}
               onFocus={() => setShowError(!name)}
               onBlur={() => setShowError(!name)}
             />
             {!formData.name && showError && (
-              <FormHelperText>Name is required</FormHelperText>
+              <FormHelperText>
+                <span className='pf-v5-c-form__helper-text-icon'>
+                  Name is required
+                </span>
+              </FormHelperText>
+            )}
+            {!nameValidation.isValid && (
+              <FormHelperText>
+                <span className='pf-v5-c-form__helper-text-icon'>
+                  {nameValidation.error}
+                </span>
+              </FormHelperText>
             )}
           </FormGroup>
           <FormGroup label='What type of task is it?' fieldId='category-field'>
@@ -95,13 +124,29 @@ const Details = ({ options, formData, dispatch }) => {
               id='description-field'
               name='description'
               value={description}
-              onChange={(_event, newDescription) =>
-                dispatch({
-                  type: actions.SET_DESCRIPTION,
-                  value: newDescription,
-                })
-              }
+              validated={!descriptionValidation.isValid ? 'error' : 'default'}
+              onChange={(_event, newDescription) => {
+                const validation = validateLength(
+                  newDescription,
+                  MAX_LENGTHS.DESCRIPTION,
+                );
+                setDescriptionValidation(validation);
+                if (validation.isValid) {
+                  const sanitizedDescription = sanitizeInput(newDescription);
+                  dispatch({
+                    type: actions.SET_DESCRIPTION,
+                    value: sanitizedDescription,
+                  });
+                }
+              }}
             />
+            {!descriptionValidation.isValid && (
+              <FormHelperText>
+                <span className='pf-v5-c-form__helper-text-icon'>
+                  {descriptionValidation.error}
+                </span>
+              </FormHelperText>
+            )}
           </FormGroup>
           <FormGroup
             label='How long does it take to do this manually?'
