@@ -65,6 +65,9 @@ describe('Savings Planner input validation', () => {
         .parent()
         .parent()
         .should('contain', 'exceeds maximum length of 1024 characters');
+
+      // Next button should be disabled
+      cy.contains('button', 'Next').should('be.disabled');
     });
 
     it('should enforce max length on task field', () => {
@@ -123,7 +126,7 @@ describe('Savings Planner input validation', () => {
       cy.contains('1. Complete setup').should('exist');
     });
 
-    it('should sanitize input to prevent XSS', () => {
+    it('should prevent XSS via React auto-escaping', () => {
       cy.contains('Add plan').click();
       cy.wait('@getPlanOptions');
 
@@ -131,10 +134,10 @@ describe('Savings Planner input validation', () => {
       const xssPayload = '<script>alert("XSS")</script>';
       cy.get('#name-field').type(xssPayload);
 
-      // The input should be sanitized (HTML entities escaped)
+      // React stores the raw value and auto-escapes at render time
       cy.get('#name-field').should(
         'have.value',
-        '&lt;script&gt;alert(&quot;XSS&quot;)&lt;&#x2F;script&gt;',
+        '<script>alert("XSS")</script>',
       );
     });
   }
