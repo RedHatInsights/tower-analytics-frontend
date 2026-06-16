@@ -1,6 +1,7 @@
-import { FormHelperText } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { HelperText } from '@patternfly/react-core/dist/dynamic/components/HelperText';
+import { HelperTextItem } from '@patternfly/react-core/dist/dynamic/components/HelperText';
 import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
 import { NumberInput } from '@patternfly/react-core/dist/dynamic/components/NumberInput';
 import { Select } from '@patternfly/react-core/dist/dynamic/components/Select';
@@ -32,6 +33,39 @@ const Details = ({ options, formData, dispatch, onValidationChange }) => {
     isValid: true,
   });
 
+  // Common handler for validated text fields
+  const createFieldChangeHandler = (
+    setLocalValue,
+    maxLength,
+    setValidation,
+    otherFieldValidation,
+    actionType,
+  ) => {
+    return (_event, newValue) => {
+      setLocalValue(newValue);
+      const validation = validateLength(newValue, maxLength);
+      setValidation(validation);
+      if (onValidationChange) {
+        onValidationChange({
+          nameValid:
+            actionType === actions.SET_NAME
+              ? validation.isValid
+              : nameValidation.isValid,
+          descriptionValid:
+            actionType === actions.SET_DESCRIPTION
+              ? validation.isValid
+              : descriptionValidation.isValid,
+        });
+      }
+      if (validation.isValid) {
+        dispatch({
+          type: actionType,
+          value: newValue,
+        });
+      }
+    };
+  };
+
   return (
     <Form>
       {options && (
@@ -48,44 +82,35 @@ const Details = ({ options, formData, dispatch, onValidationChange }) => {
               id='name-field'
               name='name'
               value={localName}
+              maxLength={MAX_LENGTHS.NAME}
               validated={
                 !nameValidation.isValid || (!localName && showError)
                   ? 'error'
                   : 'default'
               }
-              onChange={(_event, newName) => {
-                setLocalName(newName);
-                const validation = validateLength(newName, MAX_LENGTHS.NAME);
-                setNameValidation(validation);
-                if (onValidationChange) {
-                  onValidationChange({
-                    nameValid: validation.isValid,
-                    descriptionValid: descriptionValidation.isValid,
-                  });
-                }
-                if (validation.isValid) {
-                  dispatch({
-                    type: actions.SET_NAME,
-                    value: newName,
-                  });
-                }
-              }}
+              onChange={createFieldChangeHandler(
+                setLocalName,
+                MAX_LENGTHS.NAME,
+                setNameValidation,
+                descriptionValidation,
+                actions.SET_NAME,
+              )}
               onFocus={() => setShowError(!localName)}
               onBlur={() => setShowError(!localName)}
             />
             {!localName && showError && (
-              <FormHelperText>
-                <span className='pf-v5-c-form__helper-text-icon'>
+              <HelperText>
+                <HelperTextItem variant='error'>
                   Name is required
-                </span>
-              </FormHelperText>
+                </HelperTextItem>
+              </HelperText>
             )}
             {!nameValidation.isValid && (
-              <FormHelperText>
-                <span className='pf-v5-c-form__helper-text-icon'>
+              <HelperText>
+                <HelperTextItem variant='error'>
                   {nameValidation.error}
-                </span>
-              </FormHelperText>
+                </HelperTextItem>
+              </HelperText>
             )}
           </FormGroup>
           <FormGroup label='What type of task is it?' fieldId='category-field'>
@@ -132,34 +157,22 @@ const Details = ({ options, formData, dispatch, onValidationChange }) => {
               id='description-field'
               name='description'
               value={localDescription}
+              maxLength={MAX_LENGTHS.DESCRIPTION}
               validated={!descriptionValidation.isValid ? 'error' : 'default'}
-              onChange={(_event, newDescription) => {
-                setLocalDescription(newDescription);
-                const validation = validateLength(
-                  newDescription,
-                  MAX_LENGTHS.DESCRIPTION,
-                );
-                setDescriptionValidation(validation);
-                if (onValidationChange) {
-                  onValidationChange({
-                    nameValid: nameValidation.isValid,
-                    descriptionValid: validation.isValid,
-                  });
-                }
-                if (validation.isValid) {
-                  dispatch({
-                    type: actions.SET_DESCRIPTION,
-                    value: newDescription,
-                  });
-                }
-              }}
+              onChange={createFieldChangeHandler(
+                setLocalDescription,
+                MAX_LENGTHS.DESCRIPTION,
+                setDescriptionValidation,
+                nameValidation,
+                actions.SET_DESCRIPTION,
+              )}
             />
             {!descriptionValidation.isValid && (
-              <FormHelperText>
-                <span className='pf-v5-c-form__helper-text-icon'>
+              <HelperText>
+                <HelperTextItem variant='error'>
                   {descriptionValidation.error}
-                </span>
-              </FormHelperText>
+                </HelperTextItem>
+              </HelperText>
             )}
           </FormGroup>
           <FormGroup

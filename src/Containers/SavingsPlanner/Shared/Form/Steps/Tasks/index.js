@@ -9,7 +9,8 @@ import { DataListDragButton } from '@patternfly/react-core/dist/dynamic/componen
 import { DataListItemCells } from '@patternfly/react-core/dist/dynamic/components/DataList';
 import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
-import { FormHelperText } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { HelperText } from '@patternfly/react-core/dist/dynamic/components/HelperText';
+import { HelperTextItem } from '@patternfly/react-core/dist/dynamic/components/HelperText';
 import { InputGroupItem } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
 import { InputGroup } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
 import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
@@ -92,6 +93,7 @@ const Tasks = ({ tasks, dispatch }) => {
                   id='task-field'
                   name='task'
                   value={taskToAdd}
+                  maxLength={MAX_LENGTHS.TASK}
                   validated={!taskValidation.isValid ? 'error' : 'default'}
                   onChange={(_event, newTaskName) => {
                     setTaskToAdd(newTaskName);
@@ -117,11 +119,11 @@ const Tasks = ({ tasks, dispatch }) => {
               </InputGroupItem>
             </InputGroup>
             {!taskValidation.isValid && (
-              <FormHelperText>
-                <span className='pf-v5-c-form__helper-text-icon'>
+              <HelperText>
+                <HelperTextItem variant='error'>
                   {taskValidation.error}
-                </span>
-              </FormHelperText>
+                </HelperTextItem>
+              </HelperText>
             )}
           </FormGroup>
         </Grid>
