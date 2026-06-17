@@ -95,9 +95,9 @@ describe('Savings Planner input validation', () => {
 
       // Should show validation error
       cy.get('.pf-v6-c-form__group').should(
-             'contain',
-             'exceeds maximum length of 255 characters',
-         );
+        'contain',
+        'exceeds maximum length of 255 characters',
+      );
 
       // Add button should be disabled due to validation
       cy.get('button[aria-label="Add task"]').should('be.disabled');
