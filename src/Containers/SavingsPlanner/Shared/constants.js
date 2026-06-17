@@ -8,3 +8,10 @@ export const actions = {
   SET_TASKS: 'SET_TASKS',
   SET_TEMPLATE_ID: 'SET_TEMPLATE_ID',
 };
+
+// Max length constraints for input validation (matching backend limits)
+export const MAX_LENGTHS = {
+  NAME: 255,
+  DESCRIPTION: 1024,
+  TASK: 255,
+};

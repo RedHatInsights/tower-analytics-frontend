@@ -70,3 +70,27 @@ export const getDateFormatByGranularity = (granularity: string): string => {
 
 export const avgDurationFormatter = (avgDuration: number): string =>
   avgDuration.toFixed(2);
+
+/**
+ * Validate input length against a maximum limit
+ * @param input - The input string to validate
+ * @param maxLength - Maximum allowed length
+ * @returns Object with isValid flag and error message if invalid
+ */
+export const validateLength = (
+  input: string,
+  maxLength: number,
+): { isValid: boolean; error?: string } => {
+  if (!input) {
+    return { isValid: true };
+  }
+
+  if (input.length > maxLength) {
+    return {
+      isValid: false,
+      error: `Input exceeds maximum length of ${maxLength} characters (current: ${input.length})`,
+    };
+  }
+
+  return { isValid: true };
+};
