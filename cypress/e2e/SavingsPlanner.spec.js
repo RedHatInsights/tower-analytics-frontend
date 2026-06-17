@@ -37,13 +37,16 @@ describe('Savings Planner input validation', () => {
       // Type into the name field
       cy.get('#name-field').type(longName);
 
+      // User should see the full input (not truncated)
+      cy.get('#name-field').should('have.value', longName);
+
       // Should show validation error
       cy.get('#name-field')
         .parent()
         .parent()
         .should('contain', 'exceeds maximum length of 255 characters');
 
-      // Next button should still be disabled due to validation
+      // Next button should be disabled due to validation
       cy.contains('button', 'Next').should('be.disabled');
     });
 
@@ -59,6 +62,9 @@ describe('Savings Planner input validation', () => {
 
       // Type into the description field
       cy.get('#description-field').type(longDescription);
+
+      // User should see the full input (not truncated)
+      cy.get('#description-field').should('have.value', longDescription);
 
       // Should show validation error
       cy.get('#description-field')
@@ -83,6 +89,9 @@ describe('Savings Planner input validation', () => {
 
       // Type into the task field
       cy.get('#task-field').type(longTask);
+
+      // User should see the full input (not truncated)
+      cy.get('#task-field').should('have.value', longTask);
 
       // Should show validation error
       cy.get('#task-field')

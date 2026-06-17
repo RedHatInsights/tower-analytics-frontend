@@ -10,7 +10,7 @@ import { SelectList } from '@patternfly/react-core/dist/dynamic/components/Selec
 import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
 import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import PropTypes from 'prop-types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   isPositiveNum,
   validateLength,
@@ -32,6 +32,12 @@ const Details = ({ options, formData, dispatch, onValidationChange }) => {
   const [descriptionValidation, setDescriptionValidation] = useState({
     isValid: true,
   });
+
+  // Sync local state with formData to prevent divergence on wizard step remount
+  useEffect(() => {
+    setLocalName(formData.name || '');
+    setLocalDescription(formData.description || '');
+  }, [formData.name, formData.description]);
 
   // Common handler for validated text fields
   const createFieldChangeHandler = (
@@ -82,7 +88,6 @@ const Details = ({ options, formData, dispatch, onValidationChange }) => {
               id='name-field'
               name='name'
               value={localName}
-              maxLength={MAX_LENGTHS.NAME}
               validated={
                 !nameValidation.isValid || (!localName && showError)
                   ? 'error'
@@ -157,7 +162,6 @@ const Details = ({ options, formData, dispatch, onValidationChange }) => {
               id='description-field'
               name='description'
               value={localDescription}
-              maxLength={MAX_LENGTHS.DESCRIPTION}
               validated={!descriptionValidation.isValid ? 'error' : 'default'}
               onChange={createFieldChangeHandler(
                 setLocalDescription,

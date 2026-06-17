@@ -93,7 +93,6 @@ const Tasks = ({ tasks, dispatch }) => {
                   id='task-field'
                   name='task'
                   value={taskToAdd}
-                  maxLength={MAX_LENGTHS.TASK}
                   validated={!taskValidation.isValid ? 'error' : 'default'}
                   onChange={(_event, newTaskName) => {
                     setTaskToAdd(newTaskName);
