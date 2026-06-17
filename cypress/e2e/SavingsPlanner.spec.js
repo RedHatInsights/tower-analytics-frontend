@@ -21,7 +21,7 @@ describe('Savings Planner input validation', () => {
   if (ENV != ENVS.EPHEMERAL) {
     beforeEach(() => {
       cy.intercept('**/plans/*').as('getPlans');
-      cy.intercept('**/plan_options/*').as('getPlanOptions');
+      cy.intercept('**/plan_options/').as('getPlanOptions');
       cy.visit(savingsPlannerUrl);
       cy.wait('@getPlans');
     });
@@ -94,10 +94,10 @@ describe('Savings Planner input validation', () => {
       cy.get('#task-field').should('have.value', longTask);
 
       // Should show validation error
-      cy.get('#task-field')
-        .parent()
-        .parent()
-        .should('contain', 'exceeds maximum length of 255 characters');
+      cy.get('.pf-v6-c-form__group').should(
+             'contain',
+             'exceeds maximum length of 255 characters',
+         );
 
       // Add button should be disabled due to validation
       cy.get('button[aria-label="Add task"]').should('be.disabled');
