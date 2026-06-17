@@ -9,6 +9,8 @@ import { DataListDragButton } from '@patternfly/react-core/dist/dynamic/componen
 import { DataListItemCells } from '@patternfly/react-core/dist/dynamic/components/DataList';
 import { Form } from '@patternfly/react-core/dist/dynamic/components/Form';
 import { FormGroup } from '@patternfly/react-core/dist/dynamic/components/Form';
+import { HelperText } from '@patternfly/react-core/dist/dynamic/components/HelperText';
+import { HelperTextItem } from '@patternfly/react-core/dist/dynamic/components/HelperText';
 import { InputGroupItem } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
 import { InputGroup } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
 import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
@@ -19,7 +21,8 @@ import TimesIcon from '@patternfly/react-icons/dist/dynamic/icons/times-icon';
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { actions } from '../../../constants';
+import { validateLength } from '../../../../../../Utilities/helpers';
+import { MAX_LENGTHS, actions } from '../../../constants';
 
 const TaskSection = styled.div`
   margin-top: 20px;
@@ -47,12 +50,19 @@ const Tasks = ({ tasks, dispatch }) => {
   };
 
   const [taskToAdd, setTaskToAdd] = useState('');
+  const [taskValidation, setTaskValidation] = useState({ isValid: true });
 
   const appendTask = () => {
     const trimmedTask = taskToAdd.trim();
     if (trimmedTask !== '') {
+      const validation = validateLength(trimmedTask, MAX_LENGTHS.TASK);
+      if (!validation.isValid) {
+        setTaskValidation(validation);
+        return;
+      }
       setTasks([...tasks, trimmedTask]);
       setTaskToAdd('');
+      setTaskValidation({ isValid: true });
     }
   };
 
@@ -83,7 +93,15 @@ const Tasks = ({ tasks, dispatch }) => {
                   id='task-field'
                   name='task'
                   value={taskToAdd}
-                  onChange={(_event, newTaskName) => setTaskToAdd(newTaskName)}
+                  validated={!taskValidation.isValid ? 'error' : 'default'}
+                  onChange={(_event, newTaskName) => {
+                    setTaskToAdd(newTaskName);
+                    const validation = validateLength(
+                      newTaskName,
+                      MAX_LENGTHS.TASK,
+                    );
+                    setTaskValidation(validation);
+                  }}
                   onKeyDown={handleTextKeyDown}
                 />
               </InputGroupItem>
@@ -91,12 +109,21 @@ const Tasks = ({ tasks, dispatch }) => {
                 <Button
                   icon={<PlusIcon />}
                   onClick={appendTask}
-                  isDisabled={taskToAdd.trim() === ''}
+                  isDisabled={
+                    taskToAdd.trim() === '' || !taskValidation.isValid
+                  }
                   variant='control'
                   aria-label='Add task'
                 ></Button>
               </InputGroupItem>
             </InputGroup>
+            {!taskValidation.isValid && (
+              <HelperText>
+                <HelperTextItem variant='error'>
+                  {taskValidation.error}
+                </HelperTextItem>
+              </HelperText>
+            )}
           </FormGroup>
         </Grid>
       </Form>

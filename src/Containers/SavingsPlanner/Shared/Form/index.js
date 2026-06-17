@@ -21,6 +21,7 @@ const Form = ({ title, options, data = {} }) => {
   const navigate = useNavigate();
   const { hash } = useLocation();
   const [startStep, setStartStep] = useState(null);
+  const [isDetailsValid, setIsDetailsValid] = useState(true);
 
   const {
     result: apiResponse,
@@ -54,13 +55,23 @@ const Form = ({ title, options, data = {} }) => {
   );
 
   const { formData, requestPayload, dispatch } = usePlanData(data);
+
+  const handleValidationChange = (validation) => {
+    setIsDetailsValid(validation.nameValid && validation.descriptionValid);
+  };
+
   const steps = [
     {
       step_number: 1,
       id: 'details',
       name: 'Details',
       component: (
-        <Details options={options} formData={formData} dispatch={dispatch} />
+        <Details
+          options={options}
+          formData={formData}
+          dispatch={dispatch}
+          onValidationChange={handleValidationChange}
+        />
       ),
     },
     {
@@ -130,7 +141,7 @@ const Form = ({ title, options, data = {} }) => {
                   variant={ButtonVariant.primary}
                   type='submit'
                   onClick={onNext}
-                  isDisabled={!formData.name}
+                  isDisabled={!formData.name || !isDetailsValid}
                 >
                   Next
                 </Button>
@@ -152,7 +163,7 @@ const Form = ({ title, options, data = {} }) => {
                 variant={ButtonVariant.primary}
                 type='submit'
                 onClick={onSave}
-                isDisabled={!formData.name}
+                isDisabled={!formData.name || !isDetailsValid}
               >
                 Save
               </Button>
