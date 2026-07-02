@@ -7,6 +7,7 @@ import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
 import { Tabs } from '@patternfly/react-core/dist/dynamic/components/Tabs';
 import { Tab } from '@patternfly/react-core/dist/dynamic/components/Tabs';
+import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { scaleOrdinal } from 'd3';
@@ -25,6 +26,10 @@ import { pfmulti } from '../../Charts/Utilities/colors';
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
 import NoData from '../../Components/ApiStatus/NoData';
+import {
+  FilterVariantToggle,
+  QueryFilterInput,
+} from '../../Components/QueryFilter/QueryFilterInput';
 import FilterableToolbar from '../../Components/Toolbar/';
 import {
   DEFAULT_NAMESPACE,
@@ -121,8 +126,41 @@ const chartMapper = [
   },
 ];
 
+const ORG_STATS_FIELD_DEFS = [
+  {
+    key: 'status',
+    op: '=',
+    displayLabel: 'status =',
+    hint: 'Filter by job status',
+    filterStateKey: 'status',
+    values: [
+      { value: 'successful', label: 'Successful' },
+      { value: 'failed', label: 'Failed' },
+      { value: 'error', label: 'Error' },
+      { value: 'running', label: 'Running' },
+      { value: 'pending', label: 'Pending' },
+      { value: 'canceled', label: 'Canceled' },
+    ],
+  },
+  {
+    key: 'job_type',
+    op: '=',
+    displayLabel: 'job_type =',
+    hint: 'Filter by job type',
+    filterStateKey: 'job_type',
+    values: [
+      { value: 'job', label: 'Job' },
+      { value: 'workflowjob', label: 'Workflow job' },
+      { value: 'inventoryupdate', label: 'Inventory update' },
+      { value: 'projectupdate', label: 'Project update' },
+    ],
+  },
+];
+
 const OrganizationStatistics = () => {
   const [activeTabKey, setActiveTabKey] = useState(0);
+  const [filterVariant, setFilterVariant] = useState('a');
+  const [queryValue, setQueryValue] = useState('');
 
   // params from toolbar/searchbar
   const { queryParams, setFromToolbar } = useQueryParams(
@@ -326,14 +364,52 @@ const OrganizationStatistics = () => {
     </Grid>
   );
 
+  const variantToggle = (
+    <FilterVariantToggle
+      key='variant-toggle'
+      variant={filterVariant}
+      onChange={(v) => {
+        setFilterVariant(v);
+        setQueryValue('');
+        setFromToolbar(null, null);
+      }}
+    />
+  );
+
   return (
     <>
       <PageHeader title={'Organization Statistics'} />
-      <FilterableToolbar
-        categories={options}
-        filters={queryParams}
-        setFilters={setFromToolbar}
-      />
+      {filterVariant === 'a' && (
+        <FilterableToolbar
+          categories={options}
+          filters={queryParams}
+          setFilters={setFromToolbar}
+          searchFirst='name'
+          leadingControls={[variantToggle]}
+        />
+      )}
+      {filterVariant === 'b' && (
+        <FilterableToolbar
+          expandLeadingControls
+          categories={{}}
+          filters={queryParams}
+          setFilters={setFromToolbar}
+          leadingControls={[
+            variantToggle,
+              <QueryFilterInput
+                fieldDefs={ORG_STATS_FIELD_DEFS}
+                value={queryValue}
+                onChange={setQueryValue}
+                setFilterState={(state) => {
+                  Object.entries(state).forEach(([key, values]) => {
+                    setFromToolbar(key, values.length === 1 ? values[0] : values);
+                  });
+                  if (Object.keys(state).length === 0) setFromToolbar(null, null);
+                }}
+              />
+          ]}
+        />
+      )}
       <PageSection hasBodyWrapper={false}>{renderContent()}</PageSection>
     </>
   );

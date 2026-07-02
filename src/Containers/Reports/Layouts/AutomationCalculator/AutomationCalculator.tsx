@@ -604,17 +604,22 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         </CardFooter>
       </Card>
     ) : (
-      <>
-        <FilterableToolbar
-          categories={options as any}
-          filters={queryParams as any}
-          setFilters={setFromToolbar}
-        />
-        <Grid hasGutter>
-          <GridItem span={9}>{renderLeft()}</GridItem>
-          <GridItem span={3}>{renderRight()}</GridItem>
-        </Grid>
-      </>
+      <div>
+        <div style={{ paddingInline: '16px' }}>
+          <FilterableToolbar
+            categories={options as any}
+            filters={queryParams as any}
+            setFilters={setFromToolbar}
+            noPadding
+          />
+        </div>
+        <div style={{ paddingTop: '8px', maxHeight: '420px', overflowY: 'auto' }}>
+          <Grid hasGutter>
+            <GridItem span={9}>{renderLeft()}</GridItem>
+            <GridItem span={3}>{renderRight()}</GridItem>
+          </Grid>
+        </div>
+      </div>
     );
   return (
     <ApiStatusWrapper

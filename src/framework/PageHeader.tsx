@@ -153,10 +153,10 @@ export function PageHeader(props: PageHeaderProps) {
       )}
       <PageSection
         hasBodyWrapper={false}
-        className='border-top border-bottom dark-3'
+        className='dark-3'
         style={{
           paddingTop: breadcrumbs ? (xl ? 16 : 12) : xl ? 16 : 12,
-          paddingBottom: xl ? 16 : 12,
+          paddingBottom: xl ? 24 : 20,
         }}
       >
         <Stack hasGutter>

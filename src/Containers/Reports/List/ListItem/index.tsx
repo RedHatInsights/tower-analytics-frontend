@@ -28,42 +28,20 @@ const SLabel = styled(Label)`
 
 interface Props {
   report: BaseReportProps;
-  selected: string;
-  setSelected: (newSelection: string) => void;
 }
 
 const ListItem: FunctionComponent<Props> = ({
   report: { slug, description, name, tags },
-  selected,
-  setSelected,
 }) => {
   return (
     <Card
       data-cy={slug}
-      isSelected={selected === slug}
-      onClick={() => {
-        setSelected(slug);
-      }}
-      className={
-        selected === slug
-          ? 'pf-m-selectable-raised pf-m-selected-raised'
-          : 'pf-m-selectable-raised'
-      }
     >
       <CardTitle>
-        <Tooltip content={<div>Click to go to report details</div>}>
-          <Link to={paths.getDetails(slug)}>{name}</Link>
-        </Tooltip>
+        <Link to={paths.getDetails(slug)}>{name}</Link>
       </CardTitle>
       <CardBody>
-        {description ? (
-          <Tooltip
-            content={<div>Show report in preview</div>}
-            position='bottom'
-          >
-            <Small>{description}</Small>
-          </Tooltip>
-        ) : null}
+        {description ? <Small>{description}</Small> : null}
       </CardBody>
       <CardFooter>
         {tags.map((tagKey, idx) => {

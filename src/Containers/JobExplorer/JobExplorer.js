@@ -1,12 +1,11 @@
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
-import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
-import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { DescriptionList } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
 import { DescriptionListGroup } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
 import { DescriptionListTerm } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
 import { DescriptionListDescription } from '@patternfly/react-core/dist/dynamic/components/DescriptionList';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
 import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
+import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
 import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
 import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
@@ -25,6 +24,10 @@ import Breakdown from '../../Charts/Breakdown';
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import JobStatus from '../../Components/JobStatus';
 import Pagination from '../../Components/Pagination';
+import {
+  FilterVariantToggle,
+  QueryFilterInput,
+} from '../../Components/QueryFilter/QueryFilterInput';
 import FilterableToolbar from '../../Components/Toolbar/';
 import { SettingsPanel } from '../../Components/Toolbar/Groups';
 import { useQueryParams } from '../../QueryParams/';
@@ -35,7 +38,42 @@ import { TextCell } from '../../framework/PageCells/TextCell';
 import { PageHeader } from '../../framework/PageHeader';
 import { PageTable } from '../../framework/PageTable/PageTable';
 
+const JOB_EXPLORER_FIELD_DEFS = [
+  {
+    key: 'status',
+    op: '=',
+    displayLabel: 'status =',
+    hint: 'Filter by job status',
+    filterStateKey: 'status',
+    values: [
+      { value: 'successful', label: 'Successful' },
+      { value: 'failed', label: 'Failed' },
+      { value: 'error', label: 'Error' },
+      { value: 'running', label: 'Running' },
+      { value: 'pending', label: 'Pending' },
+      { value: 'canceled', label: 'Canceled' },
+    ],
+  },
+  {
+    key: 'job_type',
+    op: '=',
+    displayLabel: 'job_type =',
+    hint: 'Filter by job type',
+    filterStateKey: 'job_type',
+    values: [
+      { value: 'job', label: 'Job' },
+      { value: 'workflowjob', label: 'Workflow job' },
+      { value: 'inventoryupdate', label: 'Inventory update' },
+      { value: 'projectupdate', label: 'Project update' },
+      { value: 'systemjob', label: 'System job' },
+    ],
+  },
+];
+
 const JobExplorer = () => {
+  const [filterVariant, setFilterVariant] = useState('a');
+  const [queryValue, setQueryValue] = useState('');
+
   const {
     queryParams,
     setFromPagination,
@@ -272,66 +310,29 @@ const JobExplorer = () => {
     </ExpandableRowContent>
   );
 
+  const variantToggle = (
+    <FilterVariantToggle
+      key='variant-toggle'
+      variant={filterVariant}
+      onChange={(v) => {
+        setFilterVariant(v);
+        setQueryValue('');
+        setFromToolbar(null, null);
+      }}
+    />
+  );
+
   return (
     <React.Fragment>
       <PageHeader title={'Job Explorer'} />
-      <PageSection hasBodyWrapper={false}>
-        <Card>
-          <CardBody>
-            <FilterableToolbar
-              categories={options}
-              filters={queryParams}
-              setFilters={setFromToolbar}
-              pagination={
-                <Pagination
-                  count={meta.count}
-                  params={{
-                    limit: +queryParams.limit,
-                    offset: +queryParams.offset,
-                  }}
-                  setPagination={setFromPagination}
-                  isCompact
-                />
-              }
-              settingsPanel={(setSettingsExpanded, settingsExpanded) => (
-                <SettingsPanel
-                  filters={queryParams}
-                  setFilters={setFromToolbar}
-                  settingsExpanded={settingsExpanded}
-                  setSettingsExpanded={setSettingsExpanded}
-                  id={'showRootWorkflowJobs'}
-                  label={'Ignore nested workflows and jobs'}
-                  labelOff={'Ignore nested workflows and jobs'}
-                  isChecked={
-                    queryParams.only_root_workflows_and_standalone_jobs
-                  }
-                  onChange={(value) => {
-                    setFromToolbar(
-                      'only_root_workflows_and_standalone_jobs',
-                      value,
-                    );
-                  }}
-                  ariaLabel={'ignore nested workflow popover'}
-                  bodyContent={
-                    'If enabled, nested workflows and jobs will not be included in the overall totals. Enable this option to filter out duplicate entries.'
-                  }
-                />
-              )}
-              hasSettings
-            />
-            <PageTable
-              pageItems={data}
-              itemCount={meta.count}
-              autoHidePagination
-              tableColumns={jobExplorerTableColumns}
-              expandedRow={expandedRowContent}
-              errorStateTitle={'Error loading templates'}
-              emptyStateTitle={'No templates yet'}
-              emptyStateDescription={'To get started, create a template.'}
-              sort={queryParams.sort_options}
-              sortDirection={queryParams.sort_order}
-              setSort={(e) => setSort(e)}
-            />
+      {filterVariant === 'a' && (
+        <FilterableToolbar
+          categories={options}
+          filters={queryParams}
+          setFilters={setFromToolbar}
+          searchFirst='name'
+          leadingControls={[variantToggle]}
+          pagination={
             <Pagination
               count={meta.count}
               params={{
@@ -339,10 +340,76 @@ const JobExplorer = () => {
                 offset: +queryParams.offset,
               }}
               setPagination={setFromPagination}
-              variant={PaginationVariant.bottom}
+              isCompact
             />
-          </CardBody>
-        </Card>
+          }
+          settingsPanel={(setSettingsExpanded, settingsExpanded) => (
+            <SettingsPanel
+              filters={queryParams}
+              setFilters={setFromToolbar}
+              settingsExpanded={settingsExpanded}
+              setSettingsExpanded={setSettingsExpanded}
+              id={'showRootWorkflowJobs'}
+              label={'Ignore nested workflows and jobs'}
+              labelOff={'Ignore nested workflows and jobs'}
+              isChecked={queryParams.only_root_workflows_and_standalone_jobs}
+              onChange={(value) => {
+                setFromToolbar('only_root_workflows_and_standalone_jobs', value);
+              }}
+              ariaLabel={'ignore nested workflow popover'}
+              bodyContent={
+                'If enabled, nested workflows and jobs will not be included in the overall totals. Enable this option to filter out duplicate entries.'
+              }
+            />
+          )}
+          hasSettings
+        />
+      )}
+      {filterVariant === 'b' && (
+        <FilterableToolbar
+          expandLeadingControls
+          categories={{}}
+          filters={queryParams}
+          setFilters={setFromToolbar}
+          leadingControls={[
+            variantToggle,
+              <QueryFilterInput
+                fieldDefs={JOB_EXPLORER_FIELD_DEFS}
+                value={queryValue}
+                onChange={setQueryValue}
+                setFilterState={(state) => {
+                  Object.entries(state).forEach(([key, values]) => {
+                    setFromToolbar(key, values.length === 1 ? values[0] : values);
+                  });
+                  if (Object.keys(state).length === 0) setFromToolbar(null, null);
+                }}
+              />
+          ]}
+        />
+      )}
+      <PageSection hasBodyWrapper={false}>
+        <PageTable
+          pageItems={data}
+          itemCount={meta.count}
+          autoHidePagination
+          tableColumns={jobExplorerTableColumns}
+          expandedRow={expandedRowContent}
+          errorStateTitle={'Error loading templates'}
+          emptyStateTitle={'No templates yet'}
+          emptyStateDescription={'To get started, create a template.'}
+          sort={queryParams.sort_options}
+          sortDirection={queryParams.sort_order}
+          setSort={(e) => setSort(e)}
+        />
+        <Pagination
+          count={meta.count}
+          params={{
+            limit: +queryParams.limit,
+            offset: +queryParams.offset,
+          }}
+          setPagination={setFromPagination}
+          variant={PaginationVariant.bottom}
+        />
       </PageSection>
     </React.Fragment>
   );

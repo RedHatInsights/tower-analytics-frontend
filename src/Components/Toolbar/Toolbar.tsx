@@ -25,7 +25,14 @@ interface Props {
     settingsExpanded: boolean,
   ) => ReactNode;
   hasSettings?: boolean;
+  leadingControls?: ReactNode[];
+  // When true, the leading controls group stretches to fill available toolbar width (use in advanced query mode)
+  expandLeadingControls?: boolean;
   additionalControls?: ReactNode[];
+  // Prepend a "Search" (keyword) option that maps to this category key
+  searchFirst?: string;
+  // Disable the page-section padding override (use inside cards/panels)
+  noPadding?: boolean;
 }
 
 const FilterableToolbar: FunctionComponent<Props> = ({
@@ -36,7 +43,11 @@ const FilterableToolbar: FunctionComponent<Props> = ({
   pagination = null,
   hasSettings = false,
   settingsPanel = null,
+  leadingControls = [],
+  expandLeadingControls = false,
   additionalControls = [],
+  searchFirst,
+  noPadding = false,
 }) => {
   const [settingsExpanded, setSettingsExpanded] = useState(false);
   const { quick_date_range, sort_options, granularity, ...restCategories } =
@@ -70,10 +81,23 @@ const FilterableToolbar: FunctionComponent<Props> = ({
       clearAllFilters={() => setFilters(null, null)}
       collapseListedFiltersBreakpoint='xl'
       data-cy={'filter-toolbar'}
+      style={noPadding ? undefined : {
+        paddingInlineStart: 'calc(var(--pf-v6-c-page__main-section--PaddingInlineStart) - var(--pf-v6-c-page__main-container--BorderInlineStartWidth))',
+        paddingInlineEnd: 'calc(var(--pf-v6-c-page__main-section--PaddingInlineEnd) - var(--pf-v6-c-page__main-container--BorderInlineEndWidth))',
+      }}
     >
       <ToolbarContent>
+        {leadingControls.length > 0 && (
+          <ToolbarGroup style={expandLeadingControls ? { flex: 1 } : undefined}>
+            {leadingControls.map((control, idx) => (
+              <ToolbarItem key={idx} style={expandLeadingControls && idx === leadingControls.length - 1 ? { flex: 1 } : undefined}>
+                {control}
+              </ToolbarItem>
+            ))}
+          </ToolbarGroup>
+        )}
         <ToolbarToggleGroup toggleIcon={<FilterIcon />} breakpoint='xl'>
-          {Object.keys(filterCategories).length > 0 && (
+          {(Object.keys(filterCategories).length > 0 || searchFirst) && (
             <FilterCategoriesGroup
               filterCategories={
                 filterCategories as Record<
@@ -84,6 +108,7 @@ const FilterableToolbar: FunctionComponent<Props> = ({
               defaultSelected={defaultSelected}
               filters={filters}
               setFilters={setFilters}
+              searchFirst={searchFirst}
             />
           )}
           {(quick_date_range || granularity) && (

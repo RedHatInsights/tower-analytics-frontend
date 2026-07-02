@@ -367,36 +367,41 @@ const ReportCard: FunctionComponent<StandardProps> = ({
     </Card>
   ) : (
     <div data-cy={dataApi.isLoading ? 'toolbar_loading' : 'toolbar_loaded'}>
-      <FilterableToolbar
-        categories={options as any}
-        defaultSelected={defaultSelectedToolbarCategory}
-        filters={queryParams as any}
-        setFilters={setFromToolbar}
-        hasSettings={false}
-        additionalControls={[]}
-      />
-      {tableHeaders && slug === 'templates_by_organization' ? (
-        <ApiStatusWrapper api={dataApi as any}>
-          <PlotlyChart data={(dataApi.result as any).items} />
-        </ApiStatusWrapper>
-      ) : (
-        <ApiStatusWrapper api={dataApi as any}>
-          <Chart
-            schema={hydrateSchema(schema as any)({
-              label: chartParams.label,
-              y: chartParams.y,
-              xTickFormat: chartParams.xTickFormat,
-              chartType: chartParams.chartType as any,
-            })}
-            data={dataApi.result as any}
-            specificFunctions={{
-              labelFormat: {
-                customTooltipFormatting,
-              },
-            }}
-          />
-        </ApiStatusWrapper>
-      )}
+      <div style={{ paddingInline: '16px' }}>
+        <FilterableToolbar
+          categories={options as any}
+          defaultSelected={defaultSelectedToolbarCategory}
+          filters={queryParams as any}
+          setFilters={setFromToolbar}
+          hasSettings={false}
+          additionalControls={[]}
+          noPadding
+        />
+      </div>
+      <div style={{ paddingTop: '8px', maxHeight: '420px', overflowY: 'auto' }}>
+        {tableHeaders && slug === 'templates_by_organization' ? (
+          <ApiStatusWrapper api={dataApi as any}>
+            <PlotlyChart data={(dataApi.result as any).items} />
+          </ApiStatusWrapper>
+        ) : (
+          <ApiStatusWrapper api={dataApi as any}>
+            <Chart
+              schema={hydrateSchema(schema as any)({
+                label: chartParams.label,
+                y: chartParams.y,
+                xTickFormat: chartParams.xTickFormat,
+                chartType: chartParams.chartType as any,
+              })}
+              data={dataApi.result as any}
+              specificFunctions={{
+                labelFormat: {
+                  customTooltipFormatting,
+                },
+              }}
+            />
+          </ApiStatusWrapper>
+        )}
+      </div>
     </div>
   );
 };

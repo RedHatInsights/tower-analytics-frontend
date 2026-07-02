@@ -73,7 +73,6 @@ const Details = () => {
         },
         {
           label: plan.name,
-          to: `/ansible/automation-analytics/savings-planner/${id}`,
         },
       ]
     : [];

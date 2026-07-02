@@ -2,9 +2,10 @@ import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { Grid } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
 import { GridItem } from '@patternfly/react-core/dist/dynamic/layouts/Grid';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   readClustersOptions,
   readEventExplorer,
@@ -14,6 +15,10 @@ import BarChart from '../../Charts/BarChart';
 import LineChart from '../../Charts/LineChart';
 import ApiErrorState from '../../Components/ApiStatus/ApiErrorState';
 import LoadingState from '../../Components/ApiStatus/LoadingState';
+import {
+  FilterVariantToggle,
+  QueryFilterInput,
+} from '../../Components/QueryFilter/QueryFilterInput';
 import FilterableToolbar from '../../Components/Toolbar';
 import { useQueryParams } from '../../QueryParams/';
 import { jobExplorer } from '../../Utilities/constants';
@@ -50,7 +55,41 @@ const initialOptionsParams = {
   attributes: jobExplorer.attributes,
 };
 
+const CLUSTERS_FIELD_DEFS = [
+  {
+    key: 'status',
+    op: '=',
+    displayLabel: 'status =',
+    hint: 'Filter by job status',
+    filterStateKey: 'status',
+    values: [
+      { value: 'successful', label: 'Successful' },
+      { value: 'failed', label: 'Failed' },
+      { value: 'error', label: 'Error' },
+      { value: 'running', label: 'Running' },
+      { value: 'pending', label: 'Pending' },
+      { value: 'canceled', label: 'Canceled' },
+    ],
+  },
+  {
+    key: 'job_type',
+    op: '=',
+    displayLabel: 'job_type =',
+    hint: 'Filter by job type',
+    filterStateKey: 'job_type',
+    values: [
+      { value: 'job', label: 'Job' },
+      { value: 'workflowjob', label: 'Workflow job' },
+      { value: 'inventoryupdate', label: 'Inventory update' },
+      { value: 'projectupdate', label: 'Project update' },
+    ],
+  },
+];
+
 const Clusters = () => {
+  const [filterVariant, setFilterVariant] = useState('a');
+  const [queryValue, setQueryValue] = useState('');
+
   // params from toolbar/searchbar
   const optionsQueryParams = useQueryParams(initialOptionsParams);
   const { queryParams, setFromToolbar } = useQueryParams(
@@ -194,14 +233,52 @@ const Clusters = () => {
     );
   };
 
+  const variantToggle = (
+    <FilterVariantToggle
+      key='variant-toggle'
+      variant={filterVariant}
+      onChange={(v) => {
+        setFilterVariant(v);
+        setQueryValue('');
+        setFromToolbar(null, null);
+      }}
+    />
+  );
+
   return (
     <div data-cy={'header-clusters'}>
       <PageHeader data-cy={'header-clusters'} title={'Clusters'} />
-      <FilterableToolbar
-        categories={options}
-        filters={queryParams}
-        setFilters={setFromToolbar}
-      />
+      {filterVariant === 'a' && (
+        <FilterableToolbar
+          categories={options}
+          filters={queryParams}
+          setFilters={setFromToolbar}
+          searchFirst='name'
+          leadingControls={[variantToggle]}
+        />
+      )}
+      {filterVariant === 'b' && (
+        <FilterableToolbar
+          expandLeadingControls
+          categories={{}}
+          filters={queryParams}
+          setFilters={setFromToolbar}
+          leadingControls={[
+            variantToggle,
+              <QueryFilterInput
+                fieldDefs={CLUSTERS_FIELD_DEFS}
+                value={queryValue}
+                onChange={setQueryValue}
+                setFilterState={(state) => {
+                  Object.entries(state).forEach(([key, values]) => {
+                    setFromToolbar(key, values.length === 1 ? values[0] : values);
+                  });
+                  if (Object.keys(state).length === 0) setFromToolbar(null, null);
+                }}
+              />,
+          ]}
+        />
+      )}
       <PageSection hasBodyWrapper={false}>{renderContent()}</PageSection>
     </div>
   );

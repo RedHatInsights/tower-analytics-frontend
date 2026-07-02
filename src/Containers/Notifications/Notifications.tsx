@@ -1,79 +1,41 @@
-import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
-import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
-import { CardBody } from '@patternfly/react-core/dist/dynamic/components/Card';
-import { FormSelect } from '@patternfly/react-core/dist/dynamic/components/FormSelect';
-import { FormSelectOption } from '@patternfly/react-core/dist/dynamic/components/FormSelect';
-import { NotificationDrawer } from '@patternfly/react-core/dist/dynamic/components/NotificationDrawer';
+import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
-import { PaginationVariant } from '@patternfly/react-core/dist/dynamic/components/Pagination';
 import { Pagination } from '@patternfly/react-core/dist/dynamic/components/Pagination';
-import { Flex } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
-import { FlexItem } from '@patternfly/react-core/dist/dynamic/layouts/Flex';
+import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
+import { Select } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectList } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { SelectOption } from '@patternfly/react-core/dist/dynamic/components/Select';
+import { Toolbar } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarContent } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
+import ExternalLinkAltIcon from '@patternfly/react-icons/dist/dynamic/icons/external-link-alt-icon';
 import React, { FC, useCallback, useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { Params, readClusters, readNotifications } from '../../Api/';
-import LoadingState from '../../Components/ApiStatus/LoadingState';
-import NoData from '../../Components/ApiStatus/NoData';
 import { useQueryParams } from '../../QueryParams/';
+import { formatDateTime } from '../../Utilities/helpers';
 import useRequest from '../../Utilities/useRequest';
+import { TextCell } from '../../framework/PageCells/TextCell';
 import { PageHeader } from '../../framework/PageHeader';
-import NotificationsList from './NotificationsList';
-
-const NCardTitle = styled(CardTitle)`
-  display: flex;
-  justify-content: space-between;
-
-  @media screen and (max-width: 1035px) {
-    display: block;
-  }
-`;
+import { PageTable } from '../../framework/PageTable/PageTable';
 
 const notificationOptions = [
-  {
-    value: 'please choose',
-    label: 'Select Notification Severity',
-    disabled: true,
-  },
-  { value: 'error', label: 'View Critical', disabled: false },
-  { value: 'warning', label: 'View Warning', disabled: false },
-  { value: 'notice', label: 'View Notice', disabled: false },
-  { value: '', label: 'View All', disabled: false },
+  { value: '',        label: 'All severities' },
+  { value: 'error',   label: 'Danger' },
+  { value: 'warning', label: 'Warning' },
+  { value: 'notice',  label: 'Info' },
 ];
-
-const formatClusterName = (
-  data: any[],
-): { value: string; label: string; disabled: boolean }[] => {
-  const defaultClusterOptions = [
-    { value: 'please choose', label: 'Select cluster', disabled: true },
-    { value: '', label: 'All Clusters', disabled: false },
-    { value: '-1', label: 'Unassociated', disabled: false },
-  ];
-
-  const calcData = data.map(
-    ({ label, cluster_id: id, install_uuid: uuid }) => ({
-      value: id as string,
-      label: (label ?? uuid) as string,
-      disabled: false,
-    }),
-  );
-
-  return [...defaultClusterOptions, ...calcData];
-};
 
 const initialQueryParams = {
   defaultParams: {
-    limit: 5,
+    limit: 10,
     offset: 0,
-    // This is not doing anything opn the v0 api
     sort_options: 'created',
   },
 };
 
 interface NotificationDataType {
   notifications: any[];
-  meta: {
-    count: number;
-  };
+  meta: { count: number };
 }
 
 interface ClusterDataType {
@@ -81,7 +43,10 @@ interface ClusterDataType {
 }
 
 const Notifications: FC<Record<string, never>> = () => {
+  const [clusterOpen, setClusterOpen] = useState(false);
+  const [severityOpen, setSeverityOpen] = useState(false);
   const [selectedCluster, setSelectedCluster] = useState('');
+  const [selectedClusterLabel, setSelectedClusterLabel] = useState('All clusters');
 
   const { queryParams, setId, setFromPagination, setSeverity } = useQueryParams(
     initialQueryParams.defaultParams,
@@ -98,9 +63,7 @@ const Notifications: FC<Record<string, never>> = () => {
   } = useRequest<NotificationDataType>(
     useCallback(
       () =>
-        readNotifications(
-          queryParams as Params,
-        ) as unknown as Promise<NotificationDataType>,
+        readNotifications(queryParams as Params) as unknown as Promise<NotificationDataType>,
       [queryParams],
     ),
     { notifications: [], meta: { count: 0 } },
@@ -115,7 +78,6 @@ const Notifications: FC<Record<string, never>> = () => {
   );
 
   useEffect(() => {
-    // TODO: Update the useRequest hook to return function and not a promise!! @brum
     fetchClusters();
   }, []);
 
@@ -128,103 +90,150 @@ const Notifications: FC<Record<string, never>> = () => {
     setFromPagination(newOffset);
   };
 
-  const handlePerPageChange = (_event: unknown, _perPage: number) => {
-    setFromPagination(0);
+  const handlePerPageChange = (_event: unknown, perPage: number) => {
+    setFromPagination(0, perPage as any);
   };
 
   const currentPage = Math.floor(+offset / +limit) + 1;
 
+  const severityMap: Record<string, { label: string; status: 'danger' | 'warning' | 'info' }> = {
+    error:   { label: 'Danger',  status: 'danger' },
+    warning: { label: 'Warning', status: 'warning' },
+    notice:  { label: 'Info',    status: 'info' },
+  };
+
+  const clusterOptions = [
+    { value: '',   label: 'All clusters' },
+    { value: '-1', label: 'Unassociated' },
+    ...(clustersData as any[]).map(({ label, cluster_id: id, install_uuid: uuid }) => ({
+      value: id as string,
+      label: (label ?? uuid) as string,
+    })),
+  ];
+
+  const selectedSeverityLabel =
+    notificationOptions.find((o) => o.value === (severity || ''))?.label ?? 'All severities';
+
+  const tableColumns = [
+    {
+      header: 'Severity',
+      sort: 'label',
+      cell: (item: any) => {
+        const sev = severityMap[item.label] ?? { label: item.label, status: 'info' as const };
+        return <Label status={sev.status} variant='outline'>{sev.label}</Label>;
+      },
+      value: (item: any) => item.label,
+    },
+    {
+      header: 'Message',
+      cell: (item: any) => (
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+          {item.message}
+          {item.tower_url && (
+            <a href={item.tower_url} target='_blank' rel='noopener noreferrer' aria-label='View in Tower'>
+              <ExternalLinkAltIcon style={{ fontSize: '12px' }} />
+            </a>
+          )}
+        </span>
+      ),
+      value: (item: any) => item.message,
+    },
+    {
+      header: 'Date',
+      sort: 'created',
+      cell: (item: any) => <TextCell text={item.date ? formatDateTime(item.date) : '—'} />,
+      value: (item: any) => item.date,
+    },
+  ];
+
   return (
     <>
       <PageHeader title={'Notifications'} />
-      <>
-        <PageSection hasBodyWrapper={false}>
-          <Card>
-            <NCardTitle>
-              <Flex direction={{ default: 'row' }}>
-                <FlexItem>
-                  <FormSelect
-                    name='selectedCluster'
-                    value={selectedCluster}
-                    onChange={(_event, value) => {
-                      setSelectedCluster(value);
-                      setId(value);
-                      setFromPagination(0);
-                    }}
-                    aria-label='Select Cluster'
-                  >
-                    {formatClusterName(clustersData).map(
-                      ({ value, label, disabled }, index) => (
-                        <FormSelectOption
-                          isDisabled={disabled}
-                          key={index}
-                          value={value}
-                          label={label}
-                        />
-                      ),
-                    )}
-                  </FormSelect>
-                </FlexItem>
-                <FlexItem>
-                  <FormSelect
-                    name='selectedNotification'
-                    value={severity || ''}
-                    onChange={(_event, value) => {
-                      setSeverity(value);
-                      setFromPagination(0);
-                    }}
-                    aria-label='Select Notification Type'
-                  >
-                    {notificationOptions.map(
-                      ({ disabled, value, label }, index) => (
-                        <FormSelectOption
-                          isDisabled={disabled}
-                          key={index}
-                          value={value}
-                          label={label}
-                        />
-                      ),
-                    )}
-                  </FormSelect>
-                </FlexItem>
-              </Flex>
-              <Pagination
-                itemCount={meta?.count || 0}
-                page={currentPage}
-                perPage={+limit}
-                onSetPage={handlePaginationChange}
-                onPerPageSelect={handlePerPageChange}
-                isCompact
-              />
-            </NCardTitle>
-            <CardBody>
-              {isLoading && <LoadingState />}
-              {isSuccess && notificationsData.length <= 0 && <NoData />}
-              {isSuccess && notificationsData.length > 0 && (
-                <NotificationDrawer>
-                  <NotificationsList
-                    filterBy={severity || ''}
-                    notifications={notificationsData}
-                  />
-                </NotificationDrawer>
+      <Toolbar
+        style={{
+          paddingInlineStart: 'calc(var(--pf-v6-c-page__main-section--PaddingInlineStart) - var(--pf-v6-c-page__main-container--BorderInlineStartWidth))',
+          paddingInlineEnd: 'calc(var(--pf-v6-c-page__main-section--PaddingInlineEnd) - var(--pf-v6-c-page__main-container--BorderInlineEndWidth))',
+        }}
+      >
+        <ToolbarContent>
+          <ToolbarItem>
+            <Select
+              isOpen={clusterOpen}
+              onOpenChange={setClusterOpen}
+              onSelect={(_e, value) => {
+                const label = clusterOptions.find((o) => o.value === value)?.label ?? 'All clusters';
+                setSelectedCluster(value as string);
+                setSelectedClusterLabel(label);
+                setId(value as string);
+                setFromPagination(0);
+                setClusterOpen(false);
+              }}
+              selected={selectedCluster}
+              toggle={(ref) => (
+                <MenuToggle ref={ref} onClick={() => setClusterOpen(!clusterOpen)} isExpanded={clusterOpen}>
+                  {selectedClusterLabel}
+                </MenuToggle>
               )}
-              {!!error && (
-                <div>
-                  <NoData />
-                </div>
+            >
+              <SelectList>
+                {clusterOptions.map(({ value, label }) => (
+                  <SelectOption key={value} value={value}>{label}</SelectOption>
+                ))}
+              </SelectList>
+            </Select>
+          </ToolbarItem>
+
+          <ToolbarItem>
+            <Select
+              isOpen={severityOpen}
+              onOpenChange={setSeverityOpen}
+              onSelect={(_e, value) => {
+                setSeverity(value as string);
+                setFromPagination(0);
+                setSeverityOpen(false);
+              }}
+              selected={severity || ''}
+              toggle={(ref) => (
+                <MenuToggle ref={ref} onClick={() => setSeverityOpen(!severityOpen)} isExpanded={severityOpen}>
+                  {selectedSeverityLabel}
+                </MenuToggle>
               )}
-              <Pagination
-                itemCount={meta?.count || 0}
-                page={currentPage}
-                perPage={+limit}
-                onSetPage={handlePaginationChange}
-                onPerPageSelect={handlePerPageChange}
-                variant={PaginationVariant.bottom}
-              />
-            </CardBody>
-          </Card>
-        </PageSection>
-      </>
+            >
+              <SelectList>
+                {notificationOptions.map(({ value, label }) => (
+                  <SelectOption key={value} value={value}>{label}</SelectOption>
+                ))}
+              </SelectList>
+            </Select>
+          </ToolbarItem>
+
+          <ToolbarItem align={{ default: 'alignEnd' }}>
+            <Pagination
+              itemCount={meta?.count || 0}
+              page={currentPage}
+              perPage={+limit}
+              onSetPage={handlePaginationChange}
+              onPerPageSelect={handlePerPageChange}
+              isCompact
+            />
+          </ToolbarItem>
+        </ToolbarContent>
+      </Toolbar>
+      <PageSection hasBodyWrapper={false}>
+        <PageTable
+          keyFn={(item: any) => item.id ?? item.date}
+          pageItems={notificationsData}
+          itemCount={meta?.count || 0}
+          tableColumns={tableColumns}
+          page={currentPage}
+          perPage={+limit}
+          setPage={(page) => handlePaginationChange(null, page)}
+          setPerPage={(perPage) => handlePerPageChange(null, perPage)}
+          errorStateTitle={'Error loading notifications'}
+          emptyStateTitle={'No notifications found'}
+          emptyStateDescription={'Try adjusting your filters.'}
+        />
+      </PageSection>
     </>
   );
 };

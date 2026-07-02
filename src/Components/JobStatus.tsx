@@ -19,49 +19,31 @@ interface Props {
     | 'waiting';
 }
 
-const JobStatus: FunctionComponent<Props> = ({ status }) => {
-  const getColor = () => {
-    switch (status) {
-      case 'successful':
-        return 'green';
-      case 'failed':
-      case 'error':
-        return 'red';
-      case 'running':
-      case 'pending':
-        return 'blue';
-      case 'canceled':
-        return 'orange';
-      // case new, waiting
-      default:
-        return 'grey';
-    }
-  };
+const statusMap: Record<
+  Props['status'],
+  {
+    status: 'success' | 'danger' | 'info' | 'warning' | 'custom';
+    icon: React.ReactNode;
+  }
+> = {
+  successful: { status: 'success', icon: <CheckCircleIcon /> },
+  failed:     { status: 'danger',  icon: <ExclamationCircleIcon /> },
+  error:      { status: 'danger',  icon: <ExclamationCircleIcon /> },
+  running:    { status: 'info',    icon: <SyncAltIcon /> },
+  pending:    { status: 'info',    icon: <ClockIcon /> },
+  canceled:   { status: 'warning', icon: <ExclamationTriangleIcon /> },
+  new:        { status: 'custom',  icon: <ClockIcon /> },
+  waiting:    { status: 'custom',  icon: <ClockIcon /> },
+};
 
-  const getIcon = () => {
-    switch (status) {
-      case 'successful':
-        return <CheckCircleIcon />;
-      case 'failed':
-      case 'error':
-        return <ExclamationCircleIcon />;
-      case 'running':
-        return <SyncAltIcon />;
-      case 'canceled':
-        return <ExclamationTriangleIcon />;
-      // case new, waiting, pending
-      default:
-        return <ClockIcon />;
-    }
+const JobStatus: FunctionComponent<Props> = ({ status }) => {
+  const { status: pfStatus, icon } = statusMap[status] ?? {
+    status: 'custom' as const,
+    icon: <ClockIcon />,
   };
 
   return (
-    <Label
-      variant='outline'
-      color={getColor()}
-      icon={getIcon()}
-      style={{ marginRight: '0.5rem', marginBottom: '0.5rem' }}
-    >
+    <Label variant='outline' status={pfStatus} icon={icon}>
       {capitalize(status)}
     </Label>
   );

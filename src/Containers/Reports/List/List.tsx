@@ -1,27 +1,30 @@
 import { Button } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { ButtonVariant } from '@patternfly/react-core/dist/dynamic/components/Button';
 import { Card } from '@patternfly/react-core/dist/dynamic/components/Card';
-import { CardFooter } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { CardHeader } from '@patternfly/react-core/dist/dynamic/components/Card';
 import { CardTitle } from '@patternfly/react-core/dist/dynamic/components/Card';
-import { Divider } from '@patternfly/react-core/dist/dynamic/components/Divider';
 import { Dropdown } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
 import { DropdownItem } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
 import { DropdownList } from '@patternfly/react-core/dist/dynamic/components/Dropdown';
 import { Label } from '@patternfly/react-core/dist/dynamic/components/Label';
 import { MenuToggle } from '@patternfly/react-core/dist/dynamic/components/MenuToggle';
 import { PageSection } from '@patternfly/react-core/dist/dynamic/components/Page';
+import { ToolbarItem } from '@patternfly/react-core/dist/dynamic/components/Toolbar';
 import { TooltipPosition } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import { Tooltip } from '@patternfly/react-core/dist/dynamic/components/Tooltip';
 import { Gallery } from '@patternfly/react-core/dist/dynamic/layouts/Gallery';
 import AngleLeftIcon from '@patternfly/react-icons/dist/dynamic/icons/angle-left-icon';
 import AngleRightIcon from '@patternfly/react-icons/dist/dynamic/icons/angle-right-icon';
-import CaretDownIcon from '@patternfly/react-icons/dist/dynamic/icons/caret-down-icon';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { readReport, readReports, reportOptions } from '../../../Api';
 import NoData from '../../../Components/ApiStatus/NoData';
 import EmptyList from '../../../Components/EmptyList';
+import {
+  FieldDef,
+  FilterVariantToggle,
+  QueryFilterInput,
+} from '../../../Components/QueryFilter/QueryFilterInput';
 import FilterableToolbar from '../../../Components/Toolbar/Toolbar';
 import { useQueryParams } from '../../../QueryParams';
 import { reportDefaultParams } from '../../../Utilities/constants';
@@ -32,6 +35,25 @@ import { ReportSchema } from '../Layouts/types';
 import { TAGS, TagName } from '../Shared/constants';
 import paths from '../paths';
 import ListItem from './ListItem';
+
+const REPORT_FIELD_DEFS: FieldDef[] = [
+  {
+    key: 'name',
+    op: '~',
+    displayLabel: 'name ~',
+    hint: 'Filter by report name',
+    filterStateKey: 'name',
+    values: null,
+  },
+  {
+    key: 'tag',
+    op: '=',
+    displayLabel: 'tag =',
+    hint: 'Filter by tag',
+    filterStateKey: 'tags',
+    values: TAGS.map((t) => ({ value: t.key, label: t.name })),
+  },
+];
 
 export interface Report {
   slug: string;
@@ -44,6 +66,8 @@ export interface Report {
 
 const List: FunctionComponent<Record<string, never>> = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [filterVariant, setFilterVariant] = useState<'a' | 'b'>('a');
+  const [queryValue, setQueryValue] = useState('');
   let index = 0;
   let nextItem = '';
   let previousItem = '';
@@ -97,31 +121,76 @@ const List: FunctionComponent<Record<string, never>> = () => {
     }
   }, [reports]);
 
-  const dropdownItems = [
-    isSuccess &&
-      reports.length > 0 &&
-      isReportSuccess &&
-      reports.map((report) => {
-        return (
-          <Button
-            icon={<DropdownItem key={report.slug}>{report.name}</DropdownItem>}
+  const dropdownItems =
+    isSuccess && reports.length > 0 && isReportSuccess
+      ? reports.map((report) => (
+          <DropdownItem
             key={report.slug}
-            variant={ButtonVariant.plain}
-            aria-label='Report list item'
-            onClick={() => setSelected(report.slug)}
-          />
-        );
-      }),
-  ];
+            onClick={() => {
+              setSelected(report.slug);
+              setIsOpen(false);
+            }}
+          >
+            {report.name}
+          </DropdownItem>
+        ))
+      : [];
+
+  const variantToggle = (
+    <FilterVariantToggle
+      key='variant-toggle'
+      variant={filterVariant}
+      onChange={(v) => {
+        setFilterVariant(v);
+        setQueryValue('');
+        setFromToolbar(null, null);
+      }}
+    />
+  );
 
   return (
     <React.Fragment>
       <PageHeader data-cy={'header-all_reports'} title={'Reports'} />
-      <FilterableToolbar
-        categories={options as any}
-        filters={queryParams as any}
-        setFilters={setFromToolbar}
-      />
+
+      {/* Variant A — existing FilterableToolbar with "Search" first + toggle prepended */}
+      {filterVariant === 'a' && (
+        <FilterableToolbar
+          categories={options as any}
+          filters={queryParams as any}
+          setFilters={setFromToolbar}
+          searchFirst='name'
+          leadingControls={[variantToggle]}
+        />
+      )}
+
+      {/* Variant B — toggle + advanced query input, no category dropdowns */}
+      {filterVariant === 'b' && (
+        <FilterableToolbar
+          expandLeadingControls
+          categories={{} as any}
+          filters={queryParams as any}
+          setFilters={setFromToolbar}
+          leadingControls={[
+            variantToggle,
+              <QueryFilterInput
+                fieldDefs={REPORT_FIELD_DEFS}
+                value={queryValue}
+                onChange={setQueryValue}
+                setFilterState={(state) => {
+                  Object.entries(state).forEach(([key, values]) => {
+                    setFromToolbar(
+                      key,
+                      values.length === 1 ? values[0] : values,
+                    );
+                  });
+                  if (Object.keys(state).length === 0)
+                    setFromToolbar(null, null);
+                }}
+              />
+          ]}
+        />
+      )}
+
       {isSuccess && reports.length > 0 && isReportSuccess && (
         <PageSection hasBodyWrapper={false}>
           {reports
@@ -139,12 +208,17 @@ const List: FunctionComponent<Record<string, never>> = () => {
                       key={report.slug}
                       style={{
                         maxWidth: '100%',
-                        marginBottom: '25px',
+                        marginBottom: '16px',
                       }}
                       isCompact
                       data-cy={report.slug}
                     >
                       <CardHeader
+                        style={{
+                          paddingTop: '16px',
+                          paddingBottom: '16px',
+                          paddingRight: '0px',
+                        }}
                         actions={{
                           actions: (
                             <>
@@ -179,19 +253,19 @@ const List: FunctionComponent<Record<string, never>> = () => {
                               />
                               <Dropdown
                                 data-cy={'preview_dropdown'}
-                                isPlain
-                                onSelect={() => setIsOpen(!isOpen)}
+                                onOpenChange={(open) => setIsOpen(open)}
+                                onSelect={() => setIsOpen(false)}
                                 toggle={(toggleRef) => (
                                   <MenuToggle
                                     ref={toggleRef}
                                     onClick={() => setIsOpen(!isOpen)}
                                     isExpanded={isOpen}
-                                    icon={<CaretDownIcon />}
                                     id='report_list'
                                     data-cy={'selected_report_dropdown'}
                                     style={{
                                       color:
                                         'var(--pf-t--global--text--color--100)',
+                                      justifyContent: 'flex-start',
                                     }}
                                   >
                                     {report.name}
@@ -216,11 +290,6 @@ const List: FunctionComponent<Record<string, never>> = () => {
                           hasNoOffset: false,
                           className: undefined,
                         }}
-                        style={{
-                          paddingTop: '16px',
-                          paddingBottom: '16px',
-                          paddingRight: '0px',
-                        }}
                       >
                         <CardTitle>
                           <Link
@@ -231,19 +300,9 @@ const List: FunctionComponent<Record<string, never>> = () => {
                           </Link>
                         </CardTitle>
                       </CardHeader>
-                      <Divider />
                       {report.slug === previewReport.slug
                         ? getComponent(previewReport, false)
                         : ''}
-                      <CardFooter style={{ paddingBottom: '16px' }}>
-                        <Link
-                          to={paths.getDetails(report.slug)}
-                          style={{ float: 'right' }}
-                          data-cy={'view_full_report_link'}
-                        >
-                          View full report
-                        </Link>
-                      </CardFooter>
                     </Card>
                   </>
                 )
@@ -264,8 +323,6 @@ const List: FunctionComponent<Record<string, never>> = () => {
               <ListItem
                 key={report.slug}
                 report={report}
-                selected={selected}
-                setSelected={setSelected}
               />
             ))}
           </Gallery>
