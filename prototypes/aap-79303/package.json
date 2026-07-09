@@ -1,0 +1,33 @@
+{
+  "name": "aap-79303",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "build:demo": "vite build --config vite.demo.config.js",
+    "deploy:demo": "VITE_BASE_PATH=/app/ npm run build:demo && rm -rf ../../public/app && cp -r dist-demo ../../public/app && cp dist-demo/index.html ../../public/404.html",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@patternfly/react-core": "^6.5.1",
+    "@patternfly/react-icons": "^6.5.1",
+    "@patternfly/react-table": "^6.5.1",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^6.30.4"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^10.3.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.6.0",
+    "vite": "^8.0.12"
+  }
+}

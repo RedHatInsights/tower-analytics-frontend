@@ -1,0 +1,22 @@
+stages:
+  - deploy
+
+# Only run on prototype branches
+workflow:
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^ux-/'
+
+# The static site is pre-built locally and committed to public/.
+# The CI job simply publishes those files to GitLab Pages.
+pages:
+  stage: deploy
+  tags:
+    - itup-alm-x86
+  script:
+    - echo "Publishing pre-built static files from public/"
+    - ls public/
+  artifacts:
+    paths:
+      - public/
+  rules:
+    - if: '$CI_COMMIT_BRANCH =~ /^ux-/'
