@@ -4,7 +4,6 @@ import {
   Nav,
   NavList,
   NavItem,
-  NavExpandable,
   Page,
   PageSidebar,
   PageSidebarBody,
@@ -17,7 +16,8 @@ import {
 } from '@patternfly/react-core'
 import BarsIcon from '@patternfly/react-icons/dist/esm/icons/bars-icon'
 
-const analyticsPages = [
+const navItems = [
+  { name: 'PROTOTYPE INTRODUCTION', path: '/' },
   { name: 'Organization Statistics', path: '/organization-statistics' },
   { name: 'Job Explorer', path: '/job-explorer' },
   { name: 'Clusters', path: '/clusters' },
@@ -26,26 +26,9 @@ const analyticsPages = [
   { name: 'Notifications', path: '/notifications' },
 ]
 
-function NavLink({ name, basePath }) {
-  const location = useLocation()
-  const path = `${basePath}${analyticsPages.find(p => p.name === name)?.path ?? ''}`
-  const isActive = location.pathname === path || location.pathname.startsWith(path + '/')
-  return (
-    <NavItem isActive={isActive}>
-      <Link to={path} style={{ color: 'inherit', textDecoration: 'none' }}>
-        {name}
-      </Link>
-    </NavItem>
-  )
-}
-
 export function AppNavigation({ children }) {
   const location = useLocation()
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-
-  const topNavItems = [
-    { name: 'PROTOTYPE INTRODUCTION', path: '/' },
-  ]
 
   const Header = (
     <Masthead>
@@ -75,52 +58,19 @@ export function AppNavigation({ children }) {
       <PageSidebarBody>
         <Nav aria-label="Navigation">
           <NavList>
-            {topNavItems.map((item) => (
-              <NavItem
-                key={item.path}
-                isActive={location.pathname === item.path}
-              >
-                <Link to={item.path} style={{ color: 'inherit', textDecoration: 'none' }}>
-                  {item.name}
-                </Link>
-              </NavItem>
-            ))}
-
-            <NavExpandable
-              title="Automation Analytics — Current"
-              isExpanded
-              isActive={location.pathname.startsWith('/current/')}
-            >
-              {analyticsPages.map((page) => {
-                const path = `/current${page.path}`
-                const isActive = location.pathname === path || location.pathname.startsWith(path + '/')
-                return (
-                  <NavItem key={path} isActive={isActive}>
-                    <Link to={path} style={{ color: 'inherit', textDecoration: 'none' }}>
-                      {page.name}
-                    </Link>
-                  </NavItem>
-                )
-              })}
-            </NavExpandable>
-
-            <NavExpandable
-              title="Automation Analytics — Proposed"
-              isExpanded
-              isActive={location.pathname.startsWith('/proposed/')}
-            >
-              {analyticsPages.map((page) => {
-                const path = `/proposed${page.path}`
-                const isActive = location.pathname === path || location.pathname.startsWith(path + '/')
-                return (
-                  <NavItem key={path} isActive={isActive}>
-                    <Link to={path} style={{ color: 'inherit', textDecoration: 'none' }}>
-                      {page.name}
-                    </Link>
-                  </NavItem>
-                )
-              })}
-            </NavExpandable>
+            {navItems.map((item) => {
+              const isActive =
+                item.path === '/'
+                  ? location.pathname === '/'
+                  : location.pathname === item.path || location.pathname.startsWith(item.path + '/')
+              return (
+                <NavItem key={item.path} isActive={isActive}>
+                  <Link to={item.path} style={{ color: 'inherit', textDecoration: 'none' }}>
+                    {item.name}
+                  </Link>
+                </NavItem>
+              )
+            })}
           </NavList>
         </Nav>
       </PageSidebarBody>
