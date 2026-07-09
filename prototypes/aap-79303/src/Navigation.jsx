@@ -4,6 +4,7 @@ import {
   Nav,
   NavList,
   NavItem,
+  NavExpandable,
   Page,
   PageSidebar,
   PageSidebarBody,
@@ -16,19 +17,24 @@ import {
 } from '@patternfly/react-core'
 import BarsIcon from '@patternfly/react-icons/dist/esm/icons/bars-icon'
 
-const navItems = [
-  { name: 'PROTOTYPE INTRODUCTION', path: '/' },
+const analyticsPages = [
+  { name: 'Reports', path: '/reports' },
+  { name: 'Savings Planner', path: '/savings-planner' },
+  { name: 'Automation Calculator', path: '/automation-calculator' },
   { name: 'Organization Statistics', path: '/organization-statistics' },
   { name: 'Job Explorer', path: '/job-explorer' },
   { name: 'Clusters', path: '/clusters' },
-  { name: 'Reports', path: '/reports' },
-  { name: 'Savings Planner', path: '/savings-planner' },
   { name: 'Notifications', path: '/notifications' },
 ]
 
 export function AppNavigation({ children }) {
   const location = useLocation()
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
+  const [isGroupExpanded, setIsGroupExpanded] = useState(true)
+
+  const isGroupActive = analyticsPages.some(
+    (p) => location.pathname === p.path || location.pathname.startsWith(p.path + '/')
+  )
 
   const Header = (
     <Masthead>
@@ -44,9 +50,11 @@ export function AppNavigation({ children }) {
           </PageToggleButton>
         </MastheadToggle>
         <MastheadBrand>
-          <span style={{ color: 'white', fontWeight: 600, fontSize: '16px' }}>
-            Ansible Automation Platform
-          </span>
+          <img
+            src={`${import.meta.env.BASE_URL}aap-logo.png`}
+            alt="Red Hat Ansible Automation Platform"
+            style={{ height: '36px' }}
+          />
         </MastheadBrand>
       </MastheadMain>
       <MastheadContent />
@@ -58,19 +66,25 @@ export function AppNavigation({ children }) {
       <PageSidebarBody>
         <Nav aria-label="Navigation">
           <NavList>
-            {navItems.map((item) => {
-              const isActive =
-                item.path === '/'
-                  ? location.pathname === '/'
-                  : location.pathname === item.path || location.pathname.startsWith(item.path + '/')
-              return (
-                <NavItem key={item.path} isActive={isActive}>
-                  <Link to={item.path} style={{ color: 'inherit', textDecoration: 'none' }}>
-                    {item.name}
-                  </Link>
-                </NavItem>
-              )
-            })}
+            <NavExpandable
+              title="Automation Analytics"
+              isExpanded={isGroupExpanded}
+              onExpand={(_, expanded) => setIsGroupExpanded(expanded)}
+              isActive={isGroupActive}
+            >
+              {analyticsPages.map((page) => {
+                const isActive =
+                  location.pathname === page.path ||
+                  location.pathname.startsWith(page.path + '/')
+                return (
+                  <NavItem key={page.path} isActive={isActive}>
+                    <Link to={page.path} style={{ color: 'inherit', textDecoration: 'none' }}>
+                      {page.name}
+                    </Link>
+                  </NavItem>
+                )
+              })}
+            </NavExpandable>
           </NavList>
         </Nav>
       </PageSidebarBody>
