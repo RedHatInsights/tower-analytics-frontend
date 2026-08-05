@@ -85,6 +85,7 @@
   },
   "overrides": {
     "axios": "1.16.1",
-    "follow-redirects": ">=1.16.0"
+    "follow-redirects": ">=1.16.0",
+    "sanitize-html": ">=2.17.4"
   }
 }
