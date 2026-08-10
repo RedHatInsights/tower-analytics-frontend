@@ -28,7 +28,7 @@
     "redux": "^4.2.1",
     "redux-promise-middleware": "^6.2.0",
     "streamsaver": "^2.0.6",
-    "styled-components": "^6.1.13",
+    "styled-components": "^6.5.1",
     "uuid": "^11.0.3",
     "victory": "^37.3.6",
     "web-streams-polyfill": "^3.3.3"
