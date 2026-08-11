@@ -70,6 +70,7 @@ export interface saveROIParams {
   currency: string;
   hourly_manual_labor_cost: number;
   hourly_automation_cost: number;
+  default_manual_effort_minutes?: number;
   templates_manual_equivalent: {
     template_id: number;
     effort_minutes: number;

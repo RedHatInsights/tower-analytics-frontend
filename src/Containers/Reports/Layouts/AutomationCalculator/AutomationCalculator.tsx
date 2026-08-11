@@ -99,6 +99,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const [costAutomation, setCostAutomation] = useState<
     number | string | undefined
   >('');
+  const [defaultManualEffort, setDefaultManualEffort] = useState<
+    number | string | undefined
+  >('');
   const [isMoney, setIsMoney] = useState(true);
   const { queryParams, setFromToolbar, setFromPagination } =
     useQueryParams(defaultParams);
@@ -167,6 +170,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     items: any[],
     manualCost = costManual,
     automationCost = costAutomation,
+    manualEffort = defaultManualEffort,
   ) => {
     const updatedDataApi = items.map((el) => ({
       template_id: el.id,
@@ -177,6 +181,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       currency: 'USD',
       hourly_manual_labor_cost: manualCost,
       hourly_automation_cost: automationCost,
+      default_manual_effort_minutes: manualEffort,
       templates_manual_equivalent: updatedDataApi,
     };
   };
@@ -199,31 +204,41 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       varName === 'automation_cost' ? value : costAutomation;
     const hourly_manual_labor_cost =
       varName === 'manual_cost' ? value : costManual;
-    const humanVarName =
-      varName === 'automation_cost' ? 'Automation cost' : 'Manual cost';
+    const manual_effort =
+      varName === 'default_manual_effort_minutes'
+        ? value
+        : defaultManualEffort;
+    const humanVarNames: Record<string, string> = {
+      automation_cost: 'Automation cost',
+      manual_cost: 'Manual cost',
+      default_manual_effort_minutes: 'Default manual time',
+    };
+    const humanVarName = humanVarNames[varName] || varName;
     try {
       await saveROI(
         getROISaveData(
           api.result.items,
           hourly_manual_labor_cost,
           hourly_automation_cost,
+          manual_effort,
         ) as any,
       );
     } catch {
       addNotification({
         title: `Unable to save changes to ${humanVarName}.`,
-        description: `Unable to save changes ${humanVarName}. Please try again.`,
+        description: `Unable to save changes to ${humanVarName}. Please try again.`,
         variant: 'danger',
         dismissable: true,
       });
-      // don't update inputs
       return;
     }
     await update();
     if (varName === 'manual_cost') {
       setCostManual(value);
-    } else {
+    } else if (varName === 'automation_cost') {
       setCostAutomation(value);
+    } else if (varName === 'default_manual_effort_minutes') {
+      setDefaultManualEffort(value);
     }
   };
 
@@ -317,6 +332,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     if (api.result?.cost && !costAutomation && !costManual) {
       setCostManual(api.result.cost.hourly_manual_labor_cost);
       setCostAutomation(api.result.cost.hourly_automation_cost);
+      setDefaultManualEffort(
+        api.result.cost.default_manual_effort_minutes ?? ''
+      );
     }
   }, [api]);
 
@@ -496,6 +514,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               costManual={costManual as any}
               setFromCalculation={updateCalculationValues}
               costAutomation={costAutomation as any}
+              defaultManualEffort={defaultManualEffort as any}
               readOnly={isReadOnly(api)}
             />
           </StackItem>
