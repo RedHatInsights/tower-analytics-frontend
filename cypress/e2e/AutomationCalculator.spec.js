@@ -324,6 +324,69 @@ describe('Automation Calculator page', () => {
     }
   });
 
+  it('applies default manual time to unreviewed templates on confirm', () => {
+    cy.intercept('POST', '**/roi_templates_apply_default/', {
+      updated_count: 3,
+    }).as('applyDefault');
+
+    cy.get('body').then(($body) => {
+      if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
+        cy.log('Empty state found - skipping apply default test');
+        return;
+      }
+
+      cy.getByCy('apply_default_button').then(($button) => {
+        if ($button.is(':disabled')) {
+          cy.log(
+            'Apply default button disabled (no unreviewed templates) - skipping',
+          );
+          return;
+        }
+
+        cy.wrap($button).click();
+        cy.getByCy('apply_default_modal').should('exist');
+
+        cy.getByCy('apply_default_confirm_button').click();
+        cy.wait('@applyDefault');
+        waitToLoad();
+
+        cy.getByCy('apply_default_modal').should('not.exist');
+        cy.contains('Default manual time applied to 3 templates.').should(
+          'exist',
+        );
+      });
+    });
+  });
+
+  it('cancels apply default without calling the endpoint', () => {
+    cy.intercept('POST', '**/roi_templates_apply_default/', {
+      updated_count: 3,
+    }).as('applyDefault');
+
+    cy.get('body').then(($body) => {
+      if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
+        cy.log('Empty state found - skipping apply default cancel test');
+        return;
+      }
+
+      cy.getByCy('apply_default_button').then(($button) => {
+        if ($button.is(':disabled')) {
+          cy.log(
+            'Apply default button disabled (no unreviewed templates) - skipping',
+          );
+          return;
+        }
+
+        cy.wrap($button).click();
+        cy.getByCy('apply_default_modal').should('exist');
+
+        cy.getByCy('apply_default_cancel_button').click();
+        cy.getByCy('apply_default_modal').should('not.exist');
+        cy.get('@applyDefault.all').should('have.length', 0);
+      });
+    });
+  });
+
   it('shows Automation formula', () => {
     cy.getByCy('automation_formula_button').click();
     cy.getByCy('automation_formula_modal').should('exist');

@@ -20,6 +20,7 @@ export interface Template {
   automatedCost: number;
   enabled: boolean;
   monetary_gain: number;
+  manual_effort_reviewed: boolean;
   // Anything else accidentally having it
   [key: string]: string | number | boolean;
 }

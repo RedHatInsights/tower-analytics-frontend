@@ -15,7 +15,11 @@ import { useAddNotification } from '@redhat-cloud-services/frontend-components-n
 import React, { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { endpointFunctionMap, saveROI } from '../../../../Api';
+import {
+  applyDefaultROITemplates,
+  endpointFunctionMap,
+  saveROI,
+} from '../../../../Api';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 // Chart
 import Chart from '../../../../Components/Chart';
@@ -298,6 +302,31 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     await update();
     setValue(updatedData);
   };
+
+  const applyDefaultToAll = async () => {
+    try {
+      const res = (await applyDefaultROITemplates(queryParams as any)) as {
+        updated_count?: number;
+      };
+      const count = res.updated_count ?? 0;
+      await update();
+      addNotification({
+        title: `Default manual time applied to ${count} template${
+          count === 1 ? '' : 's'
+        }.`,
+        variant: 'success',
+        dismissable: true,
+      });
+    } catch {
+      addNotification({
+        title: 'Unable to apply default manual time',
+        description: 'Unable to apply default manual time. Please try again.',
+        variant: 'danger',
+        dismissable: true,
+      });
+    }
+  };
+
   const getSortParams = () => {
     const onSort = (_event, index, direction) => {
       setFromToolbar('sort_order', direction);
@@ -416,6 +445,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     return !api.result.rbac?.perms?.all && !api.result.rbac?.perms?.write;
   };
 
+  const unreviewedCount = api.result.items.filter(
+    (item) => item.manual_effort_reviewed === false,
+  ).length;
+
   const renderLeft = () => (
     <Card isPlain>
       {fullCard && (
@@ -516,6 +549,8 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               setFromCalculation={updateCalculationValues}
               costAutomation={costAutomation as any}
               defaultManualEffort={defaultManualEffort as any}
+              unreviewedCount={unreviewedCount}
+              onApplyDefault={applyDefaultToAll}
               readOnly={isReadOnly(api)}
             />
           </StackItem>
