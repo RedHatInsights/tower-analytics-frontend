@@ -136,6 +136,28 @@ describe('Automation Calculator page', () => {
     });
   });
 
+  it('can change default manual effort', () => {
+    // Skip test if no data available
+    cy.get('body').then(($body) => {
+      if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
+        cy.log('Empty state found - skipping default manual effort test');
+        return;
+      }
+
+      cy.get('#default-manual-effort').clear();
+      waitToLoad();
+      cy.get('#default-manual-effort').should('have.value', '0');
+
+      cy.get('#default-manual-effort').type('60');
+      waitToLoad();
+      cy.get('#default-manual-effort')
+        .invoke('val')
+        .then((val) => {
+          expect(Number(val)).to.be.greaterThan(0);
+        });
+    });
+  });
+
   it('can change visibility', () => {
     let originalTotalSavingsValue = cy
       .getByCy('total_savings')

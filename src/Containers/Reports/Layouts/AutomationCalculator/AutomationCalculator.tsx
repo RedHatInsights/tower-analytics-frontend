@@ -181,7 +181,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       currency: 'USD',
       hourly_manual_labor_cost: manualCost,
       hourly_automation_cost: automationCost,
-      default_manual_effort_minutes: manualEffort,
+      ...(typeof manualEffort === 'number' && !isNaN(manualEffort)
+        ? { default_manual_effort_minutes: manualEffort }
+        : {}),
       templates_manual_equivalent: updatedDataApi,
     };
   };
@@ -200,20 +202,19 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   };
 
   const updateCalculationValues = async (varName: string, value: number) => {
+    if (isNaN(value)) return;
     const hourly_automation_cost =
       varName === 'automation_cost' ? value : costAutomation;
     const hourly_manual_labor_cost =
       varName === 'manual_cost' ? value : costManual;
     const manual_effort =
-      varName === 'default_manual_effort_minutes'
-        ? value
-        : defaultManualEffort;
+      varName === 'default_manual_effort_minutes' ? value : defaultManualEffort;
     const humanVarNames: Record<string, string> = {
       automation_cost: 'Automation cost',
       manual_cost: 'Manual cost',
       default_manual_effort_minutes: 'Default manual time',
     };
-    const humanVarName = humanVarNames[varName] || varName;
+    const humanVarName = humanVarNames[varName];
     try {
       await saveROI(
         getROISaveData(
@@ -333,7 +334,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       setCostManual(api.result.cost.hourly_manual_labor_cost);
       setCostAutomation(api.result.cost.hourly_automation_cost);
       setDefaultManualEffort(
-        api.result.cost.default_manual_effort_minutes ?? ''
+        api.result.cost.default_manual_effort_minutes ?? '',
       );
     }
   }, [api]);

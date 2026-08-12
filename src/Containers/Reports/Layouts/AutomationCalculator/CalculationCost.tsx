@@ -15,8 +15,13 @@ const WInputGroup = styled(InputGroup)`
 const validFloat = (value: number): number =>
   +value && +value < 0 ? NaN : value;
 
-const validPositiveInt = (value: number): number =>
-  !Number.isFinite(value) || value < 0 || !Number.isInteger(value)
+const MAX_PG_INT = 2147483646;
+
+const validNonNegativeInt = (value: number): number =>
+  !Number.isFinite(value) ||
+  value < 0 ||
+  !Number.isInteger(value) ||
+  value > MAX_PG_INT
     ? NaN
     : value;
 
@@ -85,7 +90,7 @@ const CalculationCost: FunctionComponent<Props> = ({
         <InputGroupText>/hr</InputGroupText>
       </WInputGroup>
       <p style={{ paddingTop: '10px' }}>
-        Default manual time per template
+        Default manual time per template (minutes)
       </p>
       <WInputGroup>
         <InputGroupText>
@@ -102,7 +107,7 @@ const CalculationCost: FunctionComponent<Props> = ({
           onChange={(_event, value) =>
             setFromCalculation(
               'default_manual_effort_minutes',
-              validPositiveInt(+value)
+              validNonNegativeInt(+value),
             )
           }
           isDisabled={readOnly}
