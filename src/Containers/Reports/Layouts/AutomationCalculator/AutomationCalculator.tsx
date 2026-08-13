@@ -15,7 +15,11 @@ import { useAddNotification } from '@redhat-cloud-services/frontend-components-n
 import React, { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { endpointFunctionMap, saveROI } from '../../../../Api';
+import {
+  applyDefaultROITemplates,
+  endpointFunctionMap,
+  saveROI,
+} from '../../../../Api';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 // Chart
 import Chart from '../../../../Components/Chart';
@@ -298,6 +302,49 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     await update();
     setValue(updatedData);
   };
+
+  const applyDefaultToAll = async () => {
+    let count = 0;
+    try {
+      // backend applies to all unreviewed templates tenant-wide; no params needed
+      const res = (await applyDefaultROITemplates()) as {
+        updated_count?: number;
+      };
+      count = typeof res.updated_count === 'number' ? res.updated_count : 0;
+    } catch {
+      addNotification({
+        title: 'Unable to apply default manual time',
+        description: 'Unable to apply default manual time. Please try again.',
+        variant: 'danger',
+        dismissable: true,
+      });
+      // apply failed; skip refresh
+      return;
+    }
+
+    addNotification({
+      title: `Default manual time applied to ${count} template${
+        count === 1 ? '' : 's'
+      }.`,
+      variant: 'success',
+      dismissable: true,
+    });
+
+    try {
+      // refresh is best-effort: a failure here must not read as an apply
+      // failure, and must not throw — CalculationCost awaits this handler
+      // and relies on it always resolving to reset its modal state.
+      await update();
+    } catch {
+      addNotification({
+        title: 'Default manual time applied, but the table could not refresh',
+        description: 'Reload the page to see the latest values.',
+        variant: 'warning',
+        dismissable: true,
+      });
+    }
+  };
+
   const getSortParams = () => {
     const onSort = (_event, index, direction) => {
       setFromToolbar('sort_order', direction);
@@ -516,6 +563,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               setFromCalculation={updateCalculationValues}
               costAutomation={costAutomation as any}
               defaultManualEffort={defaultManualEffort as any}
+              onApplyDefault={applyDefaultToAll}
               readOnly={isReadOnly(api)}
             />
           </StackItem>
