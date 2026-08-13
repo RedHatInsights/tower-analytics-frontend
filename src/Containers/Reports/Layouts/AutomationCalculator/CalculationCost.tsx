@@ -32,7 +32,6 @@ interface Props {
   setFromCalculation: (varName: string, value: number) => void;
   costAutomation: number;
   defaultManualEffort: number;
-  unreviewedCount: number;
   onApplyDefault: () => Promise<void>;
   readOnly: boolean;
 }
@@ -42,7 +41,6 @@ const CalculationCost: FunctionComponent<Props> = ({
   setFromCalculation = () => ({}),
   costAutomation = 0,
   defaultManualEffort = 0,
-  unreviewedCount = 0,
   onApplyDefault = () => Promise.resolve(),
   readOnly = true,
 }) => {
@@ -128,7 +126,7 @@ const CalculationCost: FunctionComponent<Props> = ({
           variant='secondary'
           style={{ marginTop: '10px' }}
           data-cy='apply_default_button'
-          isDisabled={readOnly || unreviewedCount === 0}
+          isDisabled={readOnly}
           onClick={() => setIsOpen(true)}
         >
           Apply default to all unreviewed
@@ -138,7 +136,12 @@ const CalculationCost: FunctionComponent<Props> = ({
           title='Apply default manual time'
           variant='warning'
           data-cy='apply_default_modal'
-          onClose={() => setIsOpen(false)}
+          onClose={() => {
+            // don't let escape/backdrop dismiss while a request is in flight
+            if (!isApplying) {
+              setIsOpen(false);
+            }
+          }}
           actions={[
             <Button
               key='confirm'
@@ -159,6 +162,7 @@ const CalculationCost: FunctionComponent<Props> = ({
               key='cancel'
               data-cy='apply_default_cancel_button'
               variant='link'
+              isDisabled={isApplying}
               onClick={() => setIsOpen(false)}
             >
               Cancel
@@ -166,10 +170,7 @@ const CalculationCost: FunctionComponent<Props> = ({
           ]}
         >
           {`This will set ${defaultManualEffort} minutes as the manual time ` +
-            `for all templates you haven't individually reviewed. ` +
-            `${unreviewedCount} template${
-              unreviewedCount === 1 ? '' : 's'
-            } will be updated. Continue?`}
+            `for all templates you haven't individually reviewed. Continue?`}
         </AlertModal>
       </CardBody>
     </Card>

@@ -305,11 +305,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
 
   const applyDefaultToAll = async () => {
     try {
-      const res = (await applyDefaultROITemplates(queryParams as any)) as {
+      // backend applies to all unreviewed templates tenant-wide; no params needed
+      const res = (await applyDefaultROITemplates()) as {
         updated_count?: number;
       };
-      const count = res.updated_count ?? 0;
-      await update();
+      const count =
+        typeof res.updated_count === 'number' ? res.updated_count : 0;
       addNotification({
         title: `Default manual time applied to ${count} template${
           count === 1 ? '' : 's'
@@ -324,7 +325,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
         variant: 'danger',
         dismissable: true,
       });
+      // apply failed; skip refresh
+      return;
     }
+    // refresh is best-effort: a failure here must not read as an apply failure
+    await update();
   };
 
   const getSortParams = () => {
@@ -445,10 +450,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     return !api.result.rbac?.perms?.all && !api.result.rbac?.perms?.write;
   };
 
-  const unreviewedCount = api.result.items.filter(
-    (item) => item.manual_effort_reviewed === false,
-  ).length;
-
   const renderLeft = () => (
     <Card isPlain>
       {fullCard && (
@@ -549,7 +550,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               setFromCalculation={updateCalculationValues}
               costAutomation={costAutomation as any}
               defaultManualEffort={defaultManualEffort as any}
-              unreviewedCount={unreviewedCount}
               onApplyDefault={applyDefaultToAll}
               readOnly={isReadOnly(api)}
             />

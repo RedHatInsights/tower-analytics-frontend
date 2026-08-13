@@ -5,6 +5,52 @@ const waitToLoad = () => {
   cy.wait('@roiTemplates');
 };
 
+// Deterministic roi_templates payload: one unreviewed-looking template, write
+// RBAC, so the apply-default button renders enabled regardless of live data.
+const ROI_TEMPLATES_STUB = {
+  meta: {
+    count: 1,
+    legend: [
+      {
+        id: 1,
+        name: 'Stubbed Template',
+        manual_effort_minutes: 30,
+        template_weigh_in: true,
+        successful_hosts_total: 5,
+        successful_hosts_savings: 100,
+        successful_hosts_saved_hours: 2,
+        monetary_gain: 50,
+        elapsed: 120,
+        host_count: 5,
+        total_count: 5,
+        total_org_count: 1,
+        total_cluster_count: 1,
+        total_inventory_count: 1,
+        template_success_rate: 90,
+        failed_hosts_costs: 0,
+      },
+    ],
+  },
+  cost: {
+    hourly_manual_labor_cost: 50,
+    hourly_automation_cost: 20,
+    default_manual_effort_minutes: 30,
+  },
+  rbac: { perms: { all: false, write: true } },
+};
+
+// Re-visits the page with a stubbed roi_templates response so the apply
+// default button is deterministically enabled, instead of depending on
+// whatever unreviewed templates happen to exist in the live/seed backend.
+const visitWithStubbedTemplates = () => {
+  cy.intercept(
+    '/api/tower-analytics/v1/roi_templates/*',
+    ROI_TEMPLATES_STUB,
+  ).as('roiTemplatesStub');
+  cy.visit(calculatorUrl);
+  cy.wait('@roiTemplatesStub');
+};
+
 describe('Automation Calculator page', () => {
   beforeEach(() => {
     cy.visit(calculatorUrl);
@@ -329,33 +375,23 @@ describe('Automation Calculator page', () => {
       updated_count: 3,
     }).as('applyDefault');
 
-    cy.get('body').then(($body) => {
-      if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
-        cy.log('Empty state found - skipping apply default test');
-        return;
-      }
+    visitWithStubbedTemplates();
 
-      cy.getByCy('apply_default_button').then(($button) => {
-        if ($button.is(':disabled')) {
-          cy.log(
-            'Apply default button disabled (no unreviewed templates) - skipping',
-          );
-          return;
-        }
+    cy.getByCy('apply_default_button').should('not.be.disabled').click();
+    cy.getByCy('apply_default_modal').should('exist');
+    // Modal no longer promises a specific pre-count (backend, not the
+    // paginated client, is the source of truth for how many get updated).
+    cy.getByCy('apply_default_modal').should(
+      'contain.text',
+      "This will set 30 minutes as the manual time for all templates you haven't individually reviewed.",
+    );
 
-        cy.wrap($button).click();
-        cy.getByCy('apply_default_modal').should('exist');
+    cy.getByCy('apply_default_confirm_button').click();
+    cy.wait('@applyDefault').its('request.body').should('deep.equal', {});
+    waitToLoad();
 
-        cy.getByCy('apply_default_confirm_button').click();
-        cy.wait('@applyDefault');
-        waitToLoad();
-
-        cy.getByCy('apply_default_modal').should('not.exist');
-        cy.contains('Default manual time applied to 3 templates.').should(
-          'exist',
-        );
-      });
-    });
+    cy.getByCy('apply_default_modal').should('not.exist');
+    cy.contains('Default manual time applied to 3 templates.').should('exist');
   });
 
   it('cancels apply default without calling the endpoint', () => {
@@ -363,28 +399,55 @@ describe('Automation Calculator page', () => {
       updated_count: 3,
     }).as('applyDefault');
 
-    cy.get('body').then(($body) => {
-      if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
-        cy.log('Empty state found - skipping apply default cancel test');
-        return;
-      }
+    visitWithStubbedTemplates();
 
-      cy.getByCy('apply_default_button').then(($button) => {
-        if ($button.is(':disabled')) {
-          cy.log(
-            'Apply default button disabled (no unreviewed templates) - skipping',
-          );
-          return;
-        }
+    cy.getByCy('apply_default_button').should('not.be.disabled').click();
+    cy.getByCy('apply_default_modal').should('exist');
 
-        cy.wrap($button).click();
-        cy.getByCy('apply_default_modal').should('exist');
+    cy.getByCy('apply_default_cancel_button').click();
+    cy.getByCy('apply_default_modal').should('not.exist');
+    cy.get('@applyDefault.all').should('have.length', 0);
+  });
 
-        cy.getByCy('apply_default_cancel_button').click();
-        cy.getByCy('apply_default_modal').should('not.exist');
-        cy.get('@applyDefault.all').should('have.length', 0);
-      });
-    });
+  it('shows an error notification and keeps state usable when apply default fails', () => {
+    cy.intercept('POST', '**/roi_templates_apply_default/', {
+      statusCode: 500,
+      body: { error: 'boom' },
+    }).as('applyDefaultFailure');
+
+    visitWithStubbedTemplates();
+
+    cy.getByCy('apply_default_button').should('not.be.disabled').click();
+    cy.getByCy('apply_default_modal').should('exist');
+
+    cy.getByCy('apply_default_confirm_button').click();
+    cy.wait('@applyDefaultFailure');
+
+    cy.contains('Unable to apply default manual time').should('exist');
+    cy.getByCy('apply_default_modal').should('not.exist');
+    // button remains usable for a retry
+    cy.getByCy('apply_default_button').should('not.be.disabled');
+  });
+
+  it('disables cancel/close while a request is in flight', () => {
+    cy.intercept('POST', '**/roi_templates_apply_default/', {
+      delay: 1000,
+      body: { updated_count: 1 },
+    }).as('applyDefaultSlow');
+
+    visitWithStubbedTemplates();
+
+    cy.getByCy('apply_default_button').should('not.be.disabled').click();
+    cy.getByCy('apply_default_confirm_button').click();
+
+    // while the request is in flight, Continue is loading/disabled and
+    // Cancel can't dismiss the modal out from under the pending request
+    cy.getByCy('apply_default_confirm_button').should('be.disabled');
+    cy.getByCy('apply_default_cancel_button').should('be.disabled');
+    cy.getByCy('apply_default_modal').should('exist');
+
+    cy.wait('@applyDefaultSlow');
+    cy.getByCy('apply_default_modal').should('not.exist');
   });
 
   it('shows Automation formula', () => {
