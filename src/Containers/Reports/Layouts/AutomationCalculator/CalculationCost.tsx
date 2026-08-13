@@ -4,6 +4,7 @@ import { InputGroup } from '@patternfly/react-core/dist/dynamic/components/Input
 import { InputGroupText } from '@patternfly/react-core/dist/dynamic/components/InputGroup';
 import { TextInput } from '@patternfly/react-core/dist/dynamic/components/TextInput';
 import DollarSignIcon from '@patternfly/react-icons/dist/dynamic/icons/dollar-sign-icon';
+import OutlinedClockIcon from '@patternfly/react-icons/dist/dynamic/icons/outlined-clock-icon';
 import React, { FunctionComponent } from 'react';
 import styled from 'styled-components';
 
@@ -14,10 +15,21 @@ const WInputGroup = styled(InputGroup)`
 const validFloat = (value: number): number =>
   +value && +value < 0 ? NaN : value;
 
+const MAX_PG_INT = 2147483646;
+
+const validNonNegativeInt = (value: number): number =>
+  !Number.isFinite(value) ||
+  value < 0 ||
+  !Number.isInteger(value) ||
+  value > MAX_PG_INT
+    ? NaN
+    : value;
+
 interface Props {
   costManual: number;
   setFromCalculation: (varName: string, value: number) => void;
   costAutomation: number;
+  defaultManualEffort: number;
   readOnly: boolean;
 }
 
@@ -25,6 +37,7 @@ const CalculationCost: FunctionComponent<Props> = ({
   costManual = 0,
   setFromCalculation = () => ({}),
   costAutomation = 0,
+  defaultManualEffort = 0,
   readOnly = true,
 }) => (
   <Card isPlain isCompact>
@@ -75,6 +88,31 @@ const CalculationCost: FunctionComponent<Props> = ({
           isDisabled={readOnly}
         />
         <InputGroupText>/hr</InputGroupText>
+      </WInputGroup>
+      <p style={{ paddingTop: '10px' }}>
+        Default manual time per template (minutes)
+      </p>
+      <WInputGroup>
+        <InputGroupText>
+          <OutlinedClockIcon />
+        </InputGroupText>
+        <TextInput
+          id='default-manual-effort'
+          key='default-manual-effort'
+          type='number'
+          aria-label='default-manual-effort'
+          value={
+            isNaN(defaultManualEffort) ? '' : defaultManualEffort.toString()
+          }
+          onChange={(_event, value) =>
+            setFromCalculation(
+              'default_manual_effort_minutes',
+              validNonNegativeInt(+value),
+            )
+          }
+          isDisabled={readOnly}
+        />
+        <InputGroupText>min</InputGroupText>
       </WInputGroup>
     </CardBody>
   </Card>
