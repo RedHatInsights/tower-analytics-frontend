@@ -304,20 +304,13 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   };
 
   const applyDefaultToAll = async () => {
+    let count = 0;
     try {
       // backend applies to all unreviewed templates tenant-wide; no params needed
       const res = (await applyDefaultROITemplates()) as {
         updated_count?: number;
       };
-      const count =
-        typeof res.updated_count === 'number' ? res.updated_count : 0;
-      addNotification({
-        title: `Default manual time applied to ${count} template${
-          count === 1 ? '' : 's'
-        }.`,
-        variant: 'success',
-        dismissable: true,
-      });
+      count = typeof res.updated_count === 'number' ? res.updated_count : 0;
     } catch {
       addNotification({
         title: 'Unable to apply default manual time',
@@ -328,8 +321,28 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       // apply failed; skip refresh
       return;
     }
-    // refresh is best-effort: a failure here must not read as an apply failure
-    await update();
+
+    addNotification({
+      title: `Default manual time applied to ${count} template${
+        count === 1 ? '' : 's'
+      }.`,
+      variant: 'success',
+      dismissable: true,
+    });
+
+    try {
+      // refresh is best-effort: a failure here must not read as an apply
+      // failure, and must not throw — CalculationCost awaits this handler
+      // and relies on it always resolving to reset its modal state.
+      await update();
+    } catch {
+      addNotification({
+        title: 'Default manual time applied, but the table could not refresh',
+        description: 'Reload the page to see the latest values.',
+        variant: 'warning',
+        dismissable: true,
+      });
+    }
   };
 
   const getSortParams = () => {

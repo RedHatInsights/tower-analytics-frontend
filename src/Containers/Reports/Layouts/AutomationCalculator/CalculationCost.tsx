@@ -151,9 +151,12 @@ const CalculationCost: FunctionComponent<Props> = ({
               isDisabled={isApplying}
               onClick={async () => {
                 setIsApplying(true);
-                await onApplyDefault();
-                setIsApplying(false);
-                setIsOpen(false);
+                try {
+                  await onApplyDefault();
+                } finally {
+                  setIsApplying(false);
+                  setIsOpen(false);
+                }
               }}
             >
               Continue
