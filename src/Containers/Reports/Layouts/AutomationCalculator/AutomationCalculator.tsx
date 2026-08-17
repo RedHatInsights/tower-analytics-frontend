@@ -110,11 +110,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const { queryParams, setFromToolbar, setFromPagination } =
     useQueryParams(defaultParams);
 
-  const mapApi = ({ legend = [] }) => {
+  const mapApi = ({ legend = [] }, defaultManualMinutes = 60) => {
     return legend.map((el: { [key: string]: number }) => ({
       ...el,
       delta: 0,
-      avgRunTime: el.manual_effort_minutes * 60 || 3600,
+      avgRunTime: el.manual_effort_minutes * 60 || defaultManualMinutes * 60,
       manualCost: 0,
       automatedCost: 0,
       enabled: el.template_weigh_in,
@@ -149,7 +149,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       return {
         ...response,
         items: updateDeltaCost(
-          mapApi(response.meta),
+          mapApi(
+            response.meta,
+            response.cost?.default_manual_effort_minutes ?? 60,
+          ),
           response.cost.hourly_manual_labor_cost,
           response.cost.hourly_automation_cost,
         ),
@@ -201,7 +204,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       res.successful_hosts_saved_hours_current_page;
     api.result.successful_hosts_saved_hours_other_pages =
       res.successful_hosts_saved_hours_other_pages;
-    setValue(mapApi(res.meta as any));
+    setValue(
+      mapApi(
+        res.meta as any,
+        (res as any).cost?.default_manual_effort_minutes ?? 60,
+      ),
+    );
     return res;
   };
 
@@ -651,6 +659,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                   getSortParams={getSortParams as any}
                   readOnly={isReadOnly(api)}
                   isMoney={isMoney}
+                  defaultManualTime={
+                    api.result?.cost?.default_manual_effort_minutes ?? 60
+                  }
                 />
               )}
             </GridItem>
