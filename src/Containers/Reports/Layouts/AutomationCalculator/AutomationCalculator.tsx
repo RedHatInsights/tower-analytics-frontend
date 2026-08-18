@@ -226,7 +226,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       manual_cost: 'Manual cost',
       default_manual_effort_minutes: 'Default manual time',
     };
-    const humanVarName = humanVarNames[varName];
+    const humanVarName = humanVarNames[varName] ?? varName;
     try {
       await saveROI(
         getROISaveData(
@@ -570,7 +570,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               costManual={costManual as any}
               setFromCalculation={updateCalculationValues}
               costAutomation={costAutomation as any}
-              defaultManualEffort={defaultManualEffort as any}
+              defaultManualEffort={typeof defaultManualEffort === 'number' ? defaultManualEffort : 0}
               onApplyDefault={applyDefaultToAll}
               readOnly={isReadOnly(api)}
             />

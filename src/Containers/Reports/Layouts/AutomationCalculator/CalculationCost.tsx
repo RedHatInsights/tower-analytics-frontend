@@ -172,7 +172,7 @@ const CalculationCost: FunctionComponent<Props> = ({
             </Button>,
           ]}
         >
-          {`This will set ${defaultManualEffort} minutes as the manual time ` +
+          {`This will set ${defaultManualEffort || 0} minutes as the manual time ` +
             `for all templates you haven't individually reviewed. Continue?`}
         </AlertModal>
       </CardBody>
