@@ -570,7 +570,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               costManual={costManual as any}
               setFromCalculation={updateCalculationValues}
               costAutomation={costAutomation as any}
-              defaultManualEffort={typeof defaultManualEffort === 'number' ? defaultManualEffort : 0}
+              defaultManualEffort={
+                typeof defaultManualEffort === 'number'
+                  ? defaultManualEffort
+                  : 0
+              }
               onApplyDefault={applyDefaultToAll}
               readOnly={isReadOnly(api)}
             />
