@@ -26,6 +26,7 @@ interface Props {
   navigateToJobExplorer: (id: number) => void;
   readOnly: boolean;
   isMoney: boolean;
+  defaultManualTime: number;
 }
 
 const setLabeledValue = (key: string, value: number) => {
@@ -73,6 +74,7 @@ const Row: FunctionComponent<Props> = ({
   navigateToJobExplorer,
   readOnly = true,
   isMoney,
+  defaultManualTime,
 }) => {
   const [isExpanded, setIsExpanded] = useState(
     window.localStorage.getItem(template.id.toString()) === 'true' || false,
@@ -128,7 +130,7 @@ const Row: FunctionComponent<Props> = ({
                 onBlur={(event: React.ChangeEvent<HTMLInputElement>) => {
                   const minutes = +event.target.value;
                   if (minutes <= 0 || isNaN(minutes)) {
-                    event.target.value = '60';
+                    event.target.value = String(defaultManualTime);
                     setDataRunTime(+event.target.value * 60, template.id);
                   } else {
                     setDataRunTime(minutes * 60, template.id);

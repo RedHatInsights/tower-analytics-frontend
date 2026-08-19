@@ -27,6 +27,7 @@ interface Props {
   getSortParams?: () => TableSortParams;
   readOnly: boolean;
   isMoney: boolean;
+  defaultManualTime: number;
 }
 
 const TopTemplates: FunctionComponent<Props> = ({
@@ -38,6 +39,7 @@ const TopTemplates: FunctionComponent<Props> = ({
   getSortParams = () => ({}),
   readOnly = true,
   isMoney,
+  defaultManualTime,
 }) => {
   const [isKebabOpen, setIsKebabOpen] = useState(false);
   const defaultParams = reportDefaultParams('automation_calculator');
@@ -140,6 +142,7 @@ const TopTemplates: FunctionComponent<Props> = ({
             setEnabled={setEnabled(template.id)}
             readOnly={readOnly}
             isMoney={isMoney}
+            defaultManualTime={defaultManualTime}
           />
         ))}
       </Tbody>

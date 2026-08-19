@@ -15,7 +15,11 @@ import { useAddNotification } from '@redhat-cloud-services/frontend-components-n
 import React, { FC, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { endpointFunctionMap, saveROI } from '../../../../Api';
+import {
+  applyDefaultROITemplates,
+  endpointFunctionMap,
+  saveROI,
+} from '../../../../Api';
 import ApiStatusWrapper from '../../../../Components/ApiStatus/ApiStatusWrapper';
 // Chart
 import Chart from '../../../../Components/Chart';
@@ -99,15 +103,18 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const [costAutomation, setCostAutomation] = useState<
     number | string | undefined
   >('');
+  const [defaultManualEffort, setDefaultManualEffort] = useState<
+    number | string | undefined
+  >('');
   const [isMoney, setIsMoney] = useState(true);
   const { queryParams, setFromToolbar, setFromPagination } =
     useQueryParams(defaultParams);
 
-  const mapApi = ({ legend = [] }) => {
+  const mapApi = ({ legend = [] }, defaultManualMinutes = 60) => {
     return legend.map((el: { [key: string]: number }) => ({
       ...el,
       delta: 0,
-      avgRunTime: el.manual_effort_minutes * 60 || 3600,
+      avgRunTime: el.manual_effort_minutes * 60 || defaultManualMinutes * 60,
       manualCost: 0,
       automatedCost: 0,
       enabled: el.template_weigh_in,
@@ -142,7 +149,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       return {
         ...response,
         items: updateDeltaCost(
-          mapApi(response.meta),
+          mapApi(
+            response.meta,
+            response.cost?.default_manual_effort_minutes ?? 60,
+          ),
           response.cost.hourly_manual_labor_cost,
           response.cost.hourly_automation_cost,
         ),
@@ -167,6 +177,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     items: any[],
     manualCost = costManual,
     automationCost = costAutomation,
+    manualEffort = defaultManualEffort,
   ) => {
     const updatedDataApi = items.map((el) => ({
       template_id: el.id,
@@ -177,6 +188,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       currency: 'USD',
       hourly_manual_labor_cost: manualCost,
       hourly_automation_cost: automationCost,
+      ...(typeof manualEffort === 'number' && !isNaN(manualEffort)
+        ? { default_manual_effort_minutes: manualEffort }
+        : {}),
       templates_manual_equivalent: updatedDataApi,
     };
   };
@@ -190,40 +204,54 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       res.successful_hosts_saved_hours_current_page;
     api.result.successful_hosts_saved_hours_other_pages =
       res.successful_hosts_saved_hours_other_pages;
-    setValue(mapApi(res.meta as any));
+    setValue(
+      mapApi(
+        res.meta as any,
+        (res as any).cost?.default_manual_effort_minutes ?? 60,
+      ),
+    );
     return res;
   };
 
   const updateCalculationValues = async (varName: string, value: number) => {
+    if (isNaN(value)) return;
     const hourly_automation_cost =
       varName === 'automation_cost' ? value : costAutomation;
     const hourly_manual_labor_cost =
       varName === 'manual_cost' ? value : costManual;
-    const humanVarName =
-      varName === 'automation_cost' ? 'Automation cost' : 'Manual cost';
+    const manual_effort =
+      varName === 'default_manual_effort_minutes' ? value : defaultManualEffort;
+    const humanVarNames: Record<string, string> = {
+      automation_cost: 'Automation cost',
+      manual_cost: 'Manual cost',
+      default_manual_effort_minutes: 'Default manual time',
+    };
+    const humanVarName = humanVarNames[varName] ?? varName;
     try {
       await saveROI(
         getROISaveData(
           api.result.items,
           hourly_manual_labor_cost,
           hourly_automation_cost,
+          manual_effort,
         ) as any,
       );
     } catch {
       addNotification({
         title: `Unable to save changes to ${humanVarName}.`,
-        description: `Unable to save changes ${humanVarName}. Please try again.`,
+        description: `Unable to save changes to ${humanVarName}. Please try again.`,
         variant: 'danger',
         dismissable: true,
       });
-      // don't update inputs
       return;
     }
     await update();
     if (varName === 'manual_cost') {
       setCostManual(value);
-    } else {
+    } else if (varName === 'automation_cost') {
       setCostAutomation(value);
+    } else if (varName === 'default_manual_effort_minutes') {
+      setDefaultManualEffort(value);
     }
   };
 
@@ -282,6 +310,49 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     await update();
     setValue(updatedData);
   };
+
+  const applyDefaultToAll = async () => {
+    let count = 0;
+    try {
+      // backend applies to all unreviewed templates tenant-wide; no params needed
+      const res = (await applyDefaultROITemplates()) as {
+        updated_count?: number;
+      };
+      count = typeof res.updated_count === 'number' ? res.updated_count : 0;
+    } catch {
+      addNotification({
+        title: 'Unable to apply default manual time',
+        description: 'Unable to apply default manual time. Please try again.',
+        variant: 'danger',
+        dismissable: true,
+      });
+      // apply failed; skip refresh
+      return;
+    }
+
+    addNotification({
+      title: `Default manual time applied to ${count} template${
+        count === 1 ? '' : 's'
+      }.`,
+      variant: 'success',
+      dismissable: true,
+    });
+
+    try {
+      // refresh is best-effort: a failure here must not read as an apply
+      // failure, and must not throw — CalculationCost awaits this handler
+      // and relies on it always resolving to reset its modal state.
+      await update();
+    } catch {
+      addNotification({
+        title: 'Default manual time applied, but the table could not refresh',
+        description: 'Reload the page to see the latest values.',
+        variant: 'warning',
+        dismissable: true,
+      });
+    }
+  };
+
   const getSortParams = () => {
     const onSort = (_event, index, direction) => {
       setFromToolbar('sort_order', direction);
@@ -317,6 +388,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     if (api.result?.cost && !costAutomation && !costManual) {
       setCostManual(api.result.cost.hourly_manual_labor_cost);
       setCostAutomation(api.result.cost.hourly_automation_cost);
+      setDefaultManualEffort(
+        api.result.cost.default_manual_effort_minutes ?? '',
+      );
     }
   }, [api]);
 
@@ -496,6 +570,12 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
               costManual={costManual as any}
               setFromCalculation={updateCalculationValues}
               costAutomation={costAutomation as any}
+              defaultManualEffort={
+                typeof defaultManualEffort === 'number'
+                  ? defaultManualEffort
+                  : 0
+              }
+              onApplyDefault={applyDefaultToAll}
               readOnly={isReadOnly(api)}
             />
           </StackItem>
@@ -583,6 +663,9 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
                   getSortParams={getSortParams as any}
                   readOnly={isReadOnly(api)}
                   isMoney={isMoney}
+                  defaultManualTime={
+                    api.result?.cost?.default_manual_effort_minutes ?? 60
+                  }
                 />
               )}
             </GridItem>

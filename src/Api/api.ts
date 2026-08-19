@@ -37,6 +37,7 @@ export enum Endpoint {
   adoptionRate = '/api/tower-analytics/v1/adoption_rate/',
   ROI = '/api/tower-analytics/v1/roi_templates/',
   costEffortROI = '/api/tower-analytics/v1/roi_cost_effort_data/',
+  roiTemplatesApplyDefault = '/api/tower-analytics/v1/roi_templates_apply_default/',
   plans = '/api/tower-analytics/v1/plans/',
   plan = '/api/tower-analytics/v1/plan/',
   sendEmail = 'api/tower-analytics/v1/send_email/',
@@ -167,6 +168,10 @@ export const saveROI = (params: saveROIParams): Promise<ApiJson> => {
 
 export const readROIOptions = (params: Params): Promise<ApiJson> =>
   post(Endpoint.ROIOptions, params);
+
+export const applyDefaultROITemplates = (
+  params: Params = {},
+): Promise<ApiJson> => post(Endpoint.roiTemplatesApplyDefault, params);
 
 export const readHostExplorer = (
   params: ParamsWithPagination,

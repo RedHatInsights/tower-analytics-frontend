@@ -1,8 +1,87 @@
 import { ENV, ENVS, calculatorUrl } from '../support/constants';
 
+// This repo has no Jest tooling (no config, no dependency, no script, never
+// existed in history) — every other test here, including the sibling
+// AAP-84050 frontend test story for this epic, is Cypress E2E. Rather than
+// bolt on a second test runner for one PR, the error-handling branches that
+// would otherwise only exist as unit tests (see applyDefaultToAll in
+// AutomationCalculator.tsx) are covered below as Cypress scenarios instead.
+
 const waitToLoad = () => {
   cy.wait('@roiCostEffortData');
   cy.wait('@roiTemplates');
+};
+
+// Deterministic roi_templates payload: one unreviewed-looking template, write
+// RBAC, so the apply-default button renders enabled regardless of live data.
+// `applied` flips the top-level savings figures so a test can assert the
+// *second* fetch (triggered by the post-apply refresh) genuinely reflects
+// new data, instead of a static response that can't prove the refresh
+// actually changed anything.
+const buildRoiTemplatesStub = (applied) => ({
+  meta: {
+    count: 1,
+    legend: [
+      {
+        id: 1,
+        name: 'Stubbed Template',
+        manual_effort_minutes: 30,
+        template_weigh_in: true,
+        successful_hosts_total: 5,
+        successful_hosts_savings: 100,
+        successful_hosts_saved_hours: 2,
+        monetary_gain: 50,
+        elapsed: 120,
+        host_count: 5,
+        total_count: 5,
+        total_org_count: 1,
+        total_cluster_count: 1,
+        total_inventory_count: 1,
+        template_success_rate: 90,
+        failed_hosts_costs: 0,
+      },
+    ],
+  },
+  cost: {
+    hourly_manual_labor_cost: 50,
+    hourly_automation_cost: 20,
+    default_manual_effort_minutes: 30,
+  },
+  rbac: { perms: { all: false, write: true } },
+  monetary_gain_current_page: applied ? 250 : 100,
+  monetary_gain_other_pages: 0,
+  successful_hosts_saved_hours_current_page: applied ? 5 : 2,
+  successful_hosts_saved_hours_other_pages: 0,
+});
+
+// Re-visits the page with a stubbed roi_templates response so the apply
+// default button is deterministically enabled, instead of depending on
+// whatever unreviewed templates happen to exist in the live/seed backend.
+// Returns a setter the test can call to flip the stub's "applied" state
+// after a successful apply-default POST, so the next refetch differs.
+const visitWithStubbedTemplates = () => {
+  let applied = false;
+  cy.intercept('/api/tower-analytics/v1/roi_templates/*', (req) =>
+    req.reply(buildRoiTemplatesStub(applied)),
+  ).as('roiTemplatesStub');
+  cy.visit(calculatorUrl);
+  cy.wait('@roiTemplatesStub');
+  return {
+    markApplied: () => {
+      applied = true;
+    },
+  };
+};
+
+// visitWithStubbedTemplates() re-intercepts the same roi_templates route the
+// outer beforeEach already aliased as 'roiTemplates'. Cypress matches the
+// newest-registered intercept first, so 'roiTemplatesStub' shadows
+// 'roiTemplates' for the rest of the test — waiting on '@roiTemplates' here
+// would never match another request and would hang/desync instead of
+// actually waiting for the post-apply refetch.
+const waitForStubbedLoad = () => {
+  cy.wait('@roiCostEffortData');
+  cy.wait('@roiTemplatesStub');
 };
 
 describe('Automation Calculator page', () => {
@@ -132,6 +211,28 @@ describe('Automation Calculator page', () => {
         .then(($pageSavings) => {
           const pageSavingsValue = $pageSavings.text();
           expect(pageSavingsValue).not.to.eq(originalPageSavingsValue);
+        });
+    });
+  });
+
+  it('can change default manual effort', () => {
+    // Skip test if no data available
+    cy.get('body').then(($body) => {
+      if ($body.find('.pf-v6-c-empty-state__content').length > 0) {
+        cy.log('Empty state found - skipping default manual effort test');
+        return;
+      }
+
+      cy.get('#default-manual-effort').clear();
+      waitToLoad();
+      cy.get('#default-manual-effort').should('have.value', '0');
+
+      cy.get('#default-manual-effort').type('60');
+      waitToLoad();
+      cy.get('#default-manual-effort')
+        .invoke('val')
+        .then((val) => {
+          expect(Number(val)).to.be.greaterThan(0);
         });
     });
   });
@@ -300,6 +401,151 @@ describe('Automation Calculator page', () => {
           expect(pageSavingsValue).not.to.eq('$0.00');
         });
     }
+  });
+
+  it('applies default manual time to unreviewed templates on confirm', () => {
+    const { markApplied } = visitWithStubbedTemplates();
+
+    cy.intercept('POST', '**/roi_templates_apply_default/', (req) => {
+      markApplied();
+      req.reply({ updated_count: 3 });
+    }).as('applyDefault');
+
+    cy.getByCy('apply_default_button').should('not.be.disabled').click();
+    cy.getByCy('apply_default_modal').should('exist');
+    // Modal no longer promises a specific pre-count (backend, not the
+    // paginated client, is the source of truth for how many get updated).
+    cy.getByCy('apply_default_modal').should(
+      'contain.text',
+      "This will set 30 minutes as the manual time for all templates you haven't individually reviewed.",
+    );
+
+    cy.getByCy('current_page_savings')
+      .find('h3')
+      .invoke('text')
+      .then((originalCurrentPageSavings) => {
+        cy.getByCy('apply_default_confirm_button').click();
+        cy.wait('@applyDefault').its('request.body').should('deep.equal', {});
+        waitForStubbedLoad();
+
+        cy.getByCy('apply_default_modal').should('not.exist');
+        cy.contains('Default manual time applied to 3 templates.').should(
+          'exist',
+        );
+
+        // Genuine before/after diff: the stub returns different savings
+        // figures once `markApplied()` flips, proving the table actually
+        // reflects the post-apply refresh rather than a static response.
+        cy.getByCy('current_page_savings')
+          .find('h3')
+          .invoke('text')
+          .should('not.eq', originalCurrentPageSavings);
+      });
+  });
+
+  it('cancels apply default without calling the endpoint', () => {
+    cy.intercept('POST', '**/roi_templates_apply_default/', {
+      updated_count: 3,
+    }).as('applyDefault');
+
+    visitWithStubbedTemplates();
+
+    cy.getByCy('apply_default_button').should('not.be.disabled').click();
+    cy.getByCy('apply_default_modal').should('exist');
+
+    cy.getByCy('apply_default_cancel_button').click();
+    cy.getByCy('apply_default_modal').should('not.exist');
+    cy.get('@applyDefault.all').should('have.length', 0);
+  });
+
+  it('shows an error notification and keeps state usable when apply default fails', () => {
+    cy.intercept('POST', '**/roi_templates_apply_default/', {
+      statusCode: 500,
+      body: { error: 'boom' },
+    }).as('applyDefaultFailure');
+
+    visitWithStubbedTemplates();
+
+    cy.getByCy('apply_default_button').should('not.be.disabled').click();
+    cy.getByCy('apply_default_modal').should('exist');
+
+    cy.getByCy('apply_default_confirm_button').click();
+    cy.wait('@applyDefaultFailure');
+
+    cy.contains('Unable to apply default manual time').should('exist');
+    cy.getByCy('apply_default_modal').should('not.exist');
+    // button remains usable for a retry
+    cy.getByCy('apply_default_button').should('not.be.disabled');
+  });
+
+  it('shows a warning and closes the modal when the refresh after a successful apply fails', () => {
+    // First roi_templates fetch (initial page load) succeeds; the second
+    // (the update() refresh triggered by a successful apply) fails. This is
+    // the regression case for applyDefaultToAll: a refresh failure must not
+    // leave the modal stuck open or surface as an apply failure.
+    let requestCount = 0;
+    cy.intercept('/api/tower-analytics/v1/roi_templates/*', (req) => {
+      requestCount += 1;
+      if (requestCount === 1) {
+        req.reply(buildRoiTemplatesStub(false));
+      } else {
+        req.reply({ statusCode: 500, body: { error: 'boom' } });
+      }
+    }).as('roiTemplatesStub');
+    cy.visit(calculatorUrl);
+    cy.wait('@roiTemplatesStub');
+
+    cy.intercept('POST', '**/roi_templates_apply_default/', {
+      updated_count: 2,
+    }).as('applyDefault');
+
+    cy.getByCy('apply_default_button').should('not.be.disabled').click();
+    cy.getByCy('apply_default_confirm_button').click();
+    cy.wait('@applyDefault');
+    cy.wait('@roiTemplatesStub'); // the failing refresh request
+
+    cy.getByCy('apply_default_modal').should('not.exist');
+    cy.contains(
+      'Default manual time applied, but the table could not refresh',
+    ).should('exist');
+    // no leftover disabled/loading state from the failed refresh
+    cy.getByCy('apply_default_button').should('not.be.disabled');
+  });
+
+  it('falls back to 0 when the apply response has no updated_count', () => {
+    cy.intercept('POST', '**/roi_templates_apply_default/', {}).as(
+      'applyDefault',
+    );
+
+    visitWithStubbedTemplates();
+
+    cy.getByCy('apply_default_button').should('not.be.disabled').click();
+    cy.getByCy('apply_default_confirm_button').click();
+    cy.wait('@applyDefault');
+    waitForStubbedLoad();
+
+    cy.contains('Default manual time applied to 0 templates.').should('exist');
+  });
+
+  it('disables cancel/close while a request is in flight', () => {
+    cy.intercept('POST', '**/roi_templates_apply_default/', {
+      delay: 1000,
+      body: { updated_count: 1 },
+    }).as('applyDefaultSlow');
+
+    visitWithStubbedTemplates();
+
+    cy.getByCy('apply_default_button').should('not.be.disabled').click();
+    cy.getByCy('apply_default_confirm_button').click();
+
+    // while the request is in flight, Continue is loading/disabled and
+    // Cancel can't dismiss the modal out from under the pending request
+    cy.getByCy('apply_default_confirm_button').should('be.disabled');
+    cy.getByCy('apply_default_cancel_button').should('be.disabled');
+    cy.getByCy('apply_default_modal').should('exist');
+
+    cy.wait('@applyDefaultSlow');
+    cy.getByCy('apply_default_modal').should('not.exist');
   });
 
   it('shows Automation formula', () => {
