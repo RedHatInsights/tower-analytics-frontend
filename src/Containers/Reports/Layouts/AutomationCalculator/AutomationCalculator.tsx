@@ -314,7 +314,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const applyDefaultToAll = async () => {
     let count = 0;
     try {
-      // backend applies to all unreviewed templates tenant-wide; no params needed
+      // backend applies to all templates tenant-wide; no params needed
       const res = (await applyDefaultROITemplates()) as {
         updated_count?: number;
       };

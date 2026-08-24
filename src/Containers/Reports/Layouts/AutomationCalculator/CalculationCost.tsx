@@ -129,7 +129,7 @@ const CalculationCost: FunctionComponent<Props> = ({
           isDisabled={readOnly}
           onClick={() => setIsOpen(true)}
         >
-          Apply default to all unreviewed
+          Apply default to all templates
         </Button>
         <AlertModal
           isOpen={isOpen}
@@ -172,8 +172,10 @@ const CalculationCost: FunctionComponent<Props> = ({
             </Button>,
           ]}
         >
-          {`This will set ${defaultManualEffort || 0} minutes as the manual time ` +
-            `for all templates you haven't individually reviewed. Continue?`}
+          {`This will overwrite the manual time for every template with the ` +
+            `current default of ${defaultManualEffort || 0} minutes, including ` +
+            `templates you've already reviewed. Do you want to apply this ` +
+            `default value to all templates?`}
         </AlertModal>
       </CardBody>
     </Card>
