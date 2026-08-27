@@ -403,7 +403,7 @@ describe('Automation Calculator page', () => {
     }
   });
 
-  it('applies default manual time to unreviewed templates on confirm', () => {
+  it('applies default manual time to all templates on confirm', () => {
     const { markApplied } = visitWithStubbedTemplates();
 
     cy.intercept('POST', '**/roi_templates_apply_default/', (req) => {
@@ -417,7 +417,9 @@ describe('Automation Calculator page', () => {
     // paginated client, is the source of truth for how many get updated).
     cy.getByCy('apply_default_modal').should(
       'contain.text',
-      "This will set 30 minutes as the manual time for all templates you haven't individually reviewed.",
+      'This will overwrite the manual time for every template with the ' +
+        "current default of 30 minutes, including templates you've already " +
+        'reviewed. Do you want to apply this default value to all templates?',
     );
 
     cy.getByCy('current_page_savings')
