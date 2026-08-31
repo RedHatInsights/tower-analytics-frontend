@@ -204,6 +204,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       res.successful_hosts_saved_hours_current_page;
     api.result.successful_hosts_saved_hours_other_pages =
       res.successful_hosts_saved_hours_other_pages;
+    api.result.cost = res.cost;
     setValue(
       mapApi(
         res.meta as any,
@@ -215,16 +216,21 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
 
   const updateCalculationValues = async (varName: string, value: number) => {
     if (isNaN(value)) return;
+    if (varName === 'default_manual_effort_minutes') {
+      // Staged only: the default is committed via the explicit "Apply
+      // default to all templates" action (applyDefaultToAll), not on every
+      // keystroke. Mirrors per-template manual time, which also only
+      // commits on its own action (blur).
+      setDefaultManualEffort(value);
+      return;
+    }
     const hourly_automation_cost =
       varName === 'automation_cost' ? value : costAutomation;
     const hourly_manual_labor_cost =
       varName === 'manual_cost' ? value : costManual;
-    const manual_effort =
-      varName === 'default_manual_effort_minutes' ? value : defaultManualEffort;
     const humanVarNames: Record<string, string> = {
       automation_cost: 'Automation cost',
       manual_cost: 'Manual cost',
-      default_manual_effort_minutes: 'Default manual time',
     };
     const humanVarName = humanVarNames[varName] ?? varName;
     try {
@@ -233,7 +239,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
           api.result.items,
           hourly_manual_labor_cost,
           hourly_automation_cost,
-          manual_effort,
+          defaultManualEffort,
         ) as any,
       );
     } catch {
@@ -250,8 +256,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       setCostManual(value);
     } else if (varName === 'automation_cost') {
       setCostAutomation(value);
-    } else if (varName === 'default_manual_effort_minutes') {
-      setDefaultManualEffort(value);
     }
   };
 
@@ -314,6 +318,11 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   const applyDefaultToAll = async () => {
     let count = 0;
     try {
+      // The default is staged locally (see updateCalculationValues) and only
+      // committed here, so persist it before the apply endpoint reads it —
+      // that endpoint POSTs no body and relies on the server-persisted
+      // default_manual_effort_minutes.
+      await saveROI(getROISaveData(api.result.items) as any);
       // backend applies to all templates tenant-wide; no params needed
       const res = (await applyDefaultROITemplates()) as {
         updated_count?: number;

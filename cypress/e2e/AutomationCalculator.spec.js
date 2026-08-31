@@ -223,12 +223,13 @@ describe('Automation Calculator page', () => {
         return;
       }
 
+      // The default is staged locally and only persisted when "Apply default
+      // to all templates" is confirmed, so typing here must not hit the
+      // network — no waitToLoad().
       cy.get('#default-manual-effort').clear();
-      waitToLoad();
       cy.get('#default-manual-effort').should('have.value', '0');
 
       cy.get('#default-manual-effort').type('60');
-      waitToLoad();
       cy.get('#default-manual-effort')
         .invoke('val')
         .then((val) => {
@@ -442,6 +443,42 @@ describe('Automation Calculator page', () => {
           .find('h3')
           .invoke('text')
           .should('not.eq', originalCurrentPageSavings);
+      });
+  });
+
+  it('does not update savings when editing the default before applying', () => {
+    // The default manual time is staged locally, like a per-template manual
+    // time edit — neither savings figure should move until "Apply default to
+    // all templates" is confirmed.
+    visitWithStubbedTemplates();
+
+    cy.intercept('POST', '/api/tower-analytics/v1/roi_cost_effort_data/').as(
+      'roiCostEffortSave',
+    );
+    cy.intercept('POST', '**/roi_templates_apply_default/').as('applyDefault');
+
+    cy.getByCy('total_savings')
+      .find('h3')
+      .invoke('text')
+      .then((originalTotalSavings) => {
+        cy.getByCy('current_page_savings')
+          .find('h3')
+          .invoke('text')
+          .then((originalCurrentPageSavings) => {
+            cy.get('#default-manual-effort').clear();
+            cy.get('#default-manual-effort').type('45');
+
+            cy.getByCy('total_savings')
+              .find('h3')
+              .invoke('text')
+              .should('eq', originalTotalSavings);
+            cy.getByCy('current_page_savings')
+              .find('h3')
+              .invoke('text')
+              .should('eq', originalCurrentPageSavings);
+            cy.get('@roiCostEffortSave.all').should('have.length', 0);
+            cy.get('@applyDefault.all').should('have.length', 0);
+          });
       });
   });
 
