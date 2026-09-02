@@ -14,6 +14,12 @@ const WInputGroup = styled(InputGroup)`
   width: 170px;
 `;
 
+const Divider = styled.hr`
+  margin: 16px 0 12px 0;
+  border: none;
+  border-top: 1px solid var(--pf-t--global--border--color--200);
+`;
+
 const validFloat = (value: number): number =>
   +value && +value < 0 ? NaN : value;
 
@@ -97,6 +103,7 @@ const CalculationCost: FunctionComponent<Props> = ({
           />
           <InputGroupText>/hr</InputGroupText>
         </WInputGroup>
+        <Divider />
         <p style={{ paddingTop: '10px' }}>
           Default manual time per template (minutes)
         </p>

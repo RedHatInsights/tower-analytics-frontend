@@ -117,6 +117,7 @@ const Row: FunctionComponent<Props> = ({
           <InputGroup>
             <InputGroupItem isFill>
               <TextInput
+                key={template.avgRunTime}
                 autoFocus={
                   window.localStorage.getItem('focused') ===
                   'manual-time-' + template.id.toString()
