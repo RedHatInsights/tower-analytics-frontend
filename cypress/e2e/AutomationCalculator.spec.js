@@ -432,7 +432,7 @@ describe('Automation Calculator page', () => {
         waitForStubbedLoad();
 
         cy.getByCy('apply_default_modal').should('not.exist');
-        cy.contains('Default manual time applied to 3 templates.').should(
+        cy.contains('Default manual time applied to all templates.').should(
           'exist',
         );
 
@@ -551,7 +551,7 @@ describe('Automation Calculator page', () => {
     cy.getByCy('apply_default_button').should('not.be.disabled');
   });
 
-  it('falls back to 0 when the apply response has no updated_count', () => {
+  it('shows success message when the apply response has no body', () => {
     cy.intercept('POST', '**/roi_templates_apply_default/', {}).as(
       'applyDefault',
     );
@@ -563,7 +563,9 @@ describe('Automation Calculator page', () => {
     cy.wait('@applyDefault');
     waitForStubbedLoad();
 
-    cy.contains('Default manual time applied to 0 templates.').should('exist');
+    cy.contains('Default manual time applied to all templates.').should(
+      'exist',
+    );
   });
 
   it('disables cancel/close while a request is in flight', () => {

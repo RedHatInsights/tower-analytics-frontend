@@ -316,7 +316,6 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
   };
 
   const applyDefaultToAll = async () => {
-    let count = 0;
     try {
       // The default is staged locally (see updateCalculationValues) and only
       // committed here, so persist it before the apply endpoint reads it —
@@ -324,10 +323,7 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
       // default_manual_effort_minutes.
       await saveROI(getROISaveData(api.result.items) as any);
       // backend applies to all templates tenant-wide; no params needed
-      const res = (await applyDefaultROITemplates()) as {
-        updated_count?: number;
-      };
-      count = typeof res.updated_count === 'number' ? res.updated_count : 0;
+      await applyDefaultROITemplates();
     } catch {
       addNotification({
         title: 'Unable to apply default manual time',
@@ -340,9 +336,10 @@ const AutomationCalculator: FC<AutmationCalculatorProps> = ({
     }
 
     addNotification({
-      title: `Default manual time applied to ${count} template${
-        count === 1 ? '' : 's'
-      }.`,
+      // updated_count from the backend only reflects templates with a prior
+      // manual-effort row, not the true total the default was applied to —
+      // so the message stays count-free.
+      title: 'Default manual time applied to all templates.',
       variant: 'success',
       dismissable: true,
     });
