@@ -4,7 +4,7 @@
   "private": false,
   "dependencies": {
     "@ansible/react-json-chart-builder": "^3.0.0",
-    "@babel/runtime": "^7.26.0",
+    "@babel/runtime": "^8.0.0",
     "@patternfly/patternfly": "^6.4.0",
     "@patternfly/react-charts": "^8.4.0",
     "@patternfly/react-core": "^6.4.0",
@@ -34,11 +34,11 @@
     "web-streams-polyfill": "^3.3.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.26.0",
-    "@babel/plugin-transform-runtime": "^7.25.9",
-    "@babel/preset-env": "^7.26.0",
-    "@babel/preset-react": "^7.26.3",
-    "@babel/preset-typescript": "^7.26.0",
+    "@babel/core": "^8.0.1",
+    "@babel/plugin-transform-runtime": "^8.0.1",
+    "@babel/preset-env": "^8.0.2",
+    "@babel/preset-react": "^8.0.1",
+    "@babel/preset-typescript": "^8.0.1",
     "@redhat-cloud-services/eslint-config-redhat-cloud-services": "2.0.4",
     "@redhat-cloud-services/frontend-components-config": "^6.7.51",
     "@redhat-cloud-services/tsc-transform-imports": "^1.0.21",
