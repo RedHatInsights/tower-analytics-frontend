@@ -62,7 +62,7 @@
     "stylelint-config-recommended-scss": "^14.1.0",
     "stylelint-scss": "^6.10.0",
     "ts-loader": "^9.5.1",
-    "ts-patch": "^3.3.0",
+    "ts-patch": "^4.0.0",
     "typescript": "^5.7.2",
     "webpack": "^5.97.1",
     "webpack-cli": "^5.1.4"
