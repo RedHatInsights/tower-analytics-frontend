@@ -30,7 +30,7 @@
     "streamsaver": "^2.0.6",
     "styled-components": "^6.1.13",
     "uuid": "^11.0.3",
-    "victory": "^37.3.6",
+    "victory": "^38.0.0",
     "web-streams-polyfill": "^3.3.3"
   },
   "devDependencies": {
