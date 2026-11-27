@@ -22,7 +22,7 @@ export BONFIRE_COMPONENTS_ARG=""
 
 # backend
 export COMPONENT_NAME="tower-analytics-clowdapp"
-export IMAGE_BACKEND="quay.io/cloudservices/automation-analytics-api"
+export IMAGE_BACKEND="quay.io/redhat-user-workloads/aap-aa-tenant/aap-aa-main/automation-analytics-backend-main"
 export IMAGE_BACKEND_TAG=$(curl -s https://gitlab.cee.redhat.com/api/v4/projects/37507/repository/commits | jq -r ' .[0].id' | head -c7)
 
 # frontend
